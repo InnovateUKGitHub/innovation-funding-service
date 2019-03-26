@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -129,13 +128,17 @@ public class ApplicationSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.isFullyFunded()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                bindingResult.rejectValue("agreeTerms","validation.application.procurement.terms.required");
+                String errorCode = competition.isH2020()?
+                        "validation.application.h2020.terms.required" :
+                        "validation.application.procurement.terms.required";
+                bindingResult.rejectValue("agreeTerms",errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, applicationSubmitForm);
                 return String.format("redirect:/application/%d/summary", applicationId);
             }
+
         }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return String.format("redirect:/application/%d/confirm-submit", applicationId);
@@ -194,7 +197,9 @@ public class ApplicationSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
-        return "application-track";
+
+        return competition.isH2020() ?
+                "h2020-grant-transfer-track" : "application-track";
     }
 
     private boolean isResearchCategoryQuestion(Long questionId) {

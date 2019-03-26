@@ -13,7 +13,9 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -61,6 +63,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -103,6 +106,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Mock
     private ApplicationMapper applicationMapperMock;
+
+    @Mock
+    private CompetitionMapper competitionMapperMock;
 
     @Mock
     private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
@@ -775,5 +781,24 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         assertTrue(result.isSuccess());
         assertEquals(expectedDateTime, result.getSuccess());
+    }
+
+    @Test
+    public void getCompetitionByApplicationId() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+
+        CompetitionResource actual = service.getCompetitionByApplicationId(application.getId()).getSuccess();
+
+        assertEquals(competitionResource, actual);
+
+        verify(applicationRepositoryMock, only()).findById(application.getId());
+        verify(competitionMapperMock, only()).mapToResource(competition);
     }
 }

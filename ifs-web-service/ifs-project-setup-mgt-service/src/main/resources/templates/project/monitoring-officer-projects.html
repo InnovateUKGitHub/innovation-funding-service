@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign projects to Monitoring Officer'"/>
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to assign project.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.monitoringOfficerName},subTitle='Assign projects to Monitoring Officer',size='govuk-heading-xl'" />
+                <form th:action="@{/monitoring-officer/{projectMonitoringOfficerId}/assign(projectMonitoringOfficerId=${model.projectMonitoringOfficerId})}"
+                      method="POST">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" th:for="${form.projectId}">
+                            Enter a project number or project name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('form.projectId')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('form.projectId')}" th:text="${err}"></span>
+                        </th:block>
+                        <select id="projectId"
+                                th:field="${form.projectId}"
+                                th:errorclass="govuk-input--error"
+                                class="govuk-select"
+                                data-auto-complete="">
+                            <option value="">Select</option>
+                            <option th:each="project : ${model.unassignedProjects}"
+                                    th:value="${project.projectId}"
+                                    th:text="|${project.applicationId} - ${project.projectName}|"></option>
+                        </select>
+                    </div>
+                    <div class="govuk-form-group">
+                        <button type="submit" th:disabled="${ #lists.isEmpty(model.unassignedProjects) }"
+                                data-auto-complete-submit=""
+                                class="govuk-button">Assign</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half">
+                <span class="govuk-body govuk-!-font-size-48 govuk-!-font-weight-bold"
+                      th:text="${model.assignedProjectsCount}">20</span>
+                <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">assigned projects</span>
+            </div>
+        </div>
+
+        <div class="table-overflow">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Project number</th>
+                    <th class="govuk-table__header" scope="col">Project name</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row"
+                    th:each="project : ${model.assignedProjects}">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link"
+                           th:href="@{~/management/competition/{competitionId}/application/{applicationId}(competitionId=${project.competitionId},applicationId=${project.applicationId})}"
+                           th:text="${project.applicationId}"></a>
+                    </td>
+                    <td class="govuk-table__cell" th:text="${project.projectName}"></td>
+                    <td class="govuk-table__cell" th:text="${project.leadOrganisationName}"></td>
+                    <td class="govuk-table__cell alignright">
+                        <a class="govuk-link"
+                           th:href="@{/monitoring-officer/{projectMonitoringOfficerId}/unassign/{projectId}
+                                   (projectMonitoringOfficerId=${model.projectMonitoringOfficerId}, projectId=${project.projectId})}">Remove</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

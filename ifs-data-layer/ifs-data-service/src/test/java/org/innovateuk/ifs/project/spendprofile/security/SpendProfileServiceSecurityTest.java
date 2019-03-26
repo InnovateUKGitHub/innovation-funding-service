@@ -41,7 +41,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testGenerateSpendProfile() {
+    public void generateSpendProfile() {
 
         asList(Role.values()).forEach(role -> {
             Role roleResource = Role.getByName(role.getName());
@@ -62,7 +62,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testGenerateSpendProfileForPartnerOrganisation() {
+    public void generateSpendProfileForPartnerOrganisation() {
 
         asList(Role.values()).forEach(role -> {
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
@@ -82,7 +82,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testGetSpendProfileTable() {
+    public void getSpendProfileTable() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -95,12 +95,13 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).monitoringOfficerCanViewProjectsSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
     @Test
-    public void testGetSpendProfileCSV() {
+    public void getSpendProfileCSV() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -120,7 +121,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testGetSpendProfile() {
+    public void getSpendProfile() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -133,12 +134,13 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).monitoringOfficerCanViewProjectsSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
     @Test
-    public void testSaveSpendProfile() {
+    public void saveSpendProfile() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -156,7 +158,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testApproveOrRejectSpendProfile() {
+    public void approveOrRejectSpendProfile() {
 
         List<Role> nonCompAdminRoles = getNonProjectFinanceUserRoles();
         nonCompAdminRoles.forEach(role -> {
@@ -172,7 +174,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testGetSpendProfileStatusByProjectId() {
+    public void getSpendProfileStatusByProjectId() {
 
         List<Role> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
         nonCompAdminRoles.forEach(role -> {
@@ -202,7 +204,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testMarkSpendProfileComplete() {
+    public void markSpendProfileComplete() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -218,7 +220,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
-    public void testCompleteSpendProfilesReview() {
+    public void completeSpendProfilesReview() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
         assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId.id()),

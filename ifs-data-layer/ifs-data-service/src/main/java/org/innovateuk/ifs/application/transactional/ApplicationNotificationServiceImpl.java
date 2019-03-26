@@ -147,26 +147,49 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             application.getLeadApplicant().getEmail()
                     );
 
-                    Map<String, Object> notificationArguments = new HashMap<>();
                     Competition competition = application.getCompetition();
+                    Notification notification;
+                    if (competition.isH2020()) {
+                        notification = horizon2020GrantTransferNotification(from, to, application);
+                    } else {
+                        notification = applicationSubmitNotification(from, to, application, competition);
+                    }
 
-                    notificationArguments.put("applicationName", application.getName());
-                    notificationArguments.put("competitionName", competition.getName());
-                    notificationArguments.put("webBaseUrl", webBaseUrl);
-
-                    Notification notification = new Notification(
-                            from,
-                            singletonList(to),
-                            Notifications.APPLICATION_SUBMITTED,
-                            notificationArguments
-                    );
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
                 });
     }
 
+    private Notification horizon2020GrantTransferNotification(NotificationSource from, NotificationTarget to, Application application) {
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationName", application.getName());
+
+        return new Notification(
+                from,
+                singletonList(to),
+                Notifications.HORIZON_2020_APPLICATION_SUBMITTED,
+                notificationArguments
+        );
+    }
+
+    private Notification applicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("competitionName", competition.getName());
+        notificationArguments.put("webBaseUrl", webBaseUrl);
+
+        return new Notification(
+                from,
+                singletonList(to),
+                Notifications.APPLICATION_SUBMITTED,
+                notificationArguments
+        );
+    }
+
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+        HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE
     }
 }

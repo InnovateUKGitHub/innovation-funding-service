@@ -1,0 +1,1 @@
+ALTER TABLE project_user ADD UNIQUE unique_project_users(user_id, project_id, project_role);

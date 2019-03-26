@@ -74,14 +74,6 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
 
-    @Spy
-    @InjectMocks
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -224,7 +216,33 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
         assertFalse(submitForm.isAgreeTerms());
         assertEquals("validation.application.procurement.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
+    }
 
+    @Test
+    public void applicationSummaryH2020SubmitAgreeToTerms() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(post("/application/" + application.getId() + "/summary")
+                                                   .param("agreeTerms", "false")
+                                                   .param("submit-application", ""))
+                .andExpect(redirectedUrl("/application/" + application.getId() + "/summary"))
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getFlashMap().get(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME);
+        ApplicationSubmitForm submitForm = (ApplicationSubmitForm) result.getFlashMap().get(APPLICATION_SUBMIT_FROM_ATTR_NAME);
+
+        assertFalse(submitForm.isAgreeTerms());
+        assertEquals("validation.application.h2020.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
     }
 
     @Test
@@ -255,6 +273,25 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionResource));
+    }
+
+    @Test
+    public void h2020GrantTransferTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.SUBMITTED);
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
+        app.setCompetition(competition.getId());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
+                .andExpect(view().name("h2020-grant-transfer-track"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", competition));
 
     }
 

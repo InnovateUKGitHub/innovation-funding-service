@@ -38,8 +38,8 @@ Applications Dashboard
 Submitted applications
     [Documentation]    INFUND-7367 INFUND-7371
     [Tags]
-    When the user clicks the button/link  link = Submitted applications
-    And the user should see the element   jQuery = td:contains("Intelligent Building") ~ td:nth-child(4):contains("Digital manufacturing")
+    Given the user clicks the button/link  link = Submitted applications
+    Then the user should see the element   jQuery = td:contains("Intelligent Building") ~ td:nth-child(4):contains("Digital manufacturing")
     And the user should see the element   jQuery = .pagination-part-title:contains("21 to 40")
 
 Submitted applications Key Statistics
@@ -59,19 +59,19 @@ Submitted applications View completed applications
 Sort by Lead
     [Documentation]    INFUND-8012
     [Tags]
-    When the application list is sorted by            Lead
+    Given the application list is sorted by            Lead
     Then the applications should be sorted by column  3
 
 Sort by Application number
     [Documentation]    INFUND-8012
     [Tags]
-    When the application list is sorted by            Application no.
+    Given the application list is sorted by            Application no.
     Then the applications should be sorted by column  1
 
 Finances are showing in the list
     [Documentation]    INFUND-7371
     [Tags]
-    Then the user should see the element           jQuery = td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}")
+    Given the user should see the element           jQuery = td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}")
     And the user should see the element            jQuery = td:contains("${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}")
 
 Only applications from this competition should be visible
@@ -91,12 +91,12 @@ Filter by application number
 Next/Previous pagination on submitted applications
     [Documentation]    INFUND-8012
     [Tags]
-    When the user clicks the button/link     jQuery = .pagination-label:contains("Next")
-    Then the user should see the element     jQuery = .pagination-part-title:contains("1 to 20")
-    And the user should see the element      jQuery = .pagination-part-title:contains("41 to")
-    And the user clicks the button/link      jQuery = .pagination-label:contains("Previous")
-    And the user should not see the element  jQuery = .pagination-label:contains("Previous")
-    And the user should not see the element  jQuery = .pagination-part-title:contains("41 to")
+    Given the user clicks the button/link     jQuery = .pagination-label:contains("Next")
+    And the user should see the element      jQuery = .pagination-part-title:contains("1 to 20")
+    And the user should see the element       jQuery = .pagination-part-title:contains("41 to")
+    When the user clicks the button/link      jQuery = .pagination-label:contains("Previous")
+    Then the user should not see the element  jQuery = .pagination-label:contains("Previous")
+    And the user should not see the element   jQuery = .pagination-part-title:contains("41 to")
 
 Page list pagination on submitted applications
     [Documentation]    INFUND-8012
@@ -109,13 +109,8 @@ Page list pagination on submitted applications
 Next/Previous pagination on all applications
     [Documentation]    INFUND-8010
     [Tags]
-    [Setup]    the user clicks the button/link  link = All applications
-    When the user clicks the button/link        jQuery = .pagination-label:contains("Next")
-    Then the user should see the element        jQuery = .pagination-part-title:contains("1 to 20")
-    And the user should see the element         jQuery = .pagination-part-title:contains("41 to")
-    When the user clicks the button/link        jQuery = .pagination-label:contains("Previous")
-    Then the user should not see the element    jQuery = .pagination-label:contains("Previous")
-    And the user should not see the element     jQuery = .pagination-part-title:contains("41 to")
+    Given the user clicks the button/link  link = All applications
+    Then the user should see the Next/Previous links on all applicaitons page
 
 Page list pagination on all applications
     [Documentation]    INFUND-8010
@@ -159,3 +154,11 @@ User opens the excel and checks the content
     should be equal    ${APPLICATION_TITLE_3}    ${IN_ASSESSMENT_APPLICATION_3_TITLE}
     ${LEAD_ORGANISATION_EMAIL_3} =    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
     should be equal    ${LEAD_ORGANISATION_EMAIL_3}    ${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}
+
+the user should see the Next/Previous links on all applicaitons page
+    the user clicks the button/link         jQuery = .pagination-label:contains("Next")
+    the user should see the element         jQuery = .pagination-part-title:contains("1 to 20")
+    the user should see the element         jQuery = .pagination-part-title:contains("41 to")
+    the user clicks the button/link         jQuery = .pagination-label:contains("Previous")
+    the user should not see the element     jQuery = .pagination-label:contains("Previous")
+    the user should not see the element     jQuery = .pagination-part-title:contains("41 to")

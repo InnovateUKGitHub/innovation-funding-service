@@ -1,7 +1,12 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.ZonedDateTime;
+
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 
 public class PublicContentItemResource {
     private PublicContentResource publicContentResource;
@@ -13,16 +18,18 @@ public class PublicContentItemResource {
     private Boolean isNonIfs;
     private Boolean setupComplete;
     private FundingType fundingType;
+    private String competitionType;
 
     public PublicContentItemResource() {
     }
 
-    public PublicContentItemResource(PublicContentResource publicContentResource, String competitionTitle, ZonedDateTime competitionOpenDate, ZonedDateTime competitionCloseDate, ZonedDateTime registrationCloseDate) {
+    public PublicContentItemResource(PublicContentResource publicContentResource, String competitionTitle, ZonedDateTime competitionOpenDate, ZonedDateTime competitionCloseDate, ZonedDateTime registrationCloseDate, String competitionType) {
         this.publicContentResource = publicContentResource;
         this.competitionTitle = competitionTitle;
         this.competitionOpenDate = competitionOpenDate;
         this.competitionCloseDate = competitionCloseDate;
         this.registrationCloseDate = registrationCloseDate;
+        this.competitionType = competitionType;
     }
 
     public PublicContentResource getPublicContentResource() {
@@ -93,8 +100,22 @@ public class PublicContentItemResource {
         return fundingType;
     }
 
-    public PublicContentItemResource setFundingType(FundingType fundingType) {
+    public void setFundingType(FundingType fundingType) {
         this.fundingType = fundingType;
-        return this;
+    }
+
+    public String getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(String competitionType) {
+        this.competitionType = competitionType;
+    }
+
+    @JsonIgnore
+    public boolean isH2020() {
+        return ofNullable(competitionType)
+                .map(name -> name.equals(H2020_TYPE_NAME))
+                .orElse(false);
     }
 }
