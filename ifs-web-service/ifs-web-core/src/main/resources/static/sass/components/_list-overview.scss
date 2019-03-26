@@ -239,7 +239,7 @@ ol {
     }
   }
 
-  .ifs-list--number {
+  &.ifs-list--number {
     list-style-type: none;
     counter-reset: item;
     margin: 0;
@@ -258,7 +258,7 @@ ol {
       }
 
       ol {
-        .ifs-list--number {
+        &.ifs-list--number {
           list-style-type: none;
           counter-reset: item;
           margin: 0;
