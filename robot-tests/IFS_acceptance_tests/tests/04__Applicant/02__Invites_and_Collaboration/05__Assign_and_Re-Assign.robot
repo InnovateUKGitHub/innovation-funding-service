@@ -73,7 +73,7 @@ Collaborator should see the terms and conditions from the overview page
     Given the user clicks the button/link          link = Application overview
     When The user clicks the button/link           link = View the award terms and conditions
     Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element            jQuery = h2:contains("Entire agreement")
+    And the user should see the element            jQuery = li:contains("Entire agreement")
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
