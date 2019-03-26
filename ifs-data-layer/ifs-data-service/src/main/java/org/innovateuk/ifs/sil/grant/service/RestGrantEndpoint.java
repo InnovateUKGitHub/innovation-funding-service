@@ -22,6 +22,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_PROCESS_SEND_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 
 @Component
 public class RestGrantEndpoint implements GrantEndpoint {
@@ -48,11 +49,11 @@ public class RestGrantEndpoint implements GrantEndpoint {
 
         return response.mapLeftOrRight(
                 failure -> {
-                    LOG.debug("Sent grant NOK : " + JsonMappingUtil.toJson(grant));
+                    LOG.debug("Sent grant FAILURE : " + toJson(grant));
                     return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED, failure.getStatusCode()));
                 },
                 success -> {
-                    LOG.debug("Sent grant OK : " + JsonMappingUtil.toJson(grant));
+                    LOG.debug("Sent grant SUCCESS : " + toJson(grant));
                     return serviceSuccess();
                 }
         );
