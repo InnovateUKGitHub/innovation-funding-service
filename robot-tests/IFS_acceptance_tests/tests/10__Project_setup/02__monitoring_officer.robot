@@ -401,10 +401,10 @@ comp admin assign and remove project to MO
     comp admin remove project assigned to MO      ${Assign_Project}
 
 search for MO
-    the element should be disabled      jQuery = button:contains("View monitoring officer")
+    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
     input text                          id = userId    Orvill
     the user clicks the button/link     jQuery = ul li:contains("Orville Gibbs")
-    the user clicks the button/link     jQuery = button:contains("View monitoring officer")
+    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
 Custom suite teardown
     the user closes the browser
