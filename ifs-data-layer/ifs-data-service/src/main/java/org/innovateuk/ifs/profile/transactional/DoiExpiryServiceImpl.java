@@ -12,7 +12,6 @@ import org.innovateuk.ifs.profile.repository.AffiliationRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,20 +32,27 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
     private static final DateTimeFormatter formatter = ofPattern("d MMMM yyyy");
     private static final Log LOG = LogFactory.getLog(DoiExpiryServiceImpl.class);
 
-    @Autowired
-    private AffiliationRepository affiliationRepository;
+    private final AffiliationRepository affiliationRepository;
 
-    @Autowired
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private final SystemNotificationSource systemNotificationSource;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
+    private final String webBaseUrl;
+
+    public DoiExpiryServiceImpl(AffiliationRepository affiliationRepository,
+                                ProfileRepository profileRepository,
+                                NotificationService notificationService,
+                                SystemNotificationSource systemNotificationSource,
+                                @Value("${ifs.web.baseURL}") String webBaseUrl) {
+        this.affiliationRepository = affiliationRepository;
+        this.profileRepository = profileRepository;
+        this.notificationService = notificationService;
+        this.systemNotificationSource = systemNotificationSource;
+        this.webBaseUrl = webBaseUrl;
+    }
 
     @Override
     @Transactional
@@ -74,7 +80,7 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
                         "affiliationModifiedDate", user.getAffiliations().stream().findFirst().get().getModifiedOn().format(formatter))
         );
 
-        notificationService.sendNotificationWithFlush(notification, EMAIL);
+        notificationService.sendNotificationWithFlush(notification, EMAIL).getSuccess();
 
         profileRepository.findById(user.getProfileId()).get().setDoiNotifiedOn(ZonedDateTime.now());
     }

@@ -9,11 +9,6 @@ import org.springframework.data.repository.Repository;
 
 import java.time.ZonedDateTime;
 
-/**
- * This interface is used to generate Spring Data Repositories.
- * For more info:
- * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
- */
 public interface AffiliationRepository extends Repository<Affiliation, Long> {
 
     @Query("SELECT u FROM User u" +

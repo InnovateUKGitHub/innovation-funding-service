@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Processor that sends projects data to grant service.
+ * Processor that checks for expired DOIs.
  */
 @Component
 @Profile("!integration-test")
