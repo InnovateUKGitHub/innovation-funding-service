@@ -6,12 +6,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -34,15 +37,18 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private OrganisationService organisationService;
+    private ProjectMapper projectMapper;
 
     public ProjectMonitoringOfficerServiceImpl(ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository,
                                                ProjectRepository projectRepository,
                                                UserRepository userRepository,
-                                               OrganisationService organisationService) {
+                                               OrganisationService organisationService,
+                                               ProjectMapper projectMapper) {
         this.projectMonitoringOfficerRepository = projectMonitoringOfficerRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.organisationService = organisationService;
+        this.projectMapper = projectMapper;
     }
 
     @Override
@@ -90,6 +96,15 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     public ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId) {
         projectMonitoringOfficerRepository.deleteByUserIdAndProjectId(userId, projectId);
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId) {
+        List<ProjectMonitoringOfficer> monitoringOfficers = projectMonitoringOfficerRepository.findByUserId(userId);
+        return serviceSuccess(monitoringOfficers.stream()
+                .map(ProjectMonitoringOfficer::getProcess)
+                .map(projectMapper::mapToResource)
+                .collect(toList()));
     }
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {

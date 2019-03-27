@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.monitoring.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -28,4 +29,8 @@ public interface ProjectMonitoringOfficerService {
             description = "Only comp admin, project finance and ifs administrators can unassign projects from a monitoring officer")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId);
+
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'GET_MONITORING_OFFICER_PROJECTS')")
+    ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId);
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.monitoring.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,4 +40,10 @@ public class ProjectMonitoringOfficerController {
     public RestResult<Void> unassignProjectFromMonitoringOfficer(@PathVariable long userId, @PathVariable long projectId) {
         return projectMonitoringOfficerService.unassignProjectFromMonitoringOfficer(userId, projectId).toPostResponse();
     }
+
+    @GetMapping("/monitoring-officer/projects/{userId}")
+    public RestResult<List<ProjectResource>> getMonitoringOfficerProjects(@PathVariable("userId") final long userId) {
+        return projectMonitoringOfficerService.getMonitoringOfficerProjects(userId).toGetResponse();
+    }
+
 }

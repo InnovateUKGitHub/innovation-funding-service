@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -46,5 +47,21 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Internal users can assign Monitoring Officers on any Project")
     public boolean internalUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
         return isInternal(user) && isProjectInSetup(project.getId());
+    }
+
+    @PermissionRule(
+            value = "GET_MONITORING_OFFICER_PROJECTS",
+            description = "Monitoring officers can get their own projects."
+    )
+    public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
+        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(Role.MONITORING_OFFICER);
+    }
+
+    @PermissionRule(
+            value = "GET_MONITORING_OFFICER_PROJECTS",
+            description = "Monitoring officers can get their own projects."
+    )
+    public boolean internalUsersCanSeeMonitoringOfficerProjects(UserResource monitoringOfficerUser, UserResource user) {
+        return isInternal(user);
     }
 }

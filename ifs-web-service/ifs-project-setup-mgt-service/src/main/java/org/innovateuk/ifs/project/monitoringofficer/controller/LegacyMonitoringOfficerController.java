@@ -9,11 +9,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -22,8 +22,8 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,7 +59,7 @@ public class LegacyMonitoringOfficerController {
     private StatusService statusService;
 
     @Autowired
-    private MonitoringOfficerService monitoringOfficerService;
+    private MonitoringOfficerRestService monitoringOfficerService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -77,7 +77,7 @@ public class LegacyMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
     }
@@ -89,7 +89,7 @@ public class LegacyMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
         MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
     }
@@ -127,7 +127,7 @@ public class LegacyMonitoringOfficerController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             ServiceResult<Void> updateResult = monitoringOfficerService.updateMonitoringOfficer(projectId, form.getFirstName(),
-                    form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
+                    form.getLastName(), form.getEmailAddress(), form.getPhoneNumber()).toServiceResult();
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));

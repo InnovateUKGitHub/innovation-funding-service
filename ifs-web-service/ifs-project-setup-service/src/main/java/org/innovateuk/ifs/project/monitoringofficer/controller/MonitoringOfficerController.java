@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class MonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private MonitoringOfficerService monitoringOfficerService;
+    private MonitoringOfficerRestService monitoringOfficerService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
@@ -51,7 +51,7 @@ public class MonitoringOfficerController {
 
     private MonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         return new MonitoringOfficerViewModel(project, monitoringOfficer);
     }
 }

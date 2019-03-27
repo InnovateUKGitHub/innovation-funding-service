@@ -97,7 +97,7 @@ public class ApplicationFinanceController {
 
     @GetMapping("/financeDetails/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeDetails(@PathVariable("applicationId") final Long applicationId) {
-        return financeService.financeDetails(applicationId).toGetResponse();
+         return financeService.financeDetails(applicationId).toGetResponse();
     }
 
     @GetMapping("/financeTotals/{applicationId}")

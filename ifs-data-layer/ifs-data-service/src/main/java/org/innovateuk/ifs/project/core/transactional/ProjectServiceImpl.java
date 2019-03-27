@@ -18,8 +18,6 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -37,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -77,9 +74,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
-    @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
-
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -102,7 +96,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseFailingOrSucceedingResult::isFailure);
 
-        return  anyProjectCreationFailed ?
+        return anyProjectCreationFailed ?
                 serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS) : serviceSuccess();
     }
 
@@ -110,16 +104,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Transactional
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<ProjectMonitoringOfficer> monitoringOfficers = projectMonitoringOfficerRepository.findByUserId(userId);
-
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess);
-        List<Project> monitoringOfficerProjects = simpleMap(monitoringOfficers, ProjectMonitoringOfficer::getProcess);
-
-        return serviceSuccess(
-                concat(projects.stream(), monitoringOfficerProjects.stream())
-                        .distinct()
-                        .map(projectMapper::mapToResource)
-                        .collect(toList())
+        return serviceSuccess(projectUsers
+                .stream()
+                .map(ProjectUser::getProcess)
+                .distinct()
+                .map(projectMapper::mapToResource)
+                .collect(toList())
         );
     }
 
@@ -141,7 +131,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 });
     }
 
-    private ServiceResult<ProjectUser> addProjectPartner(Project project, User user, Organisation organisation){
+    private ServiceResult<ProjectUser> addProjectPartner(Project project, User user, Organisation organisation) {
         List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
         Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(user.getId()));
         if (projectUser.isPresent()) {
@@ -197,7 +187,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return getProject(projectId).andOnSuccess(
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                                projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
+                        projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
         );
     }
@@ -262,7 +252,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
                 List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                                createPartnerOrganisation(application, project, org, leadApplicantRole));
+                        createPartnerOrganisation(application, project, org, leadApplicantRole));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
