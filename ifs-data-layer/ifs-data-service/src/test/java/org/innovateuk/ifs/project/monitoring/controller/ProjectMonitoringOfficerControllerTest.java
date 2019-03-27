@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -18,6 +21,20 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
     @Mock
     private ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+
+    @Test
+    public void findAll() throws Exception {
+        List<ProjectMonitoringOfficerResource> expected = singletonList(new ProjectMonitoringOfficerResource());
+
+        when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(projectMonitoringOfficerServiceMock).findAll();
+    }
+
 
     @Test
     public void getProjectMonitoringOfficer() throws Exception {

@@ -375,6 +375,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private SendNotificationsViewModel emptyViewModel() {
         List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
-        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
+        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName", false);
     }
 }

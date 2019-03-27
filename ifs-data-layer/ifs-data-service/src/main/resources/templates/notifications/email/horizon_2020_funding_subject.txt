@@ -1,0 +1,1 @@
+${competitionName}: Notification regarding your submission ${applicationId?c}: ${applicationName}

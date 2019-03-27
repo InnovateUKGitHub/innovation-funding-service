@@ -38,7 +38,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Transactional(readOnly = true)
 public class EuGrantTransferServiceImpl implements EuGrantTransferService {
 
-    static final LocalDate HORIZON_2020_START_DATE = LocalDate.of(2019, 4, 1);
+    @Value("#{T(java.time.LocalDate).parse('${ifs.data.horizon.2020.project.start.date:2019-04-01}')}")
+    private LocalDate horizon2020StartDate;
 
     @Value("${ifs.data.service.file.storage.eu.grant.transfer.agreement.max.filesize.bytes}")
     private Long maxFileSize;
@@ -119,9 +120,9 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
 
             ofNullable(euGrantTransferResource.getProjectEndDate()).ifPresent(endDate -> {
-                long duration = Period.between(HORIZON_2020_START_DATE, endDate).getMonths();
+                long duration = Period.between(horizon2020StartDate, endDate).getMonths();
                 domain.getApplication().setDurationInMonths(max(duration, 1L));
-                domain.getApplication().setStartDate(HORIZON_2020_START_DATE);
+                domain.getApplication().setStartDate(horizon2020StartDate);
             });
 
             ofNullable(euGrantTransferResource.getActionType())

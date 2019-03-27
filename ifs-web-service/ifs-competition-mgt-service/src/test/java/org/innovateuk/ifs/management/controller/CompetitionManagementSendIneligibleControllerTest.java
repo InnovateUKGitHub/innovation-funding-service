@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateRe
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.ineligible.controller.CompetitionManagementSendIneligibleController;
 import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
@@ -29,6 +31,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -50,6 +53,9 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
@@ -79,6 +85,9 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 .withUserName("other", leadApplicant, "an other")
                 .withUserId(1L, 2L, 3L)
                 .build(3);
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withName("Programme")
+                .build();
 
         InformIneligibleViewModel expectedViewModel =
                 new InformIneligibleViewModel(competitionId, applicationId, competitionName, applicationName, leadApplicant);
@@ -90,6 +99,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
                 .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/competition/application/{applicationId}/ineligible", applicationId))
                 .andExpect(status().isOk())
