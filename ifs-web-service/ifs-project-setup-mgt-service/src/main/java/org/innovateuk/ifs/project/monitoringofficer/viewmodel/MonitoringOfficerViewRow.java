@@ -11,13 +11,13 @@ public class MonitoringOfficerViewRow {
 
     private final long userId;
 
-    private final long assignedProjects;
+    private final long numberOfAssignedProjects;
 
-    public MonitoringOfficerViewRow(String firstName, String lastName, long userId, long assignedProjects) {
+    public MonitoringOfficerViewRow(String firstName, String lastName, long userId, long numberOfAssignedProjects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userId = userId;
-        this.assignedProjects = assignedProjects;
+        this.numberOfAssignedProjects = numberOfAssignedProjects;
     }
 
     public String getFirstName() {
@@ -36,7 +36,7 @@ public class MonitoringOfficerViewRow {
         return userId;
     }
 
-    public long getAssignedProjects() {
-        return assignedProjects;
+    public long getNumberOfAssignedProjects() {
+        return numberOfAssignedProjects;
     }
 }
