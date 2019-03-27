@@ -181,11 +181,11 @@
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
-                        <td class="govuk-table__cell" th:text="${funder.funder}">Funder Name</td>
+                        <td class="govuk-table__cell" th:text="${funder.funderOriginalName}">Funder Name</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
-                        <td class="govuk-table__cell" th:text="${funder.funder}">Co-Funder Name</td>
+                        <td class="govuk-table__cell" th:text="${funder.funderOriginalName}">Co-Funder Name</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
