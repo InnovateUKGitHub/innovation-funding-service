@@ -2,6 +2,8 @@ package org.innovateuk.ifs.management.ineligible.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -25,6 +27,9 @@ public class InformIneligibleModelPopulator {
     @Autowired
     private ApplicationNotificationTemplateRestService templateRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     public InformIneligibleViewModel populateModel(ApplicationResource applicationResource, InformIneligibleForm form) {
 
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationResource.getId()).getSuccess();
@@ -37,7 +42,18 @@ public class InformIneligibleModelPopulator {
         }
 
         if (form.getSubject() == null) {
-            form.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
+            CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+            if(competition.isH2020()) {
+                form.setSubject(String.format(
+                        "Notification regarding your submission %s: %s",
+                        applicationResource.getId(),
+                        applicationResource.getName()));
+            } else {
+                form.setSubject(String.format(
+                        "Notification regarding your application %s: %s",
+                        applicationResource.getId(),
+                        applicationResource.getName()));
+            }
         }
 
         return new InformIneligibleViewModel(

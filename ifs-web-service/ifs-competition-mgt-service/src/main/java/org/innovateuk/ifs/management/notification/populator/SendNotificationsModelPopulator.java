@@ -53,14 +53,19 @@ public class SendNotificationsModelPopulator {
             tryToPrePopulateMessage(competitionId, successfulCount, unsuccessfulCount, onHoldCount, form);
         }
 
-        return new SendNotificationsViewModel(filteredApplications, successfulCount, unsuccessfulCount, onHoldCount, competitionId, competitionResource.getName());
+        return new SendNotificationsViewModel(filteredApplications,
+                                              successfulCount,
+                                              unsuccessfulCount,
+                                              onHoldCount,
+                                              competitionId,
+                                              competitionResource.getName(),
+                                              competitionResource.isH2020());
     }
 
     private long getApplicationCountByFundingDecision(List<ApplicationSummaryResource> filteredApplications, FundingDecision fundingDecision) {
         return filteredApplications.stream()
                 .filter(application -> application.getFundingDecision() == fundingDecision)
-                .collect(Collectors.toList())
-                .size();
+                .count();
     }
 
     private void tryToPrePopulateMessage(long competitionId, long successfulCount, long unsuccessfulCount, long onHoldCount, NotificationEmailsForm form) {
