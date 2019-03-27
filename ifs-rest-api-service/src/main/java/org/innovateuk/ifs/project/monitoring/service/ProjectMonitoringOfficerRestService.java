@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.monitoring.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 
+import java.util.List;
+
 public interface ProjectMonitoringOfficerRestService {
 
     RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long projectMonitoringOfficerId);
@@ -10,4 +12,6 @@ public interface ProjectMonitoringOfficerRestService {
     RestResult<Void> assignMonitoringOfficerToProject(long projectMonitoringOfficerId, long projectId);
 
     RestResult<Void> unassignMonitoringOfficerFromProject(long monitoringOfficerId, long projectId);
+
+    RestResult<List<ProjectMonitoringOfficerResource>> findAll();
 }

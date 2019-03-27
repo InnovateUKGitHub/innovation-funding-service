@@ -13,6 +13,7 @@ IFS.core.autoComplete = (function () {
       var autoCompleteElement = jQuery(s.autoCompleteElement)
       var autoCompleteSubmitElement = jQuery(s.autoCompleteSubmitElement)
       if (autoCompleteElement.length > 0) {
+        autoCompleteElement.val('')
         autoCompleteSubmitElement.prop('disabled', true)
         jQuery(document).on('keydown', s.autoCompleteWrapper, function (e) {
           if (e.which !== 13 && e.which !== 32) {
@@ -25,9 +26,10 @@ IFS.core.autoComplete = (function () {
           showAllValues: showAllValues,
           defaultValue: '',
           confirmOnBlur: false,
+          displayMenu: 'overlay',
           onConfirm: function (confirmed) {
-            autoCompleteElement.children('option').attr('selected', false)
-            autoCompleteElement.children('option:contains(' + confirmed + ')').attr('selected', 'selected')
+            var selectedUserId = autoCompleteElement.children('option:contains(' + confirmed + ')').val()
+            autoCompleteElement.val(selectedUserId)
             autoCompleteSubmitElement.prop('disabled', false)
           }
         })
