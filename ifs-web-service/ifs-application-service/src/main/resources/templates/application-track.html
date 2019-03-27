@@ -99,8 +99,13 @@
 
 
         <div class="govuk-!-margin-top-6">
-            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Finished</a>
+            <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Give us feedback</a>
         </div>
+
+        <p class="govuk-body govuk-!-margin-bottom-6">
+            <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
+        </p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
