@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
@@ -39,6 +40,6 @@ public class AdditionalInfoFormPopulatorTest {
         assertEquals("p123", form.getPafNumber());
         assertEquals("b123", form.getBudgetCode());
         assertEquals(CompetitionFundersFixture.getTestCoFunders().size(), form.getFundersCount());
-        assertEquals("coFunder1", form.getFunders().get(0).getFunder());
+        assertEquals(Funder.ADVANCED_PROPULSION_CENTRE_APC, form.getFunders().get(0).getFunder());
     }
 }
