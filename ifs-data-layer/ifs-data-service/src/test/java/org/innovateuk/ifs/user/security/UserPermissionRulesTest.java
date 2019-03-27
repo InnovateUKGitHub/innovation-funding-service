@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -475,14 +474,24 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void usersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
-        assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
+        assertTrue(rules.canUpdateUserDetails(user, user));
     }
 
     @Test
     public void usersCanUpdateTheirOwnProfilesButAttemptingToUpdateAnotherUsersProfile() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.usersCanUpdateTheirOwnProfiles(user, anotherUser));
+        assertFalse(rules.canUpdateUserDetails(user, anotherUser));
+    }
+
+    @Test
+    public void allowedRolesCanUpdateUsersToMonitoringOfficers() {
+        UserResource userToUpdate = newUserResource().build();
+
+        assertTrue(rules.canUpdateUserDetails(userToUpdate, compAdminUser()));
+        assertTrue(rules.canUpdateUserDetails(userToUpdate, projectFinanceUser()));
+        assertTrue(rules.canUpdateUserDetails(userToUpdate, ifsAdminUser()));
+        assertFalse(rules.canUpdateUserDetails(userToUpdate, assessorUser()));
     }
 
     @Test
@@ -802,11 +811,33 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void assessorCanRequestApplicantRole() {
         UserResource otherAssessor = newUserResource().withRolesGlobal(asList(ASSESSOR)).build();
 
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
 
-        assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+        assertTrue(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+
+    }
+
+    @Test
+    public void correctRolesCanGrantMonitoringOfficerRole() {
+        GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
+
+        assertTrue(rules.canGrantSystemRolesToUsers(grantMonitoringOfficerRole, compAdminUser()));
+        assertTrue(rules.canGrantSystemRolesToUsers(grantMonitoringOfficerRole, projectFinanceUser()));
+        assertTrue(rules.canGrantSystemRolesToUsers(grantMonitoringOfficerRole, ifsAdminUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(grantMonitoringOfficerRole, assessorUser()));
+
+    }
+
+    @Test
+    public void usersAllowedToGrantMonitoringOfficerRoleCannotGrantOtherRoles() {
+        GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), INNOVATION_LEAD);
+
+        assertFalse(rules.canGrantSystemRolesToUsers(grantInnovationLeadRole, compAdminUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(grantInnovationLeadRole, projectFinanceUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(grantInnovationLeadRole, ifsAdminUser()));
+        assertFalse(rules.canGrantSystemRolesToUsers(grantInnovationLeadRole, assessorUser()));
 
     }
 

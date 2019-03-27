@@ -58,7 +58,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsEditResource), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(rules).canUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -87,7 +87,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.updateProfileAgreement(userId), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(rules).canUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -129,7 +129,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.updateUserProfile(userId, profile), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(rules).canUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }

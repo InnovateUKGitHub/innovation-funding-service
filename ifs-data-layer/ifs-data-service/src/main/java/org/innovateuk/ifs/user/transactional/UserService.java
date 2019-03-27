@@ -35,7 +35,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
 
-    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE') or hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -50,7 +50,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
     ServiceResult<Void> agreeNewTermsAndConditions(long userId);
 
-    @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE') or hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")

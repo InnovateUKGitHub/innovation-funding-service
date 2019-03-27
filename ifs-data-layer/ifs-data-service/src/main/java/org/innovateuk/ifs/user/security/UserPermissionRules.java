@@ -32,8 +32,13 @@ import static java.util.Collections.disjoint;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -158,9 +163,9 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
-    public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
-        return userToUpdate.getId().equals(user.getId());
+    @PermissionRule(value = "UPDATE", description = "A user can update User details")
+    public boolean canUpdateUserDetails(UserResource userToUpdate, UserResource user) {
+        return userIsUpdatingTheirOwnProfile(userToUpdate, user) || isAllowedToUpdateUsersToMonitoringOfficers(user);
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
@@ -251,11 +256,27 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can request applicant role")
-    public boolean assessorCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
+    @PermissionRule(value = "GRANT_ROLE", description = "A user can grant a role")
+    public boolean canGrantSystemRolesToUsers(GrantRoleCommand roleCommand, UserResource user) {
+        return isAssessorRequestingApplicantRole(roleCommand, user) || isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(roleCommand, user);
+    }
+
+    private boolean isAssessorRequestingApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(ASSESSOR);
+    }
+
+    private boolean userIsUpdatingTheirOwnProfile(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.getId().equals(user.getId());
+    }
+
+    private boolean isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(GrantRoleCommand roleCommand, UserResource user) {
+        return isAllowedToUpdateUsersToMonitoringOfficers(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+    }
+
+    private boolean isAllowedToUpdateUsersToMonitoringOfficers(UserResource user) {
+        return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 
     private boolean userIsInCompetitionAssignedToStakeholder(UserResource userToView, UserResource stakeholder) {
