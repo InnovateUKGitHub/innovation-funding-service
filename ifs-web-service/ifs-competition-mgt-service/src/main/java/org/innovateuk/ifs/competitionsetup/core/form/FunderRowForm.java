@@ -22,6 +22,10 @@ public class FunderRowForm {
     @NotNull
     private Boolean coFunder;
 
+    public FunderRowForm(){
+        // For Spring binding
+    }
+
     public FunderRowForm(CompetitionFunderResource funderResource) {
         // IFS-3807. If there is no corresponding Funder enum to the free text field it is set to null. This has the
         // effect that the user will be forced to select from the approved list on editing. When IFS-5508 is completed

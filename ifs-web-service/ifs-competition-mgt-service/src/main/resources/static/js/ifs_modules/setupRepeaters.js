@@ -193,7 +193,24 @@ IFS.competitionManagement.repeater = (function () {
       var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="govuk-form-group">' +
-                        '<input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="govuk-input govuk-input--width-30" id="' + idCount + '-funder" name="funders[' + count + '].funder" value="">' +
+                        '<select class="govuk-select"  id="' + idCount + '-funder" name="funders[' + count + '].funder">' +
+                          '<option value="">Please Select</option>' +
+                          '<option value="ADVANCED_PROPULSION_CENTRE_APC">Advanced Propulsion Centre (APC)</option>' +
+                          '<option value="AEROSPACE_TECHNOLOGY_INSTITUTE_ATI">Aerospace Technology Institute (ATI)</option>' +
+                          '<option value="CENTRE_FOR_CONNECTED_AND_AUTONOMOUS_VEHICLES_CCAV">Centre for Connected and Autonomous Vehicles (CCAV)</option>' +
+                          '<option value="DEPARTMENT_FOR_BUSINESS_ENERGY_AND_INDUSTRIAL_STRATEGY_BEIS">Department for Business, Energy and Industrial Strategy (BEIS)</option>' +
+                          '<option value="DEPARTMENT_FOR_DIGITAL_CULTURE_MEDIA_AND_SPORT_DCMS">Department for Digital, Culture, Media and Sport (DCMS)</option>' +
+                          '<option value="EUROPEAN_EUREKA_EUROSTARS_AND_OTHER_EU">European: Eureka, Eurostars and other EU</option>' +
+                          '<option value="INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF">Industrial Strategy Challenge Fund (ISCF)</option>' +
+                          '<option value="INNOVATE_UK_CORE_BUDGET">Innovate UK core budget</option>' +
+                          '<option value="SMART_OPEN">Smart Open</option>' +
+                          '<option value="INTEGRATED_DELIVERY_PLATFORM_IDP">Integrated Delivery Platform (IDP)</option>' +
+                          '<option value="INTERNATIONAL">International</option>' +
+                          '<option value="OFFICE_FOR_LIFE_SCIENCES_OLS">Office for Life Sciences (OLS)</option>' +
+                          '<option value="SMALL_BUSINESS_RESEARCH_INITIATIVE_SBRI">Small Business Research Initiative (SBRI)</option>' +
+                          '<option value="OTHER_STAKEHOLDERS">Other stakeholders</option>' +
+                          '<option value="OTHER_DELIVERY_PARTNERS">Other delivery partners</option>' +
+                        '</select>' +
                       '</div>' +
                     '</div>' +
                     '<div class="govuk-grid-column-one-half">' +
