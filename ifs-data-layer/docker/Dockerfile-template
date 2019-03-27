@@ -9,10 +9,22 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 
 VOLUME /mnt/ifs_storage
 
-RUN apt-get update && apt-get install rsync -y
+RUN apt-get update && apt-get install rsync mysql-client -y
 
 RUN groupadd -g @glusterGID@ gluster
 RUN useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
+
+RUN mkdir /tmp/ifs
+RUN mkdir /tmp/virus-scan-holding
+RUN mkdir /tmp/virus-scan-scanned
+
+RUN chown -R gluster:gluster /tmp/ifs
+RUN chown -R gluster:gluster /tmp/virus-scan-holding
+RUN chown -R gluster:gluster /tmp/virus-scan-scanned
+
+RUN chmod 777 /tmp/ifs
+RUN chmod 777 /tmp/virus-scan-holding
+RUN chmod 777 /tmp/virus-scan-scanned
 
 ADD newrelic.jar /
 ADD newrelic.yml /
