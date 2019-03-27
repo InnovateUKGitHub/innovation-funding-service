@@ -5,11 +5,13 @@ import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerRe
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
- * Controller to handle RESTful services related to inviting project monitoring officers
+ * Controller to handle RESTful services related to project monitoring officers
  */
 @RestController
-@RequestMapping("/monitoring-officer/{userId}")
+@RequestMapping("/monitoring-officer")
 public class ProjectMonitoringOfficerController {
 
     private ProjectMonitoringOfficerService projectMonitoringOfficerService;
@@ -18,17 +20,22 @@ public class ProjectMonitoringOfficerController {
         this.projectMonitoringOfficerService = projectMonitoringOfficerService;
     }
 
-    @GetMapping
+    @GetMapping("/find-all")
+    public RestResult<List<ProjectMonitoringOfficerResource>> findAll() {
+        return projectMonitoringOfficerService.findAll().toGetResponse();
+    }
+
+    @GetMapping("/{userId}")
     public RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(@PathVariable long userId) {
         return projectMonitoringOfficerService.getProjectMonitoringOfficer(userId).toGetResponse();
     }
 
-    @PostMapping("/assign/{projectId}")
+    @PostMapping("/{userId}/assign/{projectId}")
     public RestResult<Void> assignProjectToMonitoringOfficer(@PathVariable long userId, @PathVariable long projectId) {
         return projectMonitoringOfficerService.assignProjectToMonitoringOfficer(userId, projectId).toPostResponse();
     }
 
-    @PostMapping("/unassign/{projectId}")
+    @PostMapping("/{userId}/unassign/{projectId}")
     public RestResult<Void> unassignProjectFromMonitoringOfficer(@PathVariable long userId, @PathVariable long projectId) {
         return projectMonitoringOfficerService.unassignProjectFromMonitoringOfficer(userId, projectId).toPostResponse();
     }
