@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.form;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,8 +12,8 @@ import java.math.BigInteger;
  */
 public class FunderRowForm {
 
-    @NotBlank(message = "{validation.additionalinfoform.fundername.required}")
-    private String funder;
+    @NotNull(message = "{validation.additionalinfoform.fundername.required}")
+    private Funder funder;
 
     @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")
     @NotNull(message = "{validation.additionalinfoform.funderbudget.required}")
@@ -22,21 +22,20 @@ public class FunderRowForm {
     @NotNull
     private Boolean coFunder;
 
-    public FunderRowForm() {
-
-    }
-
     public FunderRowForm(CompetitionFunderResource funderResource) {
-        this.setFunder(funderResource.getFunder());
+        // IFS-3807. If there is no corresponding Funder enum to the free text field it is set to null. This has the
+        // effect that the user will be forced to select from the approved list on editing. When IFS-5508 is completed
+        // this should no longer be an issue as we will be saving the enum to the database.
+        this.setFunder(Funder.fromDisplayName(funderResource.getFunder()));
         this.setFunderBudget(funderResource.getFunderBudget());
         this.setCoFunder(funderResource.getCoFunder());
     }
 
-    public String getFunder() {
+    public Funder getFunder() {
         return funder;
     }
 
-    public void setFunder(String funder) {
+    public void setFunder(Funder funder) {
         this.funder = funder;
     }
 

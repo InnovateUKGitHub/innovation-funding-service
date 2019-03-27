@@ -38,13 +38,12 @@
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
-                        <input required="required"
-                               class="govuk-input govuk-input--width-30"
-                               th:errorclass="govuk-input--error"
-                               th:id="funders[__${iteration.index}__].funder"
-                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
-                               th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
-                                        data-maxlength-errormessage=#{validation.additionalinfoform.funder.size(null,null,'255')}" />
+                        <select class="govuk-select"
+                                th:id="funders[__${iteration.index}__].funder"
+                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}">
+                            <option value="" >Please Select</option>
+                            <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
+                        </select>
                     </div>
                 </div>
 

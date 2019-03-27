@@ -64,7 +64,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 		competition.setFunders(new ArrayList());
 		additionalInfoForm.getFunders().forEach(funder -> {
 			CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
-			competitionFunderResource.setFunder(funder.getFunder());
+			competitionFunderResource.setFunder(funder.getFunder().getDisplayName()); //qqRP todo - what happens if we don't have match?
 			competitionFunderResource.setFunderBudget(funder.getFunderBudget());
 			competitionFunderResource.setCoFunder(funder.getCoFunder());
 			competition.getFunders().add(competitionFunderResource);
