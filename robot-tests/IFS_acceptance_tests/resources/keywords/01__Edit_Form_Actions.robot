@@ -50,7 +50,7 @@ The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10    2000ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
@@ -58,19 +58,19 @@ The user enters text to a text field
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    element should contain    ${element}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10    5000ms    element should contain    ${element}    ${text}
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${textfield}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10    2000ms    textfield should contain    ${textfield}    ${text}
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible Without Screenshots   ${field}
-    Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
+    Wait Until Keyword Succeeds Without Screenshots     30s    2000ms    Input Text    ${field}    ${concatenated_string}
     Mouse Out                                           ${field}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
