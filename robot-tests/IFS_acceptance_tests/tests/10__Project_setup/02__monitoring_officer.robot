@@ -305,6 +305,11 @@ Assign MO role to existing IFS user
     Then the user should see exisitng IFS user details and add phone number
     And the user should see the element         jQuery = h1:contains("Steve Smith") span:contains("Assign projects to Monitoring Officer")
 
+Comp admin assign project existing IFS user MO
+    [Documentation]  IFS-5104
+    Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    Then the user logs in and see the assigned project
+
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
@@ -432,6 +437,10 @@ phone number: validations checks
     the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
+
+the user logs in and see the assigned project
+    log in as a different user            &{lead_applicant_credentials}
+    the user should see the element       jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
 
 Custom suite teardown
     the user closes the browser
