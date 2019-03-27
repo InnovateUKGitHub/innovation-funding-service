@@ -30,6 +30,8 @@ public class InProgressDashboardRowViewModelTest {
             assertThat(viewModel.isClosingToday(), equalTo(false));
         }
         assertThat(viewModel.isWithin24Hours(), equalTo(true));
+        assertThat(viewModel.isApplicationComplete(), equalTo(false));
+        assertThat(viewModel.getProgressMessage(), equalTo("50% complete"));
     }
 
     @Test
@@ -40,6 +42,8 @@ public class InProgressDashboardRowViewModelTest {
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/track"));
         assertThat(viewModel.getTitle(), equalTo( "Untitled application"));
+        assertThat(viewModel.isApplicationComplete(), equalTo(true));
+        assertThat(viewModel.getProgressMessage(), equalTo("Ready to review and submit"));
     }
 
     @Test
@@ -49,5 +53,7 @@ public class InProgressDashboardRowViewModelTest {
                 ZonedDateTime.now().plusDays(12), 12, 100 , true);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/summary"));
+        assertThat(viewModel.isApplicationComplete(), equalTo(true));
+        assertThat(viewModel.getProgressMessage(), equalTo("Ready to review and submit"));
     }
 }

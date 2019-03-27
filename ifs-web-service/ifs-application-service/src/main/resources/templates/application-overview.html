@@ -20,6 +20,12 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
+        <div class="govuk-!-margin-bottom-6">
+            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.applicationSubmitted and model.user.userIsLeadApplicant}">
+                <p class="govuk-body">Now your application is complete, you need to <a th:href="'#' + ${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}">review and submit</a> at the bottom of this page.</p>
+            </div>
+        </div>
+
         <th:block th:if="${model.currentCompetition.isH2020()}"
                   th:insert="fragments/elements :: h2020-information-panel" />
 
@@ -60,11 +66,7 @@
                 </th:block>
             </div>
         </div>
-        <div class="govuk-!-margin-bottom-6">
-            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.applicationSubmitted and model.user.userIsLeadApplicant}">
-                <p class="govuk-body">Now your application is complete, you need to review and then submit.</p>
-            </div>
-        </div>
+
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
             <th:block th:each="section,iteration : ${model.section.sections}"
                       th:with="fullyFundedCompetition=${model.currentCompetition.fullyFunded}">

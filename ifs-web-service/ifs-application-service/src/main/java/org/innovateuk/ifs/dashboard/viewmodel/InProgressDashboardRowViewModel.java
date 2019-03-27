@@ -90,6 +90,14 @@ public class InProgressDashboardRowViewModel extends
         return today.equals(endDay);
     }
 
+    public boolean isApplicationComplete() {
+        return applicationProgress == 100;
+    }
+
+    public String getProgressMessage() {
+        return isApplicationComplete() ? "Ready to review and submit" : applicationProgress + "% complete";
+    }
+
     @Override
     public String getLinkUrl() {
         if (isSubmitted()) {
