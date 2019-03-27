@@ -240,11 +240,13 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-    the user selects the index from the drop-down menu   12  id=actionType  #(IA) Innovation action
+    Input text                                           id = actionType    (CSA) Coordination and support action
+    the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and support action")
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
     the user clicks the button/link                      jQuery = label:contains("No")
     the user clicks the button/link                      id = mark-as-complete
+    the user clicks the button/link                      link = Return to application overview
     the user should see the element                      jQuery = li:contains("Application details") > .task-status-complete
 
 The user is able to complete Public description section

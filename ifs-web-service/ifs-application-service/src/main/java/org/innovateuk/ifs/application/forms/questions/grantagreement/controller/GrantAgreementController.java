@@ -80,7 +80,7 @@ public class GrantAgreementController {
         }
         ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
-        return saveAndReturn(applicationId);
+        return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
     }
 
     @PostMapping(params = "edit")

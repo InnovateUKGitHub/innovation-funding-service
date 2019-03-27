@@ -46,16 +46,32 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     }
 
     @Override
+    public ServiceResult<List<ProjectMonitoringOfficerResource>> findAll() {
+        return find(userRepository.findByRoles(MONITORING_OFFICER), notFoundError(User.class))
+                .andOnSuccessReturn(userList -> simpleMap(userList,
+                                                          user -> mapToProjectMonitoringOfficerResource(user).getSuccess()
+                                    )
+                );
+    }
+
+    private ServiceResult<ProjectMonitoringOfficerResource> mapToProjectMonitoringOfficerResource(User user) {
+        return getAssignedProjects(user.getId())
+                .andOnSuccess(assignedProjects -> getUnassignedProjects()
+                        .andOnSuccessReturn(unassignedProjects ->
+                                                    new ProjectMonitoringOfficerResource(user.getId(),
+                                                                                         user.getFirstName(),
+                                                                                         user.getLastName(),
+                                                                                         unassignedProjects,
+                                                                                         assignedProjects)
+                        )
+                );
+    }
+
+    @Override
     @Transactional
     public ServiceResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long userId) {
         return getMonitoringOfficerUser(userId)
-                .andOnSuccess(user -> getAssignedProjects(userId)
-                    .andOnSuccess(assignedProjects -> getUnassignedProjects()
-                        .andOnSuccessReturn(unassignedProjects -> new ProjectMonitoringOfficerResource(
-                                userId, user.getFirstName(), user.getLastName(), unassignedProjects, assignedProjects
-                        ))
-                    )
-                );
+                .andOnSuccess(this::mapToProjectMonitoringOfficerResource);
     }
 
     @Override

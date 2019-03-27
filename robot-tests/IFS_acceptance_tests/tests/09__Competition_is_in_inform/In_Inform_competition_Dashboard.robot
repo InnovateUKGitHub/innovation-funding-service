@@ -36,6 +36,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${proj_electric_drive}  ${application_ids['Electric Drive']}
@@ -45,9 +46,8 @@ ${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 Competition Dashboard
     [Documentation]    INFUND-7365  INFUND-7561 INFUND-7950
     [Tags]
-    Given The user should see the element      jQuery = span:contains("${INFORM_COMPETITION_NAME}")
-    Then the user should see the competition details
-    And the user should see milestones for the In inform competition
+    Given the user should see the competition details  ${INFORM_COMPETITION_NAME}  Inform  Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
+    Then the user should see milestones for the In inform competition
 
 Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
@@ -205,14 +205,6 @@ The user checks the ineligible and unsuccessful applications in the Previous tab
     the user clicks the button/link    link = ${NOT_EDITABLE_COMPETITION_NAME}
     the user should see the element    jQuery = td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     the user should see the element    jQuery = td:contains("${INFORM_COMPETITION_NAME_1}") ~ td:contains("Successful")
-
-the user should see the competition details
-    the user should see the element       jQuery = h1:contains("Inform")
-    the user should see the element       jQuery = dd:contains("Programme")
-    the user should see the element       jQuery = dd:contains("Materials and manufacturing")
-    the user should see the element       jQuery = dd:contains("Digital manufacturing")
-    the user should see the element       jQuery = a:contains("Invite assessors to assess the competition")
-    the user should not see the element   link = View and update competition setup
 
 the user should see milestones for the In inform competition
     the user should see the element    jQuery = .govuk-button:contains("Manage funding notifications")

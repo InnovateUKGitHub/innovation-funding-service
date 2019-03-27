@@ -64,6 +64,7 @@ CompAdmin should see Assessor's profile and Innovation Area
 
 CompAdmin Invites assessor to assess an application
     [Tags]  HappyPath
+    [Setup]  the user clicks the button/link       link = Dashboard
     Given comp admin navigate to manage applications
     Then comp admin allocate application to an assessor
 
@@ -163,12 +164,6 @@ Invited user accept the invitation and navigate to registration form
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")
     the user should see the element         jQuery = p strong:contains("${Assessor_e2e["email"]}")
-
-comp admin navigate to manage applications
-    the user clicks the button/link       link = Dashboard
-    the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    the user clicks the button/link       jQuery = a:contains("Manage assessments")
-    the user clicks the button/link       jQuery = a:contains("Manage applications")
 
 comp admin allocate application to an assessor
     the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
