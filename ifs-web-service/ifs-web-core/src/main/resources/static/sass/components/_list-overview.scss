@@ -238,38 +238,40 @@ ol {
       margin-left:-45px;
     }
   }
-}
 
-ol.ifs-list--number {
-  list-style-type: none;
-  counter-reset: item;
-  margin: 0;
-  padding: 0;
+  &.ifs-list--number {
+    list-style-type: none;
+    counter-reset: item;
+    margin: 0;
+    padding: 0;
 
-  > li {
-    display: table;
-    counter-increment: item;
-    margin-bottom: 0.6em;
-    font-weight: bold;
+    > li {
+      display: table;
+      counter-increment: item;
+      margin-bottom: 0.6em;
+      font-weight: bold;
 
-    &:before {
-      content: counters(item, ".") ". ";
-      display: table-cell;
-      padding-right: 0.6em;
-    }
+      &:before {
+        content: counters(item, ".") ". ";
+        display: table-cell;
+        padding-right: 0.6em;
+      }
 
-    ol.ifs-list--number {
-      list-style-type: none;
-      counter-reset: item;
-      margin: 0;
-      padding: 0;
+      ol {
+        &.ifs-list--number {
+          list-style-type: none;
+          counter-reset: item;
+          margin: 0;
+          padding: 0;
 
-      > li {
-        margin: 0;
-        font-weight: normal;
+          > li {
+            margin: 0;
+            font-weight: normal;
 
-        &:before {
-          content: counters(item, ".") " ";
+            &:before {
+              content: counters(item, ".") " ";
+            }
+          }
         }
       }
     }

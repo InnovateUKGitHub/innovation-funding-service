@@ -34,10 +34,12 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_2020_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -68,7 +70,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING,
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING
     }
 
     @Override
@@ -95,7 +97,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
                 success -> {
 
-                    Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess(), APPLICATION_FUNDING);
+                    Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess());
                     ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
@@ -119,8 +121,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
-        List<Application> applications = findApplicationsByIds(applicationIds);
-        return applications;
+        return (List) applicationRepository.findAllById(applicationIds);
     }
 
     private void setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
@@ -132,18 +133,10 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         });
     }
 
-    private List<Application> findApplicationsByIds(List<Long> applicationIds) {
-        return (List) applicationRepository.findAllById(applicationIds);
-    }
-
     private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
-        List<Application> applicationsInCompetition = applicationRepository.findByCompetitionId(competitionId);
 
-        List<Application> allowedApplications = applicationsInCompetition.stream()
-                .filter(application -> applicationFundingDecisionValidator.isValid(application))
-                .collect(Collectors.toList());
-
-        return allowedApplications;
+        return simpleFilter(applicationRepository.findByCompetitionId(competitionId),
+                            application -> applicationFundingDecisionValidator.isValid(application));
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
@@ -188,9 +181,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private Notification createFundingDecisionNotification(
             List<Application> applications,
             FundingNotificationResource fundingNotificationResource,
-            List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId,
-            Notifications notificationType
+            List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId
     ) {
+        Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
         List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(
@@ -225,6 +218,10 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             applicationNotificationTargets.add(getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).andOnSuccessReturn(pr -> Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail()))));
         });
         return applicationNotificationTargets;
+    }
+
+    private boolean isH2020Competition(List<Application> applications) {
+        return applications.get(0).getCompetition().isH2020();
     }
 
     private ApplicationState stateFromDecision(FundingDecision applicationFundingDecision) {
