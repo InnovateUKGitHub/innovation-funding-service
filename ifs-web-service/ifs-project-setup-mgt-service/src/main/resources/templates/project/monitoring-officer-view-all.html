@@ -33,8 +33,8 @@
                                 data-auto-complete="">
                             <option value="">Select Monitoring Officer</option>
                             <option th:each="monitoringOfficer : ${model.monitoringOfficers}"
-                                    th:value="${monitoringOfficer.getUserId()}"
-                                    th:text="|${monitoringOfficer.getFullName()}|"></option>
+                                    th:value="${monitoringOfficer.userId}"
+                                    th:text="|${monitoringOfficer.fullName}|"></option>
                         </select>
                     </div>
                     <div class="govuk-form-group">
