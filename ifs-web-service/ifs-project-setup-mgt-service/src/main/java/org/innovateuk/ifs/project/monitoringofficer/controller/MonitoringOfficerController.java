@@ -123,7 +123,7 @@ public class MonitoringOfficerController {
         return "project/monitoring-officer-view-all";
     }
 
-    @PostMapping("/view-monitoring-officer")
+    @GetMapping("/view-monitoring-officer")
     public String redirectToMoProjectPage(@ModelAttribute("form") MonitoringOfficerViewAllForm form) {
         // required to allow auto complete to send back the data about the selection
         if(form == null || form.getUserId() == null) {

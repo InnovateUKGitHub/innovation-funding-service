@@ -21,7 +21,7 @@
                 <a class="button-secondary"
                    href="/project-setup-management/monitoring-officer/search-by-email">Add a monitoring officer</a>
                 <form th:action="@{/monitoring-officer/view-monitoring-officer}"
-                      method="POST"
+                      method="GET"
                       th:object="${form}">
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="userId">
