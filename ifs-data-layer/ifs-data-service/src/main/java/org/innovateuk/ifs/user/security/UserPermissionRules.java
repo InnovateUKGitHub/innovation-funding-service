@@ -163,9 +163,14 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "A user can update User details")
+    @PermissionRule(value = "UPDATE", description = "A user can update their own details")
     public boolean canUpdateUserDetails(UserResource userToUpdate, UserResource user) {
-        return userIsUpdatingTheirOwnProfile(userToUpdate, user) || isAllowedToUpdateUsersToMonitoringOfficers(user);
+        return userIsUpdatingTheirOwnProfile(userToUpdate, user);
+    }
+
+    @PermissionRule(value = "UPDATE", description = "An admin user can assign monitoring officers")
+    public boolean adminsCanAssignMonitoringOfficers(UserResource userToUpdate, UserResource user) {
+        return isAllowedToUpdateUsersToMonitoringOfficers(user);
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
@@ -256,9 +261,14 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "A user can grant a role")
+    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can grant applicant role")
     public boolean canGrantSystemRolesToUsers(GrantRoleCommand roleCommand, UserResource user) {
-        return isAssessorRequestingApplicantRole(roleCommand, user) || isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(roleCommand, user);
+        return isAssessorRequestingApplicantRole(roleCommand, user);
+    }
+
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+    public boolean canUpdateUsersToMonitoringOfficer(GrantRoleCommand roleCommand, UserResource user) {
+        return isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(roleCommand, user);
     }
 
     private boolean isAssessorRequestingApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
