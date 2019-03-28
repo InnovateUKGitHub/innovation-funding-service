@@ -232,10 +232,17 @@ Monitoring Officer cannot see projects if they are not assigned to them
 
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
+Search for an MO
+    [Documentation]
+    [Setup]  Login as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${server}/project-setup-management/monitoring-officer/view-all
+    When search for MO
+    Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
+    [Teardown]  the user clicks the button/link  link = Back
+
 Add MO client validations
     [Documentation]  IFS-5428
-    [Setup]  Login as a different user         &{Comp_admin1_credentials}
-    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/search-by-email
+    Given The user clicks the button/link      link = Add a monitoring officer
     When the user enters text to a text field  id = emailAddress  ${EMPTY}
     Then the user should see a field error     Please enter an email address.
 
@@ -392,6 +399,12 @@ comp admin assign project to MO
 comp admin assign and remove project to MO
     comp admin assign project to MO               ${Assign_Project_ID}  ${Assign_Project}
     comp admin remove project assigned to MO      ${Assign_Project}
+
+search for MO
+    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
+    input text                          id = userId    Orvill
+    the user clicks the button/link     jQuery = ul li:contains("Orville Gibbs")
+    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
 Custom suite teardown
     the user closes the browser
