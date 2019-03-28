@@ -144,6 +144,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId);
         BigDecimal avgScore = responses.stream()
                 .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                .filter(input -> input.getValue() != null)
                 .map(AssessorFormInputResponse::getValue)
                 .collect(new AssessorScoreAverageCollector());
         List<String> feedback = responses.stream()
