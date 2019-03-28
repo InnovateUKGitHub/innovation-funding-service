@@ -40,7 +40,8 @@
                         </th:block>
                         <select class="govuk-select"
                                 th:id="funders[__${iteration.index}__].funder"
-                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}">
+                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
+                                data-auto-complete="">
                             <option value="" >Please Select</option>
                             <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
                         </select>

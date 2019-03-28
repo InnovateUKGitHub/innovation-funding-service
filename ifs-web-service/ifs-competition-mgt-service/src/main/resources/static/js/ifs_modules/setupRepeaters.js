@@ -190,12 +190,12 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10) + 1
       }
+      var options = jQuery('#funders\\[0\\]\\.funder-select').clone().end().html()
       var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="govuk-form-group">' +
-                        '<select class="govuk-select"  id="' + idCount + '-funder" name="funders[' + count + '].funder">' +
-                           // We pull the options from the first select that should always be present on the page
-                           jQuery('#funders\\[0\\]\\.funder').clone().find('option:selected').remove().end().html() +
+                        '<select class="govuk-select" id="' + idCount + '-funder" name="funders[' + count + '].funder" data-auto-complete="">' +
+                          options +
                         '</select>' +
                       '</div>' +
                     '</div>' +
@@ -207,6 +207,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                   '</div>'
       jQuery('.funder-row').last().after(html)
+      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('#' + idCount + '-funder'))
     },
     addGuidanceRow: function () {
       var table = jQuery('#guidance-table')
