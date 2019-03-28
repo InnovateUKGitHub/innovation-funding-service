@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -144,8 +145,8 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId);
         BigDecimal avgScore = responses.stream()
                 .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
-                .filter(input -> input.getValue() != null)
                 .map(AssessorFormInputResponse::getValue)
+                .filter(Objects::nonNull)
                 .collect(new AssessorScoreAverageCollector());
         List<String> feedback = responses.stream()
                 .filter(input -> input.getFormInput().getType() == FormInputType.TEXTAREA)
