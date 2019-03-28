@@ -106,7 +106,7 @@ Funding information server-side validations
     Given the user clicks the button/link                 link = Funding information
     And the user should see the element                   jQUery = h1:contains("Funding information")
     When the user clicks the button/link                  jQuery = button:contains("Done")
-    Then the user should see a field and summary error    Please enter a funder name.
+    Then the user should see a field and summary error    Please select a funder name.
     And the user should see a field and summary error     Please enter a budget.
     And the user should see a field and summary error     Please generate a competition code.
 
@@ -115,8 +115,10 @@ Funding information client-side validations
     [Tags]
     When the user clicks the button/link               id = generate-code
     Then the user should not see the error any more    Please generate a competition code.
-    When the user enters text to a text field          id = funders[0].funder    FunderName
-    Then the user should not see the error any more    Please enter a funder name.
+    # IFS-3807 this may need to change with type ahead
+    And the user selects the option from the drop-down menu    Aerospace Technology Institute (ATI)    name=funders[0].funder
+    # IFS-3807 When the user enters text to a text field          id = funders[0].funder    FunderName
+    Then the user should not see the error any more    Please select a funder name.
     And the user enters text to a text field           id = funders[0].funderBudget    20000
     And the user enters text to a text field           id = pafNumber    2016
     And the user enters text to a text field           id = budgetCode    2004

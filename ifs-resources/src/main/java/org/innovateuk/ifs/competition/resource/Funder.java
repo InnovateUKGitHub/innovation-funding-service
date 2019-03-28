@@ -14,13 +14,14 @@ public enum Funder {
     EUROPEAN_EUREKA_EUROSTARS_AND_OTHER_EU("European: Eureka, Eurostars and other EU"),
     INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF("Industrial Strategy Challenge Fund (ISCF)"),
     INNOVATE_UK_CORE_BUDGET("Innovate UK core budget"),
-    SMART_OPEN("Smart Open"),
     INTEGRATED_DELIVERY_PLATFORM_IDP("Integrated Delivery Platform (IDP)"),
     INTERNATIONAL("International"),
     OFFICE_FOR_LIFE_SCIENCES_OLS("Office for Life Sciences (OLS)"),
     SMALL_BUSINESS_RESEARCH_INITIATIVE_SBRI("Small Business Research Initiative (SBRI)"),
-    OTHER_STAKEHOLDERS("Other stakeholders"),
-    OTHER_DELIVERY_PARTNERS("Other delivery partners");
+    SMART_OPEN("Smart Open"),
+    OTHER_DELIVERY_PARTNERS("Other delivery partners"),
+    OTHER_STAKEHOLDERS("Other stakeholders");
+
 
     private final String displayName;
 

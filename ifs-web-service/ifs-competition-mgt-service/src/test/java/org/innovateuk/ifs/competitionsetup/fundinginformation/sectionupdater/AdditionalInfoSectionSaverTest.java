@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
@@ -129,11 +130,11 @@ public class AdditionalInfoSectionSaverTest {
 		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionFunderResource funderResource1 = newCompetitionFunderResource()
-				.withFunder("Funder 1")
+				.withFunder(Funder.ADVANCED_PROPULSION_CENTRE_APC.getDisplayName())
 				.withFunderBudget(BigInteger.valueOf(1))
 				.build();
 		CompetitionFunderResource funderResource2 = newCompetitionFunderResource()
-				.withFunder("Funder 2")
+				.withFunder(Funder.AEROSPACE_TECHNOLOGY_INSTITUTE_ATI.getDisplayName())
 				.withFunderBudget(BigInteger.valueOf(2))
 				.build();
 

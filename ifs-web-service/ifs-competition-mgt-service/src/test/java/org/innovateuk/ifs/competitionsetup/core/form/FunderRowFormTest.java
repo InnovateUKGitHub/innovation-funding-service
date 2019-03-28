@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.core.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -13,13 +14,13 @@ public class FunderRowFormTest {
     @Test
     public void testGetAppendixFileDescription() throws Exception {
         Boolean coFunder = Boolean.FALSE;
-        String funder = "Funder";
+        Funder funder = Funder.ADVANCED_PROPULSION_CENTRE_APC;
         BigInteger funderBudget = BigInteger.valueOf(12345678);
 
         CompetitionFunderResource funderResource = newCompetitionFunderResource()
                 .withCoFunder(coFunder)
                 .withCompetitionId(123L)
-                .withFunder(funder)
+                .withFunder(funder.getDisplayName())
                 .withFunderBudget(funderBudget)
                 .build();
 
