@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
@@ -16,11 +17,11 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -39,7 +39,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
+import static org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteServiceImpl.Notifications.MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION;
+import static org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteServiceImpl.Notifications.MONITORING_OFFICER_REGISTRATION_INVITE;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 /**
@@ -54,7 +55,8 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
     private static final String WEB_CONTEXT = "/management/monitoring-officer";
 
     enum Notifications {
-        MONITORING_OFFICER_INVITE
+        MONITORING_OFFICER_REGISTRATION_INVITE,
+        MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION
     }
 
     @Autowired
@@ -80,15 +82,15 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteMonitoringOfficer(UserResource invitedUser) {
+    public ServiceResult<Void> inviteMonitoringOfficer(User invitedUser, Project project) {
 
         return validateInvite(invitedUser)
+                .andOnSuccess(this::validateUserExists)
                 .andOnSuccess(this::validateUserIsNotInternal)
-                .andOnSuccess(this::validateUserInviteNotPending)
-                .andOnSuccess(this::addOrInviteUser);
+                .andOnSuccess(user -> sendEmailToRegisteredOrUnregistered(user, project));
     }
 
-    private ServiceResult<UserResource> validateInvite(UserResource invitedUser) {
+    private ServiceResult<User> validateInvite(User invitedUser) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName())) {
@@ -97,7 +99,16 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return serviceSuccess(invitedUser);
     }
 
-    private ServiceResult<UserResource> validateUserIsNotInternal(UserResource user) {
+    private ServiceResult<User> validateUserExists(User invitedUser) {
+        // for monitoring officers, the invite is only sent after the user has been created
+        // and then assigned to a project
+        boolean foundUser = userRepository.existsById(invitedUser.getId());
+        return foundUser?
+                serviceSuccess(invitedUser) :
+                serviceFailure(MONITORING_OFFICER_INVITE_INVALID);
+    }
+
+    private ServiceResult<User> validateUserIsNotInternal(User user) {
         String emailAddress = user.getEmail();
         String domain = StringUtils.substringAfter(emailAddress, "@");
         internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
@@ -111,26 +122,15 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return serviceSuccess(user);
     }
 
-    private ServiceResult<UserResource> validateUserInviteNotPending(UserResource invitedUser) {
-        boolean foundPendingInvite = monitoringOfficerInviteRepository.sentInviteExistsByEmail(invitedUser.getEmail());
-        return foundPendingInvite ? serviceFailure(MONITORING_OFFICER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess(invitedUser);
+    private ServiceResult<Void> sendEmailToRegisteredOrUnregistered(User invitedUser, Project project) {
+        boolean userIsRegistered = monitoringOfficerInviteRepository.existsByStatusAndUserId(InviteStatus.OPENED, invitedUser.getId());
+        return userIsRegistered ?
+                sendEmailToRegistered(invitedUser, project) :
+                saveInvite(invitedUser).andOnSuccess(invite -> sendInviteToUnregistered(invite, project));
     }
 
-    private ServiceResult<Void> addOrInviteUser(UserResource invitedUser) {
-        Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
-        if (user.isPresent()) {
-            if (!user.get().hasRole(MONITORING_OFFICER)) {
-                addMonitoringOfficerRoleToUser(user.get());
-            }
-            return serviceSuccess();
-        } else {
-            return saveInvite(invitedUser)
-                    .andOnSuccess(this::sendMonitoringOfficerInviteNotification);
-        }
-    }
-
-    private ServiceResult<MonitoringOfficerInvite> saveInvite(UserResource invitedUser) {
+    private ServiceResult<MonitoringOfficerInvite> saveInvite(User invitedUser) {
         MonitoringOfficerInvite monitoringOfficerInvite = new MonitoringOfficerInvite(
                 invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
@@ -140,47 +140,49 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return serviceSuccess(monitoringOfficerInviteRepository.save(monitoringOfficerInvite));
     }
 
-    private ServiceResult<Void> sendMonitoringOfficerInviteNotification(MonitoringOfficerInvite monitoringOfficerInvite) {
+    private ServiceResult<Void> sendEmailToRegistered(User user, Project project) {
 
-        Map<String, Object> globalArgs = createGlobalArgsForMonitoringOfficerInvite(monitoringOfficerInvite);
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("monitoringOfficer", user);
+        globalArgs.put("project", project);
+        globalArgs.put("competition", project.getApplication().getCompetition());
 
-        Notification notification = new Notification(systemNotificationSource,
-                singletonList(createMonitoringOfficerInviteNotificationTarget(monitoringOfficerInvite)),
-                MONITORING_OFFICER_INVITE, globalArgs);
-
-        ServiceResult<Void> sendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
-
-        sendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(monitoringOfficerInvite, failure),
-                success -> handleInviteSuccess(monitoringOfficerInvite)
-        );
-
-        return sendResult;
+        return sendNotification(globalArgs,
+                                Notifications.MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION,
+                                new UserNotificationTarget(user.getName(), user.getEmail()));
     }
 
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, monitoringOfficerInvite));
-        return globalArguments;
+    private ServiceResult<Void> sendInviteToUnregistered(MonitoringOfficerInvite invite,
+                                                         Project project) {
+
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("monitoringOfficerInvite", invite);
+        globalArgs.put("inviteUrl", getInviteUrl("registration", invite));
+        globalArgs.put("project", project);
+        globalArgs.put("competition", project.getApplication().getCompetition());
+
+        return sendNotification(globalArgs,
+                                Notifications.MONITORING_OFFICER_REGISTRATION_INVITE,
+                                new UserNotificationTarget(invite.getName(), invite.getEmail()));
+    }
+
+    private ServiceResult<Void> sendNotification(Map<String, Object> args, Notifications notificationType, NotificationTarget target) {
+
+        Notification notification = new Notification(systemNotificationSource,
+                                                     singletonList(target),
+                                                     notificationType,
+                                                     args);
+
+        ServiceResult<Void> sendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
+        return sendResult.handleSuccessOrFailure(
+                failure -> serviceFailure(sendResult.getErrors()),
+                success -> serviceSuccess()
+        );
+
     }
 
     private static String getInviteUrl(String baseUrl, MonitoringOfficerInvite monitoringOfficerInvite) {
         return String.format("%s/%s/%s", baseUrl, monitoringOfficerInvite.getHash(), "register");
-    }
-
-    private NotificationTarget createMonitoringOfficerInviteNotificationTarget(MonitoringOfficerInvite monitoringOfficerInvite) {
-        return new UserNotificationTarget(monitoringOfficerInvite.getName(), monitoringOfficerInvite.getEmail());
-    }
-
-    private ServiceResult<Void> handleInviteError(MonitoringOfficerInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s, %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        List<Error> errors = failure.getErrors();
-        return serviceFailure(errors);
-    }
-
-    private ServiceResult<Void> handleInviteSuccess(MonitoringOfficerInvite monitoringOfficerInvite) {
-        monitoringOfficerInviteRepository.save(monitoringOfficerInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
-        return serviceSuccess();
     }
 
     @Override
@@ -221,9 +223,5 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         invite.getUser().addRole(MONITORING_OFFICER);
         userRepository.save(invite.getUser());
         return serviceSuccess();
-    }
-
-    private void addMonitoringOfficerRoleToUser(User user) {
-        user.addRole(MONITORING_OFFICER);
     }
 }

@@ -34,15 +34,18 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private OrganisationService organisationService;
+    private MonitoringOfficerInviteService monitoringOfficerInviteService;
 
     public ProjectMonitoringOfficerServiceImpl(ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository,
                                                ProjectRepository projectRepository,
                                                UserRepository userRepository,
-                                               OrganisationService organisationService) {
+                                               OrganisationService organisationService,
+                                               MonitoringOfficerInviteService monitoringOfficerInviteService) {
         this.projectMonitoringOfficerRepository = projectMonitoringOfficerRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.organisationService = organisationService;
+        this.monitoringOfficerInviteService = monitoringOfficerInviteService;
     }
 
     @Override
@@ -79,8 +82,8 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
         return getMonitoringOfficerUser(userId)
                .andOnSuccess(user -> getProject(projectId)
-                       .andOnSuccessReturnVoid(project ->
-                               projectMonitoringOfficerRepository.save(new ProjectMonitoringOfficer(user, project))
+                       .andOnSuccess(project -> (monitoringOfficerInviteService.inviteMonitoringOfficer(user, project))
+                               .andOnSuccessReturnVoid(() -> projectMonitoringOfficerRepository.save(new ProjectMonitoringOfficer(user, project)))
                        )
                );
     }
