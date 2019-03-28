@@ -3,8 +3,6 @@ package org.innovateuk.ifs.project.monitoring.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
@@ -29,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -148,7 +145,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         globalArgs.put("competition", project.getApplication().getCompetition());
 
         return sendNotification(globalArgs,
-                                Notifications.MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION,
+                                MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION,
                                 new UserNotificationTarget(user.getName(), user.getEmail()));
     }
 
@@ -157,13 +154,16 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
 
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("monitoringOfficerInvite", invite);
-        globalArgs.put("inviteUrl", getInviteUrl("registration", invite));
+        globalArgs.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, invite));
         globalArgs.put("project", project);
         globalArgs.put("competition", project.getApplication().getCompetition());
 
         return sendNotification(globalArgs,
-                                Notifications.MONITORING_OFFICER_REGISTRATION_INVITE,
-                                new UserNotificationTarget(invite.getName(), invite.getEmail()));
+                                MONITORING_OFFICER_REGISTRATION_INVITE,
+                                new UserNotificationTarget(invite.getName(), invite.getEmail()))
+                .andOnSuccess(() -> monitoringOfficerInviteRepository.save(
+                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                );
     }
 
     private ServiceResult<Void> sendNotification(Map<String, Object> args, Notifications notificationType, NotificationTarget target) {

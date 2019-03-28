@@ -11,6 +11,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
@@ -40,6 +41,9 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
 
     @Mock
     private UserRepository userRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Override
     protected MonitoringOfficerInviteServiceImpl supplyServiceUnderTest() {
@@ -118,15 +122,18 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
                 .thenReturn(new MonitoringOfficerInvite());
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
                 .thenReturn(serviceSuccess());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         ServiceResult<Void> result = service.inviteMonitoringOfficer(user, project);
 
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(monitoringOfficerInviteRepositoryMock, notificationServiceMock);
+        InOrder inOrder = inOrder(monitoringOfficerInviteRepositoryMock, notificationServiceMock, loggedInUserSupplierMock);
         inOrder.verify(monitoringOfficerInviteRepositoryMock).existsByStatusAndUserId(InviteStatus.OPENED, user.getId());
         inOrder.verify(monitoringOfficerInviteRepositoryMock).save(any(MonitoringOfficerInvite.class));
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class));
+        inOrder.verify(loggedInUserSupplierMock).get();
+        inOrder.verify(monitoringOfficerInviteRepositoryMock).save(any(MonitoringOfficerInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 

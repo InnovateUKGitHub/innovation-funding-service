@@ -6,7 +6,7 @@ Welcome to the monitoring team. The project ${project.name} has been assigned to
 
 You need to create an account as a Monitoring Officer on the Innovation Funding Service before you can view this project.
 
-[Create account]
+${inviteUrl}
 
 Once you have reviewed the project details you can contact the lead organisation to introduce yourself to them.
 
