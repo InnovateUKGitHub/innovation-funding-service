@@ -10,9 +10,10 @@ ENV APACHE_RUN_GROUP smtp
 
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 
-RUN apt-get update && \
+RUN apt-get -o Acquire::Check-Valid-Until=false update && \
     apt-get install -y --no-install-recommends postfix courier-base sqwebmail courier-imap && \
     apt-get autoremove -y && \
     rm -fr /var/lib/apt/lists/*
