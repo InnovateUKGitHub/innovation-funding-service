@@ -811,11 +811,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void assessorCanRequestApplicantRole() {
         UserResource otherAssessor = newUserResource().withRolesGlobal(asList(ASSESSOR)).build();
 
-        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
-        assertFalse(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
+        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
 
-        assertTrue(rules.canGrantSystemRolesToUsers(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+        assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
 
     }
 

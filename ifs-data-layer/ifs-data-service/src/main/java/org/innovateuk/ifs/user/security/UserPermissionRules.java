@@ -261,23 +261,15 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can grant applicant role")
-    public boolean canGrantSystemRolesToUsers(GrantRoleCommand roleCommand, UserResource user) {
-        return isAssessorRequestingApplicantRole(roleCommand, user);
-    }
-
-    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
-    public boolean canUpdateUsersToMonitoringOfficer(GrantRoleCommand roleCommand, UserResource user) {
-        return isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(roleCommand, user);
-    }
-
-    private boolean isAssessorRequestingApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
+    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can request applicant role")
+    public boolean assessorCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(ASSESSOR);
     }
 
-    private boolean isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(GrantRoleCommand roleCommand, UserResource user) {
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+    public boolean canUpdateUsersToMonitoringOfficer(GrantRoleCommand roleCommand, UserResource user) {
         return isAllowedToUpdateUsersToMonitoringOfficers(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
     }
 
