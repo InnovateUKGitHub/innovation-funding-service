@@ -15,7 +15,7 @@ WHERE funder = 'Office for Life Sciences';
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
-WHERE funder LIKE '%NHS England%'
+WHERE funder LIKE '%NHS England%';
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
