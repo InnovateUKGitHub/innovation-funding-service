@@ -24,7 +24,7 @@ WHERE funder = 'Network Rail';
 -- Only one competition with this and can go to this
 UPDATE competition_funder
 SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
-WHERE funder LIKE 'N/A';
+WHERE funder = 'N/A';
 
 UPDATE competition_funder
 SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
@@ -72,7 +72,7 @@ WHERE funder = 'BEIS';
 
 UPDATE competition_funder
 SET funder = 'OTHER_DELIVERY_PARTNERS'
-WHERE funder = 'ATI (BEIS)' OR 'ATI (BEIS)';
+WHERE funder IN ('ATI (BEIS)', 'ATI (BEIS)');
 
 UPDATE competition_funder
 SET funder = 'AEROSPACE_TECHNOLOGY_INSTITUTE_ATI'
