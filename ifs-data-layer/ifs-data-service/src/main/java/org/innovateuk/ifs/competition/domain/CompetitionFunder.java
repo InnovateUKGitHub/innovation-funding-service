@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.competition.domain;
 
 
+import org.innovateuk.ifs.competition.resource.Funder;
+
 import javax.persistence.*;
 import java.math.BigInteger;
+
+import static javax.persistence.EnumType.*;
 
 /**
  * Entity model to store the Competition Co-Funders.
@@ -18,8 +22,11 @@ public class CompetitionFunder {
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
-    private String funder;
+    @Enumerated(STRING)
+    private Funder funder;
+
     private BigInteger funderBudget;
+
     private Boolean coFunder;
 
     public Long getId() {
@@ -38,11 +45,11 @@ public class CompetitionFunder {
         this.competition = competition;
     }
 
-    public String getFunder() {
+    public Funder getFunder() {
         return funder;
     }
 
-    public void setFunder(String funder) {
+    public void setFunder(Funder funder) {
         this.funder = funder;
     }
 

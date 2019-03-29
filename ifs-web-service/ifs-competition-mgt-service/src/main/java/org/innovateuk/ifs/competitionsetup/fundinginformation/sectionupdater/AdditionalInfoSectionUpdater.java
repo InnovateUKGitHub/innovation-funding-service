@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -64,7 +65,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 		competition.setFunders(new ArrayList());
 		additionalInfoForm.getFunders().forEach(funder -> {
 			CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
-			competitionFunderResource.setFunder(funder.getFunder().getDisplayName());
+			competitionFunderResource.setFunder(funder.getFunder());
 			competitionFunderResource.setFunderBudget(funder.getFunderBudget());
 			competitionFunderResource.setCoFunder(funder.getCoFunder());
 			competition.getFunders().add(competitionFunderResource);
@@ -111,7 +112,7 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 		funder = competitionResource.getFunders().get(index);
 
 		if (fieldName.endsWith("funder")) {
-			funder.setFunder(value);
+			funder.setFunder(Funder.valueOf(value));
 		} else if(fieldName.endsWith("funderBudget")) {
 			funder.setFunderBudget(new BigInteger(value));
 		} else {

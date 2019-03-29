@@ -12,7 +12,6 @@ import java.math.BigInteger;
  */
 public class FunderRowForm {
 
-
     @NotNull(message = "{validation.additionalinfoform.fundername.required}")
     private Funder funder;
 
@@ -23,20 +22,11 @@ public class FunderRowForm {
     @NotNull
     private Boolean coFunder;
 
-    // TODO IFS-3807 the original funder text. This is included so that if there is no corresponding enum then we can
-    // TODO show the original value to the user. After IFS-5508 this should be removed.
-    private String funderOriginalName;
-
     public FunderRowForm(){
-        // For Spring binding
     }
 
     public FunderRowForm(CompetitionFunderResource funderResource) {
-        // TODO IFS-3807. If there is no corresponding Funder enum to the free text field it is set to null. This has the
-        // TODO the effect that the user will be forced to select from the approved list on editing. When IFS-5508 is
-        // TODO completed this should no longer be an issue as we will be saving the enum to the database.
-        this.setFunder(Funder.fromDisplayName(funderResource.getFunder()));
-        this.setFunderOriginalName(funderResource.getFunder());
+        this.setFunder(funderResource.getFunder());
         this.setFunderBudget(funderResource.getFunderBudget());
         this.setCoFunder(funderResource.getCoFunder());
     }
@@ -47,14 +37,6 @@ public class FunderRowForm {
 
     public void setFunder(Funder funder) {
         this.funder = funder;
-    }
-
-    public String getFunderOriginalName() {
-        return funderOriginalName;
-    }
-
-    public void setFunderOriginalName(String funderOriginalName) {
-        this.funderOriginalName = funderOriginalName;
     }
 
     public BigInteger getFunderBudget() {
