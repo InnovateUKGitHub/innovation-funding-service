@@ -70,7 +70,8 @@ the user selects the Terms and Conditions
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link = Funding information
-    the user enters text to a text field  id = funders[0].funder  FunderName FamilyName
+    input text      id = funders[0].funder    Aerospace Technology Institute (ATI)
+    the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
     the user enters text to a text field  id = funders[0].funderBudget  142424242
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
