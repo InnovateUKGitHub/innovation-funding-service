@@ -300,15 +300,15 @@ Assign MO role to existing IFS user
     [Documentation]  IFS-5104
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/search-by-email
-    And the user enters text to a text field    id = emailAddress   ${collaborator1_credentials["email"]}
+    And the user enters text to a text field    id = emailAddress   ${assessor2_credentials["email"]}
     When the user clicks the button/link        jQuery = button:contains("Continue")
     Then the user should see exisitng IFS user details and add phone number
-    And the user should see the element         jQuery = h1:contains("Jessica Doe") span:contains("Assign projects to Monitoring Officer")
+    And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
 
 Comp admin assign project existing IFS user MO
     [Documentation]  IFS-5104
     Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
-    Then the user logs in and see the assigned project
+    #assessor as MO assigned project view will be covered in IFS-5070 - continunation of this test case.
 
 *** Keywords ***
 standard verification for email address follows
@@ -424,9 +424,9 @@ search for MO
 
 the user should see exisitng IFS user details and add phone number
     the user should see the element          jQuery = .message-alert:contains("We have found a user with this email address.")
-    the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${collaborator1_credentials["email"]}")
-    the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Jessica")
-    the user should see the element          jQuery = dt:contains("Last name") ~ dd:contains("Doe")
+    the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${assessor2_credentials["email"]}")
+    the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Felix")
+    the user should see the element          jQuery = dt:contains("Last name") ~ dd:contains("Wilson")
     phone number: validations checks
     the user enters text to a text field     id = phoneNumber   1234567890
     the user clicks the button/link          jQuery = button:contains("Add monitoring officer")
@@ -437,10 +437,6 @@ phone number: validations checks
     the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
-
-the user logs in and see the assigned project
-    log in as a different user            &{collaborator1_credentials}
-    the user should see the element       jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
 
 Custom suite teardown
     the user closes the browser
