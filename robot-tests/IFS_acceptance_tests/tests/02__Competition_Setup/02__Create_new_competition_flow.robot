@@ -224,7 +224,7 @@ Funding information: calculations
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
-    And input text   id = 1-funder   Aerospace Technology Institute (ATI)
+    And input text   id = funders[1].funder   Aerospace Technology Institute (ATI)
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
