@@ -120,7 +120,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         UserResource userResource = new UserResource();
         userResource.setId(999L);
         userResource.setEmail("test@test.test");
-        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(userResource));
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),
                 "firstName",
                 "lastName",
@@ -136,11 +136,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void assignRoleGetWhenUserIsAlreadyMonitoringOfficer() throws Exception {
-        UserResource userResource = new UserResource();
-        userResource.setId(999L);
-        userResource.setEmail("test@test.test");
-        userResource.setRoles(singletonList(MONITORING_OFFICER));
-        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(userResource));
+        UserResource userResource = newUserResource()
+                .withId(999L)
+                .withEmail("test@test.test")
+                .withRolesGlobal(singletonList(MONITORING_OFFICER))
+                .build();
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),
                 "firstName",
                 "lastName",
@@ -162,11 +163,11 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void assignRolePost() throws Exception {
-        UserResource userResource = new UserResource();
-        userResource.setId(999L);
-        userResource.setPhoneNumber("01234567890");
-
-        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(userResource));
+        UserResource userResource = newUserResource()
+                .withId(999L)
+                .withPhoneNumber("01234567890")
+                .build();
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         when(userService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(userResource));
         when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
@@ -180,9 +181,9 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void assignRolePostWithValidationErrors() throws Exception {
-        UserResource userResource = new UserResource();
-        userResource.setId(999L);
-
+        UserResource userResource = newUserResource()
+                .withId(999L)
+                .build();
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role"))
                 .andReturn();
 

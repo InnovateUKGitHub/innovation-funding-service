@@ -59,7 +59,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
 
         assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsEditResource), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verify(rules).adminsCanAssignMonitoringOfficers(user, getLoggedInUser());
+            verify(rules).adminsCanUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -89,7 +89,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
 
         assertAccessDenied(() -> classUnderTest.updateProfileAgreement(userId), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verify(rules).adminsCanAssignMonitoringOfficers(user, getLoggedInUser());
+            verify(rules).adminsCanUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -132,7 +132,7 @@ public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileS
 
         assertAccessDenied(() -> classUnderTest.updateUserProfile(userId, profile), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verify(rules).adminsCanAssignMonitoringOfficers(user, getLoggedInUser());
+            verify(rules).adminsCanUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }

@@ -15,7 +15,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -23,14 +25,14 @@ import static org.mockito.Mockito.*;
  */
 public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<AffiliationService> {
 
-    private UserPermissionRules rules;
+    private UserPermissionRules userPermissionRules;
     private UserLookupStrategies userLookupStrategies;
 
     private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     @Before
     public void lookupPermissionRules() {
-        rules = getMockPermissionRulesBean(UserPermissionRules.class);
+        userPermissionRules = getMockPermissionRulesBean(UserPermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
     }
 
@@ -49,7 +51,7 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
                 .thenReturn(serviceSuccess(affiliationListResource));
 
         classUnderTest.getUserAffiliations(userId);
-        verifyNoMoreInteractions(rules);
+        verifyNoMoreInteractions(userPermissionRules);
 
     }
 
@@ -60,15 +62,13 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
         AffiliationListResource affiliationListResource = newAffiliationListResource()
                 .withAffiliationList(affiliations)
                 .build();
-
-
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliationListResource), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verify(rules).adminsCanAssignMonitoringOfficers(user, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
+            verify(userPermissionRules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(userPermissionRules).adminsCanUpdateUserDetails(user, getLoggedInUser());
+            verifyNoMoreInteractions(userPermissionRules);
         });
     }
 

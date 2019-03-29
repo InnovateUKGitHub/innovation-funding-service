@@ -488,10 +488,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void allowedRolesCanUpdateUsersToMonitoringOfficers() {
         UserResource userToUpdate = newUserResource().build();
 
-        assertTrue(rules.adminsCanAssignMonitoringOfficers(userToUpdate, compAdminUser()));
-        assertTrue(rules.adminsCanAssignMonitoringOfficers(userToUpdate, projectFinanceUser()));
-        assertTrue(rules.adminsCanAssignMonitoringOfficers(userToUpdate, ifsAdminUser()));
-        assertFalse(rules.adminsCanAssignMonitoringOfficers(userToUpdate, assessorUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, compAdminUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, projectFinanceUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, ifsAdminUser()));
+        assertFalse(rules.adminsCanUpdateUserDetails(userToUpdate, assessorUser()));
     }
 
     @Test
@@ -823,10 +823,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void correctRolesCanGrantMonitoringOfficerRole() {
         GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
 
-        assertTrue(rules.canUpdateUsersToMonitoringOfficer(grantMonitoringOfficerRole, compAdminUser()));
-        assertTrue(rules.canUpdateUsersToMonitoringOfficer(grantMonitoringOfficerRole, projectFinanceUser()));
-        assertTrue(rules.canUpdateUsersToMonitoringOfficer(grantMonitoringOfficerRole, ifsAdminUser()));
-        assertFalse(rules.canUpdateUsersToMonitoringOfficer(grantMonitoringOfficerRole, assessorUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, compAdminUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, projectFinanceUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, assessorUser()));
 
     }
 
@@ -834,10 +834,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void usersAllowedToGrantMonitoringOfficerRoleCannotGrantOtherRoles() {
         GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), INNOVATION_LEAD);
 
-        assertFalse(rules.canUpdateUsersToMonitoringOfficer(grantInnovationLeadRole, compAdminUser()));
-        assertFalse(rules.canUpdateUsersToMonitoringOfficer(grantInnovationLeadRole, projectFinanceUser()));
-        assertFalse(rules.canUpdateUsersToMonitoringOfficer(grantInnovationLeadRole, ifsAdminUser()));
-        assertFalse(rules.canUpdateUsersToMonitoringOfficer(grantInnovationLeadRole, assessorUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, compAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, projectFinanceUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, assessorUser()));
 
     }
 

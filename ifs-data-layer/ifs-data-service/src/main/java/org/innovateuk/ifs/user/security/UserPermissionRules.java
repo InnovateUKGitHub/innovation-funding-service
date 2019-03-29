@@ -168,9 +168,9 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "UPDATE", description = "An admin user can assign monitoring officers")
-    public boolean adminsCanAssignMonitoringOfficers(UserResource userToUpdate, UserResource user) {
-        return isAllowedToUpdateUsersToMonitoringOfficers(user);
+    @PermissionRule(value = "UPDATE", description = "An admin user can update user details to assign monitoring officers")
+    public boolean adminsCanUpdateUserDetails(UserResource userToUpdate, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user);
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
@@ -269,11 +269,11 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
-    public boolean canUpdateUsersToMonitoringOfficer(GrantRoleCommand roleCommand, UserResource user) {
-        return isAllowedToUpdateUsersToMonitoringOfficers(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+    public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
     }
 
-    private boolean isAllowedToUpdateUsersToMonitoringOfficers(UserResource user) {
+    private boolean hasPermissionToGrantMonitoringOfficerRole(UserResource user) {
         return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 

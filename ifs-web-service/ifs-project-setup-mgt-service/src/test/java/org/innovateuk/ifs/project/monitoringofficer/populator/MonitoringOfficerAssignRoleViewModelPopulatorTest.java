@@ -14,8 +14,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class MonitoringOfficerAssignRoleViewModelPopulatorTest extends BaseUnitTest {
@@ -28,12 +28,13 @@ public class MonitoringOfficerAssignRoleViewModelPopulatorTest extends BaseUnitT
 
     @Test
     public void populate() {
-        UserResource userResource = new UserResource();
-        userResource.setId(999L);
-        userResource.setEmail("email@email.email");
-        userResource.setFirstName("first");
-        userResource.setLastName("last");
-        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(userResource));
+        UserResource userResource = newUserResource()
+                .withId(999L)
+                .withEmail("email@email.email")
+                .withFirstName("first")
+                .withLastName("last")
+                .build();
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         MonitoringOfficerAssignRoleViewModel actual = target.populate(userResource.getId());
 
         assertThat(actual, instanceOf(MonitoringOfficerAssignRoleViewModel.class));
