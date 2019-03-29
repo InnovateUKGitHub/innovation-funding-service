@@ -1,5 +1,5 @@
 -- IFS-5496 Change all funder inputs to be a value from a standard list
-SET SQL_SAFE_UPDATES = 0; # Ignore warnings when using a update without PK in the WHERE clause
+SET SQL_SAFE_UPDATES = 0;
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
@@ -7,7 +7,7 @@ WHERE funder = 'The National Physical Laboratory (NPL), Laboratory of the Govern
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
-WHERE funder = 'OLEV' OR 'Office for Low Emission Vehicles (OLEV)';
+WHERE funder LIKE '%OLEV%';
 
 UPDATE competition_funder
 SET funder = 'Office for Life Sciences (OLS)'
@@ -15,7 +15,7 @@ WHERE funder = 'Office for Life Sciences';
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
-WHERE funder = 'NHS England (NHSE)' OR 'NHS England';
+WHERE funder LIKE '%NHS England%'
 
 UPDATE competition_funder
 SET funder = 'Other delivery partners'
