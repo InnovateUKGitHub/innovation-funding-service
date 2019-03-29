@@ -163,9 +163,9 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "A user can update their own details")
-    public boolean canUpdateUserDetails(UserResource userToUpdate, UserResource user) {
-        return userIsUpdatingTheirOwnProfile(userToUpdate, user);
+    @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
+    public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.getId().equals(user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "An admin user can assign monitoring officers")
@@ -275,10 +275,6 @@ public class UserPermissionRules {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(ASSESSOR);
-    }
-
-    private boolean userIsUpdatingTheirOwnProfile(UserResource userToUpdate, UserResource user) {
-        return userToUpdate.getId().equals(user.getId());
     }
 
     private boolean isUpdatingUserToMonitoringOfficerRoleAndHasAppropriatePermissions(GrantRoleCommand roleCommand, UserResource user) {

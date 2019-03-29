@@ -66,7 +66,8 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliationListResource), () -> {
-            verify(rules).canUpdateUserDetails(user, getLoggedInUser());
+            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(rules).adminsCanAssignMonitoringOfficers(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }

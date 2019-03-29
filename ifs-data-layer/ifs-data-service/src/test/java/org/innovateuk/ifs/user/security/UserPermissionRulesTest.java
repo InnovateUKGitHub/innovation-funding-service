@@ -474,14 +474,14 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void usersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
-        assertTrue(rules.canUpdateUserDetails(user, user));
+        assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
     }
 
     @Test
     public void usersCanUpdateTheirOwnProfilesButAttemptingToUpdateAnotherUsersProfile() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.canUpdateUserDetails(user, anotherUser));
+        assertFalse(rules.usersCanUpdateTheirOwnProfiles(user, anotherUser));
     }
 
     @Test
