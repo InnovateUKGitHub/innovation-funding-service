@@ -33,14 +33,14 @@
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funder">
-                        </label>
+                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funder">Select funder name</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
                         <select class="govuk-select"
                                 th:id="funders[__${iteration.index}__].funder"
                                 th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
+                                data-required-errormessage="Please select a funder name."
                                 data-auto-complete="">
                             <option value="" >Please Select</option>
                             <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
