@@ -215,10 +215,8 @@ Funding information: calculations
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
-
-    # IFS-3807 this may need to change with type ahead
-    And the user selects the option from the drop-down menu    Advanced Propulsion Centre (APC)    name=funders[0].funder
-    # IFS-3807 And the user enters text to a text field    id = funders[0].funder    FunderName
+    And input text       id = funders[0].funder   Advanced Propulsion Centre (APC)
+    And the user clicks the button/link     jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
@@ -226,9 +224,8 @@ Funding information: calculations
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
-    # IFS-3807 this may need to change with type ahead
-    And the user selects the option from the drop-down menu    Aerospace Technology Institute (ATI)    name=funders[1].funder
-    # IFS-3807 And the user enters text to a text field    id = 1-funder    FunderName2
+    And input text   id = 1-funder   Aerospace Technology Institute (ATI)
+    And the user clicks the button/link      jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
@@ -237,24 +234,20 @@ Funding information: calculations
 Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]  HappyPath
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery = button:contains("Done")
+    Given the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = td:contains("Advanced Propulsion Centre (APC)")
     And the user should see the element     jQuery = th:contains("Total") ~ td:contains("£20,000")
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
     And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2001-1")
-    And the user should see the element     jQuery = button:contains("Edit")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
     When the user clicks the button/link             jQuery = .govuk-button:contains("Edit")
-    # IFS-3807 this may need to change with type ahead
-    And the user selects the option from the drop-down menu    Centre for Connected and Autonomous Vehicles (CCAV)    name=funders[0].funder
-    # IFS-3807 And the user enters text to a text field         id = funders[0].funder    testFunder
-    And the user moves focus and waits for autosave
+    And input text                                   id = funders[0].funder  Centre for Connected and Autonomous Vehicles (CCAV)
+    And the user clicks the button/link              jQuery = ul li:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
     When the user clicks the button/link             jQuery = button:contains("Done")
     Then the user should see the element             jQUery = td:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
 
