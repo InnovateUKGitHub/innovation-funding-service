@@ -21,10 +21,10 @@ UPDATE competition_funder
 SET funder = 'Other delivery partners'
 WHERE funder = 'Network Rail';
 
--- WHAT SHOULD N/A Be
--- UPDATE competition_funder
--- SET funder = ''
--- WHERE funder LIKE 'N/A';
+-- Need to change (Do not merge without changing)
+UPDATE competition_funder
+SET funder = ''
+WHERE funder LIKE 'N/A';
 
 UPDATE competition_funder
 SET funder = 'Industrial Strategy Challenge Fund (ISCF)'
