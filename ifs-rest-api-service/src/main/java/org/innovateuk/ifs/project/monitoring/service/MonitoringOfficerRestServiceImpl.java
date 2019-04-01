@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoring.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +13,13 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.pro
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 
 @Service
-public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService implements ProjectMonitoringOfficerRestService {
+public class MonitoringOfficerRestServiceImpl extends BaseRestService implements MonitoringOfficerRestService {
 
     private static final String PROJECT_MONITORING_OFFICER_REST_URL = "/monitoring-officer";
 
     @Override
-    public RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long projectMonitoringOfficerId) {
-        return getWithRestResult(format("%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectMonitoringOfficerId), ProjectMonitoringOfficerResource.class);
+    public RestResult<MonitoringOfficerResource> getProjectMonitoringOfficer(long projectMonitoringOfficerId) {
+        return getWithRestResult(format("%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectMonitoringOfficerId), MonitoringOfficerResource.class);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<List<ProjectMonitoringOfficerResource>> findAll() {
+    public RestResult<List<MonitoringOfficerResource>> findAll() {
         return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), projectMonitoringOfficerResourceListType());
     }
 

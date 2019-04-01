@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.mapstruct.Mapper;
 
@@ -13,16 +13,16 @@ import org.mapstruct.Mapper;
                 ProjectMapper.class
         }
 )
-public abstract class MonitoringOfficerMapper extends BaseMapper<MonitoringOfficer, LegacyMonitoringOfficerResource, Long>{
+public abstract class LegacyMonitoringOfficerMapper extends BaseMapper<LegacyMonitoringOfficer, LegacyMonitoringOfficerResource, Long>{
 
     @Override
-    public abstract LegacyMonitoringOfficerResource mapToResource(MonitoringOfficer monitoringOfficer);
+    public abstract LegacyMonitoringOfficerResource mapToResource(LegacyMonitoringOfficer monitoringOfficer);
 
     @Override
-    public abstract MonitoringOfficer mapToDomain(LegacyMonitoringOfficerResource monitoringOfficerResource);
+    public abstract LegacyMonitoringOfficer mapToDomain(LegacyMonitoringOfficerResource monitoringOfficerResource);
 
 
-    public Long mapMonitoringOfficerToId(MonitoringOfficer object) {
+    public Long mapMonitoringOfficerToId(LegacyMonitoringOfficer object) {
         if (object == null) {
             return null;
         }

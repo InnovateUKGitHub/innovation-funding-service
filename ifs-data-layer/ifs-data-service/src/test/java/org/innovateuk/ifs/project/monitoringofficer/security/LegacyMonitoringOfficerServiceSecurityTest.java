@@ -15,14 +15,14 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in ProjectMonitoringOfficerService interact with Spring Security
  */
-public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<LegacyMonitoringOfficerService> {
+public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<LegacyMonitoringOfficerService> {
 
-    private MonitoringOfficerPermissionRules permissionRules;
+    private LegacyMonitoringOfficerPermissionRules permissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(MonitoringOfficerPermissionRules.class);
+        permissionRules = getMockPermissionRulesBean(LegacyMonitoringOfficerPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 

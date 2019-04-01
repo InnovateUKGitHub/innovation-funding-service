@@ -5,10 +5,10 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.builder.LegacyMonitoringOfficerBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.LegacyMonitoringOfficerMapper;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<LegacyMonitoringOfficerService> {
+public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<LegacyMonitoringOfficerService> {
 
     private LegacyMonitoringOfficerResource monitoringOfficerResource;
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
@@ -36,10 +36,10 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Legacy
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+    private LegacyMonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
-    private MonitoringOfficerMapper monitoringOfficerMappeMockr;
+    private LegacyMonitoringOfficerMapper monitoringOfficerMappeMockr;
 
     @Mock
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
@@ -93,7 +93,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Legacy
         Long projectid = 1L;
 
         // Set this to different values, so that we can assert that it gets updated
-        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
                 .withFirstName("def")
                 .withLastName("klm")
                 .withEmail("def.klm@gmail.com")
@@ -127,7 +127,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Legacy
         Long projectId = 1L;
 
         // The details for the MO is set to the same as in resource
-        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
                 .withFirstName("abc")
                 .withLastName("xyz")
                 .withEmail("abc.xyz@gmail.com")
@@ -184,7 +184,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Legacy
 
         Long projectid = 1L;
 
-        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
                 .withFirstName("def")
                 .withLastName("klm")
                 .withEmail("def.klm@gmail.com")

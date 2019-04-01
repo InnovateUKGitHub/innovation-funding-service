@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.monitoring.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerServiceImpl;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerServiceImpl;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 /**
  * Testing how the secured methods in ProjectMonitoringOfficerService interact with Spring Security
  */
-public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<ProjectMonitoringOfficerService> {
+public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<MonitoringOfficerService> {
 
     @Test
     public void findAllProjectMonitoringOfficersOnlyIfGlobaLCompAdminOrProjectFinanceOrIfsAdminRole() {
@@ -44,8 +44,8 @@ public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecu
     }
 
     @Override
-    protected Class<? extends ProjectMonitoringOfficerService> getClassUnderTest() {
-        return ProjectMonitoringOfficerServiceImpl.class;
+    protected Class<? extends MonitoringOfficerService> getClassUnderTest() {
+        return MonitoringOfficerServiceImpl.class;
     }
 }
 

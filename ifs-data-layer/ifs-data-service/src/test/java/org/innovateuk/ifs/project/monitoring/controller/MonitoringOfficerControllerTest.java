@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,14 +17,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     @Mock
-    private ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+    private MonitoringOfficerService projectMonitoringOfficerServiceMock;
 
     @Test
     public void findAll() throws Exception {
-        List<ProjectMonitoringOfficerResource> expected = singletonList(new ProjectMonitoringOfficerResource());
+        List<MonitoringOfficerResource> expected = singletonList(new MonitoringOfficerResource());
 
         when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
 
@@ -39,7 +39,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
         long userId = 7;
-        ProjectMonitoringOfficerResource expected = new ProjectMonitoringOfficerResource();
+        MonitoringOfficerResource expected = new MonitoringOfficerResource();
 
         when(projectMonitoringOfficerServiceMock.getProjectMonitoringOfficer(userId)).thenReturn(serviceSuccess(expected));
 
@@ -77,7 +77,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController(projectMonitoringOfficerServiceMock);
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController(projectMonitoringOfficerServiceMock);
     }
 }

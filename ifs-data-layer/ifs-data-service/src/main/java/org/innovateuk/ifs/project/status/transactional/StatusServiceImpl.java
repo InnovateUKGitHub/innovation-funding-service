@@ -20,7 +20,7 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -269,11 +269,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 partnerProjectLocationStatus);
     }
 
-    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
+    private ServiceResult<LegacyMonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(LegacyMonitoringOfficer.class, projectId));
     }
 
-    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer,
                                                                            final ProjectActivityStates leadProjectDetailsSubmitted,
                                                                            final boolean locationPerPartnerRequired,
                                                                            final ProjectActivityStates partnerProjectLocationStatus) {
@@ -288,7 +288,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return getMonitoringOfficerStatus(monitoringOfficer, allRequiredDetailsComplete);
     }
 
-    private ProjectActivityStates getMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+    private ProjectActivityStates getMonitoringOfficerStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer,
                                                              final boolean allRequiredDetailsComplete) {
 
 
@@ -440,7 +440,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
-        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+        Optional<LegacyMonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());

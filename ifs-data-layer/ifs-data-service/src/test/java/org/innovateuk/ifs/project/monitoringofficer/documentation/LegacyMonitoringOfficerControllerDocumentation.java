@@ -24,7 +24,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
+public class LegacyMonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
 
     private LegacyMonitoringOfficerResource monitoringOfficerResource;
 

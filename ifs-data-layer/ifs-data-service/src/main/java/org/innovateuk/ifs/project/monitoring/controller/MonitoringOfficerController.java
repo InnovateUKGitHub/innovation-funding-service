@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,21 +13,21 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/monitoring-officer")
-public class ProjectMonitoringOfficerController {
+public class MonitoringOfficerController {
 
-    private ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    private MonitoringOfficerService projectMonitoringOfficerService;
 
-    public ProjectMonitoringOfficerController(ProjectMonitoringOfficerService projectMonitoringOfficerService) {
+    public MonitoringOfficerController(MonitoringOfficerService projectMonitoringOfficerService) {
         this.projectMonitoringOfficerService = projectMonitoringOfficerService;
     }
 
     @GetMapping("/find-all")
-    public RestResult<List<ProjectMonitoringOfficerResource>> findAll() {
+    public RestResult<List<MonitoringOfficerResource>> findAll() {
         return projectMonitoringOfficerService.findAll().toGetResponse();
     }
 
     @GetMapping("/{userId}")
-    public RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(@PathVariable long userId) {
+    public RestResult<MonitoringOfficerResource> getProjectMonitoringOfficer(@PathVariable long userId) {
         return projectMonitoringOfficerService.getProjectMonitoringOfficer(userId).toGetResponse();
     }
 

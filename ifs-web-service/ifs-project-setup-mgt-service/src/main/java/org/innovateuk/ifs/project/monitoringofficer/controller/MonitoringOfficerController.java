@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
@@ -45,7 +45,7 @@ public class MonitoringOfficerController {
     private MonitoringOfficerViewAllViewModelPopulator monitoringOfficerViewAllViewModelPopulator;
 
     @Autowired
-    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+    private MonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     @Autowired
     private UserService userService;
@@ -117,7 +117,7 @@ public class MonitoringOfficerController {
 
     @GetMapping("/view-all")
     public String viewAll(Model model) {
-        List<ProjectMonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
+        List<MonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
         model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate(monitoringOfficers));
         model.addAttribute(FORM, new MonitoringOfficerViewAllForm());
         return "project/monitoring-officer-view-all";

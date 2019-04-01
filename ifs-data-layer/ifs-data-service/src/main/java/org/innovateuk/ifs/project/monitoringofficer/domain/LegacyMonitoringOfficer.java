@@ -8,7 +8,8 @@ import javax.persistence.*;
  * Represents Monitoring Officer
  */
 @Entity
-public class MonitoringOfficer {
+@Table(name = "monitoring_officer")
+public class LegacyMonitoringOfficer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +27,9 @@ public class MonitoringOfficer {
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
-    public MonitoringOfficer() {}
+    public LegacyMonitoringOfficer() {}
 
-    public MonitoringOfficer(String firstName, String lastName, String email, String phoneNumber, Project project) {
+    public LegacyMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber, Project project) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

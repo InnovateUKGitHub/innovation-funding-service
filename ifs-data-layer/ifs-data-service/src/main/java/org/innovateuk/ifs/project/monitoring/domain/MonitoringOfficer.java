@@ -15,17 +15,17 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
  */
 @Entity
 @DiscriminatorValue("PROJECT_MONITORING_OFFICER")
-public class ProjectMonitoringOfficer extends ProjectParticipant {
+public class MonitoringOfficer extends ProjectParticipant {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
-    public ProjectMonitoringOfficer() {
+    public MonitoringOfficer() {
         super(null, MONITORING_OFFICER);
     }
 
-    public ProjectMonitoringOfficer(User user, Project project) {
+    public MonitoringOfficer(User user, Project project) {
         super(user, MONITORING_OFFICER);
         this.project = project;
     }
@@ -41,7 +41,7 @@ public class ProjectMonitoringOfficer extends ProjectParticipant {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectMonitoringOfficer that = (ProjectMonitoringOfficer) o;
+        MonitoringOfficer that = (MonitoringOfficer) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

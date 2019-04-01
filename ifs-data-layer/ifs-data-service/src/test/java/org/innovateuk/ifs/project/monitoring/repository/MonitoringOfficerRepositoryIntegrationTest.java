@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,10 +15,10 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.junit.Assert.assertEquals;
 
-public class ProjectMonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ProjectMonitoringOfficerRepository> {
+public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<MonitoringOfficerRepository> {
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -28,7 +28,7 @@ public class ProjectMonitoringOfficerRepositoryIntegrationTest extends BaseRepos
 
     @Autowired
     @Override
-    protected void setRepository(ProjectMonitoringOfficerRepository repository) {
+    protected void setRepository(MonitoringOfficerRepository repository) {
         this.repository = repository;
     }
 
@@ -60,7 +60,7 @@ public class ProjectMonitoringOfficerRepositoryIntegrationTest extends BaseRepos
 
         flushAndClearSession();
 
-        Iterable<ProjectMonitoringOfficer> projectMonitoringOfficers = repository.findAll();
+        Iterable<MonitoringOfficer> projectMonitoringOfficers = repository.findAll();
         assertEquals(1, Stream.of(projectMonitoringOfficers).count());
     }
 }

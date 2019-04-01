@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test the basic functions of the builder
  */
-public class MonitoringOfficerResourceBuilderTest extends BaseTest {
+public class LegacyMonitoringOfficerResourceBuilderTest extends BaseTest {
 
     @Test
     public void testUniqueFields() {

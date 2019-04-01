@@ -24,8 +24,8 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -64,7 +64,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectUserMapper projectUserMapper;
 
     @Autowired
-    protected MonitoringOfficerRepository monitoringOfficerRepository;
+    protected LegacyMonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
     protected BankDetailsRepository bankDetailsRepository;
@@ -157,7 +157,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
-    protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+    protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
             return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
         } else {

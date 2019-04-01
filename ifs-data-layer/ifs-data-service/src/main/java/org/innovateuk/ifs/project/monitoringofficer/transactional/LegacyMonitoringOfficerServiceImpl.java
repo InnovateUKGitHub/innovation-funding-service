@@ -10,8 +10,8 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.LegacyMonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements LegacyMonitoringOfficerService {
 
     @Autowired
-    private MonitoringOfficerMapper monitoringOfficerMapper;
+    private LegacyMonitoringOfficerMapper monitoringOfficerMapper;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -65,8 +65,8 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
         return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
     }
 
-    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
+    private ServiceResult<LegacyMonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(LegacyMonitoringOfficer.class, projectId));
     }
 
     @Override
@@ -108,12 +108,12 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
 
     private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(LegacyMonitoringOfficerResource monitoringOfficerResource) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-        MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
+        LegacyMonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
         return serviceSuccess(result);
     }
 
-    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
+    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(LegacyMonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
 
         if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
@@ -128,7 +128,7 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
         return serviceSuccess(result);
     }
 
-    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
+    private boolean isMonitoringOfficerDetailsChanged(LegacyMonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
         return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
                 !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
                 !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||

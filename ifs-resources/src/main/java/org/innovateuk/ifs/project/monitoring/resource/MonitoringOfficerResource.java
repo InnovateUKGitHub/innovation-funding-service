@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoring.resource;
 
 import java.util.List;
 
-public class ProjectMonitoringOfficerResource {
+public class MonitoringOfficerResource {
 
     private final long userId;
     private final String firstName;
@@ -10,7 +10,7 @@ public class ProjectMonitoringOfficerResource {
     private final List<MonitoringOfficerUnassignedProjectResource> unassignedProjects;
     private final List<MonitoringOfficerAssignedProjectResource> assignedProjects;
 
-    public ProjectMonitoringOfficerResource() {
+    public MonitoringOfficerResource() {
         userId = -1;
         firstName = null;
         lastName = null;
@@ -18,7 +18,7 @@ public class ProjectMonitoringOfficerResource {
         assignedProjects = null;
     }
 
-    public ProjectMonitoringOfficerResource(long userId, String firstName, String lastName, List<MonitoringOfficerUnassignedProjectResource> unassignedProjects, List<MonitoringOfficerAssignedProjectResource> assignedProjects) {
+    public MonitoringOfficerResource(long userId, String firstName, String lastName, List<MonitoringOfficerUnassignedProjectResource> unassignedProjects, List<MonitoringOfficerAssignedProjectResource> assignedProjects) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

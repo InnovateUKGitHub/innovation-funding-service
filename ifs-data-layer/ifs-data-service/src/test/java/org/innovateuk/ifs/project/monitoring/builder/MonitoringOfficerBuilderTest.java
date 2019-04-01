@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoring.builder;
 
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -10,11 +10,11 @@ import java.util.List;
 
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class ProjectMonitoringOfficerBuilderTest {
+public class MonitoringOfficerBuilderTest {
 
     @Test
     public void buildOne() {
@@ -23,7 +23,7 @@ public class ProjectMonitoringOfficerBuilderTest {
         Project expectedProject = newProject().build();
         ParticipantStatus expectedParticipantStatus = ACCEPTED;
 
-        ProjectMonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer()
+        MonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer()
                 .withId(expectedId)
                 .withUser(expectedUser)
                 .withProject(expectedProject)
@@ -43,7 +43,7 @@ public class ProjectMonitoringOfficerBuilderTest {
         Project[] expectedProjects = newProject().buildArray(2, Project.class);
         ParticipantStatus[] expectedParticipantStatuses = { PENDING, REJECTED };
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
                 .withId(expectedIds)
                 .withUser(expectedUsers)
                 .withProject(expectedProjects)

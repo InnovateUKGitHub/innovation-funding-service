@@ -164,7 +164,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertEquals(competition.getInnovationAreaNames(), CollectionFunctions.asLinkedSet("Some Area", "Some other area"));
     }
 
-
     private void setupViewMonitoringOfficerTestExpectations(ProjectResource project, boolean existingMonitoringOfficer) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -187,7 +186,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
-
 
     @Override
     protected LegacyMonitoringOfficerController supplyControllerUnderTest() {

@@ -11,8 +11,8 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -55,7 +55,7 @@ public class UserPermissionRules {
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
@@ -275,9 +275,9 @@ public class UserPermissionRules {
         List<Project> projectsThisUserIsAMemberOf =
                 simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
 
-        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, ProjectMonitoringOfficer::getProject);
+        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
     }

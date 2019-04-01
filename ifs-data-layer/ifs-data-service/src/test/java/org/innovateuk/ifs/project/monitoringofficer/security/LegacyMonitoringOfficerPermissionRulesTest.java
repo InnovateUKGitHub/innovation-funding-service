@@ -29,7 +29,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<MonitoringOfficerPermissionRules> {
+public class LegacyMonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<LegacyMonitoringOfficerPermissionRules> {
     private ProjectProcess projectProcess;
 
     @Mock
@@ -44,8 +44,8 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Override
-    protected MonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
-        return new MonitoringOfficerPermissionRules();
+    protected LegacyMonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
+        return new LegacyMonitoringOfficerPermissionRules();
     }
 
     @Test

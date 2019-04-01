@@ -15,13 +15,12 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -122,7 +121,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
         List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
                 .map(pmo -> pmo.getProject())
                 .map(project -> project.getApplication().getCompetition().getId())

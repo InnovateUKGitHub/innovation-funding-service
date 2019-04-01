@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.monitoring.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoring.controller.ProjectMonitoringOfficerController;
+import org.innovateuk.ifs.project.monitoring.controller.MonitoringOfficerController;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -24,14 +24,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectMonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     @Mock
-    private ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+    private MonitoringOfficerService projectMonitoringOfficerServiceMock;
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController(projectMonitoringOfficerServiceMock);
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController(projectMonitoringOfficerServiceMock);
     }
 
     @Test
@@ -47,8 +47,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                                                                            "projectName",
                                                                            "leadOrganisationName"));
 
-        List<ProjectMonitoringOfficerResource> expected =
-                singletonList(new ProjectMonitoringOfficerResource(1L,
+        List<MonitoringOfficerResource> expected =
+                singletonList(new MonitoringOfficerResource(1L,
                                                                    "firstName",
                                                                    "lastName",
                                                                    unassignedProjects,
@@ -71,7 +71,7 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
         long userId = 7;
-        ProjectMonitoringOfficerResource expected = new ProjectMonitoringOfficerResource(1L, "firstName", "lastName",
+        MonitoringOfficerResource expected = new MonitoringOfficerResource(1L, "firstName", "lastName",
                 singletonList(new MonitoringOfficerUnassignedProjectResource(1, 1, "projectName")),
                 singletonList(new MonitoringOfficerAssignedProjectResource(1, 1, 1, "projectName", "leadOrganisationName")));
 

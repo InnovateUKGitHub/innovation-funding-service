@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.monitoring.repository;
 
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
-public interface ProjectMonitoringOfficerRepository extends PagingAndSortingRepository<ProjectMonitoringOfficer, Long> {
+public interface MonitoringOfficerRepository extends PagingAndSortingRepository<MonitoringOfficer, Long> {
 
-    List<ProjectMonitoringOfficer> findByUserId(long userId);
+    List<MonitoringOfficer> findByUserId(long userId);
 
     boolean existsByProjectIdAndUserId(long projectId, long userId);
 

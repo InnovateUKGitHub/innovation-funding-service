@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,7 +33,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
     @Mock
-    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+    private MonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     @Mock
     private UserService userService;

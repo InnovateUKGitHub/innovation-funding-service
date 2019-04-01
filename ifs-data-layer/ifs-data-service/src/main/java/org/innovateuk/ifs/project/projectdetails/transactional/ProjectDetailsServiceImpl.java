@@ -26,7 +26,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -340,11 +340,11 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private boolean isMonitoringOfficerAssigned(long projectId) {
-        MonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
+        LegacyMonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
         return monitoringOfficer != null;
     }
 
-    private MonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
+    private LegacyMonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
         return monitoringOfficerRepository.findOneByProjectId(projectId);
     }
 

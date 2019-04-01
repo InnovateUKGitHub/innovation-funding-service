@@ -8,11 +8,11 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -38,10 +38,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<ProjectMonitoringOfficerServiceImpl> {
+public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerServiceImpl> {
 
     @Mock
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
 
     @Mock
     private ProjectRepository projectRepositoryMock;
@@ -59,7 +59,7 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
         when(projectRepositoryMock.findAssigned(anyLong())).thenReturn(emptyList());
         when(projectRepositoryMock.findAssignable()).thenReturn(emptyList());
 
-        List<ProjectMonitoringOfficerResource> result = service.findAll().getSuccess();
+        List<MonitoringOfficerResource> result = service.findAll().getSuccess();
 
         assertThat(result.size() == 2);
         assertThat(result.get(0).getFirstName().equals("John"));
@@ -110,7 +110,7 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
                 .thenReturn(serviceSuccess(assignProjectOrganisationResources.get(1)));
         when(projectRepositoryMock.findAssignable()).thenReturn(unassignedProjects);
 
-        ProjectMonitoringOfficerResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
+        MonitoringOfficerResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
 
         assertEquals(moUser.getFirstName(), projectMonitoringOfficer.getFirstName());
         assertEquals(moUser.getLastName(), projectMonitoringOfficer.getLastName());
@@ -156,7 +156,7 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
         InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, projectMonitoringOfficerRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER);
         inOrder.verify(projectRepositoryMock).findById(project.getId());
-        inOrder.verify(projectMonitoringOfficerRepositoryMock).save(new ProjectMonitoringOfficer(moUser, project));
+        inOrder.verify(projectMonitoringOfficerRepositoryMock).save(new MonitoringOfficer(moUser, project));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -171,8 +171,8 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
     }
 
     @Override
-    protected ProjectMonitoringOfficerServiceImpl supplyServiceUnderTest() {
-        return new ProjectMonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,
+    protected MonitoringOfficerServiceImpl supplyServiceUnderTest() {
+        return new MonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,
                 userRepositoryMock, organisationServiceMock);
     }
 }
