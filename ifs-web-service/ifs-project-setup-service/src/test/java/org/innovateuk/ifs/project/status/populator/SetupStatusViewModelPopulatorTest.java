@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -20,6 +19,7 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -83,7 +84,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private MonitoringOfficerService monitoringOfficerService;
+    private LegacyMonitoringOfficerRestService monitoringOfficerService;
 
     @Mock
     private BankDetailsRestService bankDetailsRestService;
@@ -117,8 +118,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<BankDetailsResource> bankDetailsNotFoundResult = restFailure(notFoundError(BankDetailsResource.class, 123L));
 
     private LegacyMonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
-    private Optional<LegacyMonitoringOfficerResource> monitoringOfficerFoundResult = Optional.of(monitoringOfficer);
-    private Optional<LegacyMonitoringOfficerResource> monitoringOfficerNotFoundResult = Optional.empty();
+    private RestResult<LegacyMonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
+    private RestResult<LegacyMonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
     private Map<String, SectionStatus> partnerStatusFlagChecks = new HashMap<>();
 
@@ -1506,7 +1507,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         return populator.populateViewModel(projectId, loggedInUser, "origin").get();
     }
 
-    private void setupLookupProjectDetailsExpectations(Optional<LegacyMonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
+    private void setupLookupProjectDetailsExpectations(RestResult<LegacyMonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
 
         ProjectUserResource pmUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)

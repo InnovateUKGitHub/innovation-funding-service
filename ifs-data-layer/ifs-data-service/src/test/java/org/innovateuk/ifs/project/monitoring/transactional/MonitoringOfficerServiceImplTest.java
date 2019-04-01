@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
@@ -51,6 +52,9 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
     @Mock
     private OrganisationService organisationServiceMock;
+
+    @Mock
+    private ProjectMapper projectMapper;
 
     @Test
     public void findAll() {
@@ -173,6 +177,6 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     @Override
     protected MonitoringOfficerServiceImpl supplyServiceUnderTest() {
         return new MonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,
-                userRepositoryMock, organisationServiceMock);
+                userRepositoryMock, organisationServiceMock, projectMapper);
     }
 }

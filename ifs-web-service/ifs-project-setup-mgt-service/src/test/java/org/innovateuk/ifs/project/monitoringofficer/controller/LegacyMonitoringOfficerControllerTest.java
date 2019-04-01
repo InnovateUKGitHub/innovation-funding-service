@@ -7,14 +7,14 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -25,6 +25,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -42,9 +43,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
@@ -111,7 +111,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     private StatusService statusService;
 
     @Mock
-    private MonitoringOfficerService monitoringOfficerService;
+    private LegacyMonitoringOfficerRestService monitoringOfficerService;
 
     @Mock
     private ApplicationService applicationService;
@@ -349,7 +349,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
         ProjectResource project = projectBuilder.build();
 
-        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(restSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
         String url = "/project/123/monitoring-officer/confirm";
         MvcResult result = mockMvc.perform(post(url).
@@ -439,7 +439,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         when(projectService.getById(123L)).thenReturn(projectBuilder.build());
         when(statusService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
-        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/123/monitoring-officer/assign").
                 param("firstName", "First").
@@ -456,7 +456,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
         ProjectResource project = projectBuilder.build();
 
-        ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
+        RestResult<Void> failureResponse = restFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
         when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
@@ -526,7 +526,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
         ProjectResource project = projectBuilder.build();
 
-        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(restSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
         String url = "/project/123/monitoring-officer/assign";
 
@@ -597,8 +597,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                         build()).
                 build();
 
-        Optional<LegacyMonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(mo) : restFailure(HttpStatus.NOT_FOUND));
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);

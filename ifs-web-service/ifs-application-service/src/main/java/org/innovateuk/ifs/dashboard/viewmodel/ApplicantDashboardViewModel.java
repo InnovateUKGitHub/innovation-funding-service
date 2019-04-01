@@ -47,7 +47,6 @@ public class ApplicantDashboardViewModel {
 
     /* View logic */
     public String getApplicationInProgressText() {
-
         return inProgress.size() == 1 ?
                 "Application in progress" : "Applications in progress";
     }
