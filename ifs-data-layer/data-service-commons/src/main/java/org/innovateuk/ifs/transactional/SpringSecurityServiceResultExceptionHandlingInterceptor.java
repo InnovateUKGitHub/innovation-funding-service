@@ -26,7 +26,9 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptor implements 
         try {
             return invocation.proceed();
         } catch (AccessDeniedException | AuthenticationCredentialsNotFoundException e) {
-            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
+            // Don't log out the Exception as it floods the logs and AccessDeniedExceptions can be normal.
+            // There is more useful logging in DefaultPermissionMethodHandler.
+            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
             return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (Exception e) {
             LOG.error(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a 500 ServiceFailure", e);

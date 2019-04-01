@@ -9,13 +9,11 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -50,6 +48,28 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
                 return true;
             }
         }
+
+
+        // Permissions have failed, it is useful to log out some salient details. However if they end up spamming the
+        // logs the level may have to be put down as denying access is not exceptional application behaviour. We use
+        // a String builder as there are a few variations on the authentication that can be provided.
+        StringBuilder message = new StringBuilder();
+        message.append("failed authentication ");
+        Optional<UserResource> user = from(authentication);
+        if (user.isPresent()){
+            message.append("user [");
+            message.append(ANONYMOUS_USER.equals(user) ? "anonymous" : user.get().getId());
+            message.append("] ");
+        }
+        else {
+            message.append("authentication [] ");
+        }
+
+        message.append("permission [" + (permission != null ? permission.toString() : "null") + " ]");
+        message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
+        Object targetObjectId = getId(targetObject);
+        message.append("target id [" + (targetObjectId != null ? targetObjectId : "null") + "]");
+        LOG.warn(message);
 
         return false;
     }
@@ -100,14 +120,12 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         Class<?> secondParameter = method.getParameterTypes()[1];
 
         if (secondParameter.equals(UserResource.class)) {
-            if (authentication instanceof UserAuthentication) {
-                finalAuthentication = ((UserAuthentication) authentication).getDetails();
-            } else if (authentication instanceof AnonymousAuthenticationToken) {
-                finalAuthentication = ANONYMOUS_USER;
-            } else {
-                throw new IllegalArgumentException("Unable to determine the authentication token for Spring Security");
-            }
-        } else if (Authentication.class.isAssignableFrom(secondParameter)) {
+            // We want a UserResource to feed into the @PermissonRule-method. If we don't have one we have to throw.
+            finalAuthentication = from(authentication).orElseThrow(() ->
+            new IllegalArgumentException("Unable to determine the authentication token for Spring Security"));
+        }
+        else if (Authentication.class.isAssignableFrom(secondParameter)) {
+            // Well also allow Authentication objects to be feed into @PermissonRule-methods.
             finalAuthentication = authentication;
         } else {
             throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
@@ -127,6 +145,27 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         } catch (Exception e) {
             LOG.error("Error whilst processing a permissions method", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    private Optional<Object> getId(Object dto){
+        Method getId = ReflectionUtils.findMethod(dto.getClass(), "getId");
+        try {
+            return Optional.of(ReflectionUtils.invokeMethod(getId, dto));
+        }
+        catch (Exception e) {
+            // Not much that we can do here and we don't want to cause issues just for logging.
+            return Optional.empty();
+        }
+    }
+
+    private Optional<UserResource> from(Authentication authentication){
+        if (authentication instanceof UserAuthentication) {
+            return Optional.of(((UserAuthentication) authentication).getDetails());
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.of(ANONYMOUS_USER);
+        } else {
+            return Optional.empty();
         }
     }
 
