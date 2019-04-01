@@ -67,8 +67,8 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
 
         message.append("permission [" + (permission != null ? permission.toString() : "null") + " ]");
         message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
-        Object targetObjectId = getId(targetObject);
-        message.append("target id [" + (targetObjectId != null ? targetObjectId : "null") + "]");
+        Optional<Object> targetObjectId = getId(targetObject);
+        message.append("target id [" + (targetObjectId != null ? targetObjectId.get() : "null") + "]");
         LOG.warn(message);
 
         return false;
