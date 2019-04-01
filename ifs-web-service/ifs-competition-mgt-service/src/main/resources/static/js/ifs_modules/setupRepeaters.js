@@ -184,7 +184,6 @@ IFS.competitionManagement.repeater = (function () {
     addCoFunder: function () {
       var count = 0
       var idCount = 0
-
       if (jQuery('.funder-row').length) {
         count = parseInt(jQuery('.funder-row').length, 10) // name attribute has to be 0,1,2,3
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
@@ -194,7 +193,8 @@ IFS.competitionManagement.repeater = (function () {
       var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="govuk-form-group">' +
-                        '<select class="govuk-select" id="' + idCount + '-funder" name="funders[' + count + '].funder" data-auto-complete="">' +
+                        '<label class="govuk-label govuk-visually-hidden" for="funders[' + idCount + '].funder">Select funder name</label>' +
+                        '<select class="govuk-select funders-' + idCount + '" id="funders[' + idCount + '].funder" name="funders[' + count + '].funder" data-auto-complete="" data-required-errormessage="Please select a funder name.">' +
                           options +
                         '</select>' +
                       '</div>' +
@@ -207,7 +207,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                   '</div>'
       jQuery('.funder-row').last().after(html)
-      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('#' + idCount + '-funder'))
+      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.funders-' + idCount))
     },
     addGuidanceRow: function () {
       var table = jQuery('#guidance-table')

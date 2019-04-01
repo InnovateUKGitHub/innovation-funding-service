@@ -30,18 +30,27 @@ IFS.core.autoComplete = (function () {
         })
       }
       var showAllValues = element.children('option').length <= s.menuLimit
+      var required = element.data('required-errormessage')
       s.autoCompletePlugin.enhanceSelectElement({
         selectElement: element[0],
         showAllValues: showAllValues,
         defaultValue: '',
-        confirmOnBlur: false,
+        confirmOnBlur: true,
         displayMenu: 'overlay',
+        required: required,
         onConfirm: function (confirmed) {
-          var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
-          element.val(selectedUserId)
-          autoCompleteSubmitElement.prop('disabled', false)
+          if (confirmed !== '') {
+            var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
+            element.val(selectedUserId)
+            autoCompleteSubmitElement.prop('disabled', false)
+          } else {
+            element.val('')
+          }
         }
       })
+      if (required) {
+        element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
+      }
     }
   }
 })()
