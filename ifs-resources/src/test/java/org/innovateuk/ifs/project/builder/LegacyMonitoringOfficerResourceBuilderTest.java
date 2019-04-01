@@ -16,7 +16,7 @@ public class LegacyMonitoringOfficerResourceBuilderTest extends BaseTest {
     @Test
     public void testUniqueFields() {
 
-        List<LegacyMonitoringOfficerResource> mos = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource().withProject(123L, 456L).build(2);
+        List<LegacyMonitoringOfficerResource> mos = LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource().withProject(123L, 456L).build(2);
 
         LegacyMonitoringOfficerResource mo1 = mos.get(0);
         assertEquals(Long.valueOf(1), mo1.getId());

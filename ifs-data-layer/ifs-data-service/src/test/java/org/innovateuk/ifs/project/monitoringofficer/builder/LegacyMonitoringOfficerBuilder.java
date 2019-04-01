@@ -16,7 +16,7 @@ public class LegacyMonitoringOfficerBuilder extends BaseBuilder<LegacyMonitoring
         super(multiActions);
     }
 
-    public static LegacyMonitoringOfficerBuilder newMonitoringOfficer() {
+    public static LegacyMonitoringOfficerBuilder newLegacyMonitoringOfficer() {
         return new LegacyMonitoringOfficerBuilder(emptyList()).with(uniqueIds());
     }
 

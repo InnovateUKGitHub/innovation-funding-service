@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -74,6 +75,18 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
+    }
+
+    @Test
+    public void getMonitoringOfficerProjects() throws Exception {
+        long userId = 11;
+
+        when(projectMonitoringOfficerServiceMock.getMonitoringOfficerProjects(userId)).thenReturn(serviceSuccess(emptyList()));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/monitoring-officer/{userId}/projects", userId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).getMonitoringOfficerProjects(userId);
     }
 
     @Override

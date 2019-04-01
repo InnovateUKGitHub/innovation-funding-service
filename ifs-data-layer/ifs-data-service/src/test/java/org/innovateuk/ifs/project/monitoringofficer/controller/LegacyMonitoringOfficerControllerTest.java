@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_M
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
       @Before
       public void setUp() {
 
-          monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+          monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource()
                   .withId(null)
                   .withProject(1L)
                   .withFirstName("abc")
@@ -60,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
       @Test
       public void getMonitoringOfficer() throws Exception {
 
-          LegacyMonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+          LegacyMonitoringOfficerResource monitoringOfficer = newLegacyMonitoringOfficerResource().build();
 
           when(monitoringOfficerServiceMock.getMonitoringOfficer(123L)).thenReturn(serviceSuccess(monitoringOfficer));
 
@@ -156,7 +156,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           Long projectId = 1L;
 
-          LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+          LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource()
                   .withId(null)
                   .withProject(projectId)
                   .withFirstName("")

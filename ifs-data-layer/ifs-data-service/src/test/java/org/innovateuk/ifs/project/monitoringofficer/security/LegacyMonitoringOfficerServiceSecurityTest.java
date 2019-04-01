@@ -8,7 +8,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +47,7 @@ public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecur
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newLegacyMonitoringOfficerResource().build()), () -> {
             verify(permissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(permissionRules);
         });
@@ -59,7 +59,7 @@ public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecur
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
+        assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newLegacyMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
                     verify(permissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
                     verifyNoMoreInteractions(permissionRules);

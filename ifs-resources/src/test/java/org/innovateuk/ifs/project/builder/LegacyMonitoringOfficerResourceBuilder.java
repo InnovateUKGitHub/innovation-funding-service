@@ -16,7 +16,7 @@ public class LegacyMonitoringOfficerResourceBuilder extends BaseBuilder<LegacyMo
         super(multiActions);
     }
 
-    public static LegacyMonitoringOfficerResourceBuilder newMonitoringOfficerResource() {
+    public static LegacyMonitoringOfficerResourceBuilder newLegacyMonitoringOfficerResource() {
         return new LegacyMonitoringOfficerResourceBuilder(emptyList()).
                 with(uniqueIds()).
                 withIdBased((id, mo) -> mo.setFirstName("Monitoring " + id)).

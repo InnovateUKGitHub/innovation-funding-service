@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -46,7 +46,7 @@ public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<
 
     @Before
     public void setUp() {
-        monitoringOfficerResource = newMonitoringOfficerResource()
+        monitoringOfficerResource = newLegacyMonitoringOfficerResource()
                 .withProject(1L)
                 .withFirstName("abc")
                 .withLastName("xyz")
@@ -60,7 +60,7 @@ public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<
 
         Long projectid = 1L;
 
-        LegacyMonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource()
+        LegacyMonitoringOfficerResource monitoringOfficerResource = newLegacyMonitoringOfficerResource()
                 .withProject(3L)
                 .withFirstName("abc")
                 .withLastName("xyz")
@@ -93,7 +93,7 @@ public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<
         Long projectid = 1L;
 
         // Set this to different values, so that we can assert that it gets updated
-        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newLegacyMonitoringOfficer()
                 .withFirstName("def")
                 .withLastName("klm")
                 .withEmail("def.klm@gmail.com")
@@ -127,7 +127,7 @@ public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<
         Long projectId = 1L;
 
         // The details for the MO is set to the same as in resource
-        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newLegacyMonitoringOfficer()
                 .withFirstName("abc")
                 .withLastName("xyz")
                 .withEmail("abc.xyz@gmail.com")
@@ -184,7 +184,7 @@ public class LegacyMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<
 
         Long projectid = 1L;
 
-        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newMonitoringOfficer()
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newLegacyMonitoringOfficer()
                 .withFirstName("def")
                 .withLastName("klm")
                 .withEmail("def.klm@gmail.com")

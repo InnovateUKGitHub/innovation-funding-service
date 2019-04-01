@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -59,7 +59,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     private long applicationId = 456L;
     private long competitionId = 789L;
 
-    private LegacyMonitoringOfficerResource mo = newMonitoringOfficerResource().
+    private LegacyMonitoringOfficerResource mo = newLegacyMonitoringOfficerResource().
             withFirstName("First").
             withLastName("Last").
             withEmail("asdf@asdf.com").

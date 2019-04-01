@@ -13,8 +13,11 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.ProjectDocs.projectResourceFields;
 import static org.innovateuk.ifs.documentation.ProjectMonitoringOfficerResourceDocs.*;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -127,5 +130,26 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 ));
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
+    }
+
+    @Test
+    public void getMonitoringOfficerProjects() throws Exception {
+        long userId = 11;
+
+        when(projectMonitoringOfficerServiceMock.getMonitoringOfficerProjects(userId)).thenReturn(serviceSuccess(newProjectResource().build(1)));
+
+        mockMvc.perform(get("/monitoring-officer/{userId}/projects", userId).contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("monitoring-officer/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Id of the monitoring officer user")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of projects the user is allowed to monitor")
+                        ).andWithPrefix("[].", projectResourceFields)
+                ));
+
+        verify(projectMonitoringOfficerServiceMock, only()).getMonitoringOfficerProjects(userId);
     }
 }

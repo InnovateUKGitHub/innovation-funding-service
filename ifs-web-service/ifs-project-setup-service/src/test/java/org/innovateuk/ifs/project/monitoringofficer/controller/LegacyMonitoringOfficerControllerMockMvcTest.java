@@ -13,14 +13,14 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
+public class LegacyMonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
     @Mock
     private ProjectService projectService;
 
@@ -31,7 +31,7 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
     public void testViewMonitoringOfficer() throws Exception {
 
         ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
-        LegacyMonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+        LegacyMonitoringOfficerResource monitoringOfficer = newLegacyMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
         when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(restSuccess(monitoringOfficer));

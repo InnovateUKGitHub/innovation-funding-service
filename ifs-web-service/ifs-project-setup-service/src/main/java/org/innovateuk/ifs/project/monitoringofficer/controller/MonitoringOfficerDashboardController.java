@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasAnyAuthority('monitoring_officer')")
 public class MonitoringOfficerDashboardController {
 
-    private final MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;
+    private MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;
+
+    MonitoringOfficerDashboardController() {}
 
     public MonitoringOfficerDashboardController(MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator) {
         this.monitoringOfficerDashboardViewModelPopulator = monitoringOfficerDashboardViewModelPopulator;

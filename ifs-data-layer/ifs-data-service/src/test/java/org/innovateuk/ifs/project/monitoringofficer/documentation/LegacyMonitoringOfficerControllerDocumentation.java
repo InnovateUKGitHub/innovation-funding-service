@@ -34,7 +34,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
     @Before
     public void setUp() {
 
-        monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource()
                 .withId(null)
                 .withProject(1L)
                 .withFirstName("abc")
@@ -54,7 +54,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
 
         Long projectId = 1L;
 
-        LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource()
                 .withId(null)
                 .withProject(3L)
                 .withFirstName("abc")

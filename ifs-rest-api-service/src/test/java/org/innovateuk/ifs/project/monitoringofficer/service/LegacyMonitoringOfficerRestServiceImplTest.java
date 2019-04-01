@@ -10,7 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<LegacyMonitoringOfficerRestServiceImpl> {
+public class LegacyMonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<LegacyMonitoringOfficerRestServiceImpl> {
     private static final String projectRestURL = "/project";
 
     @Override
