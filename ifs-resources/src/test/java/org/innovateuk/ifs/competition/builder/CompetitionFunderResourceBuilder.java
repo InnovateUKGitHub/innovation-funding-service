@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -25,7 +26,7 @@ public class CompetitionFunderResourceBuilder extends BaseBuilder<CompetitionFun
         return with(competitionFunder -> setField("id", id, competitionFunder));
     }
 
-    public CompetitionFunderResourceBuilder withFunder(String funder) {
+    public CompetitionFunderResourceBuilder withFunder(Funder funder) {
         return with(competitionFunder -> setField("funder", funder, competitionFunder));
     }
 

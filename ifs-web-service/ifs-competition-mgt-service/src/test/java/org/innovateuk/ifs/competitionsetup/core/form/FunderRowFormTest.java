@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class FunderRowFormTest {
 
     @Test
-    public void testGetAppendixFileDescription() throws Exception {
+    public void getAppendixFileDescription() throws Exception {
         Boolean coFunder = Boolean.FALSE;
         Funder funder = Funder.ADVANCED_PROPULSION_CENTRE_APC;
         BigInteger funderBudget = BigInteger.valueOf(12345678);
@@ -20,7 +20,7 @@ public class FunderRowFormTest {
         CompetitionFunderResource funderResource = newCompetitionFunderResource()
                 .withCoFunder(coFunder)
                 .withCompetitionId(123L)
-                .withFunder(funder.getDisplayName())
+                .withFunder(funder)
                 .withFunderBudget(funderBudget)
                 .build();
 

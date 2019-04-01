@@ -11,10 +11,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -513,14 +510,14 @@ public class CsvUtils {
 
     public static class CompetitionFunderLine {
         public String competitionName;
-        public String funder;
+        public Funder funder;
         public BigInteger funder_budget;
         public boolean co_funder;
 
         private CompetitionFunderLine(List<String> line) {
             int i = 0;
             competitionName = nullable(line.get(i++));
-            funder = nullable(line.get(i++));
+            funder = nullableEnum(line.get(i++), Funder::valueOf);;
             funder_budget = nullableBigInteger(line.get(i++));
             co_funder = nullableBoolean(line.get(i++));
         }

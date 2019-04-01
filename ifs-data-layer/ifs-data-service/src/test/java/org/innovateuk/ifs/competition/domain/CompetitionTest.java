@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Before;
@@ -18,6 +19,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.Funder.ADVANCED_PROPULSION_CENTRE_APC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -39,8 +41,8 @@ public class CompetitionTest {
     private String budgetCode;
 
     private String activityCode;
-    private String funder;
     private BigDecimal funderBudget;
+    private Funder funder;
 
     @Before
     public void setUp() throws Exception {
@@ -55,7 +57,7 @@ public class CompetitionTest {
 
         budgetCode = "BudgetCode";
         activityCode = "ActivityCode";
-        funder = "Funder";
+        funder = ADVANCED_PROPULSION_CENTRE_APC;
         funderBudget = new BigDecimal(0);
 
         sections = new ArrayList<>();
@@ -86,7 +88,7 @@ public class CompetitionTest {
         CompetitionFunder Funder1 = new CompetitionFunder();
         Funder1.setId(1L);
         Funder1.setCompetition(competition);
-        Funder1.setFunder("Funder1");
+        Funder1.setFunder(funder);
         Funder1.setFunderBudget(BigInteger.valueOf(1));
         Funder1.setCoFunder(false);
         returnList.add(Funder1);
@@ -95,7 +97,7 @@ public class CompetitionTest {
         CompetitionFunder coFunder1 = new CompetitionFunder();
         coFunder1.setId(1L);
         coFunder1.setCompetition(competition);
-        coFunder1.setFunder("CoFunder1");
+        coFunder1.setFunder(funder);
         coFunder1.setFunderBudget(BigInteger.valueOf(1));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder1);
@@ -103,7 +105,7 @@ public class CompetitionTest {
         CompetitionFunder coFunder2 = new CompetitionFunder();
         coFunder2.setId(2L);
         coFunder2.setCompetition(competition);
-        coFunder2.setFunder("CoFunder2");
+        coFunder2.setFunder(funder);
         coFunder2.setFunderBudget(BigInteger.valueOf(2));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder2);
