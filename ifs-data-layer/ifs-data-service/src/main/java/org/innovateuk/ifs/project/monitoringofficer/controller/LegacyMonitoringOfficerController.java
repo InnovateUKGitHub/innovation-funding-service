@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,19 +14,19 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/project")
-public class MonitoringOfficerController {
+public class LegacyMonitoringOfficerController {
 
     @Autowired
-    private MonitoringOfficerService monitoringOfficerService;
+    private LegacyMonitoringOfficerService monitoringOfficerService;
 
     @GetMapping("/{projectId}/monitoring-officer")
-    public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
+    public RestResult<LegacyMonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
         return monitoringOfficerService.getMonitoringOfficer(projectId).toGetResponse();
     }
 
     @PutMapping("/{projectId}/monitoring-officer")
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
-                                                  @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
+                                                  @RequestBody @Valid final LegacyMonitoringOfficerResource monitoringOfficerResource) {
 
         ServiceResult<Boolean> result = monitoringOfficerService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
                 .andOnSuccessReturn(r -> r.isMonitoringOfficerSaved());

@@ -41,7 +41,7 @@ public class ProjectMonitoringOfficerController {
         return projectMonitoringOfficerService.unassignProjectFromMonitoringOfficer(userId, projectId).toPostResponse();
     }
 
-    @GetMapping("/monitoring-officer/projects/{userId}")
+    @GetMapping("{userId}/projects")
     public RestResult<List<ProjectResource>> getMonitoringOfficerProjects(@PathVariable("userId") final long userId) {
         return projectMonitoringOfficerService.getMonitoringOfficerProjects(userId).toGetResponse();
     }

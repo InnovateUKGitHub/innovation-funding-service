@@ -13,9 +13,9 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -70,7 +70,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     private long applicationId = 456L;
     private long competitionId = 789L;
 
-    private MonitoringOfficerResource mo = newMonitoringOfficerResource().
+    private LegacyMonitoringOfficerResource mo = newMonitoringOfficerResource().
             withFirstName("First").
             withLastName("Last").
             withEmail("asdf@asdf.com").
@@ -143,7 +143,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -166,7 +166,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
         MvcResult result = mockMvc.perform(post ? post(url) : get(url)).andReturn();
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
         assertFalse(model.isEditable());
     }
 
@@ -186,7 +186,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -243,7 +243,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -278,7 +278,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -333,7 +333,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -361,7 +361,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -376,7 +376,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
+        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -470,7 +470,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -485,7 +485,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones that resulted in error
-        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
+        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf2@asdf.com", form.getEmailAddress());
@@ -539,7 +539,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -554,7 +554,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
+        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -581,7 +581,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
-        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
+        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf@asdf.com", form.getEmailAddress());
@@ -597,7 +597,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                         build()).
                 build();
 
-        Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
+        Optional<LegacyMonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
         when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
         when(projectService.getById(projectId)).thenReturn(project);
@@ -613,7 +613,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(LegacyMonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
@@ -626,7 +626,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     }
 
     private void assertMonitoringOfficerFormNotPrepopulated(Map<String, Object> modelMap) {
-        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
+        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertNull(form.getFirstName());
         assertNull(form.getLastName());
         assertNull(form.getEmailAddress());

@@ -2,10 +2,10 @@ package org.innovateuk.ifs.project.monitoringofficer.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.controller.MonitoringOfficerController;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.controller.LegacyMonitoringOfficerController;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
+import static org.innovateuk.ifs.documentation.LegacyMonitoringOfficerDocs.legacyMonitoringOfficerResourceFields;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -24,17 +24,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {
+public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
 
-    private MonitoringOfficerResource monitoringOfficerResource;
+    private LegacyMonitoringOfficerResource monitoringOfficerResource;
 
     @Mock
-    private MonitoringOfficerService monitoringOfficerServiceMock;
+    private LegacyMonitoringOfficerService monitoringOfficerServiceMock;
 
     @Before
     public void setUp() {
 
-        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
                 .withId(null)
                 .withProject(1L)
                 .withFirstName("abc")
@@ -45,8 +45,8 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
     }
 
     @Override
-    protected MonitoringOfficerController supplyControllerUnderTest() {
-        return new MonitoringOfficerController();
+    protected LegacyMonitoringOfficerController supplyControllerUnderTest() {
+        return new LegacyMonitoringOfficerController();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+        LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
                 .withId(null)
                 .withProject(3L)
                 .withFirstName("abc")
@@ -76,7 +76,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
-                        requestFields(monitoringOfficerResourceFields)
+                        requestFields(legacyMonitoringOfficerResourceFields)
                 ));
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
@@ -103,7 +103,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
-                        requestFields(monitoringOfficerResourceFields)
+                        requestFields(legacyMonitoringOfficerResourceFields)
                 ));
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
@@ -132,7 +132,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
-                        requestFields(monitoringOfficerResourceFields)
+                        requestFields(legacyMonitoringOfficerResourceFields)
                 ));
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
@@ -160,7 +160,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
-                        requestFields(monitoringOfficerResourceFields)
+                        requestFields(legacyMonitoringOfficerResourceFields)
                 ));
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);

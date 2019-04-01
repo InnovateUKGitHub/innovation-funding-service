@@ -12,7 +12,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 @Transactional(readOnly = true)
-public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements MonitoringOfficerService {
+public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements LegacyMonitoringOfficerService {
 
     @Autowired
     private MonitoringOfficerMapper monitoringOfficerMapper;
@@ -61,7 +61,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
     }
 
     @Override
-    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
+    public ServiceResult<LegacyMonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
         return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
     }
 
@@ -71,14 +71,14 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
 
     @Override
     @Transactional
-    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final LegacyMonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
                 andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
                 andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
     }
 
-    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final LegacyMonitoringOfficerResource monitoringOfficerResource) {
 
         if (!projectId.equals(monitoringOfficerResource.getProject())) {
             return serviceFailure(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE);
@@ -98,7 +98,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         });
     }
 
-    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final LegacyMonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
                 noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
@@ -106,14 +106,14 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         );
     }
 
-    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(LegacyMonitoringOfficerResource monitoringOfficerResource) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
         MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
         return serviceSuccess(result);
     }
 
-    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
 
         if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
@@ -128,7 +128,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         return serviceSuccess(result);
     }
 
-    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, LegacyMonitoringOfficerResource updateDetails) {
         return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
                 !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
                 !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||
@@ -137,7 +137,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
 
     @Override
     @Transactional
-    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
+    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(LegacyMonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findById(monitoringOfficer.getProject()).get();
 
@@ -170,7 +170,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
+    private NotificationTarget createMonitoringOfficerNotificationTarget(LegacyMonitoringOfficerResource monitoringOfficer) {
 
         String fullName = getMonitoringOfficerFullName(monitoringOfficer);
 
@@ -178,7 +178,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
 
     }
 
-    private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
+    private String getMonitoringOfficerFullName(LegacyMonitoringOfficerResource monitoringOfficer) {
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
     }
@@ -194,7 +194,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         return projectManager.getFirstName() + " " + projectManager.getLastName();
     }
 
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(LegacyMonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());

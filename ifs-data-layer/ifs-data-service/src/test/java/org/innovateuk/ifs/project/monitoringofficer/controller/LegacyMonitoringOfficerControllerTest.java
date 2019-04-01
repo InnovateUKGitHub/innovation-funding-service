@@ -3,9 +3,9 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_M
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -32,17 +32,17 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-  public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
+  public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
 
-      private MonitoringOfficerResource monitoringOfficerResource;
+      private LegacyMonitoringOfficerResource monitoringOfficerResource;
 
       @Mock
-      private MonitoringOfficerService monitoringOfficerServiceMock;
+      private LegacyMonitoringOfficerService monitoringOfficerServiceMock;
 
       @Before
       public void setUp() {
 
-          monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+          monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
                   .withId(null)
                   .withProject(1L)
                   .withFirstName("abc")
@@ -53,14 +53,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
       }
 
       @Override
-      protected MonitoringOfficerController supplyControllerUnderTest() {
-          return new MonitoringOfficerController();
+      protected LegacyMonitoringOfficerController supplyControllerUnderTest() {
+          return new LegacyMonitoringOfficerController();
       }
 
       @Test
       public void getMonitoringOfficer() throws Exception {
 
-          MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+          LegacyMonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
           when(monitoringOfficerServiceMock.getMonitoringOfficer(123L)).thenReturn(serviceSuccess(monitoringOfficer));
 
@@ -156,7 +156,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           Long projectId = 1L;
 
-          MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
+          LegacyMonitoringOfficerResource monitoringOfficerResource = LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
                   .withId(null)
                   .withProject(projectId)
                   .withFirstName("")

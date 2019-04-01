@@ -8,11 +8,11 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -20,6 +20,7 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -31,10 +32,11 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -51,13 +53,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  *
  **/
-public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
+public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
 
     private long projectId = 123L;
     private long applicationId = 456L;
     private long competitionId = 789L;
 
-    private MonitoringOfficerResource mo = newMonitoringOfficerResource().
+    private LegacyMonitoringOfficerResource mo = newMonitoringOfficerResource().
             withFirstName("First").
             withLastName("Last").
             withEmail("asdf@asdf.com").
@@ -98,7 +100,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     private StatusService statusService;
 
     @Mock
-    private MonitoringOfficerService monitoringOfficerService;
+    private LegacyMonitoringOfficerRestService monitoringOfficerService;
 
     @Mock
     private ApplicationService applicationService;
@@ -123,7 +125,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -146,7 +148,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
         Boolean readOnlyView = (Boolean) modelMap.get("readOnlyView");
 
         // assert the project details are correct
@@ -156,7 +158,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(readOnlyView);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(LegacyMonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectName());
         assertEquals(competition.getInnovationAreaNames(), CollectionFunctions.asLinkedSet("Some Area", "Some other area"));
@@ -172,8 +174,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                         build()).
                 build();
 
-        Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(mo) : restFailure(HttpStatus.NOT_FOUND));
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -189,7 +190,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
 
     @Override
-    protected MonitoringOfficerController supplyControllerUnderTest() {
-        return new MonitoringOfficerController();
+    protected LegacyMonitoringOfficerController supplyControllerUnderTest() {
+        return new LegacyMonitoringOfficerController();
     }
 }

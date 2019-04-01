@@ -3,12 +3,14 @@ package org.innovateuk.ifs.project.monitoring.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectMonitoringOfficerResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 
 @Service
 public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService implements ProjectMonitoringOfficerRestService {
@@ -33,5 +35,10 @@ public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<List<ProjectMonitoringOfficerResource>> findAll() {
         return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), projectMonitoringOfficerResourceListType());
+    }
+
+    @Override
+    public RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId) {
+        return getWithRestResult(String.format("%s/%d/projects", PROJECT_MONITORING_OFFICER_REST_URL, userId), projectResourceListType());
     }
 }

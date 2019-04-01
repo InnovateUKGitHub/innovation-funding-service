@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,14 +12,14 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
+public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
     @Mock
     private ProjectService projectService;
 
@@ -29,7 +29,7 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
     public void testViewMonitoringOfficer() throws Exception {
 
         ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
-        MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+        LegacyMonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
         when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
@@ -38,8 +38,8 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        MonitoringOfficerViewModel viewModel =
-                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        LegacyMonitoringOfficerViewModel viewModel =
+                (LegacyMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -62,8 +62,8 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        MonitoringOfficerViewModel viewModel =
-                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        LegacyMonitoringOfficerViewModel viewModel =
+                (LegacyMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -75,7 +75,7 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
     }
 
     @Override
-    protected MonitoringOfficerController supplyControllerUnderTest() {
-        return new MonitoringOfficerController();
+    protected LegacyMonitoringOfficerController supplyControllerUnderTest() {
+        return new LegacyMonitoringOfficerController();
     }
 }

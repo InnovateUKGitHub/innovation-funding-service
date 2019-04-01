@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -10,12 +10,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<MonitoringOfficerRestServiceImpl> {
+public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<LegacyMonitoringOfficerRestServiceImpl> {
     private static final String projectRestURL = "/project";
 
     @Override
-    protected MonitoringOfficerRestServiceImpl registerRestServiceUnderTest() {
-        MonitoringOfficerRestServiceImpl monitoringOfficerRestService = new MonitoringOfficerRestServiceImpl();
+    protected LegacyMonitoringOfficerRestServiceImpl registerRestServiceUnderTest() {
+        LegacyMonitoringOfficerRestServiceImpl monitoringOfficerRestService = new LegacyMonitoringOfficerRestServiceImpl();
         ReflectionTestUtils.setField(monitoringOfficerRestService, "projectRestURL", projectRestURL);
         return monitoringOfficerRestService;
     }
@@ -25,7 +25,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
 
         Long projectId = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = new MonitoringOfficerResource();
+        LegacyMonitoringOfficerResource monitoringOfficerResource = new LegacyMonitoringOfficerResource();
         monitoringOfficerResource.setId(null);
         monitoringOfficerResource.setProject(projectId);
         monitoringOfficerResource.setFirstName("abc");
@@ -44,16 +44,16 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void testGetMonitoringOfficerForProject() {
 
-        MonitoringOfficerResource expectedMonitoringOfficerResource = new MonitoringOfficerResource();
+        LegacyMonitoringOfficerResource expectedMonitoringOfficerResource = new LegacyMonitoringOfficerResource();
         expectedMonitoringOfficerResource.setProject(1L);
         expectedMonitoringOfficerResource.setFirstName("abc");
         expectedMonitoringOfficerResource.setLastName("xyz");
         expectedMonitoringOfficerResource.setEmail("abc.xyz@gmail.com");
         expectedMonitoringOfficerResource.setPhoneNumber("078323455");
 
-        setupGetWithRestResultExpectations(projectRestURL + "/1/monitoring-officer", MonitoringOfficerResource.class, expectedMonitoringOfficerResource);
+        setupGetWithRestResultExpectations(projectRestURL + "/1/monitoring-officer", LegacyMonitoringOfficerResource.class, expectedMonitoringOfficerResource);
 
-        RestResult<MonitoringOfficerResource> result = service.getMonitoringOfficerForProject(1L);
+        RestResult<LegacyMonitoringOfficerResource> result = service.getMonitoringOfficerForProject(1L);
 
         assertTrue(result.isSuccess());
 

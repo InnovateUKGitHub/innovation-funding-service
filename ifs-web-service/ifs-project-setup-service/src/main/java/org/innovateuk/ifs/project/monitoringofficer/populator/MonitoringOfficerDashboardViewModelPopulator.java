@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectDashboardRowViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -16,10 +16,10 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class MonitoringOfficerDashboardViewModelPopulator {
 
-    private final MonitoringOfficerRestService monitoringOfficerRestService;
+    private final ProjectMonitoringOfficerRestService monitoringOfficerRestService;
     private final CompetitionRestService competitionRestService;
 
-    public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService, CompetitionRestService competitionRestService) {
+    public MonitoringOfficerDashboardViewModelPopulator(ProjectMonitoringOfficerRestService monitoringOfficerRestService, CompetitionRestService competitionRestService) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
         this.competitionRestService = competitionRestService;
     }

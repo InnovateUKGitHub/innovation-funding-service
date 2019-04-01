@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
 
-public class MonitoringOfficerResource {
+public class LegacyMonitoringOfficerResource {
 
     private Long id;
 
@@ -43,10 +43,10 @@ public class MonitoringOfficerResource {
 
     private Long project;
 
-    public MonitoringOfficerResource() {
+    public LegacyMonitoringOfficerResource() {
     }
 
-    public MonitoringOfficerResource(String firstName, String lastName, String email, String phoneNumber, Long project) {
+    public LegacyMonitoringOfficerResource(String firstName, String lastName, String email, String phoneNumber, Long project) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -113,7 +113,7 @@ public class MonitoringOfficerResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        MonitoringOfficerResource that = (MonitoringOfficerResource) o;
+        LegacyMonitoringOfficerResource that = (LegacyMonitoringOfficerResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

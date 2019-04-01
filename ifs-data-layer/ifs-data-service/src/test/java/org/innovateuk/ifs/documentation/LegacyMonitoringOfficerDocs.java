@@ -4,8 +4,8 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class MonitoringOfficerDocs {
-    public static final FieldDescriptor[] monitoringOfficerResourceFields = {
+public class LegacyMonitoringOfficerDocs {
+    public static final FieldDescriptor[] legacyMonitoringOfficerResourceFields = {
             fieldWithPath("id").description("Id of the Monitoring Officer"),
             fieldWithPath("firstName").description("First name of the Monitoring Officer"),
             fieldWithPath("lastName").description("Last name of the Monitoring Officer"),

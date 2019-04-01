@@ -2,20 +2,20 @@ package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerServiceImpl;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ProjectMonitoringOfficerService interact with Spring Security
  */
-public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<MonitoringOfficerService> {
+public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<LegacyMonitoringOfficerService> {
 
     private MonitoringOfficerPermissionRules permissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -67,7 +67,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Override
-    protected Class<? extends MonitoringOfficerService> getClassUnderTest() {
-        return MonitoringOfficerServiceImpl.class;
+    protected Class<? extends LegacyMonitoringOfficerService> getClassUnderTest() {
+        return LegacyMonitoringOfficerServiceImpl.class;
     }
 }

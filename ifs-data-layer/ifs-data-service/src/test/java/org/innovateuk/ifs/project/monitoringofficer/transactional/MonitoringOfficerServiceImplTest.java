@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBui
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,15 +21,15 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerService> {
+public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<LegacyMonitoringOfficerService> {
 
-    private MonitoringOfficerResource monitoringOfficerResource;
+    private LegacyMonitoringOfficerResource monitoringOfficerResource;
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
 
     @Mock
@@ -60,7 +60,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Long projectid = 1L;
 
-        MonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource()
+        LegacyMonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource()
                 .withProject(3L)
                 .withFirstName("abc")
                 .withLastName("xyz")
@@ -173,7 +173,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         Long projectid = 1L;
 
-        ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
+        ServiceResult<LegacyMonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
         String errorKey = result.getFailure().getErrors().get(0).getErrorKey();
         Assert.assertEquals(CommonFailureKeys.GENERAL_NOT_FOUND.name(), errorKey);
@@ -193,16 +193,16 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectid)).thenReturn(monitoringOfficerInDB);
 
-        ServiceResult<MonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
+        ServiceResult<LegacyMonitoringOfficerResource> result = service.getMonitoringOfficer(projectid);
 
         assertTrue(result.isSuccess());
 
     }
 
     @Override
-    protected MonitoringOfficerService supplyServiceUnderTest() {
+    protected LegacyMonitoringOfficerService supplyServiceUnderTest() {
 
-        MonitoringOfficerService monitoringOfficerService =  new MonitoringOfficerServiceImpl();
+        LegacyMonitoringOfficerService monitoringOfficerService =  new LegacyMonitoringOfficerServiceImpl();
         ReflectionTestUtils.setField(monitoringOfficerService, "webBaseUrl", webBaseUrl);
         return monitoringOfficerService;
     }

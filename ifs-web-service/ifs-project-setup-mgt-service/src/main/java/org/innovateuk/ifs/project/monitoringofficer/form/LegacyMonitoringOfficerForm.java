@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_P
 /**
  * Form to capture the posted details of the Monitoring Officer
  */
-public class MonitoringOfficerForm extends BaseBindingResultTarget {
+public class LegacyMonitoringOfficerForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
@@ -43,10 +43,10 @@ public class MonitoringOfficerForm extends BaseBindingResultTarget {
     private String phoneNumber;
 
     // for spring form binding
-    public MonitoringOfficerForm() {
+    public LegacyMonitoringOfficerForm() {
     }
 
-    public MonitoringOfficerForm(Optional<MonitoringOfficerResource> existingMonitoringOfficer) {
+    public LegacyMonitoringOfficerForm(Optional<LegacyMonitoringOfficerResource> existingMonitoringOfficer) {
         existingMonitoringOfficer.ifPresent(mo -> {
             setFirstName(mo.getFirstName());
             setLastName(mo.getLastName());

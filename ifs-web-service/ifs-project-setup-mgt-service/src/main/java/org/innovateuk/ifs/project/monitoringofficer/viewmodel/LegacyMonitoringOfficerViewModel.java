@@ -11,7 +11,7 @@ import static java.util.Collections.emptyList;
 /**
  * View model to back the Monitoring Officer page
  */
-public class MonitoringOfficerViewModel {
+public class LegacyMonitoringOfficerViewModel {
 
     private Long projectId;
     private String projectTitle;
@@ -27,11 +27,11 @@ public class MonitoringOfficerViewModel {
     private boolean editable;
     private List<String> primaryAddressLines;
 
-    public MonitoringOfficerViewModel(Long projectId, String projectTitle, Long applicationId, String area, AddressResource primaryAddress,
-                                             LocalDate targetProjectStartDate, String projectManagerName,
-                                             List<String> partnerOrganisationNames, String leadOrganisationName,
-                                             CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
-                                             boolean editMode, boolean editable) {
+    public LegacyMonitoringOfficerViewModel(Long projectId, String projectTitle, Long applicationId, String area, AddressResource primaryAddress,
+                                            LocalDate targetProjectStartDate, String projectManagerName,
+                                            List<String> partnerOrganisationNames, String leadOrganisationName,
+                                            CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
+                                            boolean editMode, boolean editable) {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.applicationId = applicationId;
