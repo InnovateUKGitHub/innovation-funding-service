@@ -273,6 +273,25 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
                 .andExpect(view().name("application-track"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionResource));
+    }
+
+    @Test
+    public void h2020GrantTransferTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.SUBMITTED);
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
+        app.setCompetition(competition.getId());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/track"))
+                .andExpect(view().name("h2020-grant-transfer-track"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition", competition));
 
     }
 

@@ -219,10 +219,10 @@ the user send funding decision email for all applicant
     the user clicks the button/link     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
 
 the user filter applications by application number
-    the user enters text to a text field  css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    And the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    When the user clicks the button/link       jQuery = a:contains("Clear all filters")
+    the user enters text to a text field   css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    the user clicks the button/link        jQuery = button:contains("Filter")
+    the user should see the element        jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    the user clicks the button/link        jQuery = a:contains("Clear all filters")
 
 the user filter applications by sent email status
     the user selects the option from the drop-down menu  No  id = sendFilter

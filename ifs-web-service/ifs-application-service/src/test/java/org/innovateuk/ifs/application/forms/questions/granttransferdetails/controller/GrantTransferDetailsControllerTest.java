@@ -111,7 +111,7 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
                 .param("projectCoordinator", String.valueOf(grantTransferDetailsForm.getProjectCoordinator()))
                 .param("actionType", String.valueOf(grantTransferDetailsForm.getActionType())))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/application/%d", applicationId)))
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId)))
                 .andReturn();
 
         verify(grantTransferDetailsSaver).save(grantTransferDetailsForm, applicationId);

@@ -1,0 +1,18 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+  <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+  <p>You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.</p>
+  <p>What happens next?</p>
+  <ul>
+    <li>your application will be checked to ensure eligibility for the Horizon 2020 underwrite</li>
+    <li>we will contact you to let you know if you are eligible or not</li>
+    <li>if you are eligible, you will move on to project setup</li>
+    <li>you will need your EU reconciliation statement and funding conversion spreadsheet during project setup</li>
+  </ul>
+  <p>Your EU reconciliation statement will be issued to you by the EU, so you must contact them directly for updates. Please apply for this as soon as possible.</p>
+  <p>We will aim to get back to you as soon as we can but regret that we are unable to give firm dates at this stage.</p>
+  <p>If you have any queries, please ring 0300 321 4357 or email <a href="mailto:EUGrantsFunding@ukri.org">EUGrantsFunding@ukri.org</a>.</p>
+  <p>Yours sincerely,</p>
+  <@layout.h2020SenderHTML />
+</@layout.default>

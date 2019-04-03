@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -49,6 +51,26 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private OrganisationService organisationServiceMock;
+
+    @Test
+    public void findAll() {
+        List<User> moUsers = newUser().withFirstName("John", "Jane").withLastName("Doe").build(2);
+        when(userRepositoryMock.findByRoles(Role.MONITORING_OFFICER)).thenReturn(moUsers);
+        when(projectRepositoryMock.findAssigned(anyLong())).thenReturn(emptyList());
+        when(projectRepositoryMock.findAssignable()).thenReturn(emptyList());
+
+        List<ProjectMonitoringOfficerResource> result = service.findAll().getSuccess();
+
+        assertThat(result.size() == 2);
+        assertThat(result.get(0).getFirstName().equals("John"));
+        assertThat(result.get(0).getLastName().equals("Doe"));
+        assertThat(result.get(0).getFirstName().equals("Jane"));
+        assertThat(result.get(0).getLastName().equals("Doe"));
+
+        verify(userRepositoryMock).findByRoles(Role.MONITORING_OFFICER);
+        verify(projectRepositoryMock, times(2)).findAssigned(anyLong());
+        verify(projectRepositoryMock, times(2)).findAssignable();
+    }
 
     @Test
     public void getProjectMonitoringOfficer() {

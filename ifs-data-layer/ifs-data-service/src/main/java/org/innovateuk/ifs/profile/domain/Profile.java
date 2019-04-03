@@ -23,7 +23,6 @@ import static java.time.Month.APRIL;
  */
 @Entity
 public class Profile extends AuditableEntity {
-
     private static final MonthDay DOI_EXPIRE_DATE = MonthDay.of(APRIL, 6);
 
     @Id
@@ -48,6 +47,8 @@ public class Profile extends AuditableEntity {
     private Agreement agreement;
 
     private ZonedDateTime agreementSignedDate;
+
+    private ZonedDateTime doiNotifiedOn;
 
     public Profile() {
         // no-arg constructor
@@ -144,13 +145,21 @@ public class Profile extends AuditableEntity {
                         );
     }
 
-    static LocalDate startOfCurrentFinancialYear(ZonedDateTime now) {
+    public static LocalDate startOfCurrentFinancialYear(ZonedDateTime now) {
         if (!DOI_EXPIRE_DATE.isAfter(MonthDay.of(now.getMonth(), now.getDayOfMonth()))) {
             return DOI_EXPIRE_DATE.atYear(now.getYear());
         }
         else {
             return DOI_EXPIRE_DATE.atYear(now.getYear()-1);
         }
+    }
+
+    public ZonedDateTime getDoiNotifiedOn() {
+        return doiNotifiedOn;
+    }
+
+    public void setDoiNotifiedOn(ZonedDateTime doiNotifiedOn) {
+        this.doiNotifiedOn = doiNotifiedOn;
     }
 
     @Override

@@ -83,7 +83,7 @@ public class GrantTransferDetailsController {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
                 questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
-                return String.format("redirect:/application/%d", applicationId);
+                return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
             });
         });
     }

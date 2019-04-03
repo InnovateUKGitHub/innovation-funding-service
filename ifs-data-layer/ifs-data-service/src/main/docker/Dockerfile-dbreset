@@ -1,6 +1,7 @@
 FROM dhoer/flyway:4.1.2
 MAINTAINER Lukasz Guminski <lukasz.guminski@container-solutions.com>
 VOLUME /tmp
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y mysql-client ldap-utils
 COPY db/ /flyway/sql/db
 COPY *.sh /

@@ -17,14 +17,23 @@ public class SendNotificationsViewModel {
     private long successfulRecipientsCount;
     private long unsuccessfulRecipientsCount;
     private long onHoldRecipientsCount;
+    private boolean h2020;
 
-    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, long successfulRecipientsCount, long unsuccessfulRecipientsCount, long onHoldRecipientsCount, long competitionId, String competitionName) {
+    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
+                                      long successfulRecipientsCount,
+                                      long unsuccessfulRecipientsCount,
+                                      long onHoldRecipientsCount,
+                                      long competitionId,
+                                      String competitionName,
+                                      boolean h2020) {
+
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
         this.onHoldRecipientsCount = onHoldRecipientsCount;
         this.applications = applications;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.h2020 = h2020;
     }
 
     public long getCompetitionId() {
@@ -51,12 +60,17 @@ public class SendNotificationsViewModel {
         return onHoldRecipientsCount;
     }
 
+    public boolean isH2020() {
+        return h2020;
+    }
+
     public Map<Long, FundingDecision> getFundingDecisions() {
 
         return getApplications()
                 .stream()
                 .collect(Collectors.toMap(
                         ApplicationSummaryResource::getId,
-                        summary -> summary.getFundingDecision()));
+                        ApplicationSummaryResource::getFundingDecision
+                ));
     }
 }

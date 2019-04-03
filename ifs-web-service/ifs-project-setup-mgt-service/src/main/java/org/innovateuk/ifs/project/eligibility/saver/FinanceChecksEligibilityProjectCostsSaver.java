@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.eligibility.saver;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
