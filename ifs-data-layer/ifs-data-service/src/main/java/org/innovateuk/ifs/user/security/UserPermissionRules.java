@@ -32,8 +32,13 @@ import static java.util.Collections.disjoint;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -163,6 +168,11 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
+    @PermissionRule(value = "UPDATE", description = "An admin user can update user details to assign monitoring officers")
+    public boolean adminsCanUpdateUserDetails(UserResource userToUpdate, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user);
+    }
+
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
     public boolean usersCanViewTheirOwnProfileSkills(ProfileSkillsResource profileSkills, UserResource user) {
         return user.getId().equals(profileSkills.getUser());
@@ -256,6 +266,15 @@ public class UserPermissionRules {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(ASSESSOR);
+    }
+
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+    public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+    }
+
+    private boolean hasPermissionToGrantMonitoringOfficerRole(UserResource user) {
+        return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 
     private boolean userIsInCompetitionAssignedToStakeholder(UserResource userToView, UserResource stakeholder) {
