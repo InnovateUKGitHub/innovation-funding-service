@@ -21,7 +21,6 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -1500,6 +1499,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(true, viewModel.getDocumentsStatus().equals(TICK));
 
         assertFalse(viewModel.isProjectComplete());
+        assertFalse(viewModel.isMonitoringOfficer());
 
     }
 
