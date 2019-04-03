@@ -95,7 +95,6 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             return organisationFinanceHandler.costToCostItem(applicationFinanceRow);
         });
-        // IFS-5593 errors seen in the logs with not finding the FinanceRowItem for the costItemId
         if (!financeRowItem.isPresent()){
             LOG.error("IFS-5593 unable to find a FinanceRowItem for costItemId:" + costItemId);
         }
