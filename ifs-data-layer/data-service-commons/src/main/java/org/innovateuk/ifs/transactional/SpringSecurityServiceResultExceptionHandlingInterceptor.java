@@ -25,8 +25,14 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptor implements 
     public Object invoke(MethodInvocation invocation) throws Throwable {
         try {
             return invocation.proceed();
-        } catch (AccessDeniedException | AuthenticationCredentialsNotFoundException e) {
-            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
+        } catch (AccessDeniedException e) {
+            // Don't log out the Exception as it floods the logs and AccessDeniedExceptions can be normal.
+            // There is more useful logging in DefaultPermissionMethodHandler. However it is useful to log which method
+            // was being called.
+            LOG.warn("Authentication denied calling method [" + "class:" + invocation.getMethod().getDeclaringClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
+            return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            LOG.error("AuthenticationCredentialsNotFoundException caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
             return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (Exception e) {
             LOG.error(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a 500 ServiceFailure", e);

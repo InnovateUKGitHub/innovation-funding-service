@@ -3,19 +3,18 @@ package org.innovateuk.ifs.commons.security.evaluator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -51,8 +50,14 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
             }
         }
 
+
+        // Permissions have failed, it is useful to log out some salient details. However if they end up spamming the
+        // logs the level may have to be put down as denying access is not exceptional application behaviour.
+        LOG.warn(detailedAccessDeniedMessage(authentication, targetObject, permission, targetClass));
         return false;
     }
+
+
 
     @Override
     public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
@@ -100,14 +105,12 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         Class<?> secondParameter = method.getParameterTypes()[1];
 
         if (secondParameter.equals(UserResource.class)) {
-            if (authentication instanceof UserAuthentication) {
-                finalAuthentication = ((UserAuthentication) authentication).getDetails();
-            } else if (authentication instanceof AnonymousAuthenticationToken) {
-                finalAuthentication = ANONYMOUS_USER;
-            } else {
-                throw new IllegalArgumentException("Unable to determine the authentication token for Spring Security");
-            }
-        } else if (Authentication.class.isAssignableFrom(secondParameter)) {
+            // We want a UserResource to feed into the @PermissonRule-method. If we don't have one we have to throw.
+            finalAuthentication = from(authentication).orElseThrow(() ->
+            new IllegalArgumentException("Unable to determine the authentication token for Spring Security"));
+        }
+        else if (Authentication.class.isAssignableFrom(secondParameter)) {
+            // Well also allow Authentication objects to be feed into @PermissonRule-methods.
             finalAuthentication = authentication;
         } else {
             throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
@@ -129,6 +132,59 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
             throw new RuntimeException(e);
         }
     }
+
+    private Optional<UserResource> from(Authentication authentication){
+        if (authentication instanceof UserAuthentication) {
+            return Optional.of(((UserAuthentication) authentication).getDetails());
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.of(ANONYMOUS_USER);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private String detailedAccessDeniedMessage(Authentication authentication, Object targetObject, Object permission, Class<?> targetClass){
+        StringBuilder message = new StringBuilder();
+        message.append("Failed authentication ");
+        Optional<UserResource> user = from(authentication);
+        if (user.isPresent()){
+            message.append("user [id:");
+            message.append(ANONYMOUS_USER.equals(user) ? "anonymous" : user.get().getId());
+            message.append("] ");
+        }
+        else {
+            message.append("authentication [] ");
+        }
+
+        message.append("permission [" + (permission != null ? permission.toString() : "null") + "] ");
+        message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
+        message.append(detailedAccessDeniedMessageTarget(targetObject));
+        return message.toString();
+    }
+
+    private String detailedAccessDeniedMessageTarget(Object targetObject){
+        // May need to add additional checks to obtain more information.
+        if (targetObject instanceof FormInputResponseCommand) {
+            FormInputResponseCommand firc = (FormInputResponseCommand)targetObject;
+            return "target [userId:" + firc.getUserId() + " formInputId:" + firc.getFormInputId() + " applicationId:" + firc.getApplicationId() + "]";
+        }
+        else {
+            Optional<Object> targetId = getId(targetObject);
+             return "target [id:" + (targetId.isPresent() ? targetId.get() : "null") + "]";
+        }
+    }
+
+    private Optional<Object> getId(Object dto){
+        Method getId = ReflectionUtils.findMethod(dto.getClass(), "getId");
+        try {
+            return Optional.of(ReflectionUtils.invokeMethod(getId, dto));
+        }
+        catch (Exception e) {
+            // Not much that we can do here and we don't want to cause issues just for logging.
+            return Optional.empty();
+        }
+    }
+
 
     private static PermissionsToPermissionsMethods emptyPermissions() {
         return new PermissionsToPermissionsMethods();

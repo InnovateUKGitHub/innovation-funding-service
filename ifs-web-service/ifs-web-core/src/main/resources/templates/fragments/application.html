@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}"
-           th:unless="${section.name.equals('Finances')}"
-           th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
+    <section th:each="section : ${sections.values()}"
+             th:unless="${section.name.equals('Finances')}"
+             th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
-      <h2 th:text="${section.name}"
-          class="govuk-heading-m govuk-!-margin-top-6"
-          th:unless="${section.name.equals('Project details') and appIsClosed}"/>
+        <h2 th:text="${section.name}"
+            class="govuk-heading-m govuk-!-margin-top-6"
+            th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
-      <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
-      <th:block th:if="${section.name.equals('Project details')}">
-          <th:block th:each="question : ${sectionQuestions.get(section.id)}"
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
-            <div class="govuk-!-margin-top-6">
-                <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
-                     th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                      <th:block th:insert="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
+        <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
+        <th:block th:if="${section.name.equals('Project details')}">
+            <th:block th:each="question : ${sectionQuestions.get(section.id)}"
+                      th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
+                <div class="govuk-!-margin-top-6">
+                    <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
+                         th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <th:block
+                            th:insert="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})"/>
+                    </div>
                 </div>
-            </div>
 
-              <h2 th:text="${section.name}" class="govuk-heading-m govuk-!-margin-top-6" />
+                <h2 th:text="${section.name}" class="govuk-heading-m govuk-!-margin-top-6"/>
 
-          </th:block>
-      </th:block>
+            </th:block>
+        </th:block>
 
-      <!--/* Show the collapsible sections */-->
-      <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-          <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS
+        <!--/* Show the collapsible sections */-->
+        <th:block th:each="question : ${sectionQuestions.get(section.id)}">
+            <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS
                                                     and appIsClosed)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM
                                                     and !isApplicant)
@@ -48,15 +49,28 @@
                     </th:block>
                 </h3>
 
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
+                <th:block
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                     <th:block
-                        th:insert="fragments/application-team :: application_team(${model.applicationTeamViewModel},${question})" />
+                        th:insert="fragments/application-team :: application_team(${model.applicationTeamViewModel},${question})"/>
                 </th:block>
 
                 <th:block
-                  th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
-                  <th:block
-                      th:insert="fragments/research-category :: research_category_summary(${model.researchCategorySummaryViewModel})" />
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
+                    <th:block
+                        th:insert="fragments/research-category :: research_category_summary(${model.researchCategorySummaryViewModel})"/>
+                </th:block>
+
+                <th:block
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).GRANT_TRANSFER_DETAILS}">
+                    <th:block
+                        th:insert="fragments/horizon-2020 :: grant_transfer_details(${model.grantTransferDetailsSummaryViewModel})"/>
+                </th:block>
+
+                <th:block
+                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).GRANT_AGREEMENT}">
+                    <th:block
+                        th:insert="fragments/horizon-2020 :: grant_agreement(${model.grantAgreementSummaryViewModel})"/>
                 </th:block>
 
                 <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
@@ -90,7 +104,8 @@
                                                 </div>
                                                 <div class="govuk-grid-column-one-half alignright govuk-heading-s">
                                                     <th:block th:each="score : ${score}">
-                                                        <th:block th:if="${formInput.getQuestion()} == ${score.question}">
+                                                        <th:block
+                                                            th:if="${formInput.getQuestion()} == ${score.question}">
                                                             Score <span th:text="${score.value}">Feedback score</span>/10
                                                         </th:block>
                                                     </th:block>
@@ -116,11 +131,10 @@
 
     <section th:if="${hasFinanceSection}">
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
-        <div class="collapsible" th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-
+        <div class="collapsible">
             <h3>
-                <span th:unless="${procurementCompetition}">Finances summary</span>
-                <span th:if="${procurementCompetition}">Funding breakdown</span>
+                <span th:unless="${model.currentCompetition.fullyFunded}">Finances summary</span>
+                <span th:if="${model.currentCompetition.fullyFunded}">Funding breakdown</span>
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
                     <div class="section-status section-complete"
                          th:if="${completedViewModel.financeOverviewSectionComplete}">Complete
@@ -134,7 +148,8 @@
 
             <div class="question">
 
-                <p class="govuk-body" th:unless="${procurementCompetition}">This is the overview of the finances provided by all partners in this project.</p>
+                <p class="govuk-body" th:unless="${model.currentCompetition.fullyFunded}">This is the overview of the finances
+                    provided by all partners in this project.</p>
 
                 <p class="govuk-body" th:if="${(currentApplication.open and isApplicant)}">
                     To make changes to your organisations' finances, go back to the
@@ -143,7 +158,7 @@
                 </p>
 
                 <div>
-                    <th:block th:unless="${procurementCompetition}">
+                    <th:block th:unless="${model.currentCompetition.fullyFunded}">
                         <th:block ifs:global="${applicationFinanceSummaryViewModel}"
                                   th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null})"></th:block>
                         <th:block ifs:global="${applicationResearchParticipationViewModel}"
@@ -151,7 +166,7 @@
                                   th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
                     </th:block>
 
-                    <h2 class="govuk-heading-s" th:unless="${procurementCompetition}">Funding breakdown</h2>
+                    <h2 class="govuk-heading-s" th:unless="${model.currentCompetition.fullyFunded}">Funding breakdown</h2>
                     <th:block ifs:global="${applicationFundingBreakdownViewModel}"
                               th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
                 </div>

@@ -11,9 +11,7 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 The Comp admin closes the competition In Assessment
-    [Documentation]    INFUND-6459
-    ...
-    ...    INFUND-6602
+    [Documentation]    INFUND-6459  INFUND-6602
     When The user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link   jQuery = .govuk-button:contains("Close assessment")
     Then The user should see the element  jQuery = h1:contains("Panel")

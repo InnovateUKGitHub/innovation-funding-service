@@ -5,7 +5,7 @@ CREATE TABLE eu_action_type (
   name VARCHAR(255) NOT NULL UNIQUE,
   description VARCHAR(255) NOT NULL,
   priority INT(11) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE eu_grant_transfer (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
@@ -23,4 +23,4 @@ CREATE TABLE eu_grant_transfer (
   CONSTRAINT fk_eu_grant_transfer_action_type_id FOREIGN KEY (eu_action_type_id) REFERENCES eu_action_type(id),
   CONSTRAINT fk_eu_grant_transfer_file_entry_id FOREIGN KEY (grant_agreement_id) REFERENCES file_entry(id),
   CONSTRAINT fk_eu_grant_transfer_calculation_spreadsheet_id FOREIGN KEY (calculation_spreadsheet_id) REFERENCES file_entry(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

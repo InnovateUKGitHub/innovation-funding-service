@@ -137,6 +137,8 @@ public class ApplicationSectionController {
             case PROJECT_COST_FINANCES:
                 if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
                     return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
+                } else if (applicantSection.getCompetition().isH2020()) {
+                    return String.format("redirect:/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 } else {
                     return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 }
