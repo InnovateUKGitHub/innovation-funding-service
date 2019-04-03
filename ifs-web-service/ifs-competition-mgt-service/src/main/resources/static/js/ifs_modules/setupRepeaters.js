@@ -207,6 +207,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                   '</div>'
       jQuery('.funder-row').last().after(html)
+      jQuery('.funders-' + idCount).val('')
       IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.funders-' + idCount))
     },
     addGuidanceRow: function () {
