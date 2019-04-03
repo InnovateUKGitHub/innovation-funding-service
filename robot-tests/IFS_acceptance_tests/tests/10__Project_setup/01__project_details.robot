@@ -60,12 +60,14 @@ ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 ${user_email}  phillip.ramos@katz.example.com
 ${pmEmailId}  ${user_ids['${user_email}']}
 
+# This suite uses the Magic material project
+
 *** Test Cases ***
 Internal finance can see Project details not yet completed
     [Tags]  HappyPath
-    When the user logs-in in new browser           &{internal_finance_credentials}
+    Given the user logs-in in new browser           &{internal_finance_credentials}
     And the user navigates to the page             ${Internal_Competition_Status}
-    And the user clicks the button/link            css = #table-project-status tr:nth-child(2) td:nth-child(2) a
+    When the user clicks the button/link            css = #table-project-status tr:nth-child(2) td:nth-child(2) a
     Then the user should see the element           jQuery = #no-project-manager:contains("Not yet completed")
     And the user should see the element            jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
@@ -78,114 +80,62 @@ Competition admin can see Project details not yet completed
     When the user clicks the button/link           css = #table-project-status tr:nth-child(2) td:nth-child(2) a
     Then the competition admin should see that their Project details aren't completed
 
-Status updates correctly for internal user's table    # This uses the Elbow grease project
-    [Documentation]    INFUND-4049, INFUND-5507, INFUND-5543
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049 INFUND-5507 INFUND-5543
     [Tags]
     Given the user navigates to the page    ${Internal_Competition_Status}
-    And the competition admin should see the status of each project setup stage
-    # Internal user can view project details via the clickable 'hour glass' for Project details
-    When the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
-    Then the user should see the element    jQuery = h1:contains("Project details")
-    And the user clicks the button/link     link = Projects in setup
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.waiting
-    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
+    Then the competition admin should see the status of each project setup stage
+    And Internal user can view project details via the clickable 'hour glass' for Project details
 
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
+    [Documentation]    INFUND-2612 INFUND-2621 INFUND-4428 INFUND-5827 INFUND-5805 INFUND-7432
     [Tags]  HappyPath
-    Given log in as a different user                &{collaborator1_credentials}
-    When The user clicks the button/link            link = ${PS_PD_Application_Title}
-    And the user should see the element             link = view application feedback
-    And the user clicks the button/link             link = view the award terms and conditions
-    And the user goes back to the previous page
-    And the user should see the element             css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
-    And the user should see the project setup stages
-    When the user clicks the button/link            link = View the status of partners
-    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}/team-status
-    And the user should see the element             jQuery = h1:contains("Project team status")
-    And the user should see the element             css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-
-Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428
-    [Tags]
-    When the user navigates to the page        ${Project_In_Setup_Page}
-    Then the user should not see the element   link = Monitoring Officer
-    And the user should not see the element    link = Bank details
-    And the user should not see the element    link = Finance checks
-    And the user should not see the element    link = Spend profile
-    And the user should not see the element    link = Grant offer letter
-
-Non-lead partner can see the application overview
-    [Documentation]    INFUND-2612
-    [Tags]
-    [Setup]    the user navigates to the page        ${Project_In_Setup_Page}
-    When the user clicks the button/link             link = view application feedback
-    Then the user should see the element             jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
+    [Setup]  log in as a different user             &{collaborator1_credentials}
+    Given the user should see the grant award terms and conditions
+    Then the user should see the project setup stages
+    And the user checks for project detail status on team status page   Ludlow
+    And Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    And the user can see the application overview
 
 Lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827, INFUND-5805
+    [Documentation]    INFUND-2612 INFUND-2621 INFUND-5827 INFUND-5805 INFUND-4428
     [Tags]
     [Setup]    log in as a different user           &{lead_applicant_credentials}
-    When the user navigates to the page             ${Project_In_Setup_Page}
-    And the user should see the project setup stages
-    And the user should see the element             css = li.require-action:nth-of-type(1)    #Action required, seen by lead
-    When the user clicks the button/link            link = View the status of partners
-    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}/team-status
-    And the user should see the element             jQuery = h1:contains("Project team status")
-    And the user should see the element             css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
+    Given the user navigates to the page             ${Project_In_Setup_Page}
+    Then the user should see the project setup stages
+    And the user checks for project detail status on team status page   Empire Ltd
 
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
-    When the user clicks the button/link    link = Dashboard
+    Given the user clicks the button/link    link = Dashboard
     Then the user should see the element    jQuery = h2:contains("Set up your project")
-
-Lead partner can see the application feedback overview
-    [Documentation]    INFUND-2612
-    [Tags]
-    Given the user navigates to the page    ${Project_In_Setup_Page}
-    When the user clicks the button/link    link = view application feedback
-    Then the user should see the element    jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
+    And the user can see the application overview
 
 Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
-    Given the user clicks the button/link  jQuery = button:contains("Finances summary")
-    When the user clicks the button/link   link = View finances
-    And the user should see the element    jQuery = h2:contains("Finance summary")
-    Then the user clicks the button/link   link = Application summary
+    Given the user clicks the button/link    jQuery = button:contains("Finances summary")
+    When the user clicks the button/link     link = View finances
+    Then the user should see the element     jQuery = h2:contains("Finance summary")
+    And the user clicks the button/link      link = Application summary
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
     [Tags]
     Given the user navigates to the page   ${Project_In_Setup_Page}
     When the user clicks the button/link   link = Project details
-    Then the user should see the element   jQuery = p:contains("Please supply the following details for your project and the team")
-    And the user should see the element    link = Target start date
-    And the user should see the element    link = Correspondence address
-    And the user should see the element    link = Project Manager
-    And the user should see the element    jQuery = h2:contains("Partner details")
+    Then the user should see the project details
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     [Tags]  HappyPath
-    [Setup]    Log in as a different user           &{lead_applicant_credentials}
-    Given the user navigates to the page            ${Project_In_Setup_Details_Page}
-    Given the user clicks the button/link           link = Target start date
-    And the duration should be visible
-    When the user enters text to a text field       id = projectStartDate_year    2013
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
-    Then the user should see a field and summary error  Please enter a future date.
+    Given Log in as a different user     &{lead_applicant_credentials}
+    And the user navigates to the page   ${Project_In_Setup_Details_Page}
+    When the user checks for target start date validation
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
-    When the user enters text to a text field       id = projectStartDate_month    1
-    And the user enters text to a text field        id = projectStartDate_year    ${nextyear}
-    And Mouse Out                                   id = projectStartDate_year
-    And wait for autosave
-    When the user clicks the button/link            jQuery = .govuk-button:contains("Save")
-    Then The user should see the element            jQuery = h1:contains("Project details")
-    And the user should see the element             jQuery = td:contains("1 Jan ${nextyear}")
+    When the user save the target start date
     Then the matching status checkbox is updated    project-details    1    yes
-    [Teardown]    the user changes the start date   ${nextyear}
 
 Option to invite a project manager
     [Documentation]    INFUND-3483
@@ -481,8 +431,7 @@ Academic Partner nominates Finance contact
 
 Validation for project location
     [Documentation]   IFS-2920
-    [Setup]  log in as a different user                 &{lead_applicant_credentials}
-    Given the user navigates to the page                ${Project_In_Setup_Details_Page}
+    [Setup]  the user logs in and navigates to project details     &{lead_applicant_credentials}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("AB12 3CD")
     And the user enters text to a text field            css = #postcode  ${empty}
     And Set Focus To Element                            link = Contact us
@@ -493,8 +442,7 @@ Validation for project location
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
-    [Setup]    log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to the page   ${Project_In_Setup_Details_Page}
+    [Setup]  the user logs in and navigates to project details     &{lead_applicant_credentials}
     And the user update the peoject location in project setup    Empire
     And the user clicks the button/link   link = Project details
     When all the fields are completed
@@ -523,15 +471,13 @@ Project details links are still enabled after submission
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Tags]
-    When log in as a different user                  &{collaborator1_credentials}
-    And the user navigates to the page               ${Project_In_Setup_Details_Page}
+    Given the user logs in and navigates to project details     &{collaborator1_credentials}
     Then the user should see the element             jQuery = td:contains("${organisationLudlowName}")
     When all the fields are completed
     And the user navigates to the page               ${Project_In_Setup_Page}
     And the user clicks the button/link              link = View the status of partners
     Then the user should see the element             css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    When log in as a different user                  &{lead_applicant_credentials}
-    And the user navigates to the page               ${Project_In_Setup_Details_Page}
+    When the user logs in and navigates to project details      &{lead_applicant_credentials}
     Then the user should see the element             jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     When all the fields are completed
     And the user navigates to the page               ${Project_In_Setup_Page}
@@ -597,9 +543,6 @@ the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}
     the user should see the element    ${table_id}
     the user should see the element    css = #${table_id} tr:nth-of-type(${ROW}) .${STATUS}
-
-the duration should be visible
-    the user should see the element    jQuery = h2:contains("Project duration") ~ p:contains("36 months")
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css = .day [readonly]
@@ -675,6 +618,7 @@ the user update the peoject location in project setup
     the user clicks the button/link       link = Set up your project
 
 the user should see the project setup stages
+    the user should see the element    css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     the user should see the element    link = Project details
     the user should see the element    jQuery = h2:contains("Monitoring Officer")
     the user should see the element    jQuery = h2:contains("Bank details")
@@ -701,6 +645,62 @@ the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+
+Internal user can view project details via the clickable 'hour glass' for Project details
+    the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
+    the user should see the element    jQuery = h1:contains("Project details")
+    the user clicks the button/link    link = Projects in setup
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
+
+the user should see the grant award terms and conditions
+    the user clicks the button/link        link = ${PS_PD_Application_Title}
+    the user clicks the button/link        link = view the award terms and conditions
+    the user should see the element        jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user goes back to the previous page
+
+the user checks for project detail status on team status page
+    [Arguments]  ${partner}
+    the user clicks the button/link            link = View the status of partners
+    the user should be redirected to the correct page    ${Project_In_Setup_Page}/team-status
+    the user should see the element            jQuery = h1:contains("Project team status")
+    the user should see the element            jQuery = #table-project-status tr:contains("${partner}") td.status.action:nth-of-type(1)
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    the user should not see the element    link = Monitoring Officer
+    the user should not see the element    link = Bank details
+    the user should not see the element    link = Finance checks
+    the user should not see the element    link = Spend profile
+    the user should not see the element    link = Grant offer letter
+
+the user can see the application overview
+    the user navigates to the page       ${Project_In_Setup_Page}
+    the user clicks the button/link      link = view application feedback
+    the user should see the element      jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
+
+the user should see the project details
+    the user should see the element    jQuery = p:contains("Please supply the following details for your project and the team")
+    the user should see the element    link = Target start date
+    the user should see the element    link = Correspondence address
+    the user should see the element    link = Project Manager
+    the user should see the element    jQuery = h2:contains("Partner details")
+
+the user logs in and navigates to project details
+    [Arguments]  ${user_id}
+    Log in as a different user       ${user_id}
+    the user navigates to the page   ${Project_In_Setup_Details_Page}
+
+the user checks for target start date validation
+    the user clicks the button/link                 link = Target start date
+    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("36 months")
+    the user enters text to a text field            id = projectStartDate_year    2013
+    the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
+    the user should see a field and summary error   Please enter a future date.
+
+the user save the target start date
+    the user enters text to a text field       id = projectStartDate_month    1
+    the user enters text to a text field       id = projectStartDate_year    ${nextyear}
+    the user clicks the button/link            jQuery = .govuk-button:contains("Save")
+    the user should see the element            jQuery = td:contains("1 Jan ${nextyear}")
 
 Custom suite teardown
     Close browser and delete emails
