@@ -26,9 +26,6 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptor implements 
         try {
             return invocation.proceed();
         } catch (AccessDeniedException e) {
-            // Don't log out the Exception as it floods the logs and AccessDeniedExceptions can be normal.
-            // There is more useful logging in DefaultPermissionMethodHandler. However it is useful to log which method
-            // was being called.
             LOG.warn("Authentication denied calling method [" + "class:" + invocation.getMethod().getDeclaringClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
             return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (AuthenticationCredentialsNotFoundException e) {

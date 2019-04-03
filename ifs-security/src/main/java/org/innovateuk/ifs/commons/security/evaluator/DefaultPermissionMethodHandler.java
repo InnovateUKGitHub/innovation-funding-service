@@ -50,9 +50,6 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
             }
         }
 
-
-        // Permissions have failed, it is useful to log out some salient details. However if they end up spamming the
-        // logs the level may have to be put down as denying access is not exceptional application behaviour.
         LOG.warn(detailedAccessDeniedMessage(authentication, targetObject, permission, targetClass));
         return false;
     }
@@ -97,29 +94,30 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
                 reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
     }
 
-    private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
+    private boolean callHasPermissionMethod(Pair<Object, Method> beanAndMethod, Object dto, Authentication authentication) {
 
-        final Object finalAuthentication;
-
-        Method method = methodAndBean.getValue();
+        Method method = beanAndMethod.getValue();
         Class<?> secondParameter = method.getParameterTypes()[1];
 
         if (secondParameter.equals(UserResource.class)) {
             // We want a UserResource to feed into the @PermissonRule-method. If we don't have one we have to throw.
-            finalAuthentication = from(authentication).orElseThrow(() ->
+            UserResource currentUser = from(authentication).orElseThrow(() ->
             new IllegalArgumentException("Unable to determine the authentication token for Spring Security"));
+            return invokePermissionMethod(beanAndMethod, dto, currentUser);
         }
         else if (Authentication.class.isAssignableFrom(secondParameter)) {
             // Well also allow Authentication objects to be feed into @PermissonRule-methods.
-            finalAuthentication = authentication;
+            return invokePermissionMethod(beanAndMethod, dto, authentication);
         } else {
             throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
                     "either an instance of " + UserResource.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
                     "but was " + secondParameter.getName());
         }
+    }
 
+    private boolean invokePermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Object authentication) {
         try {
-            return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
+            return (Boolean) methodAndBean.getRight().invoke(methodAndBean.getLeft(), dto, authentication);
         } catch (InvocationTargetException e) {
             LOG.error("Error whilst processing a permissions method", e);
             if (e.getTargetException() instanceof ObjectNotFoundException || e.getTargetException() instanceof ForbiddenActionException) {
@@ -133,6 +131,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         }
     }
 
+
     private Optional<UserResource> from(Authentication authentication){
         if (authentication instanceof UserAuthentication) {
             return Optional.of(((UserAuthentication) authentication).getDetails());
@@ -144,22 +143,22 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
     }
 
     private String detailedAccessDeniedMessage(Authentication authentication, Object targetObject, Object permission, Class<?> targetClass){
-        StringBuilder message = new StringBuilder();
-        message.append("Failed authentication ");
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("Failed authentication ");
         Optional<UserResource> user = from(authentication);
         if (user.isPresent()){
-            message.append("user [id:");
-            message.append(ANONYMOUS_USER.equals(user) ? "anonymous" : user.get().getId());
-            message.append("] ");
+            messageBuilder.append("user [id:");
+            messageBuilder.append(ANONYMOUS_USER.equals(user.get()) ? "anonymous" : user.get().getId());
+            messageBuilder.append("] ");
         }
         else {
-            message.append("authentication [] ");
+            messageBuilder.append("authentication [] ");
         }
 
-        message.append("permission [" + (permission != null ? permission.toString() : "null") + "] ");
-        message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
-        message.append(detailedAccessDeniedMessageTarget(targetObject));
-        return message.toString();
+        messageBuilder.append("permission [" + (permission != null ? permission.toString() : "null") + "] ");
+        messageBuilder.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
+        messageBuilder.append(detailedAccessDeniedMessageTarget(targetObject));
+        return messageBuilder.toString();
     }
 
     private String detailedAccessDeniedMessageTarget(Object targetObject){
