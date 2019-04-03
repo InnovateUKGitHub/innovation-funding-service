@@ -168,12 +168,12 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         }
         // May need more instanceof checks to obtain more detailed information.
         if (targetObject instanceof FormInputResponseCommand) {
-            FormInputResponseCommand firc = (FormInputResponseCommand)targetObject;
-            return "target [userId:" + firc.getUserId() + " formInputId:" + firc.getFormInputId() + " applicationId:" + firc.getApplicationId() + "]";
+            FormInputResponseCommand result = (FormInputResponseCommand)targetObject;
+            return "target [userId:" + result.getUserId() + " formInputId:" + result.getFormInputId() + " applicationId:" + result.getApplicationId() + "]";
         }
         else {
             Optional<Object> targetId = getId(targetObject);
-             return "target [id:" + (targetId.isPresent() ? targetId.get() : "null") + "]";
+             return "target [id:" + targetId.orElse("null") + "]";
         }
     }
 
