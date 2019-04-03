@@ -22,6 +22,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5428 Search by email for Monitoring Officer - Existing MOs
 ...
 ...               IFS-5088 Use auto-complete search to improve the assign Assessors/ Monitoring Officers/ Stakeholders journey
+...
+...               IFS-5104 Create a new Monitoring Officer from existing user in another role
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -294,6 +296,20 @@ New MO see the project setup view for assigned project
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
 
+Assign MO role to existing IFS user
+    [Documentation]  IFS-5104
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/search-by-email
+    And the user enters text to a text field    id = emailAddress   ${assessor2_credentials["email"]}
+    When the user clicks the button/link        jQuery = button:contains("Continue")
+    Then the user should see exisitng IFS user details and add phone number
+    And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
+
+Comp admin assign project existing IFS user MO
+    [Documentation]  IFS-5104
+    Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    #assessor as MO assigned project view will be covered in IFS-5070 - continunation of this test case.
+
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
@@ -405,6 +421,22 @@ search for MO
     input text                          id = userId    Orvill
     the user clicks the button/link     jQuery = ul li:contains("Orville Gibbs")
     the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
+
+the user should see exisitng IFS user details and add phone number
+    the user should see the element          jQuery = .message-alert:contains("We have found a user with this email address.")
+    the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${assessor2_credentials["email"]}")
+    the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Felix")
+    the user should see the element          jQuery = dt:contains("Last name") ~ dd:contains("Wilson")
+    phone number: validations checks
+    the user enters text to a text field     id = phoneNumber   1234567890
+    the user clicks the button/link          jQuery = button:contains("Add monitoring officer")
+
+phone number: validations checks
+    the user enters text to a text field             id = phoneNumber    ${empty}
+    the user should see a field error                Please enter a phone number.
+    the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
+    the user should see a field and summary error    Please enter a phone number.
+    the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 
 Custom suite teardown
     the user closes the browser

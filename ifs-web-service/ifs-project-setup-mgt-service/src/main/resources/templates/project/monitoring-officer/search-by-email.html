@@ -32,7 +32,7 @@
             <div class="govuk-grid-column-two-thirds">
 
                 <h2 class="govuk-heading-l">Add a monitoring officer</h2>
-                <form th:object="${form}" method="post" th:action="@{/monitoring-officer/create}" novalidate="novalidate">
+                <form th:object="${form}" method="post" th:action="@{/monitoring-officer/search-by-email}" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'govuk-form-group--error'">
                         <label class="govuk-label govuk-!-font-weight-bold" for="emailAddress">
