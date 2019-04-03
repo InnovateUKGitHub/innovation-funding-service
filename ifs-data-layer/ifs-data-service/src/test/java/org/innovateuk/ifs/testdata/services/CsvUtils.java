@@ -517,7 +517,7 @@ public class CsvUtils {
         private CompetitionFunderLine(List<String> line) {
             int i = 0;
             competitionName = nullable(line.get(i++));
-            funder = nullableEnum(line.get(i++), Funder::valueOf);;
+            funder = nullableEnum(line.get(i++), Funder::valueOf);
             funder_budget = nullableBigInteger(line.get(i++));
             co_funder = nullableBoolean(line.get(i++));
         }
