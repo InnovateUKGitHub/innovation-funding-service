@@ -163,7 +163,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
     }
 
     private String detailedAccessDeniedMessageTarget(Object targetObject){
-        // May need to add additional checks.
+        // May need to add additional checks to obtain more information.
         if (targetObject instanceof FormInputResponseCommand) {
             FormInputResponseCommand firc = (FormInputResponseCommand)targetObject;
             return "target [userId:" + firc.getUserId() + " formInputId:" + firc.getFormInputId() + " applicationId:" + firc.getApplicationId() + "]";
