@@ -51,6 +51,18 @@ Send an email invite to a Business
     When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
     Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
 
+Send an email invite to Research and technology organisation (RTO)
+    [Documentation]  IFS-5266
+    Given the user clicks the button/link                  jQuery = tr:contains("ResearchTech Name") :checkbox ~ label
+    When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
+    Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
+
+Send an email invite to Public sector, charity or non Je-S registered research organisation
+    [Documentation]  IFS-5266
+    Given the user clicks the button/link                  jQuery = tr:contains("Jes Name") :checkbox ~ label
+    When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
+    Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
+
 *** Keywords ***
 Custom Suite Setup
     The guest user opens the browser

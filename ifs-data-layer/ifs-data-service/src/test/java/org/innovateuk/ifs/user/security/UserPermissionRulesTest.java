@@ -485,6 +485,16 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void allowedRolesCanUpdateUsersToMonitoringOfficers() {
+        UserResource userToUpdate = newUserResource().build();
+
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, compAdminUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, projectFinanceUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, ifsAdminUser()));
+        assertFalse(rules.adminsCanUpdateUserDetails(userToUpdate, assessorUser()));
+    }
+
+    @Test
     public void usersCanChangeTheirOwnPasswords() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanChangeTheirOwnPassword(user, user));
@@ -806,6 +816,28 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
 
         assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+
+    }
+
+    @Test
+    public void correctRolesCanGrantMonitoringOfficerRole() {
+        GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
+
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, compAdminUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, projectFinanceUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, assessorUser()));
+
+    }
+
+    @Test
+    public void usersAllowedToGrantMonitoringOfficerRoleCannotGrantOtherRoles() {
+        GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), INNOVATION_LEAD);
+
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, compAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, projectFinanceUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, assessorUser()));
 
     }
 
