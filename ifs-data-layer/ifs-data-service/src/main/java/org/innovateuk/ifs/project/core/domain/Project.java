@@ -318,6 +318,10 @@ public class Project implements ProcessActivity {
         return Optional.ofNullable(projectMonitoringOfficer);
     }
 
+    public ProjectMonitoringOfficer getProjectMonitoringOfficerOrElseNull() {
+        return getProjectMonitoringOfficer().orElse(null);
+    }
+
     public ProjectProcess getProjectProcess() {
         return projectProcess;
     }
