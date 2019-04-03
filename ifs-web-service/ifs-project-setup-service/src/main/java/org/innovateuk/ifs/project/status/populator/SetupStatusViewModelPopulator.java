@@ -31,7 +31,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -61,13 +60,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
 
-        boolean isMonitoringOfficer = isMonitoringOfficer(loggedInUser);
-
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
 
+
         CompletableFuture<OrganisationResource> organisationRequest =
-                isMonitoringOfficer ? async(() -> projectService.getLeadOrganisation(projectId)) :
-                        async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+                awaitAll(projectRequest).thenApply(project ->
+                        loggedInUser.getId().equals(project.getMonitoringOfficerUser()) ?
+                            projectService.getLeadOrganisation(projectId) :
+                            projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
@@ -95,7 +95,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     isProjectManager,
                     partnerOrganisations,
                     originQuery,
-                    isMonitoringOfficer);
+                    loggedInUser.getId().equals(projectRequest.get().getMonitoringOfficerUser()));
         });
     }
 

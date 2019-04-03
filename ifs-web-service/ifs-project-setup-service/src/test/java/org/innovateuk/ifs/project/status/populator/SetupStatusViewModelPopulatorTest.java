@@ -1500,6 +1500,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(true, viewModel.getDocumentsStatus().equals(TICK));
 
         assertFalse(viewModel.isProjectComplete());
+        assertFalse(viewModel.isMonitoringOfficer());
 
     }
 
