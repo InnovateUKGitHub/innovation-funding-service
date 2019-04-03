@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -88,11 +90,16 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<FinanceRowItem> getCostItem(final Long costItemId) {
-        ApplicationFinanceRow cost = financeRowRepository.findById(costItemId).get();
-        ApplicationFinance applicationFinance = cost.getTarget();
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-
-        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+        Optional<FinanceRowItem> financeRowItem = financeRowRepository.findById(costItemId).map(applicationFinanceRow -> {
+            ApplicationFinance applicationFinance = applicationFinanceRow.getTarget();
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
+            return organisationFinanceHandler.costToCostItem(applicationFinanceRow);
+        });
+        // IFS-5593 errors seen in the logs with not finding the FinanceRowItem for the costItemId
+        if (!financeRowItem.isPresent()){
+            LOG.error("IFS-5593 unable to find a FinanceRowItem for costItemId:" + costItemId);
+        }
+        return financeRowItem.map(item -> serviceSuccess(item)).orElse(serviceFailure(GENERAL_NOT_FOUND));
     }
 
     @Override
