@@ -52,6 +52,9 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
     @Mock
     private OrganisationService organisationServiceMock;
 
+    @Mock
+    private MonitoringOfficerInviteServiceImpl monitoringOfficerInviteServiceMock;
+
     @Test
     public void findAll() {
         List<User> moUsers = newUser().withFirstName("John", "Jane").withLastName("Doe").build(2);
@@ -150,12 +153,14 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
 
         when(userRepositoryMock.findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER)).thenReturn(Optional.of(moUser));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(monitoringOfficerInviteServiceMock.inviteMonitoringOfficer(moUser, project)).thenReturn(serviceSuccess());
 
         service.assignProjectToMonitoringOfficer(moUser.getId(), project.getId()).getSuccess();
 
-        InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, projectMonitoringOfficerRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, monitoringOfficerInviteServiceMock, projectMonitoringOfficerRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER);
         inOrder.verify(projectRepositoryMock).findById(project.getId());
+        inOrder.verify(monitoringOfficerInviteServiceMock).inviteMonitoringOfficer(moUser, project);
         inOrder.verify(projectMonitoringOfficerRepositoryMock).save(new ProjectMonitoringOfficer(moUser, project));
         inOrder.verifyNoMoreInteractions();
     }
@@ -173,6 +178,6 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
     @Override
     protected ProjectMonitoringOfficerServiceImpl supplyServiceUnderTest() {
         return new ProjectMonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,
-                userRepositoryMock, organisationServiceMock);
+                userRepositoryMock, organisationServiceMock, monitoringOfficerInviteServiceMock);
     }
 }

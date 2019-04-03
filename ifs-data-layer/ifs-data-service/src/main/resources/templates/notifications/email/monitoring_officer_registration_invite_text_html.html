@@ -1,0 +1,30 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+
+<p style="margin: 0 0 1em 0;">Welcome to the monitoring team. The project ${project.name} has been assigned to you as the Monitoring Officer for the project. The lead organisation has been informed.</p>
+
+<p style="margin: 0 0 1em 0;">You need to create an account as a Monitoring Officer on the Innovation Funding Service before you can view this project.</p>
+
+<table style="padding-bottom: 2em" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td bgcolor="#EB7035" style="background: #00823b; color: #ffffff; text-decoration: none; padding: 10px 20px; border-bottom: 2px solid #003618; display: inline-block" align="center">
+                        <a href="${inviteUrl}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">Accept invitation</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<p style="margin: 0 0 1em 0;">Once you have reviewed the project details you can contact the lead organisation to introduce yourself to them. </p>
+
+<p style="margin: 0 0 1em 0;">If you have a problem signing in, please contact support@innovateuk.ukri.org. If you need further information on the role of a Monitoring Officer please contact the monitoring team by emailing monitoring@innovateuk.ukri.org. </p>
+
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+<@layout.innovateSenderHTML />
+</@layout.default>

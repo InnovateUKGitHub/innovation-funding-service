@@ -1,0 +1,1 @@
+${competition.name}: New Monitoring Officer assignment for project ${project.name}
