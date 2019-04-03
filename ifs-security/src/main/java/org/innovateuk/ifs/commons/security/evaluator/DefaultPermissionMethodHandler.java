@@ -3,6 +3,7 @@ package org.innovateuk.ifs.commons.security.evaluator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -51,28 +52,12 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
 
 
         // Permissions have failed, it is useful to log out some salient details. However if they end up spamming the
-        // logs the level may have to be put down as denying access is not exceptional application behaviour. We use
-        // a String builder as there are a few variations on the authentication that can be provided.
-        StringBuilder message = new StringBuilder();
-        message.append("failed authentication ");
-        Optional<UserResource> user = from(authentication);
-        if (user.isPresent()){
-            message.append("user [");
-            message.append(ANONYMOUS_USER.equals(user) ? "anonymous" : user.get().getId());
-            message.append("] ");
-        }
-        else {
-            message.append("authentication [] ");
-        }
-
-        message.append("permission [" + (permission != null ? permission.toString() : "null") + " ]");
-        message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
-        Optional<Object> targetObjectId = getId(targetObject);
-        message.append("target id [" + (targetObjectId != null ? targetObjectId.get() : "null") + "]");
-        LOG.warn(message);
-
+        // logs the level may have to be put down as denying access is not exceptional application behaviour.
+        LOG.warn(detailedAccessDeniedMessage(authentication, targetObject, permission, targetClass));
         return false;
     }
+
+
 
     @Override
     public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
@@ -148,6 +133,47 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         }
     }
 
+    private Optional<UserResource> from(Authentication authentication){
+        if (authentication instanceof UserAuthentication) {
+            return Optional.of(((UserAuthentication) authentication).getDetails());
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.of(ANONYMOUS_USER);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private String detailedAccessDeniedMessage(Authentication authentication, Object targetObject, Object permission, Class<?> targetClass){
+        StringBuilder message = new StringBuilder();
+        message.append("Failed authentication ");
+        Optional<UserResource> user = from(authentication);
+        if (user.isPresent()){
+            message.append("user [id:");
+            message.append(ANONYMOUS_USER.equals(user) ? "anonymous" : user.get().getId());
+            message.append("] ");
+        }
+        else {
+            message.append("authentication [] ");
+        }
+
+        message.append("permission [" + (permission != null ? permission.toString() : "null") + "] ");
+        message.append("targetClass [" + (targetClass != null ? targetClass.getSimpleName() : "null") + "] ");
+        message.append(detailedAccessDeniedMessageTarget(targetObject));
+        return message.toString();
+    }
+
+    private String detailedAccessDeniedMessageTarget(Object targetObject){
+        // May need to add additional checks.
+        if (targetObject instanceof FormInputResponseCommand) {
+            FormInputResponseCommand firc = (FormInputResponseCommand)targetObject;
+            return "target [userId:" + firc.getUserId() + " formInputId:" + firc.getFormInputId() + " applicationId:" + firc.getApplicationId() + "]";
+        }
+        else {
+            Optional<Object> targetId = getId(targetObject);
+             return "target [id:" + (targetId.isPresent() ? targetId.get() : "null") + "]";
+        }
+    }
+
     private Optional<Object> getId(Object dto){
         Method getId = ReflectionUtils.findMethod(dto.getClass(), "getId");
         try {
@@ -159,15 +185,6 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         }
     }
 
-    private Optional<UserResource> from(Authentication authentication){
-        if (authentication instanceof UserAuthentication) {
-            return Optional.of(((UserAuthentication) authentication).getDetails());
-        } else if (authentication instanceof AnonymousAuthenticationToken) {
-            return Optional.of(ANONYMOUS_USER);
-        } else {
-            return Optional.empty();
-        }
-    }
 
     private static PermissionsToPermissionsMethods emptyPermissions() {
         return new PermissionsToPermissionsMethods();
