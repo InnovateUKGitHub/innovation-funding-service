@@ -276,7 +276,7 @@ Create account flow: MO
     Given MO enter details and create account
     When the user clicks the button/link      link = Sign into your account
     And Logging in and Error Checking         tom@poly.io  ${short_password}
-    Then the user should see the element      jQuery = h1:contains("Project Setup")
+    Then the user should see the element      jQuery = h1:contains("Project setup")
     [Teardown]  Get user id and set as suite variable  ${New_Mo}
 
 Comp admin assign project to new MO
@@ -359,6 +359,7 @@ the user should see the correct address
     the user should see the element       jQuery = p:contains("E17 5LR")
 
 the user should see the project set view
+    the user should see the element    jQuery = h1:contains("Monitor project")
     the user should see the element    jQuery = a:contains("Project details")
     the user should see the element    jQuery = a:contains("Documents")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
