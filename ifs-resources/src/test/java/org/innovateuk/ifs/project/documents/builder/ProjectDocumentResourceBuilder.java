@@ -18,7 +18,7 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
         super(multiActions);
     }
 
-    public static ProjectDocumentResourceBuilder newProjectResource() {
+    public static ProjectDocumentResourceBuilder newProjectDocumentResource() {
         return new ProjectDocumentResourceBuilder(emptyList()).
                 with(uniqueIds());
     }

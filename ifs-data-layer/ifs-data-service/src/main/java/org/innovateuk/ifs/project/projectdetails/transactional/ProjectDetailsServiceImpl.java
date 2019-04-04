@@ -28,8 +28,8 @@ import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -118,7 +118,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private MonitoringOfficerRepository monitoringOfficerRepository;
+    private LegacyMonitoringOfficerRepository legacyMonitoringOfficerRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -359,12 +359,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private boolean isMonitoringOfficerAssigned(long projectId) {
-        MonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
+        LegacyMonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
         return monitoringOfficer != null;
     }
 
-    private MonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
-        return monitoringOfficerRepository.findOneByProjectId(projectId);
+    private LegacyMonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
+        return legacyMonitoringOfficerRepository.findOneByProjectId(projectId);
     }
 
     @Override

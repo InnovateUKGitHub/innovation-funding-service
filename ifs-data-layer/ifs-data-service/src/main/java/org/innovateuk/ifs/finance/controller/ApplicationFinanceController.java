@@ -138,7 +138,8 @@ public class ApplicationFinanceController {
     }
 
     @GetMapping("/financeDocument")
-    public @ResponseBody ResponseEntity<Object> getFileContents(
+    public @ResponseBody
+    ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
         return fileControllerUtils.handleFileDownload(() -> financeFileEntryService.getFileContents(applicationFinanceId));

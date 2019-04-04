@@ -35,7 +35,7 @@ public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowV
 
     @Override
     public String getTitle() {
-        return !isNullOrEmpty(projectTitle) ? projectTitle : super.getCompetitionTitle();
+        return isNullOrEmpty(projectTitle) ? super.getCompetitionTitle() : projectTitle;
     }
 
     @Override
