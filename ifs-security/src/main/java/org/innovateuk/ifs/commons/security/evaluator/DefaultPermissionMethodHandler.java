@@ -162,7 +162,6 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
     }
 
     private String detailedAccessDeniedMessageTarget(Object targetObject){
-
         if (targetObject == null) {
             return "target [null]";
         }
@@ -172,22 +171,14 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
             return "target [userId:" + result.getUserId() + " formInputId:" + result.getFormInputId() + " applicationId:" + result.getApplicationId() + "]";
         }
         else {
-            Optional<Object> targetId = getId(targetObject);
-             return "target [id:" + targetId.orElse("null") + "]";
+            Method getId = ReflectionUtils.findMethod(targetObject.getClass(), "getId");
+            try {
+                return "target [id:" + ReflectionUtils.invokeMethod(getId, targetObject) + "]";
+            } catch (Exception e) {
+                return "target [id: threw exception:" + e.getMessage() + "]";
+            }
         }
     }
-
-    private Optional<Object> getId(Object dto){
-        Method getId = ReflectionUtils.findMethod(dto.getClass(), "getId");
-        try {
-            return Optional.ofNullable(ReflectionUtils.invokeMethod(getId, dto));
-        }
-        catch (Exception e) {
-            // Not much that we can do here and we don't want to cause issues just for logging.
-            return Optional.empty();
-        }
-    }
-
 
     private static PermissionsToPermissionsMethods emptyPermissions() {
         return new PermissionsToPermissionsMethods();
