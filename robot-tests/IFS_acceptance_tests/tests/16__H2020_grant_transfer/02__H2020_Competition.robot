@@ -59,7 +59,7 @@ Applicant user can complete an H2020 grant transfer
     [Setup]  log in as a different user                   &{collaborator1_credentials}
     Given the user starts an H2020 applcation
     When the user is able to complete Horizon 2020 Grant transfer application
-    Then the user reads his email                         jessica.doe@ludlow.co.uk   Submitted application for your Horizon 2020 grant transfer of Project name   You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.
+    Then the user reads his email                         ${collaborator1_credentials["email"]}   Submitted application for your Horizon 2020 grant transfer of Project name   You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.
 
 
 Application validation checks
@@ -335,9 +335,9 @@ Validate errors on Application details page
     the user clicks the button/link                      jQuery = a:contains("Application details")
     the user clicks the button/link                      id = mark-as-complete
     the user should see a field and summary error        Enter a project name.
-    the user should see a field and summary error        Please enter a valid date.
+    the user should see a field and summary error        ${enter_a_valid_date}
     the user should see a field and summary error        Please enter a future date.
-    the user should see a field and summary error        Please enter a valid date.
+    the user should see a field and summary error        ${enter_a_valid_date}
     the user should see a field and summary error        Enter a grant agreement number.
     the user should see a field and summary error        Enter a valid PIC.
     the user should see a field and summary error        Select a type of action.
@@ -354,7 +354,7 @@ Validate errors on Public description page
 Validate errors on H2020 grant agreement page
     the user clicks the button/link                      jQuery = a:contains("Horizon 2020 grant agreement")
     the user clicks the button/link                      id = mark-as-complete
-    the user should see a field and summary error        This field cannot be left blank.
+    the user should see a field and summary error        ${empty_field_warning_message}
     the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
 
 Validate errors on Your Finances section
@@ -366,8 +366,8 @@ Validate errors on Your Finances section
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
     the user clicks the button/link                      jQuery = button:contains("Mark as complete")
     the user should see a field and summary error        Enter your organisation size.
-    the user should see a field and summary error        This field cannot be left blank.
-    the user should see a field and summary error        This field cannot be left blank.
+    the user should see a field and summary error        ${empty_field_warning_message}
+    the user should see a field and summary error        ${empty_field_warning_message}
     the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
     the user clicks the button/link                      jQuery = a:contains("Return to application overview")
 
