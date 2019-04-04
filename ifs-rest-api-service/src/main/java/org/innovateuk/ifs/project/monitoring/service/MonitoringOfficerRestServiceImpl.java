@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectMonitoringOfficerResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.monitoringOfficerResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 
 @Service
@@ -34,7 +34,7 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<MonitoringOfficerResource>> findAll() {
-        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), projectMonitoringOfficerResourceListType());
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), monitoringOfficerResourceListType());
     }
 
     @Override

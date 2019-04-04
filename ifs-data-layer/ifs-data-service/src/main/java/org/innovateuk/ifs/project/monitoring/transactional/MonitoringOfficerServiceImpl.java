@@ -33,18 +33,18 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
-    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository monitoringOfficerRepository;
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private OrganisationService organisationService;
     private ProjectMapper projectMapper;
 
-    public MonitoringOfficerServiceImpl(MonitoringOfficerRepository projectMonitoringOfficerRepository,
+    public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository,
                                         ProjectRepository projectRepository,
                                         UserRepository userRepository,
                                         OrganisationService organisationService,
                                         ProjectMapper projectMapper) {
-        this.projectMonitoringOfficerRepository = projectMonitoringOfficerRepository;
+        this.monitoringOfficerRepository = monitoringOfficerRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.organisationService = organisationService;
@@ -86,7 +86,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
         return getMonitoringOfficerUser(userId)
                .andOnSuccess(user -> getProject(projectId)
                        .andOnSuccessReturnVoid(project ->
-                               projectMonitoringOfficerRepository.save(new MonitoringOfficer(user, project))
+                               monitoringOfficerRepository.save(new MonitoringOfficer(user, project))
                        )
                );
     }
@@ -94,13 +94,13 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     @Override
     @Transactional
     public ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId) {
-        projectMonitoringOfficerRepository.deleteByUserIdAndProjectId(userId, projectId);
+        monitoringOfficerRepository.deleteByUserIdAndProjectId(userId, projectId);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId) {
-        List<MonitoringOfficer> monitoringOfficers = projectMonitoringOfficerRepository.findByUserId(userId);
+        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.findByUserId(userId);
         return serviceSuccess(monitoringOfficers.stream()
                 .map(MonitoringOfficer::getProcess)
                 .map(projectMapper::mapToResource)

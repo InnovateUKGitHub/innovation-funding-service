@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectMonitoringOfficerResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.monitoringOfficerResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +22,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void findAll() {
         List<MonitoringOfficerResource> expected = singletonList(new MonitoringOfficerResource());
-        setupGetWithRestResultExpectations("/monitoring-officer/find-all", projectMonitoringOfficerResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations("/monitoring-officer/find-all", monitoringOfficerResourceListType(), expected, OK);
 
         RestResult<List<MonitoringOfficerResource>> result = service.findAll();
 

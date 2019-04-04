@@ -64,7 +64,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -72,7 +72,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean isMonitoringOfficer(long projectId, long userId) {
-        return projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
+        return monitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
     }
 
     protected boolean monitoringOfficerCanViewApplication(long applicationId, long userId) {
@@ -121,7 +121,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
-        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
+        List<MonitoringOfficer> projectMonitoringOfficers = monitoringOfficerRepository.findByUserId(loggedInUserId);
         List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
                 .map(pmo -> pmo.getProject())
                 .map(project -> project.getApplication().getCompetition().getId())

@@ -97,7 +97,7 @@ public class ApplicationFinanceController {
 
     @GetMapping("/financeDetails/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeDetails(@PathVariable("applicationId") final Long applicationId) {
-         return financeService.financeDetails(applicationId).toGetResponse();
+        return financeService.financeDetails(applicationId).toGetResponse();
     }
 
     @GetMapping("/financeTotals/{applicationId}")
@@ -138,7 +138,8 @@ public class ApplicationFinanceController {
     }
 
     @GetMapping("/financeDocument")
-    public @ResponseBody ResponseEntity<Object> getFileContents(
+    public @ResponseBody
+    ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
         return fileControllerUtils.handleFileDownload(() -> financeFileEntryService.getFileContents(applicationFinanceId));

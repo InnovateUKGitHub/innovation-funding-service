@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -40,7 +40,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
                 .withName("Project name")
                 .build();
 
-        when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(asList(projectResource)));
+        when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(singletonList(projectResource)));
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource()
                 .withName("Competition name")
                 .build()));

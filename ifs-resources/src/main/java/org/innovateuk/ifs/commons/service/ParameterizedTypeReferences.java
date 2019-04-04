@@ -327,7 +327,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<EuActionTypeResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<MonitoringOfficerResource>> projectMonitoringOfficerResourceListType() {
+    public static ParameterizedTypeReference<List<MonitoringOfficerResource>> monitoringOfficerResourceListType() {
         return new ParameterizedTypeReference<List<MonitoringOfficerResource>>() {};
     }
 

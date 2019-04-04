@@ -32,7 +32,7 @@ public class ProjectDashboardRowViewModel {
     }
 
     public String getTitle() {
-        return !isNullOrEmpty(projectTitle) ? projectTitle : competitionTitle;
+        return isNullOrEmpty(projectTitle) ? competitionTitle : projectTitle;
     }
 
     public long getApplicationNumber() {

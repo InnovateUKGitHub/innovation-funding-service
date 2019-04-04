@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 import java.util.List;
 
 /**
- * Applicant dashboard view model
+ * Monitoring officer dashboard view model
  */
 public class MonitoringOfficerDashboardViewModel {
 
