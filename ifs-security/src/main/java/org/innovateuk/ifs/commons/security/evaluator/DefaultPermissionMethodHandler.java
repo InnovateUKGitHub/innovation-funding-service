@@ -134,7 +134,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
 
     private Optional<UserResource> from(Authentication authentication){
         if (authentication instanceof UserAuthentication) {
-            return Optional.of(((UserAuthentication) authentication).getDetails());
+            return Optional.ofNullable(((UserAuthentication) authentication).getDetails());
         } else if (authentication instanceof AnonymousAuthenticationToken) {
             return Optional.of(ANONYMOUS_USER);
         } else {
@@ -180,7 +180,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
     private Optional<Object> getId(Object dto){
         Method getId = ReflectionUtils.findMethod(dto.getClass(), "getId");
         try {
-            return Optional.of(ReflectionUtils.invokeMethod(getId, dto));
+            return Optional.ofNullable(ReflectionUtils.invokeMethod(getId, dto));
         }
         catch (Exception e) {
             // Not much that we can do here and we don't want to cause issues just for logging.
