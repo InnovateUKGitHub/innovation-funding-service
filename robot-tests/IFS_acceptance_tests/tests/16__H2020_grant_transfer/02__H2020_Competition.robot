@@ -37,9 +37,9 @@ User can populate Terms and Conditions
 
 User can populate Funding information and Eligibility
     [Documentation]  IFS-5158
-    Given the user clicks the button/link          link = Funding information
+    Given the user clicks the button/link                                 link = Funding information
     When the user completes funding information
-    Then the user clicks the button/link           link = Return to setup overview
+    Then the user clicks the button/link                                  link = Return to setup overview
     And the user fills in the Competition Setup Eligibility section       ${BUSINESS_TYPE_ID}  4
 
 User can complete the Application
@@ -51,20 +51,20 @@ User can complete the Application
 User can finish setting up the grant transfer
     [Documentation]  IFS-5158
     Given the user completes grant transfer setup
-    Then the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
+    Then the user should see the element                           jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
     [Teardown]  Get competition id and set open date to yesterday  ${competitionTitle}
 
-Applicant user can start a grant transfer
+Applicant user can complete an H2020 grant transfer
     [Documentation]  IFS-5158
-    [Setup]  log in as a different user    &{collaborator1_credentials}
-    Given the user navigates to the page   ${server}/competition/${competitionId}/overview
-    When the user clicks the button/link   jQuery = a:contains("Start new application")
-    Then the user is able to go to Application overview
+    [Setup]  log in as a different user                   &{collaborator1_credentials}
+    Given the user starts an H2020 applcation
+    When the user is able to complete Horizon 2020 Grant transfer application
+    Then the user reads his email                         jessica.doe@ludlow.co.uk   Submitted application for your Horizon 2020 grant transfer of Project name   You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.
 
-Applicant user can complete Application details section
-    [Documentation]  IFS-5158
-    Given the user should see the element                                     jQuery = h1:contains("Application overview")
-    Then the user is able to complete Horizon 2020 Grant transfer application
+
+Application validation checks
+    Given the user starts an H2020 applcation
+    Then the user is able to verify validation on each page
 
 *** Keywords ***
 Custom Suite Setup
@@ -76,6 +76,13 @@ Custom Suite Setup
     ${lastYear} =  get last year
     Set suite variable  ${lastYear}
     Connect to database  @{database}
+
+The user starts an H2020 applcation
+   the user navigates to the page                  ${server}/competition/${competitionId}/overview
+   the user clicks the button/link                  jQuery = a:contains("Start new application")
+   check if there is an existing application in progress for this competition
+   the user clicks the button/link                  jQuery=.govuk-button:contains("Save and continue")
+   the user should see the element                  jQuery = h1:contains("Application overview")
 
 A user starts a new competition
     the user navigates to the page        ${CA_UpcomingComp}
@@ -122,7 +129,6 @@ The user completes Public content for H2020 registration and publishes
     the user fills in public content save the dates
     the user fills in public content how to apply section
     the user fills in public content supporting information section
-    # Publish and return
     the user clicks the button/link         jQuery = button:contains("Publish content")
 
 The user fills in the public content competition inforation and search
@@ -228,6 +234,7 @@ The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
+    the user is able to submit the application
 
 The user is able to complete Application details section
     [Arguments]  ${projectName}  ${month}  ${nextyear}  ${lastYear}
@@ -240,7 +247,7 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-    Input text                                           id = actionType    (CSA) Coordination and support action
+    input text                                           id = actionType    (CSA) Coordination and Support Actions
     the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
@@ -270,6 +277,9 @@ The user is able to complete Finance details section
     the user should see the element           jQuery = h1:contains("Your finances")
     the user is able to complete your project location section
     the user is able to complete your organisation section
+    the user is able to complete your project costs section
+    the user clicks the button/link            link = Return to application overview
+    the user should see the element           jQuery = li:contains("Your finances") > .task-status-complete
 
 The user is able to complete Your project location section
      the user clicks the button/link           jQuery = a:contains("Your project location")
@@ -287,6 +297,87 @@ The user is able to complete Your organisation section
      the user clicks the button/link           jQuery = button:contains("Mark as complete")
      the user should see the element           jQuery = li:contains("Your organisation") > .task-status-complete
 
+The user is able to complete your project costs section
+    the user clicks the button/link           link = Your project costs
+    the user should see the element           jQuery = h1:contains("Your project costs")
+    the user is able to validate conversion spredsheet links works
+    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = overhead  40000
+    the user enters text to a text field      id = material  30000
+    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = subcontracting  15000
+    the user enters text to a text field      id = travel  10000
+    the user enters text to a text field      id = other  0
+    the user clicks the button/link           jQuery = button:contains("Mark as complete")
+    the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
+
+The user is able to validate conversion spredsheet links works
+    the user opens the link in new window           funding conversion spreadsheet
+    Select Window                                   title = 404 - UK Research and Innovation
+    the user should see the element                 jQuery = p:contains("Go back")
+    the user closes the last opened tab
+
+The user is able to submit the application
+    the user clicks the button/link           link = Review and submit
+    the user should see the element           jQuery = h1:contains("Application summary")
+    the user selects the checkbox             agreeTerms
+    the user clicks the button/link           id = submit-application-button
+    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+
+The user is able to verify validation on each page
+    validate errors on Application details page
+    validate errors on public description page
+    validate errors on h2020 grant agreement page
+    validate errors on your finances section
+    validate the user is unable to submit an incomplete application
+
+Validate errors on Application details page
+    the user clicks the button/link                      jQuery = a:contains("Application details")
+    the user clicks the button/link                      id = mark-as-complete
+    the user should see a field and summary error        Enter a project name.
+    the user should see a field and summary error        Please enter a valid date.
+    the user should see a field and summary error        Please enter a future date.
+    the user should see a field and summary error        Please enter a valid date.
+    the user should see a field and summary error        Enter a grant agreement number.
+    the user should see a field and summary error        Enter a valid PIC.
+    the user should see a field and summary error        Select a type of action.
+    the user should see a field and summary error        Enter the EU funding contribution.
+    the user should see a field and summary error        Select a project co-ordinator option.
+    the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
+
+Validate errors on Public description page
+    the user clicks the button/link                      jQuery = a:contains("Public description")
+    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error        Please enter some text.
+    the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
+
+Validate errors on H2020 grant agreement page
+    the user clicks the button/link                      jQuery = a:contains("Horizon 2020 grant agreement")
+    the user clicks the button/link                      id = mark-as-complete
+    the user should see a field and summary error        This field cannot be left blank.
+    the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
+
+Validate errors on Your Finances section
+    the user clicks the button/link                      jQuery = a:contains("Your finances")
+    the user clicks the button/link                      jQuery = a:contains("Your project location")
+    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error        Enter a valid postcode.
+    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = a:contains("Your organisation")
+    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error        Enter your organisation size.
+    the user should see a field and summary error        This field cannot be left blank.
+    the user should see a field and summary error        This field cannot be left blank.
+    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = a:contains("Return to application overview")
+
+Validate the user is unable to submit an incomplete application
+    the user clicks the button/link    jQuery = a:contains("Review and submit")
+    Element Should Contain             jQuery = button:contains("Application details")    Incomplete
+    Element Should Contain             jQuery = button:contains("Public description")    Incomplete
+    Element Should Contain             jQuery = button:contains("Horizon 2020 grant agreement")    Incomplete
+    Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
+
 Custom Suite Teardown
-     the user closes the browser
-     disconnect from database
+    the user closes the browser
+    disconnect from database
