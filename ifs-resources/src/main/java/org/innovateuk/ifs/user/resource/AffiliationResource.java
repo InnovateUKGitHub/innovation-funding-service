@@ -20,7 +20,7 @@ public class AffiliationResource {
     private String organisation;
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String position;
-    @Size(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String description;
 
     public AffiliationResource() {
