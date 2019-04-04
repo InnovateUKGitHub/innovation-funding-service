@@ -318,7 +318,7 @@ public class Project implements ProcessActivity {
         return Optional.ofNullable(projectMonitoringOfficer);
     }
 
-    public ProjectMonitoringOfficer getProjectMonitoringOfficerOrElseNull() {
+    public MonitoringOfficer getProjectMonitoringOfficerOrElseNull() {
         return getProjectMonitoringOfficer().orElse(null);
     }
 
