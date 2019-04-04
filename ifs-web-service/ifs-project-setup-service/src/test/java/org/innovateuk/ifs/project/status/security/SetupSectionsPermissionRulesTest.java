@@ -64,9 +64,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private ProjectService projectServiceMock;
 
     @Mock
-    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestServiceMock;
-
-    @Mock
     private OrganisationRestService organisationRestService;
 
     @Mock
