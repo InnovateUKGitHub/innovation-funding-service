@@ -137,12 +137,12 @@ the user navigate to DOI page
     the user clicks the button/link    id = editDOI
 
 the user should see the proper validation messages
-    the user should see a field and summary error      Please enter a relation.
-    the user should see a field and summary error      Please enter an organisation.
-    the user should see a field and summary error      Please enter a position.
-    the user should see a field and summary error      Please enter your financial interests.
-    the user enters multiple strings into a text field    id = professionalAffiliations  a${SPACE}  101
-    the user should see a field error      Maximum word count exceeded. Please reduce your word count to 100.
+    the user should see a field and summary error         Please enter a relation.
+    the user should see a field and summary error         Please enter an organisation.
+    the user should see a field and summary error         Please enter a position.
+    the user should see a field and summary error         Please enter your financial interests.
+    the user enters multiple strings into a text field    id = professionalAffiliations  a${SPACE}  201
+    the user should see a field error                     Maximum word count exceeded. Please reduce your word count to 200.
 
 the user select Yes radio button option
     the user selects the radio button                hasAppointments    yes

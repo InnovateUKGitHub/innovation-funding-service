@@ -48,7 +48,7 @@
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'govuk-form-group--error'">
                         <label class="govuk-label govuk-label--s" th:for="${#ids.next('principalEmployer')}">
-                            Prinicipal employer
+                            Principal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
                             </th:block>
@@ -83,14 +83,14 @@
                                 cols="30"
                                 rows="3"
                                 maxlength="5000"
-                                data-max_words="100"
-                                data-maxwordslength="100"
-                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
+                                data-max_words="200"
+                                data-maxwordslength="200"
+                                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 200."
+                                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 5000)}"
                                 th:errorclass="govuk-textarea--error"
                                 th:field="*{professionalAffiliations}"></textarea>
                             <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}" aria-live="polite" aria-atomic="true" role="status">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=200, currentWordsLeft=${#ifsUtil.wordsRemaining(200, professionalAffiliations)})" />
                             </div>
                         </div>
                     </div>
