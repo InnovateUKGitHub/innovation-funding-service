@@ -38,31 +38,31 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
     public void findAll() throws Exception {
         List<MonitoringOfficerUnassignedProjectResource> unassignedProjects =
                 singletonList(new MonitoringOfficerUnassignedProjectResource(1,
-                                                                             1,
-                                                                             "projectName"));
+                        1,
+                        "projectName"));
         List<MonitoringOfficerAssignedProjectResource> assignedProjects =
                 singletonList(new MonitoringOfficerAssignedProjectResource(1,
-                                                                           1,
-                                                                           1,
-                                                                           "projectName",
-                                                                           "leadOrganisationName"));
+                        1,
+                        1,
+                        "projectName",
+                        "leadOrganisationName"));
 
         List<ProjectMonitoringOfficerResource> expected =
                 singletonList(new ProjectMonitoringOfficerResource(1L,
-                                                                   "firstName",
-                                                                   "lastName",
-                                                                   unassignedProjects,
-                                                                   assignedProjects));
+                        "firstName",
+                        "lastName",
+                        unassignedProjects,
+                        assignedProjects));
 
         when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/monitoring-officer/find-all"))
                 .andExpect(status().isOk())
                 .andDo(document("monitoring-officer/{method-name}",
-                                responseFields(fieldWithPath("[]").description("List of monitoring officers"))
-                                        .andWithPrefix("[].", projectMonitoringOfficerResourceFields)
-                                        .andWithPrefix("[].unassignedProjects[].", monitoringOfficerUnassignedProjectResourceFields)
-                                        .andWithPrefix("[].assignedProjects[].", monitoringOfficerAssignedProjectResourceFields)
+                        responseFields(fieldWithPath("[]").description("List of monitoring officers"))
+                                .andWithPrefix("[].", projectMonitoringOfficerResourceFields)
+                                .andWithPrefix("[].unassignedProjects[].", monitoringOfficerUnassignedProjectResourceFields)
+                                .andWithPrefix("[].assignedProjects[].", monitoringOfficerAssignedProjectResourceFields)
                 ));
 
         verify(projectMonitoringOfficerServiceMock).findAll();
@@ -127,24 +127,5 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                 ));
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
-    }
-
-    @Test
-    public void checkUserIsMonitoringOfficerOnProject() throws Exception {
-        long userId = 11;
-        long projectId = 13;
-
-        when(projectMonitoringOfficerServiceMock.existsByProjectIdAndUserId(projectId, userId)).thenReturn(serviceSuccess(true));
-
-        mockMvc.perform(get("/monitoring-officer/{projectId}/exists/{userId}", projectId, userId))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("monitoring-officer/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project"),
-                                parameterWithName("userId").description("Id of the user")
-                                )
-                ));
-
-        verify(projectMonitoringOfficerServiceMock, only()).existsByProjectIdAndUserId(projectId, userId);
     }
 }

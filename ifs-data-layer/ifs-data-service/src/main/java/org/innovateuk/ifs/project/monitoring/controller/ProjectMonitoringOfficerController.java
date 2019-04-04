@@ -25,11 +25,6 @@ public class ProjectMonitoringOfficerController {
         return projectMonitoringOfficerService.findAll().toGetResponse();
     }
 
-    @GetMapping("/{projectId}/exists/{userId}")
-    public RestResult<Boolean> existsByProjectIdAndUserId(@PathVariable long projectId, @PathVariable long userId) {
-        return projectMonitoringOfficerService.existsByProjectIdAndUserId(projectId, userId).toGetResponse();
-    }
-
     @GetMapping("/{userId}")
     public RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(@PathVariable long userId) {
         return projectMonitoringOfficerService.getProjectMonitoringOfficer(userId).toGetResponse();

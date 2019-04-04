@@ -9,8 +9,6 @@ public interface ProjectMonitoringOfficerRestService {
 
     RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long projectMonitoringOfficerId);
 
-    RestResult<Boolean> existsByProjectIdAndUserId(long projectId, long userId);
-
     RestResult<Void> assignMonitoringOfficerToProject(long projectMonitoringOfficerId, long projectId);
 
     RestResult<Void> unassignMonitoringOfficerFromProject(long monitoringOfficerId, long projectId);

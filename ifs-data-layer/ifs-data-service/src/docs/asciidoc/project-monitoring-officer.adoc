@@ -10,19 +10,6 @@ include::{snippets}/monitoring-officer/get-project-monitoring-officer/response-f
 ==== Curl Example
 include::{snippets}/monitoring-officer/get-project-monitoring-officer/curl-request.adoc[]
 
-=== Check monitoring officer exists by projectId and userId
-==== Request
-include::{snippets}/monitoring-officer/check-user-is-monitoring-officer-on-project/http-request.adoc[]
-include::{snippets}/monitoring-officer/check-user-is-monitoring-officer-on-project/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/monitoring-officer/check-user-is-monitoring-officer-on-project/http-response.adoc[]
-include::{snippets}/monitoring-officer/check-user-is-monitoring-officer-on-project/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/monitoring-officer/check-user-is-monitoring-officer-on-project/curl-request.adoc[]
-
-
 === Assign project monitoring officer
 ==== Request
 include::{snippets}/monitoring-officer/assign-project-to-monitoring-officer/http-request.adoc[]

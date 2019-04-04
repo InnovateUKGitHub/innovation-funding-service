@@ -76,19 +76,6 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
     }
 
-    @Test
-    public void checkUserIsMonitoringOfficerOnProject() throws Exception {
-        long userId = 11;
-        long projectId = 13;
-
-        when(projectMonitoringOfficerServiceMock.existsByProjectIdAndUserId(projectId, userId)).thenReturn(serviceSuccess(true));
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer/{projectId}/exists/{userId}", projectId, userId))
-                .andExpect(status().is2xxSuccessful());
-
-        verify(projectMonitoringOfficerServiceMock, only()).existsByProjectIdAndUserId(projectId, userId);
-    }
-
     @Override
     protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
         return new ProjectMonitoringOfficerController(projectMonitoringOfficerServiceMock);

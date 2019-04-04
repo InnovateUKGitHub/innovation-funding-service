@@ -24,9 +24,6 @@ public interface ProjectMonitoringOfficerService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'CHECK_MONITORING_OFFICER')")
-    ServiceResult<Boolean> existsByProjectIdAndUserId(long projectId, long userId);
-
     @SecuredBySpring(value = "UNASSIGN_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can unassign projects from a monitoring officer")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")

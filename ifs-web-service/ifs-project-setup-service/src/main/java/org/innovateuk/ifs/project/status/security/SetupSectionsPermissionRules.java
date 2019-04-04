@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -53,9 +52,6 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
@@ -103,7 +99,8 @@ public class SetupSectionsPermissionRules {
     }
 
     private boolean isMonitoringOfficerOnProject(long projectId, long userId) {
-        return projectMonitoringOfficerRestService.existsByProjectIdAndUserId(projectId, userId).getSuccess();
+        ProjectResource project = projectService.getById(projectId);
+        return project.getMonitoringOfficerUser() != null ? project.getMonitoringOfficerUser().equals(userId) : false;
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +

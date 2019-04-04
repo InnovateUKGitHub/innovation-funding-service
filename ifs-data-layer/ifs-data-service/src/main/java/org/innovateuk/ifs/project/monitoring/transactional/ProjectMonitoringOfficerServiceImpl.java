@@ -87,12 +87,6 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
 
     @Override
     @Transactional
-    public ServiceResult<Boolean> existsByProjectIdAndUserId(long projectId, long userId) {
-        return serviceSuccess(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId));
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId) {
         projectMonitoringOfficerRepository.deleteByUserIdAndProjectId(userId, projectId);
         return serviceSuccess();
