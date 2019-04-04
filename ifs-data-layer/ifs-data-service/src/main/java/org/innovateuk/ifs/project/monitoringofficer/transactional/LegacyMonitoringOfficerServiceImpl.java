@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.LegacyMonitoringOfficerMapper;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -52,6 +53,9 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private LegacyMonitoringOfficerRepository legacyMonitoringOfficerRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -66,7 +70,7 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
     }
 
     private ServiceResult<LegacyMonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(LegacyMonitoringOfficer.class, projectId));
+        return find(legacyMonitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(LegacyMonitoringOfficer.class, projectId));
     }
 
     @Override
@@ -109,7 +113,7 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
     private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(LegacyMonitoringOfficerResource monitoringOfficerResource) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
         LegacyMonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
-        monitoringOfficerRepository.save(monitoringOfficer);
+        legacyMonitoringOfficerRepository.save(monitoringOfficer);
         return serviceSuccess(result);
     }
 
