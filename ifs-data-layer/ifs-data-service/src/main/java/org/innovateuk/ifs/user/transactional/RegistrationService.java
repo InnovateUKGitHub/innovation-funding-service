@@ -23,6 +23,13 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(UserResource user);
 
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<User> createPendingUser(User user);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    ServiceResult<User> activatePendingUser(User user, String password);
+
+
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, long organisationId, @P("user") UserResource userResource);
 

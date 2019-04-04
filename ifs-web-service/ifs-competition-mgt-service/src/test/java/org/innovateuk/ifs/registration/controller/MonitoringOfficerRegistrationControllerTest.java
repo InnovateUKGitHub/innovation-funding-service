@@ -176,7 +176,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         MonitoringOfficerRegistrationForm registrationForm =
                 new MonitoringOfficerRegistrationForm("Tom", "Baldwin", "Passw0rd", "0114 286 6356");
 
-        when(monitoringOfficerServiceMock.createMonitoringOfficer(hash, registrationForm)).thenReturn(ServiceResult.serviceSuccess());
+        when(monitoringOfficerServiceMock.activateAndUpdateMonitoringOfficer(hash, registrationForm)).thenReturn(ServiceResult.serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/{hash}/register", hash)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -188,7 +188,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
                 .andExpect(redirectedUrl("/monitoring-officer/hash/register/account-created"));
 
         InOrder inOrder = inOrder(monitoringOfficerServiceMock, competitionSetupMonitoringOfficerRestServiceMock);
-        inOrder.verify(monitoringOfficerServiceMock).createMonitoringOfficer(hash, registrationForm);
+        inOrder.verify(monitoringOfficerServiceMock).activateAndUpdateMonitoringOfficer(hash, registrationForm);
         inOrder.verifyNoMoreInteractions();
     }
 

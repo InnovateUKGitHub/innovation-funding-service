@@ -2,18 +2,31 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
+
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.CreateMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
+
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
+
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
+
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
+
 import org.innovateuk.ifs.user.resource.Title;
+
+import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
+
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -61,6 +74,12 @@ public class MonitoringOfficerController {
     private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Autowired
+    private MonitoringOfficerRegistrationRestService monitoringOfficerRegistrationRestService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -73,7 +92,7 @@ public class MonitoringOfficerController {
     }
 
     @PostMapping("/search-by-email")
-    public String create(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
+    public String searchByEmail(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
                          BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model) {
@@ -88,7 +107,7 @@ public class MonitoringOfficerController {
             }
             return format("redirect:/monitoring-officer/%s/assign-role", userResource.getId());
         }
-        return "project/monitoring-officer/create-new";
+        return "redirect:/monitoring-officer/create/" + form.getEmailAddress();
     }
 
     @GetMapping("/{userId}/assign-role")
@@ -118,6 +137,30 @@ public class MonitoringOfficerController {
         userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
 
         return monitoringOfficerProjectsRedirect(userId);
+    }
+
+    @GetMapping("/create/{emailAddress}")
+    public String create(@PathVariable String emailAddress,
+                         Model model) {
+        MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
+        form.setEmailAddress(emailAddress);
+        model.addAttribute(FORM , form);
+        return "project/monitoring-officer/create-new";
+    }
+
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute(FORM) MonitoringOfficerCreateForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler) {
+        if (validationHandler.hasErrors()) {
+            return "project/monitoring-officer/create";
+        }
+        CreateMonitoringOfficerResource resource = new CreateMonitoringOfficerResource(form.getFirstName(),
+                                                                                       form.getLastName(),
+                                                                                       form.getPhoneNumber(),
+                                                                                       form.getEmailAddress());
+        monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource).getSuccess();
+        return "redirect:/monitoring-officer/view-all";
     }
 
     @GetMapping("/{monitoringOfficerId}/projects")

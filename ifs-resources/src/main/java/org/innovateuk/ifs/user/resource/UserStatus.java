@@ -2,7 +2,8 @@ package org.innovateuk.ifs.user.resource;
 
 public enum UserStatus {
     ACTIVE("Verified"),
-    INACTIVE("Not Verified");
+    INACTIVE("Not Verified"),
+    PENDING("Created but not registered or invited");
 
     private String displayName;
 

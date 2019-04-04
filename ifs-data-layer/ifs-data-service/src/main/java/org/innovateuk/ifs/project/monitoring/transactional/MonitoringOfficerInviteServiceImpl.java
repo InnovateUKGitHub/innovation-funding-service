@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
@@ -18,8 +17,11 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,9 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
     @Autowired
     private MonitoringOfficerInviteMapper monitoringOfficerInviteMapper;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @Value("${ifs.system.internal.user.email.domains}")
     private String internalUserEmailDomains;
 
@@ -120,10 +125,10 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
     }
 
     private ServiceResult<Void> sendEmailToRegisteredOrUnregistered(User invitedUser, Project project) {
-        boolean userIsRegistered = monitoringOfficerInviteRepository.existsByStatusAndUserId(InviteStatus.OPENED, invitedUser.getId());
-        return userIsRegistered ?
-                sendEmailToRegistered(invitedUser, project) :
-                saveInvite(invitedUser).andOnSuccess(invite -> sendInviteToUnregistered(invite, project));
+        User user = userRepository.findById(invitedUser.getId()).get();
+        return UserStatus.PENDING == user.getStatus() ?
+                saveInvite(invitedUser).andOnSuccess(invite -> sendInviteToUnregistered(invite, project)) :
+                sendEmailToRegistered(invitedUser, project);
     }
 
 
@@ -196,6 +201,25 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return getByHash(hash)
                 .andOnSuccessReturn(Invite::open)
                 .andOnSuccessReturn(monitoringOfficerInviteMapper::mapToResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<User> activateUserByHash(String inviteHash,
+                                                  MonitoringOfficerRegistrationResource resource) {
+        return getByHash(inviteHash)
+                .andOnSuccessReturn(Invite::open)
+                .andOnSuccess(invite -> updateUserWithRegistrationDetails(invite, resource))
+                .andOnSuccess(user -> registrationService.activatePendingUser(user, resource.getPassword()));
+    }
+
+    private ServiceResult<User> updateUserWithRegistrationDetails(Invite invite, MonitoringOfficerRegistrationResource resource) {
+        User user = invite.getUser();
+        user.setFirstName(resource.getFirstName());
+        user.setLastName(resource.getLastName());
+        user.setPhoneNumber(resource.getPhoneNumber());
+        user = userRepository.save(user);
+        return serviceSuccess(user);
     }
 
     @Override

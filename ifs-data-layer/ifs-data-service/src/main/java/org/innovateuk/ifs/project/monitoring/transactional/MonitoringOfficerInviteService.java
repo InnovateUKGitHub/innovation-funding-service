@@ -4,6 +4,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -18,6 +20,12 @@ public interface MonitoringOfficerInviteService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_MONITORING_OFFICER_INVITE_ON_HASH",
+            description = "The System Registration user can open an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
+    ServiceResult<User> activateUserByHash(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_MONITORING_OFFICER_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<MonitoringOfficerInviteResource> getInviteByHash(String hash);
@@ -27,6 +35,8 @@ public interface MonitoringOfficerInviteService {
             description = "The System Registration user can open an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<MonitoringOfficerInviteResource> openInvite(String hash);
+
+
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_MONITORING_OFFICER_INVITE_ON_HASH",

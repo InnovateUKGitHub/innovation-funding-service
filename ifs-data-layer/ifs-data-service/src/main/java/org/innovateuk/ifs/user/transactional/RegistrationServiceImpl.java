@@ -35,6 +35,10 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -103,6 +107,31 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<UserResource> createUser(UserResource userResource) {
         return createOrganisationUser(Optional.empty(), Optional.empty(), userResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<User> createPendingUser(User user) {
+        user.setAllowMarketingEmails(false);
+        user.setEmail("jeremy@corbyn.com");
+        user.setFirstName("Jeremy");
+        user.setLastName("Corbyn");
+        String placeholderPassword = randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+        user = createUserWithUid(user, placeholderPassword).getSuccess();
+        user.setStatus(UserStatus.PENDING);
+        user = userRepository.save(user);
+        return serviceSuccess(user);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<User> activatePendingUser(User user,
+                                                   String password) {
+        user.setStatus(UserStatus.ACTIVE);
+        idpService.activateUser(user.getUid());
+        idpService.updateUserPassword(user.getUid(), password).getSuccess();
+        user = userRepository.save(user);
+        return serviceSuccess(user);
     }
 
     @Override

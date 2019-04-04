@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.invite.resource.CreateMonitoringOfficerResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class MonitoringOfficerRegistrationRestServiceImpl extends BaseRestServic
     @Override
     public RestResult<MonitoringOfficerInviteResource> openMonitoringOfficerInvite(String inviteHash) {
         return getWithRestResultAnonymous(format("%s/open-monitoring-officer-invite/%s", BASE_URL, inviteHash), MonitoringOfficerInviteResource.class);
+    }
+
+
+    @Override
+    public RestResult<Void> createMonitoringOfficer(CreateMonitoringOfficerResource user) {
+        return postWithRestResult(BASE_URL + "/create-pending", user, Void.class);
     }
 
     @Override
