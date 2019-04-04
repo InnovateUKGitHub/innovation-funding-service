@@ -53,20 +53,22 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void test_findOne() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
 
         when(classUnderTestMock.findOne(1L))
                 .thenReturn(serviceSuccess(new NoteResource(1L, null, null, null, null)));
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
+            verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
             verifyNoMoreInteractions(noteRules);
         });
     }
 
     @Test
     public void test_findAll() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
 
         when(classUnderTestMock.findAll(22L))
                 .thenReturn(serviceSuccess(new ArrayList<>(asList(
@@ -77,18 +79,20 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
 
-        verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
+        verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verifyNoMoreInteractions(noteRules);
     }
 
     @Test
     public void test_addPost() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
+
         when(noteLookupStrategy.findById(3L)).thenReturn(new NoteResource(3L, null, new ArrayList<PostResource>(),
                 null, null));
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
-            verify(noteRules).onlyProjectFinanceUsersCanAddPosts(isA(NoteResource.class), isNull(UserResource.class));
+            verify(noteRules).onlyProjectFinanceUsersCanAddPosts(isA(NoteResource.class), eq(user));
             verifyNoMoreInteractions(noteRules);
         });
     }
