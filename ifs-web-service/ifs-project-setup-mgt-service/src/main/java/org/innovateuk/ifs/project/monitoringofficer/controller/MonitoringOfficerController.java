@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.CreateMonitoringOfficerResource;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
@@ -18,7 +18,6 @@ import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreate
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
@@ -149,13 +148,13 @@ public class MonitoringOfficerController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute(FORM) MonitoringOfficerCreateForm form,
+    public String createUser(@Valid @ModelAttribute(FORM) MonitoringOfficerCreateForm form,
                              BindingResult bindingResult,
                              ValidationHandler validationHandler) {
         if (validationHandler.hasErrors()) {
             return "project/monitoring-officer/create";
         }
-        CreateMonitoringOfficerResource resource = new CreateMonitoringOfficerResource(form.getFirstName(),
+        MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
                                                                                        form.getLastName(),
                                                                                        form.getPhoneNumber(),
                                                                                        form.getEmailAddress());

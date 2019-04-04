@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
-import org.innovateuk.ifs.invite.resource.CreateMonitoringOfficerResource;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
@@ -46,7 +46,7 @@ public class MonitoringOfficerInviteController {
     }
 
     @PostMapping("/create-pending")
-    public RestResult<Void> createPendingMonitoringOfficer(@RequestBody CreateMonitoringOfficerResource resource) {
+    public RestResult<Void> createPendingMonitoringOfficer(@RequestBody MonitoringOfficerCreateResource resource) {
 
         User user = new User();
         user.setFirstName(resource.getFirstName());

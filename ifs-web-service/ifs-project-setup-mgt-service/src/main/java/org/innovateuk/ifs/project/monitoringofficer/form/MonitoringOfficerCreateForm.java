@@ -1,13 +1,38 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+
 public class MonitoringOfficerCreateForm {
 
+    @NotBlank(message="{validation.standard.email.required}")
+    @Email(message="{validation.standard.email.format}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 
+    @NotBlank(message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
+    @Size.List ({
+            @Size(min=2, message="{validation.standard.firstname.length.min}"),
+            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+    })
     private String firstName;
 
+    @NotBlank(message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
+    @Size.List ({
+            @Size(min=2, message="{validation.standard.lastname.length.min}"),
+            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+    })
     private String lastName;
 
+    @NotBlank(message = "{validation.standard.phonenumber.required}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
     public MonitoringOfficerCreateForm() {

@@ -1,15 +1,20 @@
 package org.innovateuk.ifs.invite.resource;
 
-public class CreateMonitoringOfficerResource {
+public class MonitoringOfficerCreateResource {
 
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String emailAddress;
+    private final String firstName;
+    private final String lastName;
+    private final String phoneNumber;
+    private final String emailAddress;
 
-    public CreateMonitoringOfficerResource() {
+    public MonitoringOfficerCreateResource() {
+        this.firstName = null;
+        this.lastName = null;
+        this.phoneNumber = null;
+        this.emailAddress = null;
     }
-    public CreateMonitoringOfficerResource(String firstName,
+
+    public MonitoringOfficerCreateResource(String firstName,
                                            String lastName,
                                            String phoneNumber,
                                            String emailAddress) {
@@ -33,21 +38,5 @@ public class CreateMonitoringOfficerResource {
 
     public String getEmailAddress() {
         return emailAddress;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
     }
 }
