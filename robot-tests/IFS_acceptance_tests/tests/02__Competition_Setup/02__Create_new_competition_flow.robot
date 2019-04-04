@@ -131,7 +131,7 @@ Initial details - User enters valid values and marks as done
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
-    [Tags]
+    [Tags]   Pending
     Given the user clicks the button/link            jQuery = .govuk-button:contains("Edit")
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery = button[class = "govuk-button"]
@@ -139,7 +139,7 @@ Initial details - Competitions allow multiple innovation areas
 
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
-    [Tags]
+    [Tags]   Pending
     Given the user clicks the button/link       jQuery = .govuk-button:contains("Edit")
     And the user clicks the button/link         jQuery = #innovation-row-2 button:contains('Remove')
     When the user clicks the button/link        jQuery = button:contains("Done")
@@ -147,27 +147,28 @@ Initial Details - User can remove an innovation area
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905
-    [Tags]
+    [Tags]   Pending
     [Setup]    the user clicks the button/link                   jQuery = .govuk-button:contains("Edit")
     When the user should see the option in the drop-down menu    John Doe    name = executiveUserId
     And the user should see the option in the drop-down menu     Robert Johnson    name = executiveUserId
 
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
-    [Tags]
+    [Tags]   Pending
     And the user should not see the element   id = competitionTypeId
     And the user should not see the element   id = openingDateDay
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Initial details") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
+    [Tags]   Pending
     Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
     And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
@@ -180,7 +181,7 @@ User should have access to all the sections
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link    link = Terms and conditions
     When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
     And the user clicks the button/link      css = button.govuk-button  #Done
@@ -190,7 +191,7 @@ The user must select the Terms and Conditions they want Applicants to accept
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link        link = Public content
     Then the user should not see an error in the page
     And the user should see the element          jQuery = h1:contains("Public content")
@@ -209,14 +210,14 @@ New application shows in Preparation section
     Given the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("In preparation") li:contains("${competitionTitle}")
 
+
 Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
-    And input text       id = funders[0].funder   Advanced Propulsion Centre (APC)
-    And the user clicks the button/link     jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
+    And wait for autocomplete   id = funders[0].funder   A  jQuery = #funder-row-0 ul li:contains("Advanced Propulsion Centre (APC)")
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
@@ -224,7 +225,7 @@ Funding information: calculations
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
-    And input text   id = funders[1].funder   Aerospace Technology Institute (ATI)
+    And wait for autocomplete   id = funders[1].funder   A  jQuery = #funder-row-1 ul li:contains("Aerospace Technology Institute (ATI)")
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
@@ -232,7 +233,7 @@ Funding information: calculations
 
 Funding information: can be saved
     [Documentation]    INFUND-3182
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = td:contains("Advanced Propulsion Centre (APC)")
     And the user should see the element     jQuery = th:contains("Total") ~ td:contains("£20,000")
@@ -243,7 +244,7 @@ Funding information: can be saved
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
-    [Tags]
+    [Tags]   Pending
     When the user clicks the button/link             jQuery = .govuk-button:contains("Edit")
     And input text                                   id = funders[0].funder  Centre for Connected and Autonomous Vehicles (CCAV)
     And the user clicks the button/link              jQuery = ul li:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
@@ -252,14 +253,14 @@ Funding information: can be edited
 
 Funding information: should have a green check
     [Documentation]    INFUND-3002
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link  link = Eligibility
     And the user should see the element    jQuery = h2:contains("Please choose the project type.")
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
@@ -284,7 +285,7 @@ Eligibility: Contain the correct options
 
 Eligibility: Mark as Done then Edit again
     [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user selects the checkbox      research-categories-33
     And the user selects the checkbox        research-categories-34
     And the user selects the radio button    singleOrCollaborative    single
@@ -311,14 +312,14 @@ Eligibility: Mark as Done then Edit again
 
 Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
-    [Tags]
+    [Tags]   Pending
     When the user clicks the button/link            link = Milestones
     Then the user should see the element            jQuery = p:contains("Select the stage at which the competition is complete for Innovate UK.")
     When the user should see the element            jQuery = li span:contains("1. Open date")
@@ -341,7 +342,7 @@ Milestones: Page should contain the correct fields
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     [Setup]  the user navigates to the page    ${SERVER}/management/competition/setup/${competitionId}/section/milestones
     Given the user fills the milestones with valid data
     When the user clicks the button/link       jQuery = button:contains(Done)
@@ -349,14 +350,14 @@ Milestones: Correct Weekdays should show
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Milestones") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
-    [Tags]
+    [Tags]   Pending
     #Writing the following selectors using jQuery in order to avoid hardcoded numbers.
     When the user clicks the button/link  link = Application
     Then the user should see the element  jQuery = h2:contains("Sector competition questions")
@@ -379,7 +380,7 @@ Application - Application process Page
 
 Application: Application details validations
     [Documentation]  IFS-2776
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     [Setup]  the user navigates to the page    ${SERVER}/management/competition/setup/${competitionId}/section/application/landing-page
     Given the user clicks the button/link      jQuery = a:contains("Application details")
     And the user enters text to a text field   id = minProjectDuration  ${empty}
@@ -411,7 +412,7 @@ Application: Application details validations
 
 Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link         link = Application details
     And the user should see the element           jQuery = h1:contains("Application details")
     When the user selects the radio button        useResubmissionQuestion  false
@@ -427,7 +428,7 @@ Application: Application details
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link         link = Scope
     Then the user should see the element          jQuery = h1:contains("Scope")
     And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
@@ -440,7 +441,7 @@ Application: Scope
 
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link            link = Edit this question
     And the user selects the radio button            question.writtenFeedback    1
     And the user fills the scope assessment questions
@@ -457,7 +458,7 @@ Application: Scope Assessment questions
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link            link = Project summary
     And the user should see the element              jQuery = h1:contains("Project summary")
     And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
@@ -470,7 +471,7 @@ Application: Project Summary
 
 Application: Need or challenge
     [Documentation]  INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283 IFS-2776
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user should not see the element    jQuery = li:contains("${amendedQuestion}") .task-status-complete
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     And the user clicks the button/link          css = button[type="submit"]
@@ -493,7 +494,7 @@ Application: Need or challenge
 
 Application: marking questions as complete
     [Documentation]  IFS-743
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When the user clicks the button/link      link = Application
     Then the user marks question as complete  Public description
     And the user marks question as complete   Approach and innovation
@@ -508,7 +509,7 @@ Application: marking questions as complete
 
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link                css = p button[type="submit"]  #Add question link
     When the user is able to configure the new question  ${customQuestion}
     And the user clicks the button/link                  jQuery = li:contains("${customQuestion}")
@@ -516,7 +517,7 @@ Adding a new Assessed Application Question
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link     jQuery = a:contains("Costs and value for money")
     When the user clicks the button/link      css = button[name="deleteQuestion"]
     Then the user should not see the element  jQuery = a:contains("Costs and value for money")
@@ -525,7 +526,7 @@ Removing an Assessed Application Question
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link          link = Finances
     When the user should see the element           jQuery = h1:contains("Application finances")
     And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
@@ -544,7 +545,7 @@ Application: Finances
 
 Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given The user clicks the button/link     css = button[class = "govuk-button"]  # Done button
     Then The user should not see the element  css = button[class = "govuk-button"]  # Done button
     When The user clicks the button/link      link = Return to setup overview
@@ -552,7 +553,7 @@ Application: Done enabled when all questions are marked as complete
 
 Documents in project setup: The competition admin adds document requirements
     [Documentation]    IFS-3916
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link        link = Documents
     And the user clicks the button/link          link = Add document type
     When the user enters text to a text field    id = title    Test document type
@@ -564,7 +565,7 @@ Documents in project setup: The competition admin adds document requirements
 
 Documents in project setup: The competition admin removes a document
     [Documentation]    IFS-3916
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ a:contains("Edit")
     When the user clicks the button/link        css = button[name = "removeDocument"]
     And the user clicks the button/link         jQuery = button:contains("Confirm")
@@ -573,7 +574,7 @@ Documents in project setup: The competition admin removes a document
 
 Public content is required for a Competition to be setup
     [Documentation]
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user clicks the button/link                     link = Public content
     When the user fills in the Public content and publishes   GrowthTable
     And the user clicks the button/link                       link = Return to setup overview
@@ -581,7 +582,7 @@ Public content is required for a Competition to be setup
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
-    [Tags]
+    [Tags]   Pending
     Given the user should see the element       css = #compCTA
     When the user clicks the button/link        link = Eligibility
     And the user clicks the button/link         jQuery = button:contains("Edit")
@@ -594,7 +595,7 @@ Complete button disabled when sections are edited
 
 Moving competition to Ready to Open state
     [Documentation]
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link    css = #compCTA
     Then the user clicks the button/link    jQuery = .govuk-button:contains("Done")
@@ -603,7 +604,7 @@ Moving competition to Ready to Open state
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]
+    [Tags]   Pending
     [Setup]  the user navigates to the page    ${server}/management/competition/setup/${competitionId}
     When The user clicks the button/link       link = Initial details
     And the user clicks the button/link        jQuery = .govuk-button:contains("Edit")
@@ -615,7 +616,7 @@ Ready To Open button is visible when the user re-opens a section
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
-    [Tags]
+    [Tags]   Pending
     [Setup]  the user clicks the button/link    link = Application
     Given the user clicks the button/link       link = Application details
     When the user clicks the button/link        link = Edit this question
@@ -629,7 +630,7 @@ Application: Edit again should mark as incomplete
 
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
-    [Tags]
+    [Tags]   Pending
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
     And the user clicks the button/link      css = button.govuk-button
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
@@ -642,7 +643,7 @@ User should be able to Save the Competition as Open
 
 Assessor: Contain the correct options
     [Documentation]    INFUND-5641
-    [Tags]
+    [Tags]   Pending
     [Setup]  the user clicks the button/link        link = ${competitionTitle}
     Given The user clicks the button/link           link = View and update competition setup
     And the user clicks the button/link             link = Assessors
@@ -655,7 +656,7 @@ Assessor: Contain the correct options
 
 Assessor: Mark as Done then Edit again
     [Documentation]    INFUND-5641 IFS-380
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     [Setup]  the user navigates to the page    ${server}/management/competition/setup/${competitionId}/section/assessors
     Given the user selects the radio button    assessorCount   5
     And the user selects the radio button      hasInterviewStage  hasInterviewStage-1
@@ -673,7 +674,7 @@ Assessor: Mark as Done then Edit again
 
 Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css = #compCTA
@@ -683,7 +684,7 @@ Assessor: Should have a Green Check
 
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     [Setup]  the user clicks the button/link  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
     And The user clicks the button/link       link = Innovation leads
@@ -704,7 +705,7 @@ Innovation leads can be added to a competition
 
 User deletes the competition
     [Documentation]  IFS-1084
-    [Tags]  HappyPath
+    [Tags]  HappyPath   Pending
     Given the user navigates to the page        ${CA_UpcomingComp}
     And The user clicks the button/link         link = No competition title defined
     When the user clicks the button/link        link = Delete competition
@@ -714,7 +715,7 @@ User deletes the competition
 
 User cannot delete competition with assessors
    [Documentation]  IFS-1084
-   [Tags]  HappyPath
+   [Tags]  HappyPath   Pending
    Given the user clicks the button/link       link = Photonics for health
    And The user clicks the button/link         link = View and update competition setup
    When the user clicks the button/link        link = Delete competition
@@ -723,13 +724,14 @@ User cannot delete competition with assessors
 
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
-    [Tags]  MySQL
+    [Tags]  MySQL   Pending
     [Setup]  update milestone to yesterday          ${competitionId}  OPEN_DATE
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
 
 The Applicant should see the selected research cartegories
     [Documentation]  IFS-2941
+    [Tags]   Pending
     When the user clicks the button/link       link = Research category
     Then the user should see the element       css = label[for="researchCategory1"]
     And the user should see the element        css = label[for="researchCategory2"]
@@ -738,13 +740,14 @@ The Applicant should see the selected research cartegories
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
+    [Tags]   Pending
     Given the user should see the element      jQuery = li:contains("${customQuestion}")
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 The user can see the VAT text in Your project costs
     [Documentation]  IFS-4345
-    [Tags]
+    [Tags]   Pending
     Given the user clicks the button/link      link = Your finances
     When the user clicks the button/link       link = Your project costs
     Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
