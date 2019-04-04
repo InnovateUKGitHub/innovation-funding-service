@@ -21,6 +21,11 @@ public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService imp
     }
 
     @Override
+    public RestResult<Boolean> existsByProjectIdAndUserId(long projectId, long userId) {
+        return getWithRestResult(format("%s/%d/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectId, "exists", userId), Boolean.class);
+    }
+
+    @Override
     public RestResult<Void> assignMonitoringOfficerToProject(long projectMonitoringOfficerId, long projectId) {
         return postWithRestResult(format("%s/%d/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectMonitoringOfficerId, "assign", projectId));
     }

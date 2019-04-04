@@ -128,4 +128,23 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
     }
+
+    @Test
+    public void checkUserIsMonitoringOfficerOnProject() throws Exception {
+        long userId = 11;
+        long projectId = 13;
+
+        when(projectMonitoringOfficerServiceMock.existsByProjectIdAndUserId(projectId, userId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/monitoring-officer/{projectId}/exists/{userId}", projectId, userId))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("monitoring-officer/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project"),
+                                parameterWithName("userId").description("Id of the user")
+                                )
+                ));
+
+        verify(projectMonitoringOfficerServiceMock, only()).existsByProjectIdAndUserId(projectId, userId);
+    }
 }

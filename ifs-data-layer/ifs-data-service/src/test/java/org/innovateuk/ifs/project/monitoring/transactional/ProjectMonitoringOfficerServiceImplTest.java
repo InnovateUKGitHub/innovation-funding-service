@@ -170,6 +170,16 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
         verify(projectMonitoringOfficerRepositoryMock, only()).deleteByUserIdAndProjectId(moUser.getId(), project.getId());
     }
 
+    @Test
+    public void existsByProjectIdAndUserId() {
+        User user = newUser().build();
+        Project project = newProject().build();
+
+        service.existsByProjectIdAndUserId(project.getId(), user.getId());
+
+        verify(projectMonitoringOfficerRepositoryMock, only()).existsByProjectIdAndUserId(project.getId(), user.getId());
+    }
+
     @Override
     protected ProjectMonitoringOfficerServiceImpl supplyServiceUnderTest() {
         return new ProjectMonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -61,6 +62,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Mock
     private ProjectService projectServiceMock;
+
+    @Mock
+    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestServiceMock;
 
     @Mock
     private OrganisationRestService organisationRestService;
@@ -496,6 +500,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getOrganisationIdFromUser(activeProject.getId(), user)).thenReturn(789L);
 
         when(projectServiceMock.isUserLeadPartner(activeProject.getId(), user.getId())).thenReturn(false);
+
+        when(projectMonitoringOfficerRestServiceMock.existsByProjectIdAndUserId(activeProject.getId(), user.getId())).thenReturn(restSuccess(true));
 
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(789L);
