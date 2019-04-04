@@ -24,14 +24,18 @@ import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -49,6 +53,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -57,9 +62,11 @@ import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
@@ -100,6 +107,18 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private ProjectUserMapper projectUserMapper;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -432,5 +451,22 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private String getInviteUrl(String baseUrl, ProjectUserInviteResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    }
+
+
+    private ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {
+        return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
+    }
+
+    private ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).
+                        map(user -> serviceSuccess(user)).
+                        orElse(serviceFailure(forbiddenError())));
+    }
+
+    private boolean findUserAndRole(ProjectParticipantRole role, User currentUser, ProjectUser pu) {
+        return pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role);
     }
 }
