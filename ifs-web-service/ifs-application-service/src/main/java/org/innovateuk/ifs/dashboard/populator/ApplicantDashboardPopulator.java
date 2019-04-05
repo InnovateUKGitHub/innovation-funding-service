@@ -102,7 +102,7 @@ public class ApplicantDashboardPopulator {
                             Optional.ofNullable(euGrantTransferProjects.get(application.getId())).map(ProjectResource::getId).orElse(null));
                 }).sorted().collect(toList());
 
-        return new ApplicantDashboardViewModel(projectViews, grantTransferViews, inProgressViews, previousViews, originQuery, user.hasRole(MONITORING_OFFICER));
+        return new ApplicantDashboardViewModel(projectViews, grantTransferViews, inProgressViews, previousViews, originQuery);
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
@@ -163,8 +163,7 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRole() == APPLICANT ||
-                processRoleResource.getRole() == LEADAPPLICANT ||
+        return processRoleResource.getRole() == LEADAPPLICANT ||
                 processRoleResource.getRole() == COLLABORATOR;
     }
 

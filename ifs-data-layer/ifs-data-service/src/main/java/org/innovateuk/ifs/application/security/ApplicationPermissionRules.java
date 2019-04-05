@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -31,7 +31,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
