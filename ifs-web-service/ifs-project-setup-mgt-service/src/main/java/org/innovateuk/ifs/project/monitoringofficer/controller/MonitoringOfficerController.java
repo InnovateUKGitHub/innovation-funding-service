@@ -144,10 +144,14 @@ public class MonitoringOfficerController {
     @PostMapping("/create")
     public String createUser(@Valid @ModelAttribute(FORM) MonitoringOfficerCreateForm form,
                              BindingResult bindingResult,
-                             ValidationHandler validationHandler) {
+                             ValidationHandler validationHandler,
+                             Model model) {
         if (validationHandler.hasErrors()) {
-            return "project/monitoring-officer/create-new/" + form.getEmailAddress();
+            model.addAttribute("email", form.getEmailAddress());
+            model.addAttribute(FORM , form);
+            return "project/monitoring-officer/create-new";
         }
+
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
                                                                                        form.getLastName(),
                                                                                        form.getPhoneNumber(),
