@@ -10,7 +10,7 @@ def wait_for_autosave(formselector='css=[data-autosave]', completeselector='css=
 
 
 def repeat_string(string='', multiplicity=0):
-    return string * int(multiplicity);
+    return string * int(multiplicity)
 
 
 # Performs a keyword on a paginated page, clicking through to the next pages if the keyword is not successful, until
