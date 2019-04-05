@@ -24,7 +24,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
@@ -138,7 +138,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
 
     @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+    private LegacyMonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Test
     public void createUser() {

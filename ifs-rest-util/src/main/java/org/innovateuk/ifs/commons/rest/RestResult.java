@@ -375,7 +375,7 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
         return new RestResult<>(left(failure), null);
     }
 
-    public static RestResult<Void> restFailure(HttpStatus statusCode) {
+    public static <T> RestResult<T> restFailure(HttpStatus statusCode) {
         return restFailure(null, statusCode);
     }
 

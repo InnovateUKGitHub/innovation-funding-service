@@ -5,10 +5,13 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -18,15 +21,24 @@ import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -46,6 +58,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -55,6 +68,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResourc
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -86,6 +100,32 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
+
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
+
+    @Autowired
+    private FinanceService financeService;
+
+    @Autowired
+    private BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private LegacyMonitoringOfficerRepository legacyMonitoringOfficerRepository;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
+
+
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -269,11 +309,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 partnerProjectLocationStatus);
     }
 
-    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
+    private ServiceResult<LegacyMonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
+        return find(legacyMonitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(LegacyMonitoringOfficer.class, projectId));
     }
 
-    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer,
                                                                            final ProjectActivityStates leadProjectDetailsSubmitted,
                                                                            final boolean locationPerPartnerRequired,
                                                                            final ProjectActivityStates partnerProjectLocationStatus) {
@@ -288,7 +328,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return getMonitoringOfficerStatus(monitoringOfficer, allRequiredDetailsComplete);
     }
 
-    private ProjectActivityStates getMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+    private ProjectActivityStates getMonitoringOfficerStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer,
                                                              final boolean allRequiredDetailsComplete) {
 
 
@@ -440,7 +480,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
-        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+        Optional<LegacyMonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
@@ -478,5 +518,143 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 partnerProjectLocationStatus,
                 grantOfferLetterSentToProjectTeam,
                 isLead);
+    }
+
+    private ProjectActivityStates createDocumentStatus(Project project) {
+
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+
+        int expectedNumberOfDocuments = expectedNumberOfDocuments(project);
+        int actualNumberOfDocuments = projectDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
+            return COMPLETE;
+        }
+
+        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+            return ACTION_REQUIRED;
+        }
+
+        return PENDING;
+    }
+
+    private int expectedNumberOfDocuments(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+        return expectedNumberOfDocuments;
+    }
+
+    private ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
+        return getFinanceContact(project, partnerOrganisation).map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
+    }
+
+    private ProjectActivityStates createPartnerProjectLocationStatus(Project project, Organisation organisation) {
+
+        boolean locationPresent = project.getPartnerOrganisations().stream()
+                .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
+                .findFirst()
+                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostcode()))
+                .orElse(false);
+
+        return locationPresent ? COMPLETE : ACTION_REQUIRED;
+    }
+
+    private ProjectActivityStates createProjectDetailsStatus(Project project) {
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
+    }
+
+    private ProjectActivityStates createMonitoringOfficerStatus(final Optional<LegacyMonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
+        } else {
+            return NOT_STARTED;
+        }
+    }
+
+    private ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
+        if (bankDetails.isPresent()) {
+            return bankDetails.get().isApproved() ? COMPLETE : PENDING;
+        } else if (!isSeekingFunding(projectId, applicationId, organisationId)) {
+            return NOT_REQUIRED;
+        } else if (COMPLETE.equals(financeContactStatus)) {
+            return ACTION_REQUIRED;
+        } else {
+            return NOT_STARTED;
+        }
+    }
+
+    private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
+        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
+                .getOptionalSuccessObject()
+                .map(Boolean::booleanValue)
+                .orElse(false);
+    }
+
+    protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
+        PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+        if (financeChecksApproved(partnerOrg)) {
+            return COMPLETE;
+        } else if (isAwaitingResponse) {
+            return ACTION_REQUIRED;
+        } else {
+            return PENDING;
+        }
+    }
+
+    private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
+        return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
+                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
+    }
+
+    private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeCheckStatus, spendProfile);
+        if (COMPLETE.equals(spendProfileStatus) && !ApprovalType.APPROVED.equals(spendProfileWorkflowHandler.getApproval(project))) {
+            return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
+        } else {
+            return spendProfileStatus;
+        }
+    }
+
+    private ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        if (!spendProfile.isPresent()) {
+            return NOT_STARTED;
+        } else if (financeCheckStatus.equals(COMPLETE) && spendProfile.get().isMarkedAsComplete()) {
+            return COMPLETE;
+        } else {
+            return ACTION_REQUIRED;
+        }
+    }
+
+    private ProjectActivityStates createLeadGrantOfferLetterStatus(final Project project) {
+        GrantOfferLetterState state = golWorkflowHandler.getState(project);
+        if (SENT.equals(state)) {
+            return ACTION_REQUIRED;
+        } else if (GrantOfferLetterState.PENDING.equals(state) && project.getGrantOfferLetter() != null) {
+            return PENDING;
+        } else {
+            return createGrantOfferLetterStatus(project);
+        }
+    }
+
+    private ProjectActivityStates createGrantOfferLetterStatus(final Project project) {
+        GrantOfferLetterState state = golWorkflowHandler.getState(project);
+        if (GrantOfferLetterState.APPROVED.equals(state)) {
+            return COMPLETE;
+        } else if (GrantOfferLetterState.PENDING.equals(state)){
+            return NOT_REQUIRED;
+        } else {
+            return PENDING;
+        }
     }
 }

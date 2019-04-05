@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -61,8 +61,8 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = ProjectMonitoringOfficer.class, mappedBy = "project")
-    private ProjectMonitoringOfficer projectMonitoringOfficer = null;
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project")
+    private MonitoringOfficer projectMonitoringOfficer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
@@ -111,7 +111,7 @@ public class Project implements ProcessActivity {
         projectUsers.add(projectUser);
     }
 
-    public void setProjectMonitoringOfficer(ProjectMonitoringOfficer projectMonitoringOfficer) {
+    public void setProjectMonitoringOfficer(MonitoringOfficer projectMonitoringOfficer) {
         this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
@@ -314,8 +314,12 @@ public class Project implements ProcessActivity {
         return projectUser.getUser().getId().equals(user.getId());
     }
 
-    public Optional<ProjectMonitoringOfficer> getProjectMonitoringOfficer() {
+    public Optional<MonitoringOfficer> getProjectMonitoringOfficer() {
         return Optional.ofNullable(projectMonitoringOfficer);
+    }
+
+    public MonitoringOfficer getProjectMonitoringOfficerOrElseNull() {
+        return getProjectMonitoringOfficer().orElse(null);
     }
 
     public ProjectProcess getProjectProcess() {

@@ -29,8 +29,6 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -76,7 +74,6 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
-import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -136,9 +133,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
-
-    @Mock
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
 
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -445,23 +439,17 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withRole(PROJECT_PARTNER, PROJECT_FINANCE_CONTACT)
                 .build(2);
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
-                .withProject(project)
-                .build(1);
-
         ProjectResource projectResource = newProjectResource().build();
 
         when(projectUserRepositoryMock.findByUserId(user.getId())).thenReturn(projectUserRecords);
-        when(projectMonitoringOfficerRepositoryMock.findByUserId(user.getId())).thenReturn(projectMonitoringOfficers);
         when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
 
         List<ProjectResource> result = service.findByUserId(user.getId()).getSuccess();
 
         assertEquals(1L, result.size());
 
-        InOrder inOrder = inOrder(projectUserRepositoryMock, projectMonitoringOfficerRepositoryMock, projectMapperMock);
+        InOrder inOrder = inOrder(projectUserRepositoryMock, projectMapperMock);
         inOrder.verify(projectUserRepositoryMock).findByUserId(user.getId());
-        inOrder.verify(projectMonitoringOfficerRepositoryMock).findByUserId(user.getId());
         inOrder.verify(projectMapperMock).mapToResource(project);
         inOrder.verifyNoMoreInteractions();
     }

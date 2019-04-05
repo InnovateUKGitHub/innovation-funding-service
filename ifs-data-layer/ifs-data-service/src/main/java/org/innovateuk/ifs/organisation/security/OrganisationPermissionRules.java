@@ -8,8 +8,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,7 +41,7 @@ public class OrganisationPermissionRules {
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
@@ -55,7 +55,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
         return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
     }
 
@@ -143,7 +143,7 @@ public class OrganisationPermissionRules {
         return organisation.getUsers().isEmpty();
     }
 
-    private List<Long> getMonitoringOfficersOrganisationIds(List<ProjectMonitoringOfficer> projectMonitoringOfficers) {
+    private List<Long> getMonitoringOfficersOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
         List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
         projectMonitoringOfficers.forEach(pmo -> {
             pmo.getProject()
