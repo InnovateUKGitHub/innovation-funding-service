@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 public class CompetitionPermissionRules extends BasePermissionRules {
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @PermissionRule(value = "READ", description = "External users cannot view competitions in setup")
     public boolean externalUsersCannotViewCompetitionsInSetup(CompetitionResource competition, UserResource user) {

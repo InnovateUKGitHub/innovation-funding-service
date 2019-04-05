@@ -24,6 +24,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
@@ -35,30 +36,21 @@ ${Intelligent_water}   ${application_ids['Intelligent water system']}
 View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
-    Given The user clicks the button/link        link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link         jQuery = a:contains("Manage assessments")
-    And The user clicks the button/link          jQuery = a:contains("Manage applications")
+    Given comp admin navigate to manage applications
     Then the application list is correct before changes
     [Teardown]  the user clicks the button/link  link = Manage assessments
 
 View the list of assessors
     [Documentation]  IFS-319
     [Tags]
-    When The user clicks the button/link  jQuery = a:contains("Manage assessors")
+    Given The user clicks the button/link  jQuery = a:contains("Manage assessors")
     Then the assessor list is correct before changes
 
 Filter assessors
     [Documentation]    IFS-399
     [Tags]
-    Given the user selects the option from the drop-down menu  Materials and manufacturing  id = innovationSector
-    And the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
-    Then the user should not see the element                   jQuery = td:contains("Paul Plum")
-    And the user should see the element                        jQuery = td:contains("Felix Wilson")
-    And the user should see the element                        jQuery = td:contains("Jenna Diaz")
-    Then the user selects the option from the drop-down menu   Academic  id = businessType
-    And the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
-    Then the user should see the element                       jQuery = td:contains("Felix Wilson")
-    And the user should not see the element                    jQuery = td:contains("Jenna Diaz")
+    Given the user filter assessors by innovation sector
+    Then the user filter assessors by business type
     [Teardown]    the user clicks the button/link  link = Clear all filters
 
 View assessor progress page
@@ -66,13 +58,7 @@ View assessor progress page
     [Tags]
     [Setup]  the user clicks the button/link  jQuery = a:contains("21 to 40")
     Given the user clicks the button/link  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
-    Then The user should see the element   jQuery = h2:contains("Paul Plum")
-    And the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
-    And the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Academic")
-    And the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
-    And the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
-    And the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
-    And the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+    Then the user should see details on assessors progress page
 
 Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
@@ -112,7 +98,7 @@ Assign an application to an assessor
     And the user clicks the button/link    jQuery = a:contains("41 to")
     When the user clicks the button/link   jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    And the user clicks the button/link    jQuery = td:contains("36") ~ td button:contains("Assign")
+    When the user clicks the button/link    jQuery = td:contains("36") ~ td button:contains("Assign")
     Then the user should see the element   jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
 
 Filter by application number on the assessor page
@@ -127,16 +113,12 @@ Filtering of the applications
     [Documentation]    INFUND-8061
     [Setup]  the user navigates to the page    ${SERVER}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
     Given the user clicks the button/link      jQuery = a:contains("Manage applications")
-    When The user enters text to a text field  css = #filterSearch    ${Intelligent_water}
-    and The user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element       jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
-    And The user clicks the button/link        link = Clear all filters
-    then the user should not see the element   jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+    Then the user filter by application name
 
 Application number navigates to Overview
     [Documentation]    INFUND-7042
     [Tags]
-    When the user clicks the button/link           link = ${Intelligent_water}
+    Given the user clicks the button/link           link = ${Intelligent_water}
     Then The user should see the element           jQuery = .govuk-caption-l:contains("Intelligent water system")
     And the user should see the element            jQuery = h1:contains("Application overview")
     [Teardown]    the user clicks the button/link  link = Back
@@ -145,37 +127,28 @@ View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
     [Tags]
     Given the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    Then The user should see the element           jQuery = h2:contains("Living with Cryptocurrencies")
-    And the user should see the element            jQuery = h3:contains("Partners") ~ ul:contains("Moveis (Lead)")
-    And the user should see the element            jQuery = h3:contains("Innovation area") ~ span:contains("Digital manufacturing")
-    And the user should see the element            jQuery = p:contains("No assessors have been assigned to this application")
-    And the user should see the element            jQuery = p:contains("No assessors have rejected this application.")
-    And the user should see the element            jQuery = p:contains("No assessors were previously assigned to this application.")
+    Then the user should see details on application progress page
 
 Review the application
     [Documentation]    INFUND-7046
     [Tags]
-    When the user clicks the button/link  link = Review application
+    Given the user clicks the button/link  link = Review application
     Then the user should see the element  jQuery = h1:contains("Application overview")
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    Then the user should see the element  jQuery = .govuk-table__header:contains("Assessor")
-    And the user clicks the button/link   link = 21 to 40
-    And the available assessors information is correct
+    Given the user should see the element  jQuery = .govuk-table__header:contains("Assessor")
+    When the user clicks the button/link   link = 21 to 40
+    Then the available assessors information is correct
 
 View the application assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
     [Setup]  the user should see the element  jQuery = h2:contains("Living with Cryptocurrencies")
     Given The user should see the element  jQuery = p:contains("No assessors have been assigned to this application.")
-    When the user clicks the button/link   jQuery = tr:contains("Paul Plum") button:contains("Assign")
-    Then the user should see the element   jQuery = h2:contains("Assigned (1)")
-    And the assigned list is correct before notification
-    And the user clicks the button/link    link = Allocate applications
-    Then the user should see the element   jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+    Then the user assign application to an assessor
 
 Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
@@ -188,32 +161,20 @@ Notify an assigned user
     [Tags]
     [Setup]  the user clicks the button/link   link = 21 to 40
     Given the user clicks the button/link  jQuery = tr:contains("Paul Plum") button:contains("Assign")
-    And the user clicks the button/link    link = Allocate applications
-    And the user clicks the button/link    link = Manage assessments
-    And the user clicks the button/link    link = Competition
-    And the user clicks the button/link    jQuery = button:contains("Notify assessors")
-    And the element should be disabled     jQuery = button:contains("Notify assessors")
+    Then the comp admin notify an assessor
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
-    When The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 
 Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
     [Tags]
     [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given The user clicks the button/link         link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link           jQuery = a:contains("Manage assessments")
-    And the user clicks the button/link           jQuery = a:contains("Manage applications")
-    And the user clicks the button/link           jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    When the user clicks the button/link          jQuery = td:contains("Paul Plum") ~ td:contains("Remove")
-    And the user clicks the button/link           jQuery = .button-clear:contains("Cancel")
-    And the user should not see the element       jQuery = button:contains("Remove assessor")
-    And the user clicks the button/link           jQuery = td:contains("Paul Plum") ~ td:contains("Remove")
-    And the user clicks the button/link           jQuery = button:contains("Remove assessor")
-    And the user should see the element           jQuery = h2:contains("Previously assigned (1)")
+    Given comp admin navigate to manage applications
+    Then the user removes assessor from assigned application and notify
     And the previously assigned list is correct
 
 Assessor should not see the removed application
@@ -226,24 +187,14 @@ Reassign and notify an assessor (Notified)
     [Documentation]    INFUND-7048
     [Tags]
     [Setup]    Log in as a different user          &{Comp_admin1_credentials}
-    Given The user clicks the button/link          link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link            jQuery = a:contains("Manage assessments")
-    And the user clicks the button/link            jQuery = a:contains("Manage applications")
-    And the user clicks the button/link            jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    And the user should see the element            jQuery = h2:contains("Previously assigned (1)")
-    And the user clicks the button/link            jQuery = tr:contains("Paul Plum") button:contains("Reassign")
-    Then the user should see the element           jQuery = h2:contains("Assigned (1)")
-    And the assigned list is correct before notification
-    And the user clicks the button/link            link = Allocate applications
-    And the user clicks the button/link            link = Manage assessments
-    And the user clicks the button/link            link = Competition
-    And the user clicks the button/link            jQuery = button:contains("Notify assessors")
-    And the element should be disabled             jQuery = button:contains("Notify assessors")
+    Given comp admin navigate to manage applications
+    When the user resign assessor to an application
+    Then the comp admin notify an assessor
 
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
-    When The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 
 *** Keywords ***
@@ -277,3 +228,70 @@ the user accepts the application
     the user clicks the button/link  link = Molecular tree breeding
     the user selects the radio button  assessmentAccept  true
     the user clicks the button/link  jQuery = button:contains("Confirm")
+
+the user filter assessors by innovation sector
+    the user selects the option from the drop-down menu    Materials and manufacturing  id = innovationSector
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
+    the user should not see the element                    jQuery = td:contains("Paul Plum")
+    the user should see the element                        jQuery = td:contains("Felix Wilson")
+    the user should see the element                        jQuery = td:contains("Jenna Diaz")
+
+the user filter assessors by business type
+    the user selects the option from the drop-down menu   Academic  id = businessType
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
+    the user should see the element                       jQuery = td:contains("Felix Wilson")
+    the user should not see the element                   jQuery = td:contains("Jenna Diaz")
+
+the user should see details on assessors progress page
+    the user should see the element    jQuery = h2:contains("Paul Plum")
+    the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
+    the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Academic")
+    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
+    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
+    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
+    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+
+the user filter by application name
+    the user enters text to a text field   css = #filterSearch    ${Intelligent_water}
+    the user clicks the button/link        jQuery = button:contains("Filter")
+    the user should see the element        jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+    the user clicks the button/link        link = Clear all filters
+    the user should not see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+
+the user should see details on application progress page
+    the user should see the element       jQuery = h2:contains("Living with Cryptocurrencies")
+    the user should see the element       jQuery = h3:contains("Partners") ~ ul:contains("Moveis (Lead)")
+    the user should see the element       jQuery = h3:contains("Innovation area") ~ span:contains("Digital manufacturing")
+    the user should see the element       jQuery = p:contains("No assessors have been assigned to this application")
+    the user should see the element       jQuery = p:contains("No assessors have rejected this application.")
+    the user should see the element       jQuery = p:contains("No assessors were previously assigned to this application.")
+
+the user assign application to an assessor
+    the user clicks the button/link   jQuery = tr:contains("Paul Plum") button:contains("Assign")
+    the user should see the element   jQuery = h2:contains("Assigned (1)")
+    the assigned list is correct before notification
+    the user clicks the button/link    link = Allocate applications
+    the user should see the element   jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+
+the comp admin notify an assessor
+    the user clicks the button/link    link = Allocate applications
+    the user clicks the button/link    link = Manage assessments
+    the user clicks the button/link    link = Competition
+    the user clicks the button/link    jQuery = button:contains("Notify assessors")
+    the element should be disabled     jQuery = button:contains("Notify assessors")
+
+the user removes assessor from assigned application and notify
+    the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
+    the user clicks the button/link          jQuery = td:contains("Paul Plum") ~ td:contains("Remove")
+    the user clicks the button/link          jQuery = .button-clear:contains("Cancel")
+    the user should not see the element      jQuery = button:contains("Remove assessor")
+    the user clicks the button/link          jQuery = td:contains("Paul Plum") ~ td:contains("Remove")
+    the user clicks the button/link          jQuery = button:contains("Remove assessor")
+    the user should see the element          jQuery = h2:contains("Previously assigned (1)")
+
+the user resign assessor to an application
+    the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
+    the user should see the element          jQuery = h2:contains("Previously assigned (1)")
+    the user clicks the button/link          jQuery = tr:contains("Paul Plum") button:contains("Reassign")
+    the user should see the element          jQuery = h2:contains("Assigned (1)")
+    the assigned list is correct before notification

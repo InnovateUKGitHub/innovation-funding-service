@@ -6,23 +6,18 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 In Assessment dashboard page
     [Documentation]    INFUND-7363
-    Given The user clicks the button/link    link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then the user should see the element     jQuery =.govuk-caption-l:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And The user should see the element      jQuery =h1:contains("In assessment")
-    And The user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And The user should see the element      jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
-    And The user should see the element      jQuery = dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
-    And the user should see the element      link = View and update competition setup
-    #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery = .disabled:contains("Input and review funding decision")
+    Given The user clicks the button/link             link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then the user should see the competition details  ${IN_ASSESSMENT_COMPETITION_NAME}  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition
+    And the user should see the element               link = View and update competition setup
 
 Milestones for In Assessment competitions
     [Documentation]    INFUND-7561
-    Then the user should see the element    jQuery = button:contains("Close assessment")
+    Then the user should see the element   jQuery = button:contains("Close assessment")
     And the user should see the element    css = li:nth-child(9).not-done    #this keyword verifies that the 8. Line Draw is not done
     And the user should see the element    css = li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
 

@@ -43,9 +43,9 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.builder.LegacyMonitoringOfficerBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -99,7 +99,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
-import static org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoringofficer.builder.LegacyMonitoringOfficerBuilder.newLegacyMonitoringOfficer;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -158,7 +158,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private BankDetailsRepository bankDetailsRepositoryMock;
 
     @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+    private LegacyMonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepositoryMock;
@@ -397,7 +397,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(Optional.of(spendProfile));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(Optional.of(spendProfile));
 
-        MonitoringOfficer monitoringOfficerInDB = newMonitoringOfficer().build();
+        LegacyMonitoringOfficer monitoringOfficerInDB = newLegacyMonitoringOfficer().build();
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(0).getId())).thenReturn(monitoringOfficerInDB);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(1).getId())).thenReturn(monitoringOfficerInDB);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projects.get(2).getId())).thenReturn(monitoringOfficerInDB);
@@ -1167,7 +1167,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+        LegacyMonitoringOfficer monitoringOfficer = newLegacyMonitoringOfficer().build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
@@ -1201,7 +1201,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+        LegacyMonitoringOfficer monitoringOfficer = newLegacyMonitoringOfficer().build();
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
@@ -1322,7 +1322,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(1).getId())).thenReturn(Optional.empty());
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(2).getId())).thenReturn(Optional.empty());
 
-        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer().build();
+        LegacyMonitoringOfficer monitoringOfficerInDB = LegacyMonitoringOfficerBuilder.newLegacyMonitoringOfficer().build();
         Mockito.when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(monitoringOfficerInDB);
 
         Mockito.when(organisationRepositoryMock.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));

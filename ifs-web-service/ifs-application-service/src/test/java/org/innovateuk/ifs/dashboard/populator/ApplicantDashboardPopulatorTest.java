@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -146,7 +146,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(userRestService.findProcessRoleByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_HORIZON_2020)
-                .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT, APPLICANT)
+                .withRole(LEADAPPLICANT, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR)
                 .build(6)));
 
         UserResource user = UserResourceBuilder.newUserResource().withId(loggedInUser.getId()).withRolesGlobal(singletonList(Role.APPLICANT)).build();
@@ -172,6 +172,5 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Application in progress", viewModel.getApplicationInProgressText());
-        assertEquals("Set up your project", viewModel.getProjectSetupContainerText());
     }
 }
