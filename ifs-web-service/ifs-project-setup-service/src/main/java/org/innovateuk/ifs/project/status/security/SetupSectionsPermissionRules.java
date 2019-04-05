@@ -99,10 +99,10 @@ public class SetupSectionsPermissionRules {
     }
 
     private boolean isMonitoringOfficerOnProject(long projectId, long userId) {
-        ProjectResource project = projectService.getById(projectId);
-        if (null == project) return false;
-        if (null == project.getMonitoringOfficerUser()) return false;
-        return project.getMonitoringOfficerUser().equals(userId);
+        return Optional.ofNullable(projectService.getById(projectId))
+                .map(ProjectResource::getMonitoringOfficerUser)
+                .map(monitoringOfficerId -> monitoringOfficerId.equals(userId))
+                .orElse(false);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
