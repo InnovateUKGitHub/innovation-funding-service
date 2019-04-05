@@ -8,52 +8,51 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class InProgressDashboardRowViewModelTest {
 
     @Test
-    public void testConstructOpen() {
+    public void constructOpen() {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
                 "Competition", true, ApplicationState.OPEN, true,
                 end, 0, 50 , false);
 
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1"));
-        assertThat(viewModel.getTitle(), equalTo("Application"));
-        assertThat(viewModel.getHoursLeftBeforeSubmit(), equalTo(1L));
+        assertEquals(viewModel.getLinkUrl(), "/application/1");
+        assertEquals(viewModel.getTitle(), "Application");
+        assertEquals(viewModel.getHoursLeftBeforeSubmit(), 1L);
         if (TimeZoneUtil.toUkTimeZone(end).getDayOfMonth() == TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).getDayOfMonth()) {
-            assertThat(viewModel.isClosingToday(), equalTo(true));
+            assertTrue(viewModel.isClosingToday());
         } else {
-            assertThat(viewModel.isClosingToday(), equalTo(false));
+            assertFalse(viewModel.isClosingToday());
         }
-        assertThat(viewModel.isWithin24Hours(), equalTo(true));
-        assertThat(viewModel.isApplicationComplete(), equalTo(false));
-        assertThat(viewModel.getProgressMessage(), equalTo("50% complete"));
+        assertTrue(viewModel.isWithin24Hours());
+        assertFalse(viewModel.isApplicationComplete());
+        assertEquals(viewModel.getProgressMessage(), "50% complete");
     }
 
     @Test
-    public void testConstructSubmitted() {
+    public void constructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, ApplicationState.SUBMITTED, true,
                 ZonedDateTime.now().plusDays(12), 12, 100 , false);
 
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/track"));
-        assertThat(viewModel.getTitle(), equalTo( "Untitled application"));
-        assertThat(viewModel.isApplicationComplete(), equalTo(true));
-        assertThat(viewModel.getProgressMessage(), equalTo("Ready to review and submit"));
+        assertEquals(viewModel.getLinkUrl(), "/application/1/track");
+        assertEquals(viewModel.getTitle(),  "Untitled application");
+        assertTrue(viewModel.isApplicationComplete());
+        assertEquals(viewModel.getProgressMessage(), "Ready to review and submit");
     }
 
     @Test
-    public void testConstructInterview() {
+    public void constructInterview() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, ApplicationState.SUBMITTED, true,
                 ZonedDateTime.now().plusDays(12), 12, 100 , true);
 
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/summary"));
-        assertThat(viewModel.isApplicationComplete(), equalTo(true));
-        assertThat(viewModel.getProgressMessage(), equalTo("Ready to review and submit"));
+        assertEquals(viewModel.getLinkUrl(), "/application/1/summary");
+        assertTrue(viewModel.isApplicationComplete());
+        assertEquals(viewModel.getProgressMessage(), "Ready to review and submit");
     }
 }

@@ -16,6 +16,9 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
  */
 public class InProgressDashboardRowViewModel extends
         AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
+
+    private static final int ONE_HUNDRED_PERCENT = 100;
+
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
@@ -91,7 +94,7 @@ public class InProgressDashboardRowViewModel extends
     }
 
     public boolean isApplicationComplete() {
-        return applicationProgress == 100;
+        return applicationProgress == ONE_HUNDRED_PERCENT;
     }
 
     public String getProgressMessage() {
