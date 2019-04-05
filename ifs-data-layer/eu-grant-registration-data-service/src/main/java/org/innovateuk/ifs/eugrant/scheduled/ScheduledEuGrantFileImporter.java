@@ -94,9 +94,9 @@ public class ScheduledEuGrantFileImporter {
     }
 
     private void importFile(File sourceFile) {
-        ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> result = grantsRecordsExtractor.processFile(sourceFile).
-                andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)
+        ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> result = grantsRecordsExtractor.processFile(sourceFile)
+                .andOnSuccess(this::saveSuccessfullyExtractedGrants)
+                .andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)
                 .andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results)));
 
         grantsImportResultHandler.recordResult(result, sourceFile);

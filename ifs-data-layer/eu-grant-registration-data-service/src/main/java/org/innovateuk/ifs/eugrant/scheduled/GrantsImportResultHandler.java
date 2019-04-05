@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.util.CollectionFunctions.simplePartition;
 
 /**
@@ -31,9 +32,6 @@ public class GrantsImportResultHandler {
     }
 
     private void logSuccess(Pair<File, List<ServiceResult<EuGrantResource>>> success, File sourceFile) {
-
-        File resultsFile = success.getLeft();
-
         List<ServiceResult<EuGrantResource>> importResults = success.getRight();
         Pair<List<ServiceResult<EuGrantResource>>, List<ServiceResult<EuGrantResource>>> successesAndFailures =
                 simplePartition(importResults, ServiceResult::isSuccess);
@@ -59,7 +57,7 @@ public class GrantsImportResultHandler {
 
     private void logFailure(ServiceFailure failure, File sourceFile) {
         logBar();
-        LOG.error("Unable to complete import of " + sourceFile.getName() + ".  Failure is: " + failure);
+        LOG.error(format("Unable to complete import of %s. Failure is: %s", sourceFile.getName(), failure));
         logBar();
     }
 
