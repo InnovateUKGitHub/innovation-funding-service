@@ -235,7 +235,7 @@ Funding information: calculations
 
 Funding information: can be saved
     [Documentation]    INFUND-3182
-    [Tags]  HappyPath   Pending
+    [Tags]  HappyPath
     Given the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = td:contains("Advanced Propulsion Centre (APC)")
     And the user should see the element     jQuery = th:contains("Total") ~ td:contains("£20,000")
