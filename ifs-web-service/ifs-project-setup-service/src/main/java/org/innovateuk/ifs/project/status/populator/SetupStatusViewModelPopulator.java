@@ -3,13 +3,13 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -31,8 +31,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -50,7 +48,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private StatusService statusService;
 
     @Autowired
-    private MonitoringOfficerService monitoringOfficerService;
+    private LegacyMonitoringOfficerRestService monitoringOfficerService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -62,13 +60,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
 
-        boolean isMonitoringOfficer = isMonitoringOfficer(loggedInUser);
-
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
 
+
         CompletableFuture<OrganisationResource> organisationRequest =
-                isMonitoringOfficer ? async(() -> projectService.getLeadOrganisation(projectId)) :
-                        async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+                awaitAll(projectRequest).thenApply(project ->
+                        loggedInUser.getId().equals(project.getMonitoringOfficerUser()) ?
+                            projectService.getLeadOrganisation(projectId) :
+                            projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
@@ -77,7 +76,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
         CompletableFuture<Boolean> isProjectManagerRequest = async(() -> projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false));
-        CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.getMonitoringOfficerForProject(projectId));
+        CompletableFuture<Optional<LegacyMonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.getMonitoringOfficerForProject(projectId).getOptionalSuccessObject());
         CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
 
         return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
@@ -85,7 +84,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             BasicDetails basicDetails = basicDetailsRequest.get();
 
             ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
-            Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
+            Optional<LegacyMonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
             boolean isProjectManager = isProjectManagerRequest.get();
             List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
 
@@ -96,13 +95,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     isProjectManager,
                     partnerOrganisations,
                     originQuery,
-                    isMonitoringOfficer);
+                    loggedInUser.getId().equals(projectRequest.get().getMonitoringOfficerUser()));
         });
     }
 
     private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
                                                          ProjectTeamStatusResource teamStatus,
-                                                         Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                         Optional<LegacyMonitoringOfficerResource> monitoringOfficer,
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
                                                          String originQuery,
@@ -136,7 +135,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
                                                  ProjectTeamStatusResource teamStatus,
-                                                 Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                 Optional<LegacyMonitoringOfficerResource> monitoringOfficer,
                                                  boolean isProjectManager,
                                                  boolean collaborationAgreementRequired) {
 

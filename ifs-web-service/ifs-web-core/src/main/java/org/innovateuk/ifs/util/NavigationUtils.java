@@ -27,7 +27,7 @@ public class NavigationUtils {
                     INNOVATION_LEAD, "management/dashboard",
                     IFS_ADMINISTRATOR, "management/dashboard",
                     SUPPORT, "management/dashboard",
-                    MONITORING_OFFICER, "applicant/dashboard",
+                    MONITORING_OFFICER, "project-setup/monitoring-officer/dashboard",
                     STAKEHOLDER, "management/dashboard"
             );
 
