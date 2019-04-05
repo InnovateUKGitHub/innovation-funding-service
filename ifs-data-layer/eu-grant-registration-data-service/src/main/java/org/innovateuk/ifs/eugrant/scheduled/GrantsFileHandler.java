@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -45,7 +46,8 @@ public class GrantsFileHandler {
     ServiceResult<List<File>> getSourceFileIfExists() {
         if (Files.exists(Paths.get(sourceFileUrl))) {
             File dir = new File(sourceFileUrl);
-            return serviceSuccess(asList(dir.listFiles((directory, filename) -> filename.endsWith(".csv"))));
+            File[] files = dir.listFiles((directory, filename) -> filename.endsWith(".csv"));
+            return serviceSuccess(files != null ? asList(files) : emptyList());
         } else {
             return serviceFailure(notFoundError(File.class, sourceFileUrl.toString()));
         }
