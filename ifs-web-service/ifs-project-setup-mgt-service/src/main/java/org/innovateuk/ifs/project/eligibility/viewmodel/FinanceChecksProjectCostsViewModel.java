@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.eligibility.viewmodel;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {

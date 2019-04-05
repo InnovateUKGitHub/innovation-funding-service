@@ -22,6 +22,10 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5428 Search by email for Monitoring Officer - Existing MOs
 ...
 ...               IFS-5088 Use auto-complete search to improve the assign Assessors/ Monitoring Officers/ Stakeholders journey
+...
+...               IFS-5104 Create a new Monitoring Officer from existing user in another role
+...
+...               IFS-5070 Add Monitoring Officer to multiple-role dashboard
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -232,10 +236,17 @@ Monitoring Officer cannot see projects if they are not assigned to them
 
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
+Search for an MO
+    [Documentation]
+    [Setup]  Login as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${server}/project-setup-management/monitoring-officer/view-all
+    When search for MO
+    Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
+    [Teardown]  the user clicks the button/link  link = Back
+
 Add MO client validations
     [Documentation]  IFS-5428
-    [Setup]  Login as a different user         &{Comp_admin1_credentials}
-    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/search-by-email
+    Given The user clicks the button/link      link = Add a monitoring officer
     When the user enters text to a text field  id = emailAddress  ${EMPTY}
     Then the user should see a field error     Please enter an email address.
 
@@ -265,7 +276,7 @@ Create account flow: MO
     Given MO enter details and create account
     When the user clicks the button/link      link = Sign into your account
     And Logging in and Error Checking         tom@poly.io  ${short_password}
-    Then the user should see the element      jQuery = h1:contains("Applications")
+    Then the user should see the element      jQuery = h1:contains("Project setup")
     [Teardown]  Get user id and set as suite variable  ${New_Mo}
 
 Comp admin assign project to new MO
@@ -286,6 +297,20 @@ New MO see the project setup view for assigned project
     [Setup]  log in as a different user    tom@poly.io  ${short_password}
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
+
+Assign MO role to existing IFS user
+    [Documentation]  IFS-5104
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/search-by-email
+    And the user enters text to a text field    id = emailAddress   ${assessor2_credentials["email"]}
+    When the user clicks the button/link        jQuery = button:contains("Continue")
+    Then the user should see exisitng IFS user details and add phone number
+    And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
+
+Comp admin assign project existing IFS user MO
+    [Documentation]  IFS-5104  IFS-5070
+    Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    Then the user logs in and checks for assigned projects
 
 *** Keywords ***
 standard verification for email address follows
@@ -334,6 +359,7 @@ the user should see the correct address
     the user should see the element       jQuery = p:contains("E17 5LR")
 
 the user should see the project set view
+    the user should see the element    jQuery = h1:contains("Monitor project")
     the user should see the element    jQuery = a:contains("Project details")
     the user should see the element    jQuery = a:contains("Documents")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
@@ -392,6 +418,34 @@ comp admin assign project to MO
 comp admin assign and remove project to MO
     comp admin assign project to MO               ${Assign_Project_ID}  ${Assign_Project}
     comp admin remove project assigned to MO      ${Assign_Project}
+
+search for MO
+    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
+    input text                          id = userId    Orvill
+    the user clicks the button/link     jQuery = ul li:contains("Orville Gibbs")
+    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
+
+the user should see exisitng IFS user details and add phone number
+    the user should see the element          jQuery = .message-alert:contains("We have found a user with this email address.")
+    the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${assessor2_credentials["email"]}")
+    the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Felix")
+    the user should see the element          jQuery = dt:contains("Last name") ~ dd:contains("Wilson")
+    phone number: validations checks
+    the user enters text to a text field     id = phoneNumber   1234567890
+    the user clicks the button/link          jQuery = button:contains("Add monitoring officer")
+
+phone number: validations checks
+    the user enters text to a text field             id = phoneNumber    ${empty}
+    the user should see a field error                Please enter a phone number.
+    the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
+    the user should see a field and summary error    Please enter a phone number.
+    the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
+
+the user logs in and checks for assigned projects
+    log in as a different user         &{assessor2_credentials}
+    the user clicks the button/link    id = dashboard-link-MONITORING_OFFICER
+    the user should see the element    jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
+    the user should see the element    jQuery = .status:contains("Monitor project")
 
 Custom suite teardown
     the user closes the browser

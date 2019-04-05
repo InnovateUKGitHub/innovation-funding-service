@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
-import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,11 +37,10 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
     }
 
     private void setTotalCost(Overhead overhead) {
-        if (overhead.getRateType().equals(OverheadRateType.TOTAL)){
-            total = new BigDecimal(overhead.getRate());
-        }
-        else {
+        if (overhead.getRateType().getRate() != null) {
             total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
+        } else {
+            total = new BigDecimal(overhead.getRate());
         }
     }
 

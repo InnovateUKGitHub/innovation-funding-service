@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCost
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsCompleter;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.SectionType;

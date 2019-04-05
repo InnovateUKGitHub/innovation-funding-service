@@ -23,6 +23,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -36,28 +37,34 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
     }
 
     @Test
-    public void testViewMonitoringOfficer() {
+    public void viewMonitoringOfficer() {
         final long monitoringOfficerId = 1;
         final Model model = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewProjects(monitoringOfficerId, model), PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewProjects(monitoringOfficerId, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
-    public void testAssignProject() {
+    public void assignProject() {
         final long monitoringOfficerId = 1;
         final MonitoringOfficerAssignProjectForm form = null;
         final BindingResult bindingResult = null;
         final ValidationHandler validationHandler = null;
         final Model model = null;
         final UserResource user = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProject(monitoringOfficerId, form, bindingResult, validationHandler, model, user), PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProject(monitoringOfficerId, form, bindingResult, validationHandler, model, user), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
-    public void testUnassignProject() {
+    public void unassignProject() {
         final long monitoringOfficerId = 1;
         final long projectId = 1;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProject(monitoringOfficerId, projectId ), PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProject(monitoringOfficerId, projectId ), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+    }
+
+    @Test
+    public void viewAll() {
+        final Model model = null;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewAll(model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Override

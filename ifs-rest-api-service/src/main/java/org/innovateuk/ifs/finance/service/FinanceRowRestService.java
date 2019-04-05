@@ -23,5 +23,5 @@ public interface FinanceRowRestService {
 
     RestResult<FinanceRowItem> findById(Long id);
 
-     RestResult<Void> delete(long costId);
+    RestResult<Void> delete(long costId);
 }

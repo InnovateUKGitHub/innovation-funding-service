@@ -1,0 +1,9 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+As an assessor for Innovate UK it is your obligation to make sure your declaration of interest is reviewed and confirmed every year.
+Your declaration anniversary is: ${affiliationModifiedDate}
+Please visit our online Innovation Funding Service to review and declare any changes to your previously submitted information by the date above: ${webBaseUrl}/assessment/assessor/dashboard
+Yours sincerely,
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

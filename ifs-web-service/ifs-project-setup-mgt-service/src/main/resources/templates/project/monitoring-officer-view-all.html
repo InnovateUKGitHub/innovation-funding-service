@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign monitoring officers'"/>
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/management/dashboard/project-setup'" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign monitoring officers',size='govuk-heading-xl'" />
+                <a class="button-secondary"
+                   href="/project-setup-management/monitoring-officer/search-by-email">Add a monitoring officer</a>
+                <form th:action="@{/monitoring-officer/view-monitoring-officer}"
+                      method="GET"
+                      th:object="${form}">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="userId">
+                            Search for a first or last name
+                        </label>
+                        <select id="userId"
+                                class="govuk-select"
+                                th:field="*{userId}"
+                                data-auto-complete="">
+                            <option value="">Select Monitoring Officer</option>
+                            <option th:each="monitoringOfficer : ${model.monitoringOfficers}"
+                                    th:value="${monitoringOfficer.userId}"
+                                    th:text="|${monitoringOfficer.fullName}|"></option>
+                        </select>
+                    </div>
+                    <div class="govuk-form-group">
+                        <button type="submit"
+                                class="govuk-button"
+                                data-auto-complete-submit="">View Monitoring Officer</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

@@ -10,6 +10,8 @@ ENV APACHE_RUN_GROUP smtp
 
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends postfix courier-base sqwebmail courier-imap && \
     apt-get autoremove -y && \

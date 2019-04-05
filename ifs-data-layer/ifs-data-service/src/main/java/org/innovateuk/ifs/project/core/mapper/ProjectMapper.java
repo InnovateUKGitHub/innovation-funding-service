@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,12 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Mappings({
             @Mapping(target = "projectState", ignore = true),
-            @Mapping(target = "competition", source = "application.competition.id")
+            @Mapping(target = "competition", source = "application.competition.id"),
+            @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id")
     })
     @Override
     public abstract ProjectResource mapToResource(Project project);
@@ -68,13 +69,12 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
         return object.getId();
     }
 
-    public Long mapProjectMonitoringOfficerUserToId(Optional<ProjectMonitoringOfficer> object) {
+    public Long mapProjectMonitoringOfficerUserToId(Optional<MonitoringOfficer> object) {
         return object == null ? null : object.map(ProjectParticipant::getId).orElse(null);
     }
 
-    public ProjectMonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
+    public MonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
         return id == null ? null : projectMonitoringOfficerRepository.findById(id).get();
     }
-
 
 }

@@ -60,7 +60,9 @@ the user checks for the update DOI message
     And the user reloads the page
     Then the user should see the element    jQuery = div li a:contains("your declaration of interest")
     ${modified_date} =  Save DOI current modified date
+    And the user reads his email            worth.email.test+jeremy.alufson@gmail.com   Declaration of interest expiry   As an assessor for Innovate UK it is your obligation to make sure your declaration of interest is reviewed and confirmed every year.
     [Teardown]  Return the DOI modified_on date to initial value   ${modified_date}
+
 
 *** Keywords ***
 the user correctly fills out the role, principle employer and accurate fields

@@ -10,9 +10,9 @@ import org.innovateuk.ifs.notifications.resource.NotificationMedium;
  */
 public interface NotificationService {
 
-    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
 
-    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendNotificationWithFlush(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia);
 }
