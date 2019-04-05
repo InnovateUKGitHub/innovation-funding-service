@@ -218,7 +218,6 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         user.setFirstName(resource.getFirstName());
         user.setLastName(resource.getLastName());
         user.setPhoneNumber(resource.getPhoneNumber());
-        user = userRepository.save(user);
         return serviceSuccess(user);
     }
 

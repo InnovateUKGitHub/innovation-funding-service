@@ -45,7 +45,7 @@ public class MonitoringOfficerInviteController {
         return monitoringOfficerInviteService.openInvite(inviteHash).toGetResponse();
     }
 
-    @PostMapping("/create-pending")
+    @PostMapping("/create-monitoring-officer")
     public RestResult<Void> createPendingMonitoringOfficer(@RequestBody MonitoringOfficerCreateResource resource) {
 
         User user = new User();
@@ -53,8 +53,10 @@ public class MonitoringOfficerInviteController {
         user.setLastName(resource.getLastName());
         user.setPhoneNumber(resource.getPhoneNumber());
         user.setEmail(resource.getEmailAddress());
-        return registrationService.createPendingUser(user).
-                andOnSuccess(u -> userService.grantRole(new GrantRoleCommand(u.getId(), Role.MONITORING_OFFICER))).toPostResponse();
+        return registrationService.createPendingUser(user)
+                .andOnSuccess(pendingUser -> userService.grantRole(new GrantRoleCommand(pendingUser.getId(),
+                                                                              Role.MONITORING_OFFICER)))
+                .toPostResponse();
     }
 
     @PostMapping("/monitoring-officer/create/{inviteHash}")

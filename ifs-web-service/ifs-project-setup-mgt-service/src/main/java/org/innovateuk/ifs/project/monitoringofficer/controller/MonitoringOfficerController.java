@@ -142,7 +142,7 @@ public class MonitoringOfficerController {
     public String create(@PathVariable String emailAddress,
                          Model model) {
         MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
-        form.setEmailAddress(emailAddress);
+        model.addAttribute("email", emailAddress);
         model.addAttribute(FORM , form);
         return "project/monitoring-officer/create-new";
     }
@@ -152,7 +152,7 @@ public class MonitoringOfficerController {
                              BindingResult bindingResult,
                              ValidationHandler validationHandler) {
         if (validationHandler.hasErrors()) {
-            return "project/monitoring-officer/create";
+            return "project/monitoring-officer/create-new/" + form.getEmailAddress();
         }
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
                                                                                        form.getLastName(),

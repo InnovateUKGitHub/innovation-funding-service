@@ -41,18 +41,15 @@ public class MonitoringOfficerRegistrationController {
     private MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator;
     private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService;
     private MonitoringOfficerService monitoringOfficerService;
-    private UserRestService userRestService;
     private NavigationUtils navigationUtils;
 
     public MonitoringOfficerRegistrationController(MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator,
                                                    MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService,
                                                    MonitoringOfficerService monitoringOfficerService,
-                                                   UserRestService userRestService,
                                                    NavigationUtils navigationUtils) {
         this.monitoringOfficerRegistrationModelPopulator = monitoringOfficerRegistrationModelPopulator;
         this.competitionSetupMonitoringOfficerRestService = competitionSetupMonitoringOfficerRestService;
         this.monitoringOfficerService = monitoringOfficerService;
-        this.userRestService = userRestService;
         this.navigationUtils = navigationUtils;
     }
 

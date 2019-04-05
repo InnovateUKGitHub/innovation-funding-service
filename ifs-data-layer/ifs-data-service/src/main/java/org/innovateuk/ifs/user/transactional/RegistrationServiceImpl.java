@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -113,25 +114,23 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<User> createPendingUser(User user) {
         user.setAllowMarketingEmails(false);
-        user.setEmail("jeremy@corbyn.com");
-        user.setFirstName("Jeremy");
-        user.setLastName("Corbyn");
         String placeholderPassword = randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
-        user = createUserWithUid(user, placeholderPassword).getSuccess();
-        user.setStatus(UserStatus.PENDING);
-        user = userRepository.save(user);
-        return serviceSuccess(user);
+        return createUserWithUid(user, placeholderPassword)
+                .andOnSuccess(this::saveUserAsPending);
+    }
+
+    private ServiceResult<User> saveUserAsPending(User user) {
+        user.setStatus(PENDING);
+        return serviceSuccess(userRepository.save(user));
     }
 
     @Override
     @Transactional
     public ServiceResult<User> activatePendingUser(User user,
                                                    String password) {
-        user.setStatus(UserStatus.ACTIVE);
-        idpService.activateUser(user.getUid());
-        idpService.updateUserPassword(user.getUid(), password).getSuccess();
-        user = userRepository.save(user);
-        return serviceSuccess(user);
+        return activateUser(user)
+                .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
+                .andOnSuccessReturn(() -> user);
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface MonitoringOfficerRegistrationRestService {
 
     RestResult<MonitoringOfficerInviteResource> openMonitoringOfficerInvite(String inviteHash);
 
-    RestResult<Void> createMonitoringOfficer(MonitoringOfficerCreateResource newUser);
+    RestResult<Void> createMonitoringOfficer(MonitoringOfficerCreateResource monitoringOfficerCreateResource);
 
     RestResult<Void> createMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource);
 

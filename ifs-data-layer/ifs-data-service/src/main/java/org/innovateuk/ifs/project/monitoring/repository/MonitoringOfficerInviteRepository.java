@@ -8,8 +8,6 @@ public interface MonitoringOfficerInviteRepository extends InviteRepository<Moni
 
     boolean existsByStatusAndEmail(InviteStatus status, String email);
 
-    boolean existsByStatusAndUserId(InviteStatus status, long userId);
-
     default boolean sentInviteExistsByEmail(String email) {
         return existsByStatusAndEmail(InviteStatus.SENT, email);
     }

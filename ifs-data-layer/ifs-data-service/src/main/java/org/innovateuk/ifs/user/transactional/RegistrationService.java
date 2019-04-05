@@ -23,7 +23,9 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(UserResource user);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "CREATE", securedType = User.class,
+            description = "Competition team users can create pending users prior to registration, currently used for monitoring officers")
     ServiceResult<User> createPendingUser(User user);
 
     @PreAuthorize("hasAuthority('system_registrar')")
