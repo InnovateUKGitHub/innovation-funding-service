@@ -65,7 +65,7 @@ import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
@@ -154,7 +154,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
     protected ProjectDetailsService projectDetailsService;
-    protected MonitoringOfficerService monitoringOfficerService;
+    protected LegacyMonitoringOfficerService monitoringOfficerService;
     protected FinanceRowCostsService financeRowCostsService;
     protected SectionService sectionService;
     protected SectionStatusService sectionStatusService;
@@ -244,7 +244,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         projectService = serviceLocator.getBean(ProjectService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
-        monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
+        monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
         financeService = serviceLocator.getBean(FinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);

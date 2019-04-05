@@ -88,7 +88,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .build();
 
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder
-                .newProjectResource()
+                .newProjectDocumentResource()
                 .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
                 .build();

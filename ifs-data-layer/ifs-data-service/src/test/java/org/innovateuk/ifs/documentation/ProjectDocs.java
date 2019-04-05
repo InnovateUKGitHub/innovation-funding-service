@@ -22,6 +22,7 @@ public class ProjectDocs {
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
             fieldWithPath("projectMonitoringOfficer").description("The id of the project's ProjectMonitoringOfficer"),
+            fieldWithPath("monitoringOfficerUser").description("The user id of the project's ProjectMonitoringOfficer"),
             fieldWithPath("documentsSubmittedDate").description("Date that partner documents were submitted by the Project Manager. Null means the details have not yet been submitted"),
             fieldWithPath("offerSubmittedDate").description("Date that grant offer letter documents were submitted by the Lead partner or Project Manager. Null means the details have not yet been submitted"),
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
