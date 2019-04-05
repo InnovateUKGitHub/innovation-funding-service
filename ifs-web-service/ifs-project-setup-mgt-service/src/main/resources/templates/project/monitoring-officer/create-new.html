@@ -81,6 +81,7 @@
                                th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                     </div>
                     <div class="govuk-form-group">
+                        <input type="hidden" name="emailAddress" th:value="${emailAddress}" />
                         <button type="submit" class="govuk-button govuk-!-margin-top-6">
                             Add monitoring officer
                         </button>
