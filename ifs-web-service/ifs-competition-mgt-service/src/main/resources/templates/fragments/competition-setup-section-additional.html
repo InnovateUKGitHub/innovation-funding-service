@@ -50,8 +50,7 @@
 
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funderBudget">
-                        </label>
+                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funderBudget">Budget</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                         </th:block>
