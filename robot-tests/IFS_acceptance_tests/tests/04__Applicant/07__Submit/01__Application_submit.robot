@@ -71,13 +71,13 @@ Submit flow rto lead (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page  track
     And the user should see the element                     jQuery = h2:contains("Application submitted")
-    And The user should see the element                     link = Finished
+    And The user should see the element                     link = Give us feedback
 
 Satisfaction survey:validations
     #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
     [Tags]  survey  HappyPath
-    Given the user clicks the button/link                 link = Finished
+    Given the user clicks the button/link                 link = Give us feedback
     When the user clicks the button/link                  css = button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
     And the user should see a field and summary error     ${empty_field_warning_message}

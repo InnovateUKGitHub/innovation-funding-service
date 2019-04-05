@@ -15,8 +15,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -64,7 +64,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -72,7 +72,12 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean isMonitoringOfficer(long projectId, long userId) {
-        return projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
+        return monitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
+    }
+
+    protected boolean monitoringOfficerCanViewApplication(long applicationId, long userId) {
+        Project project = projectRepository.findOneByApplicationId(applicationId);
+        return project != null && isMonitoringOfficer(project.getId(), userId);
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {
@@ -116,7 +121,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
+        List<MonitoringOfficer> projectMonitoringOfficers = monitoringOfficerRepository.findByUserId(loggedInUserId);
         List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
                 .map(pmo -> pmo.getProject())
                 .map(project -> project.getApplication().getCompetition().getId())

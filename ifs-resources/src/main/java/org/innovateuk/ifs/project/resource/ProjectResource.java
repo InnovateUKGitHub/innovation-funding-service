@@ -25,6 +25,7 @@ public class ProjectResource {
     private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long projectMonitoringOfficer;
+    private Long monitoringOfficerUser;
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
@@ -197,6 +198,14 @@ public class ProjectResource {
         this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
+    public Long getMonitoringOfficerUser() {
+        return monitoringOfficerUser;
+    }
+
+    public void setMonitoringOfficerUser(Long monitoringOfficerUser) {
+        this.monitoringOfficerUser = monitoringOfficerUser;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -206,8 +215,9 @@ public class ProjectResource {
         ProjectResource that = (ProjectResource) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
                 .append(application, that.application)
+                .append(competition, that.competition)
+                .append(id, that.id)
                 .append(targetStartDate, that.targetStartDate)
                 .append(address, that.address)
                 .append(name, that.name)
@@ -215,15 +225,16 @@ public class ProjectResource {
                 .append(offerSubmittedDate, that.offerSubmittedDate)
                 .append(projectUsers, that.projectUsers)
                 .append(projectMonitoringOfficer, that.projectMonitoringOfficer)
+                .append(monitoringOfficerUser, that.monitoringOfficerUser)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
                 .append(grantOfferLetter, that.grantOfferLetter)
                 .append(additionalContractFile, that.additionalContractFile)
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
-                .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
-                .append(durationInMonths, that.durationInMonths)
-                .append(projectState, that.projectState)
                 .append(otherDocumentsApproved, that.otherDocumentsApproved)
+                .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
+                .append(projectState, that.projectState)
                 .append(projectDocuments, that.projectDocuments)
+                .append(durationInMonths, that.durationInMonths)
                 .isEquals();
     }
 
@@ -232,6 +243,7 @@ public class ProjectResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(application)
+                .append(competition)
                 .append(targetStartDate)
                 .append(address)
                 .append(name)
@@ -239,15 +251,16 @@ public class ProjectResource {
                 .append(offerSubmittedDate)
                 .append(projectUsers)
                 .append(projectMonitoringOfficer)
+                .append(monitoringOfficerUser)
                 .append(signedGrantOfferLetter)
                 .append(grantOfferLetter)
                 .append(additionalContractFile)
                 .append(grantOfferLetterRejectionReason)
-                .append(spendProfileSubmittedDate)
-                .append(durationInMonths)
-                .append(projectState)
                 .append(otherDocumentsApproved)
+                .append(spendProfileSubmittedDate)
+                .append(projectState)
                 .append(projectDocuments)
+                .append(durationInMonths)
                 .toHashCode();
     }
 }

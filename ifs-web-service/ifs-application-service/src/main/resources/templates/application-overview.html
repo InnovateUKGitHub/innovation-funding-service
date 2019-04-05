@@ -26,18 +26,26 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
-                    <dt>Application number:</dt>
-                    <dd th:text="${model.applicationId}"/>
-                    <dt>Competition:</dt>
-                    <dd th:text="${model.currentCompetition.name}"/>
-                    <dt>Funding body:</dt>
-                    <dd>Innovate UK</dd>
-                    <dt>Application deadline:</dt>
-                    <dd>
-                        <th:block
-                            th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}"/>
-                        <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}"/>
-                    </dd>
+                    <th:block th:unless="${model.currentCompetition.isH2020()}">
+                        <dt>Application number:</dt>
+                        <dd th:text="${model.applicationId}"/>
+                        <dt>Competition:</dt>
+                        <dd th:text="${model.currentCompetition.name}"/>
+                        <dt>Funding body:</dt>
+                        <dd>Innovate UK</dd>
+                        <dt>Application deadline:</dt>
+                        <dd>
+                            <th:block
+                                th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}"/>
+                            <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}"/>
+                        </dd>
+                    </th:block>
+                    <th:block th:if="${model.currentCompetition.isH2020()}">
+                        <dt>Application number:</dt>
+                        <dd th:text="${model.applicationId}"/>
+                        <dt>Funding body:</dt>
+                        <dd>Innovate UK, as part of UK Research and Innovation</dd>
+                    </th:block>
                 </dl>
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
                 <div th:include="fragments/elements :: progress-indicator"
@@ -48,7 +56,7 @@
                     <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
                 </th:block>
                 <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
+                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the award terms and conditions</a>
                 </th:block>
             </div>
         </div>

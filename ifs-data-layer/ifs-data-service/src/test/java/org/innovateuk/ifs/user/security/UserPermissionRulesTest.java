@@ -9,8 +9,7 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -31,7 +30,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -125,12 +124,12 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build(2);
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
                 .withProject(project)
                 .build(1);
 
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
 
         allGlobalRoleUsers.forEach(user -> {
             if (isMonitoringOfficer(user)) {
@@ -486,6 +485,16 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void allowedRolesCanUpdateUsersToMonitoringOfficers() {
+        UserResource userToUpdate = newUserResource().build();
+
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, compAdminUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, projectFinanceUser()));
+        assertTrue(rules.adminsCanUpdateUserDetails(userToUpdate, ifsAdminUser()));
+        assertFalse(rules.adminsCanUpdateUserDetails(userToUpdate, assessorUser()));
+    }
+
+    @Test
     public void usersCanChangeTheirOwnPasswords() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanChangeTheirOwnPassword(user, user));
@@ -647,9 +656,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         UserResource userResource = newUserResource().withId(userId).build();
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
+        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
 
-        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
@@ -772,7 +781,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void systemMaintenanceUserCanUpdateExternalUserEmailAddress() {
+    public void systemMaintenanceUserCanUpdateUsersEmailAddress() {
 
         UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
 
@@ -807,6 +816,28 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
 
         assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+
+    }
+
+    @Test
+    public void correctRolesCanGrantMonitoringOfficerRole() {
+        GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
+
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, compAdminUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, projectFinanceUser()));
+        assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, assessorUser()));
+
+    }
+
+    @Test
+    public void usersAllowedToGrantMonitoringOfficerRoleCannotGrantOtherRoles() {
+        GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), INNOVATION_LEAD);
+
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, compAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, projectFinanceUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, ifsAdminUser()));
+        assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, assessorUser()));
 
     }
 

@@ -90,12 +90,21 @@
                            id="subject"
                            type="text"
                            readonly="readonly"
-                           value="<competition name>: Notification regarding your application <application number>: <application title>" />
+                           th:value="${model.isH2020()} ?
+                           '<competition name>: Notification regarding your submission <application number>: <application title>' :
+                           '<competition name>: Notification regarding your application <application number>: <application title>'" />
+
                 </div>
 
                 <div class="govuk-form-group">
                     <span class="govuk-label govuk-label--s">Message</span>
-                    <p class="govuk-hint">
+                    <p class="govuk-hint" th:if="${model.isH2020()}">
+                        Dear [recipient name] <br/>
+                        Innovate UK, part of UK Research and Innovation <br/>
+                        [competition name] <br/>
+                        [application title]
+                    </p>
+                    <p class="govuk-hint" th:unless="${model.isH2020()}">
                         Dear [recipient name] <br/>
                         Innovate UK <br/>
                         [competition name] <br/>

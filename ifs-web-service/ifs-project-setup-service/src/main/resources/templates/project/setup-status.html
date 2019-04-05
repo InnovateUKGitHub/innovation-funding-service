@@ -9,10 +9,9 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{~/applicant/dashboard/}" />
-
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=${model.monitoringOfficer ? '/project-setup/monitoring-officer/dashboard' : '/applicant/dashboard'}" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div class="message-alert" th:if="${model.projectState.offline}">
             <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
@@ -36,7 +35,7 @@
                         view application feedback</a></li>
                     <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
                            class="govuk-link">
-                        view the competition terms and conditions</a></li>
+                        view the award terms and conditions</a></li>
                 </ul>
             </div>
         </div>
@@ -52,9 +51,18 @@
         <th:block th:unless="${model.projectState.offline}">
             <th:block th:unless="${model.projectComplete}">
                 <div class="message-alert">
-                    <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
-                    <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
+                    <th:block th:unless="${model.monitoringOfficer}">
+                        <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
+                        <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+                        <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a>.</p>
+                    </th:block>
+                    <th:block th:if="${model.monitoringOfficer}">
+                        <p class="govuk-body">You are viewing project setup exactly as the partners see it.
+                            Partners must complete their project and bank details within 30 days of our notification to them.
+                            All partners have individual steps to complete in this section.</p>
+                        <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a>.</p>
+                    </th:block>
+
                 </div>
             </th:block>
         </th:block>
@@ -184,8 +192,7 @@
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.spendProfileSection.accessible}"
                                th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}"
-                               class="govuk-link">Spend
-                                profile</a>
+                               class="govuk-link">Spend profile</a>
                             <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                         </h2>
                         <p class="govuk-body govuk-!-margin-0">Once we have approved your finances you can change your project spend profile.</p>

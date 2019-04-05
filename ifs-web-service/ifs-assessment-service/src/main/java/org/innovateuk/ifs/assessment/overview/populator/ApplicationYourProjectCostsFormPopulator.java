@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.AbstractYourProjectCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.AbstractYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;

@@ -37,8 +37,8 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -72,7 +72,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -144,7 +143,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private ProcessRoleRepository processRoleRepositoryMock;
 
     @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+    private LegacyMonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
@@ -662,7 +661,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         long organisationId = 2L;
         String postcode = "TW14 9QG";
 
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new LegacyMonitoringOfficer());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 

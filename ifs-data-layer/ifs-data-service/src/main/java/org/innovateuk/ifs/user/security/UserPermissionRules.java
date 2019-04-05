@@ -11,8 +11,8 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -32,8 +32,13 @@ import static java.util.Collections.disjoint;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -55,7 +60,7 @@ public class UserPermissionRules {
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
@@ -110,9 +115,9 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any external user's email address")
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any user's email address")
     public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
-        return isSystemMaintenanceUser(user) && !isInternal(userToUpdate);
+        return isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
@@ -161,6 +166,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
     public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
+    }
+
+    @PermissionRule(value = "UPDATE", description = "An admin user can update user details to assign monitoring officers")
+    public boolean adminsCanUpdateUserDetails(UserResource userToUpdate, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user);
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
@@ -258,6 +268,15 @@ public class UserPermissionRules {
                 user.hasRole(ASSESSOR);
     }
 
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+    public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantMonitoringOfficerRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+    }
+
+    private boolean hasPermissionToGrantMonitoringOfficerRole(UserResource user) {
+        return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
+    }
+
     private boolean userIsInCompetitionAssignedToStakeholder(UserResource userToView, UserResource stakeholder) {
         List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView, consortiumProcessRoleFilter);
         List<Project> projectsThisUserIsAMemberOf =
@@ -275,9 +294,9 @@ public class UserPermissionRules {
         List<Project> projectsThisUserIsAMemberOf =
                 simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
 
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
 
-        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, ProjectMonitoringOfficer::getProject);
+        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
     }

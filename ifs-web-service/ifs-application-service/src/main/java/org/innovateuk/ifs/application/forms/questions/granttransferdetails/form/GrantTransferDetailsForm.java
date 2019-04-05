@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 public class GrantTransferDetailsForm {
 
     @NotBlank(message = "{validation.fundingForm.grant.agreement.number}")
-    @Pattern(regexp="[\\d]{6}", message = "{validation.fundingForm.grant.agreement.format.invalid}")
+    @Size(max = 255, message = "{validation.fundingForm.grant.agreement.format.invalid}")
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")

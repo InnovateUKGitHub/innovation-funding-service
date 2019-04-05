@@ -2,6 +2,8 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.resource.AppendixResource;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -17,6 +19,8 @@ public class ManageApplicationViewModel {
     private final boolean stakeholder;
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
+    private final GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel;
+    private final GrantAgreementSummaryViewModel grantAgreementSummaryViewModel;
     private final List<AppendixResource> appendices;
     private final boolean collaborativeProject;
     private final CompetitionResource currentCompetition;
@@ -29,6 +33,8 @@ public class ManageApplicationViewModel {
                                       boolean stakeholder,
                                       ApplicationOverviewIneligibilityViewModel ineligibility,
                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
+                                      GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel,
+                                      GrantAgreementSummaryViewModel grantAgreementSummaryViewModel,
                                       List<AppendixResource> appendices,
                                       boolean collaborativeProject,
                                       CompetitionResource currentCompetition) {
@@ -40,6 +46,8 @@ public class ManageApplicationViewModel {
         this.stakeholder = stakeholder;
         this.ineligibility = ineligibility;
         this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
+        this.grantTransferDetailsSummaryViewModel = grantTransferDetailsSummaryViewModel;
+        this.grantAgreementSummaryViewModel = grantAgreementSummaryViewModel;
         this.appendices = appendices;
         this.collaborativeProject = collaborativeProject;
         this.currentCompetition = currentCompetition;
@@ -87,5 +95,13 @@ public class ManageApplicationViewModel {
 
     public CompetitionResource getCurrentCompetition() {
         return currentCompetition;
+    }
+
+    public GrantTransferDetailsSummaryViewModel getGrantTransferDetailsSummaryViewModel() {
+        return grantTransferDetailsSummaryViewModel;
+    }
+
+    public GrantAgreementSummaryViewModel getGrantAgreementSummaryViewModel() {
+        return grantAgreementSummaryViewModel;
     }
 }
