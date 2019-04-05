@@ -218,7 +218,8 @@ Funding information: calculations
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
     And input text       id = funders[0].funder   Advanced Propulsion Centre (APC)
-    And run keyword and ignore error    the user clicks the button/link     jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
+    check if you can see the dropdown
+    the user clicks the button/link     jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
@@ -227,7 +228,8 @@ Funding information: calculations
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
     And input text   id = funders[1].funder   Aerospace Technology Institute (ATI)
-    And run keyword and ignore error    the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
+    check if you can see the dropdown
+    the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
@@ -926,3 +928,7 @@ the user should see the read-only view of the initial details
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+check if you can see the dropdown
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
+     run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       id = funders[0].funder
