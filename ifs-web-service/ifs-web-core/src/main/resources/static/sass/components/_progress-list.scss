@@ -124,7 +124,7 @@
 
       &-waiting{
         color: $govuk-secondary-text-colour;
-        padding: 1em 0;
+        padding: 1em 0.8em;
       }
 
     }
@@ -134,6 +134,10 @@
       color: $govuk-text-colour;
       font-weight: bold;
       float: right;
+    }
+
+    &.msg-positive {
+      color: $govuk-button-colour;
     }
   }
 
@@ -282,7 +286,7 @@
     }
 
     .status-msg{
-      width: 50%;
+      //width: 50%;
 
       &:first-child{
         border-right: 1px dashed $govuk-border-colour;
