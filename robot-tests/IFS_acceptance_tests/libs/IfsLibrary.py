@@ -55,19 +55,3 @@ def do_keyword_with_pagination_and_ignore_error(keyword, *args):
             return False
         else:
             return do_keyword_with_pagination_and_ignore_error(keyword, *args)
-
-def wait_for_autocomplete(id,letter,link):
-
-    wait_until = BuiltIn().get_library_instance('WaitUntilLibrary')
-
-    pressA = wait_until.run_keyword_and_return_status_without_screenshots('press key', id, letter)
-    selectMenu =  wait_until.run_keyword_and_return_status_without_screenshots('the user clicks the button/link', link)
-
-    if selectMenu:
-
-        return True
-
-    else:
-
-        reload =  wait_until.run_keyword_and_return_status_without_screenshots('the user reloads the page')
-        return wait_for_autocomplete(id,letter,link)
