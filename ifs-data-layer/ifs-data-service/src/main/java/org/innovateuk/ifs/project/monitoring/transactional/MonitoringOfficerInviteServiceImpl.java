@@ -146,8 +146,9 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
 
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("monitoringOfficer", user);
-        globalArgs.put("project", project);
+        globalArgs.put("projectName", project.getName());
         globalArgs.put("competition", project.getApplication().getCompetition());
+        globalArgs.put("projectNumber", project.getApplication().getId());
 
         return sendNotification(globalArgs,
                                 MONITORING_OFFICER_NEW_PROJECT_NOTIFICATION,
@@ -160,8 +161,9 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("monitoringOfficerInvite", invite);
         globalArgs.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, invite));
-        globalArgs.put("project", project);
+        globalArgs.put("projectName", project.getName());
         globalArgs.put("competition", project.getApplication().getCompetition());
+        globalArgs.put("projectNumber", project.getApplication().getId());
 
         return sendNotification(globalArgs,
                                 MONITORING_OFFICER_REGISTRATION_INVITE,

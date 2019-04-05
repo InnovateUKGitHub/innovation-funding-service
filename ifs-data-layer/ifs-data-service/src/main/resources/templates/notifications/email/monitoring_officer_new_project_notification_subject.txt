@@ -1,1 +1,1 @@
-${competition.name}: Monitoring Officer assignment for project ${project.name}
+${competition.name}: Monitoring Officer assignment for project ${projectName}/${projectNumber}

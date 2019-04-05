@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-Welcome to the monitoring team. The project ${project.name} has been assigned to you as the Monitoring Officer for the project. The lead organisation has been informed.
+Welcome to the monitoring team. The project ${projectName} has been assigned to you as the Monitoring Officer for the project. The lead organisation has been informed.
 
 You need to create an account as a Monitoring Officer on the Innovation Funding Service before you can view this project.
 

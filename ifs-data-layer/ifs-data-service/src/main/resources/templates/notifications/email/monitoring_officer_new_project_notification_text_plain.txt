@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-The project ${project.name} has been assigned to you as the Monitoring Officer for this project. The lead organisation has been informed.
+The project ${projectName} has been assigned to you as the Monitoring Officer for this project. The lead organisation has been informed.
 
 [view project]
 
