@@ -78,7 +78,7 @@
 
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
-                        <p class="govuk-body">TODO</p>
+                        <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
                         <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p></th:block>
                     </th:block>
 
