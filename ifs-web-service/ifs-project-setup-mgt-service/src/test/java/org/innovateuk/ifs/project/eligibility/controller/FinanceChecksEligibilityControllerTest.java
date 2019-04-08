@@ -161,7 +161,29 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false, "Jes1");
+        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false, "Jes1", false);
+
+    }
+
+    @Test
+    public void testViewEligibilityLeadOrgH2020() throws Exception {
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        CompetitionResource h2020Comp = newCompetitionResource().withCompetitionTypeName("Horizon 2020").build();
+
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(h2020Comp));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
+                                               project.getId(), industrialOrganisation.getId())).
+                andExpect(status().isOk()).
+                andExpect(model().attributeExists("model")).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andReturn();
+
+        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false, "Jes1", true);
 
     }
 
@@ -180,7 +202,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, false, industrialOrganisation.getName(), false, "Jes1");
+        assertViewEligibilityDetails(eligibility, result, false, industrialOrganisation.getName(), false, "Jes1", false);
 
     }
 
@@ -205,7 +227,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, "Jes1");
+        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, "Jes1", false);
 
     }
 
@@ -227,9 +249,10 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, null);
+        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, null, false);
 
     }
+
 
     private void setUpViewEligibilityMocking(EligibilityResource eligibility) {
 
@@ -241,13 +264,14 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(projectFinanceService.getEligibility(project.getId(), academicOrganisation.getId())).thenReturn(eligibility);
     }
 
-    private void assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, String expectedJesFilename) {
+    private void assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, String expectedJesFilename, boolean isH2020) {
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertEquals(expectedIsLeadPartnerOrganisation, viewModel.isLeadPartnerOrganisation());
+        assertEquals(viewModel.isH2020(), isH2020);
         assertTrue(viewModel.getOrganisationName().equals(organisationName));
         assertTrue(viewModel.getProjectName().equals(project.getName()));
 
