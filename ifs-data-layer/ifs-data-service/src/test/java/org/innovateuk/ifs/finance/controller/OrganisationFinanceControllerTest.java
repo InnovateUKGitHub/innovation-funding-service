@@ -44,13 +44,19 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.*;
+import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION;
+import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION;
+import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION;
+import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -163,6 +169,38 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", application.getId(), organisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedOrganisationFinances)));
+    }
+
+    @Test
+    public void getOrganisationWithGrowthTableWhenFinancialYearEndIsNull() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(1L)
+                .withCompetition(2L)
+                .build();
+        Organisation organisation = newOrganisation()
+                .withId(3L)
+                .build();
+        Question question = newQuestion()
+                .withId(4L)
+                .build();
+
+        when(formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(anyLong(), anyLong(), anyLong(), any(FormInputType.class)))
+                .thenReturn(serviceSuccess(new FormInputResponseResource()));
+        when(applicationService.getApplicationById(anyLong()))
+                .thenReturn(serviceSuccess(applicationResource));
+        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(anyLong(), anyLong()))
+                .thenReturn(serviceSuccess(new ApplicationFinanceResource()));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), any(FormInputType.class)))
+                .thenReturn(serviceSuccess(question));
+        when(formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(anyLong(), anyLong(), anyLong(), any(FormInputType.class), anyString()))
+                .thenReturn(serviceSuccess(newFormInputResponseResource().build()));
+
+        OrganisationFinancesWithGrowthTableResource expected = new OrganisationFinancesWithGrowthTableResource();
+        expected.setFinancialYearEnd(null);
+
+        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationResource.getId(), organisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
     }
 
     @Test

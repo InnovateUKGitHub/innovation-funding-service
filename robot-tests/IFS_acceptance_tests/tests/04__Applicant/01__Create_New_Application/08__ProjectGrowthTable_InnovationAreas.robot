@@ -148,6 +148,12 @@ As next step the Applicant cannot see the turnover field
     And the user should see the element                          jQuery = div label:contains("Full time employees")
     And the user should see the element                          jQuery = span:contains("How many full-time employees did you have on the project at the close of your last financial year?")
 
+User can save null values and reenter the organisation page
+    [Documentation]    IFS-5612
+    Given The user clicks the button/link  jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link   link = Your organisation
+    Then the user should see the element   jQuery = h1:contains("Your organisation")
+
 Organisation server side validation when no
     [Documentation]    INFUND-6393
     [Tags]
