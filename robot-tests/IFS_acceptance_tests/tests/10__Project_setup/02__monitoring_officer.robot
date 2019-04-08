@@ -26,6 +26,10 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5104 Create a new Monitoring Officer from existing user in another role
 ...
 ...               IFS-5070 Add Monitoring Officer to multiple-role dashboard
+...
+...               IFS-4208 Create pending registration for new Monitoring Officer account
+...
+...               IFS-5032 MO assigned to project - Email notification
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -240,7 +244,7 @@ Search for an MO
     [Documentation]
     [Setup]  Login as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/monitoring-officer/view-all
-    When search for MO
+    When search for MO    Orvill  Orville Gibbs
     Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
     [Teardown]  the user clicks the button/link  link = Back
 
@@ -262,11 +266,31 @@ Add MO - existing MO
     And the user cannot see a validation error in the page
     When the user clicks the button/link        jQuery = button[type="submit"]
     Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
-    [Teardown]  Logout as user
+
+Comp admin adds new MO
+    [Documentation]  IFS-4208
+    [Setup]  the user navigates to the page          ${server}/project-setup-management/monitoring-officer/view-all
+    Given The user clicks the button/link            link = Add a monitoring officer
+    And the user enters text to a text field         id = emailAddress  tom@poly.io
+    When the user clicks the button/link             jQuery = button[type="submit"]
+    Then the user enters the details
+    And the user clicks the button/link              jQUery = button:contains("Add monitoring officer")
+
+Comp admin assign project to new MO
+    [Documentation]  IFS-5031  IFS-5088  IFS-4208
+    When search for MO    Tom  Tom Poly
+    And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
+    Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
+
+Link to Application
+    [Documentation]  IFS-5031
+    Given the user clicks the button/link   link = ${Assign_Project2_ID}
+    Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
+    [Teardown]  logout as user
 
 MO create account: validations
-    [Documentation]  IFS-5031
-    Given the user navigates to the page     ${server}/management/monitoring-officer/hash123/register
+    [Documentation]  IFS-5031  IFS-5032
+    Given the user reads his email and clicks the link   tom@poly.io   ${INFORM_COMPETITION_NAME}   Welcome to the monitoring team  1
     When the user checks for validations
     Then the user should see client side validations triggered correctly
     And the user should see server side validations triggered correctly
@@ -275,26 +299,11 @@ Create account flow: MO
     [Documentation]  IFS-5031
     Given MO enter details and create account
     When the user clicks the button/link      link = Sign into your account
-    And Logging in and Error Checking         tom@poly.io  ${short_password}
+    And Logging in and Error Checking         tom@poly.io   ${short_password}
     Then the user should see the element      jQuery = h1:contains("Project setup")
-    [Teardown]  Get user id and set as suite variable  ${New_Mo}
-
-Comp admin assign project to new MO
-    [Documentation]  IFS-5031  IFS-5088
-    [Setup]  log in as a different user               &{Comp_admin1_credentials}
-    Given the user navigates to the page              ${server}/project-setup-management/monitoring-officer/${userId}/projects
-    When comp admin assign and remove project to MO
-    And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
-    Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
-
-Link to Application
-    [Documentation]  IFS-5031
-    Given the user clicks the button/link   link = ${Assign_Project2_ID}
-    Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
 
 New MO see the project setup view for assigned project
     [Documentation]  IFS-5031
-    [Setup]  log in as a different user    tom@poly.io  ${short_password}
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
 
@@ -367,10 +376,13 @@ the user should see the project set view
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
 
-MO enter details and create account
+the user enters the details
     the user enters text to a text field    id = firstName  Tom
     the user enters text to a text field    id = lastName   Poly
     the user enters text to a text field    id = phoneNumber  123456789
+
+MO enter details and create account
+    the user enters the details
     the user enters text to a text field    id = password  ${short_password}
     the user should not see an error in the page
     the user clicks the button/link         jQuery = button:contains("Create account")
@@ -411,7 +423,7 @@ the user should not see assigned project in Select a project to assign search fi
 comp admin assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    1
+    input text                          id = projectId    ${search_ID}
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 
@@ -420,9 +432,10 @@ comp admin assign and remove project to MO
     comp admin remove project assigned to MO      ${Assign_Project}
 
 search for MO
+    [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
-    input text                          id = userId    Orvill
-    the user clicks the button/link     jQuery = ul li:contains("Orville Gibbs")
+    input text                          id = userId    ${MO_name}
+    the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
 the user should see exisitng IFS user details and add phone number
