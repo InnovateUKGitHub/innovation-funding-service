@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -20,10 +21,10 @@ public class GrantsFileHandlerTest {
 
         GrantsFileHandler handler = new GrantsFileHandler(existingSourceFile.toURI().toString());
 
-        ServiceResult<File> result = handler.getSourceFileIfExists();
+        ServiceResult<List<File>> result = handler.getSourceFileIfExists();
 
         assertThat(result.isSuccess()).isTrue();
-        assertThat(result.getSuccess()).isEqualTo(existingSourceFile);
+        assertThat(result.getSuccess()).isEmpty();
     }
 
     @Test
@@ -33,40 +34,14 @@ public class GrantsFileHandlerTest {
 
         GrantsFileHandler handler = new GrantsFileHandler(nonExistentSourceFile.toURI().toString());
 
-        ServiceResult<File> result = handler.getSourceFileIfExists();
+        ServiceResult<List<File>> result = handler.getSourceFileIfExists();
 
         assertThat(result.isFailure()).isTrue();
         assertThatServiceFailureIs(result, notFoundError(File.class, nonExistentSourceFile.toURI().toString()));
     }
 
     @Test
-    public void deleteSourceFile() throws IOException, URISyntaxException {
-
-        File existingSourceFile = File.createTempFile("temp", "temp");
-
-        GrantsFileHandler handler = new GrantsFileHandler(existingSourceFile.toURI().toString());
-
-        ServiceResult<Void> result = handler.deleteSourceFile();
-
-        assertThat(result.isSuccess()).isTrue();
-        assertThat(existingSourceFile).doesNotExist();
-    }
-
-    @Test
-    public void deleteSourceFileFailureToRemove() throws URISyntaxException {
-
-        File nonExistentSourceFile = new File("non-existent-eu-grant-file");
-
-        GrantsFileHandler handler = new GrantsFileHandler(nonExistentSourceFile.toURI().toString());
-
-        ServiceResult<Void> result = handler.deleteSourceFile();
-
-        assertThat(result.isFailure()).isTrue();
-    }
-
-    @Test
     public void newGrantsFileUploaderInvalidUri() {
-
         try {
             new GrantsFileHandler("not a valid uri");
         } catch (URISyntaxException e) {

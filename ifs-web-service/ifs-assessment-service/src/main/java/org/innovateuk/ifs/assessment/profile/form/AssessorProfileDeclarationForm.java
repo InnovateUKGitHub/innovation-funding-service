@@ -34,7 +34,7 @@ public class AssessorProfileDeclarationForm implements BindingResultTarget {
     private String role;
 
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
-    @WordCount(max = 100, message = "{validation.field.max.word.count}")
+    @WordCount(max = 200, message = "{validation.field.max.word.count}")
     private String professionalAffiliations;
 
     @NotNull(message = "{validation.assessorprofiledeclarationform.hasAppointments.required}")

@@ -30,15 +30,21 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.lang.Boolean.TRUE;
+import static java.time.YearMonth.*;
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -468,22 +474,22 @@ public class OrganisationFinanceController {
     }
 
     private Long getLongValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
-
-        return formInputResponse.
-                map(response -> isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null).
-                orElse(null);
+        return formInputResponse
+                .map(response -> isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null)
+                .orElse(null);
     }
 
     private YearMonth getYearMonthValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
+        return formInputResponse
+                .map(this::getYearMonthFromForm)
+                .orElse(null);
+    }
 
-        return formInputResponse.
-                map(response -> {
-                    try {
-                        return YearMonth.parse(response.getValue(), MONTH_YEAR_FORMAT);
-                    } catch (DateTimeParseException e) {
-                        return null;
-                    }
-                }).
-                orElse(null);
+    private YearMonth getYearMonthFromForm(FormInputResponseResource formInputResponseResource) {
+        try {
+            return parse(formInputResponseResource.getValue(), MONTH_YEAR_FORMAT);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

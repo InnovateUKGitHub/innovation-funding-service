@@ -131,7 +131,7 @@ Initial details - User enters valid values and marks as done
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
-    [Tags]  Pending
+    [Tags]
     Given the user clicks the button/link            jQuery = .govuk-button:contains("Edit")
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery = button[class = "govuk-button"]
@@ -139,7 +139,7 @@ Initial details - Competitions allow multiple innovation areas
 
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
-    [Tags]  Pending
+    [Tags]
     Given the user clicks the button/link       jQuery = .govuk-button:contains("Edit")
     And the user clicks the button/link         jQuery = #innovation-row-2 button:contains('Remove')
     When the user clicks the button/link        jQuery = button:contains("Done")
@@ -147,28 +147,28 @@ Initial Details - User can remove an innovation area
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905
-    [Tags]  Pending
+    [Tags]
     [Setup]    the user clicks the button/link                   jQuery = .govuk-button:contains("Edit")
     When the user should see the option in the drop-down menu    John Doe    name = executiveUserId
     And the user should see the option in the drop-down menu     Robert Johnson    name = executiveUserId
 
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
-    [Tags]  Pending
+    [Tags]
     And the user should not see the element   id = competitionTypeId
     And the user should not see the element   id = openingDateDay
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
-    [Tags]  HappyPath  Pending
+    [Tags]  HappyPath
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Initial details") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
-    [Tags]  HappyPath  Pending
+    [Tags]  HappyPath
     Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
     And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
@@ -181,7 +181,7 @@ User should have access to all the sections
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
-    [Tags]  HappyPath  Pending
+    [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
     When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
     And the user clicks the button/link      css = button.govuk-button  #Done
@@ -191,7 +191,7 @@ The user must select the Terms and Conditions they want Applicants to accept
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
-    [Tags]  HappyPath  Pending
+    [Tags]  HappyPath
     Given the user clicks the button/link        link = Public content
     Then the user should not see an error in the page
     And the user should see the element          jQuery = h1:contains("Public content")
@@ -217,25 +217,24 @@ Funding information: calculations
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
-    And input text       id = funders[0].funder   A
-    And the user clicks the button/link     jQuery = #funder-row-0 ul li:contains("Advanced Propulsion Centre (APC)")
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
     And the user enters text to a text field    id = activityCode    4242
-
-Funding information: add co-funder
-    [Documentation]  INFUND-2985 INFUND-4894
-    [Tags]  HappyPath
+    And the user enters text to an autocomplete field       id = funders[0].funder    Advanced Propulsion Centre (APC)
+    And the user clicks the button/link         id = funders[0].funder
+    And click element                           id = funders[0].funder__option--0
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
-    And input text   id = funders[1].funder   A
-    And the user clicks the button/link     jQuery = #funder-row-1 ul li:contains("Aerospace Technology Institute (ATI)")
+    And the user enters text to an autocomplete field   id = funders[1].funder   Aerospace Technology Institute (ATI)
+    And the user clicks the button/link         id = funders[1].funder
+    And click element                           id = funders[1].funder__option--0
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
     Then the total should be correct            Total: £20,000
+
 Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]  HappyPath
@@ -250,11 +249,12 @@ Funding information: can be saved
 Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
-    When the user clicks the button/link             jQuery = .govuk-button:contains("Edit")
-    And input text                                   id = funders[0].funder  Centre for Connected and Autonomous Vehicles (CCAV)
-    And the user clicks the button/link              jQuery = ul li:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
-    When the user clicks the button/link             jQuery = button:contains("Done")
-    Then the user should see the element             jQUery = td:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
+    When the user clicks the button/link               jQuery = .govuk-button:contains("Edit")
+    And the user enters text to an autocomplete field       id = funders[0].funder    ${EMPTY}
+    And the user clicks the button/link         id = funders[0].funder
+    And click element                           id = funders[0].funder__option--2
+    When the user clicks the button/link   jQuery = button:contains("Done")
+    Then the user should see the element   jQUery = td:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
 
 Funding information: should have a green check
     [Documentation]    INFUND-3002

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;
@@ -106,7 +106,7 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setSpendProfileSubmittedDate(date));
     }
 
-    public ProjectBuilder withProjectMonitoringOfficer(ProjectMonitoringOfficer... projectMonitoringOfficers) {
+    public ProjectBuilder withProjectMonitoringOfficer(MonitoringOfficer... projectMonitoringOfficers) {
         return withArray((projectMonitoringOfficer, project) -> project.setProjectMonitoringOfficer(projectMonitoringOfficer), projectMonitoringOfficers);
     }
 

@@ -20,36 +20,37 @@ IFS.core.autoComplete = (function () {
     },
     initAutoCompletePlugin: function (element) {
       var autoCompleteSubmitElement = jQuery(s.autoCompleteSubmitElement)
-      if (autoCompleteSubmitElement.length > 0) {
+      if (element.length > 0) {
         autoCompleteSubmitElement.prop('disabled', true)
-        var wrapper = element.closest(s.autoCompleteWrapper)
-        jQuery(document).on('keydown', wrapper, function (e) {
+        jQuery(document).on('keydown', s.autoCompleteWrapper, function (e) {
           if (e.which !== 13 && e.which !== 32) {
             autoCompleteSubmitElement.prop('disabled', true)
           }
         })
-      }
-      var showAllValues = element.children('option').length <= s.menuLimit
-      var required = element.data('required-errormessage')
-      s.autoCompletePlugin.enhanceSelectElement({
-        selectElement: element[0],
-        showAllValues: showAllValues,
-        defaultValue: '',
-        confirmOnBlur: true,
-        displayMenu: 'overlay',
-        required: required,
-        onConfirm: function (confirmed) {
-          if (confirmed !== '') {
-            var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
-            element.val(selectedUserId)
-            autoCompleteSubmitElement.prop('disabled', false)
-          } else {
-            element.val('')
+        var showAllValues = element.children('option').length <= s.menuLimit
+        var required = element.data('required-errormessage')
+        s.autoCompletePlugin.enhanceSelectElement({
+          autoselect: false,
+          selectElement: element[0],
+          showAllValues: showAllValues,
+          defaultValue: '',
+          confirmOnBlur: true,
+          displayMenu: 'overlay',
+          required: required,
+          onConfirm: function (confirmed) {
+            if (confirmed) {
+              var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
+              element.val(selectedUserId)
+              autoCompleteSubmitElement.prop('disabled', false)
+            } else if (element.parent().find('.autocomplete__input').val() === '') {
+              element.val('')
+              autoCompleteSubmitElement.prop('disabled', true)
+            }
           }
+        })
+        if (required) {
+          element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
         }
-      })
-      if (required) {
-        element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
       }
     }
   }
