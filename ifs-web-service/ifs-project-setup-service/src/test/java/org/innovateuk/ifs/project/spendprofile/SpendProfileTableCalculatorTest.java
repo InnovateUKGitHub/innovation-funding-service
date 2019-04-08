@@ -1,9 +1,8 @@
-package org.innovateuk.ifs.project.spendprofile.util;
+package org.innovateuk.ifs.project.spendprofile;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
-import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
