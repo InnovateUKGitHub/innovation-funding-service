@@ -146,6 +146,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
 
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("monitoringOfficer", user);
+        globalArgs.put("dashboardUrl", webBaseUrl);
         globalArgs.put("projectName", project.getName());
         globalArgs.put("competition", project.getApplication().getCompetition());
         globalArgs.put("projectNumber", project.getApplication().getId());

@@ -75,6 +75,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -611,6 +612,38 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
 
         service.createMonitoringOfficer(hash, registrationResource).getSuccess();
+    }
+
+    @Test
+    public void createPendingUser() {
+        User user = newUser().withEmailAddress("test@test.test").build();
+        String password = "superSecurePassword";
+        when(idpServiceMock.createUserRecordWithUid(anyString(), anyString())).thenReturn(serviceSuccess("uid"));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+
+        service.createPendingUser(user).getSuccess();
+
+        verify(idpServiceMock).createUserRecordWithUid(anyString(), anyString());
+        verify(profileRepositoryMock).save(any(Profile.class));
+        verify(userRepositoryMock, times(2)).save(any(User.class));
+    }
+
+    @Test
+    public void activatePendingUser() {
+        User user = newUser().withUid("uid").build();
+
+        when(monitoringOfficerInviteRepositoryMock.existsByHash("hash")).thenReturn(true);
+        when(idpServiceMock.activateUser(anyString())).thenReturn(serviceSuccess("uid"));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        when(idpServiceMock.updateUserPassword("uid", "password")).thenReturn(serviceSuccess("uid"));
+
+        service.activatePendingUser(user, "password", "hash").getSuccess();
+
+        verify(monitoringOfficerInviteRepositoryMock).existsByHash("hash");
+        verify(idpServiceMock).activateUser(anyString());
+        verify(userRepositoryMock).save(any(User.class));
+        verify(idpServiceMock).updateUserPassword("uid", "password");
     }
 
     private void setUpUsersForEditInternalUserSuccess() {
