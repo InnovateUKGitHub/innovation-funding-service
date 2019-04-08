@@ -421,23 +421,6 @@ then
     openReports
 fi
 
-#if [[ $(which google-chrome) ]]
-#then
- #   google-chrome target/${targetDir}/log.html &
-  #  if [[ ${showZapReport} -eq 1 ]]
-   # then
-    #    google-chrome target/${targetDir}/ZAPReport.html &
-   # fi
-#else
- #   wd=$(pwd)
-  #  logs="target/${targetDir}"
-   # open "file://${wd}/${logs}/log.html"
- #   if [[ ${showZapReport} -eq 1 ]]
-  #  then
-   #     open "file://${wd}/${logs}/ZAPReport.html"
-  #  fi
-#fi
-
 if [[ ${compress} -eq 1 ]]
 then
   saveResultsToCompressedFolder
