@@ -98,6 +98,7 @@ import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
@@ -2221,11 +2222,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
         when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
-                competitionId,
-                innovationArea,
-                singletonList(status),
-                compliant,
-                pageable
+                eq(competitionId),
+                eq(innovationArea),
+                eq(singletonList(status)),
+                eq(compliant),
+                any(ZonedDateTime.class),
+                eq(pageable)
         ))
                 .thenReturn(pageResult);
 
@@ -2251,12 +2253,14 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         );
 
         verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
-                competitionId,
-                innovationArea,
-                singletonList(status),
-                compliant,
-                pageable
+                eq(competitionId),
+                eq(innovationArea),
+                eq(singletonList(status)),
+                eq(compliant),
+                any(ZonedDateTime.class),
+                eq(pageable)
         );
+
         verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(AssessmentParticipant.class));
 
         assertTrue(result.isSuccess());

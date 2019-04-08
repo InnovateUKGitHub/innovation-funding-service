@@ -36,6 +36,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -668,6 +669,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 innovationArea.getId(),
                 singletonList(ACCEPTED),
                 TRUE,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
@@ -706,6 +708,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 innovationArea.getId(),
                 asList(ACCEPTED, PENDING),
                 null,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
@@ -759,6 +762,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 null,
                 singletonList(ACCEPTED),
                 null,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
@@ -836,6 +840,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 null,
                 singletonList(PENDING),
                 TRUE,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
@@ -848,6 +853,80 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(1, content.size());
         assertEquals("Jane Pritchard", content.get(0).getInvite().getName());
+    }
+
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isCompliantExpired() throws Exception {
+        loginCompAdmin();
+
+        Agreement agreement = agreementRepository.findById(1L).get();
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withAgreement(agreement)
+                .withInnovationAreas(singletonList(innovationArea))
+                .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
+                .build(4);
+
+        profileRepository.saveAll(profiles);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid-1", "uid-2", "uid-3", "uid-4")
+                .withFirstName("Jane", "Charles", "Claire", "Anthony")
+                .withLastName("Pritchard", "Dance", "Jenkins", "Hale")
+                .withProfileId(
+                        profiles.get(0).getId(),
+                        profiles.get(1).getId(),
+                        profiles.get(2).getId(),
+                        profiles.get(3).getId()
+                )
+                .build(4);
+
+        userRepository.saveAll(users);
+
+        users.get(0).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 1")
+                        .withExists(TRUE)
+                        .withUser(users.get(0))
+                        .build(1)
+        );
+
+        userRepository.saveAll(users);
+
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withUser(users.get(0), users.get(1), users.get(2), users.get(3))
+                .withStatus(SENT)
+                .build(4);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+        flushAndClearSession();
+
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+                competition.getId(),
+                null,
+                singletonList(PENDING),
+                TRUE,
+                ZonedDateTime.now().plusDays(1),
+                pageable
+        );
+
+        assertEquals(0, pagedResult.getTotalPages());
+        assertEquals(0, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
     }
 
     @Test
@@ -913,6 +992,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 null,
                 singletonList(PENDING),
                 FALSE,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
@@ -955,6 +1035,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 null,
                 asList(PENDING, REJECTED),
                 null,
+                ZonedDateTime.now().minusDays(1),
                 pageable
         );
 
