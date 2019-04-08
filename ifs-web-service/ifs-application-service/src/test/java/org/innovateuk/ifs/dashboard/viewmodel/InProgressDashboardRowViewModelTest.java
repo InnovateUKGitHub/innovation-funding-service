@@ -40,7 +40,7 @@ public class InProgressDashboardRowViewModelTest {
                 ZonedDateTime.now().plusDays(12), 12, 100 , false);
 
         assertEquals(viewModel.getLinkUrl(), "/application/1/track");
-        assertEquals(viewModel.getTitle(),  "Untitled application");
+        assertEquals(viewModel.getTitle(), "Untitled application");
         assertTrue(viewModel.isApplicationComplete());
         assertEquals(viewModel.getProgressMessage(), "Ready to review and submit");
     }
