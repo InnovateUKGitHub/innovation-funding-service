@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
@@ -28,21 +31,20 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
-    @Mock
-    private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
     @Mock
-    private MonitoringOfficerRestService projectMonitoringOfficerRestService;
-
+    private MonitoringOfficerRegistrationRestService monitoringOfficerRegistrationRestServiceMock;
     @Mock
     private UserService userService;
 
@@ -56,7 +58,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Before
     public void logInCompAdminUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
     }
 
     @Test
@@ -75,7 +77,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .param(EMAIL_ADDRESS, "123@test.com"))
                 .andReturn();
 
-        assertEquals("project/monitoring-officer/create-new", mvcResult.getModelAndView().getViewName());
+        assertEquals("project/monitoring-officer/create/" + "123@test.com", mvcResult.getModelAndView().getViewName());
     }
 
     @Test
@@ -188,6 +190,41 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .andReturn();
 
         assertEquals("project/monitoring-officer/assign-role", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void create() throws Exception {
+        mockMvc.perform(get("/monitoring-officer/create/"+ EMAIL_ADDRESS))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/monitoring-officer/create-new"));
+    }
+
+    @Test
+    public void createUser() throws Exception {
+
+        when(monitoringOfficerRegistrationRestServiceMock.createMonitoringOfficer(any(MonitoringOfficerCreateResource.class)))
+                .thenReturn(restSuccess());
+
+        mockMvc.perform(post("/monitoring-officer/create")
+                                .param("emailAddress", "test@test.com")
+                                .param("firstName", "Steve")
+                                .param("lastName", "Smith")
+                                .param("phoneNumber", "01142222222"))
+                .andExpect(status().is3xxRedirection());
+
+        verify(monitoringOfficerRegistrationRestServiceMock).createMonitoringOfficer(any(MonitoringOfficerCreateResource.class));
+    }
+
+    @Test
+    public void createUserInvalidData() throws Exception {
+        mockMvc.perform(post("/monitoring-officer/create")
+                                .param("emailAddress", "invalidEmailAddress")
+                                .param("firstName", "Steve")
+                                .param("lastName", "Smith")
+                                .param("phoneNumber", "01142222222"))
+                .andExpect(view().name("project/monitoring-officer/create-new"));  // failure view
+
+        verifyZeroInteractions(monitoringOfficerRegistrationRestServiceMock);
     }
 
     @Override

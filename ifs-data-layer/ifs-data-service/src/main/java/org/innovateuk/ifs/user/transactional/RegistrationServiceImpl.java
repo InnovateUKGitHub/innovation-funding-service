@@ -35,11 +35,10 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -127,10 +126,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<User> activatePendingUser(User user,
-                                                   String password) {
-        return activateUser(user)
-                .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
-                .andOnSuccessReturn(() -> user);
+                                                   String password,
+                                                   String hash) {
+        if(monitoringOfficerInviteRepository.existsByHash(hash)) {
+            return activateUser(user)
+                    .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
+                    .andOnSuccessReturn(() -> user);
+        }
+        return serviceFailure(GENERAL_FORBIDDEN);
     }
 
     @Override

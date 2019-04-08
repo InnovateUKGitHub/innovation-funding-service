@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.invite.resource;
 
+/**
+ * DTO for creating a monitoring officer as a pending user
+ */
 public class MonitoringOfficerCreateResource {
 
     private final String firstName;

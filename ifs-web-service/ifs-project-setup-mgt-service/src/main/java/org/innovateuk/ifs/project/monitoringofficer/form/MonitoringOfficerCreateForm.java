@@ -8,6 +8,9 @@ import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
 
+/**
+ * Object to store the data that is used to create monitoring officers
+ */
 public class MonitoringOfficerCreateForm {
 
     @NotBlank(message="{validation.standard.email.required}")

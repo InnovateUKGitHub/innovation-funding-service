@@ -28,8 +28,10 @@ public interface RegistrationService {
             description = "Competition team users can create pending users prior to registration, currently used for monitoring officers")
     ServiceResult<User> createPendingUser(User user);
 
+    @SecuredBySpring(value = "CREATE", securedType = InternalUserRegistrationResource.class,
+            description = "A System Registration User can activate new monitoring officer users on behalf of non-logged in users with invite hash")
     @PreAuthorize("hasAuthority('system_registrar')")
-    ServiceResult<User> activatePendingUser(User user, String password);
+    ServiceResult<User> activatePendingUser(User user, String password, String hash);
 
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")

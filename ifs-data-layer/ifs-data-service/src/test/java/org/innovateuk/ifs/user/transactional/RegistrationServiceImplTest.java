@@ -137,8 +137,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
 
-    @Mock
-    private LegacyMonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Test
     public void createUser() {

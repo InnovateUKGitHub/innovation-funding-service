@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
@@ -65,6 +66,22 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
     public void viewAll() {
         final Model model = null;
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewAll(model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+    }
+
+    @Test
+    public void create() {
+        final Model model = null;
+        final String emailAddress = null;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.create(emailAddress, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+    }
+
+    @Test
+    public void createUser() {
+        final MonitoringOfficerCreateForm form = null;
+        final BindingResult bindingResult = null;
+        final ValidationHandler validationHandler = null;
+        final Model model = null;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createUser(form, bindingResult, validationHandler, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Override

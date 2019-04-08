@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -18,8 +17,6 @@ import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerA
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
 import org.innovateuk.ifs.user.resource.Title;
-
-
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -38,7 +35,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -65,9 +61,6 @@ public class MonitoringOfficerController {
 
     @Autowired
     private MonitoringOfficerRestService projectMonitoringOfficerRestService;
-
-    @Autowired
-    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Autowired
     private MonitoringOfficerRegistrationRestService monitoringOfficerRegistrationRestService;

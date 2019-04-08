@@ -18,12 +18,15 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.MonitoringOfficerInviteResourceBuilder.newMonitoringOfficerInviteResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -109,6 +112,7 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
                 .withFirstName("Donald")
                 .withLastName("Tusk")
                 .withEmailAddress("test@test.test")
+                .withStatus(PENDING)
                 .build();
         Project project = newProject()
                 .withApplication(newApplication()
@@ -116,8 +120,7 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
                                          .build())
                 .build();
         when(userRepositoryMock.existsById(user.getId())).thenReturn(true);
-        when(monitoringOfficerInviteRepositoryMock.existsByStatusAndUserId(InviteStatus.OPENED, user.getId()))
-                .thenReturn(false);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(monitoringOfficerInviteRepositoryMock.save(any(MonitoringOfficerInvite.class)))
                 .thenReturn(new MonitoringOfficerInvite());
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
@@ -129,7 +132,6 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(monitoringOfficerInviteRepositoryMock, notificationServiceMock, loggedInUserSupplierMock);
-        inOrder.verify(monitoringOfficerInviteRepositoryMock).existsByStatusAndUserId(InviteStatus.OPENED, user.getId());
         inOrder.verify(monitoringOfficerInviteRepositoryMock).save(any(MonitoringOfficerInvite.class));
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class));
         inOrder.verify(loggedInUserSupplierMock).get();
@@ -151,8 +153,7 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
                                          .build())
                 .build();
         when(userRepositoryMock.existsById(user.getId())).thenReturn(true);
-        when(monitoringOfficerInviteRepositoryMock.existsByStatusAndUserId(InviteStatus.OPENED, user.getId()))
-                .thenReturn(true);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
                 .thenReturn(serviceSuccess());
 
@@ -161,7 +162,6 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(monitoringOfficerInviteRepositoryMock, notificationServiceMock);
-        inOrder.verify(monitoringOfficerInviteRepositoryMock).existsByStatusAndUserId(InviteStatus.OPENED, user.getId());
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class));
         inOrder.verifyNoMoreInteractions();
     }

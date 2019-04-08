@@ -212,7 +212,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return getByHash(inviteHash)
                 .andOnSuccessReturn(Invite::open)
                 .andOnSuccess(invite -> updateUserWithRegistrationDetails(invite, resource))
-                .andOnSuccess(user -> registrationService.activatePendingUser(user, resource.getPassword()));
+                .andOnSuccess(user -> registrationService.activatePendingUser(user, resource.getPassword(), inviteHash));
     }
 
     private ServiceResult<User> updateUserWithRegistrationDetails(Invite invite, MonitoringOfficerRegistrationResource resource) {
