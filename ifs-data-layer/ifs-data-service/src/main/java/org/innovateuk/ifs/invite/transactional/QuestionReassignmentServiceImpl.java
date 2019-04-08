@@ -31,7 +31,7 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
     private QuestionStatusRepository questionStatusRepository;
 
     @Override
-    public void reassignCollaboratorResponsesAndQuestionStatuses(Long applicationId,  List<ProcessRole> collaboratorProcessRoles, ProcessRole leadApplicantProcessRole) {
+    public void reassignCollaboratorResponsesAndQuestionStatuses(Long applicationId, List<ProcessRole> collaboratorProcessRoles, ProcessRole leadApplicantProcessRole) {
         collaboratorProcessRoles.forEach(collaboratorProcessRole -> {
             List<ProcessRole> organisationRoles = getOrganisationProcessRolesExcludingCollaborator(applicationId, collaboratorProcessRole);
 
@@ -119,8 +119,8 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
     }
 
     private static ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
-                                                                              ProcessRole processRoleTo,
-                                                                              ProcessRole leadApplicantRole) {
+                                                                                     ProcessRole processRoleTo,
+                                                                                     ProcessRole leadApplicantRole) {
         return Optional.of(processRoleFrom)
                 .filter(originalRole -> !originalRole.getId().equals(leadApplicantRole.getId()))
                 .map(originalRole -> processRoleTo)
