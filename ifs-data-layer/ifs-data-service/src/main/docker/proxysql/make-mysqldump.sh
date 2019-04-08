@@ -14,6 +14,3 @@ echo "encrypted"
 rm /dump/anonymised-dump.sql
 
 echo "removed"
-
-
-mysqldump -u$DB_USER -p$DB_PASS -h127.0.0.1 -P6033 $DB_NAME --single-transaction --skip-extended-insert > /dump/anonymised-dump.sql
