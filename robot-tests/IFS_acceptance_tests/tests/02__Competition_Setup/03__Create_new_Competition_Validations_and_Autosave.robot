@@ -379,8 +379,6 @@ the user should see the correct values in the initial details form
     the user should see the element    jQuery = #executiveUserId option[selected]:contains("John Doe")
 
 the user should see the correct details in the funding information form
-    ${input_value} =    Get Value    id = funders[0].funder
-    Should Be Equal    ${input_value}    Aerospace Technology Institute (ATI)
     ${input_value} =    Get Value    id = funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id = pafNumber
