@@ -77,7 +77,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .param(EMAIL_ADDRESS, "123@test.com"))
                 .andReturn();
 
-        assertEquals("project/monitoring-officer/create/" + "123@test.com", mvcResult.getModelAndView().getViewName());
+        assertEquals("redirect:/monitoring-officer/create/" + "123@test.com", mvcResult.getModelAndView().getViewName());
     }
 
     @Test

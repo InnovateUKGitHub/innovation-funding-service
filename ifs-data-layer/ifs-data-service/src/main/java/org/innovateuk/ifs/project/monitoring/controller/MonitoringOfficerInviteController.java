@@ -13,6 +13,10 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+
 /**
  * Controller to handle RESTful services related to inviting project monitoring officers
  */
@@ -47,6 +51,11 @@ public class MonitoringOfficerInviteController {
 
     @PostMapping("/create-monitoring-officer")
     public RestResult<Void> createPendingMonitoringOfficer(@RequestBody MonitoringOfficerCreateResource resource) {
+
+        boolean userAlreadyExists = userService.findByEmail(resource.getEmailAddress()).isSuccess();
+        if(userAlreadyExists) {
+            return restSuccess();
+        }
 
         User user = new User();
         user.setFirstName(resource.getFirstName());

@@ -129,7 +129,7 @@ public class MonitoringOfficerController {
     public String create(@PathVariable String emailAddress,
                          Model model) {
         MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
-        model.addAttribute("email", emailAddress);
+        model.addAttribute("emailAddress", emailAddress);
         model.addAttribute(FORM , form);
         return "project/monitoring-officer/create-new";
     }
@@ -139,18 +139,26 @@ public class MonitoringOfficerController {
                              BindingResult bindingResult,
                              ValidationHandler validationHandler,
                              Model model) {
-        if (validationHandler.hasErrors()) {
-            model.addAttribute("email", form.getEmailAddress());
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("emailAddress", form.getEmailAddress());
             model.addAttribute(FORM , form);
             return "project/monitoring-officer/create-new";
-        }
+        };
 
-        MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
-                                                                                       form.getLastName(),
-                                                                                       form.getPhoneNumber(),
-                                                                                       form.getEmailAddress());
-        monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource).getSuccess();
-        return "redirect:/monitoring-officer/view-all";
+        return validationHandler
+                .failNowOrSucceedWith(failureView, () -> {
+                    MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
+                                                                                                   form.getLastName(),
+                                                                                                   form.getPhoneNumber(),
+                                                                                                   form.getEmailAddress());
+
+                    RestResult<Void> result =  monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
+                    return validationHandler
+                            .addAnyErrors(result)
+                            .failNowOrSucceedWith(failureView,
+                                                  () -> "redirect:/monitoring-officer/view-all");
+                });
     }
 
     @GetMapping("/{monitoringOfficerId}/projects")
