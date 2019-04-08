@@ -50,7 +50,7 @@ function importDump() {
   echo "decrypted file"
 
   oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
-    sh -c "mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" --verbose -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -P${DB_PORT} ${DB_NAME} < /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
+    sh -c "mysql --verbose -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -P${DB_PORT} ${DB_NAME} --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" < /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
   echo "Imported database dump"
 }
 
