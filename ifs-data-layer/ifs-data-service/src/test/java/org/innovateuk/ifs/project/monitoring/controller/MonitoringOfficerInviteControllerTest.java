@@ -2,17 +2,21 @@ package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.http.MediaType;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.MonitoringOfficerInviteResourceBuilder.newMonitoringOfficerInviteResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -119,5 +123,34 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
                 .andExpect(status().is2xxSuccessful());
 
         verify(monitoringOfficerInviteServiceMock, only()).addMonitoringOfficerRole(hash);
+    }
+
+
+    @Test
+    public void createPendingMonitoringOfficer() throws Exception {
+        User user = newUser()
+                .withFirstName("Steve")
+                .withLastName("Smith")
+                .withEmailAddress("steve@smith.com")
+                .withPhoneNumber("01142356565")
+                .build();
+
+        MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
+                user.getFirstName(), user.getLastName(), user.getPhoneNumber(),  user.getEmail());
+
+        when(userServiceMock.findByEmail(user.getEmail()))
+                .thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
+
+        when(registrationServiceMock.createPendingUser(any(User.class))).thenReturn(serviceSuccess(user));
+        when(userServiceMock.grantRole(any(GrantRoleCommand.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/monitoring-officer-registration/create-pending-monitoring-officer")
+                                .content(toJson(resource))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock).findByEmail(user.getEmail());
+        verify(registrationServiceMock).createPendingUser(any(User.class));
+        verify(userServiceMock).grantRole(any(GrantRoleCommand.class));
     }
 }

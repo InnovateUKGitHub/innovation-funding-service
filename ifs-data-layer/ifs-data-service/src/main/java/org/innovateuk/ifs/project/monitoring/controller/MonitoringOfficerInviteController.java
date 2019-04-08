@@ -49,7 +49,7 @@ public class MonitoringOfficerInviteController {
         return monitoringOfficerInviteService.openInvite(inviteHash).toGetResponse();
     }
 
-    @PostMapping("/create-monitoring-officer")
+    @PostMapping("/create-pending-monitoring-officer")
     public RestResult<Void> createPendingMonitoringOfficer(@RequestBody MonitoringOfficerCreateResource resource) {
 
         boolean userAlreadyExists = userService.findByEmail(resource.getEmailAddress()).isSuccess();

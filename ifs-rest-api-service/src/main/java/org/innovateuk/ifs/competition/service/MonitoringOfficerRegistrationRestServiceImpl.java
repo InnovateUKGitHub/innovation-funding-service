@@ -27,7 +27,7 @@ public class MonitoringOfficerRegistrationRestServiceImpl extends BaseRestServic
 
     @Override
     public RestResult<Void> createMonitoringOfficer(MonitoringOfficerCreateResource resource) {
-        return postWithRestResult(format("%s/create-monitoring-officer", BASE_URL), resource, Void.class);
+        return postWithRestResult(format("%s/create-pending-monitoring-officer", BASE_URL), resource, Void.class);
     }
 
     @Override
