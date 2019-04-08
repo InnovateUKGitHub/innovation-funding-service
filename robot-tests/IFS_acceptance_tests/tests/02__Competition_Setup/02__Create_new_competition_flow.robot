@@ -217,17 +217,18 @@ Funding information: calculations
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
-    And the user enters text to an autocomplete field       id = funders[0].funder   Advanced Propulsion Centre (APC)
-    And run keyword and ignore error    the user clicks the button/link     jQuery = ul li:contains("Advanced Propulsion Centre (APC)")
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
     And the user enters text to a text field    id = activityCode    4242
+    And the user enters text to an autocomplete field       id = funders[0].funder    Advanced Propulsion Centre (APC)
+    And the user clicks the button/link    id = funders[0].funder
+    And run keyword and ignore error    click element    id = funders[0].funder__option--0
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
     And the user enters text to an autocomplete field   id = funders[1].funder   Aerospace Technology Institute (ATI)
-    And run keyword and ignore error    the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
+    And run keyword and ignore error without screenshots    the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
     And the user enters text to a text field    id = 1-funderBudget    1000
     Then the total should be correct            Total: £21,000
     When the user clicks the button/link        jQuery = Button:contains("Remove")
