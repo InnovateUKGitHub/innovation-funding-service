@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
@@ -17,24 +16,18 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.AjaxResult;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -45,8 +38,6 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -262,42 +253,5 @@ public class ApplicationAjaxController {
         model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
         model.addAttribute("lastUpdatedText", "by you");
         return "question-type/form-elements :: updateTimeDetails";
-    }
-
-    @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
-    public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-                             BindingResult bindingResult,
-                             Model model,
-                             @PathVariable(APPLICATION_ID) final Long applicationId,
-                             @PathVariable(QUESTION_ID) final Long questionId,
-                             UserResource user) {
-        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(applicationService.getById(applicationId).getCompetition()).getSuccess();
-
-        FinanceRowItem costItem = addCost(organisationType, competition, applicationId, questionId, user);
-        FinanceRowType costType = costItem.getCostType();
-        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
-
-        Set<Long> markedAsComplete = new TreeSet<>();
-        model.addAttribute("markedAsComplete", markedAsComplete);
-
-        financeViewHandlerProvider.getFinanceModelManager(competition, organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
-
-        form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
-    }
-
-
-    @GetMapping("/remove_cost/{costId}")
-    public @ResponseBody
-    String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        financeRowRestService.delete(costId).getSuccess();
-        AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
-    }
-
-    private FinanceRowItem addCost(Long organisationType, CompetitionResource competition, Long applicationId, Long questionId, UserResource user) {
-        return financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 }
