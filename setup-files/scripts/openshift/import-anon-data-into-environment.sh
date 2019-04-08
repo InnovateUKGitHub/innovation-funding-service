@@ -48,7 +48,8 @@ function importDump() {
     sh -c "gpg --decrypt --passphrase ${DUMP_PASS} /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} > /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
 
   echo "decrypted file"
-  sed -i '1s/^/SET FOREIGN_KEY_CHECKS=0; /' /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
+    sh -c "sed -i '1s/^/SET FOREIGN_KEY_CHECKS=0; /' /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
   echo "remove foreign key checks"
 
   oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
