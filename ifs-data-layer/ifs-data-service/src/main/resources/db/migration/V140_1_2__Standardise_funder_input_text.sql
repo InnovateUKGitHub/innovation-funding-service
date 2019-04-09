@@ -10,8 +10,12 @@ SET funder = 'OTHER_DELIVERY_PARTNERS'
 WHERE funder LIKE '%OLEV%';
 
 UPDATE competition_funder
+SET funder = 'SMART_OPEN'
+WHERE funder = 'Smart Open';
+
+UPDATE competition_funder
 SET funder = 'OFFICE_FOR_LIFE_SCIENCES_OLS'
-WHERE funder = 'Office for Life Sciences';
+WHERE funder LIKE '%Office for Life Sciences%';
 
 UPDATE competition_funder
 SET funder = 'OTHER_DELIVERY_PARTNERS'
@@ -32,7 +36,7 @@ WHERE funder IN ('ISCF/BEIS','ISCF - ORG','ISCF - Innovate UK','ISCF','Innovate 
 
 UPDATE competition_funder
 SET funder = 'INNOVATE_UK_CORE_BUDGET'
-WHERE funder = 'Innovate UK';
+WHERE funder IN ('Innovate UK','Innovate UK, part of UK Research and Innovation');
 
 UPDATE competition_funder
 SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
@@ -52,11 +56,11 @@ WHERE funder = 'Department for Transport';
 
 UPDATE competition_funder
 SET funder = 'DEPARTMENT_FOR_DIGITAL_CULTURE_MEDIA_AND_SPORT_DCMS'
-WHERE funder = 'DCMS';
+WHERE funder LIKE '%DCMS%';
 
 UPDATE competition_funder
 SET funder = 'CENTRE_FOR_CONNECTED_AND_AUTONOMOUS_VEHICLES_CCAV'
-WHERE funder = 'CCAV';
+WHERE funder LIKE '%CCAV%';
 
 UPDATE competition_funder
 SET funder = 'OTHER_STAKEHOLDERS'
