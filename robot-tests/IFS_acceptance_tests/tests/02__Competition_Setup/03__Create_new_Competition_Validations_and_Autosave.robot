@@ -115,8 +115,8 @@ Funding information client-side validations
     [Tags]
     When the user clicks the button/link               id = generate-code
     Then the user should not see the error any more    Please generate a competition code.
-    And input text       id = funders[0].funder  Aerospace Technology Institute (ATI)
-    And the user clicks the button/link     jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
+    And input text                                     id = funders[0].funder  Aerospace Technology Institute (ATI)
+    And the user clicks the button/link                jQuery = ul li:contains("Aerospace Technology Institute (ATI)")
     Then the user should not see the error any more    Please select a funder name.
     And the user enters text to a text field           id = funders[0].funderBudget    20000
     And the user enters text to a text field           id = pafNumber    2016

@@ -168,7 +168,6 @@ Initial details - should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
-    [Tags]  HappyPath
     Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
     And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
@@ -206,7 +205,6 @@ Internal user can navigate to Public Content without having any issues
 
 New application shows in Preparation section
     [Documentation]    INFUND-2980
-    [Tags]  HappyPath
     [Setup]  Get competitions id and set it as suite variable  ${competitionTitle}
     Given the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("In preparation") li:contains("${competitionTitle}")
@@ -221,7 +219,7 @@ Funding information: calculations
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
     And the user enters text to a text field    id = activityCode    4242
-    And the user enters text to an autocomplete field       id = funders[0].funder    Advanced Propulsion Centre (APC)
+    And the user enters text to an autocomplete field  id = funders[0].funder    Advanced Propulsion Centre (APC)
     And the user clicks the button/link         id = funders[0].funder
     And click element                           id = funders[0].funder__option--0
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
@@ -238,7 +236,7 @@ Funding information: calculations
 Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]  HappyPath
-    Given the user clicks the button/link    jQuery = button:contains("Done")
+    Given the user clicks the button/link   jQuery = button:contains("Done")
     Then the user should see the element    jQuery = td:contains("Advanced Propulsion Centre (APC)")
     And the user should see the element     jQuery = th:contains("Total") ~ td:contains("£20,000")
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
@@ -250,9 +248,9 @@ Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
     When the user clicks the button/link               jQuery = .govuk-button:contains("Edit")
-    And the user enters text to an autocomplete field       id = funders[0].funder    ${EMPTY}
-    And the user clicks the button/link         id = funders[0].funder
-    And click element                           id = funders[0].funder__option--2
+    And the user enters text to an autocomplete field  id = funders[0].funder    ${EMPTY}
+    And the user clicks the button/link    id = funders[0].funder
+    And click element                      id = funders[0].funder__option--2
     When the user clicks the button/link   jQuery = button:contains("Done")
     Then the user should see the element   jQUery = td:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
 
