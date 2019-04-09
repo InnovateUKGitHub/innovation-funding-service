@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<th:block th:fragment="empty (model)">
+    Empty
+</th:block>
+
+<th:block th:fragment="generic (model)">
+    <div class="govuk-form-group">
+        <label th:if="${model.question != null}" class="govuk-label">
+            <span th:text="${model.question}" class="govuk-heading-s"></span>
+        </label>
+        <div class="textarea-wrapped">
+            <textarea class="govuk-textarea"
+                      readonly="readonly"
+                      data-editor="md"
+                      th:text="${model.answer}">
+            </textarea>
+        </div>
+        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
+            <p class="uploaded-file govuk-body">
+                <a class="govuk-link"
+                   th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download/{filename}(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId}, filename=${model.appendixFilename})}"
+                   th:text="${model.appendixFilename}"
+                   target="_blank">file</a> (opens in a new window).
+            </p>
+        </div>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="application-details (model)">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <dl class="govuk-list govuk-!-font-size-16">
+                <dt>Competition name</dt>
+                <dd th:text="${model.competitionName}"></dd>
+                <dt>Application name</dt>
+                <dd th:text="${model.applicationName}"></dd>
+                <dt>When do you wish to start your project?</dt>
+                <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
+                <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                <dt>Duration in months</dt>
+                <dd>
+                    <th:block th:text="${model.duration}"/>
+                    months
+                </dd>
+                <th:block th:if="${model.canSelectInnovationArea}">
+                    <dt>Innovation area</dt>
+                    <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
+                </th:block>
+                <th:block th:unless="${model.resubmission == null}">
+                    <dt>Is this application a resubmission?</dt>
+                    <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
+                    <th:block th:if="${model.resubmission == true}">
+                        <dt>Previous application number</dt>
+                        <dd th:text="${model.previousApplicationNumber}"></dd>
+                        <dt>Previous application title</dt>
+                        <dd th:text="${model.previousApplicationTitle}"></dd>
+                    </th:block>
+                </th:block>
+            </dl>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <th:block th:if="${showApplicationTeamLink}">
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${originQuery}"
+                           class="govuk-link">
+                            view contributors and collaborators
+                        </a>
+                    </li>
+                    <li th:with="procurementCompetition=${competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+                        <th:block th:if="${procurementCompetition}">
+                            <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank"
+                                                     class="govuk-link">view the draft contract</a> (opens in new
+                                window).</p>
+                        </th:block>
+                        <th:block th:unless="${procurementCompetition}">
+                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}"
+                               class="govuk-link">
+                                view the award terms and conditions
+                            </a>
+                        </th:block>
+                    </li>
+                </ul>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="research-category (model)">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <dl class="govuk-list govuk-!-font-size-16">
+                <dt>Selected research category</dt>
+                <dd th:text="${model.researchCategory}"></dd>
+            </dl>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="finance-summary (model)">
+    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
+        provided by all partners in this project.</p>
+
+    <p class="govuk-body" th:if="${model.open}"><!-- isApplicant -->
+        To make changes to your organisations' finances, go back to the
+        <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
+           class="govuk-link">your finances</a> section.
+    </p>
+
+    <div>
+        <th:block th:unless="${model.fullyFunded}">
+            <th:block ifs:global="${model.applicationFinanceSummaryViewModel}"
+                      th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${true})"></th:block>
+            <th:block ifs:global="${model.applicationResearchParticipationViewModel}"
+                      th:replace="finance/finance-summary :: research_participation_alert"
+                      th:if="${model.open}"></th:block>
+        </th:block>
+
+        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
+        <th:block ifs:global="${model.applicationFundingBreakdownViewModel}"
+                  th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${true}, supportUserAndSummaryPage=${false})"/>
+    </div>
+</th:block>
+
+<th:block th:fragment="application-team (model)">
+    <div class="govuk-!-margin-top-6"
+         th:each="organisation : ${model.organisations}">
+
+        <div class="govuk-heading-s" role="heading" aria-level="4">
+            <th:block th:text="${organisation.name}">Organisation name</th:block>
+            <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+            <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
+        </div>
+        <div class="govuk-body govuk-!-font-size-16" role="heading" aria-level="5"><strong>Organisation type</strong></div>
+        <p class="govuk-body govuk-!-font-size-16" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+        <table class="govuk-table table-overflow">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header width-30-percent" scope="col">Applicant</th>
+                <th class="govuk-table__header width-50-percent" scope="col">Email</th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Additional details</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr th:each="applicant : ${organisation.applicants}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
+                <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
+                <td class="govuk-table__cell" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+</html>

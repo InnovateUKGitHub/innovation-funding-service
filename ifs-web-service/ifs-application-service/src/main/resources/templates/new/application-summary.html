@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application summary'" />
+    </head>
+
+    <body class="govuk-template__body app-summary">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/}"/>
+
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+
+                <th:block th:each="section : ${model.sections}">
+
+                    <h2 th:text="${section.name}"
+                        class="govuk-heading-m govuk-!-margin-top-6" />
+
+                    <!--/* Show the collapsible sections */-->
+                    <th:block th:each="question : ${section.questions}">
+                        <div class="collapsible">
+                            <h3 th:text="${question.name}"></h3>
+                            <div class="question">
+                                <th:block th:insert="new/question-summaries :: ${question.fragment} (${question})" />
+                            </div>
+                        </div>
+                    </th:block>
+
+                </th:block>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
+    </body>
+</html>
