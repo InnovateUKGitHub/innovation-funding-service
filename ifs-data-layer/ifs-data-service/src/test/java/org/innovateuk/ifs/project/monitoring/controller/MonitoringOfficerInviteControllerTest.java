@@ -141,8 +141,8 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
         when(userServiceMock.findByEmail(user.getEmail()))
                 .thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
-        when(registrationServiceMock.createPendingUser(any(User.class))).thenReturn(serviceSuccess(user));
-        when(userServiceMock.grantRole(any(GrantRoleCommand.class))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createPendingMonitoringOfficer(any(MonitoringOfficerCreateResource.class)))
+                .thenReturn(serviceSuccess(user));
 
         mockMvc.perform(post("/monitoring-officer-registration/create-pending-monitoring-officer")
                                 .content(toJson(resource))
@@ -150,7 +150,6 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
                 .andExpect(status().isOk());
 
         verify(userServiceMock).findByEmail(user.getEmail());
-        verify(registrationServiceMock).createPendingUser(any(User.class));
-        verify(userServiceMock).grantRole(any(GrantRoleCommand.class));
+        verify(registrationServiceMock).createPendingMonitoringOfficer(any(MonitoringOfficerCreateResource.class));
     }
 }

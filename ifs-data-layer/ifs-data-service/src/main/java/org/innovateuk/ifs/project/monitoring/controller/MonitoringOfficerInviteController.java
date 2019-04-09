@@ -13,7 +13,6 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
@@ -57,15 +56,7 @@ public class MonitoringOfficerInviteController {
             return restSuccess();
         }
 
-        User user = new User();
-        user.setFirstName(resource.getFirstName());
-        user.setLastName(resource.getLastName());
-        user.setPhoneNumber(resource.getPhoneNumber());
-        user.setEmail(resource.getEmailAddress());
-        return registrationService.createPendingUser(user)
-                .andOnSuccess(pendingUser -> userService.grantRole(new GrantRoleCommand(pendingUser.getId(),
-                                                                              Role.MONITORING_OFFICER)))
-                .toPostResponse();
+        return registrationService.createPendingMonitoringOfficer(resource).toPostResponse();
     }
 
     @PostMapping("/monitoring-officer/create/{inviteHash}")

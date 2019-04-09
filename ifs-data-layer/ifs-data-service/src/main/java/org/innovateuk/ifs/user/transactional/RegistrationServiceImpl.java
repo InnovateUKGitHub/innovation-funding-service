@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -45,6 +47,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -111,11 +114,22 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<User> createPendingUser(User user) {
+    public ServiceResult<User> createPendingMonitoringOfficer(MonitoringOfficerCreateResource resource) {
+        User user = mapMonitoringOfficerCreateResourceToUser(resource);
         user.setAllowMarketingEmails(false);
+        user.addRole(MONITORING_OFFICER);
         String placeholderPassword = randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
         return createUserWithUid(user, placeholderPassword)
                 .andOnSuccess(this::saveUserAsPending);
+    }
+
+    private User mapMonitoringOfficerCreateResourceToUser(MonitoringOfficerCreateResource resource) {
+        User user = new User();
+        user.setFirstName(resource.getFirstName());
+        user.setLastName(resource.getLastName());
+        user.setPhoneNumber(resource.getPhoneNumber());
+        user.setEmail(resource.getEmailAddress());
+        return user;
     }
 
     private ServiceResult<User> saveUserAsPending(User user) {
@@ -360,7 +374,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<User> createMonitoringOfficerUser(MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource, MonitoringOfficerInvite monitoringOfficerInvite) {
         final UserResource userResource = monitoringOfficerRegistrationResource.toUserResource();
         userResource.setEmail(monitoringOfficerInvite.getEmail());
-        userResource.setRoles(singletonList(Role.MONITORING_OFFICER));
+        userResource.setRoles(singletonList(MONITORING_OFFICER));
         return validateUser(userResource).
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
