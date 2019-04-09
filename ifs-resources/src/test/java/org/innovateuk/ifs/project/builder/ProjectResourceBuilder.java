@@ -96,6 +96,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((projectDocumentList, project) -> project.setProjectDocuments(projectDocumentList), projectDocuments);
     }
 
+    public ProjectResourceBuilder withMonitoringOfficerUser(Long monitoringOfficerUser) {
+        return with(project -> project.setMonitoringOfficerUser(monitoringOfficerUser));
+    }
+
     public ProjectResourceBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
     }
