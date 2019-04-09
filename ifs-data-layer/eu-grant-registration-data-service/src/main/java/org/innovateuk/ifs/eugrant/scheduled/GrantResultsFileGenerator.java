@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
@@ -56,7 +56,7 @@ public class GrantResultsFileGenerator {
         return readDataFromCsv(originalFile).
                 andOnSuccess(this::filterOutEmptyRows).
                 andOnSuccess(originalData -> addImportResultsToOriginalData(originalData, importResults)).
-                andOnSuccess(this::createResultsFile);
+                andOnSuccess(data -> createResultsFile(data, originalFile));
     }
 
     private ServiceResult<List<List<String>>> addImportResultsToOriginalData(List<List<String>> originalData, List<ServiceResult<EuGrantResource>> importResults) {
@@ -79,11 +79,13 @@ public class GrantResultsFileGenerator {
         return serviceSuccess(finalSetOfData);
     }
 
-    private ServiceResult<File> createResultsFile(List<List<String>> data) {
-
-        String dateTimeSuffix = ZonedDateTime.now().format(RESULTS_FILE_SUFFIX_FORMAT);
+    private ServiceResult<File> createResultsFile(List<List<String>> data, File originalFile) {
+        String originalName = FilenameUtils.removeExtension(originalFile.getName());
         File resultsFileFolder = new File(resultsFileUri);
-        File resultsFile = new File(resultsFileFolder, "eu-grants-import-result-" + dateTimeSuffix + ".csv");
+        if (!resultsFileFolder.exists()) {
+            resultsFileFolder.mkdir();
+        }
+        File resultsFile = new File(resultsFileFolder, originalName + "-results" + ".csv");
         return writeDataToCsv(data, resultsFile);
     }
 
