@@ -30,6 +30,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-4208 Create pending registration for new Monitoring Officer account
 ...
 ...               IFS-5032 MO assigned to project - Email notification
+...
+...               IFS-5418 Assign MO: Internal navigation
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -241,10 +243,10 @@ Monitoring Officer cannot see projects if they are not assigned to them
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
 Search for an MO
-    [Documentation]
-    [Setup]  Login as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/monitoring-officer/view-all
-    When search for MO    Orvill  Orville Gibbs
+    [Documentation]  IFS-5428  IFS-5418
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigate to assign MO page
+    And search for MO    Orvill  Orville Gibbs
     Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
     [Teardown]  the user clicks the button/link  link = Back
 
@@ -269,8 +271,9 @@ Add MO - existing MO
 
 Comp admin adds new MO
     [Documentation]  IFS-4208
-    [Setup]  the user navigates to the page          ${server}/project-setup-management/monitoring-officer/view-all
-    Given The user clicks the button/link            link = Add a monitoring officer
+    [Setup]  log in as a different user              &{Comp_admin1_credentials}
+    Given the user navigate to assign MO page
+    And The user clicks the button/link              link = Add a monitoring officer
     And the user enters text to a text field         id = emailAddress  tom@poly.io
     When the user clicks the button/link             jQuery = button[type="submit"]
     Then the user enters the details
@@ -319,6 +322,7 @@ Assign MO role to existing IFS user
 Comp admin assign project existing IFS user MO
     [Documentation]  IFS-5104  IFS-5070
     Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    And logout as user
     Then the user logs in and checks for assigned projects
 
 *** Keywords ***
@@ -455,10 +459,15 @@ phone number: validations checks
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 
 the user logs in and checks for assigned projects
-    log in as a different user         &{assessor2_credentials}
-    the user clicks the button/link    id = dashboard-link-MONITORING_OFFICER
-    the user should see the element    jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
-    the user should see the element    jQuery = .status:contains("Monitor project")
+    the user reads his email and clicks the link    ${assessor2_credentials["email"]}   ${PROJECT_SETUP_COMPETITION_NAME}   The project Elbow grease has been assigned to you as the Monitoring Officer  1
+    logging in and error checking                   &{assessor2_credentials}
+    the user clicks the button/link                 id = dashboard-link-MONITORING_OFFICER
+    the user should see the element                 jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
+    the user should see the element                 jQuery = .status:contains("Monitor project")
+
+the user navigate to assign MO page
+    the user navigates to the page         ${server}/management/dashboard/project-setup
+    the user clicks the button/link        link = Assign monitoring officers
 
 Custom suite teardown
     the user closes the browser
