@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
@@ -15,7 +16,6 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.anyCollectionOf;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
-public class QuestionReassignmentServiceImplTest {
+public class QuestionReassignmentServiceImplTest extends BaseUnitTestMocksTest {
 
     private List<ProcessRole> inviteProcessRoles;
     private ProcessRole leadApplicantProcessRole;
@@ -50,10 +50,6 @@ public class QuestionReassignmentServiceImplTest {
     @InjectMocks
     private QuestionReassignmentService questionReassignmentService = new QuestionReassignmentServiceImpl();
 
-    @Before
-    public void setupMockInjection() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Before
     public void setupLeadAndCollaboratorUserProcessRoles() {
