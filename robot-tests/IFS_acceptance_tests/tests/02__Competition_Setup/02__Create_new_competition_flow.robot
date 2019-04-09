@@ -248,9 +248,10 @@ Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
     When the user clicks the button/link               jQuery = .govuk-button:contains("Edit")
-    And the user enters text to an autocomplete field  id = funders[0].funder    ${EMPTY}
+    And the user enters text to an autocomplete field  id = funders[0].funder    Centre for Connected and Autonomous Vehicles (CCAV)
     And the user clicks the button/link    id = funders[0].funder
-    And click element                      id = funders[0].funder__option--2
+    And click element                      id = funders[0].funder__option--0
+    And the user clicks the button/link    id = funders[0].funder
     When the user clicks the button/link   jQuery = button:contains("Done")
     Then the user should see the element   jQUery = td:contains("Centre for Connected and Autonomous Vehicles (CCAV)")
 
