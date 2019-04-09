@@ -6,5 +6,4 @@ mysqldump -u$DB_USER -p$DB_PASS -h127.0.0.1 -P6033 $DB_NAME --single-transaction
 
 # encrypt the dump file before transit and finally remove the unprotected file
 gpg --yes --batch --passphrase=$DB_ANON_PASS -c /dump/anonymised-dump.sql
-
 rm /dump/anonymised-dump.sql
