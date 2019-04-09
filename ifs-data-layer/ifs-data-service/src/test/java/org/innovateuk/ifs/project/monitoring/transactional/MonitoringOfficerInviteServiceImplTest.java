@@ -153,7 +153,6 @@ public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<
                                          .build())
                 .build();
         when(userRepositoryMock.existsById(user.getId())).thenReturn(true);
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
                 .thenReturn(serviceSuccess());
 

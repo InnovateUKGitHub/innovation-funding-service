@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -615,14 +616,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void createPendingUser() {
+    public void createPendingMonitoringOfficer() {
         User user = newUser().withEmailAddress("test@test.test").build();
+        MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
+                "Steve", "Smith", "011432333333", "test@test.test");
         String password = "superSecurePassword";
         when(idpServiceMock.createUserRecordWithUid(anyString(), anyString())).thenReturn(serviceSuccess("uid"));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
         when(userRepositoryMock.save(any(User.class))).thenReturn(user);
 
-        service.createPendingUser(user).getSuccess();
+        service.createPendingMonitoringOfficer(resource).getSuccess();
 
         verify(idpServiceMock).createUserRecordWithUid(anyString(), anyString());
         verify(profileRepositoryMock).save(any(Profile.class));
