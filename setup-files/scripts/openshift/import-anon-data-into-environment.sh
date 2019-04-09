@@ -43,9 +43,14 @@ function copyDumpToMysqlClientPod() {
 
 function importDump() {
   echo "Importing database dump"
+
   oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
-  sh -c "gpg --decrypt --passphrase ${DUMP_PASS} /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} \
-  | mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -P${DB_PORT} ${DB_NAME}"
+    sh -c "gpg --decrypt --passphrase ${DUMP_PASS} /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} > /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
+
+  echo "decrypted file"
+
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
+    sh -c "mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -P${DB_PORT} ${DB_NAME} --init-command='SET SESSION FOREIGN_KEY_CHECKS=0;' < /tmp/${DUMP_DIR_NAME}/anonymised-dump.sql"
   echo "Imported database dump"
 }
 
