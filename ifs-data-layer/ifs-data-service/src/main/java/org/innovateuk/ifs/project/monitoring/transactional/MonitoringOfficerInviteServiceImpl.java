@@ -125,8 +125,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
     }
 
     private ServiceResult<Void> sendEmailToRegisteredOrUnregistered(User invitedUser, Project project) {
-        User user = userRepository.findById(invitedUser.getId()).get();
-        return UserStatus.PENDING == user.getStatus() ?
+        return UserStatus.PENDING == invitedUser.getStatus() ?
                 saveInvite(invitedUser).andOnSuccess(invite -> sendInviteToUnregistered(invite, project)) :
                 sendEmailToRegistered(invitedUser, project);
     }
