@@ -269,15 +269,17 @@ Add MO - existing MO
     When the user clicks the button/link        jQuery = button[type="submit"]
     Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
 
+Add New MO details - client and server side validations
+    [Documentation]  IFS-4208
+    [Setup]  the user adds MO email address
+    When the user checks for validations
+    Then the user should see client side validations
+    And the user should see server side validations   Add monitoring officer
+
 Comp admin adds new MO
     [Documentation]  IFS-4208
-    [Setup]  log in as a different user              &{Comp_admin1_credentials}
-    Given the user navigate to assign MO page
-    And The user clicks the button/link              link = Add a monitoring officer
-    And the user enters text to a text field         id = emailAddress  tom@poly.io
-    When the user clicks the button/link             jQuery = button[type="submit"]
-    Then the user enters the details
-    And the user clicks the button/link              jQUery = button:contains("Add monitoring officer")
+    Given the user enters the details
+    Then the user clicks the button/link         jQUery = button:contains("Add monitoring officer")
 
 Comp admin assign project to new MO
     [Documentation]  IFS-5031  IFS-5088  IFS-4208
@@ -294,7 +296,7 @@ Link to Application
 MO create account: validations
     [Documentation]  IFS-5031  IFS-5032
     Given the user reads his email and clicks the link   tom@poly.io   ${INFORM_COMPETITION_NAME}   Welcome to the monitoring team  1
-    When the user checks for validations
+    When the user checks for details and password validations
     Then the user should see client side validations triggered correctly
     And the user should see server side validations triggered correctly
 
@@ -395,22 +397,32 @@ the user checks for validations
     the user enters text to a text field    id = firstName  ${empty}
     the user enters text to a text field    id = lastName   ${empty}
     the user enters text to a text field    id = phoneNumber  ${empty}
+
+the user checks for details and password validations
+    the user checks for validations
     the user enters text to a text field    id = password  ${empty}
 
-the user should see client side validations triggered correctly
+the user should see client side validations
     the user should see a field error    Please enter a first name.
     the user should see a field error    Please enter a last name.
     the user should see a field error    Please enter a phone number.
+
+the user should see client side validations triggered correctly
+    the user should see client side validations
     the user should see a field error    Password must contain at least one lower case letter.
 
-the user should see server side validations triggered correctly
-    the user clicks the button/link                  jQuery = button:contains("Create account")
+the user should see server side validations
+    [Arguments]  ${button}
+    the user clicks the button/link                  jQuery = button:contains("${button}")
     the user should see a field and summary error    Please enter a first name.
     the user should see a field and summary error    Your first name should have at least 2 characters.
     the user should see a field and summary error    Please enter a last name.
     the user should see a field and summary error    Your last name should have at least 2 characters.
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
+
+the user should see server side validations triggered correctly
+    the user should see server side validations      Create account
     the user should see a field and summary error    Password must be at least 8 characters.
     the user should see a field and summary error    Please enter your password.
 
@@ -468,6 +480,13 @@ the user logs in and checks for assigned projects
 the user navigate to assign MO page
     the user navigates to the page         ${server}/management/dashboard/project-setup
     the user clicks the button/link        link = Assign monitoring officers
+
+the user adds MO email address
+    log in as a different user              &{Comp_admin1_credentials}
+    the user navigate to assign MO page
+    the user clicks the button/link         link = Add a monitoring officer
+    the user enters text to a text field    id = emailAddress  tom@poly.io
+    the user clicks the button/link         jQuery = button[type="submit"]
 
 Custom suite teardown
     the user closes the browser
