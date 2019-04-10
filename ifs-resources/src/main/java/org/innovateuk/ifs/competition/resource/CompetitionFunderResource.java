@@ -5,7 +5,7 @@ import java.math.BigInteger;
 public class CompetitionFunderResource {
 
     private Long id;
-    private String funder;
+    private Funder funder;
     private BigInteger funderBudget;
     private Boolean coFunder;
     private Long competitionId;
@@ -19,11 +19,11 @@ public class CompetitionFunderResource {
         this.id = id;
     }
 
-    public String getFunder() {
+    public Funder getFunder() {
         return funder;
     }
 
-    public void setFunder(String funder) {
+    public void setFunder(Funder funder) {
         this.funder = funder;
     }
 

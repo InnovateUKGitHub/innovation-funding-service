@@ -106,7 +106,7 @@ Funding information server-side validations
     Given the user clicks the button/link                 link = Funding information
     And the user should see the element                   jQUery = h1:contains("Funding information")
     When the user clicks the button/link                  jQuery = button:contains("Done")
-    Then the user should see a field and summary error    Please enter a funder name.
+    Then the user should see a field and summary error    Please select a funder name.
     And the user should see a field and summary error     Please enter a budget.
     And the user should see a field and summary error     Please generate a competition code.
 
@@ -115,8 +115,10 @@ Funding information client-side validations
     [Tags]
     When the user clicks the button/link               id = generate-code
     Then the user should not see the error any more    Please generate a competition code.
-    When the user enters text to a text field          id = funders[0].funder    FunderName
-    Then the user should not see the error any more    Please enter a funder name.
+    And the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
+    And the user clicks the button/link                id = funders[0].funder
+    And click element                                  id = funders[0].funder__option--0
+    Then the user should not see the error any more    Please select a funder name.
     And the user enters text to a text field           id = funders[0].funderBudget    20000
     And the user enters text to a text field           id = pafNumber    2016
     And the user enters text to a text field           id = budgetCode    2004
@@ -378,8 +380,6 @@ the user should see the correct values in the initial details form
     the user should see the element    jQuery = #executiveUserId option[selected]:contains("John Doe")
 
 the user should see the correct details in the funding information form
-    ${input_value} =    Get Value    id = funders[0].funder
-    Should Be Equal    ${input_value}    FunderName
     ${input_value} =    Get Value    id = funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id = pafNumber

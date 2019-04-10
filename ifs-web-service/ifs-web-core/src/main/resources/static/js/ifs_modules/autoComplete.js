@@ -6,33 +6,54 @@ IFS.core.autoComplete = (function () {
       autoCompleteWrapper: '.autocomplete__wrapper',
       autoCompleteElement: '[data-auto-complete]',
       autoCompleteSubmitElement: '[data-auto-complete-submit]',
+      menuLimit: 20,
       autoCompletePlugin: accessibleAutocomplete // eslint-disable-line
     },
     init: function () {
       s = this.settings
       var autoCompleteElement = jQuery(s.autoCompleteElement)
-      var autoCompleteSubmitElement = jQuery(s.autoCompleteSubmitElement)
       if (autoCompleteElement.length > 0) {
-        autoCompleteElement.val('')
+        autoCompleteElement.each(function () {
+          IFS.core.autoComplete.initAutoCompletePlugin(jQuery(this))
+        })
+      }
+    },
+    initAutoCompletePlugin: function (element) {
+      var autoCompleteSubmitElement = jQuery(s.autoCompleteSubmitElement)
+      if (element.length > 0) {
         autoCompleteSubmitElement.prop('disabled', true)
         jQuery(document).on('keydown', s.autoCompleteWrapper, function (e) {
           if (e.which !== 13 && e.which !== 32) {
             autoCompleteSubmitElement.prop('disabled', true)
           }
         })
-        var showAllValues = autoCompleteElement.children('option').length <= 20
+        var showAllValues = element.children('option').length <= s.menuLimit
+        var required = element.data('required-errormessage')
         s.autoCompletePlugin.enhanceSelectElement({
-          selectElement: autoCompleteElement[0],
+          autoselect: false,
+          selectElement: element[0],
           showAllValues: showAllValues,
           defaultValue: '',
-          confirmOnBlur: false,
+          confirmOnBlur: true,
           displayMenu: 'overlay',
+          required: required,
           onConfirm: function (confirmed) {
-            var selectedUserId = autoCompleteElement.children('option:contains(' + confirmed + ')').val()
-            autoCompleteElement.val(selectedUserId)
-            autoCompleteSubmitElement.prop('disabled', false)
+            if (confirmed) {
+              var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
+              element.val(selectedUserId)
+              autoCompleteSubmitElement.prop('disabled', false)
+            } else if (element.parent().find('.autocomplete__input').val() === '') {
+              element.val('')
+              autoCompleteSubmitElement.prop('disabled', true)
+            }
+            if (required) {
+              setInterval(function () { IFS.core.formValidation.checkRequired(element.parent().find('.autocomplete__input')) }, 1)
+            }
           }
         })
+        if (required) {
+          element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
+        }
       }
     }
   }
