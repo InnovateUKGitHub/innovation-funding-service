@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class LegacyMonitoringOfficerController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private LegacyMonitoringOfficerRestService legacyMonitoringOfficerRestService;
 
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
