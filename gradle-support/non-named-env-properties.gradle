@@ -48,8 +48,6 @@ ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.p
 ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.ZIPKIN_ADDRESS="zipkin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-ext.PROTOTYPES_ADDRESS="prototypes-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
 ext.DB_NAME="ifs"
