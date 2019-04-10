@@ -37,17 +37,20 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private OrganisationService organisationService;
+    private MonitoringOfficerInviteService monitoringOfficerInviteService;
     private ProjectMapper projectMapper;
 
     public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository,
-                                        ProjectRepository projectRepository,
-                                        UserRepository userRepository,
-                                        OrganisationService organisationService,
-                                        ProjectMapper projectMapper) {
+                                               ProjectRepository projectRepository,
+                                               UserRepository userRepository,
+                                               OrganisationService organisationService,
+                                               ProjectMapper projectMapper,
+                                               MonitoringOfficerInviteService monitoringOfficerInviteService) {
         this.monitoringOfficerRepository = monitoringOfficerRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.organisationService = organisationService;
+        this.monitoringOfficerInviteService = monitoringOfficerInviteService;
         this.projectMapper = projectMapper;
     }
 
@@ -85,8 +88,8 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
         return getMonitoringOfficerUser(userId)
                .andOnSuccess(user -> getProject(projectId)
-                       .andOnSuccessReturnVoid(project ->
-                               monitoringOfficerRepository.save(new MonitoringOfficer(user, project))
+                       .andOnSuccess(project -> (monitoringOfficerInviteService.inviteMonitoringOfficer(user, project))
+                               .andOnSuccessReturnVoid(() -> monitoringOfficerRepository.save(new MonitoringOfficer(user, project)))
                        )
                );
     }

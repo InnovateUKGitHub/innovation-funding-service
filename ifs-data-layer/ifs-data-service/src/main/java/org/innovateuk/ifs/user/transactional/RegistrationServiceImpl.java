@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
@@ -34,14 +35,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -103,6 +111,44 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<UserResource> createUser(UserResource userResource) {
         return createOrganisationUser(Optional.empty(), Optional.empty(), userResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<User> createPendingMonitoringOfficer(MonitoringOfficerCreateResource resource) {
+        User user = mapMonitoringOfficerCreateResourceToUser(resource);
+        user.setAllowMarketingEmails(false);
+        user.addRole(MONITORING_OFFICER);
+        String placeholderPassword = randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+        return createUserWithUid(user, placeholderPassword)
+                .andOnSuccess(this::saveUserAsPending);
+    }
+
+    private User mapMonitoringOfficerCreateResourceToUser(MonitoringOfficerCreateResource resource) {
+        User user = new User();
+        user.setFirstName(resource.getFirstName());
+        user.setLastName(resource.getLastName());
+        user.setPhoneNumber(resource.getPhoneNumber());
+        user.setEmail(resource.getEmailAddress());
+        return user;
+    }
+
+    private ServiceResult<User> saveUserAsPending(User user) {
+        user.setStatus(PENDING);
+        return serviceSuccess(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<User> activatePendingUser(User user,
+                                                   String password,
+                                                   String hash) {
+        if(monitoringOfficerInviteRepository.existsByHash(hash)) {
+            return activateUser(user)
+                    .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
+                    .andOnSuccessReturn(() -> user);
+        }
+        return serviceFailure(GENERAL_NOT_FOUND);
     }
 
     @Override
@@ -329,7 +375,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<User> createMonitoringOfficerUser(MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource, MonitoringOfficerInvite monitoringOfficerInvite) {
         final UserResource userResource = monitoringOfficerRegistrationResource.toUserResource();
         userResource.setEmail(monitoringOfficerInvite.getEmail());
-        userResource.setRoles(singletonList(Role.MONITORING_OFFICER));
+        userResource.setRoles(singletonList(MONITORING_OFFICER));
         return validateUser(userResource).
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
