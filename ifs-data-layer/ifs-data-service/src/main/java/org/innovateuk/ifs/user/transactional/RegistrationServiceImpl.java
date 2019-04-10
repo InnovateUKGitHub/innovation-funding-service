@@ -41,6 +41,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -147,7 +148,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
                     .andOnSuccessReturn(() -> user);
         }
-        return serviceFailure(GENERAL_FORBIDDEN);
+        return serviceFailure(GENERAL_NOT_FOUND);
     }
 
     @Override
