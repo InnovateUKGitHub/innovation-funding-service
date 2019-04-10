@@ -1,22 +1,25 @@
-package org.innovateuk.ifs.project.documents.populator;
+package org.innovateuk.ifs.documents;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
+import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
+import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
+import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
-import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
-import org.innovateuk.ifs.project.documents.viewmodel.DocumentViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +30,8 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.junit.Assert.assertEquals;
@@ -41,18 +45,22 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private DocumentsPopulator populator;
 
     @Mock
-    private ProjectService projectService;
-
-    @Mock
-    private ApplicationService applicationService;
+    private ProjectRestService projectRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private CompetitionSetupDocumentRestService competitionSetupDocumentRestService;
 
     private long competitionId = 18L;
     private long applicationId = 19L;
 
     private long projectId = 1L;
+    private long loggedInUserId = 2L;
     private String projectName = "Project 12";
 
     private long documentConfigId1 = 11L;
@@ -93,27 +101,33 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .withStatus(UPLOADED)
                 .build();
 
+        ProjectUserResource projectUserResource = newProjectUserResource()
+                .withUser(loggedInUserId)
+                .build();
+
+        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
+
         ProjectResource project = ProjectResourceBuilder
                 .newProjectResource()
                 .withId(projectId)
                 .withName(projectName)
+                .withCompetition(competitionId)
                 .withApplication(application)
                 .withProjectDocuments(singletonList(projectDocumentResource))
                 .build();
 
-        OrganisationResource partnerOrganisationResource = newOrganisationResource().build();
-
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(applicationService.getById(project.getApplication())).thenReturn(application);
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(singletonList(partnerOrganisationResource));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
+        when(competitionSetupDocumentRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configuredProjectDocuments));
+        when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectUserResource));
 
     }
 
     @Test
     public void populateAllDocuments() {
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId);
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(applicationId, viewModel.getApplicationId());
@@ -129,7 +143,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateViewDocument() {
 
-        DocumentViewModel viewModel = populator.populateViewDocument(projectId, documentConfigId1);
+        DocumentViewModel viewModel = populator.populateViewDocument(projectId, loggedInUserId, documentConfigId1);
 
         assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());
@@ -143,29 +157,27 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populateAllDocumentsWithMultiplePartnerOrganisation() {
-        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
-                .withName("abc")
-                .build(4);
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        List<PartnerOrganisationResource> partnerOrganisationResource = newPartnerOrganisationResource().build(4);
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResource));
+
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
 
         assertEquals(3, viewModel.getDocuments().size());
 
-        verify(projectService).getPartnerOrganisationsForProject(projectId);
+        verify(partnerOrganisationRestService).getProjectPartnerOrganisations(projectId);
     }
 
     @Test
     public void populateAllDocumentsWithNoPartnerOrganisation() {
-        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
-                .withName("abc")
-                .build(1);
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
+
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
 
         assertEquals(2, viewModel.getDocuments().size());
 
-        verify(projectService).getPartnerOrganisationsForProject(projectId);
+        verify(partnerOrganisationRestService).getProjectPartnerOrganisations(projectId);
     }
 }
