@@ -83,61 +83,31 @@ User sees error response for invalid bank details for non-lead partner
 Non lead partner is able to submit bank details
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]  HappyPath
-    Given the non
-    Given the user enters text to a text field     name = accountNumber  ${Account_One}
-    When the user enters text to a text field      name = sortCode  ${Sortcode_One}
-    Then the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
-    And the user clicks the button/link            jquery = button:contains("Cancel")
-    Then the user should not see an error in the page
-    And the user should not see the element        jQuery = p:contains("The bank account details below are being")
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
-    And the user clicks the button/link            id = submit-bank-details
-    And the user should see the element            jQuery = p:contains("The bank account details below are being")
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    And the user should see the element            css = ul li.complete:nth-child(1)
-    When the user clicks the button/link           link = View the status of partners
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    And the user should see the element            jQuery = h1:contains("Project team status")
-    And the user should see the element            css = #table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(4)
+    Given the non lead partner submits bank details
+    Then the non lead partner confirms bank details have been completed
 
 Bank details verified by Experian require no action by the Project Finance
     [Documentation]  IFS-2495
     [Tags]  MySQL  HappyPath
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
-    When the user navigates to the page       ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/organisation/${Vitruvius_Id}/review-bank-details
-    Then the user should see the element      jQuery = .success-alert:contains("The bank details provided have been approved.")
-    And the user should not see the element   css = button[data-js-modal = "modal-partner-approve-bank-details"]
-    When the user navigates to the page       ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
-    Then the user should not see the element  jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td:contains("${Vitruvius_Name}")
+    Then the project finance verifies that no further action is required
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    And the user clicks the button/link             css = #table-project-status tr:nth-child(4) td:nth-child(5) a
-    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details
-    And the user should see the element             jQuery = p:contains("This overview shows whether each partner has submitted their bank details")
-    Then the user should see the element            jQuery = li:contains("${Vitruvius_Name}") .task-status-complete
-    And the user should see the element             jQuery = li:contains("${A_B_Cad_Services_Name}") .action-required
-    And the user should see the element             jQuery = li:contains("${Armstrong_Butler_Name}") .action-required
-    When the user clicks the button/link            link = ${A_B_Cad_Services_Name}
-    Then the user should see the element            jQuery = h2:contains("${A_B_Cad_Services_Name} - Account details")
-    And the user should see the element             jQuery = p:contains("${Grade_Crossing_Partner_Finance}")
-    And the user should see the element             jQuery = p:contains("${Grade_Crossing_Partner_Email}")
-    And the user goes back to the previous page
-    When the user clicks the button/link            link = ${Armstrong_Butler_Name}
-    Then the user should see the element            jQuery = h2:contains("${Armstrong_Butler_Name} - Account details")
-    And the user should see the element             jQuery = p:contains("${Grade_Crossing_Academic_Finance}")
-    And the user should see the element             jQuery = p:contains("${Grade_Crossing_Academic_Email}")
+    Then project finance is able to view progress of partners bank details
 
 IFS Admin can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
     [Tags]  HappyPath
     [Setup]  log in as a different user                       &{ifs_admin_user_credentials}
     Given the user navigates to the page                      ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link                       link = ${PS_Competition_Name}
-    Then the user should see the element                      link = All projects
+    When the admin user navigates to All projects
+    Then the admin user is able to
+
+
     And the user should see the element                       css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(4)
     When the user clicks the button/link                      css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(4) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details
@@ -176,6 +146,53 @@ Project Finance approves Bank Details through the Bank Details list
     And the project finance user confirms the approved bank details
 
 *** Keywords ***
+The admin user navigates to All projects
+    the user clicks the button/link                       link = ${PS_Competition_Name}
+    Then the user should see the element                      link = All projects
+
+Project finance is able to view progress of partners bank details
+    the user clicks the button/link             css = #table-project-status tr:nth-child(4) td:nth-child(5) a
+    the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details
+    the user should see the element             jQuery = p:contains("This overview shows whether each partner has submitted their bank details")
+    the user should see the element            jQuery = li:contains("${Vitruvius_Name}") .task-status-complete
+    the user should see the element             jQuery = li:contains("${A_B_Cad_Services_Name}") .action-required
+    the user should see the element             jQuery = li:contains("${Armstrong_Butler_Name}") .action-required
+    the user clicks the button/link            link = ${A_B_Cad_Services_Name}
+    the user should see the element            jQuery = h2:contains("${A_B_Cad_Services_Name} - Account details")
+    the user should see the element             jQuery = p:contains("${Grade_Crossing_Partner_Finance}")
+    the user should see the element             jQuery = p:contains("${Grade_Crossing_Partner_Email}")
+    the user goes back to the previous page
+    the user clicks the button/link            link = ${Armstrong_Butler_Name}
+    the user should see the element            jQuery = h2:contains("${Armstrong_Butler_Name} - Account details")
+    the user should see the element             jQuery = p:contains("${Grade_Crossing_Academic_Finance}")
+    the user should see the element             jQuery = p:contains("${Grade_Crossing_Academic_Email}")
+
+The project finance verifies that no further action is required
+    the user navigates to the page       ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/organisation/${Vitruvius_Id}/review-bank-details
+    the user should see the element      jQuery = .success-alert:contains("The bank details provided have been approved.")
+    the user should not see the element  css = button[data-js-modal = "modal-partner-approve-bank-details"]
+    the user navigates to the page       ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    the user should not see the element  jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td:contains("${Vitruvius_Name}")
+
+The non lead partner confirms bank details have been completed
+    the user should see the element    jQuery = p:contains("The bank account details below are being")
+    the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    the user should see the element    css = ul li.complete:nth-child(1)
+    the user clicks the button/link    link = View the status of partners
+    the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
+    the user should see the element    jQuery = h1:contains("Project team status")
+    the user should see the element    css = #table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(4)
+
+The non lead partner submits bank details
+    the user enters text to a text field         name = accountNumber  ${Account_One}
+    the user enters text to a text field         name = sortCode  ${Sortcode_One}
+    the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link              jquery = button:contains("Cancel")
+    the user should not see an error in the page
+    the user should not see the element          jQuery = p:contains("The bank account details below are being")
+    the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link              id = submit-bank-details
+
 Verify bank details blank submission page validation for non-lead partner
     partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
     # Stub is configured to return error response for these values
