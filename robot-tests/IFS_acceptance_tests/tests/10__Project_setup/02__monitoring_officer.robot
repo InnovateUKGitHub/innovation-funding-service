@@ -246,7 +246,7 @@ Search for an MO
     [Documentation]  IFS-5428  IFS-5418
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigate to assign MO page
-    And search for MO    Orvill  Orville Gibbs
+    When search for MO    Orvill  Orville Gibbs
     Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
     [Teardown]  the user clicks the button/link  link = Back
 
@@ -272,7 +272,7 @@ Add MO - existing MO
 Add New MO details - client and server side validations
     [Documentation]  IFS-4208
     [Setup]  the user adds MO email address
-    When the user checks for validations
+    Given the user checks for validations
     Then the user should see client side validations
     And the user should see server side validations   Add monitoring officer
 
@@ -283,8 +283,8 @@ Comp admin adds new MO
 
 Comp admin assign project to new MO
     [Documentation]  IFS-5031  IFS-5088  IFS-4208
-    When search for MO    Tom  Tom Poly
-    And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
+    Given search for MO    Tom  Tom Poly
+    When comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
 Link to Application
@@ -304,8 +304,8 @@ Create account flow: MO
     [Documentation]  IFS-5031
     Given MO enter details and create account
     When the user clicks the button/link      link = Sign into your account
-    And Logging in and Error Checking         tom@poly.io   ${short_password}
-    Then the user should see the element      jQuery = h1:contains("Project setup")
+    Then Logging in and Error Checking         tom@poly.io   ${short_password}
+    And the user should see the element      jQuery = h1:contains("Project setup")
 
 New MO see the project setup view for assigned project
     [Documentation]  IFS-5031
