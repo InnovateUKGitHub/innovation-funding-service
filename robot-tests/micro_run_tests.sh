@@ -84,8 +84,10 @@ function initialiseTestEnvironment() {
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
       else
-        section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE and syncing shibboleth users"
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate :ifs-data-layer:ifs-data-service:syncShib --configure-on-demand
+        section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate --configure-on-demand
+        section "=> SYNCING SHIBBOLETH USERS"
+        ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
     fi
 
   }
@@ -226,6 +228,25 @@ function saveResultsToCompressedFolder() {
   tar -zcf "results/"${branchName}"-"${dt}.tar.gz "target/"${targetDir}
 }
 
+function openReports() {
+if [[ $(which google-chrome) ]]
+then
+   google-chrome target/${targetDir}/log.html &
+   if [[ ${showZapReport} -eq 1 ]]
+   then
+        google-chrome target/${targetDir}/ZAPReport.html &
+   fi
+else
+   wd=$(pwd)
+   logs="target/${targetDir}"
+   open "file://${wd}/${logs}/log.html"
+   if [[ ${showZapReport} -eq 1 ]]
+   then
+       open "file://${wd}/${logs}/ZAPReport.html"
+   fi
+fi
+}
+
 
 # ====================================
 # The actual start point of our script
@@ -293,9 +314,10 @@ showZapReport=0
 compress=0
 eu=0
 dryRun=0
+openReports=1
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E:" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :o" opt ; do
     case ${opt} in
         q)
             quickTest=1
@@ -341,6 +363,9 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E:" opt ; do
         B)
           eu=1
         ;;
+	o)
+	  openReports=0
+	;;
         \?)
             coloredEcho "=> Invalid option: -$OPTARG" red >&2
             exit 1
@@ -391,21 +416,9 @@ then
     stopSeleniumGrid
 fi
 
-if [[ $(which google-chrome) ]]
+if [[ ${openReports} -eq 1 ]]
 then
-    google-chrome target/${targetDir}/log.html &
-    if [[ ${showZapReport} -eq 1 ]]
-    then
-        google-chrome target/${targetDir}/ZAPReport.html &
-    fi
-else
-    wd=$(pwd)
-    logs="target/${targetDir}"
-    open "file://${wd}/${logs}/log.html"
-    if [[ ${showZapReport} -eq 1 ]]
-    then
-        open "file://${wd}/${logs}/ZAPReport.html"
-    fi
+    openReports
 fi
 
 if [[ ${compress} -eq 1 ]]

@@ -26,6 +26,8 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.Funder.ADVANCED_PROPULSION_CENTRE_APC;
+import static org.innovateuk.ifs.competition.resource.Funder.AEROSPACE_TECHNOLOGY_INSTITUTE_ATI;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -39,7 +41,7 @@ public class AdditionalInfoSectionSaverTest {
 	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Test
-	public void testSaveCompetitionSetupSection() {
+	public void saveCompetitionSetupSection() {
 		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("PAF", "Activity", "BudgetCode", Collections.emptyList());
 
 		CompetitionResource competition = newCompetitionResource()
@@ -55,7 +57,7 @@ public class AdditionalInfoSectionSaverTest {
 	}
 
 	@Test
-	public void testAutoSaveFunders() {
+	public void autoSaveFunders() {
 		CompetitionResource competition = newCompetitionResource().build();
 		int expectedFunders = competition.getFunders().size() + 3;
 		int lastIndex = expectedFunders - 1;
@@ -75,7 +77,7 @@ public class AdditionalInfoSectionSaverTest {
 
 
 	@Test
-	public void testAutoSaveRemoveFunders() {
+	public void autoSaveRemoveFunders() {
 		CompetitionResource competition = newCompetitionResource().withFunders(Lists.newArrayList(
 				new CompetitionFunderResource(),
 				new CompetitionFunderResource(),
@@ -110,13 +112,13 @@ public class AdditionalInfoSectionSaverTest {
 	}
 
 	@Test
-	public void testsSupportsForm() {
+	public void supportsForm() {
 		assertTrue(service.supportsForm(AdditionalInfoForm.class));
 		assertFalse(service.supportsForm(CompetitionSetupForm.class));
 	}
 
 	@Test
-	public void testOnlyFundersAreUpdatedAfterSetupAndLive() {
+	public void onlyFundersAreUpdatedAfterSetupAndLive() {
 		String newPafNumber = "newPafNumber";
 		String newActivityCode = "newActivityCode";
 		String newBudgetCode = "newBudgetCoce";
@@ -129,11 +131,11 @@ public class AdditionalInfoSectionSaverTest {
 		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionFunderResource funderResource1 = newCompetitionFunderResource()
-				.withFunder("Funder 1")
+				.withFunder(ADVANCED_PROPULSION_CENTRE_APC)
 				.withFunderBudget(BigInteger.valueOf(1))
 				.build();
 		CompetitionFunderResource funderResource2 = newCompetitionFunderResource()
-				.withFunder("Funder 2")
+				.withFunder(AEROSPACE_TECHNOLOGY_INSTITUTE_ATI)
 				.withFunderBudget(BigInteger.valueOf(2))
 				.build();
 
@@ -174,7 +176,7 @@ public class AdditionalInfoSectionSaverTest {
 	}
 
 	@Test
-	public void testUpdateResultsInFailureAfterCompetitionNotificationsWereSent() {
+	public void updateResultsInFailureAfterCompetitionNotificationsWereSent() {
 		String newPafNumber = "newPafNumber";
 		String newActivityCode = "newActivityCode";
 		String newBudgetCode = "newBudgetCoce";
