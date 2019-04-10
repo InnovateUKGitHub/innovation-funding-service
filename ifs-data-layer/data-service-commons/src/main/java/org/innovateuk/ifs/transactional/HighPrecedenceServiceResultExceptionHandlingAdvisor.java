@@ -24,7 +24,7 @@ public class HighPrecedenceServiceResultExceptionHandlingAdvisor extends Abstrac
     private static final long serialVersionUID = 1L;
 
     public HighPrecedenceServiceResultExceptionHandlingAdvisor(){
-        setOrder(LOWEST_PRECEDENCE);
+        setOrder(HIGHEST_PRECEDENCE);
     }
 
     private transient final StaticMethodMatcherPointcut pointcut = new
