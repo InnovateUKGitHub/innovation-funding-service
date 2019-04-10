@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
 import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
 import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
@@ -52,9 +51,6 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
-
-    @Mock
-    private CompetitionSetupDocumentRestService competitionSetupDocumentRestService;
 
     private long competitionId = 18L;
     private long applicationId = 19L;
@@ -119,7 +115,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
-        when(competitionSetupDocumentRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configuredProjectDocuments));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectUserResource));
 
     }

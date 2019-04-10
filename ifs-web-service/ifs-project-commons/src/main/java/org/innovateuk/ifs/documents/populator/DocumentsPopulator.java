@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.documents.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
 import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -30,7 +31,7 @@ public class DocumentsPopulator {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private CompetitionSetupDocumentRestService competitionSetupDocumentRestService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -39,8 +40,7 @@ public class DocumentsPopulator {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments =
-                competitionSetupDocumentRestService.findByCompetitionId(project.getCompetition()).getSuccess();
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
@@ -70,8 +70,7 @@ public class DocumentsPopulator {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments =
-                competitionSetupDocumentRestService.findByCompetitionId(project.getCompetition()).getSuccess();
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
 
         CompetitionDocumentResource configuredProjectDocument =
                 simpleFindAny(configuredProjectDocuments,
@@ -103,5 +102,11 @@ public class DocumentsPopulator {
                 .map(ProjectUserResource::getUser)
                 .map(userId -> userId.equals(loggedInUserId))
                 .orElse(false);
+    }
+
+    private List<CompetitionDocumentResource> getCompetitionDocuments(long competitionId) {
+        return competitionRestService.getCompetitionById(competitionId)
+                .andOnSuccessReturn(CompetitionResource::getCompetitionDocuments)
+                .getSuccess();
     }
 }

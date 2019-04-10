@@ -83,6 +83,19 @@ public class DocumentViewModel {
         return projectManager;
     }
 
+    /* view model logic. */
+    public boolean isEditable() {
+        return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
+    }
+
+    public boolean isShowSubmitDocumentsButton() {
+        return projectManager && status == DocumentStatus.UPLOADED;
+    }
+
+    public boolean isShowDisabledSubmitDocumentsButton() {
+        return projectManager && status == DocumentStatus.UNSET;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
