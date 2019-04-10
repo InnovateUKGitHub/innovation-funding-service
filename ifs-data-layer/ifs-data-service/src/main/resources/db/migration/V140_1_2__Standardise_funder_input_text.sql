@@ -1,6 +1,15 @@
 -- IFS-5496 Change all funder inputs to be a value from a standard list
 SET SQL_SAFE_UPDATES = 0;
 
+-- This is to map this one specific competition to INTEGRATED_DELIVERY_PLATFORM_IDP rather than OTHER_DELIVERY_PARTNERS
+UPDATE competition_funder
+SET funder = 'INTEGRATED_DELIVERY_PLATFORM_IDP'
+WHERE competition_id = '238';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE competition_id = '341';
+
 UPDATE competition_funder
 SET funder = 'OTHER_DELIVERY_PARTNERS'
 WHERE funder = 'The National Physical Laboratory (NPL), Laboratory of the Government Chemist (LGC), National Engineering Laboratory (NEL) and Science and Technology Facilities Council (STFC) ';
