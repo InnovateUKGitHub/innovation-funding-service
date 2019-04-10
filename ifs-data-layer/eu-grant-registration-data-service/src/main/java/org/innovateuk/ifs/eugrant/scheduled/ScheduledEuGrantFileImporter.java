@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,30 +66,40 @@ public class ScheduledEuGrantFileImporter {
     @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
     void importEuGrantsFile() {
 
-        ServiceResult<File> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
+        ServiceResult<List<File>> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
 
         if (isNotFoundError(sourceFileCheck)) {
             return;
         }
 
         LOG.info("Beginning import of grants...");
+        LOG.info("--------------------------------------------------------");
 
         webUserSecuritySetter.setWebUser();
 
         try {
-            ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> importResult = sourceFileCheck.
-                    andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
-                            andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                            andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile).
-                                    andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results))));
-
-            grantsImportResultHandler.recordResult(importResult);
+            sourceFileCheck.getSuccess()
+                    .stream()
+                    .sorted(Comparator.comparing(File::getName))
+                    .forEach(this::importFile);
 
         } finally {
 
             grantsFileHandler.deleteSourceFile();
             webUserSecuritySetter.clearWebUser();
+
+            LOG.info("--------------------------------------------------------");
+            LOG.info("Completed import of all grants");
         }
+    }
+
+    private void importFile(File sourceFile) {
+        ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> result = grantsRecordsExtractor.processFile(sourceFile)
+                .andOnSuccess(this::saveSuccessfullyExtractedGrants)
+                .andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)
+                .andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results)));
+
+        grantsImportResultHandler.recordResult(result, sourceFile);
     }
 
     private ServiceResult<List<ServiceResult<EuGrantResource>>> saveSuccessfullyExtractedGrants(List<ServiceResult<EuGrantResource>> grantsExtractResults) {
@@ -99,7 +110,7 @@ public class ScheduledEuGrantFileImporter {
         return serviceSuccess(creationResults);
     }
 
-    private boolean isNotFoundError(ServiceResult<File> sourceFileCheck) {
+    private boolean isNotFoundError(ServiceResult<List<File>> sourceFileCheck) {
         return sourceFileCheck.isFailure() &&
                 simpleAnyMatch(sourceFileCheck.getFailure().getErrors(), e -> NOT_FOUND.equals(e.getStatusCode()));
     }

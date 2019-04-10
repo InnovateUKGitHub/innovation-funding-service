@@ -31,7 +31,7 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
     private QuestionStatusRepository questionStatusRepository;
 
     @Override
-    public void reassignCollaboratorResponsesAndQuestionStatuses(Long applicationId,  List<ProcessRole> collaboratorProcessRoles, ProcessRole leadApplicantProcessRole) {
+    public void reassignCollaboratorResponsesAndQuestionStatuses(Long applicationId, List<ProcessRole> collaboratorProcessRoles, ProcessRole leadApplicantProcessRole) {
         collaboratorProcessRoles.forEach(collaboratorProcessRole -> {
             List<ProcessRole> organisationRoles = getOrganisationProcessRolesExcludingCollaborator(applicationId, collaboratorProcessRole);
 
@@ -98,7 +98,7 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
         questionStatusRepository.deleteAll(unassignableQuestionStatuses);
     }
 
-    private static QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
+    private QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
         if (questionStatus.getAssignee() != null && questionStatus.getAssignedBy() != null) {
             ProcessRole assignee =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignee(), reassignTo, leadApplicantRole);
@@ -118,9 +118,9 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
         return questionStatus;
     }
 
-    private static ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
-                                                                              ProcessRole processRoleTo,
-                                                                              ProcessRole leadApplicantRole) {
+    private ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
+                                                                                     ProcessRole processRoleTo,
+                                                                                     ProcessRole leadApplicantRole) {
         return Optional.of(processRoleFrom)
                 .filter(originalRole -> !originalRole.getId().equals(leadApplicantRole.getId()))
                 .map(originalRole -> processRoleTo)
