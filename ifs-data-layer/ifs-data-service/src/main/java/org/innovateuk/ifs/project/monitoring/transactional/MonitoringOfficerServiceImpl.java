@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
@@ -60,7 +60,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     }
 
     @Override
-    public ServiceResult<List<MonitoringAssignmentOfficerResource>> findAll() {
+    public ServiceResult<List<MonitoringOfficerAssignmentResource>> findAll() {
         return find(userRepository.findByRoles(MONITORING_OFFICER), notFoundError(User.class))
                 .andOnSuccessReturn(userList -> simpleMap(userList,
                         user -> mapToProjectMonitoringOfficerResource(user).getSuccess()
@@ -68,11 +68,11 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
                 );
     }
 
-    private ServiceResult<MonitoringAssignmentOfficerResource> mapToProjectMonitoringOfficerResource(User user) {
+    private ServiceResult<MonitoringOfficerAssignmentResource> mapToProjectMonitoringOfficerResource(User user) {
         return getAssignedProjects(user.getId())
                 .andOnSuccess(assignedProjects -> getUnassignedProjects()
                         .andOnSuccessReturn(unassignedProjects ->
-                                new MonitoringAssignmentOfficerResource(user.getId(),
+                                new MonitoringOfficerAssignmentResource(user.getId(),
                                         user.getFirstName(),
                                         user.getLastName(),
                                         unassignedProjects,
@@ -83,7 +83,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     @Override
     @Transactional
-    public ServiceResult<MonitoringAssignmentOfficerResource> getProjectMonitoringOfficer(long userId) {
+    public ServiceResult<MonitoringOfficerAssignmentResource> getProjectMonitoringOfficer(long userId) {
         return getMonitoringOfficerUser(userId)
                 .andOnSuccess(this::mapToProjectMonitoringOfficerResource);
     }

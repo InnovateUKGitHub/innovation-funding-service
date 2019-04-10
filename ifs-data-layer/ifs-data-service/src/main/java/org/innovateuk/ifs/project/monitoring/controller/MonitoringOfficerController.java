@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -23,12 +23,12 @@ public class MonitoringOfficerController {
     }
 
     @GetMapping("/find-all")
-    public RestResult<List<MonitoringAssignmentOfficerResource>> findAll() {
+    public RestResult<List<MonitoringOfficerAssignmentResource>> findAll() {
         return monitoringOfficerService.findAll().toGetResponse();
     }
 
     @GetMapping("/{userId}")
-    public RestResult<MonitoringAssignmentOfficerResource> getProjectMonitoringOfficer(@PathVariable long userId) {
+    public RestResult<MonitoringOfficerAssignmentResource> getProjectMonitoringOfficer(@PathVariable long userId) {
         return monitoringOfficerService.getProjectMonitoringOfficer(userId).toGetResponse();
     }
 
