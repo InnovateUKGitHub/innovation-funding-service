@@ -363,10 +363,11 @@ public class GrantMapperTest {
 
         private Project createProject() {
 
-            List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
-                    withOrganisation(newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).
-                    withLeadOrganisation(true, false).
-                    build(partnerOrganisationCount);
+            List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
+                    .withOrganisation(newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build())
+                    .withLeadOrganisation(true, false)
+                    .withPostcode("123 ABC")
+                    .build(partnerOrganisationCount);
 
             List<ProjectUser> leadOrganisationProjectUsers = newProjectUser().
                     withOrganisation(partnerOrganisations.get(0).getOrganisation()).
