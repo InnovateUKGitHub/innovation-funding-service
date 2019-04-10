@@ -77,16 +77,13 @@ User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
     [Tags]  HappyPath
     Given log in as a different user               &{collaborator1_credentials_bd}
-    When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
-    Then the user clicks the button/link           link = Bank details
-    When partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
-    # Stub is configured to return error response for these values
-    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
-    # Added this wait so to give extra execution time
+    When the non-lead partner navigates to the bank details
+    Then Verify bank details blank submission page validation for non-lead partner
 
-Non lead partner submits bank details
+Non lead partner is able to submit bank details
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]  HappyPath
+    Given the non
     Given the user enters text to a text field     name = accountNumber  ${Account_One}
     When the user enters text to a text field      name = sortCode  ${Sortcode_One}
     Then the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
@@ -179,6 +176,16 @@ Project Finance approves Bank Details through the Bank Details list
     And the project finance user confirms the approved bank details
 
 *** Keywords ***
+Verify bank details blank submission page validation for non-lead partner
+    partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
+    # Stub is configured to return error response for these values
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
+    # Added this wait so to give extra execution time
+
+The non-lead partner navigates to the bank details
+    The user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
+    The user clicks the button/link           link = Bank details
+
 The internal user is able to see updated statuses
     the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok       # Project details
     the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.waiting  # Docs
