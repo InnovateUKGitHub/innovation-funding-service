@@ -24,7 +24,7 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -327,8 +327,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<EuActionTypeResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<MonitoringOfficerResource>> monitoringOfficerResourceListType() {
-        return new ParameterizedTypeReference<List<MonitoringOfficerResource>>() {};
+    public static ParameterizedTypeReference<List<MonitoringAssignmentOfficerResource>> monitoringOfficerResourceListType() {
+        return new ParameterizedTypeReference<List<MonitoringAssignmentOfficerResource>>() {};
     }
 
 }

@@ -13,7 +13,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -71,7 +71,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         when(projectRepositoryMock.findAssigned(anyLong())).thenReturn(emptyList());
         when(projectRepositoryMock.findAssignable()).thenReturn(emptyList());
 
-        List<MonitoringOfficerResource> result = service.findAll().getSuccess();
+        List<MonitoringAssignmentOfficerResource> result = service.findAll().getSuccess();
 
         assertThat(result.size() == 2);
         assertThat(result.get(0).getFirstName().equals("John"));
@@ -122,7 +122,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
                 .thenReturn(serviceSuccess(assignProjectOrganisationResources.get(1)));
         when(projectRepositoryMock.findAssignable()).thenReturn(unassignedProjects);
 
-        MonitoringOfficerResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
+        MonitoringAssignmentOfficerResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
 
         assertEquals(moUser.getFirstName(), projectMonitoringOfficer.getFirstName());
         assertEquals(moUser.getLastName(), projectMonitoringOfficer.getLastName());

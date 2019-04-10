@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewAllViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewRow;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class MonitoringOfficerViewAllViewModelPopulator {
 
-    public MonitoringOfficerViewAllViewModel populate(List<MonitoringOfficerResource> monitoringOfficers) {
+    public MonitoringOfficerViewAllViewModel populate(List<MonitoringAssignmentOfficerResource> monitoringOfficers) {
         List<MonitoringOfficerViewRow> rows = simpleMap(monitoringOfficers,
                                                         mo -> new MonitoringOfficerViewRow(mo.getFirstName(),
                                                                                            mo.getLastName(),

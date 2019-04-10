@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectmonitoringofficer.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringAssignmentOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -21,10 +21,10 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void findAll() {
-        List<MonitoringOfficerResource> expected = singletonList(new MonitoringOfficerResource());
+        List<MonitoringAssignmentOfficerResource> expected = singletonList(new MonitoringAssignmentOfficerResource());
         setupGetWithRestResultExpectations("/monitoring-officer/find-all", monitoringOfficerResourceListType(), expected, OK);
 
-        RestResult<List<MonitoringOfficerResource>> result = service.findAll();
+        RestResult<List<MonitoringAssignmentOfficerResource>> result = service.findAll();
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), expected);

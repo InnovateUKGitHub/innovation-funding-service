@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.service.LegacyMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -27,7 +28,10 @@ public class LegacyMonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private LegacyMonitoringOfficerRestService monitoringOfficerService;
+    private LegacyMonitoringOfficerRestService legacyMonitoringOfficerRestService;
+
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
@@ -51,7 +55,7 @@ public class LegacyMonitoringOfficerController {
 
     private LegacyMonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Optional<LegacyMonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
+        Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         return new LegacyMonitoringOfficerViewModel(project, monitoringOfficer);
     }
 }
