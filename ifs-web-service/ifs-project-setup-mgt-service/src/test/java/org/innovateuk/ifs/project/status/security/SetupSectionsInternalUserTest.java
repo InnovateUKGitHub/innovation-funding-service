@@ -345,19 +345,22 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
         assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::getRoleSpecificActivityState,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
     public void checkAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
         roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
@@ -370,7 +373,29 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
         verifyInteractions(SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
-                SetupProgressChecker::getRoleSpecificActivityState);
+                SetupProgressChecker::getRoleSpecificActivityState,
+                SetupProgressChecker::isBankDetailsApproved);
+    }
+
+    @Test
+    public void checkNoAccessToGrantOfferLetterSendSectionWhenBankDetailsNotApprovedButDocumentsApproved() {
+        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+
+        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
+        List<Role> roles = singletonList(COMP_ADMIN);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+
+        verifyInteractions(SetupProgressChecker::allDocumentsApproved,
+                           SetupProgressChecker::isSpendProfileApproved,
+                           SetupProgressChecker::getRoleSpecificActivityState,
+                           SetupProgressChecker::isBankDetailsApproved);
     }
 
 
@@ -379,12 +404,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -392,12 +419,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
         verifyInteractions(SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
-                SetupProgressChecker::isGrantOfferLetterApproved);
+                SetupProgressChecker::isGrantOfferLetterApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -405,12 +434,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -427,12 +458,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getInnovationLeadUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -440,12 +473,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getInnovationLeadUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -462,12 +497,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(stakeholderUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
@@ -475,12 +512,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(stakeholderUser()));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved,
-                SetupProgressChecker::allDocumentsApproved);
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test

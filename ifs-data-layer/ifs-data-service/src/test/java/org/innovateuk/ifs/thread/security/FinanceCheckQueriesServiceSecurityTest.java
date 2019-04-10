@@ -51,14 +51,15 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void test_findOne() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
 
         when(classUnderTestMock.findOne(1L))
                 .thenReturn(serviceSuccess(new QueryResource(1L, null, null, null, null, false, null, null, null)));
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-            verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });
@@ -66,7 +67,8 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void test_findAll() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
 
         when(classUnderTestMock.findAll(22L))
                 .thenReturn(serviceSuccess(new ArrayList<>(asList(
@@ -77,22 +79,24 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
 
-        verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-        verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
+        verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
+        verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
 
         verifyNoMoreInteractions(queryRules);
     }
 
     @Test
     public void test_addPost() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
+
         when(queryLookupStrategy.findById(3L)).thenReturn(new QueryResource(3L, null, new ArrayList<PostResource>(),
                 null, null, false, null, null, null));
 
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
-            verify(queryRules).projectFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
-            verify(queryRules).projectPartnersCanAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verify(queryRules).projectFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).projectPartnersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });

@@ -55,14 +55,12 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
     public void openInvite() throws Exception {
         setLoggedInUser(null);
 
-        boolean existingUser = false;
         String hash = "hash";
         MonitoringOfficerInviteResource monitoringOfficerInviteResource = newMonitoringOfficerInviteResource()
                 .withEmail("tom@poly.io")
                 .build();
         MonitoringOfficerRegistrationViewModel expectedViewModel = new MonitoringOfficerRegistrationViewModel(monitoringOfficerInviteResource.getEmail());
 
-        when(competitionSetupMonitoringOfficerRestServiceMock.checkExistingUser(hash)).thenReturn(restSuccess(existingUser));
         when(competitionSetupMonitoringOfficerRestServiceMock.openMonitoringOfficerInvite(hash)).thenReturn(restSuccess(monitoringOfficerInviteResource));
         when(monitoringOfficerRegistrationModelPopulatorMock.populateModel(monitoringOfficerInviteResource.getEmail())).thenReturn(expectedViewModel);
 
@@ -73,62 +71,8 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
                 .andExpect(view().name("monitoring-officer/create-account"));
 
         InOrder inOrder = inOrder(competitionSetupMonitoringOfficerRestServiceMock, monitoringOfficerRegistrationModelPopulatorMock);
-        inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).checkExistingUser(hash);
         inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).openMonitoringOfficerInvite(hash);
         inOrder.verify(monitoringOfficerRegistrationModelPopulatorMock).populateModel(monitoringOfficerInviteResource.getEmail());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void openInvite_existingUser() throws Exception {
-        setLoggedInUser(null);
-
-        boolean existingUser = true;
-        String hash = "hash";
-        MonitoringOfficerInviteResource monitoringOfficerInviteResource = newMonitoringOfficerInviteResource()
-                .withEmail("tom@poly.io")
-                .build();
-        String redirectUrl = "/to/dashboard/";
-
-        when(competitionSetupMonitoringOfficerRestServiceMock.checkExistingUser(hash)).thenReturn(restSuccess(existingUser));
-        when(competitionSetupMonitoringOfficerRestServiceMock.addMonitoringOfficerRole(hash)).thenReturn(restSuccess());
-        when(navigationUtilsMock.getRedirectToLandingPageUrl(any(HttpServletRequest.class))).thenReturn("redirect:" + redirectUrl);
-
-        mockMvc.perform(get(URL_PREFIX + "/{hash}/register", hash))
-                .andExpect(model().hasNoErrors())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(redirectUrl));
-
-        InOrder inOrder = inOrder(competitionSetupMonitoringOfficerRestServiceMock, monitoringOfficerRegistrationModelPopulatorMock, navigationUtilsMock);
-        inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).checkExistingUser(hash);
-        inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).addMonitoringOfficerRole(hash);
-        inOrder.verify(navigationUtilsMock).getRedirectToLandingPageUrl(any(HttpServletRequest.class));
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void openInvite_existingUserLoggedIn() throws Exception {
-        boolean existingUser = true;
-        String hash = "hash";
-        MonitoringOfficerInviteResource monitoringOfficerInviteResource = newMonitoringOfficerInviteResource()
-                .withEmail(getLoggedInUser().getEmail())
-                .build();
-        String redirectUrl = "/to/dashboard/";
-
-        when(competitionSetupMonitoringOfficerRestServiceMock.getMonitoringOfficerInvite(hash)).thenReturn(restSuccess(monitoringOfficerInviteResource));
-        when(competitionSetupMonitoringOfficerRestServiceMock.checkExistingUser(hash)).thenReturn(restSuccess(existingUser));
-        when(competitionSetupMonitoringOfficerRestServiceMock.addMonitoringOfficerRole(hash)).thenReturn(restSuccess());
-        when(navigationUtilsMock.getRedirectToLandingPageUrl(any(HttpServletRequest.class))).thenReturn("redirect:" + redirectUrl);
-
-        mockMvc.perform(get(URL_PREFIX + "/{hash}/register", hash))
-                .andExpect(model().hasNoErrors())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(redirectUrl));
-
-        InOrder inOrder = inOrder(competitionSetupMonitoringOfficerRestServiceMock, monitoringOfficerRegistrationModelPopulatorMock, navigationUtilsMock);
-        inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).checkExistingUser(hash);
-        inOrder.verify(competitionSetupMonitoringOfficerRestServiceMock).addMonitoringOfficerRole(hash);
-        inOrder.verify(navigationUtilsMock).getRedirectToLandingPageUrl(any(HttpServletRequest.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -159,13 +103,13 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
                 .build();
         MonitoringOfficerRegistrationViewModel expectedViewModel = new MonitoringOfficerRegistrationViewModel(monitoringOfficerInviteResource.getEmail());
 
-        when(competitionSetupMonitoringOfficerRestServiceMock.checkExistingUser(hash))
+        when(competitionSetupMonitoringOfficerRestServiceMock.openMonitoringOfficerInvite(hash))
                 .thenReturn(restFailure(notFoundError(MonitoringOfficerInviteResource.class)));
 
         mockMvc.perform(get(URL_PREFIX + "/{hash}/register", hash))
                 .andExpect(status().isNotFound());
 
-        verify(competitionSetupMonitoringOfficerRestServiceMock, only()).checkExistingUser(hash);
+        verify(competitionSetupMonitoringOfficerRestServiceMock, only()).openMonitoringOfficerInvite(hash);
     }
 
     @Test
@@ -176,7 +120,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         MonitoringOfficerRegistrationForm registrationForm =
                 new MonitoringOfficerRegistrationForm("Tom", "Baldwin", "Passw0rd", "0114 286 6356");
 
-        when(monitoringOfficerServiceMock.createMonitoringOfficer(hash, registrationForm)).thenReturn(ServiceResult.serviceSuccess());
+        when(monitoringOfficerServiceMock.activateAndUpdateMonitoringOfficer(hash, registrationForm)).thenReturn(ServiceResult.serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/{hash}/register", hash)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -188,7 +132,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
                 .andExpect(redirectedUrl("/monitoring-officer/hash/register/account-created"));
 
         InOrder inOrder = inOrder(monitoringOfficerServiceMock, competitionSetupMonitoringOfficerRestServiceMock);
-        inOrder.verify(monitoringOfficerServiceMock).createMonitoringOfficer(hash, registrationForm);
+        inOrder.verify(monitoringOfficerServiceMock).activateAndUpdateMonitoringOfficer(hash, registrationForm);
         inOrder.verifyNoMoreInteractions();
     }
 
