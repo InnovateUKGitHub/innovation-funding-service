@@ -6,14 +6,14 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.project.spendprofile.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
@@ -26,8 +26,8 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +43,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * This controller will handle all requests that are related to spend profile.
@@ -88,10 +87,13 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
 
-        boolean isMonitoringOfficer = isMonitoringOfficer(loggedInUser);
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        boolean isMonitoringOfficer = projectResource.getProjectMonitoringOfficer() == null ? false :
+                projectResource.getProjectMonitoringOfficer().equals(loggedInUser.getId());
 
         if (isMonitoringOfficer || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
-            return viewProjectManagerSpendProfile(model, projectId, loggedInUser, isMonitoringOfficer);
+            return viewProjectManagerSpendProfile(model, projectResource, loggedInUser, isMonitoringOfficer);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
@@ -260,8 +262,8 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    private String viewProjectManagerSpendProfile(Model model, final Long projectId, final UserResource loggedInUser,  final boolean isMonitoringOfficer) {
-        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId, loggedInUser, isMonitoringOfficer));
+    private String viewProjectManagerSpendProfile(Model model, final ProjectResource projectResource, final UserResource loggedInUser,  final boolean isMonitoringOfficer) {
+        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectResource, loggedInUser, isMonitoringOfficer));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
 
@@ -320,26 +322,24 @@ public class ProjectSpendProfileController {
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
 
-    private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
+    private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final ProjectResource projectResource,
                                                                                                    final UserResource loggedInUser,
                                                                                                    final boolean isMonitoringOfficer) {
-        ProjectResource projectResource = projectService.getById(projectId);
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
 
-        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-
-        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectResource.getId()),
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
 
-        Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(projectId, organisations, loggedInUser);
+        Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(projectResource.getId(), organisations, loggedInUser);
 
-        return new ProjectSpendProfileProjectSummaryViewModel(projectId,
+        return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
                 organisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
-                isApproved(projectId),
+                isApproved(projectResource.getId()),
                 isMonitoringOfficer);
     }
 
