@@ -1,6 +1,4 @@
 -- IFS-3708 convert the test funders types to give them legitimate values.
-SET SQL_SAFE_UPDATES = 0;
-
 UPDATE competition_funder SET funder = 'ADVANCED_PROPULSION_CENTRE_APC' WHERE funder = 'Season Services';
 UPDATE competition_funder SET funder = 'AEROSPACE_TECHNOLOGY_INSTITUTE_ATI' WHERE funder = 'Downstream Technologies';
 UPDATE competition_funder SET funder = 'CENTRE_FOR_CONNECTED_AND_AUTONOMOUS_VEHICLES_CCAV' WHERE funder = 'Asterix Technologies';
@@ -25,5 +23,3 @@ UPDATE competition_funder
         'Jumping Project Services',
         'Bloc Inc',
         'Silver Scratch Industries');
-
-SET SQL_SAFE_UPDATES = 1;

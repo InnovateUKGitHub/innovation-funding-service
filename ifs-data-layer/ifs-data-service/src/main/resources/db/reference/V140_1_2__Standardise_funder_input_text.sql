@@ -1,6 +1,4 @@
 -- IFS-5496 Change all funder inputs to be a value from a standard list
-SET SQL_SAFE_UPDATES = 0;
-
 -- This is to map this one specific competition to INTEGRATED_DELIVERY_PLATFORM_IDP rather than OTHER_DELIVERY_PARTNERS
 UPDATE competition_funder
 SET funder = 'INTEGRATED_DELIVERY_PLATFORM_IDP'
@@ -94,5 +92,3 @@ WHERE funder = 'ATI';
 UPDATE competition_funder
 SET funder = 'ADVANCED_PROPULSION_CENTRE_APC'
 WHERE funder = 'APC';
-
-SET SQL_SAFE_UPDATES = 1;
