@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.model;
+package org.innovateuk.ifs.project.spendprofile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,6 +10,7 @@ import java.util.List;
  * View model used to display financial year-wise summary below spend profile
  */
 public class SpendProfileSummaryModel {
+
     List<SpendProfileSummaryYearModel> years;
 
     public SpendProfileSummaryModel(final List<SpendProfileSummaryYearModel> years) {
