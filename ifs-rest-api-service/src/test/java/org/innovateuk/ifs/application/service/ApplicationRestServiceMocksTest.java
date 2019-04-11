@@ -12,7 +12,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -54,8 +53,8 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void getApplicationsByCompetitionIdAndUserId() {
 
-        String expectedUrl = applicationRestURL + "/get-applications-by-competition-id-and-user-id/123/456/APPLICANT";
-        List<ApplicationResource> returnedApplications = Stream.of(1, 2, 3).map(i -> new ApplicationResource()).collect(Collectors.toList());// newApplicationResource().build(3);
+        String expectedUrl = applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/123/456/APPLICANT";
+        List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());// newApplicationResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
@@ -67,7 +66,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void getApplicationsByUserId() {
 
-        String expectedUrl = applicationRestURL + "/find-by-user/123";
+        String expectedUrl = applicationRestURL + "/findByUser/123";
         List<ApplicationResource> returnedApplications = Arrays.asList(1,2,3).stream().map(i -> new ApplicationResource()).collect(Collectors.toList());//newApplicationResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
@@ -85,7 +84,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         int pageNumber = 0;
         int pageSize = 5;
 
-        String expectedUrl = applicationRestURL + "/wildcard-search-by-id?searchString=12&page=0&size=5";
+        String expectedUrl = applicationRestURL + "/wildcardSearchById?searchString=12&page=0&size=5";
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         setupGetWithRestResultExpectations(expectedUrl, ApplicationPageResource.class, applicationPageResource);
 
@@ -101,7 +100,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         Double returnedResponse = 60.5;
 
-        String expectedUrl = applicationRestURL + "/get-progress-percentage-by-application-id/123";
+        String expectedUrl = applicationRestURL + "/getProgressPercentageByApplicationId/123";
         setupGetWithRestResultAsyncExpectations(expectedUrl, Double.class, returnedResponse);
 
         Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccess();
@@ -111,7 +110,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void saveApplication() {
 
-        String expectedUrl = applicationRestURL + "/save-application-details/123";
+        String expectedUrl = applicationRestURL + "/saveApplicationDetails/123";
         ApplicationResource applicationToUpdate = new ApplicationResource(); // newApplicationResource().withId(123L).build();
         applicationToUpdate.setId(123L);
         ResponseEntity<String> response = new ResponseEntity<>("", OK);
@@ -124,7 +123,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void updateApplicationStatus() {
 
-        String expectedUrl = applicationRestURL + "/update-application-state?applicationId=123&state=APPROVED";
+        String expectedUrl = applicationRestURL + "/updateApplicationState?applicationId=123&state=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
         // now run the method under test
         service.updateApplicationState(123L, ApplicationState.APPROVED);
@@ -132,7 +131,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
     @Test
     public void createApplication() {
-        String expectedUrl = applicationRestURL + "/create-application-by-name/123/456/789";
+        String expectedUrl = applicationRestURL + "/createApplicationByName/123/456/789";
 
         ApplicationResource application = new ApplicationResource();
         application.setName("testApplicationName123");
@@ -187,7 +186,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         long applicationId = 1L;
         ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
 
-        setupPostWithRestResultExpectations(applicationRestURL + "/inform-ineligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
+        setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
         service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
     }
 
@@ -223,7 +222,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     public void getLatestEmailFundingDate() {
         long competitionId = 1L;
         ZonedDateTime returnedDate = ZonedDateTime.now();
-        String expectedUrl = applicationRestURL + "/get-latest-email-funding-date/" + competitionId;
+        String expectedUrl = applicationRestURL + "/getLatestEmailFundingDate/" + competitionId;
 
         setupGetWithRestResultExpectations(expectedUrl, ZonedDateTime.class, returnedDate);
 

@@ -70,7 +70,7 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
 
     @Override
     public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
-        return putWithRestResult(format("%s/%s/reject-invitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
+        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
     }
 
     @Override
@@ -80,12 +80,12 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
 
     @Override
     public RestResult<Void> acceptInvitation(long id) {
-        return putWithRestResult(format("%s/%s/accept-invitation", assessmentRestURL, id), Void.class);
+        return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
     }
 
     @Override
     public RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions) {
-        return putWithRestResult(format("%s/submit-assessments", assessmentRestURL), assessmentSubmissions, Void.class);
+        return putWithRestResult(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, Void.class);
     }
 
     @Override

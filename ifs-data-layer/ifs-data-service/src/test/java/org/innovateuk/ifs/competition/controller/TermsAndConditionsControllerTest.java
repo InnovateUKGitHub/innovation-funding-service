@@ -36,7 +36,7 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
         when(termsAndConditionsService.getById(competitionId)).thenReturn(serviceSuccess
                 (newGrantTermsAndConditionsResource().build()));
 
-        mockMvc.perform(get("/terms-and-conditions/get-by-id/{id}", competitionId))
+        mockMvc.perform(get("/terms-and-conditions/getById/{id}", competitionId))
                 .andExpect(status().isOk());
 
         verify(termsAndConditionsService, only()).getById(competitionId);
@@ -50,7 +50,7 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
         when(termsAndConditionsService.getLatestVersionsForAllTermsAndConditions()).thenReturn(serviceSuccess
                 (termsAndConditionsResourceList));
 
-        mockMvc.perform(get("/terms-and-conditions/get-latest"))
+        mockMvc.perform(get("/terms-and-conditions/getLatest"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(termsAndConditionsResourceList)));
 

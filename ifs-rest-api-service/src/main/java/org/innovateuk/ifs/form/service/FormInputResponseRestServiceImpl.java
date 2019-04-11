@@ -29,7 +29,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(long applicationId) {
-        return getWithRestResult(formInputResponseRestURL + "/find-responses-by-application/" + applicationId, formInputResponseListType());
+        return getWithRestResult(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, formInputResponseListType());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
         node.put("ignoreEmpty", ignoreEmpty);
-        return postWithRestResult(formInputResponseRestURL + "/save-question-response/", node, ValidationMessages.class);
+        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, ValidationMessages.class);
     }
 
     @Override
@@ -95,20 +95,20 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
-        String url = formInputResponseRestURL + "/find-response-by-form-input-id-and-application-id/" + formInputId + "/" + applicationId;
+        String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" + formInputId + "/" + applicationId;
         return getWithRestResult(url, formInputResponseListType());
     }
 
     @Override
     public RestResult<FormInputResponseResource> getByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                         QuestionSetupType questionSetupType) {
-        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "find-by-application-id-and-question-setup-type",
+        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionSetupType",
                 applicationId, questionSetupType), FormInputResponseResource.class);
     }
 
     @Override
     public RestResult<List<FormInputResponseResource>> getByApplicationIdAndQuestionId(long applicationId, long questionId) {
-        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "find-by-application-id-and-question-id",
+        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
                 applicationId, questionId), formInputResponseListType());
     }
 }

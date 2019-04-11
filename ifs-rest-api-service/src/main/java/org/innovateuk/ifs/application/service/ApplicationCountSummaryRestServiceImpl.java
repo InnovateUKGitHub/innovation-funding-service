@@ -19,14 +19,14 @@ import static java.util.Collections.singletonList;
 @Service
 public class ApplicationCountSummaryRestServiceImpl extends BaseRestService implements ApplicationCountSummaryRestService {
 
-    private static final String APPLICATION_COUNT_REST_URL = "/application-count-summary";
+    private static final String APPLICATION_COUNT_REST_URL = "/applicationCountSummary";
 
     @Override
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
                                                                                                        int pageIndex,
                                                                                                        int pageSize,
                                                                                                        String filter) {
-        String uriWithParams = buildUri(APPLICATION_COUNT_REST_URL + "/find-by-competition-id/{compId}", pageIndex, pageSize, filter, competitionId);
+        String uriWithParams = buildUri(APPLICATION_COUNT_REST_URL + "/findByCompetitionId/{compId}", pageIndex, pageSize, filter, competitionId);
         return getWithRestResult(uriWithParams, ApplicationCountSummaryPageResource.class);
     }
 
@@ -39,7 +39,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                                                                                                                         String filter,
                                                                                                                         String sortField) {
 
-        String baseUrl = format("%s/%s/%s", APPLICATION_COUNT_REST_URL, "find-by-competition-id-and-innovation-area", competitionId);
+        String baseUrl = format("%s/%s/%s", APPLICATION_COUNT_REST_URL, "findByCompetitionIdAndInnovationArea", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("assessorId", assessorId)

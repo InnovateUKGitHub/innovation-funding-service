@@ -12,7 +12,7 @@ import java.util.Optional;
  * Controller for exposing statistical data on applications
  */
 @RestController
-@RequestMapping("/application-count-summary")
+@RequestMapping("/applicationCountSummary")
 public class ApplicationCountSummaryController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class ApplicationCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    @GetMapping("/find-by-competition-id/{competitionId}")
+    @GetMapping("/findByCompetitionId/{competitionId}")
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId,
                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
@@ -28,7 +28,7 @@ public class ApplicationCountSummaryController {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionId(competitionId, pageIndex, pageSize, filter).toGetResponse();
     }
 
-    @GetMapping("/find-by-competition-id-and-innovation-area/{competitionId}")
+    @GetMapping("/findByCompetitionIdAndInnovationArea/{competitionId}")
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(@PathVariable("competitionId") long competitionId,
                                                                                                                         @RequestParam(value = "assessorId") long assessorId,
                                                                                                                         @RequestParam(value = "page",defaultValue = "0") int pageIndex,

@@ -26,7 +26,7 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
     public void test_getById() {
         GrantTermsAndConditionsResource returnedResponse = newGrantTermsAndConditionsResource().build();
 
-        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/get-by-id/" + competitionId,
+        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getById/" + competitionId,
                 GrantTermsAndConditionsResource.class, returnedResponse);
         GrantTermsAndConditionsResource response = service.getById(competitionId).getSuccess();
         assertNotNull(response);
@@ -37,7 +37,7 @@ public class TermsAndConditionsRestServiceMocksTest extends BaseRestServiceUnitT
     public void test_getLatestTermsAndConditions() {
         List<GrantTermsAndConditionsResource> returnedResponse = newGrantTermsAndConditionsResource().build(1);
 
-        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/get-latest",
+        setupGetWithRestResultExpectations(termsAndConditionsRestUrl + "/getLatest",
                 grantTermsAndConditionsResourceListType(), returnedResponse);
 
         List<GrantTermsAndConditionsResource> response = service.getLatestVersionsForAllTermsAndConditions()

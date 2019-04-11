@@ -18,7 +18,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testAddOverheadFile() {
 
-        String expectedUrl = overheadFileRestURL + "/overhead-calculation-document?overheadId=123&filename=original.pdf";
+        String expectedUrl = overheadFileRestURL + "/overheadCalculationDocument?overheadId=123&filename=original.pdf";
         FileEntryResource returnedFileEntry = new FileEntryResource();
 
         setupFileUploadWithRestResultExpectations(
@@ -33,7 +33,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testGetOverheadFileDetails() {
 
-        String expectedUrl = overheadFileRestURL + "/overhead-calculation-document-details?overheadId=123";
+        String expectedUrl = overheadFileRestURL + "/overheadCalculationDocumentDetails?overheadId=123";
         FileEntryResource returnedFileEntry = new FileEntryResource();
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
@@ -46,7 +46,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testGetOverheadFileDetailsUsingProjectFinanceRowId() {
 
-        String expectedUrl = overheadFileRestURL + "/project-overhead-calculation-document-details?overheadId=123";
+        String expectedUrl = overheadFileRestURL + "/projectOverheadCalculationDocumentDetails?overheadId=123";
         FileEntryResource returnedFileEntry = new FileEntryResource();
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
@@ -59,7 +59,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testGetOverheadFileContent() {
 
-        String expectedUrl = overheadFileRestURL + "/overhead-calculation-document?overheadId=123";
+        String expectedUrl = overheadFileRestURL + "/overheadCalculationDocument?overheadId=123";
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
@@ -72,7 +72,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testGetOverheadFileUsingProjectFinanceRowId() {
 
-        String expectedUrl = overheadFileRestURL + "/project-overhead-calculation-document?overheadId=123";
+        String expectedUrl = overheadFileRestURL + "/projectOverheadCalculationDocument?overheadId=123";
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
@@ -85,7 +85,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
     @Test
     public void testDeleteOverheadFile() {
 
-        String expectedUrl = overheadFileRestURL + "/overhead-calculation-document?overheadId=123";
+        String expectedUrl = overheadFileRestURL + "/overheadCalculationDocument?overheadId=123";
 
         setupDeleteWithRestResultExpectations(expectedUrl);
 

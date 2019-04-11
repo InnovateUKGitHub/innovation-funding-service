@@ -33,7 +33,7 @@ public class AffiliationRestServiceImplTest extends BaseRestServiceUnitTest<Affi
                 .withAffiliationList(affiliationResources)
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/get-user-affiliations", affiliationUrl, userId), AffiliationListResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", affiliationUrl, userId), AffiliationListResource.class, expected);
 
         AffiliationListResource response = service.getUserAffiliations(userId).getSuccess();
         assertEquals(expected, response);
@@ -47,7 +47,7 @@ public class AffiliationRestServiceImplTest extends BaseRestServiceUnitTest<Affi
                 .withAffiliationList(affiliationResources)
                 .build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/update-user-affiliations", affiliationUrl, userId), expected, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserAffiliations", affiliationUrl, userId), expected, OK);
 
         RestResult<Void> response = service.updateUserAffiliations(userId, expected);
         assertTrue(response.isSuccess());

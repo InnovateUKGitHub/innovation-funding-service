@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.exception.SummaryDataUnavailableException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -58,41 +57,7 @@ public class ApplicationDownloadController {
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    @ZeroDowntime(reference = "IFS-430", description = "delete in h2020 sprint 6")
     @GetMapping("/downloadByCompetition/{competitionId}")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> getDownloadByCompetitionIdOld(@PathVariable("competitionId") Long competitionId) throws IOException {
-        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);
-
-        List<Application> applications;
-        if (applicationsResult.isSuccess()) {
-            applications = applicationsResult.getSuccess();
-        } else {
-            LOG.error("failed call to get application summaries by competition and status for the download");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
-
-        try (XSSFWorkbook wb = new XSSFWorkbook()) {
-            populateExcelWorkbook(wb, applications);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            wb.write(baos);
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            // Prevent caching
-            httpHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            httpHeaders.add("Pragma", "no-cache");
-            httpHeaders.add("Expires", "0");
-            return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
-        } catch (SummaryDataUnavailableException e) {
-            LOG.error("unable to retrieve data required for the excel workbook", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/download-by-competition/{competitionId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
         ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);

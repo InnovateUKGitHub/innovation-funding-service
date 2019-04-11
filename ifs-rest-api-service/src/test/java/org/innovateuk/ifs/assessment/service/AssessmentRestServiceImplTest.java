@@ -25,7 +25,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     private static final String assessmentRestURL = "/assessment";
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
 
     }
 
@@ -37,7 +37,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getById() {
+    public void getById() throws Exception {
         AssessmentResource expected = newAssessmentResource().build();
 
         Long assessmentId = 1L;
@@ -47,7 +47,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getAssignableById() {
+    public void getAssignableById() throws Exception {
         AssessmentResource expected = newAssessmentResource().build();
 
         Long assessmentId = 1L;
@@ -56,7 +56,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getRejectableById() {
+    public void getRejectableById() throws Exception {
         AssessmentResource expected = newAssessmentResource().build();
 
         Long assessmentId = 1L;
@@ -66,7 +66,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getByUserAndCompetition() {
+    public void getByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
         Long userId = 1L;
@@ -77,7 +77,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getByUserAndApplication() {
+    public void getByUserAndApplication() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
         Long userId = 1L;
@@ -88,7 +88,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void countByStateAndCompetition() {
+    public void countByStateAndCompetition() throws Exception {
         Long expected = 2L;
 
         AssessmentState state = AssessmentState.CREATED;
@@ -99,7 +99,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getTotalScore() {
+    public void getTotalScore() throws Exception {
         AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
 
         Long assessmentId = 1L;
@@ -109,7 +109,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void recommend() {
+    public void recommend() throws Exception {
         Long assessmentId = 1L;
 
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
@@ -120,7 +120,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void getApplicationFeedback() {
+    public void getApplicationFeedback() throws Exception {
         long applicationId = 1L;
 
         ApplicationAssessmentFeedbackResource expectedResource = newApplicationAssessmentFeedbackResource().build();
@@ -137,36 +137,36 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
-    public void rejectInvitation() {
+    public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
 
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/reject-invitation", assessmentRestURL, assessmentId),
+        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId),
                 assessmentRejectOutcomeResource, OK);
         RestResult<Void> response = service.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(response.isSuccess());
     }
 
     @Test
-    public void accept() {
+    public void accept() throws Exception {
         Long assessmentId = 1L;
 
-        setupPutWithRestResultExpectations(format("%s/%s/accept-invitation", assessmentRestURL, assessmentId), null, OK);
+        setupPutWithRestResultExpectations(format("%s/%s/acceptInvitation", assessmentRestURL, assessmentId), null, OK);
         RestResult<Void> response = service.acceptInvitation(assessmentId);
         assertTrue(response.isSuccess());
     }
 
     @Test
-    public void submitAssessments() {
+    public void submitAssessments() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/submit-assessments", assessmentRestURL), assessmentSubmissions, OK);
+        setupPutWithRestResultExpectations(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, OK);
         RestResult<Void> response = service.submitAssessments(assessmentSubmissions);
         assertTrue(response.isSuccess());
     }
 
     @Test
-    public void withdrawAssessment() {
+    public void withdrawAssessment() throws Exception {
         Long assessmentId = 1L;
 
         setupPutWithRestResultExpectations(format("%s/%s/withdraw", assessmentRestURL, assessmentId), null, OK);

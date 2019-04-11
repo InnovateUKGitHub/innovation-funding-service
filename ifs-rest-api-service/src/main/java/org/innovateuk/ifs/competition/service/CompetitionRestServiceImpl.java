@@ -24,7 +24,7 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
 
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
-        return getWithRestResult(competitionsRestURL + "/find-all", competitionResourceListType());
+        return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
 
     @Override
     public RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long competitionId) {
-        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId + "/get-organisation-types", organisationTypeResourceListType());
+        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId + "/getOrganisationTypes", organisationTypeResourceListType());
     }
 
     @Override
@@ -89,12 +89,12 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
 
     @Override
     public RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
-        return putWithRestResult(competitionsRestURL + "/" + competitionId + "/update-terms-and-conditions/" + termsAndConditionsId, Void.class);
+        return putWithRestResult(competitionsRestURL + "/" + competitionId + "/updateTermsAndConditions/" + termsAndConditionsId, Void.class);
     }
 
     @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
-        return getWithRestResult(competitionsTypesRestURL + "/find-all", competitionTypeResourceListType());
+        return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
     }
 
 }

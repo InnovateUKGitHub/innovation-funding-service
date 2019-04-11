@@ -62,7 +62,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.findAll()).thenReturn(serviceSuccess(competitionResourceBuilder.build(2)));
 
-        mockMvc.perform(get("/competition/find-all")
+        mockMvc.perform(get("/competition/findAll")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
@@ -241,7 +241,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         when(competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/{id}/update-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId)
+        mockMvc.perform(put("/competition/{id}/updateTermsAndConditions/{tcId}", competitionId, termsAndConditionsId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
