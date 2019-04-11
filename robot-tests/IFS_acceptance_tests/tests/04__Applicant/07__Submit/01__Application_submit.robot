@@ -33,7 +33,7 @@ Submit button disabled when application is incomplete
     [Tags]  HappyPath
     Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_rto_name}
-    And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and then submit.")
+    And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and submit at the bottom of this page.")
     And the user clicks the button/link                link = Your finances
     And the user clicks the button/link                link = Application overview
     And the user clicks the button/link                jQuery = .govuk-button:contains("Review and submit")
@@ -60,13 +60,23 @@ RTO lead has read only view after submission
     And the user clicks the button/link                    link = Review and submit
     And the user should not see the element                css = input
 
+Application overview complete status
+    [Documentation]  IFS-4265
+    [Tags]
+    Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
+    When the applicant completes the application details  ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user should see the text in the element      css = .message-alert  Now your application is complete, you need to review and submit at the bottom of this page
+
+Applicant dashboard shows correct status
+    [Documentation]  IFS-4265
+    Given The user clicks the button/link   link = Applications
+    Then the user should see the element    jQuery = .task:contains("${application_rto_name}") ~ .status:contains("Ready to review and submit")
+    [Teardown]  the user clicks the button/link  link = ${application_rto_name}
+
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
-    [Tags]
-    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
-    When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
-    When the user clicks the button/link                    link = Review and submit
+    Given the user clicks the button/link                   link = review and submit
+    And The user clicks the button/link                     link = Review and submit
     Then the user should be redirected to the correct page  summary
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page  track
