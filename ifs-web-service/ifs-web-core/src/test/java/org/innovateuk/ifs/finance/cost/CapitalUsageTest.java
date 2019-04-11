@@ -1,79 +1,97 @@
 package org.innovateuk.ifs.finance.cost;
 
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_USAGE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class CapitalUsageTest {
 
-    private Long id = 1L;
-    private Integer deprecation = 12;
-    private String description = "";
-    private String existing = "New";
-    private BigDecimal npv = new BigDecimal(20000);
-    private BigDecimal residualValue = new BigDecimal(15000);
-    private Integer utilisation = 25;
+    private Long id;
+    private Integer deprecation;
+    private String description;
+    private String existing;
+    private BigDecimal npv;
+    private BigDecimal residualValue;
+    private Integer utilisation;
     private CapitalUsage capitalUsage;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        id = 1L;
+        deprecation = 12;
+        description = "";
+        existing = "New";
+        npv = new BigDecimal(20000);
+        residualValue = new BigDecimal(15000);
+        utilisation = 25;
 
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
-    public CapitalUsage initCapitalUsage(){
         capitalUsage = new CapitalUsage(id, deprecation, description, existing, npv, residualValue, utilisation);
-        return capitalUsage;
     }
 
     @Test
-    public void testGetTotal() throws Exception {
-        initCapitalUsage();
-        assertEquals(BigDecimal.valueOf(1250).setScale(2,BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
+    public void getTotal() {
+        assertEquals(BigDecimal.valueOf(1250).setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalNullNPV() throws Exception {
-        npv = null;
-        initCapitalUsage();
+    public void getTotalNullNPV() {
+        capitalUsage.setNpv(null);
         assertEquals(BigDecimal.ZERO, capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalNullResidualValue() throws Exception {
-        residualValue = null;
-        initCapitalUsage();
+    public void getTotalNullResidualValue() {
+        capitalUsage.setResidualValue(null);
         assertEquals(BigDecimal.ZERO, capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalNullUtilizationValue() throws Exception {
-        utilisation = null;
-        initCapitalUsage();
+    public void getTotalNullUtilizationValue() {
+        capitalUsage.setUtilisation(null);
         assertEquals(BigDecimal.ZERO, capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalZeroNPV() throws Exception {
-        npv = BigDecimal.ZERO;
-        initCapitalUsage();
+    public void getTotalZeroNPV() {
+        capitalUsage.setNpv(BigDecimal.ZERO);
         assertEquals(BigDecimal.valueOf(-3750).setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalZeroResidualVal() throws Exception {
-        residualValue = BigDecimal.ZERO;
-        initCapitalUsage();
+    public void getTotalZeroResidualVal() {
+        capitalUsage.setResidualValue(BigDecimal.ZERO);
         assertEquals(BigDecimal.valueOf(5000).setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
     }
+
     @Test
-    public void testGetTotalZeroUtilisation() throws Exception {
-        utilisation = 0;
-        initCapitalUsage();
+    public void getTotalZeroUtilisation() {
+        capitalUsage.setUtilisation(0);
         assertEquals(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN), capitalUsage.getTotal());
+    }
+
+    @Test
+    public void getName() {
+        assertEquals("capital_usage", capitalUsage.getName());
+    }
+
+    @Test
+    public void isEmpty() {
+        assertFalse(capitalUsage.isEmpty());
+    }
+
+    @Test
+    public void getMinRows() {
+        assertEquals(0, capitalUsage.getMinRows());
+    }
+
+    @Test
+    public void getCostType() {
+        assertEquals(CAPITAL_USAGE, capitalUsage.getCostType());
     }
 }
