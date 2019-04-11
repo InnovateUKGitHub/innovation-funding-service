@@ -12,24 +12,17 @@ import static org.junit.Assert.assertFalse;
 
 public class CapitalUsageTest {
 
-    private Long id;
-    private Integer deprecation;
-    private String description;
-    private String existing;
-    private BigDecimal npv;
-    private BigDecimal residualValue;
-    private Integer utilisation;
     private CapitalUsage capitalUsage;
 
     @Before
     public void setUp() {
-        id = 1L;
-        deprecation = 12;
-        description = "";
-        existing = "New";
-        npv = new BigDecimal(20000);
-        residualValue = new BigDecimal(15000);
-        utilisation = 25;
+        Long id = 1L;
+        Integer deprecation = 12;
+        String description = "";
+        String existing = "New";
+        BigDecimal npv = new BigDecimal(20000);
+        BigDecimal residualValue = new BigDecimal(15000);
+        Integer utilisation = 25;
 
         capitalUsage = new CapitalUsage(id, deprecation, description, existing, npv, residualValue, utilisation);
     }
