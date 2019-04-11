@@ -215,7 +215,15 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         String email = "blah@example.com";
         String phoneNumber = "012345678";
 
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer()
+                .withUser(newUser()
+                        .withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withEmailAddress(email)
+                        .withPhoneNumber(phoneNumber)
+                        .build()
+                )
+                .build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(monitoringOfficer).build()));
 
@@ -258,19 +266,12 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         assertEquals(resource.getFirstName(), firstName);
         assertEquals(resource.getLastName(), lastName);
         assertEquals(resource.getPhoneNumber(), phoneNumber);
-        assertEquals(resource.getId(), monitoringOfficer.getId());
         assertEquals(resource.getProject(), (Long) projectId);
     }
 
     @Test
     public void findMonitoringOfficerForProject_notFound() {
         long projectId = 1L;
-        String firstName = "firstName";
-        String lastName = "lastName";
-        String email = "blah@example.com";
-        String phoneNumber = "012345678";
-
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(null).build()));
         when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceFailure(CommonErrors.notFoundError(LegacyMonitoringOfficer.class)));

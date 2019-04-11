@@ -120,7 +120,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
         return find(projectRepository.findById(projectId), notFoundError(Project.class))
                 .andOnSuccess(project -> {
                     if (project.getProjectMonitoringOfficer().isPresent()) {
-                        return toMonitoringOfficerResource(project.getProjectMonitoringOfficer().get());
+                        return toMonitoringOfficerResource(project.getProjectMonitoringOfficer().get(), projectId);
                     } else {
                         return legacyMonitoringOfficer(projectId);
                     }
@@ -128,13 +128,13 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     }
 
 
-    private ServiceResult<MonitoringOfficerResource> toMonitoringOfficerResource(MonitoringOfficer monitoringOfficer) {
+    private ServiceResult<MonitoringOfficerResource> toMonitoringOfficerResource(MonitoringOfficer monitoringOfficer, long projectId) {
         return serviceSuccess(new MonitoringOfficerResource(monitoringOfficer.getId(),
                 monitoringOfficer.getUser().getFirstName(),
                 monitoringOfficer.getUser().getLastName(),
                 monitoringOfficer.getUser().getEmail(),
                 monitoringOfficer.getUser().getPhoneNumber(),
-                monitoringOfficer.getProject().getId()));
+                projectId));
     }
 
     private ServiceResult<MonitoringOfficerResource> legacyMonitoringOfficer(long projectId) {
