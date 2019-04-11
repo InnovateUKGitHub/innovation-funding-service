@@ -32,6 +32,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5032 MO assigned to project - Email notification
 ...
 ...               IFS-5418 Assign MO: Internal navigation
+...
+...               IFS-5686 MO - external user view
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -73,14 +75,13 @@ Status updates correctly for internal user's table
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
 
 Search for an MO
-    [Documentation]  IFS-5428  IFS-5418
+    [Documentation]  IFS-5428  IFS-5418  IFS-5686
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
     Then search for MO    Orvill  Orville Gibbs
     And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
     And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Applicaiton_Titile}
-    #[Teardown]  the user clicks the button/link  link = Back
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -105,10 +106,10 @@ MO details can be edited and viewed in the Set up your project page
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
-    [Tags]  HappyPath
+    [Tags]  HappyPathSuper-EFFY - Super Efficient Forecasting of Freight Yields
     Given Log in as a different user                   &{collaborator1_credentials_bd}
     When the user should see assigned MO details
-    When Log in as a different user                    &{collaborator2_credentials_bd}
+    Then Log in as a different user                    &{collaborator2_credentials_bd}
     And the user should see assigned MO details
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -123,11 +124,11 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
     Given log in as a different user          &{monitoring_officer_one_credentials}
-    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("Magic material")
+    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209
-    Given the user clicks the button/link    link = Magic material
+    Given the user clicks the button/link    link = ${PS_LP_Application_Title}
     Then the user should see the project set view
 
 MO sees the application feedback
@@ -267,7 +268,7 @@ the user should see the project set view
     the user should see the element    jQuery = a:contains("Documents")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
-    the user should see the element    jQuery = .progress-list .read-only h2:contains("Spend profile")
+    the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
 
 the user enters the details
