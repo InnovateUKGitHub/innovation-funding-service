@@ -75,13 +75,9 @@ Applicant dashboard shows correct status
 
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
-    Given the user clicks the button/link                   link = review and submit
-    And the user clicks the button/link                     link = Review and submit
-    Then the user should be redirected to the correct page  summary
-    And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page  track
-    And the user should see the element                     jQuery = h2:contains("Application submitted")
-    And The user should see the element                     link = Give us feedback
+    Given the user clicks the button/link  link = review and submit
+    When the user clicks the button/link   link = Review and submit
+    Then the user can submit their application
 
 Satisfaction survey:validations
     #The survey needs to be set to enabled in gradle.properties
@@ -207,3 +203,10 @@ Your Project costs section is read-only once application is marked as complete
     the user should not see the element         css = input
     the user clicks the button/link            jQuery = button:contains("Overhead costs")
     the user should not see the element        css = input
+
+the user can submit their application
+    the user should be redirected to the correct page  summary
+    the applicant clicks Yes in the submit modal
+    the user should be redirected to the correct page  track
+    And the user should see the element                     jQuery = h2:contains("Application submitted")
+    And The user should see the element                     link = Give us feedback
