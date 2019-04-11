@@ -77,7 +77,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
         when(registrationServiceMock.resendUserVerificationEmail(userResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
+        mockMvc.perform(put("/user/resend-email-verification-notification/{emailAddress}/", emailAddress))
                 .andExpect(status().isOk());
 
         verify(registrationServiceMock, only()).resendUserVerificationEmail(userResource);
@@ -89,7 +89,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
 
-        mockMvc.perform(put("/user/resendEmailVerificationNotification/{emailAddress}/", emailAddress))
+        mockMvc.perform(put("/user/resend-email-verification-notification/{emailAddress}/", emailAddress))
                 .andExpect(status().isNotFound());
     }
 
@@ -100,7 +100,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
+        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userResource)))
                 .andExpect(status().isCreated())
@@ -118,7 +118,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
+        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userResource)))
                 .andExpect(status().isCreated())
@@ -140,7 +140,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         users.add(testUser3);
 
         when(baseUserServiceMock.findAll()).thenReturn(serviceSuccess(users));
-        mockMvc.perform(get("/user/findAll/")
+        mockMvc.perform(get("/user/find-all/")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
@@ -277,7 +277,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
-        mockMvc.perform(get("/user/findByEmail/" + user.getEmail() + "/", "json")
+        mockMvc.perform(get("/user/find-by-email/" + user.getEmail() + "/", "json")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -289,7 +289,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userServiceMock.findByEmail(email)).thenReturn(serviceFailure(notFoundError(User.class, email)));
 
-        mockMvc.perform(get("/user/findByEmail/" + email + "/", "json")
+        mockMvc.perform(get("/user/find-by-email/" + email + "/", "json")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -330,7 +330,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId))
+        mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId))
                 .andExpect(status().isOk());
 
         verify(userServiceMock, only()).agreeNewTermsAndConditions(userId);
@@ -373,7 +373,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
         when(userServiceMock.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
-        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
+        mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 

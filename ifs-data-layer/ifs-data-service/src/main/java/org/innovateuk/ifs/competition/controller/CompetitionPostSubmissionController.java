@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
@@ -17,26 +16,15 @@ import java.util.List;
  * Controller for handling the competition after submission of the application phase
  */
 @RestController
-@RequestMapping("/competition/postSubmission")
+@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+@RequestMapping({"/competition/postSubmission", "/competition/post-submission"})
 public class CompetitionPostSubmissionController {
 
     @Autowired
     private CompetitionService competitionService;
 
     @Autowired
-    private AssessorService assessorService;
-
-    @Autowired
     private ApplicationNotificationService applicationNotificationService;
-
-    @ZeroDowntime(reference = "IFS-3561", description = "To support the older REST client before this was moved to " +
-            "AssessorController. Remove in cleanup before the next release.")
-    @PutMapping("/{id}/notify-assessors")
-    public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
-        return competitionService.notifyAssessors(competitionId)
-                .andOnSuccess(() -> assessorService.notifyAssessorsByCompetition(competitionId))
-                .toPutResponse();
-    }
 
     @PutMapping("/{id}/release-feedback")
     public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {

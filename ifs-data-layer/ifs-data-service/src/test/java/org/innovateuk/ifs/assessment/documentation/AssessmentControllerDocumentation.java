@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
-import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -217,7 +216,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentRejectOutcomeResource)))
@@ -236,7 +235,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/accept-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
@@ -268,7 +267,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         AssessmentSubmissionsResource assessmentSubmissions = assessmentSubmissionsResourceBuilder.build();
         when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/submitAssessments")
+        mockMvc.perform(put("/assessment/submit-assessments")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentSubmissions)))

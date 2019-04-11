@@ -28,38 +28,45 @@ public class QuestionController {
         return questionService.getQuestionById(id).toGetResponse();
     }
 
-    @GetMapping("/findByCompetition/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByCompetition/{competitionId}", "/find-by-competition/{competitionId}"})
     public RestResult<List<QuestionResource>> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return questionService.findByCompetition(competitionId).toGetResponse();
     }
 
-    @GetMapping("/getNextQuestion/{questionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getNextQuestion/{questionId}", "/get-next-question/{questionId}"})
     public RestResult<QuestionResource> getNextQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getNextQuestion(questionId).toGetResponse();
     }
 
-    @GetMapping("/getPreviousQuestionBySection/{sectionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getPreviousQuestionBySection/{sectionId}", "/get-previous-question-by-section/{sectionId}"})
     public RestResult<QuestionResource> getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getPreviousQuestionBySection(sectionId).toGetResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @GetMapping("/getNextQuestionBySection/{sectionId}")
     public RestResult<QuestionResource> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getNextQuestionBySection(sectionId).toGetResponse();
     }
 
-    @GetMapping("/getPreviousQuestion/{questionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getPreviousQuestion/{questionId}", "/get-previous-question/{questionId}"})
     public RestResult<QuestionResource> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 
-    @GetMapping("/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", "/get-question-by-competition-id-and-form-input-type/{competitionId}/{formInputType}"})
     public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("competitionId") final Long competitionId,
                                                                    @PathVariable("formInputType") final FormInputType formInputType) {
         return questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
     }
-    
-    @GetMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")
+
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getQuestionsBySectionIdAndType/{sectionId}/{type}", "/get-questions-by-section-id-and-type/{sectionId}/{type}"})
     public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(@PathVariable("sectionId") final Long sectionId, @PathVariable("type") QuestionType type) {
         return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
     }
@@ -69,32 +76,24 @@ public class QuestionController {
         return questionService.save(questionResource).toGetResponse();
     }
 
-    @GetMapping("/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}", "/get-question-by-id-and-assessmentId/{questionId}/{assessmentId}"})
     public RestResult<QuestionResource> getQuestionByIdAndAssessmentId(@PathVariable("questionId") Long questionId, @PathVariable("assessmentId") Long assessmentId) {
         return questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).toGetResponse();
     }
 
-    @GetMapping("/getQuestionsByAssessment/{assessmentId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getQuestionsByAssessment/{assessmentId}", "/get-questions-by-assessment/{assessmentId}"})
     public RestResult<List<QuestionResource>> getQuestionsByAssessmentId(@PathVariable("assessmentId") final Long assessmentId) {
         return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
     }
 
-    @GetMapping("/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}", "/get-question-by-competition-id-and-question-setup-type/{competitionId}/{type}"})
     public RestResult<QuestionResource> getQuestionByCompetitionIdQuestionSetupType(
             @PathVariable("competitionId") final long competitionId,
             @PathVariable("type") final QuestionSetupType questionSetupType) {
         return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 questionSetupType).toGetResponse();
     }
-
-    @ZeroDowntime(reference = "IFS-2123", description = "To support the older type (CompetitionSetupQuestionType) before this was renamed " +
-            "Remove in cleanup before the next release.")
-    @GetMapping("/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/{competitionId}/{type}")
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(
-            @PathVariable("competitionId") final long competitionId,
-            @PathVariable("type") final QuestionSetupType questionSetupType) {
-        return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
-                questionSetupType).toGetResponse();
-    }
-
 }

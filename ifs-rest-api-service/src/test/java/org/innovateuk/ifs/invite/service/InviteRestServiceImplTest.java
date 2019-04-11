@@ -15,7 +15,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -123,7 +122,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     public void getUser() throws Exception {
         UserResource expected = new UserResource();
 
-        String url = inviteRestURL + String.format(GET_USER_BY_HASH_MAPPING + "%s", inviteHash);
+        String url = inviteRestURL + String.format("/getUser/" + "%s", inviteHash);
         setupGetWithRestResultAnonymousExpectations(url, UserResource.class, expected);
         RestResult<UserResource> response = service.getUser(inviteHash);
 

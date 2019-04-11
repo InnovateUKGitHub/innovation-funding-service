@@ -367,7 +367,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentRejectOutcomeResource)))
                 .andExpect(status().isOk());
@@ -385,7 +385,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error rejectReasonError = fieldError("rejectReason", null, "validation.assessmentRejectOutcome.rejectReason.required", "");
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentRejectOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
@@ -405,7 +405,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error rejectCommentError = fieldError("rejectComment", rejectComment, "validation.field.too.many.characters", "", "5000", "0");
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentRejectOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
@@ -425,7 +425,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error rejectCommentError = fieldError("rejectComment", rejectComment, "validation.field.max.word.count", "", "100");
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentRejectOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
@@ -447,7 +447,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error rejectionFailedError = new Error(ASSESSMENT_REJECTION_FAILED.getErrorKey(), null);
 
-        mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentRejectOutcomeResource)))
                 .andExpect(status().isBadRequest())
@@ -463,7 +463,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
+        mockMvc.perform(put("/assessment/{id}/accept-invitation", assessmentId))
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).acceptInvitation(assessmentId);
@@ -491,7 +491,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/submitAssessments")
+        mockMvc.perform(put("/assessment/submit-assessments")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isOk());
@@ -503,7 +503,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     public void submitAssessments_null() throws Exception {
         Error error = fieldError("assessmentIds", null, "validation.assessmentSubmissions.assessmentIds.required", "");
 
-        mockMvc.perform(put("/assessment/submitAssessments")
+        mockMvc.perform(put("/assessment/submit-assessments")
                 .contentType(APPLICATION_JSON)
                 .content("{\"assessmentIds\": null}"))
                 .andExpect(status().isNotAcceptable())
@@ -519,7 +519,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error error = fieldError("assessmentIds", emptyList(), "validation.assessmentSubmissions.assessmentIds.required", "");
 
-        mockMvc.perform(put("/assessment/submitAssessments")
+        mockMvc.perform(put("/assessment/submit-assessments")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isNotAcceptable())
@@ -541,7 +541,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceFailure(errorList));
 
-        mockMvc.perform(put("/assessment/submitAssessments")
+        mockMvc.perform(put("/assessment/submit-assessments")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isBadRequest())
