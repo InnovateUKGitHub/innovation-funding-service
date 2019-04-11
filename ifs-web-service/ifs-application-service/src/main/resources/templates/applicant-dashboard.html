@@ -114,7 +114,10 @@
                                         Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
                                         <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
                                     </div>
-                                    <span class="status-msg msg-progress" th:text="${inProgressView.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
+                                    <span class="status-msg msg-progress"
+                                          th:classappend="${inProgressView.isApplicationComplete()} ? 'msg-positive'"
+                                          th:text="${inProgressView.getProgressMessage()}">PERCENTAGE COMPLETE
+                                    </span>
                                 </th:block>
                                 <th:block th:if="${inProgressView.submitted}">
                                     <th:block th:if="${inProgressView.assignedToInterview}">

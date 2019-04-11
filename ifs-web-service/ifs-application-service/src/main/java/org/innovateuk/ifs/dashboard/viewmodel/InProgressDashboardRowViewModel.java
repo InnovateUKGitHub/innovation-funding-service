@@ -16,6 +16,9 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
  */
 public class InProgressDashboardRowViewModel extends
         AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
+
+    private static final int ONE_HUNDRED_PERCENT = 100;
+
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
@@ -88,6 +91,14 @@ public class InProgressDashboardRowViewModel extends
         LocalDate today = TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).toLocalDate();
 
         return today.equals(endDay);
+    }
+
+    public boolean isApplicationComplete() {
+        return applicationProgress == ONE_HUNDRED_PERCENT;
+    }
+
+    public String getProgressMessage() {
+        return isApplicationComplete() ? "Ready to review and submit" : applicationProgress + "% complete";
     }
 
     @Override
