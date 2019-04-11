@@ -105,14 +105,14 @@ Project partners cannot access bank details page
     the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
 
 The user is able to approve bank details
-    the user should see the element             jQuery = h2:contains("${Gabtype_Name} - Account details")
-    the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
-    the user clicks the button/link             jQuery = .button-clear:contains("Cancel")
-    the user should see the element            jQuery = .govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
-    the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
-    the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
-    the user should not see the element        jQuery = .govuk-button:contains("Approve bank account details")
-    the user should see the element             jQuery = .success-alert:contains("The bank details provided have been approved.")
+    the user should see the element       jQuery = h2:contains("${Gabtype_Name} - Account details")
+    the user clicks the button/link       jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link       jQuery = .button-clear:contains("Cancel")
+    the user should see the element       jQuery = .govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
+    the user clicks the button/link       jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link       jQuery = .govuk-button:contains("Approve account")
+    the user should not see the element   jQuery = .govuk-button:contains("Approve bank account details")
+    the user should see the element       jQuery = .success-alert:contains("The bank details provided have been approved.")
 
 The user updates bank account details
     the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
@@ -125,17 +125,17 @@ The user updates bank account details
     the user clicks the button/link            id = submit-change-bank-details
 
 The user is able to cancel bank details changes
-    the user clicks the button/link                      link = Cancel bank account changes
-    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
-    the user clicks the button/link                      link = Change bank account details
-    the text box should be editable                      id = organisationName
-    Set Focus To Element                                  css = [id = "addressForm.manualAddress.addressLine1"]
-    the user sees the text in the text field             css = [id = "addressForm.manualAddress.addressLine1"]  290 Parkside Circle
-    the user clicks the button/link                      id = modal-change-bank-details
-    the user clicks the button/link                       jQuery = .button-clear:contains("Cancel")
-    the text box should be editable                      id = organisationName
-    the user clicks the button/link                      link = Review bank details
-    the user should see the element                      jQuery = p:contains("These details are now undergoing an internal review. ")
+    the user clicks the button/link                     link = Cancel bank account changes
+    the user should be redirected to the correct page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
+    the user clicks the button/link                     link = Change bank account details
+    the text box should be editable                     id = organisationName
+    Set Focus To Element                                css = [id = "addressForm.manualAddress.addressLine1"]
+    the user sees the text in the text field            css = [id = "addressForm.manualAddress.addressLine1"]  290 Parkside Circle
+    the user clicks the button/link                     id = modal-change-bank-details
+    the user clicks the button/link                     jQuery = .button-clear:contains("Cancel")
+    the text box should be editable                     id = organisationName
+    the user clicks the button/link                     link = Review bank details
+    the user should see the element                     jQuery = p:contains("These details are now undergoing an internal review. ")
 
 The user verifies server side validation
     the user enters text to a text field            id = accountNumber  123
