@@ -241,12 +241,6 @@ public class SetupSectionAccessibilityHelper {
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
-        if (!isBankDetailsApproved(organisation)) {
-
-            return fail("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
-                    "approved or queried");
-        }
-
         if (!setupProgressChecker.isSpendProfileGenerated()) {
 
             return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
@@ -299,6 +293,7 @@ public class SetupSectionAccessibilityHelper {
         }
 
         if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
+                && (isBankDetailsApproved(organisation))
                 && setupProgressChecker.isGrantOfferLetterAvailable()
                 && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;

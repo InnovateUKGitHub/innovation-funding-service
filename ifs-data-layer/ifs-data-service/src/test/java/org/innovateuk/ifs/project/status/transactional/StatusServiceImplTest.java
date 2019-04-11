@@ -705,7 +705,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, false);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -717,7 +720,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -734,12 +737,19 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         long projectId = 2345L;
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
+        long orgId = 564321L;
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(orgId).build();
 
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, false);
 
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(false);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -751,7 +761,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -771,6 +781,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -782,7 +796,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -803,6 +817,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE,
                 Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
+
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -814,7 +833,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -834,6 +853,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -845,7 +868,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
