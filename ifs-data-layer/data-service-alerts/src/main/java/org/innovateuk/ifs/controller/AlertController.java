@@ -2,6 +2,7 @@ package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.domain.Alert;
 import org.innovateuk.ifs.transactional.AlertService;
@@ -20,7 +21,8 @@ public class AlertController {
     @Autowired
     private AlertService alertService;
 
-    @GetMapping("/findAllVisible")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findAllVisible", "find-all-visible"})
     public RestResult<List<AlertResource>> findAllVisible() {
         return alertService.findAllVisible().toGetResponse();
     }

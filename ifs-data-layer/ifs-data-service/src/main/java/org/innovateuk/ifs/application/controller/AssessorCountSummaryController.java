@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import java.util.Optional;
  * Controller for exposing statistical data on assessors
  */
 @RestController
-@RequestMapping("/assessorCountSummary")
+@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+@RequestMapping({"/assessorCountSummary", "/assessor-count-summary"})
 public class AssessorCountSummaryController {
 
     @Autowired
@@ -21,7 +23,8 @@ public class AssessorCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    @GetMapping("/findByCompetitionId/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByCompetitionId/{competitionId}", "/find-by-competition-id/{competitionId}"})
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(@PathVariable("competitionId") long competitionId,
                                                                                                  @RequestParam(value = "innovationSector") Optional<Long> innovationSector,
                                                                                                  @RequestParam(value = "businessType") Optional<BusinessType> businessType,

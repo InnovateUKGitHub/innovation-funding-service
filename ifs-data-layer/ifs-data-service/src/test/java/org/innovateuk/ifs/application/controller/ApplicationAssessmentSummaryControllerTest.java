@@ -39,7 +39,7 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
 
         when(applicationAssessmentSummaryServiceMock.getAssignedAssessors(applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}/assignedAssessors", applicationId))
+        mockMvc.perform(get("/application-assessment-summary/{id}/assigned-assessors", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
@@ -54,7 +54,7 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
 
         when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, 0, 20, null)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}/availableAssessors", applicationId))
+        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
@@ -72,7 +72,7 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
 
         when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, page, size, filterInnovationArea)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}/availableAssessors?page={page}&size={size}&filterInnovationArea={filter}", applicationId, page, size, filterInnovationArea))
+        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors?page={page}&size={size}&filterInnovationArea={filter}", applicationId, page, size, filterInnovationArea))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
@@ -88,7 +88,7 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
 
         when(applicationAssessmentSummaryServiceMock.getApplicationAssessmentSummary(applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}", applicationId))
+        mockMvc.perform(get("/application-assessment-summary/{id}", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
