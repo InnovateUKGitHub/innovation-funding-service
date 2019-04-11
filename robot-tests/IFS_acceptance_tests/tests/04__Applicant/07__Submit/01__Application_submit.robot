@@ -69,14 +69,14 @@ Application overview complete status
 
 Applicant dashboard shows correct status
     [Documentation]  IFS-4265
-    Given The user clicks the button/link   link = Applications
+    Given the user clicks the button/link   link = Applications
     Then the user should see the element    jQuery = .task:contains("${application_rto_name}") ~ .status:contains("Ready to review and submit")
     [Teardown]  the user clicks the button/link  link = ${application_rto_name}
 
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
     Given the user clicks the button/link                   link = review and submit
-    And The user clicks the button/link                     link = Review and submit
+    And the user clicks the button/link                     link = Review and submit
     Then the user should be redirected to the correct page  summary
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page  track
