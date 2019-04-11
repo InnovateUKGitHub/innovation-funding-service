@@ -29,15 +29,6 @@ public class CompetitionPostSubmissionController {
     @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
-    @ZeroDowntime(reference = "IFS-3561", description = "To support the older REST client before this was moved to " +
-            "AssessorController. Remove in cleanup before the next release.")
-    @PutMapping("/{id}/notify-assessors")
-    public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
-        return competitionService.notifyAssessors(competitionId)
-                .andOnSuccess(() -> assessorService.notifyAssessorsByCompetition(competitionId))
-                .toPutResponse();
-    }
-
     @PutMapping("/{id}/release-feedback")
     public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
         return competitionService.releaseFeedback(competitionId)

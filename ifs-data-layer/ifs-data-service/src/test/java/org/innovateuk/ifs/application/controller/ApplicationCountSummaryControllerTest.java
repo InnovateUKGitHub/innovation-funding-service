@@ -15,14 +15,14 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {
+public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVCTest<OldApplicationCountSummaryController> {
 
     @Mock
     private ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Override
-    protected ApplicationCountSummaryController supplyControllerUnderTest() {
-        return new ApplicationCountSummaryController();
+    protected OldApplicationCountSummaryController supplyControllerUnderTest() {
+        return new OldApplicationCountSummaryController();
     }
 
     @Test

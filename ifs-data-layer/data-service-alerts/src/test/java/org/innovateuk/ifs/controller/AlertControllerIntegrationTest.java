@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,20 +15,20 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 import static org.junit.Assert.*;
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
     private UserResource systemMaintenanceUser;
 
     @Before
-    public void setUp() throws Exception {
-        systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)).build();
+    public void setUp() {
+        systemMaintenanceUser = newUserResource().withRoleGlobal(SYSTEM_MAINTAINER).build();
         clearUniqueIds();
     }
 
@@ -40,7 +39,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void findAllVisible() throws Exception {
+    public void findAllVisible() {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -69,7 +68,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType() {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -100,7 +99,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         setLoggedInUser(systemMaintenanceUser);
 
         AlertResource alertResource = AlertResourceBuilder.newAlertResource()
@@ -118,7 +117,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete() {
         setLoggedInUser(systemMaintenanceUser);
 
         // save a new alert
@@ -141,7 +140,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void deleteAllByType() throws Exception {
+    public void deleteAllByType() {
         setLoggedInUser(systemMaintenanceUser);
 
         controller.deleteAllByType(AlertType.MAINTENANCE);

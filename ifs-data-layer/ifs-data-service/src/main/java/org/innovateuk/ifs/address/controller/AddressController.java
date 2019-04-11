@@ -3,6 +3,7 @@ package org.innovateuk.ifs.address.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.transactional.AddressLookupService;
 import org.innovateuk.ifs.address.transactional.AddressService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,24 @@ public class AddressController {
     @Autowired
     private AddressLookupService addressLookupService;
 
+    @ZeroDowntime(reference = "IFS-430", description = "delete in h2020 sprint 6")
     @GetMapping("/doLookup")
+    public RestResult<List<AddressResource>> doLookupOld(@RequestParam(name="lookup", defaultValue="") final String lookup) {
+        return addressLookupService.doLookup(lookup).toGetResponse();
+    }
+
+    @GetMapping("/do-lookup")
     public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-430", description = "delete in h2020 sprint 6")
     @GetMapping("/validatePostcode")
+    public RestResult<Boolean> validatePostcodeOld(@RequestParam(name="postcode", defaultValue="") final String postcode) {
+        return addressLookupService.validatePostcode(postcode).toGetResponse();
+    }
+
+    @GetMapping("/validate-postcode")
     public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }

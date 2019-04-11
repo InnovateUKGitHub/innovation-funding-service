@@ -53,7 +53,7 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(overheadFileServiceMock.getProjectFileEntryDetails(overHeadIdSuccess)).thenReturn(serviceSuccess(fileEntryResource));
 
-        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocumentDetails?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/project-overhead-calculation-document-details?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)))
@@ -77,7 +77,7 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
 
         when(overheadFileServiceMock.getProjectFileEntryContents(overHeadIdSuccess)).thenReturn(serviceSuccess(successResult));
 
-        mockMvc.perform(get(OVERHEAD_BASE_URL + "/projectOverheadCalculationDocument?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
+        mockMvc.perform(get(OVERHEAD_BASE_URL + "/project-overhead-calculation-document?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(successResult)))

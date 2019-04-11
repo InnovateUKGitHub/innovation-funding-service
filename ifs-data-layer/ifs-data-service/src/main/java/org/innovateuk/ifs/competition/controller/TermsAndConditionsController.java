@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
@@ -25,9 +26,21 @@ public class TermsAndConditionsController {
     @Autowired
     private TermsAndConditionsService termsAndConditionsService;
 
+    @ZeroDowntime(reference = "IFS-430", description = "delete in h2020 sprint 6")
     @GetMapping("/getLatest")
+    public RestResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditionsOld() {
+        return termsAndConditionsService.getLatestVersionsForAllTermsAndConditions().toGetResponse();
+    }
+
+    @GetMapping("/get-latest")
     public RestResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
         return termsAndConditionsService.getLatestVersionsForAllTermsAndConditions().toGetResponse();
+    }
+
+    @ZeroDowntime(reference = "IFS-430", description = "delete in h2020 sprint 6")
+    @GetMapping("/getById/{id}")
+    public RestResult<GrantTermsAndConditionsResource> getByIdOld(@PathVariable("id") final Long id) {
+        return termsAndConditionsService.getById(id).toGetResponse();
     }
 
     @GetMapping("/getById/{id}")

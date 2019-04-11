@@ -44,7 +44,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
 
         final List<AlertResource> expected = asList(expected1, expected2);
 
-        setupGetWithRestResultAnonymousExpectations(alertRestURL + "/findAllVisible", alertResourceListType(), expected, OK);
+        setupGetWithRestResultAnonymousExpectations(alertRestURL + "/find-all-visible", alertResourceListType(), expected, OK);
         final List<AlertResource> response = service.findAllVisible().getSuccess();
         assertSame(expected, response);
     }
@@ -65,7 +65,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
 
         final List<AlertResource> expected = asList(expected1, expected2);
 
-        setupGetWithRestResultAnonymousExpectations(alertRestURL + "/findAllVisible/MAINTENANCE", alertResourceListType(), expected, OK);
+        setupGetWithRestResultAnonymousExpectations(alertRestURL + "/find-all-visible/MAINTENANCE", alertResourceListType(), expected, OK);
         final List<AlertResource> response = service.findAllVisibleByType(AlertType.MAINTENANCE).getSuccess();
         assertSame(expected, response);
     }

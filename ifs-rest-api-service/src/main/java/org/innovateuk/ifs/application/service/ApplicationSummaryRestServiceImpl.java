@@ -149,7 +149,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ByteArrayResource> downloadByCompetition(long competitionId) {
-        String url = applicationRestUrl + "/download/downloadByCompetition/" + competitionId;
+        String url = applicationRestUrl + "/download/download-by-competition/" + competitionId;
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
