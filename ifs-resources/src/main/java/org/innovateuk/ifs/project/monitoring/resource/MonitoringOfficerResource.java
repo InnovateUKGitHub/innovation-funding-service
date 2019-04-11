@@ -21,10 +21,6 @@ public class MonitoringOfficerResource {
     public MonitoringOfficerResource() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public MonitoringOfficerResource(Long id, String firstName, String lastName, String email, String phoneNumber, Long project) {
         this.id = id;
         this.firstName = firstName;
@@ -32,6 +28,10 @@ public class MonitoringOfficerResource {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.project = project;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
