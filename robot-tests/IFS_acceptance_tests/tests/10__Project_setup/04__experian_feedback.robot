@@ -102,7 +102,12 @@ Other internal users cannot access bank details page
 
 Project partners cannot access bank details page
     log in as a different user  ${PS_EF_Application_Partner_Email}  ${short_password}
+    the user should not be able to access the page &{creds} &{url}
     the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
+The user should not be able to access the page
+    [Arguments]   ${creds}   ${url}
+    log in as a different user
+    Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
 
 The user is able to approve bank details
     the user should see the element       jQuery = h2:contains("${Gabtype_Name} - Account details")
