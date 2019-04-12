@@ -85,11 +85,11 @@
                         </li>
                         <li th:unless="${model.readOnly}">
                             <a class="disabled govuk-link" aria-disabled="true"
-                               th:if="${model.isInviteAssessorsLinkDisabled()}">
+                               th:unless="${model.isInviteAssessorsLinkEnabled()}">
                                 Invite assessors to assess the competition
                             </a>
                             <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}"
-                               th:unless="${model.isInviteAssessorsLinkDisabled()}"
+                               th:if="${model.isInviteAssessorsLinkEnabled()}"
                                class="govuk-link">
                                 Invite assessors to assess the competition
                             </a>
