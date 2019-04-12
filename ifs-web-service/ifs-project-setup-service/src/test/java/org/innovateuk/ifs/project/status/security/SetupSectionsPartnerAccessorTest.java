@@ -367,7 +367,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
@@ -376,7 +375,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
-                mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isSpendProfileGenerated(),
                 mock -> mock.isOffline()
         );
@@ -455,6 +453,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
@@ -464,6 +463,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
+                mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isGrantOfferLetterAvailable(),
                 mock -> mock.isGrantOfferLetterSent(),
                 mock -> mock.isOffline()
@@ -475,6 +475,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
@@ -483,6 +484,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
+                mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isGrantOfferLetterAvailable(),
                 mock -> mock.isOffline()
         );
@@ -521,10 +523,30 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     }
 
     @Test
+    public void checkAccessToGrantOfferLetterSectionBankDetailsNotApproved() {
+
+        when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isSpendProfileApproved(),
+                mock -> mock.isDocumentsApproved(),
+                mock -> mock.isBankDetailsApproved(organisation),
+                mock -> mock.isDocumentsApproved(),
+                mock -> mock.isOffline()
+        );
+    }
+
+    @Test
     public void checkAccessToGrantOfferLetterSectionGrantOfferNotSent() {
 
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
@@ -534,6 +556,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
+                mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isGrantOfferLetterAvailable(),
                 mock -> mock.isGrantOfferLetterSent(),
                 mock -> mock.isOffline()

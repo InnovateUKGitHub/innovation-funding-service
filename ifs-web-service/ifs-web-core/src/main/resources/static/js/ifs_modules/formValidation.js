@@ -47,7 +47,7 @@ IFS.core.formValidation = (function () {
         }
       },
       required: {
-        fields: '[required]:not([data-date],[readonly],[name="password"])',
+        fields: '[required]:not([data-date],[readonly],[name="password"],.autocomplete__input)',
         messageInvalid: 'This field cannot be left blank.'
       },
       requiredGroup: {

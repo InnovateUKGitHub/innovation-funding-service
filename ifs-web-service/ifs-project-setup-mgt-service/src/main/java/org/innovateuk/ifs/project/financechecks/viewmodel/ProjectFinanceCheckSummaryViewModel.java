@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check summary page
@@ -16,8 +16,7 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     private boolean isGenerateSpendProfileReady() {
         return financeCheckSummaryResource.isFinanceChecksAllApproved() &&
-                financeCheckSummaryResource.isBankDetailsApproved() &&
-                !simpleAnyMatch(financeCheckSummaryResource.getPartnerStatusResources(),
+                simpleNoneMatch(financeCheckSummaryResource.getPartnerStatusResources(),
                         partnerStatusResource -> !partnerStatusResource.isFinanceContactProvided());
     }
 
