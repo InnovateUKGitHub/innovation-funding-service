@@ -21,11 +21,11 @@ public class OrganisationTypeRestServiceImpl extends BaseRestService implements 
 
     @Override
     public RestResult<List<OrganisationTypeResource>> getAll() {
-        return getWithRestResultAnonymous(restUrl + "/getAll", organisationTypeResourceListType());
+        return getWithRestResultAnonymous(restUrl + "/get-all", organisationTypeResourceListType());
     }
 
     @Override
     public RestResult<OrganisationTypeResource> getForOrganisationId(Long organisationId) {
-        return getWithRestResultAnonymous(restUrl + "/getTypeForOrganisation/" + organisationId, OrganisationTypeResource.class);
+        return getWithRestResultAnonymous(restUrl + "/get-type-for-organisation/" + organisationId, OrganisationTypeResource.class);
     }
 }

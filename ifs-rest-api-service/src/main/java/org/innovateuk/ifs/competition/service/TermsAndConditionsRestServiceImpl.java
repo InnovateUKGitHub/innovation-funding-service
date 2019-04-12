@@ -23,12 +23,12 @@ public class TermsAndConditionsRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
-        return getWithRestResult(termsAndConditionsRestUrl + "/getLatest", grantTermsAndConditionsResourceListType());
+        return getWithRestResult(termsAndConditionsRestUrl + "/get-latest", grantTermsAndConditionsResourceListType());
     }
 
     @Override
     public RestResult<GrantTermsAndConditionsResource> getById(Long id) {
-        return getWithRestResult(termsAndConditionsRestUrl + "/getById/" + id, GrantTermsAndConditionsResource.class);
+        return getWithRestResult(termsAndConditionsRestUrl + "/get-by-id/" + id, GrantTermsAndConditionsResource.class);
     }
 
     @Override

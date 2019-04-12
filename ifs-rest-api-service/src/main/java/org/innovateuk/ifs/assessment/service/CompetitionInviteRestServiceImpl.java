@@ -23,17 +23,17 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getall-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
-        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getInviteToSend", inviteId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invite-to-send", inviteId), AssessorInvitesToSendResource.class);
     }
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getAllInvitesToResend", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-all-invites-to-resend", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
@@ -43,32 +43,32 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<CompetitionInviteResource> getInvite(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getInvite", inviteHash), CompetitionInviteResource.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invite", inviteHash), CompetitionInviteResource.class);
     }
 
     @Override
     public RestResult<CompetitionInviteResource> openInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "openInvite", inviteHash), CompetitionInviteResource.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "open-invite", inviteHash), CompetitionInviteResource.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash) {
-        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "acceptInvite", inviteHash), Void.class);
+        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "accept-invite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionResource rejectionReason) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "rejectInvite", inviteHash), rejectionReason, Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "reject-invite", inviteHash), rejectionReason, Void.class);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "checkExistingUser", inviteHash), Boolean.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "check-existing-user", inviteHash), Boolean.class);
     }
 
     @Override
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getAvailableAssessors", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -80,7 +80,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getAvailableAssessors", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl)

@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 
 public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationInnovationAreaRestServiceImpl> {
-    private static final String applicationInnovationAreaRestUrl = "/applicationInnovationArea";
+    private static final String applicationInnovationAreaRestUrl = "/application-innovation-area";
 
     @Override
     protected ApplicationInnovationAreaRestServiceImpl registerRestServiceUnderTest() {
@@ -27,7 +27,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     public void testSaveApplicationInnovationAreaChoice() {
         Long innovationAreaId = 123L;
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/innovationArea/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/innovation-area/" + 321;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -40,7 +40,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     @Test
     public void setSetApplicationInnovationAreaNotApplicable() {
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/noInnovationAreaApplicable/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/no-innovation-area-applicable/" + 321;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -52,7 +52,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     @Test
     public void testGetAvailableInnovationAreas() {
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/availableInnovationAreas/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/available-innovation-areas/" + 321;
 
         List<InnovationAreaResource> innovationAreaResourceList = newInnovationAreaResource().build(5);
 

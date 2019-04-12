@@ -6,9 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.addressResourceListType;
 import static org.junit.Assert.assertEquals;
@@ -26,8 +26,8 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
     @Test
     public void doLookup() throws Exception{
         String postcode = "BS348XU";
-        String expectedUrl = addressRestURL + "/doLookup?lookup=" + postcode;
-        List<AddressResource> returnedAddresses = Arrays.asList(1,2,3,4).stream().map(i -> new AddressResource()).collect(Collectors.toList());// newAddressResource().build(4);
+        String expectedUrl = addressRestURL + "/do-lookup?lookup=" + postcode;
+        List<AddressResource> returnedAddresses = Stream.of(1, 2, 3, 4).map(i -> new AddressResource()).collect(Collectors.toList());// newAddressResource().build(4);
         setupGetWithRestResultAnonymousExpectations(expectedUrl, addressResourceListType(), returnedAddresses, HttpStatus.OK);
 
         // now run the method under test

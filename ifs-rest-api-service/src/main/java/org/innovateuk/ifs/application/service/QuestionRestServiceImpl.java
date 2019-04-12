@@ -23,7 +23,7 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
 
     @Override
     public RestResult<List<QuestionResource>> findByCompetition(long competitionId) {
-        return getWithRestResult(questionRestURL + "/findByCompetition/" + competitionId, ParameterizedTypeReferences.questionResourceListType());
+        return getWithRestResult(questionRestURL + "/find-by-competition/" + competitionId, ParameterizedTypeReferences.questionResourceListType());
     }
 
     @Override
@@ -33,33 +33,33 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
 
     @Override
     public RestResult<QuestionResource> getNextQuestion(long questionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestion/" + questionId, QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-next-question/" + questionId, QuestionResource.class);
     }
 
     @Override
     public RestResult<QuestionResource> getPreviousQuestion(long questionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestion/" + questionId, QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-previous-question/" + questionId, QuestionResource.class);
     }
 
     @Override
     public RestResult<QuestionResource> getPreviousQuestionBySection(long sectionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/" + sectionId, QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-previous-question-by-section/" + sectionId, QuestionResource.class);
     }
 
     @Override
     public RestResult<QuestionResource> getNextQuestionBySection(long sectionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-next-question-by-section/" + sectionId, QuestionResource.class);
     }
 
     @Override
     public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(long competitionId, FormInputType formInputType) {
-        return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndFormInputType/" + competitionId + "/" + formInputType.name(), QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-question-by-competition-id-and-form-input-type/" + competitionId + "/" + formInputType.name(), QuestionResource.class);
     }
 
     @Override
     public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
             long sectionId, QuestionType type) {
-        return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), ParameterizedTypeReferences.questionResourceListType());
+        return getWithRestResult(questionRestURL + "/get-questions-by-section-id-and-type/" + sectionId + "/" + type.name(), ParameterizedTypeReferences.questionResourceListType());
     }
 
     @Override
@@ -69,18 +69,18 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
 
     @Override
     public RestResult<QuestionResource> getByIdAndAssessmentId(long questionId, long assessmentId) {
-        return getWithRestResult(questionRestURL + "/getQuestionByIdAndAssessmentId/" + questionId + "/" + assessmentId, QuestionResource.class);
+        return getWithRestResult(questionRestURL + "/get-question-by-id-and-assessment-id/" + questionId + "/" + assessmentId, QuestionResource.class);
     }
 
     @Override
     public RestResult<List<QuestionResource>> getQuestionsByAssessment(long assessmentId) {
-        return getWithRestResult(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, ParameterizedTypeReferences.questionResourceListType());
+        return getWithRestResult(questionRestURL + "/get-questions-by-assessment/" + assessmentId, ParameterizedTypeReferences.questionResourceListType());
     }
 
     @Override
     public RestResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(long questionId,
                                                                                        QuestionSetupType questionSetupType) {
-        return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndQuestionSetupType/" +
+        return getWithRestResult(questionRestURL + "/get-question-by-competition-id-and-question-setup-type/" +
                 questionId + "/" + questionSetupType.name(), QuestionResource.class);
     }
 }
