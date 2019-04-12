@@ -5,16 +5,14 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -22,21 +20,18 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -59,7 +54,7 @@ public class LegacyMonitoringOfficerController {
     private StatusService statusService;
 
     @Autowired
-    private MonitoringOfficerService monitoringOfficerService;
+    private MonitoringOfficerRestService monitoringOfficerService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -77,61 +72,12 @@ public class LegacyMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
+        if (!existingMonitoringOfficer.isPresent()) {
+            return "redirect:/monitoring-officer/view-all";
+        }
+        LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
-    @GetMapping("/edit")
-    public String editMonitoringOfficer(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
-                                        UserResource loggedInUser) {
-
-        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
-        return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
-    @PostMapping("/confirm")
-    public String confirmMonitoringOfficerDetails(Model model,
-                                                  @P("projectId") @PathVariable("projectId") final Long projectId,
-                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
-                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                  UserResource loggedInUser) {
-
-        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-
-        Supplier<String> failureView = () -> editMonitoringOfficer(model, projectId, form, false, isInternalAdmin(loggedInUser));
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            doViewMonitoringOfficer(model, projectId, form, false, false, isInternalAdmin(loggedInUser));
-            return "project/monitoring-officer-confirm";
-        });
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
-    @PostMapping("/assign")
-    public String updateMonitoringOfficerDetails(Model model,
-                                                 @P("projectId")@PathVariable("projectId") final Long projectId,
-                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
-                                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                 UserResource loggedInUser) {
-
-        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-
-        Supplier<String> failureView = () -> editMonitoringOfficer(model, projectId, form, false, isInternalAdmin(loggedInUser));
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> updateResult = monitoringOfficerService.updateMonitoringOfficer(projectId, form.getFirstName(),
-                    form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
-
-            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> redirectToMonitoringOfficerViewTemporarily(projectId));
-        });
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
@@ -142,25 +88,21 @@ public class LegacyMonitoringOfficerController {
         }
     }
 
-    private String viewMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned, boolean editable) {
-        return doViewMonitoringOfficer(model, projectId, form, false, existingMonitoringOfficerAssigned, editable);
+    private String viewMonitoringOfficer(Model model, Long projectId, LegacyMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned, boolean editable) {
+        return doViewMonitoringOfficer(model, projectId, form, existingMonitoringOfficerAssigned, editable);
     }
 
-    private String editMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned, boolean editable) {
-        return doViewMonitoringOfficer(model, projectId, form, true, existingMonitoringOfficerAssigned, editable);
-    }
+    private String doViewMonitoringOfficer(Model model, Long projectId, LegacyMonitoringOfficerForm form, boolean existingMonitoringOfficer, boolean editable) {
+        boolean editMode = false;
 
-    private String doViewMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean currentlyEditing, boolean existingMonitoringOfficer, boolean editable) {
-        boolean editMode = currentlyEditing || !existingMonitoringOfficer;
-
-        MonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer, editable);
+        LegacyMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer, editable);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/monitoring-officer";
     }
 
-    private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId, boolean editMode, boolean existingMonitoringOfficer, boolean editable) {
+    private LegacyMonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId, boolean editMode, boolean existingMonitoringOfficer, boolean editable) {
         ProjectResource projectResource = projectService.getById(projectId);
         Long applicationId = projectResource.getApplication();
         ApplicationResource application = applicationService.getById(applicationId);
@@ -174,16 +116,9 @@ public class LegacyMonitoringOfficerController {
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new MonitoringOfficerViewModel(projectId, projectResource.getName(), applicationId,
+        return new LegacyMonitoringOfficerViewModel(projectId, projectResource.getName(), applicationId,
                 innovationAreas, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, existingMonitoringOfficer, editMode, editable);
-    }
-
-    /**
-     * "Temporarily" because the final target page to redirect to after submission has not yet been built
-     */
-    private String redirectToMonitoringOfficerViewTemporarily(long projectId) {
-        return "redirect:/project/" + projectId + "/monitoring-officer";
     }
 
     private String getProjectManagerName(ProjectResource project) {

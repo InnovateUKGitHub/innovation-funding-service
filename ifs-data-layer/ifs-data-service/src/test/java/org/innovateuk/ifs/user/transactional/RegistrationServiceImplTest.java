@@ -18,13 +18,14 @@ import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
@@ -75,6 +76,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -137,8 +139,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
 
-    @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Test
     public void createUser() {
@@ -613,6 +613,40 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
 
         service.createMonitoringOfficer(hash, registrationResource).getSuccess();
+    }
+
+    @Test
+    public void createPendingMonitoringOfficer() {
+        User user = newUser().withEmailAddress("test@test.test").build();
+        MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
+                "Steve", "Smith", "011432333333", "test@test.test");
+        String password = "superSecurePassword";
+        when(idpServiceMock.createUserRecordWithUid(anyString(), anyString())).thenReturn(serviceSuccess("uid"));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+
+        service.createPendingMonitoringOfficer(resource).getSuccess();
+
+        verify(idpServiceMock).createUserRecordWithUid(anyString(), anyString());
+        verify(profileRepositoryMock).save(any(Profile.class));
+        verify(userRepositoryMock, times(2)).save(any(User.class));
+    }
+
+    @Test
+    public void activatePendingUser() {
+        User user = newUser().withUid("uid").build();
+
+        when(monitoringOfficerInviteRepositoryMock.existsByHash("hash")).thenReturn(true);
+        when(idpServiceMock.activateUser(anyString())).thenReturn(serviceSuccess("uid"));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        when(idpServiceMock.updateUserPassword("uid", "password")).thenReturn(serviceSuccess("uid"));
+
+        service.activatePendingUser(user, "password", "hash").getSuccess();
+
+        verify(monitoringOfficerInviteRepositoryMock).existsByHash("hash");
+        verify(idpServiceMock).activateUser(anyString());
+        verify(userRepositoryMock).save(any(User.class));
+        verify(idpServiceMock).updateUserPassword("uid", "password");
     }
 
     private void setUpUsersForEditInternalUserSuccess() {

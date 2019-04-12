@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;

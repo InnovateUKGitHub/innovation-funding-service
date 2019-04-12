@@ -146,7 +146,7 @@ As next step the Applicant cannot see the turnover field
     And the user clicks the button/link                          link = Your organisation
     Then the user should not see the element                     jQuery = div label:contains("Turnover (£)")
     And the user should see the element                          jQuery = div label:contains("Full time employees")
-    And the user should see the element                          jQuery = span:contains("How many full-time employees did you have on the project at the close of your last financial year?")
+    And the user should see the element                          jQuery = span:contains("Number of full time employees at your organisation.")
 
 User can save null values and reenter the organisation page
     [Documentation]    IFS-5612

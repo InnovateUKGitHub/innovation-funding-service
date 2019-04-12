@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -60,7 +60,7 @@ public class ProjectRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                                 .build(2)
                 )
                 .withProjectMonitoringOfficer(
-                        newProjectMonitoringOfficer()
+                        newMonitoringOfficer()
                                 .withId((Long) null)
                                 .withUser(felixWilson)
                                 .build()

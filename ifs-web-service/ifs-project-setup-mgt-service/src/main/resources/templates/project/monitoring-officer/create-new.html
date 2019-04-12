@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add a monitoring officer'"/>
+</head>
+
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/project-setup-management/monitoring-officer/search-by-email'" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a monitoring officer',size='govuk-heading-l'" />
+
+                <form th:object="${form}" method="post" th:action="@{/monitoring-officer/create}" novalidate="novalidate">
+                    <div class="govuk-form-group">
+                        <dl class="govuk-list">
+                            <dt>Email</dt>
+                            <dd th:text="${emailAddress}">email@domain.net</dd>
+                        </dl>
+                    </div>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="firstName">
+                            First name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-width-one-half"
+                               id="firstName"
+                               th:errorclass="govuk-input--error"
+                               type="text"
+                               th:field="*{firstName}"
+                               required="required"
+                               pattern="\D{2,}"
+                               minlength="2"
+                               maxlength="70"
+                               th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required},
+                                    data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
+                    </div>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="lastName">
+                            Last name
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-width-one-half"
+                               id="lastName"
+                               th:errorclass="govuk-input--error"
+                               type="text"
+                               th:field="*{lastName}"
+                               required="required"
+                               pattern="\D{2,}"
+                               minlength="2"
+                               maxlength="70"
+                               th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required},
+                                    data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
+                    </div>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s" for="phoneNumber">
+                            Phone number
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-width-one-half"
+                               id="phoneNumber"
+                               th:errorclass="govuk-input--error"
+                               type="tel"
+                               th:field="*{phoneNumber}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <input type="hidden" name="emailAddress" th:value="${emailAddress}" />
+                        <button type="submit" class="govuk-button govuk-!-margin-top-6">
+                            Add monitoring officer
+                        </button>
+                    </div>
+                </form>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

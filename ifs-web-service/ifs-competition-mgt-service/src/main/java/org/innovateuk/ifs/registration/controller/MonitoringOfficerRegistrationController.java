@@ -10,6 +10,7 @@ import org.innovateuk.ifs.registration.form.MonitoringOfficerRegistrationForm;
 import org.innovateuk.ifs.registration.populator.MonitoringOfficerRegistrationModelPopulator;
 import org.innovateuk.ifs.registration.service.MonitoringOfficerService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -65,22 +66,11 @@ public class MonitoringOfficerRegistrationController {
             }
         }
 
-        return competitionSetupMonitoringOfficerRestService.checkExistingUser(inviteHash).andOnSuccessReturn(
-                userExists -> {
-                    if (userExists) {
-                        addMonitoringOfficerRole(inviteHash);
-                        return dashboardRedirect(request);
-                    } else {
-                        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.openMonitoringOfficerInvite(inviteHash).getSuccess();
-                        model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
-                        return "monitoring-officer/create-account";
-                    }
-                }).getSuccess();
+        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.openMonitoringOfficerInvite(inviteHash).getSuccess();
+        model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
+        return "monitoring-officer/create-account";
     }
 
-    private void addMonitoringOfficerRole(String inviteHash) {
-        competitionSetupMonitoringOfficerRestService.addMonitoringOfficerRole(inviteHash);
-    }
 
     private String dashboardRedirect(HttpServletRequest request) {
         return navigationUtils.getRedirectToLandingPageUrl(request);
@@ -101,7 +91,8 @@ public class MonitoringOfficerRegistrationController {
         }
         else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<Void> result = monitoringOfficerService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationForm);
+                ServiceResult<Void> result = monitoringOfficerService.activateAndUpdateMonitoringOfficer(inviteHash,
+                                                                                                         monitoringOfficerRegistrationForm);
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
                         bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());

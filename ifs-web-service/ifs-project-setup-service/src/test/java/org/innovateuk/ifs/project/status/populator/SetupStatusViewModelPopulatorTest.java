@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -18,10 +17,9 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -35,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -58,6 +57,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -84,7 +84,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private MonitoringOfficerService monitoringOfficerService;
+    private MonitoringOfficerRestService monitoringOfficerService;
 
     @Mock
     private BankDetailsRestService bankDetailsRestService;
@@ -118,8 +118,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<BankDetailsResource> bankDetailsNotFoundResult = restFailure(notFoundError(BankDetailsResource.class, 123L));
 
     private MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
-    private Optional<MonitoringOfficerResource> monitoringOfficerFoundResult = Optional.of(monitoringOfficer);
-    private Optional<MonitoringOfficerResource> monitoringOfficerNotFoundResult = Optional.empty();
+    private RestResult<MonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
+    private RestResult<MonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
     private Map<String, SectionStatus> partnerStatusFlagChecks = new HashMap<>();
 
@@ -319,7 +319,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
@@ -864,7 +864,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
@@ -1434,7 +1434,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectResource()
+        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
                 .withStatus(document1Status, document2Status)
                 .build(2);
 
@@ -1480,7 +1480,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         competition.setCompetitionDocuments(competitionDocuments);
 
-        List<ProjectDocumentResource> projectDocuments = ProjectDocumentResourceBuilder.newProjectResource()
+        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
                 .withCompetitionDocument(competitionDocuments.get(1))
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
@@ -1500,6 +1500,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(true, viewModel.getDocumentsStatus().equals(TICK));
 
         assertFalse(viewModel.isProjectComplete());
+        assertFalse(viewModel.isMonitoringOfficer());
 
     }
 
@@ -1507,7 +1508,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         return populator.populateViewModel(projectId, loggedInUser, "origin").get();
     }
 
-    private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
+    private void setupLookupProjectDetailsExpectations(RestResult<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
 
         ProjectUserResource pmUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
@@ -1518,7 +1519,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())

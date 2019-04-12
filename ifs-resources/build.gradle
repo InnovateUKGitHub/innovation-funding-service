@@ -8,7 +8,6 @@ apply plugin: 'idea'
 dependencies {
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile project(':ifs-error-util')
-    compile project(":ifs-commons")
 
     testCompile "org.springframework.boot:spring-boot-starter-web:1.5.11.RELEASE"
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.11.RELEASE'

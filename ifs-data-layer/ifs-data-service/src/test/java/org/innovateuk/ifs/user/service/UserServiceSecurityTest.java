@@ -131,6 +131,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         assertAccessDenied(() -> classUnderTest.updateDetails(user), () -> {
             verify(userRules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verify(userRules).adminsCanUpdateUserDetails(user, getLoggedInUser());
             verifyNoMoreInteractions(userRules);
         });
     }
