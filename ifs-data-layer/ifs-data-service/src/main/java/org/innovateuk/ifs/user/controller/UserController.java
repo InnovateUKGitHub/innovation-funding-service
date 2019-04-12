@@ -146,7 +146,6 @@ public class UserController {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @GetMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
     public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
         return userService.findByEmail(emailAddress)
@@ -154,20 +153,17 @@ public class UserController {
                 .toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @GetMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
     public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
         return tokenService.getPasswordResetToken(hash).andOnSuccessReturnVoid().toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @PostMapping("/" + URL_PASSWORD_RESET + "/{hash}")
     public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @RequestBody final String password) {
         return userService.changePassword(hash, password)
                 .toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
@@ -184,7 +180,6 @@ public class UserController {
                 });
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
     public RestResult<Void> resendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
         return userService.findInactiveByEmail(emailAddress)

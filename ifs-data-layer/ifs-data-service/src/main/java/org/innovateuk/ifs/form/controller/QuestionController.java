@@ -47,7 +47,7 @@ public class QuestionController {
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping("/getNextQuestionBySection/{sectionId}")
+    @GetMapping({"/getNextQuestionBySection/{sectionId}", "/get-next-question-by-section/{sectionId}"})
     public RestResult<QuestionResource> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getNextQuestionBySection(sectionId).toGetResponse();
     }
@@ -77,7 +77,7 @@ public class QuestionController {
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}", "/get-question-by-id-and-assessmentId/{questionId}/{assessmentId}"})
+    @GetMapping({"/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}", "/get-question-by-id-and-assessment-id/{questionId}/{assessmentId}"})
     public RestResult<QuestionResource> getQuestionByIdAndAssessmentId(@PathVariable("questionId") Long questionId, @PathVariable("assessmentId") Long assessmentId) {
         return questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).toGetResponse();
     }

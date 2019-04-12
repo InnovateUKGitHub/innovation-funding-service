@@ -25,7 +25,7 @@ public class FinanceRowMetaFieldController {
     private FinanceRowCostsService costFieldService;
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping("/find-all/")
+    @GetMapping({"/findAll", "/find-all/"})
     public RestResult<List<FinanceRowMetaFieldResource>> findAll() {
         return costFieldService.findAllCostFields().toGetResponse();
     }

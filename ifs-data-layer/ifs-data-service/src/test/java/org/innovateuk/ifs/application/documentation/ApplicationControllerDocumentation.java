@@ -382,7 +382,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.findLatestEmailFundingDateByCompetitionId(competitionId)).thenReturn(serviceSuccess(ZonedDateTime.now()));
 
-        mockMvc.perform(get("/application/getLatest-email-funding-date/{competitionId}", competitionId)
+        mockMvc.perform(get("/application/get-latest-email-funding-date/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",

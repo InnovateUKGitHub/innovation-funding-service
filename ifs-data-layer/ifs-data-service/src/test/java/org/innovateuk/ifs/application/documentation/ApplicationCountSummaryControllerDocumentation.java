@@ -40,7 +40,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/application-count-summary/find-by-competitionId/{competitionId}", competitionId)
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",

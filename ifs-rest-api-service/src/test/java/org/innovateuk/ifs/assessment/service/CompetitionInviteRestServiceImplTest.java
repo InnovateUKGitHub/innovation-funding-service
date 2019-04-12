@@ -324,7 +324,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         String email = "firstname.lastname@example.com";
         long competitionId = 1L;
 
-        setupDeleteWithRestResultExpectations(format("%s/%s?competitionId=%s&email=%s", restUrl, "deleteInvite", competitionId, email));
+        setupDeleteWithRestResultExpectations(format("%s/%s?competitionId=%s&email=%s", restUrl, "delete-invite", competitionId, email));
 
         RestResult<Void> resultResult = service.deleteInvite(email, competitionId);
         assertTrue(resultResult.isSuccess());

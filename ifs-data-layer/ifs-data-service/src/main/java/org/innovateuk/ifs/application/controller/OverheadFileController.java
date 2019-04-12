@@ -71,7 +71,7 @@ public class OverheadFileController {
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping(value = "/overheadCalculationDocument", produces = "application/json")
+    @PostMapping(value = {"/overheadCalculationDocument", "/overhead-calculation-document"}, produces = "application/json")
     public RestResult<FileEntryResource> createCalculationFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -84,7 +84,7 @@ public class OverheadFileController {
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PutMapping(value = "/overheadCalculationDocument", produces = "application/json")
+    @PutMapping(value = {"/overheadCalculationDocument", "/overhead-calculation-document"}, produces = "application/json")
     public RestResult<FileEntryResource> updateCalculationFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -97,7 +97,7 @@ public class OverheadFileController {
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @DeleteMapping(value = "/overheadCalculationDocument", produces = "application/json")
+    @DeleteMapping(value = {"/overheadCalculationDocument", "/overhead-calculation-document"}, produces = "application/json")
     public RestResult<Void> deleteCalculationFile(
             @RequestParam(value = "overheadId") long overheadId) {
 

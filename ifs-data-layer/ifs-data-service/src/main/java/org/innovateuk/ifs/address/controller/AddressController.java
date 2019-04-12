@@ -25,13 +25,13 @@ public class AddressController {
     private AddressLookupService addressLookupService;
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/doLookup", "do-lookup"})
+    @GetMapping({"/doLookup", "/do-lookup"})
     public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/validatePostcode", "validate-postcode"})
+    @GetMapping({"/validatePostcode", "/validate-postcode"})
     public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }

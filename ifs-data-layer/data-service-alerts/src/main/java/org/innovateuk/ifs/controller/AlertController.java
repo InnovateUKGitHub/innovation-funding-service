@@ -22,12 +22,13 @@ public class AlertController {
     private AlertService alertService;
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findAllVisible", "find-all-visible"})
+    @GetMapping({"/findAllVisible", "/find-all-visible"})
     public RestResult<List<AlertResource>> findAllVisible() {
         return alertService.findAllVisible().toGetResponse();
     }
 
-    @GetMapping("/findAllVisible/{type}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findAllVisible/{type}", "/find-all-visible/{type}"})
     public RestResult<List<AlertResource>> findAllVisibleByType(@PathVariable("type") AlertType type) {
         return alertService.findAllVisibleByType(type).toGetResponse();
     }

@@ -23,7 +23,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getall-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-all-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                                                                    Optional<Long> innovationArea,
                                                                    List<ParticipantStatusResource> participantStatuses,
                                                                    Optional<Boolean> compliant) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getAssessorsNotAcceptedInviteIds", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-assessors-not-accepted-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
@@ -107,7 +107,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getCreatedInvites", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-created-invites", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -121,7 +121,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                                                                                 Optional<Long> innovationArea,
                                                                                 List<ParticipantStatusResource> participantStatuses,
                                                                                 Optional<Boolean> compliant) {
-        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getInvitationOverview", competitionId);
+        String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invitation-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -136,47 +136,47 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getInviteStatistics", competitionId), CompetitionInviteStatisticsResource.class);
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invite-statistics", competitionId), CompetitionInviteStatisticsResource.class);
     }
 
     @Override
     public RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite) {
-        return postWithRestResult(format("%s/%s", COMPETITION_INVITE_REST_URL, "inviteUser"), existingUserStagedInvite, CompetitionInviteResource.class);
+        return postWithRestResult(format("%s/%s", COMPETITION_INVITE_REST_URL, "invite-user"), existingUserStagedInvite, CompetitionInviteResource.class);
     }
 
     @Override
     public RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return postWithRestResult(format("%s/%s", COMPETITION_INVITE_REST_URL, "inviteUsers"), existingUserStagedInvites, Void.class);
+        return postWithRestResult(format("%s/%s", COMPETITION_INVITE_REST_URL, "invite-users"), existingUserStagedInvites, Void.class);
     }
 
     @Override
     public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId) {
-        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "inviteNewUsers", competitionId), newUserStagedInvites, Void.class);
+        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "invite-new-users", competitionId), newUserStagedInvites, Void.class);
     }
 
     @Override
     public RestResult<Void> deleteInvite(String email, long competitionId) {
-        return deleteWithRestResult(format("%s/%s?competitionId=%s&email=%s", COMPETITION_INVITE_REST_URL, "deleteInvite", competitionId, email), Void.class);
+        return deleteWithRestResult(format("%s/%s?competitionId=%s&email=%s", COMPETITION_INVITE_REST_URL, "delete-invite", competitionId, email), Void.class);
     }
 
     @Override
     public RestResult<Void> deleteAllInvites(long competitionId) {
-        return deleteWithRestResult(format("%s/%s?competitionId=%s", COMPETITION_INVITE_REST_URL, "deleteAllInvites", competitionId), Void.class);
+        return deleteWithRestResult(format("%s/%s?competitionId=%s", COMPETITION_INVITE_REST_URL, "delete-all-invites", competitionId), Void.class);
     }
 
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
+        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "send-all-invites", competitionId), assessorInviteSendResource, Void.class);
     }
 
     @Override
     public RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "resendInvite", inviteId), assessorInviteSendResource, Void.class);
+        return postWithRestResult(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "resend-invite", inviteId), assessorInviteSendResource, Void.class);
     }
 
     @Override
     public RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-        String baseUrl = format("%s/%s", COMPETITION_INVITE_REST_URL, "resendInvites");
+        String baseUrl = format("%s/%s", COMPETITION_INVITE_REST_URL, "resend-invites");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));

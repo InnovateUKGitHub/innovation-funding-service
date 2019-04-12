@@ -26,7 +26,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                                                                                                        int pageIndex,
                                                                                                        int pageSize,
                                                                                                        String filter) {
-        String uriWithParams = buildUri(APPLICATION_COUNT_REST_URL + "/find-by-competitionId/{compId}", pageIndex, pageSize, filter, competitionId);
+        String uriWithParams = buildUri(APPLICATION_COUNT_REST_URL + "/find-by-competition-id/{compId}", pageIndex, pageSize, filter, competitionId);
         return getWithRestResult(uriWithParams, ApplicationCountSummaryPageResource.class);
     }
 
