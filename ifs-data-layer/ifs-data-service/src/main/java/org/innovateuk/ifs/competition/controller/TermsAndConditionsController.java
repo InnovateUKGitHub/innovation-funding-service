@@ -27,7 +27,7 @@ public class TermsAndConditionsController {
     private TermsAndConditionsService termsAndConditionsService;
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping("/getLatest")
+    @GetMapping({"/getLatest", "/get-latest"})
     public RestResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions() {
         return termsAndConditionsService.getLatestVersionsForAllTermsAndConditions().toGetResponse();
     }
