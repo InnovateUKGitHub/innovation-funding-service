@@ -80,14 +80,21 @@ function shibInit() {
 }
 
 # Entry point
+echo "start tailoring app instance"
 tailorAppInstance
+echo "finished tailoring app instance"
+
 
 if [[ ${TARGET} == "local" ]]
 then
+    echo "start replace file claim"
     replacePersistentFileClaim
+    echo "finished replace file claim"
 fi
 
+echo "container registry"
 useContainerRegistry
+echo "deploy"
 deploy
 blockUntilServiceIsUp
 
