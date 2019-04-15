@@ -10,10 +10,10 @@ SET @monitoring_officer_role_id =
 (SELECT id FROM role WHERE name = 'monitoring_officer');
 
 SET @assigned_project_id =
-(SELECT id FROM project WHERE name = 'Magic material');
+(SELECT id FROM project WHERE name = 'Super-EFFY - Super Efficient Forecasting of Freight Yields');
 
 SET @assigned_application_id =
-(SELECT application_id FROM project WHERE name = 'Magic material');
+(SELECT application_id FROM project WHERE name = 'Super-EFFY - Super Efficient Forecasting of Freight Yields');
 
 INSERT INTO project_user
 (project_id, organisation_id, user_id, project_role, participant_status_id)
