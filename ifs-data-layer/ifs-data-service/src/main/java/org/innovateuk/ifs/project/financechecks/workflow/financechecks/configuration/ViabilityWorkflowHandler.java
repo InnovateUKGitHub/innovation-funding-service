@@ -51,8 +51,8 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_APPROVED), partnerOrganisation);
     }
 
-    public boolean organisationIsAcademic(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ORGANISATION_IS_ACADEMIC), partnerOrganisation);
+    public boolean viabilityNotApplicable(PartnerOrganisation partnerOrganisation, User internalUser) {
+        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_NOT_APPLICABLE), partnerOrganisation);
     }
 
     public ViabilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
