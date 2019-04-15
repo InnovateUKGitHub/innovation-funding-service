@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.monitoring.security.MonitoringOfficerPermissionRules;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -17,12 +18,14 @@ import static org.mockito.Mockito.*;
  */
 public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<LegacyMonitoringOfficerService> {
 
-    private LegacyMonitoringOfficerPermissionRules permissionRules;
+    private LegacyMonitoringOfficerPermissionRules legacyPermissionRules;
+    private MonitoringOfficerPermissionRules permissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(LegacyMonitoringOfficerPermissionRules.class);
+        permissionRules = getMockPermissionRulesBean(MonitoringOfficerPermissionRules.class);
+        legacyPermissionRules = getMockPermissionRulesBean(LegacyMonitoringOfficerPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
@@ -37,7 +40,7 @@ public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecur
             verify(permissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verify(permissionRules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verify(permissionRules).monitoringOfficersCanViewThemselves(project, getLoggedInUser());
-            verifyNoMoreInteractions(permissionRules);
+            verifyNoMoreInteractions(legacyPermissionRules);
         });
     }
 
@@ -48,8 +51,8 @@ public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecur
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newLegacyMonitoringOfficerResource().build()), () -> {
-            verify(permissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verifyNoMoreInteractions(permissionRules);
+            verify(legacyPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verifyNoMoreInteractions(legacyPermissionRules);
         });
     }
 
@@ -61,8 +64,8 @@ public class LegacyMonitoringOfficerServiceSecurityTest extends BaseServiceSecur
 
         assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newLegacyMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
-                    verify(permissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-                    verifyNoMoreInteractions(permissionRules);
+                    verify(legacyPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+                    verifyNoMoreInteractions(legacyPermissionRules);
                 });
     }
 

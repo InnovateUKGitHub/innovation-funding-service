@@ -1,0 +1,94 @@
+-- IFS-5496 Change all funder inputs to be a value from a standard list
+-- This is to map this one specific competition to INTEGRATED_DELIVERY_PLATFORM_IDP rather than OTHER_DELIVERY_PARTNERS
+UPDATE competition_funder
+SET funder = 'INTEGRATED_DELIVERY_PLATFORM_IDP'
+WHERE competition_id = '238';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE competition_id = '341';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder = 'The National Physical Laboratory (NPL), Laboratory of the Government Chemist (LGC), National Engineering Laboratory (NEL) and Science and Technology Facilities Council (STFC) ';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder LIKE '%OLEV%';
+
+UPDATE competition_funder
+SET funder = 'SMART_OPEN'
+WHERE funder = 'Smart Open';
+
+UPDATE competition_funder
+SET funder = 'OFFICE_FOR_LIFE_SCIENCES_OLS'
+WHERE funder LIKE '%Office for Life Sciences%';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder LIKE '%NHS England%';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder = 'Network Rail';
+
+-- Only one competition with this and can go to this
+UPDATE competition_funder
+SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
+WHERE funder = 'N/A';
+
+UPDATE competition_funder
+SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
+WHERE funder IN ('ISCF/BEIS','ISCF - ORG','ISCF - Innovate UK','ISCF','Innovate UK (ISCF)');
+
+UPDATE competition_funder
+SET funder = 'INNOVATE_UK_CORE_BUDGET'
+WHERE funder IN ('Innovate UK','Innovate UK, part of UK Research and Innovation');
+
+UPDATE competition_funder
+SET funder = 'INDUSTRIAL_STRATEGY_CHALLENGE_FUND_ISCF'
+WHERE funder = 'Industrial Strategy Challenge Fund';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder = 'Geospatial Commission';
+
+UPDATE competition_funder
+SET funder = 'EUROPEAN_EUREKA_EUROSTARS_AND_OTHER_EU'
+WHERE funder = 'Eureka';
+
+UPDATE competition_funder
+SET funder = 'OTHER_DELIVERY_PARTNERS'
+WHERE funder = 'Department for Transport';
+
+UPDATE competition_funder
+SET funder = 'DEPARTMENT_FOR_DIGITAL_CULTURE_MEDIA_AND_SPORT_DCMS'
+WHERE funder LIKE '%DCMS%';
+
+UPDATE competition_funder
+SET funder = 'CENTRE_FOR_CONNECTED_AND_AUTONOMOUS_VEHICLES_CCAV'
+WHERE funder LIKE '%CCAV%';
+
+UPDATE competition_funder
+SET funder = 'OFFICE_FOR_LIFE_SCIENCES_OLS'
+WHERE funder = 'BEIS (OLS)';
+
+UPDATE competition_funder
+SET funder = 'AEROSPACE_TECHNOLOGY_INSTITUTE_ATI'
+WHERE funder = 'BEIS (ATI)';
+
+UPDATE competition_funder
+SET funder = 'DEPARTMENT_FOR_BUSINESS_ENERGY_AND_INDUSTRIAL_STRATEGY_BEIS'
+WHERE funder = 'BEIS';
+
+UPDATE competition_funder
+SET funder = 'AEROSPACE_TECHNOLOGY_INSTITUTE_ATI'
+WHERE funder IN ('ATI (BEIS)', 'ATI (BEIS)');
+
+UPDATE competition_funder
+SET funder = 'AEROSPACE_TECHNOLOGY_INSTITUTE_ATI'
+WHERE funder = 'ATI';
+
+UPDATE competition_funder
+SET funder = 'ADVANCED_PROPULSION_CENTRE_APC'
+WHERE funder = 'APC';

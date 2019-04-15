@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
-import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class LegacyMonitoringOfficerViewModel {
     private String monitoringOfficerEmailAddress;
     private String monitoringOfficerPhoneNumber;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project, Optional<LegacyMonitoringOfficerResource> monitoringOfficer) {
+    public LegacyMonitoringOfficerViewModel(ProjectResource project, Optional<MonitoringOfficerResource> monitoringOfficer) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();

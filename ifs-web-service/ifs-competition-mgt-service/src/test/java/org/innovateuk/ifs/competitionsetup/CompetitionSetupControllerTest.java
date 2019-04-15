@@ -847,7 +847,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("activityCode", "a123")
                 .param("pafNumber", "p123")
                 .param("competitionCode", "c123")
-                .param("funders[0].funder", "asdf")
+                .param("funders[0].funder", Funder.ADVANCED_PROPULSION_CENTRE_APC.name())
                 .param("funders[0].funderBudget", "93129")
                 .param("funders[0].coFunder", "false")
                 .param("budgetCode", "b123"))

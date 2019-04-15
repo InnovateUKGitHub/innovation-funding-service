@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
@@ -22,6 +23,17 @@ public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(UserResource user);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "CREATE", securedType = MonitoringOfficerCreateResource.class,
+            description = "Competition team users can create pending monitoring officers prior to registration")
+    ServiceResult<User> createPendingMonitoringOfficer(MonitoringOfficerCreateResource resource);
+
+    @SecuredBySpring(value = "CREATE", securedType = User.class,
+            description = "A System Registration User can activate new monitoring officer users on behalf of non-logged in users with invite hash")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    ServiceResult<User> activatePendingUser(User user, String password, String hash);
+
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, long organisationId, @P("user") UserResource userResource);
