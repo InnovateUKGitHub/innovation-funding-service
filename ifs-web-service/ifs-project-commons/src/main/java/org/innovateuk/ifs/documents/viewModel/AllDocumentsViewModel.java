@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.documents.viewmodel;
+package org.innovateuk.ifs.documents.viewModel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,40 +11,40 @@ import java.util.List;
  */
 public class AllDocumentsViewModel {
 
+    private long competitionId;
+    private long applicationId;
     private long projectId;
     private String projectName;
     private List<ProjectDocumentStatus> documents;
     private boolean projectManager;
 
-    public AllDocumentsViewModel(long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
+    public AllDocumentsViewModel(long competitionId, long applicationId, long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
+        this.competitionId = competitionId;
+        this.applicationId = applicationId;
         this.projectId = projectId;
         this.projectName = projectName;
         this.documents = documents;
         this.projectManager = projectManager;
     }
 
-    public long getProjectId() {
-        return projectId;
+    public long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public long getProjectId() {
+        return projectId;
     }
 
     public String getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
     public List<ProjectDocumentStatus> getDocuments() {
         return documents;
-    }
-
-    public void setDocuments(List<ProjectDocumentStatus> documents) {
-        this.documents = documents;
     }
 
     public boolean isProjectManager() {
@@ -60,6 +60,8 @@ public class AllDocumentsViewModel {
         AllDocumentsViewModel that = (AllDocumentsViewModel) o;
 
         return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(applicationId, that.applicationId)
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
                 .append(documents, that.documents)
@@ -70,6 +72,8 @@ public class AllDocumentsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(applicationId)
                 .append(projectId)
                 .append(projectName)
                 .append(documents)
@@ -77,5 +81,3 @@ public class AllDocumentsViewModel {
                 .toHashCode();
     }
 }
-
-

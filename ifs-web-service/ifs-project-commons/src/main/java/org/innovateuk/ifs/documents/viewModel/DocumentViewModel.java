@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.documents.viewmodel;
+package org.innovateuk.ifs.documents.viewModel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,22 +12,34 @@ public class DocumentViewModel {
 
     private long projectId;
     private String projectName;
+    private long applicationId;
     private long documentConfigId;
     private String title;
     private String guidance;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
+    private String statusComments;
     private boolean projectManager;
 
-    public DocumentViewModel(long projectId, String projectName, long documentConfigId, String title, String guidance,
-                             FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager) {
+    public DocumentViewModel(long projectId,
+                             String projectName,
+                             long applicationId,
+                             long documentConfigId,
+                             String title,
+                             String guidance,
+                             FileDetailsViewModel fileDetails,
+                             DocumentStatus status,
+                             String statusComments,
+                             boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
+        this.applicationId = applicationId;
         this.documentConfigId = documentConfigId;
         this.title = title;
         this.guidance = guidance;
         this.fileDetails = fileDetails;
         this.status = status;
+        this.statusComments = statusComments;
         this.projectManager = projectManager;
     }
 
@@ -35,66 +47,43 @@ public class DocumentViewModel {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
-    }
-
     public String getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public long getApplicationId() {
+        return applicationId;
     }
 
     public long getDocumentConfigId() {
         return documentConfigId;
     }
 
-    public void setDocumentConfigId(long documentConfigId) {
-        this.documentConfigId = documentConfigId;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getGuidance() {
-        return guidance;
-    }
-
-    public void setGuidance(String guidance) {
-        this.guidance = guidance;
-    }
-
-    public DocumentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(DocumentStatus status) {
-        this.status = status;
     }
 
     public FileDetailsViewModel getFileDetails() {
         return fileDetails;
     }
 
-    public void setFileDetails(FileDetailsViewModel fileDetails) {
-        this.fileDetails = fileDetails;
+    public DocumentStatus getStatus() {
+        return status;
+    }
+
+    public String getStatusComments() {
+        return statusComments;
+    }
+
+    public String getGuidance() {
+        return guidance;
     }
 
     public boolean isProjectManager() {
         return projectManager;
     }
 
-    public void setProjectManager(boolean projectManager) {
-        this.projectManager = projectManager;
-    }
-
+    /* view model logic. */
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
@@ -107,7 +96,6 @@ public class DocumentViewModel {
         return projectManager && status == DocumentStatus.UNSET;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,12 +105,14 @@ public class DocumentViewModel {
         DocumentViewModel that = (DocumentViewModel) o;
 
         return new EqualsBuilder()
-                .append(projectManager, that.projectManager)
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
+                .append(documentConfigId, that.documentConfigId)
                 .append(title, that.title)
-                .append(status, that.status)
                 .append(fileDetails, that.fileDetails)
+                .append(status, that.status)
+                .append(guidance, that.guidance)
+                .append(projectManager, that.projectManager)
                 .isEquals();
     }
 
@@ -131,9 +121,11 @@ public class DocumentViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
                 .append(projectName)
+                .append(documentConfigId)
                 .append(title)
-                .append(status)
                 .append(fileDetails)
+                .append(status)
+                .append(guidance)
                 .append(projectManager)
                 .toHashCode();
     }
