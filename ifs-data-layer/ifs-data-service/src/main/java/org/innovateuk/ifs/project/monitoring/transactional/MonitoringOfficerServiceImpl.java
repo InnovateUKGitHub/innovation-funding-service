@@ -10,9 +10,11 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -37,45 +39,51 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private OrganisationService organisationService;
+    private MonitoringOfficerInviteService monitoringOfficerInviteService;
     private ProjectMapper projectMapper;
+    private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
 
     public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository,
                                         ProjectRepository projectRepository,
                                         UserRepository userRepository,
                                         OrganisationService organisationService,
-                                        ProjectMapper projectMapper) {
+                                        ProjectMapper projectMapper,
+                                        MonitoringOfficerInviteService monitoringOfficerInviteService,
+                                        LegacyMonitoringOfficerService legacyMonitoringOfficerService) {
         this.monitoringOfficerRepository = monitoringOfficerRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.organisationService = organisationService;
+        this.monitoringOfficerInviteService = monitoringOfficerInviteService;
         this.projectMapper = projectMapper;
+        this.legacyMonitoringOfficerService = legacyMonitoringOfficerService;
     }
 
     @Override
-    public ServiceResult<List<MonitoringOfficerResource>> findAll() {
+    public ServiceResult<List<MonitoringOfficerAssignmentResource>> findAll() {
         return find(userRepository.findByRoles(MONITORING_OFFICER), notFoundError(User.class))
                 .andOnSuccessReturn(userList -> simpleMap(userList,
-                                                          user -> mapToProjectMonitoringOfficerResource(user).getSuccess()
-                                    )
+                        user -> mapToProjectMonitoringOfficerResource(user).getSuccess()
+                        )
                 );
     }
 
-    private ServiceResult<MonitoringOfficerResource> mapToProjectMonitoringOfficerResource(User user) {
+    private ServiceResult<MonitoringOfficerAssignmentResource> mapToProjectMonitoringOfficerResource(User user) {
         return getAssignedProjects(user.getId())
                 .andOnSuccess(assignedProjects -> getUnassignedProjects()
                         .andOnSuccessReturn(unassignedProjects ->
-                                                    new MonitoringOfficerResource(user.getId(),
-                                                                                         user.getFirstName(),
-                                                                                         user.getLastName(),
-                                                                                         unassignedProjects,
-                                                                                         assignedProjects)
+                                new MonitoringOfficerAssignmentResource(user.getId(),
+                                        user.getFirstName(),
+                                        user.getLastName(),
+                                        unassignedProjects,
+                                        assignedProjects)
                         )
                 );
     }
 
     @Override
     @Transactional
-    public ServiceResult<MonitoringOfficerResource> getProjectMonitoringOfficer(long userId) {
+    public ServiceResult<MonitoringOfficerAssignmentResource> getProjectMonitoringOfficer(long userId) {
         return getMonitoringOfficerUser(userId)
                 .andOnSuccess(this::mapToProjectMonitoringOfficerResource);
     }
@@ -84,11 +92,11 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     @Transactional
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
         return getMonitoringOfficerUser(userId)
-               .andOnSuccess(user -> getProject(projectId)
-                       .andOnSuccessReturnVoid(project ->
-                               monitoringOfficerRepository.save(new MonitoringOfficer(user, project))
-                       )
-               );
+                .andOnSuccess(user -> getProject(projectId)
+                        .andOnSuccess(project -> (monitoringOfficerInviteService.inviteMonitoringOfficer(user, project))
+                                .andOnSuccessReturnVoid(() -> monitoringOfficerRepository.save(new MonitoringOfficer(user, project)))
+                        )
+                );
     }
 
     @Override
@@ -105,6 +113,38 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
                 .map(MonitoringOfficer::getProcess)
                 .map(projectMapper::mapToResource)
                 .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class))
+                .andOnSuccess(project -> {
+                    if (project.getProjectMonitoringOfficer().isPresent()) {
+                        return toMonitoringOfficerResource(project.getProjectMonitoringOfficer().get(), projectId);
+                    } else {
+                        return legacyMonitoringOfficer(projectId);
+                    }
+                });
+    }
+
+
+    private ServiceResult<MonitoringOfficerResource> toMonitoringOfficerResource(MonitoringOfficer monitoringOfficer, long projectId) {
+        return serviceSuccess(new MonitoringOfficerResource(monitoringOfficer.getId(),
+                monitoringOfficer.getUser().getFirstName(),
+                monitoringOfficer.getUser().getLastName(),
+                monitoringOfficer.getUser().getEmail(),
+                monitoringOfficer.getUser().getPhoneNumber(),
+                projectId));
+    }
+
+    private ServiceResult<MonitoringOfficerResource> legacyMonitoringOfficer(long projectId) {
+        return legacyMonitoringOfficerService.getMonitoringOfficer(projectId)
+                .andOnSuccessReturn(legacyMonitoringOfficer -> new MonitoringOfficerResource(legacyMonitoringOfficer.getId(),
+                        legacyMonitoringOfficer.getFirstName(),
+                        legacyMonitoringOfficer.getLastName(),
+                        legacyMonitoringOfficer.getEmail(),
+                        legacyMonitoringOfficer.getPhoneNumber(),
+                        legacyMonitoringOfficer.getProject()));
     }
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {
@@ -131,7 +171,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
                         project.getApplication().getCompetition().getId(),
                         project.getName(),
                         leadOrg.getName())
-        );
+                );
     }
 
     private ServiceResult<MonitoringOfficerUnassignedProjectResource> mapToUnassignedProject(Project project) {

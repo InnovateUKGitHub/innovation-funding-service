@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.util;
+package org.innovateuk.ifs.util;
 
 import java.time.Instant;
 import java.time.LocalDate;

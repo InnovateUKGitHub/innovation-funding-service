@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +23,7 @@ public class MonitoringOfficerBuilderTest {
         Project expectedProject = newProject().build();
         ParticipantStatus expectedParticipantStatus = ACCEPTED;
 
-        MonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer()
+        MonitoringOfficer projectMonitoringOfficer = newMonitoringOfficer()
                 .withId(expectedId)
                 .withUser(expectedUser)
                 .withProject(expectedProject)
@@ -43,7 +43,7 @@ public class MonitoringOfficerBuilderTest {
         Project[] expectedProjects = newProject().buildArray(2, Project.class);
         ParticipantStatus[] expectedParticipantStatuses = { PENDING, REJECTED };
 
-        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
                 .withId(expectedIds)
                 .withUser(expectedUsers)
                 .withProject(expectedProjects)

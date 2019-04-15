@@ -11,10 +11,10 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests for {@link SpringSecurityServiceResultExceptionHandlingInterceptor}, to ensure that Spring Security exceptions
+ * Tests for {@link HighPrecedenceServiceResultExceptionHandlingInterceptor}, to ensure that Spring Security exceptions
  * are successfully converted into failing "forbidden" ServiceResults.
  */
-public class SpringSecurityServiceResultExceptionHandlingInterceptorTest extends BaseIntegrationTest {
+public class HighPrecedenceServiceResultExceptionHandlingInterceptorTest extends BaseIntegrationTest {
 
     @Autowired
     private ServiceFailureExceptionHandlingAdviceTestService testService;
