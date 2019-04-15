@@ -109,7 +109,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Documentation]    INFUND-4428
     [Tags]
     When the user navigates to the page        ${Project_In_Setup_Page}
-    Then the user should not see the element   link = Monitoring Officer
+    Then the user should see the element       link = Monitoring Officer
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link = Spend profile

@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -124,7 +124,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build(2);
 
-        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
                 .withProject(project)
                 .build(1);
 
@@ -656,7 +656,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         UserResource userResource = newUserResource().withId(userId).build();
 
-        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
 
         when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
 
