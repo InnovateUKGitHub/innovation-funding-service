@@ -20,7 +20,7 @@ public class MonitoringOfficerBuilder extends ProjectParticipantBuilder<Monitori
         super(multiActions, ProjectParticipantRole.PROJECT_MONITORING_OFFICER_ROLES);
     }
 
-    public static MonitoringOfficerBuilder newProjectMonitoringOfficer() {
+    public static MonitoringOfficerBuilder newMonitoringOfficer() {
         return new MonitoringOfficerBuilder(emptyList()).with(uniqueIds());
     }
 

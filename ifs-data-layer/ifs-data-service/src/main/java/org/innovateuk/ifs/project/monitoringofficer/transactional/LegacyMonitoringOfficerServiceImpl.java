@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements LegacyMonitoringOfficerService {
 
     @Autowired
-    private LegacyMonitoringOfficerMapper monitoringOfficerMapper;
+    private LegacyMonitoringOfficerMapper legacyMonitoringOfficerMapper;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -66,7 +66,7 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
 
     @Override
     public ServiceResult<LegacyMonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
-        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
+        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(legacyMonitoringOfficerMapper::mapToResource);
     }
 
     private ServiceResult<LegacyMonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
@@ -112,7 +112,7 @@ public class LegacyMonitoringOfficerServiceImpl extends AbstractProjectServiceIm
 
     private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(LegacyMonitoringOfficerResource monitoringOfficerResource) {
         SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-        LegacyMonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
+        LegacyMonitoringOfficer monitoringOfficer = legacyMonitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         legacyMonitoringOfficerRepository.save(monitoringOfficer);
         return serviceSuccess(result);
     }
