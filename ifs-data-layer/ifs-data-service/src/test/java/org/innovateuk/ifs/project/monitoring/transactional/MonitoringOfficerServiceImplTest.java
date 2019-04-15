@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -13,8 +14,11 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
+import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -30,13 +34,15 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
@@ -59,7 +65,13 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     private OrganisationService organisationServiceMock;
 
     @Mock
+    private MonitoringOfficerInviteServiceImpl monitoringOfficerInviteServiceMock;
+
+    @Mock
     private ProjectMapper projectMapper;
+
+    @Mock
+    private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
 
     @Test
     public void findAll() {
@@ -68,7 +80,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         when(projectRepositoryMock.findAssigned(anyLong())).thenReturn(emptyList());
         when(projectRepositoryMock.findAssignable()).thenReturn(emptyList());
 
-        List<MonitoringOfficerResource> result = service.findAll().getSuccess();
+        List<MonitoringOfficerAssignmentResource> result = service.findAll().getSuccess();
 
         assertThat(result.size() == 2);
         assertThat(result.get(0).getFirstName().equals("John"));
@@ -119,7 +131,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
                 .thenReturn(serviceSuccess(assignProjectOrganisationResources.get(1)));
         when(projectRepositoryMock.findAssignable()).thenReturn(unassignedProjects);
 
-        MonitoringOfficerResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
+        MonitoringOfficerAssignmentResource projectMonitoringOfficer = service.getProjectMonitoringOfficer(moUser.getId()).getSuccess();
 
         assertEquals(moUser.getFirstName(), projectMonitoringOfficer.getFirstName());
         assertEquals(moUser.getLastName(), projectMonitoringOfficer.getLastName());
@@ -159,12 +171,14 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         when(userRepositoryMock.findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER)).thenReturn(Optional.of(moUser));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(monitoringOfficerInviteServiceMock.inviteMonitoringOfficer(moUser, project)).thenReturn(serviceSuccess());
 
         service.assignProjectToMonitoringOfficer(moUser.getId(), project.getId()).getSuccess();
 
-        InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, projectMonitoringOfficerRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, monitoringOfficerInviteServiceMock, projectMonitoringOfficerRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER);
         inOrder.verify(projectRepositoryMock).findById(project.getId());
+        inOrder.verify(monitoringOfficerInviteServiceMock).inviteMonitoringOfficer(moUser, project);
         inOrder.verify(projectMonitoringOfficerRepositoryMock).save(new MonitoringOfficer(moUser, project));
         inOrder.verifyNoMoreInteractions();
     }
@@ -182,7 +196,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     @Test
     public void getMonitoringOfficerProjects() {
         long userId = 1L;
-        when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(newProjectMonitoringOfficer()
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(newMonitoringOfficer()
                 .withProject(newProject().build())
                 .build(1));
         when(projectMapper.mapToResource(any(Project.class))).thenReturn(newProjectResource().build());
@@ -193,9 +207,83 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         assertEquals(result.getSuccess().size(), 1);
     }
 
+    @Test
+    public void findMonitoringOfficerForProject_monitoringOfficerFound() {
+        long projectId = 1L;
+        String firstName = "firstName";
+        String lastName = "lastName";
+        String email = "blah@example.com";
+        String phoneNumber = "012345678";
+
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer()
+                .withUser(newUser()
+                        .withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withEmailAddress(email)
+                        .withPhoneNumber(phoneNumber)
+                        .build()
+                )
+                .build();
+
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(monitoringOfficer).build()));
+
+        ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);
+
+        MonitoringOfficerResource resource = result.getSuccess();
+
+        assertEquals(resource.getEmail(), email);
+        assertEquals(resource.getFirstName(), firstName);
+        assertEquals(resource.getLastName(), lastName);
+        assertEquals(resource.getPhoneNumber(), phoneNumber);
+        assertEquals(resource.getId(), monitoringOfficer.getId());
+        assertEquals(resource.getProject(), (Long) projectId);
+    }
+
+    @Test
+    public void findMonitoringOfficerForProject_legacyOfficerFound() {
+        long projectId = 1L;
+        String firstName = "firstName";
+        String lastName = "lastName";
+        String email = "blah@example.com";
+        String phoneNumber = "012345678";
+
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(null).build()));
+        when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceSuccess(newLegacyMonitoringOfficerResource()
+                .withEmail(email)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withPhoneNumber(phoneNumber)
+                .withProject(projectId)
+                .build()));
+
+        ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);
+
+        MonitoringOfficerResource resource = result.getSuccess();
+
+        assertEquals(resource.getEmail(), email);
+        assertEquals(resource.getFirstName(), firstName);
+        assertEquals(resource.getLastName(), lastName);
+        assertEquals(resource.getPhoneNumber(), phoneNumber);
+        assertEquals(resource.getProject(), (Long) projectId);
+    }
+
+    @Test
+    public void findMonitoringOfficerForProject_notFound() {
+        long projectId = 1L;
+
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(null).build()));
+        when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceFailure(CommonErrors.notFoundError(LegacyMonitoringOfficer.class)));
+
+        ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
     @Override
     protected MonitoringOfficerServiceImpl supplyServiceUnderTest() {
         return new MonitoringOfficerServiceImpl(projectMonitoringOfficerRepositoryMock, projectRepositoryMock,
-                userRepositoryMock, organisationServiceMock, projectMapper);
+                userRepositoryMock, organisationServiceMock, projectMapper, monitoringOfficerInviteServiceMock, legacyMonitoringOfficerService);
     }
 }

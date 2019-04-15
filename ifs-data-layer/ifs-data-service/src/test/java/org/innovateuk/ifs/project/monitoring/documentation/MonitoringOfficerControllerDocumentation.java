@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.monitoring.controller.MonitoringOfficerController;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -50,8 +50,8 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                                                                            "projectName",
                                                                            "leadOrganisationName"));
 
-        List<MonitoringOfficerResource> expected =
-                singletonList(new MonitoringOfficerResource(1L,
+        List<MonitoringOfficerAssignmentResource> expected =
+                singletonList(new MonitoringOfficerAssignmentResource(1L,
                                                                    "firstName",
                                                                    "lastName",
                                                                    unassignedProjects,
@@ -74,7 +74,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
         long userId = 7;
-        MonitoringOfficerResource expected = new MonitoringOfficerResource(1L, "firstName", "lastName",
+        MonitoringOfficerAssignmentResource expected = new MonitoringOfficerAssignmentResource(1L, "firstName", "lastName",
                 singletonList(new MonitoringOfficerUnassignedProjectResource(1, 1, "projectName")),
                 singletonList(new MonitoringOfficerAssignedProjectResource(1, 1, 1, "projectName", "leadOrganisationName")));
 

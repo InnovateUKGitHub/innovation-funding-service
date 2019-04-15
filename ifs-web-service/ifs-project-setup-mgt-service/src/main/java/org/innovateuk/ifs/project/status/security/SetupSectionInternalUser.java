@@ -105,7 +105,9 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if (documentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+        if (documentsApproved()
+                && projectSetupProgressChecker.isSpendProfileApproved()
+                && projectSetupProgressChecker.isBankDetailsApproved()) {
             if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if (projectSetupProgressChecker.isGrantOfferLetterApproved()) {
                     return ACCESSIBLE;
