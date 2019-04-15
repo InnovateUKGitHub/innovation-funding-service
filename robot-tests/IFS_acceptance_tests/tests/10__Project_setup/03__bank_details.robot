@@ -51,7 +51,7 @@ Bank details page
     [Documentation]    INFUND-3010, INFUND-6018, INFUND-7173
     [Tags]  HappyPath
     Given log in as a different user        &{lead_applicant_credentials_bd}
-    When the user clicks the button/link    link = ${Grade_Crossing_Applicaiton_Titile}
+    When the user clicks the button/link    link = ${Grade_Crossing_Application_Title}
     Then the user should see the element    css = ul li.require-action:nth-child(4)
     When the user clicks the button/link    link = View the status of partners
     Then the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
@@ -151,7 +151,7 @@ Submission of bank details for academic user
     [Tags]    Experian  HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               &{collaborator2_credentials_bd}
-    When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
+    When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Application_Title}")
     Then the user should see the element           jQuery = li.require-action:contains("Bank details")
     When the user clicks the button/link           link = View the status of partners
     Then the user should be redirected to the correct page  ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
@@ -193,7 +193,7 @@ User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
     [Tags]  HappyPath
     Given log in as a different user               &{collaborator1_credentials_bd}
-    When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
+    When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Application_Title}")
     Then the user clicks the button/link           link = Bank details
     When partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
     # Stub is configured to return error response for these values

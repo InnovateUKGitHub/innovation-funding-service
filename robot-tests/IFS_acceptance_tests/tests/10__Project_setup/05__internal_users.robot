@@ -27,14 +27,14 @@ Project Finance has a dashboard and can see projects in PS
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     When the user clicks the button/link    link = ${PS_Competition_Name}
     Then the user is able to see projects in PS
-    And navigate to an pplication in PS
+    And navigate to an application in PS
 
 Project Finance can visit an application and navigate back
     [Documentation]  IFS-544
     [Tags]  HappyPath
     Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When the user clicks the button/link  link = ${PS_IU_Application_No}
-    Then the user is able to navigate back
+    Then the user navigates back successfully
 
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
@@ -67,19 +67,18 @@ The user isn't able to see bank details and finance checks
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/review-all-bank-details    ${403_error_message}
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/finance-check    ${403_error_message}
 
-
 The user is able to see project status in PS
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action
 
-The user is able to navigate back
+the user navigates back successfully
     the user should see the element                     jQuery = h1:contains("Application overview")
     the user clicks the button/link                     link = Back
     the user should be redirected to the correct page   ${server}/project-setup-management/competition/${PS_Competition_Id}/status
 
-Navigate to an pplication in PS
+Navigate to an application in PS
     the user clicks the button/link                     link = ${PS_IU_Application_No}
     the user should be redirected to the correct page   ${server}/management/competition/${PS_Competition_Id}/application/${PS_IU_Application_No}
     the user should not see an error in the page
@@ -90,7 +89,7 @@ The user is able to see projects in PS
     the user should see the element   jQuery = tr:nth-child(3) th a:contains("${PS_IU_Application_No}")
     the user should see the element   jQuery = tr:nth-child(3) th:contains("3 partners")
     the user should see the element   jQuery = tr:nth-child(3) th:contains("Lead: ${Ntag_Name}")
-    the user should see the element   jQuery = tr:nth-child(4) th:contains("${Grade_Crossing_Applicaiton_Titile}")
+    the user should see the element   jQuery = tr:nth-child(4) th:contains("${Grade_Crossing_Application_Title}")
     the user should see the element   jQuery = tr:nth-child(5) th:contains("Point control and automated monitoring")
 
 

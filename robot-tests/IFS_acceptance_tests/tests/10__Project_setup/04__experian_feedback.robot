@@ -18,6 +18,10 @@ Suite Setup       the user logs-in in new browser    &{internal_finance_credenti
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
 Resource          PS_Common.robot
+Resource          ../../resources/defaultResources.robot
+
+*** Variables ***
+${reviewBankDetailsURL}   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details
 
 *** Test Cases ***
 Project Finance can see Bank details requiring action
@@ -62,15 +66,14 @@ Project Finance cannot approve the bank details again
 
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
-    Given log in as a different user          ${PS_EF_Application_Lead_Partner_Email}  ${short_password}
-    When the user clicks the button/link           link = ${PS_EF_Application_Title}
+    Given log in as a different user          &{PS_EF_Application_Partner_Email_credentials}
+    When the user clicks the button/link      link = ${PS_EF_Application_Title}
     Then the lead partner is able to see approved bank details
 
 Project partners and other internal users cannot access bank details page
     [Documentation]    INFUND-3763
-    [Setup]
-    Given other internal users cannot access bank details page
-    Then project partners cannot access bank details page
+    Given Specific user should not be able to access the page 403 error   ${reviewBankDetailsURL}    &{Comp_admin1_credentials}
+    Then Specific user should not be able to access the page 403 error    ${reviewBankDetailsURL}    &{PS_EF_Application_Partner_Email_credentials}
 
 *** Keywords ***
 The lead partner is able to see approved bank details
@@ -96,19 +99,6 @@ The user is unable to change bank details once they have been approved
     the user clicks the button/link             id = submit-change-bank-details
     the user should see a summary error        Bank details have already been approved and cannot be changed
 
-Other internal users cannot access bank details page
-    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
-
-Project partners cannot access bank details page
-    log in as a different user  ${PS_EF_Application_Partner_Email}  ${short_password}
-    the user should not be able to access the page &{creds} &{url}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
-The user should not be able to access the page
-    [Arguments]   ${creds}   ${url}
-    log in as a different user
-    Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
-
 The user is able to approve bank details
     the user should see the element       jQuery = h2:contains("${Gabtype_Name} - Account details")
     the user clicks the button/link       jQuery = .govuk-button:contains("Approve bank account details")
@@ -133,12 +123,12 @@ The user is able to cancel bank details changes
     the user clicks the button/link                     link = Cancel bank account changes
     the user should be redirected to the correct page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     the user clicks the button/link                     link = Change bank account details
-    the text box should be editable                     id = organisationName
+    The user should see the enabled element             id = organisationName
     Set Focus To Element                                css = [id = "addressForm.manualAddress.addressLine1"]
     the user sees the text in the text field            css = [id = "addressForm.manualAddress.addressLine1"]  290 Parkside Circle
     the user clicks the button/link                     id = modal-change-bank-details
     the user clicks the button/link                     jQuery = .button-clear:contains("Cancel")
-    the text box should be editable                     id = organisationName
+    The user should see the enabled element             id = organisationName
     the user clicks the button/link                     link = Review bank details
     the user should see the element                     jQuery = p:contains("These details are now undergoing an internal review. ")
 
@@ -164,9 +154,9 @@ The user verifies client side validation
     the user should not see an error in the page
 
 The user is able to change companies house details
-    the text box should be editable                      id = organisationName
-    the user enters text to a text field                 id = organisationName  ${Gabtype_Name}
-    the user enters text to a text field                 id = registrationNumber  14935204
+    The user should see the enabled element   id = organisationName
+    the user enters text to a text field      id = organisationName  ${Gabtype_Name}
+    the user enters text to a text field      id = registrationNumber  14935204
 
 The user navigates to change bank account details page
     the user clicks the button/link                     link = Change bank account details
@@ -196,8 +186,3 @@ Project finance navigates to review bank details page
     the user navigates to the page                      ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details
     the user clicks the button/link                     link = ${Gabtype_Name}
     the user should be redirected to the correct page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
-
-The text box should be editable
-    [Arguments]    ${text_field}
-    Wait Until Element Is Visible Without Screenshots   ${text_field}
-    Element Should Be Enabled                           ${text_field}

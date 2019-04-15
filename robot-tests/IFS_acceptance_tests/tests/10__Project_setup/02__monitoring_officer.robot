@@ -79,7 +79,7 @@ Comp admin can view the Supporting information details on MO page
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
     And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Applicaiton_Titile}")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Application_Title}")
     And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
@@ -95,7 +95,7 @@ Project finance user can view MO page, and go on to assign MO
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
     And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Applicaiton_Titile}")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Application_Title}")
     And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
