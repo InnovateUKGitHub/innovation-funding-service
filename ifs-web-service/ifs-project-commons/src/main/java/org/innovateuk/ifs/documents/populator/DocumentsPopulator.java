@@ -98,7 +98,9 @@ public class DocumentsPopulator {
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {
-        return Optional.ofNullable(projectRestService.getProjectManager(projectId).getSuccess())
+        return Optional.ofNullable(projectRestService.getProjectManager(projectId).getOptionalSuccessObject())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(ProjectUserResource::getUser)
                 .map(userId -> userId.equals(loggedInUserId))
                 .orElse(false);
