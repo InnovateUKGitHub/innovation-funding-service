@@ -31,14 +31,16 @@
                     <dd>&pound;<th:block
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
-                    <dt>Grant applied for:</dt>
-                    <dd>&pound;<th:block
-                        th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
-                    </dd>
-                    <dt>Other public sector funding:</dt>
-                    <dd>&pound;<th:block
-                        th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
-                    </dd>
+                    <th:block th:unless="${model.financeCheckSummaryResource.isH2020}">
+                        <dt>Grant applied for:</dt>
+                        <dd>&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
+                        </dd>
+                        <dt>Other public sector funding:</dt>
+                        <dd>&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
+                        </dd>
+                    </th:block>
                     <dt>Total percentage grant:</dt>
                     <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
                 </dl>

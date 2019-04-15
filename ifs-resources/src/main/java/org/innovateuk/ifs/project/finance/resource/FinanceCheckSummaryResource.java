@@ -30,13 +30,14 @@ public class FinanceCheckSummaryResource {
     private BigDecimal researchParticipationPercentage;
     private BigDecimal competitionMaximumResearchPercentage;
     private Long applicationId;
+    private boolean h2020;
 
     public FinanceCheckSummaryResource() {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
                                        List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
-                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId) {
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -55,6 +56,7 @@ public class FinanceCheckSummaryResource {
         this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
         this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
         this.applicationId = applicationId;
+        this.h2020 = h2020;
     }
 
     public Long getProjectId() {
@@ -151,6 +153,14 @@ public class FinanceCheckSummaryResource {
 
     public LocalDate getSpendProfileGeneratedDate() {
         return spendProfileGeneratedDate;
+    }
+
+    public boolean isH2020() {
+        return h2020;
+    }
+
+    public void setH2020(boolean h2020) {
+        this.h2020 = h2020;
     }
 
     @JsonIgnore
