@@ -44,6 +44,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
@@ -65,6 +66,7 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
+import static org.innovateuk.ifs.profile.domain.Profile.startOfCurrentFinancialYear;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -314,6 +316,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                     innovationArea.orElse(null),
                     statuses,
                     compliant.orElse(null),
+                    startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault()),
                     pageable
             );
         } else {
@@ -351,7 +354,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                     competitionId,
                     innovationArea.orElse(null),
                     statuses,
-                    compliant.orElse(null));
+                    compliant.orElse(null),
+                    startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault())
+            );
         } else {
             participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContains(
                     competitionId,
