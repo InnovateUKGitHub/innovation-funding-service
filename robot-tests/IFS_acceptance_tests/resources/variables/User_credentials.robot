@@ -34,3 +34,4 @@
 &{assessor_stakeholder_credentials}               email=blake.wood@gmail.com    password=Passw0rd
 &{applicant_stakeholder_credentials}              email=gene.bowman@jetpulse.example.com    password=Passw0rd
 &{triple_user_credentials}                        email=carolyn.reed@example.com    password=Passw0rd
+&{PS_EF_Application_Partner_Email_credentials}    email= ${test_mailbox_one}+karen@gmail.com   password=Passw0rd

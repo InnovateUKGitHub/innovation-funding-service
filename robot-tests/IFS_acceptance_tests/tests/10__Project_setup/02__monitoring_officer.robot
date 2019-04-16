@@ -81,7 +81,7 @@ Search for an MO
     When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
     Then search for MO    Orvill  Orville Gibbs
     And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
-    And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Applicaiton_Titile}
+    And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -249,7 +249,7 @@ the user edits the MO details
     the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
     the user clicks the button/link    link = Back
     search for MO  Nilesh  Nilesh Patti
-    the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Applicaiton_Titile}
+    the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 Custom suite setup
     Connect to database  @{database}
