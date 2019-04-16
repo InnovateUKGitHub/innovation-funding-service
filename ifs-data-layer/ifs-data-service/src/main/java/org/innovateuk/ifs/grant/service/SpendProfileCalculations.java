@@ -27,7 +27,11 @@ class SpendProfileCalculations {
     }
 
     BigDecimal getOverheadPercentage() {
-        return getTotalOverhead().multiply(BigDecimal.valueOf(100))
+
+        BigDecimal totalOverhead = getTotalOverhead();
+
+        return totalOverhead.equals(BigDecimal.ZERO) ? BigDecimal.ZERO :
+                totalOverhead.multiply(BigDecimal.valueOf(100))
                 .divide(getTotal(), 2, BigDecimal.ROUND_HALF_UP);
     }
 }
