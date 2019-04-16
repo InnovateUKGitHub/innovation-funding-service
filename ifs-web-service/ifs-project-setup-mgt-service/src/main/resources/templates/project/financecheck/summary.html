@@ -56,6 +56,10 @@
                     <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}"></dd>
                     <dt>Duration:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
+                    <th:block th:unless="${model.financeCheckSummaryResource.isH2020}">
+                        <dt>Type:</dt>
+                        <dd><strong class="govuk-tag">Horizon 2020</strong></dd>
+                    </th:block>
                 </dl>
 
                 <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
