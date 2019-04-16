@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -33,23 +34,27 @@ public class ProcessRoleController {
         return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
-    @GetMapping("/findByUserApplication/{userId}/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByUserApplication/{userId}/{applicationId}", "/find-by-user-application/{userId}/{applicationId}"})
     public RestResult<ProcessRoleResource> findByUserApplication(@PathVariable("userId") final long userId,
                                                          @PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
-    @GetMapping("/findByApplicationId/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByApplicationId/{applicationId}", "/find-by-application-id/{applicationId}"})
     public RestResult<List<ProcessRoleResource>> findByUserApplication(@PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
-    @GetMapping("/findByUserId/{userId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByUserId/{userId}", "/find-by-user-id/{userId}"})
     public RestResult<List<ProcessRoleResource>> findByUser(@PathVariable("userId") final long userId) {
         return usersRolesService.getProcessRolesByUserId(userId).toGetResponse();
     }
 
-    @GetMapping("/findAssignable/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findAssignable/{applicationId}", "/find-assignable/{applicationId}"})
     public RestResult<List<ProcessRoleResource>> findAssignable(@PathVariable("applicationId") final long applicationId) {
         return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toGetResponse();
     }
@@ -59,7 +64,8 @@ public class ProcessRoleController {
         return applicationService.findByProcessRole(id).toGetResponse();
     }
 
-    @GetMapping("userHasApplicationForCompetition/{userId}/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"userHasApplicationForCompetition/{userId}/{competitionId}", "user-has-application-for-competition/{userId}/{competitionId}"})
     public RestResult<Boolean> userHasApplicationForCompetition(@PathVariable("userId") final long userId, @PathVariable("competitionId") final long competitionId) {
         return usersRolesService.userHasApplicationForCompetition(userId, competitionId).toGetResponse();
     }

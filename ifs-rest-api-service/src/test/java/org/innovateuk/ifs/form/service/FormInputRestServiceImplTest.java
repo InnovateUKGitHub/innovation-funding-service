@@ -8,9 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
 import static org.junit.Assert.*;
@@ -30,25 +30,25 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
 
     @Test
     public void testGetByQuestionIdAndScope() throws Exception {
-        List<FormInputResource> expected = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
+        List<FormInputResource> expected = Stream.of(1, 2, 3).map(i -> new FormInputResource()).collect(Collectors.toList());
 
 
         Long questionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
 
-        setupGetWithRestResultExpectations(String.format("%s/findByQuestionId/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(String.format("%s/find-by-question-id/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByQuestionIdAndScope(questionId, scope).getSuccess();
         assertSame(expected, response);
     }
 
     @Test
     public void testGetByCompetitionIdAndScope() throws Exception {
-        List<FormInputResource> expected = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
+        List<FormInputResource> expected = Stream.of(1, 2, 3).map(i -> new FormInputResource()).collect(Collectors.toList());
 
         Long competitionId = 1L;
         FormInputScope scope = FormInputScope.APPLICATION;
 
-        setupGetWithRestResultExpectations(String.format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(String.format("%s/find-by-competition-id/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccess();
         assertSame(expected, response);
     }

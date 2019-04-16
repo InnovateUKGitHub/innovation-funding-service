@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.interview.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
@@ -39,7 +40,8 @@ public class InterviewAllocationController {
         return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
 
-    @GetMapping("/{competitionId}/allocated-applications-assessorId/{assessorId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/{competitionId}/allocated-applications-assessorId/{assessorId}", "/{competitionId}/allocated-applications-assessor-id/{assessorId}"})
     public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(
             @PathVariable long competitionId,
             @PathVariable long assessorId

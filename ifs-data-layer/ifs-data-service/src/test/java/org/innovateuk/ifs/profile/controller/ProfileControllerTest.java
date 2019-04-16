@@ -38,7 +38,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkillsResource));
 
-        mockMvc.perform(get("/profile/id/{id}/getProfileSkills", userId))
+        mockMvc.perform(get("/profile/id/{id}/get-profile-skills", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileSkillsResource)));
 
@@ -55,7 +55,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/profile/id/{id}/updateProfileSkills", userId)
+        mockMvc.perform(put("/profile/id/{id}/update-profile-skills", userId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
                 .andExpect(status().isOk());
@@ -73,7 +73,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/profile/id/{id}/updateProfileSkills", userId)
+        mockMvc.perform(put("/profile/id/{id}/update-profile-skills", userId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
                 .andExpect(status().isNotAcceptable());
@@ -88,7 +88,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.getProfileAgreement(userId)).thenReturn(serviceSuccess(profileAgreementResource));
 
-        mockMvc.perform(get("/profile/id/{id}/getProfileAgreement", userId))
+        mockMvc.perform(get("/profile/id/{id}/get-profile-agreement", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileAgreementResource)));
 
@@ -101,7 +101,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.updateProfileAgreement(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/profile/id/{id}/updateProfileAgreement", userId))
+        mockMvc.perform(put("/profile/id/{id}/update-profile-agreement", userId))
                 .andExpect(status().isOk());
 
         verify(profileServiceMock, only()).updateProfileAgreement(userId);
@@ -114,7 +114,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/profile/id/{userId}/getUserProfile", userId)
+        mockMvc.perform(get("/profile/id/{userId}/get-user-profile", userId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileDetails)));
@@ -129,7 +129,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/profile/id/{userId}/updateUserProfile", userId)
+        mockMvc.perform(put("/profile/id/{userId}/update-user-profile", userId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileDetails)))
                 .andExpect(status().isOk());
@@ -144,7 +144,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
         when(profileServiceMock.getUserProfileStatus(userId)).thenReturn(serviceSuccess(profileStatus));
 
-        mockMvc.perform(get("/profile/id/{userId}/profileStatus", userId)
+        mockMvc.perform(get("/profile/id/{userId}/profile-status", userId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileStatus)))
                 .andExpect(status().isOk());

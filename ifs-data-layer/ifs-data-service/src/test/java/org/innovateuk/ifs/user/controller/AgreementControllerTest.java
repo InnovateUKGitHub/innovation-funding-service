@@ -29,7 +29,7 @@ public class AgreementControllerTest extends BaseControllerMockMVCTest<Agreement
 
         when(agreementServiceMock.getCurrent()).thenReturn(serviceSuccess(newAgreementResource().withText(agreementText).build()));
 
-        mockMvc.perform(get("/agreement/findCurrent"))
+        mockMvc.perform(get("/agreement/find-current"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text", is(agreementText)));
     }

@@ -32,7 +32,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void getAll() {
 
         List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
-        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/find-all", competitionResourceListType(), returnedResponse);
         List<CompetitionResource> responses = service.getAll().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
@@ -86,7 +86,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void getCompetitionTypes() {
         List<CompetitionTypeResource> returnedResponse = asList(new CompetitionTypeResource(), new CompetitionTypeResource());
 
-        setupGetWithRestResultExpectations("/competition-type/findAll", competitionTypeResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations("/competition-type/find-all", competitionTypeResourceListType(), returnedResponse);
 
         List<CompetitionTypeResource> response = service.getCompetitionTypes().getSuccess();
         assertNotNull(response);
@@ -172,7 +172,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Test
     public void updateTermsAndConditionsForCompetition() {
-        setupPutWithRestResultExpectations(competitionsRestURL + "/123" + "/updateTermsAndConditions" + "/234", HttpStatus.OK);
+        setupPutWithRestResultExpectations(competitionsRestURL + "/123" + "/update-terms-and-conditions" + "/234", HttpStatus.OK);
 
         RestResult<Void> response = service.updateTermsAndConditionsForCompetition(123L, 234L);
         assertTrue(response.isSuccess());

@@ -41,7 +41,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         when(applicationAssessmentSummaryServiceMock.getAssignedAssessors(applicationId)).thenReturn(serviceSuccess(applicationAssessorResources));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}/assignedAssessors", applicationId)
+        mockMvc.perform(get("/application-assessment-summary/{id}/assigned-assessors", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationassessmentsummary/{method-name}",
@@ -62,7 +62,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         when(applicationAssessmentSummaryServiceMock.getApplicationAssessmentSummary(applicationId)).thenReturn(serviceSuccess(applicationAssessmentSummaryResource));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}", applicationId)
+        mockMvc.perform(get("/application-assessment-summary/{id}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationassessmentsummary/{method-name}",

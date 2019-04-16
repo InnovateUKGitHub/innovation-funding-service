@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
@@ -19,7 +20,8 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/inviteUser")
+@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+@RequestMapping({"/inviteUser", "/invite-user"})
 public class InviteUserController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
@@ -31,18 +33,21 @@ public class InviteUserController {
     @Autowired
     private InviteUserService inviteUserService;
 
-    @PostMapping("/saveInvite")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PostMapping({"/saveInvite", "/save-invite"})
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
 
         return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole()).toPostResponse();
     }
 
-    @GetMapping("/getInvite/{inviteHash}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getInvite/{inviteHash}", "/get-invite/{inviteHash}"})
     public RestResult<RoleInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash){
         return inviteUserService.getInvite(inviteHash).toGetResponse();
     }
 
-    @GetMapping("/checkExistingUser/{inviteHash}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/checkExistingUser/{inviteHash}", "/check-existing-user/{inviteHash}"})
     public RestResult<Boolean> checkExistingUser(@PathVariable("inviteHash") String inviteHash) {
         return inviteUserService.checkExistingUser(inviteHash).toGetResponse();
     }
@@ -58,7 +63,8 @@ public class InviteUserController {
         return inviteUserService.resendInternalUserInvite(inviteId).toPutResponse();
     }
 
-    @GetMapping("/findExternalInvites")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findExternalInvites", "/find-external-invites"})
     public RestResult<List<ExternalInviteResource>> findExternalInvites(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
         return inviteUserService.findExternalInvites(searchString, searchCategory).toGetResponse();

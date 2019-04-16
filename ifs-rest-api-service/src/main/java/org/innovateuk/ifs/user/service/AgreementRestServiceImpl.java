@@ -16,6 +16,6 @@ public class AgreementRestServiceImpl extends BaseRestService implements Agreeme
 
     @Override
     public RestResult<AgreementResource> getCurrentAgreement() {
-        return getWithRestResult(agreementRestURL + "/findCurrent", AgreementResource.class);
+        return getWithRestResult(agreementRestURL + "/find-current", AgreementResource.class);
     }
 }

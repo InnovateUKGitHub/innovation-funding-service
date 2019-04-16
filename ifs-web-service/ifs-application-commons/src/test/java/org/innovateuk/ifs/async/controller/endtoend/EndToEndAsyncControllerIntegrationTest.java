@@ -245,7 +245,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 withOrganisation(333L, 444L, 555L).
                 build(3);
 
-        when(restTemplateMock.exchange(eq(baseRestUrl + "/processrole/findByApplicationId/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/processrole/find-by-application-id/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(processRoleResourceListType()))).thenAnswer(invocation -> dataLayerResponse(applicationProcessRoles, executionBehaviour));
 
         List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);

@@ -46,7 +46,7 @@ public class ProcessRoleControllerTest extends BaseControllerMockMVCTest<Process
 
         when(usersRolesServiceMock.getProcessRoleByUserIdAndApplicationId(1L,1L)).thenReturn(serviceSuccess(newProcessRoleResource().withUserName(userName).build()));
 
-        mockMvc.perform(get("/processrole/findByUserApplication/{userId}/{applicationId}", 1, 1))
+        mockMvc.perform(get("/processrole/find-by-user-application/{userId}/{applicationId}", 1, 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName", is(userName)));
     }
@@ -57,7 +57,7 @@ public class ProcessRoleControllerTest extends BaseControllerMockMVCTest<Process
 
         when(usersRolesServiceMock.getProcessRolesByApplicationId(1L)).thenReturn(serviceSuccess(newProcessRoleResource().withUserName(userName).build(3)));
 
-        mockMvc.perform(get("/processrole/findByApplicationId/{applicationId}", 1))
+        mockMvc.perform(get("/processrole/find-by-application-id/{applicationId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userName", is(userName)))
@@ -71,7 +71,7 @@ public class ProcessRoleControllerTest extends BaseControllerMockMVCTest<Process
 
         when(usersRolesServiceMock.getProcessRolesByUserId(1L)).thenReturn(serviceSuccess(newProcessRoleResource().withUserName(userName).build(3)));
 
-        mockMvc.perform(get("/processrole/findByUserId/{userId}", 1))
+        mockMvc.perform(get("/processrole/find-by-user-id/{userId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userName", is(userName)))
@@ -85,7 +85,7 @@ public class ProcessRoleControllerTest extends BaseControllerMockMVCTest<Process
 
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(1L)).thenReturn(serviceSuccess(newProcessRoleResource().withUserName(userName).build(3)));
 
-        mockMvc.perform(get("/processrole/findAssignable/{applicationId}", 1))
+        mockMvc.perform(get("/processrole/find-assignable/{applicationId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].userName", is(userName)))

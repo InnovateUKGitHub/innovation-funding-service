@@ -46,7 +46,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponses(assessmentId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}", assessmentId))
+        mockMvc.perform(get("/assessor-form-input-response/assessment/{assessmentId}", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(toJson(expected)));
@@ -63,7 +63,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesForPanel(applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessorFormInputResponse/panel/{applicationId}", applicationId))
+        mockMvc.perform(get("/assessor-form-input-response/panel/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(toJson(expected)));
@@ -81,7 +81,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessorFormInputResponse/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId))
+        mockMvc.perform(get("/assessor-form-input-response/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(toJson(expected)));
@@ -103,7 +103,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessorFormInputResponse")
+        mockMvc.perform(put("/assessor-form-input-response")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(responses)))
                 .andExpect(status().isOk());
@@ -123,7 +123,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                         .withValue(value, valueInvalid)
                         .build(2));
 
-        mockMvc.perform(put("/assessorFormInputResponse")
+        mockMvc.perform(put("/assessor-form-input-response")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(responses)))
                 .andExpect(status().isNotAcceptable())
@@ -142,7 +142,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
         when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceFailure(
                 fieldError(String.valueOf(formInputId), "response", "validation.field.max.word.count", "", 100)));
 
-        mockMvc.perform(put("/assessorFormInputResponse")
+        mockMvc.perform(put("/assessor-form-input-response")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(responses)))
                 .andExpect(status().isNotAcceptable())
@@ -159,7 +159,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessorFormInputResponse//application/{applicationId}/scores", applicationId))
+        mockMvc.perform(get("/assessor-form-input-response//application/{applicationId}/scores", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
@@ -174,7 +174,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
 
         when(assessorFormInputResponseServiceMock.getAssessmentAggregateFeedback(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+        mockMvc.perform(get("/assessor-form-input-response/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 

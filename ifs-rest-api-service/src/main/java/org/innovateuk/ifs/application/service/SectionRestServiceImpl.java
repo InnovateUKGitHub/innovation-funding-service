@@ -29,31 +29,31 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
 
     @Override
     public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
-        return getWithRestResult(sectionRestURL + "/getByCompetition/" + competitionId, sectionResourceListType());
+        return getWithRestResult(sectionRestURL + "/get-by-competition/" + competitionId, sectionResourceListType());
     }
 
     @Override
     public RestResult<SectionResource> getSectionByQuestionId(Long questionId) {
-        return getWithRestResult(sectionRestURL + "/getSectionByQuestionId/" + questionId, SectionResource.class);
+        return getWithRestResult(sectionRestURL + "/get-section-by-question-id/" + questionId, SectionResource.class);
     }
 
     @Override
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId) {
-        return getWithRestResult(sectionRestURL + "/getQuestionsForSectionAndSubsections/" + sectionId, longsSetType());
+        return getWithRestResult(sectionRestURL + "/get-questions-for-section-and-subsections/" + sectionId, longsSetType());
     }
 
     @Override
     public RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type) {
-        return getWithRestResult(sectionRestURL + "/getSectionsByCompetitionIdAndType/" + competitionId + "/" + type.name(), sectionResourceListType());
+        return getWithRestResult(sectionRestURL + "/get-sections-by-competition-id-and-type/" + competitionId + "/" + type.name(), sectionResourceListType());
     }
 
     @Override
     public RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId) {
-        return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, SectionResource.class);
+        return getWithRestResult(sectionRestURL + "/get-finance-section-by-competition-id/" + competitionId, SectionResource.class);
     }
 
     @Override
     public RestResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
-        return getWithRestResult(sectionRestURL + "/getByCompetitionIdVisibleForAssessment/" + competitionId, sectionResourceListType());
+        return getWithRestResult(sectionRestURL + "/get-by-competition-id-visible-for-assessment/" + competitionId, sectionResourceListType());
     }
 }
