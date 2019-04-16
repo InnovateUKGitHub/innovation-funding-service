@@ -188,11 +188,8 @@ function tailorAppInstance() {
 
 
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
-    echo "sed cert"
     sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
-    echo "sed cacert"
     sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
-    echo "sed key"
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
