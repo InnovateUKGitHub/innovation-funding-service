@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.grant.service;
 
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.junit.Test;
@@ -8,17 +9,17 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
-import static org.junit.Assert.assertEquals;
 
 public class SpendProfileCalculationsTest {
     private static final CostCategory OVERHEADS = newCostCategory().withName("Overheads").build();
     private static final CostCategory LABOUR = newCostCategory().withName("Labour").build();
 
     private static final BigDecimal FIFTY_PERCENT = BigDecimal.valueOf(50);
-    private static final BigDecimal HUNDRED_PERCENT =  BigDecimal.valueOf(100);
+    private static final BigDecimal HUNDRED_PERCENT = BigDecimal.valueOf(100);
 
     @Test
     public void overheadCalculationZero() {
@@ -26,7 +27,7 @@ public class SpendProfileCalculationsTest {
                 newOverheadCost(BigDecimal.ZERO),
                 newLabourCost(BigDecimal.ZERO)
         );
-        assertEquals(BigDecimal.ZERO, newCalculations(costs).getOverheadPercentage());
+        assertThat(BigDecimal.ZERO, Matchers.comparesEqualTo(newCalculations(costs).getOverheadPercentage()));
     }
 
     @Test
@@ -35,7 +36,7 @@ public class SpendProfileCalculationsTest {
                 newOverheadCost(BigDecimal.ONE),
                 newLabourCost(BigDecimal.ONE)
         );
-        assertEquals(FIFTY_PERCENT, newCalculations(costs).getOverheadPercentage());
+        assertThat(FIFTY_PERCENT, Matchers.comparesEqualTo(newCalculations(costs).getOverheadPercentage()));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class SpendProfileCalculationsTest {
                 newOverheadCost(BigDecimal.ONE),
                 newLabourCost(BigDecimal.ZERO)
         );
-        assertEquals(HUNDRED_PERCENT, newCalculations(costs).getOverheadPercentage());
+        assertThat(HUNDRED_PERCENT, Matchers.comparesEqualTo(newCalculations(costs).getOverheadPercentage()));
     }
 
     private Cost newOverheadCost(BigDecimal value) {
