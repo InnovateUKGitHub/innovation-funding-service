@@ -30,7 +30,7 @@ class SpendProfileCalculations {
 
         BigDecimal totalOverhead = getTotalOverhead();
 
-        return totalOverhead.equals(BigDecimal.ZERO) ? BigDecimal.ZERO :
+        return totalOverhead.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO :
                 totalOverhead.multiply(BigDecimal.valueOf(100))
                 .divide(getTotal(), 2, BigDecimal.ROUND_HALF_UP);
     }
