@@ -14,12 +14,12 @@ import static java.lang.String.format;
 public class ApplicationResearchCategoryRestServiceImpl extends BaseRestService implements
         ApplicationResearchCategoryRestService {
 
-    private String applicationResearchCategoryRestURL = "/applicationResearchCategory";
+    private String applicationResearchCategoryRestURL = "/application-research-category";
 
     @Override
     public RestResult<ApplicationResource> setResearchCategory(long applicationId,
                                                                Long researchCategoryId) {
-        return postWithRestResult(format("%s/researchCategory/%s", applicationResearchCategoryRestURL, applicationId),
+        return postWithRestResult(format("%s/research-category/%s", applicationResearchCategoryRestURL, applicationId),
                 researchCategoryId, ApplicationResource.class);
     }
 

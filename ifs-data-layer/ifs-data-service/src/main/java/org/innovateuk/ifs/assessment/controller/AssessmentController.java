@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -70,12 +71,14 @@ public class AssessmentController {
         return assessmentService.getApplicationFeedback(applicationId).toGetResponse();
     }
 
-    @PutMapping("/{id}/rejectInvitation")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PutMapping({"/{id}/rejectInvitation", "/{id}/reject-invitation"})
     public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
         return assessmentService.rejectInvitation(id, assessmentRejectOutcomeResource).toPutResponse();
     }
 
-    @PutMapping("/{id}/acceptInvitation")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PutMapping({"/{id}/acceptInvitation", "/{id}/accept-invitation"})
     public RestResult<Void> acceptInvitation(@PathVariable("id") long id) {
         return assessmentService.acceptInvitation(id).toPutResponse();
     }
@@ -85,7 +88,8 @@ public class AssessmentController {
         return assessmentService.withdrawAssessment(id).toPutResponse();
     }
 
-    @PutMapping("/submitAssessments")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PutMapping({"/submitAssessments", "/submit-assessments"})
     public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
     }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
@@ -72,7 +73,8 @@ public class ProjectFinanceController {
         return financeCheckService.getCreditReport(projectId, organisationId).toGetResponse();
     }
 
-    @GetMapping("/{projectId}/organisation/{organisationId}/financeDetails")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/{projectId}/organisation/{organisationId}/financeDetails", "/{projectId}/organisation/{organisationId}/finance-details"})
     public RestResult<ProjectFinanceResource> financeDetails(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId) {
         return financeRowService.financeChecksDetails(projectId, organisationId).toGetResponse();
     }

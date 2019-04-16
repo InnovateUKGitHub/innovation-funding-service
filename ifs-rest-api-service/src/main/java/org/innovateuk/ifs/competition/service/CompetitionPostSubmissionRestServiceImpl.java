@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 @Service
 public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService implements CompetitionPostSubmissionRestService {
 
-    private String competitionsRestURL = "/competition/postSubmission";
+    private String competitionsRestURL = "/competition/post-submission";
 
     @Override
     public RestResult<Void> releaseFeedback(long competitionId) {

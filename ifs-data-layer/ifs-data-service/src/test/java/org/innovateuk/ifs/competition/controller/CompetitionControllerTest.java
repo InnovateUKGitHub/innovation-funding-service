@@ -73,7 +73,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         when(competitionServiceMock.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/{id}/updateTermsAndConditions/{tcId}", competitionId, termsAndConditionsId))
+        mockMvc.perform(put("/competition/{id}/update-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId))
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);

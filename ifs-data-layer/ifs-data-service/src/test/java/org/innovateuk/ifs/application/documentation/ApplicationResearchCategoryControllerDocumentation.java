@@ -34,7 +34,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
     @Mock
     private QuestionStatusService questionStatusService;
 
-    private static String baseUrl = "/applicationResearchCategory";
+    private static String baseUrl = "/application-research-category";
 
     @Override
     protected ApplicationResearchCategoryController supplyControllerUnderTest() {
@@ -50,7 +50,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
         when(applicationResearchCategoryService.setResearchCategory(applicationId, researchCategoryId))
                 .thenReturn(serviceSuccess(newApplicationResource().build()));
 
-        mockMvc.perform(post(baseUrl + "/researchCategory/{applicationId}", applicationId)
+        mockMvc.perform(post(baseUrl + "/research-category/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))

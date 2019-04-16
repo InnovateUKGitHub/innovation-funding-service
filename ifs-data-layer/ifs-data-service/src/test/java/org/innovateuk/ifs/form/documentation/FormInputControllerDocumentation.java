@@ -55,7 +55,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L)
+        mockMvc.perform(get(baseURI + "/find-by-question-id/{id}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminput/{method-name}",
                         pathParameters(
@@ -74,7 +74,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
         when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
-        mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L)
+        mockMvc.perform(get(baseURI + "/find-by-competition-id/{id}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminput/{method-name}",
                         pathParameters(

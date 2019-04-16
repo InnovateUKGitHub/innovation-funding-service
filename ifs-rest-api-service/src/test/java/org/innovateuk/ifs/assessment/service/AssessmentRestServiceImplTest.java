@@ -141,7 +141,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long assessmentId = 1L;
 
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId),
+        setupPutWithRestResultExpectations(format("%s/%s/reject-invitation", assessmentRestURL, assessmentId),
                 assessmentRejectOutcomeResource, OK);
         RestResult<Void> response = service.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(response.isSuccess());
@@ -151,7 +151,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void accept() throws Exception {
         Long assessmentId = 1L;
 
-        setupPutWithRestResultExpectations(format("%s/%s/acceptInvitation", assessmentRestURL, assessmentId), null, OK);
+        setupPutWithRestResultExpectations(format("%s/%s/accept-invitation", assessmentRestURL, assessmentId), null, OK);
         RestResult<Void> response = service.acceptInvitation(assessmentId);
         assertTrue(response.isSuccess());
     }
@@ -160,7 +160,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void submitAssessments() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, OK);
+        setupPutWithRestResultExpectations(format("%s/submit-assessments", assessmentRestURL), assessmentSubmissions, OK);
         RestResult<Void> response = service.submitAssessments(assessmentSubmissions);
         assertTrue(response.isSuccess());
     }

@@ -79,7 +79,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
         Long competitionId = 2L;
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build()));
 
-        mockMvc.perform(get("/milestone/{competitionId}/getByType?type=" + MilestoneType.OPEN_DATE, competitionId)
+        mockMvc.perform(get("/milestone/{competitionId}/get-by-type?type=" + MilestoneType.OPEN_DATE, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("milestone/{method-name}",

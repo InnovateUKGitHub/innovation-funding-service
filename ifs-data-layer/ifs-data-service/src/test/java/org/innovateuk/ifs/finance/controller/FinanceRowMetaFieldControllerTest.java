@@ -26,7 +26,7 @@ public class FinanceRowMetaFieldControllerTest extends BaseControllerMockMVCTest
     public void findAllShouldReturnListOfCostFields() throws Exception{
         when(costFieldService.findAllCostFields()).thenReturn(serviceSuccess(asList(new FinanceRowMetaFieldResource(), new FinanceRowMetaFieldResource())));
 
-        mockMvc.perform(get("/costfield/findAll/"))
+        mockMvc.perform(get("/costfield/find-all/"))
                 .andExpect(status().isOk());
 
         verify(costFieldService, times(1)).findAllCostFields();

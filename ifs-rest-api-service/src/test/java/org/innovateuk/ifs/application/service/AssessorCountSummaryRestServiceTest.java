@@ -20,7 +20,7 @@ public class AssessorCountSummaryRestServiceTest extends BaseRestServiceUnitTest
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/assessorCountSummary/findByCompetitionId/1?innovationSector=5&businessType=ACADEMIC&page=2&size=3";
+        String expectedUrl = "/assessor-count-summary/find-by-competition-id/1?innovationSector=5&businessType=ACADEMIC&page=2&size=3";
         AssessorCountSummaryPageResource pageResource = AssessorCountSummaryPageResourceBuilder.newAssessorCountSummaryPageResource().build();
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorCountSummaryPageResource.class, pageResource, OK);

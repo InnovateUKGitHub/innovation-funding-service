@@ -70,7 +70,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
-        return getWithRestResultAnonymous(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
+        return getWithRestResultAnonymous(userRestURL + "/find-by-email/" + email + "/", UserResource.class);
     }
 
     @Override
@@ -84,17 +84,17 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<List<UserResource>> findAll() {
-        return getWithRestResult(userRestURL + "/findAll/", userListType());
+        return getWithRestResult(userRestURL + "/find-all/", userListType());
     }
 
     @Override
     public RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory) {
-        return getWithRestResult(userRestURL + "/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), userOrganisationListType());
+        return getWithRestResult(userRestURL + "/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), userOrganisationListType());
     }
 
     @Override
     public RestResult<List<UserResource>> findByUserRole(Role role) {
-        return getWithRestResult(userRestURL + "/findByRole/" + role, userListType());
+        return getWithRestResult(userRestURL + "/find-by-role/" + role, userListType());
     }
 
     @Override
@@ -113,7 +113,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRoleResource.class);
+        return getWithRestResult(processRoleRestURL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
     }
 
     @Override
@@ -123,27 +123,27 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleResourceListType());
+        return getWithRestResult(processRoleRestURL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
     }
 
     @Override
     public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(Long userId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserId/" + userId, processRoleResourceListType());
+        return getWithRestResult(processRoleRestURL + "/find-by-user-id/" + userId, processRoleResourceListType());
     }
 
     @Override
     public RestResult<List<UserResource>> findAssignableUsers(Long applicationId){
-        return getWithRestResult(userRestURL + "/findAssignableUsers/" + applicationId, userListType());
+        return getWithRestResult(userRestURL + "/find-assignable-users/" + applicationId, userListType());
     }
 
     @Override
     public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId){
-        return getWithRestResultAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRoleResource[].class);
+        return getWithRestResultAsync(processRoleRestURL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
     }
 
     @Override
     public RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return getWithRestResult(processRoleRestURL + "/userHasApplicationForCompetition/" + userId + "/" + competitionId, Boolean.class);
+        return getWithRestResult(processRoleRestURL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
     }
 
     @Override
@@ -173,9 +173,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url;
         if(competitionId != null){
-            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId +"/"+competitionId;
+            url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId +"/"+competitionId;
         }else{
-            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
+            url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId;
         }
 
         return postWithRestResultAnonymous(url, user, UserResource.class);
@@ -200,7 +200,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);
-        String url = userRestURL + "/updateDetails";
+        String url = userRestURL + "/update-details";
         return postWithRestResult(url, user, UserResource.class);
     }
 
@@ -218,7 +218,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> agreeNewSiteTermsAndConditions(long userId) {
-        String url = userRestURL + "/id/" + userId + "/agreeNewSiteTermsAndConditions";
+        String url = userRestURL + "/id/" + userId + "/agree-new-site-terms-and-conditions";
         return postWithRestResult(url, Void.class);
     }
 

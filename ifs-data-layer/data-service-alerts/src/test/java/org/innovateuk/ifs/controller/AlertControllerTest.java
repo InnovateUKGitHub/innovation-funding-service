@@ -35,7 +35,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
     private AlertService alertServiceMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @Override
@@ -57,7 +57,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
 
         when(alertServiceMock.findAllVisible()).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/alert/findAllVisible"))
+        mockMvc.perform(get("/alert/find-all-visible"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(8888)))
                 .andExpect(jsonPath("[1]id", is(9999)))
@@ -84,7 +84,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
 
         when(alertServiceMock.findAllVisibleByType(MAINTENANCE)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/alert/findAllVisible/{type}", MAINTENANCE.name()))
+        mockMvc.perform(get("/alert/find-all-visible/{type}", MAINTENANCE.name()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(8888)))
                 .andExpect(jsonPath("[1]id", is(9999)))

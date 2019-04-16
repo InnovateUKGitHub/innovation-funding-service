@@ -21,6 +21,6 @@ public class FinanceRowMetaFieldRestServiceImpl extends BaseRestService implemen
 
     @Override
     public RestResult<List<FinanceRowMetaFieldResource>> getFinanceRowMetaFields() {
-        return getWithRestResult(costFieldRestURL + "/findAll/", financeRowMetaFieldResourceListType());
+        return getWithRestResult(costFieldRestURL + "/find-all/", financeRowMetaFieldResourceListType());
     }
 }
