@@ -28,10 +28,13 @@ class SpendProfileCalculations {
 
     BigDecimal getOverheadPercentage() {
 
-        BigDecimal totalOverhead = getTotalOverhead();
+        BigDecimal total = getTotal();
 
-        return totalOverhead.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO :
-                totalOverhead.multiply(BigDecimal.valueOf(100))
-                .divide(getTotal(), 2, BigDecimal.ROUND_HALF_UP);
+        if (total.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+
+        return getTotalOverhead().multiply(BigDecimal.valueOf(100))
+                .divide(total, 2, BigDecimal.ROUND_HALF_UP);
     }
 }
