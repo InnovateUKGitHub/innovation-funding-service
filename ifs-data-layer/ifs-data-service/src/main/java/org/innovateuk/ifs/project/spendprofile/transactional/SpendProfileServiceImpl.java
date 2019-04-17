@@ -90,6 +90,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     public static final String EMPTY_CELL = "";
     private static final String CSV_MONTH = "Month";
+    private static final String CSV_QUARTER = "Quarter";
     private static final String CSV_TOTAL = "TOTAL";
     private static final String CSV_ELIGIBLE_COST_TOTAL = "Eligible Costs Total";
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
@@ -652,9 +653,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
             CostCategory cc = costCategoryRepository.findById(category).get();
-            if (cc.getLabel() != null) {
-                byCategory.add(cc.getLabel());
-            }
+
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val ->
                 byCategory.add(val.toString())
@@ -664,12 +663,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
             if (monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
                 monthsRow.remove(EMPTY_CELL);
-                rows.add(monthsRow.stream().toArray(String[]::new));
+                rows.add(monthsRow.toArray(new String[0]));
             } else if (!monthsRow.isEmpty()) {
-                rows.add(monthsRow.stream().toArray(String[]::new));
+                rows.add(monthsRow.toArray(new String[0]));
             }
             monthsRow.clear();
-            rows.add(byCategory.stream().toArray(String[]::new));
+            rows.add(byCategory.toArray(new String[0]));
             columnSize[0] = byCategory.size();
             byCategory.clear();
         });
@@ -683,7 +682,23 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         if (totals.size() > columnSize[0] && totals.contains(EMPTY_CELL)) {
             totals.remove(EMPTY_CELL);
         }
-        rows.add(totals.stream().toArray(String[]::new));
+        rows.add(totals.toArray(new String[0]));
+
+        rows.add(new String[0]);
+
+        ArrayList<String> quartersRow = new ArrayList<>();
+        int noOfQuarters = (int) Math.ceil((double) spendProfileTableResource.getMonths().size()/3);
+        quartersRow.add(CSV_QUARTER);
+        IntStream.rangeClosed(1, noOfQuarters).forEach(num -> quartersRow.add("Quarter" + num));
+        rows.add(quartersRow.toArray(new String[0]));
+
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
+            CostCategory cc = costCategoryRepository.findById(category).get();
+            rows.add(calculateQuarterly(cc.getName(), values));
+        });
+
+        rows.add(calculateQuarterly(CSV_TOTAL, totalForEachMonth));
+
         csvWriter.writeAll(rows);
         csvWriter.close();
 
@@ -692,6 +707,26 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileCSVResource.setFileName(generateSpendProfileFileName(organisation.getName()));
 
         return spendProfileCSVResource;
+    }
+
+    private String[] calculateQuarterly(String categoryLabel, List<BigDecimal> values) {
+        ArrayList<String> byCategoryQuarterly = new ArrayList<>();
+        byCategoryQuarterly.add(categoryLabel);
+        for (int i = 0; i < (values.size()-2); i += 3) {
+            BigDecimal quarterlyFigure = values.get(i).add(values.get(i + 1)).add(values.get(i + 2));
+            byCategoryQuarterly.add(quarterlyFigure.toString());
+        }
+
+        // account for extra months that don't fit neatly in a quarter
+        if(values.size()%3 !=0) {
+            BigDecimal lastQuarterlyFigure = values.get(values.size()-1);
+            if(values.size()%3 ==2) {
+                lastQuarterlyFigure = lastQuarterlyFigure.add(values.get(values.size()-2));
+            }
+            byCategoryQuarterly.add(lastQuarterlyFigure.toString());
+        }
+
+        return byCategoryQuarterly.toArray(new String[0]);
     }
 
     private String generateSpendProfileFileName(String organisationName) {
@@ -724,7 +759,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private BigDecimal buildTotalOfTotals(Map<Long, BigDecimal> input) {
-        return input.values().stream().reduce(BigDecimal.ZERO, (d1, d2) -> d1.add(d2));
+        return input.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private List<Cost> findMultipleMatchingCostsByCategory(CostGroup spendProfileFigures, CostCategory category) {
