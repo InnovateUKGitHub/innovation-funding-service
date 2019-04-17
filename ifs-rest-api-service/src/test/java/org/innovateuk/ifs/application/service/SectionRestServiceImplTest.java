@@ -6,12 +6,10 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.sectionResourceListType;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -46,7 +44,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
     @Test
     public void getByCompetition() {
         long competitionId = 123L;
-        String expectedUrl = sectionRestUrl + "/getByCompetition/" + competitionId;
+        String expectedUrl = sectionRestUrl + "/get-by-competition/" + competitionId;
         List<SectionResource> sectionResources = newSectionResource().build(2);
         setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), sectionResources);
 
@@ -58,7 +56,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
     @Test
     public void getSectionByQuestionId() {
         long questionId = 1L;
-        String expectedUrl = sectionRestUrl + "/getSectionByQuestionId/" + questionId;
+        String expectedUrl = sectionRestUrl + "/get-section-by-question-id/" + questionId;
         SectionResource sectionResource = newSectionResource().build();
         setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, sectionResource);
 
@@ -70,7 +68,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
     @Test
     public void getQuestionForSectionAndSubsections() {
         long sectionId = 1L;
-        String expectedUrl = sectionRestUrl + "/getQuestionsForSectionAndSubsections/" + sectionId;
+        String expectedUrl = sectionRestUrl + "/get-questions-for-section-and-subsections/" + sectionId;
         Set<Long> questions = new HashSet<>();
         setupGetWithRestResultExpectations(expectedUrl, longsSetType(), questions);
 
@@ -81,8 +79,8 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
     @Test
     public void getSectionsForCompetitionByType() {
-        String expectedUrl = sectionRestUrl + "/getSectionsByCompetitionIdAndType/123/FINANCE";
-        List<SectionResource> returnedResponse = Arrays.asList(new SectionResource());
+        String expectedUrl = sectionRestUrl + "/get-sections-by-competition-id-and-type/123/FINANCE";
+        List<SectionResource> returnedResponse = singletonList(new SectionResource());
         setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), returnedResponse);
 
         List<SectionResource> response = service.getSectionsByCompetitionIdAndType(123L, SectionType.FINANCE).getSuccess();
@@ -93,7 +91,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
     @Test
     public void financeSectionForCompetition() {
         long competitionId = 1L;
-        String expectedUrl = sectionRestUrl + "/getFinanceSectionByCompetitionId/" + competitionId;
+        String expectedUrl = sectionRestUrl + "/get-finance-section-by-competition-id/" + competitionId;
         SectionResource resource = newSectionResource().build();
         setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, resource);
 
@@ -108,7 +106,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         long competitionId = 1L;
 
-        setupGetWithRestResultExpectations(format("%s/getByCompetitionIdVisibleForAssessment/%s", sectionRestUrl, competitionId), sectionResourceListType(), expected);
+        setupGetWithRestResultExpectations(format("%s/get-by-competition-id-visible-for-assessment/%s", sectionRestUrl, competitionId), sectionResourceListType(), expected);
         assertSame(expected, service.getByCompetitionIdVisibleForAssessment(competitionId).getSuccess());
     }
 }

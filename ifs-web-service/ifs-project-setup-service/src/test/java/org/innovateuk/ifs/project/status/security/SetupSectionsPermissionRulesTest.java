@@ -96,30 +96,35 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void projectDetailsSectionAccess() {
         assertScenariosForSections(SetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void projectManagerPageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage,
                 () -> rules.leadCanAccessProjectManagerPage(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     @Test
     public void projectStartDatePageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage,
                 () -> rules.leadCanAccessProjectStartDatePage(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     @Test
     public void projectAddressPageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage,
                 () -> rules.leadCanAccessProjectAddressPage(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     @Test
     public void financeContactPageAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessFinanceContactPage,
                 () -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
@@ -129,6 +134,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                 setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, true),
                 () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     @Test
@@ -139,6 +145,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                 setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
                 () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     private void setUpPartnerProjectLocationRequiredMocking() {
@@ -151,23 +158,30 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                 setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation),
                 () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
     }
 
     @Test
     public void bankDetailsSectionAccessMonitoringOfficer() {
+        activeProject.setMonitoringOfficerUser(monitoringOfficer.getId());
+        when(projectServiceMock.getById(activeProject.getId())).thenReturn(activeProject);
+
         assertMonitoringOfficerUnSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                         setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation),
                 () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void projectManagerTotalSpendProfileSectionAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.projectManagerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
@@ -178,6 +192,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccessMonitoringOfficer() {
         assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
@@ -185,21 +200,25 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(activeProject.getId(), 22L);
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()),
                 () -> rules.partnerCanEditSpendProfileSection(projectOrganisationCompositeId, user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void documentsSectionAccessLead() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void documentsSectionAccessMonitoringOfficer() {
         assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void documentsSectionAccessNonLead() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
@@ -217,84 +236,97 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void projectSetupStatusAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectSetupStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectTeamStatusAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectTeamStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectDetailsSectionAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectDetailsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectManagerPageAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectManagerPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectStartDatePageAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectStartDatePage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectAddressPageAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectAddressPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void financeContactPageAccessUnavailableForWithdrawnProject() {
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void monitoringOfficerSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
-
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectLocationSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
-
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void bankDetailsSectionAccessUnavailableForWithdrawnProject() {
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
     public void spendProfileSectionAccessUnavailableForWithdrawnProject() {
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void editSpendProfileSectionAccessUnavailableForWithdrawnProject() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(withdrawnProject.getId(), 22L);
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanEditSpendProfileSection(projectOrganisationCompositeId, user));
+        verify(projectServiceMock).getById(withdrawnProject.getId());
     }
 
     @Test
     public void grantOfferLetterSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void grantOfferLetterSectionAccessMonitoringOfficer() {
         assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
     public void signedGrantOfferLetterSuccessfulAccessByLead() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.leadPartnerAccessToSignedGrantOfferLetter(ProjectCompositeId.id(activeProject.getId()), user));
+        verify(projectServiceMock).getById(activeProject.getId());
     }
 
     @Test
@@ -416,7 +448,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         assertTrue(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(activeProject.getId()), user));
 
-        verify(projectServiceMock).getById(activeProject.getId());
+        verify(projectServiceMock, times(2)).getById(activeProject.getId());
         verify(projectServiceMock).getOrganisationIdFromUser(activeProject.getId(), user);
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
     }
@@ -451,7 +483,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         assertTrue(ruleCheck.get());
 
-        verify(projectServiceMock).getById(activeProject.getId());
         verify(projectServiceMock).getOrganisationIdFromUser(activeProject.getId(), user);
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
     }
@@ -462,7 +493,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         assertFalse(ruleCheck.get());
 
-        verify(projectServiceMock).getById(withdrawnProject.getId());
         verify(projectServiceMock, never()).getOrganisationIdFromUser(withdrawnProject.getId(), user);
         verify(statusServiceMock, never()).getProjectTeamStatus(withdrawnProject.getId(), Optional.of(user.getId()));
     }

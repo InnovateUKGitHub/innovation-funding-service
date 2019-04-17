@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.rej
 @Service
 public class RejectionReasonRestServiceImpl extends BaseRestService implements RejectionReasonRestService {
 
-    private String rejectionReasonRestUrl = "/rejectionReason";
+    private String rejectionReasonRestUrl = "/rejection-reason";
 
     protected void setRejectionReasonRestUrl(String rejectionReasonRestUrl) {
         this.rejectionReasonRestUrl = rejectionReasonRestUrl;
@@ -24,6 +24,6 @@ public class RejectionReasonRestServiceImpl extends BaseRestService implements R
 
     @Override
     public RestResult<List<RejectionReasonResource>> findAllActive() {
-        return getWithRestResultAnonymous(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType());
+        return getWithRestResultAnonymous(format("%s/find-all-active", rejectionReasonRestUrl), rejectionReasonResourceListType());
     }
 }

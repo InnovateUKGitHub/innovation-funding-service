@@ -43,7 +43,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         SectionResource nextSection = newSectionResource().build();
         when(sectionServiceMock.getNextSection(section.getId())).thenReturn(serviceSuccess(nextSection));
 
-        mockMvc.perform(get("/section/getNextSection/" + section.getId())
+        mockMvc.perform(get("/section/get-next-section/" + section.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -56,7 +56,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         SectionResource previousSection = newSectionResource().build();
         when(sectionServiceMock.getPreviousSection(section.getId())).thenReturn(serviceSuccess(previousSection));
 
-        mockMvc.perform(get("/section/getPreviousSection/" + section.getId())
+        mockMvc.perform(get("/section/get-previous-section/" + section.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -71,7 +71,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         when(sectionServiceMock.getByCompetitionIdVisibleForAssessment(competitionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/getByCompetitionIdVisibleForAssessment/{competitionId}", competitionId))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/get-by-competition-id-visible-for-assessment/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void findAll() throws Exception {
-        List<MonitoringOfficerResource> expected = singletonList(new MonitoringOfficerResource());
+        List<MonitoringOfficerAssignmentResource> expected = singletonList(new MonitoringOfficerAssignmentResource());
 
         when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
 
@@ -40,7 +40,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
         long userId = 7;
-        MonitoringOfficerResource expected = new MonitoringOfficerResource();
+        MonitoringOfficerAssignmentResource expected = new MonitoringOfficerAssignmentResource();
 
         when(projectMonitoringOfficerServiceMock.getProjectMonitoringOfficer(userId)).thenReturn(serviceSuccess(expected));
 

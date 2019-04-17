@@ -66,9 +66,9 @@ ${A_B_Cad_Services_Name}  A B Cad Services
 ${A_B_Cad_Services_Id}    ${organisation_ids["${A_B_Cad_Services_Name}"]}
 ${Armstrong_Butler_Name}  Armstrong & Butler Ltd
 ${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
-${Grade_Crossing_Applicaiton_Titile}      Grade crossing manufacture and supply
-${Grade_Crossing_Applicaiton_No}          ${application_ids["${Grade_Crossing_Applicaiton_Titile}"]}
-${Grade_Crossing_Project_Id}              ${project_ids["${Grade_Crossing_Applicaiton_Titile}"]}
+${Grade_Crossing_Application_Title}       Grade crossing manufacture and supply
+${Grade_Crossing_Applicaiton_No}          ${application_ids["${Grade_Crossing_Application_Title}"]}
+${Grade_Crossing_Project_Id}              ${project_ids["${Grade_Crossing_Application_Title}"]}
 ${Grade_Crossing_Lead_Partner_Email}      diane.scott@vitruvius.example.com
 ${Grade_Crossing_Partner_Email}           phil.mcguire@abcad.example.com
 ${Grade_Crossing_Partner_Finance}         Phil Mcguire

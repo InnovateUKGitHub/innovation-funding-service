@@ -7,6 +7,8 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
+import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
@@ -113,6 +115,35 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
     }
+
+    @Test
+    public void getCostItemNotFound() {
+        long doesNotExistId = -1l;
+        ServiceResult<FinanceRowItem> result = service.getCostItem(doesNotExistId);
+        assertTrue(result.isFailure());
+        assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void getCostItem() {
+        long doesExistId = 1l;
+        FinanceRowItem financeRowItem = new SubContractingCost(doesExistId, new BigDecimal(10), "Country", "name", "role");
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
+        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
+        ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withId(doesExistId).withTarget(applicationFinance).build();
+        when(applicationFinanceRowRepositoryMock.findById(doesExistId)).thenReturn(Optional.of(applicationFinanceRow ));
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDefaultHandlerMock.costToCostItem(applicationFinanceRow)).thenReturn(financeRowItem);
+
+        ServiceResult<FinanceRowItem> result = service.getCostItem(doesExistId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(financeRowItem, result.getSuccess());
+    }
+
 
 
     @Test

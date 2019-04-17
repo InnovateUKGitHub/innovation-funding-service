@@ -3,13 +3,16 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
@@ -32,7 +35,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -61,6 +63,9 @@ public class MonitoringOfficerController {
     private MonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     @Autowired
+    private MonitoringOfficerRegistrationRestService monitoringOfficerRegistrationRestService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -73,7 +78,7 @@ public class MonitoringOfficerController {
     }
 
     @PostMapping("/search-by-email")
-    public String create(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
+    public String searchByEmail(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
                          BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model) {
@@ -88,7 +93,7 @@ public class MonitoringOfficerController {
             }
             return format("redirect:/monitoring-officer/%s/assign-role", userResource.getId());
         }
-        return "project/monitoring-officer/create-new";
+        return "redirect:/monitoring-officer/create/" + form.getEmailAddress();
     }
 
     @GetMapping("/{userId}/assign-role")
@@ -118,6 +123,42 @@ public class MonitoringOfficerController {
         userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
 
         return monitoringOfficerProjectsRedirect(userId);
+    }
+
+    @GetMapping("/create/{emailAddress}")
+    public String create(@PathVariable String emailAddress,
+                         Model model) {
+        MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
+        model.addAttribute("emailAddress", emailAddress);
+        model.addAttribute(FORM , form);
+        return "project/monitoring-officer/create-new";
+    }
+
+    @PostMapping("/create")
+    public String createUser(@Valid @ModelAttribute(FORM) MonitoringOfficerCreateForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler,
+                             Model model) {
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("emailAddress", form.getEmailAddress());
+            model.addAttribute(FORM , form);
+            return "project/monitoring-officer/create-new";
+        };
+
+        return validationHandler
+                .failNowOrSucceedWith(failureView, () -> {
+                    MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
+                                                                                                   form.getLastName(),
+                                                                                                   form.getPhoneNumber(),
+                                                                                                   form.getEmailAddress());
+
+                    RestResult<Void> result =  monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
+                    return validationHandler
+                            .addAnyErrors(result)
+                            .failNowOrSucceedWith(failureView,
+                                                  () -> "redirect:/monitoring-officer/view-all");
+                });
     }
 
     @GetMapping("/{monitoringOfficerId}/projects")
@@ -162,7 +203,7 @@ public class MonitoringOfficerController {
 
     @GetMapping("/view-all")
     public String viewAll(Model model) {
-        List<MonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
+        List<MonitoringOfficerAssignmentResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
         model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate(monitoringOfficers));
         model.addAttribute(FORM, new MonitoringOfficerViewAllForm());
         return "project/monitoring-officer-view-all";

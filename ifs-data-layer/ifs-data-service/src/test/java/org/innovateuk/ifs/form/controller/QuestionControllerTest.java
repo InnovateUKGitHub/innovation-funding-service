@@ -41,7 +41,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         SectionResource section = newSectionResource().build();
         QuestionResource nextQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, section, 2).build();
         when(questionService.getNextQuestion(anyLong())).thenReturn(serviceSuccess(nextQuestion));
-        mockMvc.perform(get("/question/getNextQuestion/" + 1L))
+        mockMvc.perform(get("/question/get-next-question/" + 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(nextQuestion)))
                 .andReturn();
@@ -55,7 +55,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
 
-        mockMvc.perform(get("/question/getPreviousQuestion/" + previousQuestion.getId()))
+        mockMvc.perform(get("/question/get-previous-question/" + previousQuestion.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(previousQuestion)));
     }
@@ -68,7 +68,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(serviceSuccess(previousQuestion));
 
-        mockMvc.perform(get("/question/getPreviousQuestion/" + 1L))
+        mockMvc.perform(get("/question/get-previous-question/" + 1L))
                 .andExpect(content().string(objectMapper.writeValueAsString(previousQuestion)))
                 .andExpect(status().isOk());
     }
@@ -79,7 +79,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         when(questionService.getPreviousQuestionBySection(anyLong())).thenReturn(serviceSuccess(previousSectionQuestion));
 
-        mockMvc.perform(get("/question/getPreviousQuestionBySection/" + 1L))
+        mockMvc.perform(get("/question/get-previous-question-by-section/" + 1L))
                 .andExpect(content().string(objectMapper.writeValueAsString(previousSectionQuestion)))
                 .andExpect(status().isOk());
     }
@@ -90,7 +90,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         when(questionService.getQuestionsBySectionIdAndType(1L, QuestionType.COST)).thenReturn(serviceSuccess(questions));
 
-        mockMvc.perform(get("/question/getQuestionsBySectionIdAndType/1/COST"))
+        mockMvc.perform(get("/question/get-questions-by-section-id-and-type/1/COST"))
                 .andExpect(content().string(objectMapper.writeValueAsString(questions)))
                 .andExpect(status().isOk());
     }
@@ -117,7 +117,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         when(questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId)).thenReturn(serviceSuccess(questionResource));
 
-        mockMvc.perform(get("/question/getQuestionByIdAndAssessmentId/{questionId}/{assessmentId}", questionId, assessmentId))
+        mockMvc.perform(get("/question/get-question-by-id-and-assessment-id/{questionId}/{assessmentId}", questionId, assessmentId))
                 .andExpect(content().string(objectMapper.writeValueAsString(questionResource)))
                 .andExpect(status().isOk());
 
@@ -129,7 +129,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         final Long assessmentId = 1L;
         List<QuestionResource> questions = newQuestionResource().build(2);
         when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(questions));
-        mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId))
+        mockMvc.perform(get("/question/get-questions-by-assessment/{assessmentId}", assessmentId))
                 .andExpect(content().string(objectMapper.writeValueAsString(questions)))
                 .andExpect(status().isOk());
     }
@@ -144,7 +144,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, type))
                 .thenReturn(serviceSuccess(questionResource));
 
-        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId" +
+        mockMvc.perform(get("/question/get-question-by-competition-id-and-question-setup-type/{competitionId" +
                 "}/{type}", competitionId, type))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(questionResource)));

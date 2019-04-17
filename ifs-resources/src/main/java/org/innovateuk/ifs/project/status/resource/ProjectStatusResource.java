@@ -35,8 +35,8 @@ public class ProjectStatusResource {
                                  ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus,
                                  ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus,
                                  ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates documentsStatus,
-                                 ProjectActivityStates grantOfferLetterStatus, Map<Role,
-                                 ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent,
+                                 ProjectActivityStates grantOfferLetterStatus, Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState,
+                                 boolean grantOfferLetterSent,
                                  ProjectState projectState) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
@@ -23,7 +24,8 @@ public class FinanceRowMetaFieldController {
     @Autowired
     private FinanceRowCostsService costFieldService;
 
-    @GetMapping("/findAll/")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findAll", "/find-all/"})
     public RestResult<List<FinanceRowMetaFieldResource>> findAll() {
         return costFieldService.findAllCostFields().toGetResponse();
     }

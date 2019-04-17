@@ -4,9 +4,9 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
-import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class DocumentsController {
     public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
 
-        model.addAttribute("model", populator.populateAllDocuments(projectId, loggedInUser));
+        model.addAttribute("model", populator.populateAllDocuments(projectId, loggedInUser.getId()));
         return "project/documents-all";
     }
 
@@ -71,7 +71,7 @@ public class DocumentsController {
 
     private String doViewDocument(long projectId, long documentConfigId, Model model, UserResource loggedInUser, DocumentForm form) {
 
-        model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId, loggedInUser));
+        model.addAttribute("model", populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId));
         model.addAttribute(FORM_ATTR, form);
         return "project/document";
     }

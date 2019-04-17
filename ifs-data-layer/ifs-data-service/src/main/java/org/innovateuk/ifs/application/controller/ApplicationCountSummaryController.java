@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationCountSummaryService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,8 @@ import java.util.Optional;
  * Controller for exposing statistical data on applications
  */
 @RestController
-@RequestMapping("/applicationCountSummary")
+@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+@RequestMapping({"/applicationCountSummary", "/application-count-summary"})
 public class ApplicationCountSummaryController {
 
     @Autowired
@@ -20,7 +22,8 @@ public class ApplicationCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    @GetMapping("/findByCompetitionId/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByCompetitionId/{competitionId}", "/find-by-competition-id/{competitionId}"})
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId,
                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
@@ -28,7 +31,8 @@ public class ApplicationCountSummaryController {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionId(competitionId, pageIndex, pageSize, filter).toGetResponse();
     }
 
-    @GetMapping("/findByCompetitionIdAndInnovationArea/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByCompetitionIdAndInnovationArea/{competitionId}", "/find-by-competition-id-and-innovation-area/{competitionId}"})
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(@PathVariable("competitionId") long competitionId,
                                                                                                                         @RequestParam(value = "assessorId") long assessorId,
                                                                                                                         @RequestParam(value = "page",defaultValue = "0") int pageIndex,

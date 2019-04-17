@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -99,7 +99,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 .withPartnerOrganisations(partnerOrganisations)
                 .build();
 
-        List<MonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
                 .withProject(project)
                 .build(1);
 

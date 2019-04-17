@@ -3,6 +3,7 @@ package org.innovateuk.ifs.address.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.transactional.AddressLookupService;
 import org.innovateuk.ifs.address.transactional.AddressService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,14 @@ public class AddressController {
     @Autowired
     private AddressLookupService addressLookupService;
 
-    @GetMapping("/doLookup")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/doLookup", "/do-lookup"})
     public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
-    @GetMapping("/validatePostcode")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/validatePostcode", "/validate-postcode"})
     public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }

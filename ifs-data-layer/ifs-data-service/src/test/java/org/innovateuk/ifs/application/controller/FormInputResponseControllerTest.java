@@ -66,7 +66,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         mockMvc.
                 perform(
-                        get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", 456, 123).
+                        get("/forminputresponse/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}", 456, 123).
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
@@ -110,7 +110,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 .thenReturn(serviceSuccess(formInputResponseResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get(
-                "/forminputresponse/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}",
+                "/forminputresponse/find-by-application-id-and-question-setup-type/{applicationId}/{questionSetupType}",
                 applicationId, questionSetupType))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(formInputResponseResource)));
@@ -124,7 +124,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
         MvcResult response = mockMvc.
                 perform(
-                        get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", 456, 123).
+                        get("/forminputresponse/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}", 456, 123).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andDo(document("forminputresponse/find-by-form-input-id-and-application-id-" + documentationSuffix)).
                 andReturn();

@@ -41,7 +41,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         when(formInputResponseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminputresponse/findResponsesByApplication/{applicationId}", applicationId)
+        mockMvc.perform(get("/forminputresponse/find-responses-by-application/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminputresponse/{method-name}",
                         pathParameters(
@@ -62,7 +62,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         when(formInputResponseServiceMock.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", formInputId, applicationId)
+        mockMvc.perform(get("/forminputresponse/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}", formInputId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminputresponse/{method-name}",
                         pathParameters(
@@ -84,7 +84,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}", applicationId, questionSetupType)
+        mockMvc.perform(get("/forminputresponse/find-by-application-id-and-question-setup-type/{applicationId}/{questionSetupType}", applicationId, questionSetupType)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminputresponse/{method-name}",
                         pathParameters(
@@ -104,7 +104,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
 
         when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionId/{applicationId}/{questionId}", applicationId, questionId)
+        mockMvc.perform(get("/forminputresponse/find-by-application-id-and-question-id/{applicationId}/{questionId}", applicationId, questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("forminputresponse/{method-name}",
                         pathParameters(

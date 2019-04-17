@@ -14,20 +14,20 @@ import java.util.List;
  */
 @Service
 public class ApplicationInnovationAreaRestServiceImpl extends BaseRestService implements ApplicationInnovationAreaRestService {
-    private String applicationFundingDecisionRestURL = "/applicationInnovationArea/";
+    private String applicationFundingDecisionRestURL = "/application-innovation-area/";
 
     @Override
     public RestResult<ApplicationResource> saveApplicationInnovationAreaChoice(Long applicationId, Long innovationAreaId) {
-        return postWithRestResult(applicationFundingDecisionRestURL + "innovationArea/" + applicationId, innovationAreaId, ApplicationResource.class);
+        return postWithRestResult(applicationFundingDecisionRestURL + "innovation-area/" + applicationId, innovationAreaId, ApplicationResource.class);
     }
 
     @Override
     public RestResult<ApplicationResource> setApplicationInnovationAreaToNotApplicable(Long applicationId) {
-        return postWithRestResult(applicationFundingDecisionRestURL + "noInnovationAreaApplicable/" + applicationId, ApplicationResource.class);
+        return postWithRestResult(applicationFundingDecisionRestURL + "no-innovation-area-applicable/" + applicationId, ApplicationResource.class);
     }
 
     @Override
     public RestResult<List<InnovationAreaResource>> getAvailableInnovationAreasForApplication(Long applicationId) {
-        return getWithRestResult(applicationFundingDecisionRestURL + "availableInnovationAreas/" + applicationId, ParameterizedTypeReferences.innovationAreaResourceListType());
+        return getWithRestResult(applicationFundingDecisionRestURL + "available-innovation-areas/" + applicationId, ParameterizedTypeReferences.innovationAreaResourceListType());
     }
 }

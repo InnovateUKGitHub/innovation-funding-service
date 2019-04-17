@@ -55,6 +55,16 @@ The user enters text to a text field
     Set Focus To Element    link=GOV.UK
     Wait for autosave
 
+The user enters text to an autocomplete field
+# different from the keyword above, as we don't want to lose focus from the field
+    [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
+    the user clicks the button/link    ${text_field}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait for autosave
+
+
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
@@ -74,6 +84,11 @@ The user enters multiple strings into a text field
     Mouse Out                                           ${field}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
+
+The user should see the enabled element
+    [Arguments]    ${text_field}
+    Wait Until Element Is Visible Without Screenshots   ${text_field}
+    Element Should Be Enabled                           ${text_field}
 
 # DropDown
 the user selects the option from the drop-down menu

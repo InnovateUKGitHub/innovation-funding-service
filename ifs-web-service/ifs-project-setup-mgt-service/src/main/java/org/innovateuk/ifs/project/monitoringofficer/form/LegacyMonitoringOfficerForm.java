@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -46,7 +46,7 @@ public class LegacyMonitoringOfficerForm extends BaseBindingResultTarget {
     public LegacyMonitoringOfficerForm() {
     }
 
-    public LegacyMonitoringOfficerForm(Optional<LegacyMonitoringOfficerResource> existingMonitoringOfficer) {
+    public LegacyMonitoringOfficerForm(Optional<MonitoringOfficerResource> existingMonitoringOfficer) {
         existingMonitoringOfficer.ifPresent(mo -> {
             setFirstName(mo.getFirstName());
             setLastName(mo.getLastName());

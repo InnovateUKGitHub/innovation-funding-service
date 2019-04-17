@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ass
 @Service
 public class AssessorFormInputResponseRestServiceImpl extends BaseRestService implements AssessorFormInputResponseRestService {
 
-    static final String assessorFormInputResponseRestUrl = "/assessorFormInputResponse";
+    static final String assessorFormInputResponseRestUrl = "/assessor-form-input-response";
 
     @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {

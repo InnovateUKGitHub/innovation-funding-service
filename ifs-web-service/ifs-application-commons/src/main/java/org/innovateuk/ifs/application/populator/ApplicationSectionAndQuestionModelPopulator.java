@@ -44,13 +44,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class ApplicationSectionAndQuestionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
-    protected FormInputRestService formInputRestService;
-    protected FormInputResponseService formInputResponseService;
-    protected FormInputResponseRestService formInputResponseRestService;
-    protected QuestionService questionService;
-    protected QuestionRestService questionRestService;
-    protected ProcessRoleService processRoleService;
-    protected SectionService sectionService;
+    private FormInputRestService formInputRestService;
+    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
+    private QuestionService questionService;
+    private QuestionRestService questionRestService;
+    private ProcessRoleService processRoleService;
+    private SectionService sectionService;
     private CategoryRestService categoryRestService;
     private ApplicantRestService applicantRestService;
     private UserService userService;
@@ -123,8 +123,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
         Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
-                .flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap(QuestionResource::getId, k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
@@ -330,7 +330,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
-        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(QuestionResource::getId, k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
     }
 

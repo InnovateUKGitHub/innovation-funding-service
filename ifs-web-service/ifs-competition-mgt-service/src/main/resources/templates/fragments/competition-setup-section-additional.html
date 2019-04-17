@@ -33,25 +33,24 @@
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funder">
-                        </label>
+                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funder">Select funder name</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
-                        <input required="required"
-                               class="govuk-input govuk-input--width-30"
-                               th:errorclass="govuk-input--error"
-                               th:id="funders[__${iteration.index}__].funder"
-                               th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
-                               th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
-                                        data-maxlength-errormessage=#{validation.additionalinfoform.funder.size(null,null,'255')}" />
+                        <select class="govuk-select"
+                                th:id="funders[__${iteration.index}__].funder"
+                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
+                                data-required-errormessage="Please select a funder name."
+                                data-auto-complete="">
+                            <option value="" >Please Select</option>
+                            <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funderBudget">
-                        </label>
+                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funderBudget">Budget</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                         </th:block>
@@ -182,11 +181,11 @@
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
-                        <td class="govuk-table__cell" th:text="${funder.funder}">Funder Name</td>
+                        <td class="govuk-table__cell" th:text="${funder?.funder != null} ? ${funder?.funder.getDisplayName()}">Funder Name</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
-                        <td class="govuk-table__cell" th:text="${funder.funder}">Co-Funder Name</td>
+                        <td class="govuk-table__cell" th:text="${funder?.funder != null} ? ${funder?.funder.getDisplayName()}">Co-Funder Name</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
