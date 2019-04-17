@@ -397,7 +397,7 @@ CompAdmin can see Project status updated
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link     link = ${PS_Competition_Name}
-    Then the user should see the element    jQuery = tr:nth-child(4):contains("${Grade_Crossing_Applicaiton_Titile}")
+    Then the user should see the element    jQuery = tr:nth-child(4):contains("${Grade_Crossing_Application_Title}")
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3) > a
 
 Status updates correctly for internal user's table
