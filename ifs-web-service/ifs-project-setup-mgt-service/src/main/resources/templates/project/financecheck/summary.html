@@ -31,7 +31,7 @@
                     <dd>&pound;<th:block
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
-                    <th:block th:unless="${model.financeCheckSummaryResource.isH2020}">
+                    <th:block th:unless="${model.financeCheckSummaryResource.h2020}">
                         <dt>Grant applied for:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
@@ -56,7 +56,7 @@
                     <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}"></dd>
                     <dt>Duration:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
-                    <th:block th:unless="${model.financeCheckSummaryResource.isH2020}">
+                    <th:block th:if="${model.financeCheckSummaryResource.h2020}">
                         <dt>Type:</dt>
                         <dd><strong class="govuk-tag">Horizon 2020</strong></dd>
                     </th:block>
@@ -100,13 +100,13 @@
                            class="govuk-link"/>
 
                         <span th:if="${orgDetails.viability.notApplicable}"
-                              th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.h2020.viability.' + orgDetails.viability) : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-' + status.index}"></span>
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
-                    <span th:if="${orgDetails.viability.notApplicable}"
-                          th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
-                          th:classappend="${'viability-rag-' + status.index}"></span>
+                        <span th:if="${orgDetails.viability.notApplicable}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:classappend="${'viability-rag-' + status.index}"></span>
                         <span th:unless="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
                               th:classappend="${'viability-rag-' + status.index}">Green</span>
