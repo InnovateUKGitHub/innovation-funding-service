@@ -40,7 +40,7 @@ public class AffiliationControllerTest extends BaseControllerMockMVCTest<Affilia
 
         when(affiliationServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(affiliationListResource));
 
-        mockMvc.perform(get("/affiliation/id/{id}/getUserAffiliations", userId)
+        mockMvc.perform(get("/affiliation/id/{id}/get-user-affiliations", userId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(affiliationListResource)));
@@ -58,7 +58,7 @@ public class AffiliationControllerTest extends BaseControllerMockMVCTest<Affilia
 
         when(affiliationServiceMock.updateUserAffiliations(userId, affiliationListResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/affiliation/id/{id}/updateUserAffiliations", userId)
+        mockMvc.perform(put("/affiliation/id/{id}/update-user-affiliations", userId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(affiliationListResource)))
                 .andExpect(status().isOk());

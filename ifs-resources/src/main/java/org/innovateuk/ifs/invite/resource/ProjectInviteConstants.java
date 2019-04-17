@@ -1,19 +1,9 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
-
 /**
  * A helper class to organise different urls for various project invite actions
  */
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
 public final class ProjectInviteConstants {
-    public static final String CAMEL_PROJECT_INVITE_BASE_URL = "/projectinvite";
-    public static final String CAMEL_PROJECT_INVITE_SAVE = "/saveInvite";
-    public static final String CAMEL_CHECK_EXISTING_USER_URL = "/checkExistingUser/";
-    public static final String CAMEL_GET_USER_BY_HASH_MAPPING = "/getUser/";
-    public static final String CAMEL_GET_INVITE_BY_HASH = "/getProjectInviteByHash/";
-    public static final String CAMEL_ACCEPT_INVITE = "/acceptInvite/";
-    public static final String CAMEL_GET_PROJECT_INVITE_LIST = "/getInvitesByProjectId/";
 
     public static final String PROJECT_INVITE_BASE_URL = "/project-invite";
     public static final String PROJECT_INVITE_SAVE = "/save-invite";

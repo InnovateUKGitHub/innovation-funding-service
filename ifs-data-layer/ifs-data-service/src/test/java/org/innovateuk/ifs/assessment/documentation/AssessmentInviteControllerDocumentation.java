@@ -72,7 +72,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/competitioninvite/getAllInvitesToSend/{competitionId}", competitionId)
+        mockMvc.perform(get("/competitioninvite/get-all-invites-to-send/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -93,7 +93,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/competitioninvite/getAllInvitesToResend/{competitionId}", competitionId)
+        mockMvc.perform(get("/competitioninvite/get-all-invites-to-resend/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId)
+        mockMvc.perform(get("/competitioninvite/get-invite-to-send/{inviteId}", inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -136,7 +136,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
-        mockMvc.perform(get("/competitioninvite/getInvite/{hash}", hash)
+        mockMvc.perform(get("/competitioninvite/get-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -155,7 +155,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
-        mockMvc.perform(post("/competitioninvite/openInvite/{hash}", hash)
+        mockMvc.perform(post("/competitioninvite/open-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -176,7 +176,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/acceptInvite/{hash}", hash)
+        mockMvc.perform(post("/competitioninvite/accept-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -193,7 +193,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.rejectInvite(hash, compRejection.getRejectReason(), ofNullable(compRejection.getRejectComment()))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash)
+        mockMvc.perform(post("/competitioninvite/reject-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(compRejection)))
@@ -212,7 +212,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash)
+        mockMvc.perform(get("/competitioninvite/check-existing-user/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
@@ -233,7 +233,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         when(assessmentInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
-        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
+        mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
@@ -269,7 +269,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
-        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L)
+        mockMvc.perform(get("/competitioninvite/get-created-invites/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
@@ -311,7 +311,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L)
+        mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("size", "20")
                 .param("page", "0")
@@ -357,7 +357,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
-        mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
+        mockMvc.perform(get("/competitioninvite/get-assessors-not-accepted-invite-ids/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("innovationArea", "10")
                 .param("statuses", "PENDING,REJECTED")
@@ -388,7 +388,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(statisticsResource));
 
-        mockMvc.perform(get("/competitioninvite/getInviteStatistics/{competitionId}", competitionId)
+        mockMvc.perform(get("/competitioninvite/get-invite-statistics/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
@@ -405,7 +405,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
 
-        mockMvc.perform(post("/competitioninvite/inviteUser")
+        mockMvc.perform(post("/competitioninvite/invite-user")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteResource)))
@@ -426,7 +426,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.inviteUser(newUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
 
-        mockMvc.perform(post("/competitioninvite/inviteNewUser")
+        mockMvc.perform(post("/competitioninvite/invite-new-user")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(newUserStagedInviteResource)))
@@ -447,7 +447,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/inviteUsers")
+        mockMvc.perform(post("/competitioninvite/invite-users")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteListResource)))
@@ -470,7 +470,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.inviteNewUsers(newUserStagedInviteResources, competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", competitionId)
+        mockMvc.perform(post("/competitioninvite/invite-new-users/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(newUserStagedInviteListResource)))
@@ -494,7 +494,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/competitioninvite/deleteInvite")
+        mockMvc.perform(delete("/competitioninvite/delete-invite")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
@@ -515,7 +515,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/competitioninvite/deleteAllInvites")
+        mockMvc.perform(delete("/competitioninvite/delete-all-invites")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
@@ -535,7 +535,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(assessmentInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/sendAllInvites/{competitionId}", competitionId)
+        mockMvc.perform(post("/competitioninvite/send-all-invites/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(assessorInviteSendResource)))
@@ -560,7 +560,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(assessmentInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+        mockMvc.perform(post("/competitioninvite/resend-invite/{inviteId}", inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
@@ -580,7 +580,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(assessmentInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/resendInvites")
+        mockMvc.perform(post("/competitioninvite/resend-invites")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))
                 .contentType(MediaType.APPLICATION_JSON)

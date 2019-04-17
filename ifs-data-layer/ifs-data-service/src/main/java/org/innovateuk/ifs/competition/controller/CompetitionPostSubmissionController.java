@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -16,8 +15,7 @@ import java.util.List;
  * Controller for handling the competition after submission of the application phase
  */
 @RestController
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-@RequestMapping({"/competition/postSubmission", "/competition/post-submission"})
+@RequestMapping("/competition/post-submission")
 public class CompetitionPostSubmissionController {
 
     @Autowired
