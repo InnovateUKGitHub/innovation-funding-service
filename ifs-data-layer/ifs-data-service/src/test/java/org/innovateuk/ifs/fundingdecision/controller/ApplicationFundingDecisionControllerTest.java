@@ -82,7 +82,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/applicationfunding/sendNotifications")
+        mockMvc.perform(post("/applicationfunding/send-notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/applicationfunding/sendNotifications")
+        mockMvc.perform(post("/applicationfunding/send-notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isOk())
@@ -134,7 +134,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
 
-        mockMvc.perform(post("/applicationfunding/sendNotifications")
+        mockMvc.perform(post("/applicationfunding/send-notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isInternalServerError())
@@ -161,7 +161,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
 
-        mockMvc.perform(post("/applicationfunding/sendNotifications")
+        mockMvc.perform(post("/applicationfunding/send-notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isInternalServerError())

@@ -27,7 +27,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
         if(applicationId == null || organisationId == null){
             return null;
         }
-        return getWithRestResult(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/find-by-application-organisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
             return null;
         }
 
-        return getWithRestResult(applicationFinanceRestURL + "/findByApplication/" + applicationId, applicationFinanceResourceListType());
+        return getWithRestResult(applicationFinanceRestURL + "/find-by-application/" + applicationId, applicationFinanceResourceListType());
     }
 
     @Override
@@ -54,32 +54,32 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId){
-        return getWithRestResult(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/get-by-id/" + applicationFinanceId, ApplicationFinanceResource.class);
     }
 
     @Override
     public RestResult<Double> getResearchParticipationPercentage(Long applicationId){
-        return getWithRestResult(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, Double.class);
+        return getWithRestResult(applicationFinanceRestURL + "/get-research-participation-percentage/" + applicationId, Double.class);
     }
 
     @Override
     public RestResult<ApplicationFinanceResource> getFinanceDetails(Long applicationId, Long organisationId) {
-        return getWithRestResult(applicationFinanceRestURL + "/financeDetails/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/finance-details/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
     public RestResult<List<ApplicationFinanceResource>> getFinanceDetails(Long applicationId) {
-        return getWithRestResult(applicationFinanceRestURL + "/financeDetails/" + applicationId, applicationFinanceResourceListType());
+        return getWithRestResult(applicationFinanceRestURL + "/finance-details/" + applicationId, applicationFinanceResourceListType());
     }
 
     @Override
     public RestResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
-        return getWithRestResult(applicationFinanceRestURL + "/financeTotals/" + applicationId, applicationFinanceResourceListType());
+        return getWithRestResult(applicationFinanceRestURL + "/finance-totals/" + applicationId, applicationFinanceResourceListType());
     }
 
     @Override
     public RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
-        String url = applicationFinanceRestURL + "/financeDocument" +
+        String url = applicationFinanceRestURL + "/finance-document" +
                 "?applicationFinanceId=" + applicationFinanceId +
                 "&filename=" + originalFilename;
 
@@ -90,7 +90,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<Void> removeFinanceDocument(Long applicationFinanceId) {
-        String url = applicationFinanceRestURL + "/financeDocument" +
+        String url = applicationFinanceRestURL + "/finance-document" +
                 "?applicationFinanceId=" + applicationFinanceId;
 
         return deleteWithRestResult(url);
@@ -98,7 +98,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
-        String url = applicationFinanceRestURL + "/financeDocument" +
+        String url = applicationFinanceRestURL + "/finance-document" +
                 "?applicationFinanceId=" + applicationFinanceId;
 
         return getWithRestResult(url, ByteArrayResource.class);
@@ -106,7 +106,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<FileEntryResource> getFileDetails(Long applicationFinanceId) {
-        String url = applicationFinanceRestURL + "/financeDocument/fileentry" +
+        String url = applicationFinanceRestURL + "/finance-document/fileentry" +
                 "?applicationFinanceId=" + applicationFinanceId;
 
         return getWithRestResult(url, FileEntryResource.class);

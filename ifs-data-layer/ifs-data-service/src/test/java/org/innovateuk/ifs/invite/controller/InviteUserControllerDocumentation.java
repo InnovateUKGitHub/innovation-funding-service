@@ -62,7 +62,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/inviteUser/saveInvite")
+        mockMvc.perform(post("/inviteUser/save-invite")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
@@ -86,7 +86,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                                 .withEmail("example@test.com").withHash("SomeHashString")
                                 .withRoleName("Project Finance").build()));
 
-        mockMvc.perform(get("/inviteUser/getInvite/{inviteHash}", "SomeHashString")
+        mockMvc.perform(get("/inviteUser/get-invite/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/getInvite/{method-name}",
@@ -104,7 +104,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/inviteUser/checkExistingUser/{inviteHash}", "SomeHashString")
+        mockMvc.perform(get("/inviteUser/check-existing-user/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
@@ -140,7 +140,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.findExternalInvites(searchString, searchCategory)).thenReturn(serviceSuccess(externalInviteResources));
 
-        mockMvc.perform(get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name())
+        mockMvc.perform(get("/inviteUser/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name())
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(externalInviteResources)))

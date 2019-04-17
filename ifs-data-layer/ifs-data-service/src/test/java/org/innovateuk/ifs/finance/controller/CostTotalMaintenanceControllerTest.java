@@ -25,7 +25,7 @@ public class CostTotalMaintenanceControllerTest extends BaseControllerMockMVCTes
     public void sendAll() throws Exception {
         when(allFinanceTotalsSenderMock.sendAllFinanceTotals()).thenReturn(ServiceResult.serviceSuccess());
 
-        mockMvc.perform(put("/cost/sendAll"))
+        mockMvc.perform(put("/cost/send-all"))
                 .andExpect(status().isOk());
 
         verify(allFinanceTotalsSenderMock, only()).sendAllFinanceTotals();

@@ -44,7 +44,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
 
         FundingNotificationResource notification = new FundingNotificationResource("Body.", decisions);
 
-        String expectedUrl = applicationFundingDecisionRestURL + "/sendNotifications";
+        String expectedUrl = applicationFundingDecisionRestURL + "/send-notifications";
         setupPostWithRestResultExpectations(expectedUrl, notification, HttpStatus.OK);
 
         RestResult<Void> result = service.sendApplicationFundingDecisions(notification);

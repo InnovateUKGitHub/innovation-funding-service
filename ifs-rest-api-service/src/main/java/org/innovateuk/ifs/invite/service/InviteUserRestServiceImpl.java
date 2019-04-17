@@ -23,22 +23,22 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ext
  */
 @Service
 public class InviteUserRestServiceImpl extends BaseRestService implements InviteUserRestService {
-    private static final String INVITE_REST_URL = "/inviteUser";
+    private static final String INVITE_REST_URL = "/invite-user";
 
     @Override
     public RestResult<Void> saveUserInvite(InviteUserResource inviteUserResource) {
-        String url = INVITE_REST_URL + "/saveInvite";
+        String url = INVITE_REST_URL + "/save-invite";
         return postWithRestResult(url, inviteUserResource, Void.class);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "checkExistingUser", inviteHash), Boolean.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "check-existing-user", inviteHash), Boolean.class);
     }
 
     @Override
     public RestResult<RoleInviteResource> getInvite(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "getInvite", inviteHash), RoleInviteResource.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "get-invite", inviteHash), RoleInviteResource.class);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
 
     @Override
     public RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
-        return getWithRestResult(INVITE_REST_URL + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
+        return getWithRestResult(INVITE_REST_URL + "/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
     }
 
     @Override

@@ -17,7 +17,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/applicationCountSummary/findByCompetitionId/1?filter=filter&page=2&size=3";
+        String expectedUrl = "/application-count-summary/find-by-competition-id/1?filter=filter&page=2&size=3";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
@@ -28,7 +28,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        String expectedUrl = "/applicationCountSummary/findByCompetitionIdAndInnovationArea/1?assessorId=10&page=2&size=3&filter=filter&sortField=&innovationArea=4";
+        String expectedUrl = "/application-count-summary/find-by-competition-id-and-innovation-area/1?assessorId=10&page=2&size=3&filter=filter&sortField=&innovationArea=4";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);

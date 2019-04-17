@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
@@ -52,7 +53,8 @@ public class ApplicationFinanceController {
 
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
-    @GetMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByApplicationOrganisation/{applicationId}/{organisationId}", "/find-by-application-organisation/{applicationId}/{organisationId}"})
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
@@ -60,14 +62,16 @@ public class ApplicationFinanceController {
         return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
-    @GetMapping("/findByApplication/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByApplication/{applicationId}", "/find-by-application/{applicationId}"})
     public RestResult<List<ApplicationFinanceResource>> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
 
         return financeService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
 
-    @GetMapping("/getResearchParticipationPercentage/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getResearchParticipationPercentage/{applicationId}", "/get-research-participation-percentage/{applicationId}"})
     public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
         return financeService.getResearchParticipationPercentage(applicationId).toGetResponse();
     }
@@ -80,7 +84,8 @@ public class ApplicationFinanceController {
         return financeRowCostsService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
     }
 
-    @GetMapping("/getById/{applicationFinanceId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getById/{applicationFinanceId}", "/get-by-id/{applicationFinanceId}"})
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return financeService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
     }
@@ -90,22 +95,26 @@ public class ApplicationFinanceController {
         return financeRowCostsService.updateApplicationFinance(applicationFinanceId, applicationFinance).toPostWithBodyResponse();
     }
 
-    @GetMapping("/financeDetails/{applicationId}/{organisationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/financeDetails/{applicationId}/{organisationId}", "/finance-details/{applicationId}/{organisationId}"})
     public RestResult<ApplicationFinanceResource> financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
         return financeService.financeDetails(applicationId, organisationId).toGetResponse();
     }
 
-    @GetMapping("/financeDetails/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/financeDetails/{applicationId}", "/finance-details/{applicationId}"})
     public RestResult<List<ApplicationFinanceResource>> financeDetails(@PathVariable("applicationId") final Long applicationId) {
         return financeService.financeDetails(applicationId).toGetResponse();
     }
 
-    @GetMapping("/financeTotals/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/financeTotals/{applicationId}", "/finance-totals/{applicationId}"})
     public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
         return financeService.financeTotals(applicationId).toGetResponse();
     }
 
-    @PostMapping(value = "/financeDocument", produces = "application/json")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PostMapping(value = {"/financeDocument", "/finance-document"}, produces = "application/json")
     public RestResult<FileEntryResource> addFinanceDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -117,7 +126,8 @@ public class ApplicationFinanceController {
                 financeFileEntryService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @PutMapping(value = "/financeDocument", produces = "application/json")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PutMapping(value = {"/financeDocument", "/finance-document"}, produces = "application/json")
     public RestResult<Void> updateFinanceDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -129,7 +139,8 @@ public class ApplicationFinanceController {
                 financeFileEntryService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @DeleteMapping(value = "/financeDocument", produces = "application/json")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @DeleteMapping(value = {"/financeDocument", "/finance-document"}, produces = "application/json")
     public RestResult<Void> deleteFinanceDocument(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
@@ -137,7 +148,8 @@ public class ApplicationFinanceController {
         return deleteResult.toDeleteResponse();
     }
 
-    @GetMapping("/financeDocument")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/financeDocument", "/finance-document"})
     public @ResponseBody
     ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
@@ -145,7 +157,8 @@ public class ApplicationFinanceController {
         return fileControllerUtils.handleFileDownload(() -> financeFileEntryService.getFileContents(applicationFinanceId));
     }
 
-    @GetMapping("/financeDocument/fileentry")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/financeDocument/fileentry", "/finance-document/fileentry"})
     public RestResult<FileEntryResource> getFileDetails(@RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
         return financeFileEntryService.getFileContents(applicationFinanceId).
                 andOnSuccessReturn(FileAndContents::getFileEntry).

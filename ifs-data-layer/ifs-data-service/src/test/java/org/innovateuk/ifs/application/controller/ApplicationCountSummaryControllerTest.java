@@ -33,7 +33,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
@@ -51,7 +51,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, page, pageSize, ofNullable(filter))).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}?page={page}&size={pageSize}&filter={filter}", competitionId, page, pageSize, filter))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id/{competitionId}?page={page}&size={pageSize}&filter={filter}", competitionId, page, pageSize, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
@@ -72,7 +72,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, pageSize, ofNullable(innovationAreaId), filter, sortField)).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-innovation-area/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
@@ -93,7 +93,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, page, pageSize, ofNullable(innovationAreaId), filter, sortField)).thenReturn(serviceSuccess(newPageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-innovation-area/{competitionId}?assessorId={assessorId}&page={page}&size={pageSize}&innovationArea={innovationArea}&sortField={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, innovationAreaId, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(newPageResource)));
     }

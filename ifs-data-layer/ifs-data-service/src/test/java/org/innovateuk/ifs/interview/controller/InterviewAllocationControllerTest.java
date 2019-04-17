@@ -103,7 +103,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         when(interviewAllocationServiceMock.getAllocatedApplicationsByAssessorId(competitionId, userId))
                 .thenReturn(serviceSuccess(expectedInterviewResources));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessorId/{userId}", competitionId, userId))
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessor-id/{userId}", competitionId, userId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedInterviewResources)));
 

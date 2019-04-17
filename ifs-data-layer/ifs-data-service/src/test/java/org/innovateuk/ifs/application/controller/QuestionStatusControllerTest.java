@@ -46,7 +46,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.getQuestionStatusByQuestionIdAndApplicationId(1L, 2L)).thenReturn(serviceSuccess
                 (questionStatuses));
 
-        mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
+        mockMvc.perform(get("/question-status/find-by-question-and-application/1/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
@@ -62,7 +62,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId,
                 applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
-        mockMvc.perform(get("/questionStatus/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" +
+        mockMvc.perform(get("/question-status/find-by-question-and-application-and-organisation/" + questionId + "/" +
                 applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
@@ -80,7 +80,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds,
                 applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
-        mockMvc.perform(get("/questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId/" + questionIdsList
+        mockMvc.perform(get("/question-status/find-by-question-ids-and-application-id-and-organisation-id/" + questionIdsList
                 .stream().map(id -> id.toString()).collect(Collectors.joining(",")) + "/" + applicationId + "/" +
                 organisationId))
                 .andExpect(status().isOk())
@@ -97,7 +97,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.findByApplicationAndOrganisation(applicationId, organisationId)).thenReturn
                 (serviceSuccess(questionStatuses));
 
-        mockMvc.perform(get("/questionStatus/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId))
+        mockMvc.perform(get("/question-status/find-by-application-and-organisation/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)));
     }
@@ -110,7 +110,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.getQuestionStatusResourceById(questionStatusId)).thenReturn(serviceSuccess
                 (questionStatus));
 
-        mockMvc.perform(get("/questionStatus/" + questionStatusId))
+        mockMvc.perform(get("/question-status/" + questionStatusId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(questionStatus)));
     }
@@ -124,7 +124,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId)).thenReturn
                 (serviceSuccess(count));
 
-        mockMvc.perform(get("/questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId
+        mockMvc.perform(get("/question-status/get-assigned-questions-count-by-application-id-and-assignee-id/" + applicationId
                 + "/" + assigneeId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(count)));
