@@ -561,7 +561,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         );
         CostCategory testCostCategory = new CostCategory();
         testCostCategory.setId(1L);
-        testCostCategory.setName("One");
+        testCostCategory.setName("Category One");
         testCostCategory.setLabel("Group Name");
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
@@ -575,9 +575,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
 
         assertTrue(serviceResult.getSuccess().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
-        assertTrue(serviceResult.getSuccess().getCsvData().contains("Group Name"));
-        assertEquals(Arrays.asList(serviceResult.getSuccess().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
-                && !s.contains("Month") && !s.contains("TOTAL")).count(), 3);
+        assertTrue(serviceResult.getSuccess().getCsvData().contains("Category One"));
+        assertEquals(6, Arrays.stream(serviceResult.getSuccess().getCsvData().split("\n")).filter(s -> s.contains("Category One")
+                && !s.contains("Month") && !s.contains("TOTAL")).count());
     }
 
     @Test
