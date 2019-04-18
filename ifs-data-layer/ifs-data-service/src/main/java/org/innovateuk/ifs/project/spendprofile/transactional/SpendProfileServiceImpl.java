@@ -402,6 +402,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
         Map<Long, CostCategoryResource> returnMap = new HashMap<>();
         costCategories.forEach(costCategory -> {
@@ -635,6 +636,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
         BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
         Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
+        boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
 
         StringWriter stringWriter = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(stringWriter);
@@ -644,7 +646,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
-        monthsRow.add(EMPTY_CELL);
+        if(isResearch) {
+            monthsRow.add(EMPTY_CELL);
+        }
+
         IntStream.rangeClosed(1, spendProfileTableResource.getMonths().size()).forEach(monthNumber -> monthsRow.add("Month " + monthNumber));
         monthsRow.add(CSV_TOTAL);
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
@@ -653,6 +658,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
             CostCategory cc = costCategoryRepository.findById(category).get();
+            if (isResearch) {
+                byCategory.add(cc.getLabel());
+            }
 
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val ->
@@ -661,12 +669,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 
-            if (monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
-                monthsRow.remove(EMPTY_CELL);
-                rows.add(monthsRow.toArray(new String[0]));
-            } else if (!monthsRow.isEmpty()) {
+            if (!monthsRow.isEmpty()) {
                 rows.add(monthsRow.toArray(new String[0]));
             }
+
             monthsRow.clear();
             rows.add(byCategory.toArray(new String[0]));
             columnSize[0] = byCategory.size();
@@ -675,13 +681,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         ArrayList<String> totals = new ArrayList<>();
         totals.add(CSV_TOTAL);
-        totals.add(EMPTY_CELL);
+        if(isResearch) {
+            totals.add(EMPTY_CELL);
+        }
+
         totalForEachMonth.forEach(value -> totals.add(value.toString()));
         totals.add(totalOfAllActualTotals.toString());
         totals.add(totalOfAllEligibleTotals.toString());
-        if (totals.size() > columnSize[0] && totals.contains(EMPTY_CELL)) {
-            totals.remove(EMPTY_CELL);
-        }
+
         rows.add(totals.toArray(new String[0]));
 
         rows.add(new String[0]);
@@ -689,15 +696,27 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         ArrayList<String> quartersRow = new ArrayList<>();
         int noOfQuarters = (int) Math.ceil((double) spendProfileTableResource.getMonths().size()/3);
         quartersRow.add(CSV_QUARTER);
-        IntStream.rangeClosed(1, noOfQuarters).forEach(num -> quartersRow.add("Quarter" + num));
+        if(isResearch) {
+            quartersRow.add(EMPTY_CELL);
+        }
+        IntStream.rangeClosed(1, noOfQuarters).forEach(num -> quartersRow.add("Quarter " + num));
         rows.add(quartersRow.toArray(new String[0]));
 
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
             CostCategory cc = costCategoryRepository.findById(category).get();
-            rows.add(calculateQuarterly(cc.getName(), values));
+
+            if(isResearch) {
+                rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
+            } else {
+                rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
+            }
         });
 
-        rows.add(calculateQuarterly(CSV_TOTAL, totalForEachMonth));
+        if(isResearch) {
+            rows.add(calculateQuarterly(CSV_TOTAL, "", totalForEachMonth).toArray(new String[0]));
+        } else {
+            rows.add(calculateQuarterly(CSV_TOTAL, totalForEachMonth).toArray(new String[0]));
+        }
 
         csvWriter.writeAll(rows);
         csvWriter.close();
@@ -709,9 +728,15 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return spendProfileCSVResource;
     }
 
-    private String[] calculateQuarterly(String categoryLabel, List<BigDecimal> values) {
+    private ArrayList<String> calculateQuarterly(String categoryLabel, String categoryName, List<BigDecimal> values) {
+        ArrayList<String> byCategoryQuarterly = calculateQuarterly(categoryName, values);
+        byCategoryQuarterly.add(0, categoryLabel);
+        return byCategoryQuarterly;
+    }
+
+    private ArrayList<String> calculateQuarterly(String categoryName, List<BigDecimal> values) {
         ArrayList<String> byCategoryQuarterly = new ArrayList<>();
-        byCategoryQuarterly.add(categoryLabel);
+        byCategoryQuarterly.add(categoryName);
         for (int i = 0; i < (values.size()-2); i += 3) {
             BigDecimal quarterlyFigure = values.get(i).add(values.get(i + 1)).add(values.get(i + 2));
             byCategoryQuarterly.add(quarterlyFigure.toString());
@@ -721,13 +746,15 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         if(values.size()%3 !=0) {
             BigDecimal lastQuarterlyFigure = values.get(values.size()-1);
             if(values.size()%3 ==2) {
-                lastQuarterlyFigure = lastQuarterlyFigure.add(values.get(values.size()-2));
+                lastQuarterlyFigure = lastQuarterlyFigure.add(values.get(values.size() - 2));
             }
+
             byCategoryQuarterly.add(lastQuarterlyFigure.toString());
         }
 
-        return byCategoryQuarterly.toArray(new String[0]);
+        return byCategoryQuarterly;
     }
+
 
     private String generateSpendProfileFileName(String organisationName) {
         Date date = new Date();
