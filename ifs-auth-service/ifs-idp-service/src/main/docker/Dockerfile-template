@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:latest
+FROM adoptopenjdk/openjdk8:jdk8u212-b03
 EXPOSE 9443
 
 ENV IDPVER="3.3.1"
