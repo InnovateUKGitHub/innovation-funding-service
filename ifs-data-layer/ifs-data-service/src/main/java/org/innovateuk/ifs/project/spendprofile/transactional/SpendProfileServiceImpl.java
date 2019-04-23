@@ -401,8 +401,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                     return serviceSuccess(table);
                 });
     }
-
-
+    
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
         Map<Long, CostCategoryResource> returnMap = new HashMap<>();
         costCategories.forEach(costCategory -> {
