@@ -3,7 +3,6 @@ package org.innovateuk.ifs.grant.service;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -20,10 +19,19 @@ public class SpendProfileCalculationsTest {
     private static final CostCategory LABOUR = newCostCategory().withName("Labour").build();
 
     private static final BigDecimal FIFTY_PERCENT = BigDecimal.valueOf(50);
-    private static final BigDecimal HUNDRED_PERCENT =  BigDecimal.valueOf(100);
+    private static final BigDecimal HUNDRED_PERCENT = BigDecimal.valueOf(100);
 
     @Test
-    public void testOverheadCalculationFifty() {
+    public void overheadCalculationZero() {
+        List<Cost> costs = asList(
+                newOverheadCost(BigDecimal.ZERO),
+                newLabourCost(BigDecimal.ZERO)
+        );
+        assertThat(BigDecimal.ZERO, Matchers.comparesEqualTo(newCalculations(costs).getOverheadPercentage()));
+    }
+
+    @Test
+    public void overheadCalculationFifty() {
         List<Cost> costs = asList(
                 newOverheadCost(BigDecimal.ONE),
                 newLabourCost(BigDecimal.ONE)
@@ -32,7 +40,7 @@ public class SpendProfileCalculationsTest {
     }
 
     @Test
-    public void testOverheadCalculationHundred() {
+    public void overheadCalculationHundred() {
         List<Cost> costs = asList(
                 newOverheadCost(BigDecimal.ONE),
                 newLabourCost(BigDecimal.ZERO)
