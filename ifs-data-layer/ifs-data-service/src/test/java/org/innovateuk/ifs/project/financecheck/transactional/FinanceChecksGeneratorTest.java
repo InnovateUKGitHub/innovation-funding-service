@@ -170,7 +170,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
-        verify(viabilityWorkflowHandlerMock, never()).organisationIsAcademic(Mockito.any(), Mockito.any());
+        verify(viabilityWorkflowHandlerMock, never()).viabilityNotApplicable(Mockito.any(), Mockito.any());
 
         assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
     }
@@ -180,7 +180,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType().getId())).thenReturn(true);
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
-        when(viabilityWorkflowHandlerMock.organisationIsAcademic(partnerOrganisation, null)).thenReturn(true);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
 
         List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
         ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
@@ -192,10 +192,38 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
-        verify(viabilityWorkflowHandlerMock).organisationIsAcademic(partnerOrganisation, null);
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
 
         assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
     }
+
+    @Test
+    public void createFinanceChecksWithH2020Competition() {
+
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setCompetitionTypeName("Horizon 2020");
+
+        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
+        verifyZeroInteractions(financeUtilMock);
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+
+    }
+
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
         ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).withApplication(newApplication().withCompetition(newCompetition().build()).build()).build();

@@ -98,6 +98,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withSpendProfilesGenerated(false).
                 withBankDetailslApproved(false).
                 withPartnerStatusResources(partnerStatusResources).
+                withH2020(false).
                 build();
 
         when(financeCheckServiceMock.getFinanceCheckSummary(123L)).thenReturn(serviceSuccess(expected));
