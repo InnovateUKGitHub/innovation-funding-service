@@ -92,6 +92,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withHasAssessmentPanel(true)
                 .withHasInterviewStage(true)
                 .withAssessorFinanceView(DETAILED)
+                .withCompetitionTypeName("Programme")
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
