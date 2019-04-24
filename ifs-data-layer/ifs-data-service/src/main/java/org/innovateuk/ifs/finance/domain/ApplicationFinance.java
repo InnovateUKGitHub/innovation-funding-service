@@ -8,11 +8,13 @@ import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -31,17 +33,17 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
+    private boolean termsAndConditionsAccepted;
+
+    private User termsAndConditionsAcceptedBy;
+
+    private ZonedDateTime termsAndConditionsAcceptedOn;
+
     public ApplicationFinance() {
-        // no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {
         super(organisation);
-        this.application = application;
-    }
-
-    public ApplicationFinance(long id, Application application, Organisation organisation) {
-        super(id, organisation);
         this.application = application;
     }
 
@@ -112,5 +114,23 @@ public class ApplicationFinance extends Finance {
         Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
                 .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
         return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
+    }
+
+    public void acceptTermsAndConditions(User user, ZonedDateTime now) {
+        this.termsAndConditionsAccepted = true;
+        this.termsAndConditionsAcceptedBy = user;
+        this.termsAndConditionsAcceptedOn = now;
+    }
+
+    public boolean isTermsAndConditionsAccepted() {
+        return termsAndConditionsAccepted;
+    }
+
+    public User getTermsAndConditionsAcceptedBy() {
+        return termsAndConditionsAcceptedBy;
+    }
+
+    public ZonedDateTime getTermsAndConditionsAcceptedOn() {
+        return termsAndConditionsAcceptedOn;
     }
 }
