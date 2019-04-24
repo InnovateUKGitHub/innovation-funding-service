@@ -93,6 +93,10 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
         return withArray((spendProfileGeneratedDate, financeCheckResource) -> setField("spendProfileGeneratedDate", spendProfileGeneratedDate, financeCheckResource), spendProfileGeneratedDates);
     }
 
+    public FinanceCheckSummaryResourceBuilder withH2020(Boolean... h2020Statuses) {
+        return withArray((h2020Status, financeCheckResource) -> setField("h2020", h2020Status, financeCheckResource), h2020Statuses);
+    }
+
     @SafeVarargs
     public final FinanceCheckSummaryResourceBuilder withPartnerStatusResources(List<FinanceCheckPartnerStatusResource>... partnerStatusResourcesLst) {
         return withArray((competitionId, financeCheckResource) -> setField("partnerStatusResources", competitionId, financeCheckResource), partnerStatusResourcesLst);
