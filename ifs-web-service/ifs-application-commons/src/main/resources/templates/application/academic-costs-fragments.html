@@ -178,7 +178,7 @@
         <legend class="govuk-visually-hidden">Indirect costs</legend>
         <div class="govuk-form-group"
              th:classappend="${#fields.hasErrors('indirectCosts')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" th:for="indirectCosts">
+            <label class="govuk-label" th:for="indirect-costs">
                 <span>Indirect costs</span>
                 <th:block
                     th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=indirectCosts)"/>
@@ -186,6 +186,7 @@
             <div>
                 <input class="govuk-input"
                        th:field="*{indirectCosts}"
+                       id="indirect-costs"
                        type="number"
                        data-prevent-input-non-number
                        min="0"
@@ -262,7 +263,7 @@
             </label>
             <div>
                 <input class="govuk-input"
-                       data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
+                       data-calculation-fields="#subtotal-resources,#indirect-costs,#subtotal-directly-allocated,#subtotal-exceptions"
                        data-calculation-operations="+"
                        id="total"
                        readonly="readonly"
