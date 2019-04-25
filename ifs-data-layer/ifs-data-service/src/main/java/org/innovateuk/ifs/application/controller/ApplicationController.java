@@ -64,31 +64,36 @@ public class ApplicationController {
         return applicationService.findAll().toGetResponse();
     }
 
-    @GetMapping("/findByUser/{userId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/findByUser/{userId}", "/find-by-user/{userId}"})
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return applicationService.findByUserId(userId).toGetResponse();
     }
 
-    @GetMapping("/wildcardSearchById")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/wildcardSearchById", "/wildcard-search-by-id"})
     public RestResult<ApplicationPageResource> wildcardSearchById(@RequestParam(value = "searchString", defaultValue = "") String searchString,
                                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return applicationService.wildcardSearchById(searchString, new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
-    @PostMapping("/saveApplicationDetails/{id}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PostMapping({"/saveApplicationDetails/{id}", "/save-application-details/{id}"})
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostResponse();
     }
 
-    @GetMapping("/getProgressPercentageByApplicationId/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getProgressPercentageByApplicationId/{applicationId}", "/get-progress-percentage-by-application-id/{applicationId}"})
     public RestResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
 
-    @PutMapping("/updateApplicationState")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PutMapping({"/updateApplicationState", "/update-application-state"})
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
                                                    @RequestParam("state") final ApplicationState state) {
 
@@ -102,12 +107,14 @@ public class ApplicationController {
         return updateStatusResult.toPutResponse();
     }
 
-    @GetMapping("/applicationReadyForSubmit/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/applicationReadyForSubmit/{applicationId}", "/application-ready-for-submit/{applicationId}"})
     public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
         return RestResult.toGetResponse(applicationProgressService.applicationReadyForSubmit(applicationId));
     }
 
-    @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", "/get-applications-by-competition-id-and-user-id/{competitionId}/{userId}/{role}"})
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,
                                                                                          @PathVariable("role") final Role role) {
@@ -115,7 +122,8 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @PostMapping("/createApplicationByName/{competitionId}/{userId}/{organisationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PostMapping({"/createApplicationByName/{competitionId}/{userId}/{organisationId}", "/create-application-by-name/{competitionId}/{userId}/{organisationId}"})
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final long competitionId,
             @PathVariable("userId") final long userId,
@@ -139,7 +147,8 @@ public class ApplicationController {
                 .toPostWithBodyResponse();
     }
 
-    @PostMapping("/informIneligible/{applicationId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @PostMapping({"/informIneligible/{applicationId}", "/inform-ineligible/{applicationId}"})
     public RestResult<Void> informIneligible(@PathVariable("applicationId") final long applicationId,
                                              @RequestBody ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return applicationNotificationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
@@ -151,20 +160,11 @@ public class ApplicationController {
     }
 
     // IFS-43 added to ease future expansion as application team members are expected to have access to the application team page, but the location of links to that page (enabled by tis method) is as yet unknown
-    @GetMapping("/showApplicationTeam/{applicationId}/{userId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/showApplicationTeam/{applicationId}/{userId}", "/show-application-team/{applicationId}/{userId}"})
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                                    @PathVariable("userId") final Long userId) {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
-    }
-
-    @ZeroDowntime(description = "delete this controller", reference = "IFS-2471")
-    @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<PreviousApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                                    @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                                    @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
-        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/{competitionId}/previous-applications")
@@ -176,7 +176,8 @@ public class ApplicationController {
         return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
-    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/getLatestEmailFundingDate/{competitionId}", "/get-latest-email-funding-date/{competitionId}"})
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
     }

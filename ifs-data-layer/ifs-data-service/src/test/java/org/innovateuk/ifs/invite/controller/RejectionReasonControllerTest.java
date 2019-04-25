@@ -32,7 +32,7 @@ public class RejectionReasonControllerTest extends BaseControllerMockMVCTest<Rej
 
         when(rejectionReasonServiceMock.findAllActive()).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/rejectionReason/findAllActive"))
+        mockMvc.perform(get("/rejection-reason/find-all-active"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));

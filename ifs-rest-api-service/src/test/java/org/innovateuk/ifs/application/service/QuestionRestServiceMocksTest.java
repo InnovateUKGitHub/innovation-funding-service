@@ -32,7 +32,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void findByCompetitionTest() {
         List<QuestionResource> questions = newQuestionResource().build(3);
-        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionResourceListType(), questions);
+        setupGetWithRestResultExpectations(questionRestURL + "/find-by-competition/1", questionResourceListType(), questions);
         // now run the method under test
         List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccess();
         // verify
@@ -56,7 +56,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void getNextQuestionTest() {
         QuestionResource question = new QuestionResource();
-        setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", QuestionResource.class, question);
+        setupGetWithRestResultExpectations(questionRestURL + "/get-next-question/1", QuestionResource.class, question);
 
         QuestionResource nextQuestion = service.getNextQuestion(1L).getSuccess();
         Assert.assertEquals(question, nextQuestion);
@@ -65,7 +65,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void getPreviousQuestionTest() {
         QuestionResource question = new QuestionResource();
-        setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", QuestionResource.class, question);
+        setupGetWithRestResultExpectations(questionRestURL + "/get-previous-question/2", QuestionResource.class, question);
 
         QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccess();
         Assert.assertEquals(question, nextQuestion);
@@ -74,7 +74,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void getQuestionsBySectionIdAndTypeTest() {
         List<QuestionResource> questions = newQuestionResource().build(2);
-        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
+        setupGetWithRestResultExpectations(questionRestURL + "/get-questions-by-section-id-and-type/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
         List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccess();
@@ -95,7 +95,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         Long assessmentId = 1L;
 
         List<QuestionResource> questions = newQuestionResource().build(2);
-        setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
+        setupGetWithRestResultExpectations(questionRestURL + "/get-questions-by-assessment/" + assessmentId, new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
         RestResult<List<QuestionResource>> result = service.getQuestionsByAssessment(assessmentId);
@@ -109,7 +109,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         Long assessmentId = 2L;
 
         QuestionResource questionResource = newQuestionResource().build();
-        setupGetWithRestResultExpectations(format("%s/getQuestionByIdAndAssessmentId/%s/%s", questionRestURL, questionId, assessmentId), QuestionResource.class, questionResource);
+        setupGetWithRestResultExpectations(format("%s/get-question-by-id-and-assessment-id/%s/%s", questionRestURL, questionId, assessmentId), QuestionResource.class, questionResource);
 
         QuestionResource result = service.getByIdAndAssessmentId(questionId, assessmentId).getSuccess();
         assertEquals(questionResource, result);
@@ -123,7 +123,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource questionResource = newQuestionResource()
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/getQuestionByCompetitionIdAndQuestionSetupType/%s/%s",
+        setupGetWithRestResultExpectations(format("%s/get-question-by-competition-id-and-question-setup-type/%s/%s",
                 questionRestURL, competitionId, questionSetupType), QuestionResource.class, questionResource);
         RestResult<QuestionResource> response = service.getQuestionByCompetitionIdAndQuestionSetupType
                 (competitionId, questionSetupType);

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Map;
 
@@ -27,8 +26,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedRequestFields;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
@@ -78,7 +75,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/applicationfunding/sendNotifications")
+        mockMvc.perform(post("/applicationfunding/send-notifications")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))

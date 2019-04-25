@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class ApplicationResearchCategoryRestServiceMocksTest extends
         BaseRestServiceUnitTest<ApplicationResearchCategoryRestServiceImpl> {
 
-    private static final String applicationResearchCategoryRestUrl = "/applicationResearchCategory";
+    private static final String applicationResearchCategoryRestUrl = "/application-research-category";
 
     @Override
     protected ApplicationResearchCategoryRestServiceImpl registerRestServiceUnderTest() {
@@ -27,7 +27,7 @@ public class ApplicationResearchCategoryRestServiceMocksTest extends
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        setupPostWithRestResultExpectations(format("%s/researchCategory/%s", applicationResearchCategoryRestUrl,
+        setupPostWithRestResultExpectations(format("%s/research-category/%s", applicationResearchCategoryRestUrl,
                 applicationResource.getId()),
                 ApplicationResource.class, researchCategoryId, applicationResource, HttpStatus.OK);
 

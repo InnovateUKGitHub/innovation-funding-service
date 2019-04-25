@@ -20,7 +20,7 @@ public class AgreementRestServiceImplTest extends BaseRestServiceUnitTest<Agreem
     public void getCurrentContract() {
         AgreementResource agreementResource = new AgreementResource();
 
-        setupGetWithRestResultExpectations(agreementUrl + "/findCurrent", AgreementResource.class, agreementResource, OK);
+        setupGetWithRestResultExpectations(agreementUrl + "/find-current", AgreementResource.class, agreementResource, OK);
         RestResult<AgreementResource> result = service.getCurrentAgreement();
 
         assertEquals(agreementResource, result.getSuccess());

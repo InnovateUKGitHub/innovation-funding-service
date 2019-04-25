@@ -29,7 +29,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     private String processRoleRestURL = "/processrole";
 
-    private String questionStatusRestURL = "/questionStatus";
+    private String questionStatusRestURL = "/question-status";
 
     @Override
     public RestResult<ApplicationResource> getApplicationById(Long applicationId) {
@@ -38,7 +38,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId) {
-        return getWithRestResult(applicationRestURL + "/findByUser/" + userId, ParameterizedTypeReferences.applicationResourceListType());
+        return getWithRestResult(applicationRestURL + "/find-by-user/" + userId, ParameterizedTypeReferences.applicationResourceListType());
     }
 
     @Override
@@ -49,38 +49,38 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
             params.put("searchString", singletonList(searchString));
         }
 
-        String uriWithParams = buildPaginationUri(applicationRestURL + "/wildcardSearchById", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(applicationRestURL + "/wildcard-search-by-id", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 
     @Override
     public RestResult<Void> saveApplication(ApplicationResource application) {
-        return postWithRestResult(applicationRestURL + "/saveApplicationDetails/" + application.getId(), application, Void.class);
+        return postWithRestResult(applicationRestURL + "/save-application-details/" + application.getId(), application, Void.class);
     }
 
     @Override
     public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
-        return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
+        return putWithRestResult(applicationRestURL + "/update-application-state?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        return getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, Double.class);
+        return getWithRestResultAsync(applicationRestURL + "/get-progress-percentage-by-application-id/" + applicationId, Double.class);
     }
 
     @Override
     public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, Boolean.class);
+        return getWithRestResult(applicationRestURL + "/application-ready-for-submit/" + applicationId, Boolean.class);
     }
 
     @Override
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, Role role) {
-        return getWithRestResult(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ParameterizedTypeReferences.applicationResourceListType());
+        return getWithRestResult(applicationRestURL + "/get-applications-by-competition-id-and-user-id/" + competitionID + "/" + userID + "/" + role, ParameterizedTypeReferences.applicationResourceListType());
     }
 
     @Override
     public RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
-        RestResult<Integer> count = getWithRestResult(questionStatusRestURL + "/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId, Integer.class);
+        RestResult<Integer> count = getWithRestResult(questionStatusRestURL + "/get-assigned-questions-count-by-application-id-and-assignee-id/" + applicationId + "/" + assigneeId, Integer.class);
         return count.andOnSuccessReturn(Integer::valueOf);
     }
 
@@ -89,7 +89,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
-        String url = format(applicationRestURL + "/createApplicationByName/%d/%d/%d", competitionId, userId, organisationId);
+        String url = format(applicationRestURL + "/create-application-by-name/%d/%d/%d", competitionId, userId, organisationId);
 
         return postWithRestResult(url, application, ApplicationResource.class);
     }
@@ -106,7 +106,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
-        return postWithRestResult(applicationRestURL + "/informIneligible/" + applicationId, applicationIneligibleSendResource, Void.class);
+        return postWithRestResult(applicationRestURL + "/inform-ineligible/" + applicationId, applicationIneligibleSendResource, Void.class);
     }
 
     @Override
@@ -116,12 +116,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
-        return getWithRestResult(applicationRestURL + "/showApplicationTeam/" + applicationId + "/" + userId, Boolean.class);
+        return getWithRestResult(applicationRestURL + "/show-application-team/" + applicationId + "/" + userId, Boolean.class);
     }
 
     @Override
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + applicationId, ZonedDateTime.class);
+        return getWithRestResult(applicationRestURL + "/get-latest-email-funding-date/" + applicationId, ZonedDateTime.class);
     }
 
     @Override

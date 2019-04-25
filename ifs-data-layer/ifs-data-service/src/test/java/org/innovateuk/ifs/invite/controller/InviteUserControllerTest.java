@@ -56,7 +56,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
     public void saveUserInvite() throws Exception {
         when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/inviteUser/saveInvite")
+        mockMvc.perform(post("/invite-user/save-invite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk());
@@ -68,7 +68,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
     public void getInvite() throws Exception {
         when(inviteUserServiceMock.getInvite("SomeHashString")).thenReturn(serviceSuccess(new RoleInviteResource()));
 
-        mockMvc.perform(get("/inviteUser/getInvite/SomeHashString")).andExpect(status().isOk());
+        mockMvc.perform(get("/invite-user/get-invite/SomeHashString")).andExpect(status().isOk());
 
         verify(inviteUserServiceMock).getInvite("SomeHashString");
 
@@ -78,7 +78,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
     public void checkExistingUser() throws Exception {
         when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/inviteUser/checkExistingUser/SomeHashString")).andExpect(status().isOk());
+        mockMvc.perform(get("/invite-user/check-existing-user/SomeHashString")).andExpect(status().isOk());
 
         verify(inviteUserServiceMock).checkExistingUser("SomeHashString");
 
@@ -88,7 +88,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
     public void findPendingInternalUserInvites() throws Exception {
         when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
 
-        mockMvc.perform(get("/inviteUser/internal/pending")).andExpect(status().isOk());
+        mockMvc.perform(get("/invite-user/internal/pending")).andExpect(status().isOk());
 
         verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
 
@@ -104,7 +104,7 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
         when(inviteUserServiceMock.findExternalInvites(searchString, searchCategory)).thenReturn(serviceSuccess(externalInviteResources));
 
-        mockMvc.perform(get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name()))
+        mockMvc.perform(get("/invite-user/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(externalInviteResources)));
 

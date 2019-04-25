@@ -37,7 +37,7 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
 
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
-        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
+        mockMvc.perform(get("/address/do-lookup?lookup=" + postCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
     }
@@ -50,7 +50,7 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
 
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
-        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
+        mockMvc.perform(get("/address/do-lookup?lookup=" + postCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
     }

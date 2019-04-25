@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionFunder;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class CompetitionFunderDataBuilder extends BaseDataBuilder<Void, Competit
 
     private static final Logger LOG = LoggerFactory.getLogger(CompetitionFunderDataBuilder.class);
 
-    public CompetitionFunderDataBuilder withCompetitionFunderData(String competitionName, String funder, BigInteger funderBudget, boolean isCoFunder) {
+    public CompetitionFunderDataBuilder withCompetitionFunderData(String competitionName, Funder funder, BigInteger funderBudget, boolean isCoFunder) {
         return with(data -> {
 
             Competition competition = retrieveCompetitionByName(competitionName);

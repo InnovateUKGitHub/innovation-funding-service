@@ -16,7 +16,7 @@ import static org.junit.Assert.assertSame;
 
 public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationAssessmentSummaryRestServiceImpl> {
 
-    private static String applicationAssessmentSummaryRestUrl = "/applicationAssessmentSummary";
+    private static String applicationAssessmentSummaryRestUrl = "/application-assessment-summary";
 
     @Override
     protected ApplicationAssessmentSummaryRestServiceImpl registerRestServiceUnderTest() {
@@ -34,7 +34,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
         int size = 3;
         long filterInnovationArea = 4L;
 
-        setupGetWithRestResultExpectations(format("%s/%s/availableAssessors?page=%s&size=%s&filterInnovationArea=%s",
+        setupGetWithRestResultExpectations(format("%s/%s/available-assessors?page=%s&size=%s&filterInnovationArea=%s",
                 applicationAssessmentSummaryRestUrl, applicationId, page,
                 size, filterInnovationArea), ApplicationAssessorPageResource.class, expected);
 
@@ -48,7 +48,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
         Long applicationId = 1L;
 
         setupGetWithRestResultExpectations(
-                format("%s/%s/assignedAssessors", applicationAssessmentSummaryRestUrl, applicationId),
+                format("%s/%s/assigned-assessors", applicationAssessmentSummaryRestUrl, applicationId),
                 ParameterizedTypeReferences.applicationAssessorResourceListType(), expected);
 
         assertSame(expected, service.getAssignedAssessors(applicationId).getSuccess());

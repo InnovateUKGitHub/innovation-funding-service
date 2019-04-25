@@ -126,13 +126,13 @@
                         </td>
                         <td class="govuk-table__cell">
                             <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
-                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
                                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
                                        th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}"
                                        class="govuk-link">post code</a>
                                 </th:block>
 
-                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
                                     <span th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}" />
                                 </th:block>
 
@@ -140,12 +140,12 @@
 
                             <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
 
-                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
                                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
                                        class="govuk-link">Select project location</a>
                                 </th:block>
 
-                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
+                                <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
                                     <span>-</span>
                                 </th:block>
 

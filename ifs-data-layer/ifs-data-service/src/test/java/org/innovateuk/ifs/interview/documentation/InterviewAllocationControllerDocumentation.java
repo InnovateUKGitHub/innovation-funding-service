@@ -144,7 +144,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.getAllocatedApplicationsByAssessorId(competitionId, userId))
                 .thenReturn(serviceSuccess(Collections.singletonList(interviewResource)));
 
-        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessorId/{userId}", competitionId, userId)
+        mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessor-id/{userId}", competitionId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",

@@ -55,7 +55,8 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void test_findOne() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
 
         when(classUnderTestMock.findOne(1L))
                 .thenReturn(serviceSuccess(
@@ -64,24 +65,25 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
             verify(attachmentPermissionsRules)
-                    .projectFinanceUsersCanFetchAnyAttachment(isA(AttachmentResource.class), isNull(UserResource.class));
+                    .projectFinanceUsersCanFetchAnyAttachment(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
-                    .financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(isA(AttachmentResource.class), isNull(UserResource.class));
+                    .financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
     }
 
     @Test
     public void test_downloadAttachment() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
         when(attachmentLookupStrategy.findById(3L))
                 .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456, null));
 
         assertAccessDenied(() -> classUnderTest.attachmentFileAndContents(3L), () -> {
             verify(attachmentPermissionsRules)
-                    .projectFinanceUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), isNull(UserResource.class));
+                    .projectFinanceUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
-                    .financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), isNull(UserResource.class));
+                    .financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
 
@@ -89,13 +91,14 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void test_deleteAttachment() throws Exception {
-        setLoggedInUser(null);
+        UserResource user = new UserResource();
+        setLoggedInUser(user);
         when(attachmentLookupStrategy.findById(3L))
                 .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456, null));
 
         assertAccessDenied(() -> classUnderTest.delete(3L), () -> {
             verify(attachmentPermissionsRules)
-                    .onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(isA(AttachmentResource.class), isNull(UserResource.class));
+                    .onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
     }

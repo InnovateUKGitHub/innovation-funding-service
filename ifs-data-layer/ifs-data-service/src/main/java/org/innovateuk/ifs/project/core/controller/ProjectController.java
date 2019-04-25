@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
@@ -45,7 +46,8 @@ public class ProjectController {
         return projectService.getProjectUsers(projectId).toGetResponse();
     }
 
-    @GetMapping("/{projectId}/getOrganisationByUser/{userId}")
+    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @GetMapping({"/{projectId}/getOrganisationByUser/{userId}", "/{projectId}/get-organisation-by-user/{userId}"})
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
