@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
 
-    private String applicationSummaryRestUrl = "/applicationSummary";
+    private String applicationSummaryRestUrl = "/application-summary";
 
     private String applicationRestUrl = "/application";
 
@@ -31,7 +31,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                          int pageNumber,
                                                                          int pageSize,
                                                                          Optional<String> filter) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId;
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId;
         return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
     }
 
@@ -39,7 +39,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     public RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                                 Optional<String> filter,
                                                                 Optional<FundingDecision> fundingFilter) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/all-submitted";
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/all-submitted";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         filter.ifPresent(f -> params.set("filter", f));
@@ -68,7 +68,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                               Optional<String> filter,
                                                                                               Optional<FundingDecision> fundingFilter,
                                                                                               Optional<Boolean> inAssessmentReviewPanel) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/submitted";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         filter.ifPresent(f -> params.set("filter", f));
@@ -85,7 +85,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                   int pageNumber,
                                                                                   int pageSize,
                                                                                   Optional<String> filter) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/not-submitted";
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/not-submitted";
         return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
     }
 
@@ -96,7 +96,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                 int pageSize,
                                                                                 Optional<String> filter,
                                                                                 Optional<Boolean> informFilter) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/ineligible";
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/ineligible";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         filter.ifPresent(f -> params.set("filter", f));
         informFilter.ifPresent(f -> params.set("informFilter", f.toString()));
@@ -112,7 +112,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                          Optional<String> filter,
                                                                                          Optional<Boolean> sendFilter,
                                                                                          Optional<FundingDecision> fundingFilter) {
-        String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/with-funding-decision";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         filter.ifPresent(f -> params.set("filter", f));
@@ -127,7 +127,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                                   Optional<String> filter,
                                                                                                   Optional<Boolean> sendFilter,
                                                                                                   Optional<FundingDecision> fundingFilter) {
-        String baseUrl = format("%s/%s/%s/%s", applicationSummaryRestUrl, "findByCompetition", competitionId, "with-funding-decision");
+        String baseUrl = format("%s/%s/%s/%s", applicationSummaryRestUrl, "find-by-competition", competitionId, "with-funding-decision");
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl)
                 .queryParam("all");
@@ -149,18 +149,18 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ByteArrayResource> downloadByCompetition(long competitionId) {
-        String url = applicationRestUrl + "/download/downloadByCompetition/" + competitionId;
+        String url = applicationRestUrl + "/download/download-by-competition/" + competitionId;
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
     @Override
     public RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId) {
-        return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);
+        return getWithRestResult(applicationSummaryRestUrl + "/get-competition-summary/" + competitionId, CompetitionSummaryResource.class);
     }
 
     @Override
     public RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId) {
-        return getWithRestResult(applicationSummaryRestUrl + "/applicationTeam/" + applicationId, ApplicationTeamResource.class);
+        return getWithRestResult(applicationSummaryRestUrl + "/application-team/" + applicationId, ApplicationTeamResource.class);
     }
 
     public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {

@@ -14,17 +14,17 @@ import java.lang.reflect.Method;
 import static java.lang.reflect.Modifier.isPublic;
 
 /**
- * This Advisor places the {@link SpringSecurityServiceResultExceptionHandlingInterceptor} below Spring Security AOP code
- * that is intercepting ServiceResult-returning Service code, and allows it to catch Spring Security exceptions and convert
+ * This Advisor places the {@link HighPrecedenceServiceResultExceptionHandlingInterceptor} above Spring Security AOP code
+ * that is intercepting ServiceResult-returning Service code, and allows it to catch Spring Exceptions and convert
  * them into failing ServiceResults.
  */
 @Component
-public class SpringSecurityServiceResultExceptionHandlingAdvisor extends AbstractPointcutAdvisor {
+public class HighPrecedenceServiceResultExceptionHandlingAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
-    public SpringSecurityServiceResultExceptionHandlingAdvisor(){
-        setOrder(LOWEST_PRECEDENCE);
+    public HighPrecedenceServiceResultExceptionHandlingAdvisor(){
+        setOrder(HIGHEST_PRECEDENCE);
     }
 
     private transient final StaticMethodMatcherPointcut pointcut = new
@@ -36,7 +36,7 @@ public class SpringSecurityServiceResultExceptionHandlingAdvisor extends Abstrac
             };
 
     @Autowired
-    private transient SpringSecurityServiceResultExceptionHandlingInterceptor interceptor;
+    private transient HighPrecedenceServiceResultExceptionHandlingInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

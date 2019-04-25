@@ -38,7 +38,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         when(competitionServiceMock.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
         when(applicationNotificationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId))
+        mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).releaseFeedback(competitionId);
@@ -51,7 +51,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
         when(competitionServiceMock.closeAssessment(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/postSubmission/{id}/close-assessment", competitionId))
+        mockMvc.perform(put("/competition/post-submission/{id}/close-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
@@ -65,7 +65,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
         when(competitionServiceMock.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
-        mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))
+        mockMvc.perform(get("/competition/post-submission/{competitionId}/pending-spend-profiles", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfiles)));
 
@@ -80,7 +80,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
         when(competitionServiceMock.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
 
-        mockMvc.perform(get("/competition/postSubmission/{competitionId}/count-pending-spend-profiles", competitionId))
+        mockMvc.perform(get("/competition/post-submission/{competitionId}/count-pending-spend-profiles", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfileCount)));
 

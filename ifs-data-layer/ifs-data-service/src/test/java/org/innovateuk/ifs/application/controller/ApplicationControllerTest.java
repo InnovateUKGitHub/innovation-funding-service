@@ -94,14 +94,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(asList(testApplicationResource1, testApplicationResource2)));
         when(applicationServiceMock.findByUserId(testUser2.getId())).thenReturn(serviceSuccess(asList(testApplicationResource2, testApplicationResource3)));
 
-        mockMvc.perform(get("/application/findByUser/{id}", userId))
+        mockMvc.perform(get("/application/find-by-user/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]name", is("testApplication1Name")))
                 .andExpect(jsonPath("[0]id", is(1)))
                 .andExpect(jsonPath("[1]name", is("testApplication2Name")))
                 .andExpect(jsonPath("[1]id", is(2)));
 
-        mockMvc.perform(get("/application/findByUser/2"))
+        mockMvc.perform(get("/application/find-by-user/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]name", is("testApplication2Name")))
                 .andExpect(jsonPath("[0]id", is(2)))
@@ -117,7 +117,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         PageRequest pageRequest = new PageRequest(0, 40);
         when(applicationServiceMock.wildcardSearchById("", pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
 
-        mockMvc.perform(get("/application/wildcardSearchById"))
+        mockMvc.perform(get("/application/wildcard-search-by-id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)));
     }
@@ -146,7 +146,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId, organisationId)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
+        mockMvc.perform(post("/application/create-application-by-name/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
@@ -162,7 +162,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(applicationProgressServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(true);
 
-        mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", app.getId()))
+        mockMvc.perform(get("/application/application-ready-for-submit/{applicationId}", app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
     }
@@ -197,7 +197,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource().build();
         when(applicationNotificationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
+        mockMvc.perform(post("/application/inform-ineligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk());
@@ -221,7 +221,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         long userId = 2L;
         when(applicationServiceMock.showApplicationTeam(applicationId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
-        mockMvc.perform(get("/application/showApplicationTeam/{applicationId}/{userId}", applicationId, userId))
+        mockMvc.perform(get("/application/show-application-team/{applicationId}/{userId}", applicationId, userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
     }

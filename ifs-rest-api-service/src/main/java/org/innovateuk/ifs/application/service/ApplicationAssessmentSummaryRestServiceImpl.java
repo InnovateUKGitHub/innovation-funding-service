@@ -22,16 +22,16 @@ import static java.util.Collections.singletonList;
 @Service
 public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService implements ApplicationAssessmentSummaryRestService {
 
-    private String applicationAssessmentSummaryRestURL = "/applicationAssessmentSummary";
+    private String applicationAssessmentSummaryRestURL = "/application-assessment-summary";
 
     @Override
     public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
-        return getWithRestResult(format("%s/%s/assignedAssessors", applicationAssessmentSummaryRestURL, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType());
+        return getWithRestResult(format("%s/%s/assigned-assessors", applicationAssessmentSummaryRestURL, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType());
     }
 
     @Override
     public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea) {
-        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/availableAssessors",pageIndex, pageSize, filterInnovationArea, applicationId);
+        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/available-assessors",pageIndex, pageSize, filterInnovationArea, applicationId);
         return getWithRestResult(uriWithParams, ApplicationAssessorPageResource.class);
     }
 

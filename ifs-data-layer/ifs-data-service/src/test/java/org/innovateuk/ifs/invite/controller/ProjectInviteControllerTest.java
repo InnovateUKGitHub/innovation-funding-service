@@ -64,7 +64,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
                 thenReturn(serviceFailure(PROJECT_INVITE_INVALID));
 
 
-        mockMvc.perform(post("/projectinvite/saveInvite")
+        mockMvc.perform(post("/project-invite/save-invite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(projectUserInviteResource)))
                 .andExpect(status().isBadRequest());
@@ -79,7 +79,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
         when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
 
 
-        mockMvc.perform(post("/projectinvite/saveInvite")
+        mockMvc.perform(post("/project-invite/save-invite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(projectUserInviteResource)))
                 .andExpect(status().isOk());
@@ -95,7 +95,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.getInviteByHash(hash)).thenReturn(serviceFailure(notFoundError(ProjectInvite.class, hash)));
 
-        mockMvc.perform(get("/projectinvite/getProjectInviteByHash/{hash}", hash)).
+        mockMvc.perform(get("/project-invite/get-project-invite-by-hash/{hash}", hash)).
                 andExpect(status().isNotFound());
 
         verify(projectInviteServiceMock).getInviteByHash(hash);
@@ -119,7 +119,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.getInviteByHash(hash)).thenReturn(serviceSuccess(projectUserInviteResource));
 
-        mockMvc.perform(get("/projectinvite/getProjectInviteByHash/{hash}", hash)).
+        mockMvc.perform(get("/project-invite/get-project-invite-by-hash/{hash}", hash)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUserInviteResource)));
 
@@ -135,7 +135,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
         when(projectInviteServiceMock.getInvitesByProject(projectId)).
                 thenReturn(serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND)));
 
-        mockMvc.perform(get("/projectinvite/getInvitesByProjectId/{projectId}", projectId)).
+        mockMvc.perform(get("/project-invite/get-invites-by-project-id/{projectId}", projectId)).
                 andExpect(status().isNotFound());
 
         verify(projectInviteServiceMock).getInvitesByProject(projectId);
@@ -158,7 +158,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.getInvitesByProject(projectId)).thenReturn(serviceSuccess(projectUserInviteResources));
 
-        mockMvc.perform(get("/projectinvite/getInvitesByProjectId/{projectId}", projectId)).
+        mockMvc.perform(get("/project-invite/get-invites-by-project-id/{projectId}", projectId)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUserInviteResources)));
 
@@ -175,7 +175,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
         when(projectInviteServiceMock.acceptProjectInvite(hash, userId)).
                 thenReturn(serviceFailure(new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE)));
 
-        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/project-invite/accept-invite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isNotAcceptable());
 
@@ -191,7 +191,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.acceptProjectInvite(hash, userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/projectinvite/acceptInvite/{hash}/{userId}", hash,userId)
+        mockMvc.perform(put("/project-invite/accept-invite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -206,7 +206,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceFailure(notFoundError(User.class)));
 
-        mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
+        mockMvc.perform(get("/project-invite/check-existing-user/{hash}", hash)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -221,7 +221,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         when(projectInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
+        mockMvc.perform(get("/project-invite/check-existing-user/{hash}", hash)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 

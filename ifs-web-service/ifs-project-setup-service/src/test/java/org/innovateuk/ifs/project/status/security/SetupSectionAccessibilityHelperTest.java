@@ -211,39 +211,46 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     @Test
     public void canAccessGrantOfferLetterSectionWhenDocsApproved() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
-                true, true, true, true, ACCESSIBLE);
+                true, true, true, true,true, ACCESSIBLE);
     }
 
     @Test
     public void canNotAccessGrantOfferLetterSectionWhenDocsNotApproved() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
-                true, false, true, true, NOT_ACCESSIBLE);
+                true, false, true, true, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenSpendProfileNotApproved() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
-                false, true, true, true, NOT_ACCESSIBLE);
+                false, true, true, true, true, NOT_ACCESSIBLE);
+    }
+
+    @Test
+    public void canAccessGrantOfferLetterSectionWhenBankDetailsNotApproved() {
+        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+               true, true, false, true, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenGOLNotAvailable() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
-                true, true, false, true, NOT_ACCESSIBLE);
+                true, true, true,false, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenGOLNotSent() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
-                true, true, true, false, NOT_ACCESSIBLE);
+                true, true, true, true, false, NOT_ACCESSIBLE);
     }
 
     private void doTest(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall,
-                        boolean spendProfileApproved, boolean docsApproved, boolean golAvailable, boolean golSent,
+                        boolean spendProfileApproved, boolean docsApproved, boolean bankDetailsApproved, boolean golAvailable, boolean golSent,
                         SectionAccess expectedAccess) {
 
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(spendProfileApproved);
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(docsApproved);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(golAvailable);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(golSent);
 

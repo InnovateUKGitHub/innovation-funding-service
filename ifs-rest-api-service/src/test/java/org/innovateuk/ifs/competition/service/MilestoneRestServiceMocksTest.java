@@ -56,7 +56,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class, returnedResponse);
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/get-by-type?type=" + type, MilestoneResource.class, returnedResponse);
 
         MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccess();
 
@@ -107,7 +107,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
 
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class, returnedResponse);
+        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/get-by-type?type=" + type, MilestoneResource.class, returnedResponse);
         MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccess();
 
         assertNotNull(response);

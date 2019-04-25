@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 
 public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionStatusRestServiceImpl> {
-    private static final String questionStatusRestURL = "/questionStatus";
+    private static final String questionStatusRestURL = "/question-status";
 
     @Override
     protected QuestionStatusRestServiceImpl registerRestServiceUnderTest() {
@@ -79,8 +80,8 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
     @Test
     public void findQuestionStatusesByQuestionAndApplicationIdTest() {
 
-        List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());// newQuestionStatusResource().build(3);
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplication/1/2", questionStatusResourceListType(), questionStatuses);
+        List<QuestionStatusResource> questionStatuses = Stream.of(1, 2, 3).map(i -> new QuestionStatusResource()).collect(Collectors.toList());// newQuestionStatusResource().build(3);
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/find-by-question-and-application/1/2", questionStatusResourceListType(), questionStatuses);
 
         List<QuestionStatusResource> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
@@ -93,8 +94,8 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         Long applicationId = 2L;
         Long organisationId = 3L;
 
-        List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+        List<QuestionStatusResource> questionStatuses = Stream.of(1, 2, 3).map(i -> new QuestionStatusResource()).collect(Collectors.toList());
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/find-by-question-and-application-and-organisation/" + questionId + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
         List<QuestionStatusResource> returnedQuestionStatuses = service.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
@@ -105,8 +106,8 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         Long applicationId = 2L;
         Long organisationId = 3L;
 
-        List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+        List<QuestionStatusResource> questionStatuses = Stream.of(1, 2, 3).map(i -> new QuestionStatusResource()).collect(Collectors.toList());
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/find-by-application-and-organisation/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
         List<QuestionStatusResource> returnedQuestionStatuses = service.findByApplicationAndOrganisation(applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
@@ -129,8 +130,8 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         Long applicationId = 2L;
         Long organisationId = 3L;
 
-        List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
+        List<QuestionStatusResource> questionStatuses = Stream.of(1, 2, 3).map(i -> new QuestionStatusResource()).collect(Collectors.toList());
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/find-by-question-ids-and-application-id-and-organisation-id/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
         List<QuestionStatusResource> returnedQuestionStatuses = service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);

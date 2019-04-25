@@ -31,14 +31,16 @@
                     <dd>&pound;<th:block
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
-                    <dt>Grant applied for:</dt>
-                    <dd>&pound;<th:block
-                        th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
-                    </dd>
-                    <dt>Other public sector funding:</dt>
-                    <dd>&pound;<th:block
-                        th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
-                    </dd>
+                    <th:block th:unless="${model.financeCheckSummaryResource.h2020}">
+                        <dt>Grant applied for:</dt>
+                        <dd>&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
+                        </dd>
+                        <dt>Other public sector funding:</dt>
+                        <dd>&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
+                        </dd>
+                    </th:block>
                     <dt>Total percentage grant:</dt>
                     <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
                 </dl>
@@ -54,6 +56,10 @@
                     <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}"></dd>
                     <dt>Duration:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
+                    <th:block th:if="${model.financeCheckSummaryResource.h2020}">
+                        <dt>Type:</dt>
+                        <dd><strong class="govuk-tag">Horizon 2020</strong></dd>
+                    </th:block>
                 </dl>
 
                 <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
@@ -94,13 +100,13 @@
                            class="govuk-link"/>
 
                         <span th:if="${orgDetails.viability.notApplicable}"
-                              th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.h2020.viability.' + orgDetails.viability) : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-' + status.index}"></span>
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
-                    <span th:if="${orgDetails.viability.notApplicable}"
-                          th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
-                          th:classappend="${'viability-rag-' + status.index}"></span>
+                        <span th:if="${orgDetails.viability.notApplicable}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:classappend="${'viability-rag-' + status.index}"></span>
                         <span th:unless="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
                               th:classappend="${'viability-rag-' + status.index}">Green</span>
@@ -133,7 +139,7 @@
               th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}"
               th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
             <h3 class="govuk-heading-m">Generate spend profile</h3>
-            <p class="govuk-body">To generate your spend profile, the viability and eligibility sections, plus bank details must be approved
+            <p class="govuk-body">To generate your spend profile, the viability and eligibility sections must be approved
                 for all partners. This will create their individual flat spend profiles. These spend profiles can be edited
                 during the project.</p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"

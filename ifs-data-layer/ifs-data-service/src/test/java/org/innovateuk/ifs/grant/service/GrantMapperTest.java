@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertTrue;
@@ -398,7 +398,7 @@ public class GrantMapperTest {
 
             List<ProjectUser> projectUsers = combineLists(leadOrganisationProjectUsers, org2ProjectUsers, org3ProjectUsers);
 
-            MonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer()
+            MonitoringOfficer projectMonitoringOfficer = newMonitoringOfficer()
                     .withUser(newUser().withEmailAddress("mo@example.com").build())
                     .build();
 

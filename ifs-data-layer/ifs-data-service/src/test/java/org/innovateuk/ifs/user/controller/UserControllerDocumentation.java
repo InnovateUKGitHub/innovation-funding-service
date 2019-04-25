@@ -65,7 +65,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress)
+        mockMvc.perform(put("/user/send-email-verification-notification/{emailAddress}/", emailAddress)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
@@ -81,7 +81,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
+        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -100,7 +100,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD)
+        mockMvc.perform(get("/user/find-by-role/{userRole}", INNOVATION_LEAD)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(
@@ -120,7 +120,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
-        mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
+        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -202,7 +202,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/user/id/{userId}/agreeNewSiteTermsAndConditions", userId)
+        mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
@@ -270,7 +270,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
         when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
-        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory)
+        mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)))

@@ -5,14 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
-
-import java.util.Optional;
 
 import static org.innovateuk.ifs.sections.SectionAccess.*;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -77,10 +71,6 @@ public class SetupSectionAccessibilityHelper {
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Partner Project Location page until Companies House details are complete for Organisation")) {
             return NOT_ACCESSIBLE;
-        }
-
-        if (isMonitoringOfficerAssigned()) {
-            return fail("Unable to access Partner Project Location page once Monitoring Officer has been assigned");
         }
 
         return ACCESSIBLE;
@@ -171,14 +161,6 @@ public class SetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
-            return fail("Unable to access Monitoring Officer section until Project Details are submitted");
-        }
-
-        if (partnerProjectLocationRequired && !setupProgressChecker.isAllPartnerProjectLocationsSubmitted()) {
-            return NOT_ACCESSIBLE;
-        }
-
         return ACCESSIBLE;
     }
 
@@ -241,12 +223,6 @@ public class SetupSectionAccessibilityHelper {
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
-        if (!isBankDetailsApproved(organisation)) {
-
-            return fail("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
-                    "approved or queried");
-        }
-
         if (!setupProgressChecker.isSpendProfileGenerated()) {
 
             return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
@@ -299,6 +275,7 @@ public class SetupSectionAccessibilityHelper {
         }
 
         if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
+                && (isBankDetailsApproved(organisation))
                 && setupProgressChecker.isGrantOfferLetterAvailable()
                 && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;

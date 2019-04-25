@@ -40,7 +40,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
-        mockMvc.perform(get("/questionStatus/mark-as-complete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById)
+        mockMvc.perform(get("/question-status/mark-as-complete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                             pathParameters(
@@ -60,7 +60,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         when(questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(get("/questionStatus/mark-as-incomplete/{questionId}/{applicationId}/{markedAsIncompleteById}", questionId, applicationId, markedAsCompleteById)
+        mockMvc.perform(get("/question-status/mark-as-incomplete/{questionId}/{applicationId}/{markedAsIncompleteById}", questionId, applicationId, markedAsCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
@@ -81,7 +81,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         when(questionStatusService.assign(new QuestionApplicationCompositeId(questionId, applicationId), assignedTo, assignedBy)).thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(get("/questionStatus/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy)
+        mockMvc.perform(get("/question-status/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
@@ -102,7 +102,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(serviceSuccess(ids));
 
-        mockMvc.perform(get("/questionStatus/get-marked-as-complete/{applicationId}/{organisationId}", applicationId, organisationId)
+        mockMvc.perform(get("/question-status/get-marked-as-complete/{applicationId}/{organisationId}", applicationId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
@@ -122,7 +122,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
 
         when(questionStatusService.updateNotification(questionStatusId, notify)).thenReturn(serviceSuccess(null));
 
-        mockMvc.perform(get("/questionStatus/update-notification/{questionStatusId}/{notify}", questionStatusId, notify)
+        mockMvc.perform(get("/question-status/update-notification/{questionStatusId}/{notify}", questionStatusId, notify)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question-status/{method-name}",
                         pathParameters(
@@ -143,7 +143,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         when(questionStatusService.markTeamAsInComplete(ids, markedAsInCompleteById)).thenReturn(serviceSuccess(emptyList
                 ()));
 
-        mockMvc.perform(put("/questionStatus/mark-team-as-in-complete/{questionId}/{applicationId" +
+        mockMvc.perform(put("/question-status/mark-team-as-in-complete/{questionId}/{applicationId" +
                         "}/{markedAsInCompleteById}",
                 questionId, applicationId, markedAsInCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))

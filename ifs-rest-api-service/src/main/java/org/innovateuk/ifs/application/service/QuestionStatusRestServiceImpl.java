@@ -23,21 +23,21 @@ import static org.innovateuk.ifs.application.service.Futures.adapt;
 @Service
 public class QuestionStatusRestServiceImpl extends BaseRestService implements QuestionStatusRestService {
 
-    private String questionStatusRestURL = "/questionStatus";
+    private String questionStatusRestURL = "/question-status";
 
     @Override
     public RestResult<List<QuestionStatusResource>> findQuestionStatusesByQuestionAndApplicationId(final long questionId, final long applicationId) {
-        return getWithRestResult(questionStatusRestURL + "/findByQuestionAndApplication/" + questionId + "/" + applicationId, ParameterizedTypeReferences.questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/find-by-question-and-application/" + questionId + "/" + applicationId, ParameterizedTypeReferences.questionStatusResourceListType());
     }
 
     @Override
     public RestResult<List<QuestionStatusResource>> findByQuestionAndApplicationAndOrganisation(long questionId, long applicationId, long organisationId) {
-        return getWithRestResult(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/find-by-question-and-application-and-organisation/" + questionId + "/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
     }
 
     @Override
     public RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(long applicationId, long organisationId) {
-        return getWithRestResult(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/find-by-application-and-organisation/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
     @Override
     public RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, long applicationId, long organisationId) {
-        return getWithRestResult(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + CollectionFunctions.simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/find-by-question-ids-and-application-id-and-organisation-id/" + CollectionFunctions.simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
     }
 
     @Override
@@ -80,7 +80,4 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
     public Future<Set<Long>> getMarkedAsComplete(long applicationId, long organisationId) {
         return adapt(restGetAsync(questionStatusRestURL + "/get-marked-as-complete/" + applicationId + "/" + organisationId, Long[].class), re -> new HashSet<>(asList(re.getBody())));
     }
-
-
-
 }

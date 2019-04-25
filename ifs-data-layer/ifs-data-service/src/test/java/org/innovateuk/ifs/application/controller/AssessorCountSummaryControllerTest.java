@@ -36,7 +36,7 @@ public class AssessorCountSummaryControllerTest extends BaseControllerMockMVCTes
 
         when(assessorCountSummaryServiceMock.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), pageNumber, pageSize)).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/assessorCountSummary/findByCompetitionId/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessor-count-summary/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 

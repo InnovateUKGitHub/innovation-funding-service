@@ -50,7 +50,7 @@ public class DocumentsControllerSecurityTest extends BaseProjectSetupControllerS
 
     @Test
     public void documentDecision() {
-        assertSecured(() -> classUnderTest.documentDecision(projectCompositeId.id(), 2L, null, null, null, null),
+        assertSecured(() -> classUnderTest.documentDecision(projectCompositeId.id(), 2L, null, null, null, null, null),
                 permissionRules -> permissionRules.internalAdminUserCanApproveDocuments(eq(projectCompositeId), isA(UserResource.class)));
     }
 

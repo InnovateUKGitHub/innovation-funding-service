@@ -59,7 +59,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.findByCompetition(competitionId)).thenReturn(serviceSuccess(questionBuilder.build(2)));
 
-        mockMvc.perform(get("/question/findByCompetition/{competitionId}", competitionId)
+        mockMvc.perform(get("/question/find-by-competition/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -77,7 +77,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getNextQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getNextQuestion/{questionId}", questionId)
+        mockMvc.perform(get("/question/get-next-question/{questionId}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -93,7 +93,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getNextQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getNextQuestionBySection/{sectionId}", sectionId)
+        mockMvc.perform(get("/question/get-next-question-by-section/{sectionId}", sectionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -109,7 +109,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getPreviousQuestion/{questionId}", questionId)
+        mockMvc.perform(get("/question/get-previous-question/{questionId}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -125,7 +125,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getPreviousQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getPreviousQuestionBySection/{sectionId}", sectionId)
+        mockMvc.perform(get("/question/get-previous-question-by-section/{sectionId}", sectionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -142,7 +142,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", competitionId, formInputType)
+        mockMvc.perform(get("/question/get-question-by-competition-id-and-form-input-type/{competitionId}/{formInputType}", competitionId, formInputType)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -175,7 +175,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(asList(questionBuilder.build())));
 
-        mockMvc.perform(get("/question/getQuestionsByAssessment/{assessmentId}", assessmentId)
+        mockMvc.perform(get("/question/get-questions-by-assessment/{assessmentId}", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",
                         pathParameters(
@@ -195,7 +195,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 setupQuestionType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}",
+        mockMvc.perform(get("/question/get-question-by-competition-id-and-question-setup-type/{competitionId}/{type}",
                             competitionId, setupQuestionType)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("question/{method-name}",

@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<InviteUserRestServiceImpl> {
 
-    private static final String inviteRestBaseUrl = "/inviteUser";
+    private static final String inviteRestBaseUrl = "/invite-user";
 
     @Override
     protected InviteUserRestServiceImpl registerRestServiceUnderTest() {
@@ -32,7 +32,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     @Test
     public void saveUserInvite() {
         InviteUserResource inviteUserResource = new InviteUserResource();
-        String url = inviteRestBaseUrl + "/saveInvite";
+        String url = inviteRestBaseUrl + "/save-invite";
         setupPostWithRestResultExpectations(url, inviteUserResource, HttpStatus.OK);
         RestResult<Void> result = service.saveUserInvite(inviteUserResource);
         assertTrue(result.isSuccess());
@@ -41,7 +41,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     @Test
     public void getInvite() {
         RoleInviteResource roleInviteResource = new RoleInviteResource();
-        String url = inviteRestBaseUrl + "/getInvite/";
+        String url = inviteRestBaseUrl + "/get-invite/";
         String inviteHash = "hash";
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, RoleInviteResource.class, roleInviteResource);
         RestResult<RoleInviteResource> result = service.getInvite(inviteHash);
@@ -51,7 +51,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
 
     @Test
     public void checkExistingUser() {
-        String url = inviteRestBaseUrl + "/checkExistingUser/";
+        String url = inviteRestBaseUrl + "/check-existing-user/";
         String inviteHash = "hash";
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, Boolean.class, true);
         RestResult<Boolean> returnedResponse = service.checkExistingUser(inviteHash);
@@ -74,7 +74,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<ExternalInviteResource> expected = Collections.singletonList(new ExternalInviteResource());
-        setupGetWithRestResultExpectations(inviteRestBaseUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(inviteRestBaseUrl + "/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
         List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccess();
         assertEquals(expected, result);
     }

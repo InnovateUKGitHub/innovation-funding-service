@@ -40,7 +40,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId)
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
@@ -64,7 +64,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "", "")).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/applicationCountSummary/findByCompetitionIdAndInnovationArea/{competitionId}?assessorId={assessorId}&sortField={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-innovation-area/{competitionId}?assessorId={assessorId}&sortField={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",

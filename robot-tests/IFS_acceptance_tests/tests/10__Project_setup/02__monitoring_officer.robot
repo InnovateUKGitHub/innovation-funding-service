@@ -32,6 +32,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5032 MO assigned to project - Email notification
 ...
 ...               IFS-5418 Assign MO: Internal navigation
+...
+...               IFS-5686 MO - external user view
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -72,144 +74,43 @@ Status updates correctly for internal user's table
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
 
-Comp admin can view the Supporting information details on MO page
-    [Documentation]    INFUND-2630
-    [Tags]  HappyPath
-    [Setup]    Log in as a different user              &{Comp_admin1_credentials}
-    When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
-    Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
-    And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Applicaiton_Titile}")
-    And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
-    And the user should see the correct address
-    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
-    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Diane Scott")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Vitruvius_Name}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${A_B_Cad_Services_Name}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Armstrong_Butler_Name}")
-
-Project finance user can view MO page, and go on to assign MO
-    [Documentation]    INFUND-5666, INFUND-5507
-    [Tags]  HappyPath
-    Given log in as a different user                   &{internal_finance_credentials}
-    When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
-    Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
-    And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${Grade_Crossing_Applicaiton_Titile}")
-    And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
-    And the user should see the correct address
-    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
-    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Diane Scott")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Vitruvius_Name}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${A_B_Cad_Services_Name}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Armstrong_Butler_Name}")
-    [Teardown]  the user clicks the button/link        link = Projects in setup
-
-MO server-side validation
-    [Documentation]    INFUND-2630
-    Given the user navigates to the page                ${Successful_Monitoring_Officer_Page}
-    When the user clicks the button/link                jQuery = .govuk-button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link                 jQuery = [role = "dialog"] .govuk-button:contains("Assign Monitoring Officer")
-    Then the user should see a field and summary error  ${enter_a_first_name}
-    And the user should see a field and summary error   ${enter_a_last_name}
-    And the user should see a field and summary error   Please enter an email address.
-    And the user should see a field and summary error   ${enter_a_phone_number}
-    And the user should see a field and summary error   ${enter_a_phone_number_between_8_and_20_digits}
-
-MO client-side validation
-    [Documentation]    INFUND-2630
-    [Tags]  HappyPath
-    Given the user navigates to the page                 ${Successful_Monitoring_Officer_Page}
-    When the user enters text to a text field            id = firstName    Abbey
-    Then the user should not see the validation error    ${enter_a_first_name}
-    When the user enters text to a text field            id = lastName    Abigail
-    Then the user should not see the validation error    ${enter_a_last_name}
-    When standard verification for email address follows
-    When the user enters text to a text field            id = emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user should not see the validation error     ${enter_a_valid_email}
-    And the user should not see the validation error     Please enter an email address.
-    When the user enters text to a text field            id = phoneNumber    0123
-    And the user should not see the validation error     ${enter_a_phone_number}
-    And the user should not see the validation error     ${enter_a_valid_phone_number}
-    And the user should see a field error                ${enter_a_phone_number_between_8_and_20_digits}
-    When the user enters text to a text field            id = phoneNumber    07438620303
-    Then the user should not see the validation error    ${enter_a_phone_number_between_8_and_20_digits}
+Search for an MO
+    [Documentation]  IFS-5428  IFS-5418  IFS-5686
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
+    Then search for MO    Orvill  Orville Gibbs
+    And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
     [Tags]  HappyPath
-    When the user clicks the button/link                 jQuery = .govuk-button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Cancel")
-    Then the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
-    And the user clicks the button/link                  jQuery = .govuk-button:contains("Assign Monitoring Officer")
-    And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
-    Then The user should see the element                 css = .success-alert
-    And the user should see the element                  jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
-    Then Log in as a different user                      &{lead_applicant_credentials_bd}
+    Given Log in as a different user                     &{lead_applicant_credentials_bd}
     And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element                  css = ul li.complete:nth-child(3)
-    And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
+    And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Orville Gibbs.
     And the user clicks the button/link                  link = View the status of partners
     And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-
-MO details(email step)
-    [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633, IFS-3553
-    [Tags]  HappyPath
-    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email     ${Grade_Crossing_Lead_Partner_Email}    ${PS_Competition_Name}: Your Monitoring Officer for project ${Grade_Crossing_Applicaiton_No}    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
     [Tags]  HappyPath
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
-    Given the user navigates to the page               ${Successful_Monitoring_Officer_Page}
+    Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
     When the user clicks the button/link               link = Change Monitoring Officer
     And the user edits the MO details
-    And the user can see the changed MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
-    Then the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    And the user should see the element                css = ul li.complete:nth-child(3)
-    And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
-    And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
-    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
-    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
-    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-
-MO details edit(email step)
-    [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
-    # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When the user reads his email    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email     ${Grade_Crossing_Lead_Partner_Email}    ${PS_Competition_Name}: Your Monitoring Officer for project ${Grade_Crossing_Applicaiton_No}    has now been assigned a Monitoring Officer
+    Then the user should see assigned MO details
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
-    [Tags]  HappyPath
+    [Tags]  HappyPathSuper-EFFY - Super Efficient Forecasting of Freight Yields
     Given Log in as a different user                   &{collaborator1_credentials_bd}
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    Then the user should see the element               css = ul li.complete:nth-child(3)
-    And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
-    And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
-    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
-    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
-    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-    When Log in as a different user                    &{lead_applicant_credentials_bd}
-    And the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    Then the user should see the element               css = ul li.complete:nth-child(3)
-    And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
-    And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
-    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
-    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
-    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    When the user should see assigned MO details
+    Then Log in as a different user                    &{collaborator2_credentials_bd}
+    And the user should see assigned MO details
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -223,11 +124,11 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
     Given log in as a different user          &{monitoring_officer_one_credentials}
-    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("Magic material")
+    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209
-    Given the user clicks the button/link    link = Magic material
+    Given the user clicks the button/link    link = ${PS_LP_Application_Title}
     Then the user should see the project set view
 
 MO sees the application feedback
@@ -242,18 +143,13 @@ Monitoring Officer cannot see projects if they are not assigned to them
 
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
-Search for an MO
-    [Documentation]  IFS-5428  IFS-5418
-    [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigate to assign MO page
-    When search for MO    Orvill  Orville Gibbs
-    Then the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
-    [Teardown]  the user clicks the button/link  link = Back
 
 Add MO client validations
     [Documentation]  IFS-5428
-    Given The user clicks the button/link      link = Add a monitoring officer
-    When the user enters text to a text field  id = emailAddress  ${EMPTY}
+    [Setup]  log in as a different user        &{Comp_admin1_credentials}
+    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/view-all
+    When The user clicks the button/link       link = Add a monitoring officer
+    And the user enters text to a text field   id = emailAddress  ${EMPTY}
     Then the user should see a field error     Please enter an email address.
 
 Add MO server validations
@@ -284,7 +180,7 @@ Comp admin adds new MO
 Comp admin assign project to new MO
     [Documentation]  IFS-5031  IFS-5088  IFS-4208
     Given search for MO    Tom  Tom Poly
-    When comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
+    When the internal user assign project to MO       ${Assign_Project2_ID}  ${Assign_Project2}
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
 Link to Application
@@ -323,7 +219,7 @@ Assign MO role to existing IFS user
 
 Comp admin assign project existing IFS user MO
     [Documentation]  IFS-5104  IFS-5070
-    Given comp admin assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
     And logout as user
     Then the user logs in and checks for assigned projects
 
@@ -349,18 +245,11 @@ the user should not see the validation error
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the user edits the MO details
-    The user enters text to a text field    id = firstName    Grace
-    The user enters text to a text field    id = lastName    Harper
-    The user enters text to a text field    id = emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
-    The user enters text to a text field    id = phoneNumber    08549731414
-    the user clicks the button/link         jQuery = .govuk-button[type = "submit"]:contains("Assign Monitoring Officer")
-    the user clicks the button/link         jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
-
-the user can see the changed MO details
-    The user should see the element             css = .success-alert
-    the user should see the element             jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
-    Textfield Should Contain                    id = firstName    Grace
-    Textfield Should Contain                    id = lastName    Harper
+    search for MO   Orvill  Orville Gibbs
+    the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
+    the user clicks the button/link    link = Back
+    search for MO  Nilesh  Nilesh Patti
+    the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 Custom suite setup
     Connect to database  @{database}
@@ -379,7 +268,7 @@ the user should see the project set view
     the user should see the element    jQuery = a:contains("Documents")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
-    the user should see the element    jQuery = .progress-list .read-only h2:contains("Spend profile")
+    the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
 
 the user enters the details
@@ -436,7 +325,7 @@ the user should not see assigned project in Select a project to assign search fi
     input text                             id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
-comp admin assign project to MO
+the internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
     input text                          id = projectId    ${search_ID}
@@ -444,7 +333,7 @@ comp admin assign project to MO
     the user clicks the button/link     jQuery = button:contains("Assign")
 
 comp admin assign and remove project to MO
-    comp admin assign project to MO               ${Assign_Project_ID}  ${Assign_Project}
+    the internal user assign project to MO        ${Assign_Project_ID}  ${Assign_Project}
     comp admin remove project assigned to MO      ${Assign_Project}
 
 search for MO
@@ -487,6 +376,18 @@ the user adds MO email address
     the user clicks the button/link         link = Add a monitoring officer
     the user enters text to a text field    id = emailAddress  tom@poly.io
     the user clicks the button/link         jQuery = button[type="submit"]
+
+the user should see assigned MO details
+    the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    the user should see the element                css = ul li.complete:nth-child(3)
+    the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Nilesh Patti.
+    the user clicks the button/link                link = Monitoring Officer
+    the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    the user should see the element                jQuery = .govuk-body:contains("Nilesh Patti")
+    the user should see the element                jQuery = .govuk-body:contains("nilesh.patti@gmail.com")
+    the user should see the element                jQuery = .govuk-body:contains("449890325459")
+    the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
+    the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Custom suite teardown
     the user closes the browser

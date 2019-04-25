@@ -3,10 +3,10 @@ package org.innovateuk.ifs.project.documents.controller;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
-import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class DocumentsController {
     public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
 
-        model.addAttribute("model", populator.populateAllDocuments(projectId));
+        model.addAttribute("model", populator.populateAllDocuments(projectId, loggedInUser.getId()));
         return "project/documents-all";
     }
 
@@ -64,12 +64,12 @@ public class DocumentsController {
                                Model model,
                                UserResource loggedInUser) {
 
-        return doViewDocument(projectId, documentConfigId, model, new DocumentForm());
+        return doViewDocument(projectId, loggedInUser.getId(), documentConfigId, model, new DocumentForm());
     }
 
-    private String doViewDocument(long projectId, long documentConfigId, Model model, DocumentForm form) {
+    private String doViewDocument(long projectId, long loggedInUserId, long documentConfigId, Model model, DocumentForm form) {
 
-        model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId));
+        model.addAttribute("model", populator.populateViewDocument(projectId, loggedInUserId, documentConfigId));
         model.addAttribute(FORM_ATTR, form);
         return "project/document";
     }
@@ -101,10 +101,11 @@ public class DocumentsController {
                                    @ModelAttribute(FORM_ATTR) DocumentForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   Model model) {
+                                   Model model,
+                                   UserResource loggedInUser) {
 
         Supplier<String> successView = () -> redirectToViewDocumentPage(projectId, documentConfigId);
-        Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, form);
+        Supplier<String> failureView = () -> doViewDocument(projectId, loggedInUser.getId(), documentConfigId, model, form);
 
         RestResult<Void> result = documentsRestService.documentDecision(projectId, documentConfigId,
                 new ProjectDocumentDecision(form.getApproved(), form.getRejectionReason()));

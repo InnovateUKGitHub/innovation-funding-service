@@ -1,20 +1,19 @@
-package org.innovateuk.ifs.project.documents.populator;
+package org.innovateuk.ifs.documents.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
+import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
-import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
-import org.innovateuk.ifs.project.documents.viewmodel.DocumentViewModel;
-import org.innovateuk.ifs.project.resource.BasicDetails;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,23 +28,22 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class DocumentsPopulator {
 
     @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private ApplicationService applicationService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public AllDocumentsViewModel populateAllDocuments(long projectId) {
+    @Autowired
+    private ProjectRestService projectRestService;
 
-        BasicDetails basicDetails = populateBasicDetails(projectId);
-        ProjectResource project = basicDetails.getProject();
-        CompetitionResource competition = basicDetails.getCompetition();
+    public AllDocumentsViewModel populateAllDocuments(long projectId, long loggedInUserId) {
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = competition.getCompetitionDocuments();
+        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
+
+        List<PartnerOrganisationResource> partnerOrganisations =
+                partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
 
         if (partnerOrganisations.size() == 1) {
             configuredProjectDocuments.removeIf(
@@ -58,19 +56,7 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(competition.getId(), basicDetails.getApplication().getId(), projectId, project.getName(), documents);
-    }
-
-    private BasicDetails populateBasicDetails(long projectId) {
-
-        ProjectResource project = projectService.getById(projectId);
-
-        ApplicationResource application = applicationService.getById(project.getApplication());
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        return new BasicDetails(project, application, competition);
-
+        return new AllDocumentsViewModel(project.getCompetition(), project.getApplication(), project.getId(), project.getName(), documents, isProjectManager(loggedInUserId, projectId));
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -80,14 +66,14 @@ public class DocumentsPopulator {
                 .orElse(DocumentStatus.UNSET);
     }
 
-    public DocumentViewModel populateViewDocument(long projectId, long documentConfigId) {
+    public DocumentViewModel populateViewDocument(long projectId, long loggedInUserId, long documentConfigId) {
 
-        BasicDetails basicDetails = populateBasicDetails(projectId);
-        ProjectResource project = basicDetails.getProject();
-        CompetitionResource competition = basicDetails.getCompetition();
+        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
 
         CompetitionDocumentResource configuredProjectDocument =
-                simpleFindAny(competition.getCompetitionDocuments(),
+                simpleFindAny(configuredProjectDocuments,
                         projectDocumentResource -> projectDocumentResource.getId().equals(documentConfigId))
                         .get();
 
@@ -98,10 +84,31 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        return new DocumentViewModel(project.getId(), project.getName(), basicDetails.getApplication().getId(),
-                configuredProjectDocument.getId(), configuredProjectDocument.getTitle(),
+        return new DocumentViewModel(project.getId(),
+                project.getName(),
+                project.getApplication(),
+                configuredProjectDocument.getId(),
+                configuredProjectDocument.getTitle(),
+                configuredProjectDocument.getGuidance(),
                 fileDetails,
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
-                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(""));
+                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(""),
+                isProjectManager(loggedInUserId, projectId)
+                );
+    }
+
+    private boolean isProjectManager(long loggedInUserId, long projectId) {
+        return Optional.ofNullable(projectRestService.getProjectManager(projectId).getOptionalSuccessObject())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ProjectUserResource::getUser)
+                .map(userId -> userId.equals(loggedInUserId))
+                .orElse(false);
+    }
+
+    private List<CompetitionDocumentResource> getCompetitionDocuments(long competitionId) {
+        return competitionRestService.getCompetitionById(competitionId)
+                .andOnSuccessReturn(CompetitionResource::getCompetitionDocuments)
+                .getSuccess();
     }
 }
