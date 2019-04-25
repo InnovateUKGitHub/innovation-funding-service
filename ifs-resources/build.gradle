@@ -9,8 +9,8 @@ dependencies {
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile project(':ifs-error-util')
 
-    testCompile "org.springframework.boot:spring-boot-starter-web:1.5.11.RELEASE"
-    testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.11.RELEASE'
+    testCompile "org.springframework.boot:spring-boot-starter-web:2.1.4.RELEASE"
+    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
 }
 
 configurations {
