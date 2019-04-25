@@ -8,7 +8,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 public enum ViabilityEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
-    ORGANISATION_IS_ACADEMIC("organisation-is-academic"),
+    VIABILITY_NOT_APPLICABLE("viability-not-applicable"),  // currently used for academic organisations and h2020 users
     VIABILITY_APPROVED("viability-approved");
 
     String event;
