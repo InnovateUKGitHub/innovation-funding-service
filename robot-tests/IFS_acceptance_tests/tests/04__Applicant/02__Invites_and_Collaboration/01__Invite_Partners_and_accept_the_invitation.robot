@@ -53,7 +53,7 @@ Application team page
     Then the user should see the element           jQuery = h1:contains("Application team")
     And the user should see the element            jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the lead applicant should have the correct org status
-    And the user should see the element            link = Application overview
+    And the user should see the element            link = Back to application overview
 
 Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
@@ -215,7 +215,7 @@ Parner can see the Application team
     Then the user should see the element     jQuery = .table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     And the user should see the element      jQuery = .table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     And the user should see the element      jQuery = .table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
-    And The user should see the element      link = Application overview
+    And The user should see the element      link = Back to application overview
     And The user should not see the element  link = Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation

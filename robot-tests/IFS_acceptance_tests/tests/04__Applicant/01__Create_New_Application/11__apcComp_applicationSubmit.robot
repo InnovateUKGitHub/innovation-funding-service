@@ -59,20 +59,20 @@ the lead applicant fills all the questions and marks as complete(APC)
 the applicant cannot add a collaborator to a single comp
     the user clicks the button/link      link = Application team
     the user should not see the element  link = Add a collaborator organisation
-    the user clicks the button/link      link = Application overview
+    the user clicks the button/link      link = Back to application overview
 
 the applicant sees single comp finance summary
     the user clicks the button/link      link = Finances overview
     the user should see the element      jQuery = .warning-alert:contains("You have not marked your finances as complete")
     the user should not see the element  jQuery = .finance-summary th[scope = "row"]:contains("Total")
-    the user clicks the button/link      link = Application overview
+    the user clicks the button/link      link = Back to application overview
 
 the applicant sees state aid information
     the user clicks the button/link      link = Your finances
     the user clicks the button/link      link = Your organisation
     the user should see the element      link = eligible for state aid
     the user clicks the button/link      link = Your finances
-    the user clicks the button/link      link = Application overview
+    the user clicks the button/link      link = Back to application overview
 
 Custom suite teardown
     Close browser and delete emails

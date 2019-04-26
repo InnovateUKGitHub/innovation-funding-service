@@ -56,7 +56,7 @@ Applicant Applies to Research leading Competition
     And The user clicks the button/link                   link = Your finances
     When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
     Then user is not able to submit his application as he exceeds research participation
-    And the user clicks the button/link                   link = Application overview
+    And the user clicks the button/link                   link = Back to application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition

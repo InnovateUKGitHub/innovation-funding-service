@@ -68,7 +68,7 @@ the user fills in the Application details
     the user clicks the button twice      css = label[for="application.resubmission-no"]
     the user should not see the element   link = Choose your innovation area
     The user clicks the button/link       css = button[name="mark_as_complete"]
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user selects research category from funding
@@ -86,7 +86,7 @@ the user marks the finances as complete
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
-    the user clicks the button/link  link = Application overview
+    the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
@@ -405,7 +405,7 @@ the user selects his organisation in Companies House
 the applicant completes Application Team
     the user clicks the button/link  link = Application team
     the user clicks the button/link  id = application-question-complete
-    the user clicks the button/link  link = Application overview
+    the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on companies house link
