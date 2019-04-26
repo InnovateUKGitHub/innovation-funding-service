@@ -61,18 +61,13 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    # conditionally deploy prototypes service
-    if $(isSysIntEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
-    fi
-
     # conditionally deploy zipkin
     if $(isPerfEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
         oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    watchSilStubAndPrototypesStatus
+    watchSilStubStatus
 
     upgradeSurvey
 
@@ -147,29 +142,20 @@ function forceReload {
         oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    # conditionally deploy prototypes service
-    if $(isSysIntEnvironment ${TARGET}); then
-        oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
-    fi
-
-    watchSilStubAndPrototypesStatus
+    watchSilStubStatus
 
     forceReloadSurvey
 
     forceReloadEuGrantRegistration
 }
 
-function watchSilStubAndPrototypesStatus {
+function watchSilStubStatus {
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         rolloutStatus sil-stub
     fi
 
-    # conditionally check prototypes service
-    if $(isSysIntEnvironment ${TARGET}); then
-        rolloutStatus prototypes-svc
-    fi
 }
 
 function rolloutStatus {
