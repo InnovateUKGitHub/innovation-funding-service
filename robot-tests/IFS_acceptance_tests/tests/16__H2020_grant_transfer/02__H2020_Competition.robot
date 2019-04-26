@@ -2,6 +2,8 @@
 Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-5247 - Application details page
+...
+...            IFS-5700 - Create new project team page to manage roles in project setup
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -61,10 +63,15 @@ Applicant user can complete an H2020 grant transfer
     When the user is able to complete Horizon 2020 Grant transfer application
     Then the user reads his email                         ${collaborator1_credentials["email"]}   Submitted application for your Horizon 2020 grant transfer of Project name   You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.
 
-
 Application validation checks
     Given the user starts an H2020 applcation
     Then the user is able to verify validation on each page
+
+An internal user is able to progress an H2020 grant transfer to project set up
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user   &{Comp_admin1_credentials}
+    Given the inernal user is able to progress an application to project set up
+
 
 *** Keywords ***
 Custom Suite Setup
@@ -76,6 +83,18 @@ Custom Suite Setup
     ${lastYear} =  get last year
     Set suite variable  ${lastYear}
     Connect to database  @{database}
+
+The inernal user is able to progress an application to project set up
+    the user clicks the button/link   link = H2020 Grant Transfer
+    the user should see the element   jQuery = h1:contains("Open")
+    the user clicks the button/link   link = Input and review funding decision
+    the user selects the checkbox     app-row-1
+    the user clicks the button/link   jQuery = button:contains("Successful")
+    the user goes back to the previous page
+    the user clicks the button/link   jQuery = button:contains("Manage funding notifications")
+    the user selects the checkbox     app-row-178
+    the user clicks the button/link   jQuery = button:contains("Write and send email")
+    the user clicks the button/link   jQuery = button:contains("Send email to all applicants")
 
 The user starts an H2020 applcation
    the user navigates to the page                  ${server}/competition/${competitionId}/overview
@@ -381,5 +400,5 @@ Validate the user is unable to submit an incomplete application
     Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
 
 Custom Suite Teardown
-    the user closes the browser
-    disconnect from database
+    #the user closes the browser
+    #disconnect from database
