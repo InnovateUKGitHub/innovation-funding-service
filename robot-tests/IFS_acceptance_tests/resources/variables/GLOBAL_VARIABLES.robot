@@ -205,6 +205,7 @@ ${too_large_pdf_validation_error}                  Please upload a smaller file
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}                     This field cannot be left blank.
 ${email_already_in_use}                            This email address is already in use.
+${enter_a_valid_name}                              Please enter a valid name.
 ${enter_a_first_name}                              Please enter a first name.
 ${enter_a_last_name}                               Please enter a last name.
 ${enter_a_valid_email}                             Please enter a valid email address.
