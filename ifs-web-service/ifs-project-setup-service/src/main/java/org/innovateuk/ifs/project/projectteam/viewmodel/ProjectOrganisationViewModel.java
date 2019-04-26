@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.viewmodel;
 
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -11,7 +9,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public class ProjectOrganisationViewModel {
 
-    private List<ProjectUserResource> users;
+    private List<ProjectOrganisationUserRowViewModel> users;
 
     private String orgName;
 
@@ -19,7 +17,7 @@ public class ProjectOrganisationViewModel {
 
     private boolean leadOrg;
 
-    public ProjectOrganisationViewModel(List<ProjectUserResource> users,
+    public ProjectOrganisationViewModel(List<ProjectOrganisationUserRowViewModel> users,
                                         String orgName,
                                         long orgId,
                                         boolean leadOrg) {
@@ -29,21 +27,21 @@ public class ProjectOrganisationViewModel {
         this.orgId = orgId;
     }
 
-    public ProjectUserResource getFinanceContact() {
+    public ProjectOrganisationUserRowViewModel getFinanceContact() {
         return simpleFindFirst(users,
-                               ProjectUserResource::isFinanceContact).orElse(null);
+                               ProjectOrganisationUserRowViewModel::isFinanceContact).orElse(null);
     }
 
-    public ProjectUserResource getProjectManager() {
+    public ProjectOrganisationUserRowViewModel getProjectManager() {
         return simpleFindFirst(users,
-                               ProjectUserResource::isProjectManager).orElse(null);
+                               ProjectOrganisationUserRowViewModel::isProjectManager).orElse(null);
     }
 
-    public List<ProjectUserResource> getUsers() {
+    public List<ProjectOrganisationUserRowViewModel> getUsers() {
         return users;
     }
 
-    public void setUsers(List<ProjectUserResource> users) {
+    public void setUsers(List<ProjectOrganisationUserRowViewModel> users) {
         this.users = users;
     }
 

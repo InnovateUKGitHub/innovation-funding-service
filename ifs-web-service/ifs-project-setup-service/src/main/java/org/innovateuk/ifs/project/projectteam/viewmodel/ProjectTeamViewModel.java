@@ -18,6 +18,7 @@ public class ProjectTeamViewModel {
     private ProjectOrganisationViewModel leadOrg;
     private ProjectUserResource projectManager;
     private boolean userLeadPartner;
+    private long loggedInUserId;
 
     private boolean monitoringOfficerAssigned;
     private boolean spendProfileGenerated;
@@ -32,6 +33,7 @@ public class ProjectTeamViewModel {
                                 ProjectOrganisationViewModel leadOrg,
                                 ProjectUserResource projectManager,
                                 boolean userLeadPartner,
+                                long loggedInUserId,
                                 boolean monitoringOfficerAssigned,
                                 boolean spendProfileGenerated,
                                 boolean grantOfferLetterGenerated,
@@ -45,6 +47,7 @@ public class ProjectTeamViewModel {
         this.leadOrg = leadOrg;
         this.projectManager = projectManager;
         this.userLeadPartner = userLeadPartner;
+        this.loggedInUserId = loggedInUserId;
         this.monitoringOfficerAssigned = monitoringOfficerAssigned;
         this.spendProfileGenerated = spendProfileGenerated;
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
@@ -77,6 +80,10 @@ public class ProjectTeamViewModel {
 
     public boolean isUserLeadPartner() {
         return userLeadPartner;
+    }
+
+    public long getLoggedInUserId() {
+        return loggedInUserId;
     }
 
     public boolean isReadOnly() {
