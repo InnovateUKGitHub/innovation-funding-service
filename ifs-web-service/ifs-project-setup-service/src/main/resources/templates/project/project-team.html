@@ -10,10 +10,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team',subTitle=${model.project.name},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <p class="govuk-body">The lead partner must choose a project manager who will be responsible for setting up the
             project. Each partner must provide a finance contact. We will contact the assigned person with any finance
@@ -34,7 +34,7 @@
                     class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-width-one-half">
                         <a th:unless="${model.grantOfferLetterGenerated}"
-                           th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}" class="govuk-link">Project manager</a>
+                           th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project manager</a>
                         <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-quarter"
