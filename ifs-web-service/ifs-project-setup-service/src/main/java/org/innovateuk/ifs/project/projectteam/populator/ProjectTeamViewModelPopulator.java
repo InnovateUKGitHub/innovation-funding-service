@@ -57,7 +57,7 @@ public class ProjectTeamViewModelPopulator {
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         ProjectUserResource loggedInProjectUser = simpleFindFirst(projectUsers,
-                                                                  u -> u.getId().equals(loggedInUser.getId())).get();
+                                                                  pu -> pu.getUser().equals(loggedInUser.getId())).get();
         OrganisationResource loggedInUserOrg = simpleFindFirst(projectOrganisations,
                                                                org -> org.getId().equals(loggedInProjectUser.getOrganisation())).get();
 
