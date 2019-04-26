@@ -21,10 +21,10 @@ dependencies {
 
     compile("org.springframework.ldap:spring-ldap-core")
     compile("org.springframework.security:spring-security-ldap")
-    compile group: 'org.springframework.data', name: 'spring-data-ldap', version: '2.1.6.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile("org.springframework.data:spring-data-ldap")
+    compile("org.springframework.boot:spring-boot-starter-security")
 
-    testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version: '2.3.2.RELEASE'
+    testCompile("org.springframework.ldap:spring-ldap-test")
 }
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
