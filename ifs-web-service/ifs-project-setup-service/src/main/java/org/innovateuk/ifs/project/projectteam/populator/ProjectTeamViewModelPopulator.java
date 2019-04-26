@@ -8,23 +8,18 @@ import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectOrganisationViewM
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Component
 public class ProjectTeamViewModelPopulator {
@@ -37,16 +32,6 @@ public class ProjectTeamViewModelPopulator {
 
     @Autowired
     private StatusService statusService;
-
-    @Autowired
-    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private PartnerOrganisationRestService partnerOrganisationService;
-
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
@@ -65,12 +50,11 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectOrganisationViewModel leadOrgModel = mapToProjectOrganisationViewModel(projectUsers, leadOrganisation, true);
         ProjectOrganisationViewModel loggedInUserOrgModel = mapToProjectOrganisationViewModel(projectUsers, loggedInUserOrg, isLead);
-        List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations
-                .stream()
-                .filter(org -> !org.getId().equals(leadOrganisation.getId()))
-                .map(org -> mapToProjectOrganisationViewModel(projectUsers, org, false))
-                .collect(Collectors.toList());
-
+        List<ProjectOrganisationViewModel> partnerOrgModels = simpleMap(projectOrganisations,
+                                                                        org -> mapToProjectOrganisationViewModel(projectUsers,
+                                                                                                                 org,
+                                                                                                                 org.equals(leadOrganisation)));
+        
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
@@ -101,6 +85,5 @@ public class ProjectTeamViewModelPopulator {
                                                                       user -> user.getOrganisation().equals(organisation.getId()));
         return new ProjectOrganisationViewModel(usersForOrganisation, organisation.getName(), organisation.getId(), isLead);
     }
-
 
 }
