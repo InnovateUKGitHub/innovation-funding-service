@@ -95,8 +95,6 @@ gulp.task('web-core:css', gulp.parallel('web-core:copy-css-autocomplete', 'web-c
     .pipe(sassLint({
       files: {
         ignore: [
-          '**/prototype.scss',
-          '**/prototype/**/*.scss',
           '**/layout/_gdsUpgrade.scss',
           '**/node_modules/**/*.scss'
         ]
