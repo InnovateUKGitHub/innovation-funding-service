@@ -74,7 +74,7 @@ public final class HttpUtils {
      * @param parameterMap
      * @return
      */
-    public static Map<String, String> processForMMYYYY(Map<String, String> parameterMap) {
+    private static Map<String, String> processForMMYYYY(Map<String, String> parameterMap) {
         Map<String, String> parametersThatNeedProcessing = simpleFilter(parameterMap, key -> key.endsWith(MM_YYYY_MONTH_APPEND) || key.endsWith(MM_YYYY_YEAR_APPEND));
         Map<String, Map<String, String>> parametersThatNeedProcessingGroupedByFormInput = simpleGroupBy(parametersThatNeedProcessing, key -> key.replace(MM_YYYY_MONTH_APPEND, "").replace(MM_YYYY_YEAR_APPEND, ""));
         Map<String, String> processed = simpleMapEntry(parametersThatNeedProcessingGroupedByFormInput, Entry::getKey,
