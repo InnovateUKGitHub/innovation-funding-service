@@ -20,7 +20,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +59,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeServiceMock.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "123", "456"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isOk());
 
         verify(financeServiceMock, times(1)).findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
@@ -69,23 +68,23 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void applicationFinanceControllerShouldReturnNotFoundOnMissingParams() throws Exception {
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/", "1"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/{applicationId}/", "1"))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void applicationFinanceControllerShouldReturnBadRequestOnWrongParamType() throws Exception {
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "1", "wrong"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/{applicationId}/{organisationId}", "1", "wrong"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "wrong", "1"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/{applicationId}/{organisationId}", "wrong", "1"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "wrong", "wrong"))
+        mockMvc.perform(get("/applicationfinance/find-by-application-organisation/{applicationId}/{organisationId}", "wrong", "wrong"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -94,7 +93,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeServiceMock.findApplicationFinanceByApplication(123L)).thenReturn(serviceSuccess(singletonList(applicationFinanceResource)));
 
-        mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "123"))
+        mockMvc.perform(get("/applicationfinance/find-by-application/{applicationId}", "123"))
                 .andExpect(status().isOk());
 
         verify(financeServiceMock, times(1)).findApplicationFinanceByApplication(123L);
@@ -103,14 +102,14 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void findByApplicationShouldReturnNotFoundOnMissingParams() throws Exception {
 
-        mockMvc.perform(get("/applicationfinance/findByApplication/"))
+        mockMvc.perform(get("/applicationfinance/find-by-application/"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void findByApplicationShouldReturnBadRequestOnWrongParamType() throws Exception {
 
-        mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "wrong"))
+        mockMvc.perform(get("/applicationfinance/find-by-application/{applicationId}", "wrong"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -153,7 +152,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeFileEntryServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
 
-        mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
+        mockMvc.perform(get("/applicationfinance/finance-document/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntry)));
     }
@@ -164,7 +163,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}/{organisationId}", "123", "456"))
+        mockMvc.perform(get("/applicationfinance/finance-details/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationFinanceResource)));
 
@@ -177,7 +176,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));
 
-        mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}", "123"))
+        mockMvc.perform(get("/applicationfinance/finance-details/{applicationId}", "123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationFinanceResources)));
 

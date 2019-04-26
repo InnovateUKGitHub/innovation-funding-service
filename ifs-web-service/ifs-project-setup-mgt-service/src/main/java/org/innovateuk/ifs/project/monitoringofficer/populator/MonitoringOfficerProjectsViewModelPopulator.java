@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignedProjectViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerProjectsViewModel;
@@ -22,7 +22,7 @@ public class MonitoringOfficerProjectsViewModelPopulator {
     }
 
     public MonitoringOfficerProjectsViewModel populate(long monitoringOfficerId) {
-        MonitoringOfficerResource projectMonitoringOfficerResource =
+        MonitoringOfficerAssignmentResource projectMonitoringOfficerResource =
                 projectMonitoringOfficerRestService.getProjectMonitoringOfficer(monitoringOfficerId).getSuccess();
 
         return new MonitoringOfficerProjectsViewModel(

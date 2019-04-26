@@ -122,7 +122,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         ProjectFinanceResource expectedResult = newProjectFinanceResource().build();
 
-        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class, expectedResult);
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/finance-details", ProjectFinanceResource.class, expectedResult);
 
         RestResult<ProjectFinanceResource> result = service.getProjectFinance(projectId, organisationId);
 

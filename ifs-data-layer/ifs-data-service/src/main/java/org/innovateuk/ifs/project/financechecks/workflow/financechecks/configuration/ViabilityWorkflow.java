@@ -46,7 +46,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                     .and()
                 .withExternal()
                     .source(REVIEW)
-                    .event(ORGANISATION_IS_ACADEMIC)
+                    .event(VIABILITY_NOT_APPLICABLE)
                     .target(NOT_APPLICABLE)
                     .and()
                 .withExternal()

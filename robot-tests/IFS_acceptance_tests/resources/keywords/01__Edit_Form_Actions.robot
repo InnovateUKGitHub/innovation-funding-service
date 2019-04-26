@@ -85,6 +85,11 @@ The user enters multiple strings into a text field
     Set Focus To Element    link=GOV.UK
     Wait for autosave
 
+The user should see the enabled element
+    [Arguments]    ${text_field}
+    Wait Until Element Is Visible Without Screenshots   ${text_field}
+    Element Should Be Enabled                           ${text_field}
+
 # DropDown
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}

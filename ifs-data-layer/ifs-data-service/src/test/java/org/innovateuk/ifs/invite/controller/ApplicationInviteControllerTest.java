@@ -87,12 +87,12 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
+        mockMvc.perform(post("/invite/create-application-invites/" + applicationId, "json")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isCreated())
-                .andDo(document("invite/createApplicationInvites/" + applicationId));
+                .andDo(document("invite/create-application-invites/" + applicationId));
 
         verify(applicationInviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }
@@ -115,7 +115,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
-        mockMvc.perform(post("/invite/createApplicationInvites/"+applicationId, "json")
+        mockMvc.perform(post("/invite/create-application-invites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isBadRequest());
@@ -129,7 +129,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}", hash, userId))
+        mockMvc.perform(put("/invite/accept-invite/{hash}/{userId}", hash, userId))
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.empty());
@@ -144,7 +144,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}/{organisationId}", hash, userId, organisationId))
+        mockMvc.perform(put("/invite/accept-invite/{hash}/{userId}/{organisationId}", hash, userId, organisationId))
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.of(organisationId));

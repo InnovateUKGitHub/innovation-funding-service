@@ -69,12 +69,12 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testOrganisationIsAcademic() {
+    public void testViabilityNotApplicable() {
 
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, internalUser)),
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityEvent.ORGANISATION_IS_ACADEMIC);
+                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityEvent.VIABILITY_NOT_APPLICABLE);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall,

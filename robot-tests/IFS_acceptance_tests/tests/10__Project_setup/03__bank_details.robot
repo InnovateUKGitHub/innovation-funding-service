@@ -203,7 +203,7 @@ Verify bank details blank submission page validation for non-lead partner
     # Added this wait so to give extra execution time
 
 The non-lead partner navigates to the bank details
-    The user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
+    The user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Application_Title}")
     The user clicks the button/link           link = Bank details
 
 The internal user is able to see updated statuses
@@ -236,7 +236,7 @@ The academic user is able to enter bank details
     the user clicks the button/link                  id = submit-bank-details
 
 The academic user navigates to the bank details page
-    the user clicks the button/link                    jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
+    the user clicks the button/link                    jQuery = .projects-in-setup a:contains("${Grade_Crossing_Application_Title}")
     the user should see the element                    jQuery = li.require-action:contains("Bank details")
     the user clicks the button/link                    link = View the status of partners
     the user should be redirected to the correct page  ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
@@ -326,7 +326,7 @@ Verify bank details blank submission page validation
     the user should see a summary error               The town cannot be blank.
 
 An applicant navigates to the Bank details page
-    the user clicks the button/link     link = ${Grade_Crossing_Applicaiton_Titile}
+    the user clicks the button/link     link = ${Grade_Crossing_Application_Title}
     the user should see the element     css = ul li.require-action:nth-child(4)
     the user clicks the button/link     link = View the status of partners
     the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status

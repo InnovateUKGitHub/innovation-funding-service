@@ -26,7 +26,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class);
+        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/organisation/" + organisationId + "/finance-details", ProjectFinanceResource.class);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/financeTotals/" + applicationId, projectFinanceResourceListType());
+        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/finance-totals/" + applicationId, projectFinanceResourceListType());
     }
 
     @Override

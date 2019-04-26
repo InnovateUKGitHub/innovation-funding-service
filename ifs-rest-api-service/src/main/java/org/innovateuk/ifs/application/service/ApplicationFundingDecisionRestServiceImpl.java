@@ -26,6 +26,6 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
     }
 
     public RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource) {
-        return postWithRestResult(applicationFundingDecisionRestURL + "/sendNotifications", fundingNotificationResource, Void.class);
+        return postWithRestResult(applicationFundingDecisionRestURL + "/send-notifications", fundingNotificationResource, Void.class);
     }
 }

@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.project.documents.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
+import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
+import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
-import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
-import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
-import org.innovateuk.ifs.project.documents.viewmodel.DocumentViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -43,9 +43,15 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
     public void viewAllDocuments() throws Exception {
 
         long projectId = 1L;
-        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(18L, 19L, projectId, "Project 12", emptyList());
+        long applicationId = 2L;
+        long compeititonId = 3L;
 
-        when(populator.populateAllDocuments(projectId)).thenReturn(viewModel);
+        AllDocumentsViewModel viewModel =
+                new AllDocumentsViewModel(compeititonId, applicationId, projectId,
+                        "Project 12", emptyList(), true);
+
+
+        when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
                 .andExpect(view().name("project/documents-all"))
                 .andReturn();
@@ -59,11 +65,13 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         long projectId = 1L;
         long documentConfigId = 2L;
+        long applicationId = 3L;
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", 19L,
-                documentConfigId, "Risk Register", null, DocumentStatus.UNSET, "");
+        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
+                documentConfigId, "Risk Register", "Guidance for Risk Register",
+                null, DocumentStatus.UNSET, "",true);
 
-        when(populator.populateViewDocument(projectId, documentConfigId)).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andReturn();
@@ -134,6 +142,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         long projectId = 1L;
         long documentConfigId = 2L;
+        long applicationId = 3L;
 
         when(documentsRestService.documentDecision(projectId, documentConfigId, new ProjectDocumentDecision(true, null))).
                 thenReturn(restFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED));
@@ -141,10 +150,11 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         FileEntryResource fileEntryDetails = newFileEntryResource().withName("Risk Register").build();
         FileDetailsViewModel fileDetailsViewModel = new FileDetailsViewModel(fileEntryDetails);
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", 19L,
-                documentConfigId, "Risk Register", fileDetailsViewModel, DocumentStatus.APPROVED, "");
+        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
+                documentConfigId, "Risk Register", "Guidance for Risk Register",
+                fileDetailsViewModel, DocumentStatus.UNSET, "",true);
 
-        when(populator.populateViewDocument(projectId, documentConfigId)).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
