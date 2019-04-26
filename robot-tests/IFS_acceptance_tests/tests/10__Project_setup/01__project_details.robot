@@ -144,40 +144,13 @@ Option to invite a project manager
     Then the user select exisitng user as project manager
     [Teardown]    the user selects the radio button    projectManager    new
 
-Inviting project manager server side validations
-    [Documentation]    INFUND-3483, INFUND-9062
+Inviting project manager and validation checks
+    [Documentation]    INFUND-3483 INFUND-9062  INFUND-6882
     [Tags]
-    Given the user should see server side validations triggered correctly   invite-project-manager
+    Given the user should see client side validations triggered correctly   name-project-manager  email-project-manager  invite-project-manager
+    And the user should see server side validations triggered correctly     invite-project-manager
     Then the lead partner cannot invite himself as project manager/finance contact  name-project-manager  email-project-manager  invite-project-manager
-
-#Inviting project manager client side validations
-   # [Documentation]    INFUND-3483, INFUND-6882
-   # [Tags]
-   # When the user enters text to a text field            id = name-project-manager    John Smith
-   # And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-   # Then the user should not see the element             jQuery = .govuk-error-message:contains("${enter_a_valid_name}")
-   # When the user enters text to a text field            id = email-project-manager    test
-   # And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-   # Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
-   # And the user should see a field error                ${enter_a_valid_email}
-   # When the user selects the radio button               projectManager    projectManager1
-   # Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
-   # And the user should not see the element              jQuery = .govuk-error-message:contains("${enter_a_valid_name}")
-   # When the user selects the radio button               projectManager    new
-   # And the user enters text to a text field             id = email-project-manager    test@example.com
-   # And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-  #  Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
-  #  And the user should not see the element              jQuery = .govuk-error-message:contains("${enter_a_valid_name}")
-  #  And the user should not see an error in the page
-
-Partner invites a project manager
-    [Documentation]    INFUND-3483  INFUND-6882
-    [Tags]  HappyPath
-    Given the user enters text to a text field                id = name-project-manager    John Smith
-    And the user enters text to a text field                  id = email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
-    And the user should not see an error in the page
-    When the user clicks the button/link                      id = invite-project-manager
-    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}
+    And the user invites project manager/finance contact   name-project-manager  email-project-manager  ${test_mailbox_one}+invitedprojectmanager@gmail.com  invite-project-manager
 
 Lead Applicant resends the invite to the Project manager
     [Documentation]  IFS-2642
@@ -199,9 +172,7 @@ Invited project manager registration flow
     Given the user selects the checkbox                 termsAndConditions
     And the invited user fills the create account form  Bob  Jones
     And the user cannot see a validation error in the page
-    When the invited user signs in                      ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Bob  Jones
-    Then the user should see the element                jQuery = .progress-list:contains("${PS_PD_Application_Title}")
-    And the user should not see the element             css = .my-applications .in-progress  #applications in progress section
+    When
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
@@ -317,34 +288,13 @@ Option to invite a finance contact
     Then the user should not see the element         id = invite-finance-contact    # testing that the element disappears when the option is deselected
     [Teardown]    the user selects the radio button  financeContact    new
 
-Inviting finance contact server side validations
+Inviting finance contact and validations checks
     [Documentation]    INFUND-3483, INFUND-9062
     [Tags]
-    When the user should see server side validations triggered correctly    invite-finance-contact
+    Given the user should see client side validations triggered correctly   name-finance-contact  email-finance-contact  invite-finance-contact
+    And the user should see server side validations triggered correctly    invite-finance-contact
     Then the lead partner cannot invite himself as project manager/finance contact  name-finance-contact  email-finance-contact  invite-finance-contact
-
-Inviting finance contact client side validations
-    [Documentation]    INFUND-3483
-    [Tags]
-    Given the user enters text to a text field            id = name-finance-contact    John Smith
-    #And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-    #Then the user should not see the element             jQuery = .govuk-error-message:contains("${enter_a_valid_name}")
-    And the user enters text to a text field            id = email-finance-contact    test
-    #And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-   # Then the user should see a field error               ${enter_a_valid_email}
-    And the user enters text to a text field            id = email-finance-contact    test@example.com
-    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-   # Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter a valid email address.")
-   # And the user should not see the element              jQuery = .govuk-error-message:contains("${enter_a_valid_name}")
-    Then the user should not see an error in the page
-
-Partner invites a finance contact
-    [Documentation]    INFUND-3579
-    [Tags]  HappyPath
-    Given the user enters text to a text field                id = name-finance-contact    John Smith
-    And the user enters text to a text field                  id = email-finance-contact  ${invitedFinanceContact}
-    And the user clicks the button/link                       id = invite-finance-contact
-    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}
+    And the user invites project manager/finance contact  name-finance-contact  email-finance-contact  ${invitedFinanceContact}  invite-finance-contact
 
 Lead applicant resends the invite to the Finance contact
     [Documentation]  IFS-2642
@@ -692,6 +642,14 @@ the user select exisitng user as project manager
     the user selects the radio button             projectManager    projectManager1
     the user should not see the element           id = project-manager    # testing that the element disappears when the option is deselected
 
+the user should see client side validations triggered correctly
+    [Arguments]  ${option}  ${name_id}  ${email_id}
+    the user enters text to a text field        id = ${name_id}   ${empty}
+    the user enters text to a text field        id = ${email_id}  ${empty}
+    the user clicks the button/link             id = ${option}
+    the user should see a field error           ${enter_a_valid_name}
+    the user should see a field error           Please enter an email address.
+
 the user should see server side validations triggered correctly
     [Arguments]  ${option}
     the user clicks the button/link             id = ${option}
@@ -700,16 +658,29 @@ the user should see server side validations triggered correctly
 
 the lead partner cannot invite himself as project manager/finance contact
     [Arguments]    ${name_id}  ${email_id}  ${invite_button}
-    the user enters text to a text field             id = ${name_id}    Steve Smith
+    the user enters text to a text field         id = ${name_id}    Steve Smith
     the user enters text to a text field         id = ${email_id}    ${lead_applicant}
     the user clicks the button/link              id = ${invite_button}
-    the user should see a field error           You cannot invite yourself to the project.
+    the user should see a field error            You cannot invite yourself to the project.
+
+the user invites project manager/finance contact
+    [Arguments]    ${name_id}  ${email_id}  ${user_email}  ${invite_button}
+    the user enters text to a text field                      id = ${name_id}    John Smith
+    And the user enters text to a text field                  id = ${email_id}    ${user_email}
+    And the user should not see an error in the page
+    When the user clicks the button/link                      id = ${invite_button}
+    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}
 
 the user should see validations triggered correctly
     the user should see a field and summary error   ${enter_a_first_name}
     the user should see a field and summary error   ${enter_a_last_name}
     the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
     the user should see a field and summary error   Please enter your password.
+
+the invited project manager logs in and check the project on dashboard
+    the invited user signs in                    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Bob  Jones
+    the user should see the element              jQuery = .progress-list:contains("${PS_PD_Application_Title}")
+    the user should not see the element          css = .my-applications .in-progress  #applications in progress section
 
 Custom suite teardown
     Close browser and delete emails
