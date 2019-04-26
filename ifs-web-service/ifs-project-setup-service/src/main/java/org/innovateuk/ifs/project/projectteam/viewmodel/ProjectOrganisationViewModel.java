@@ -15,14 +15,18 @@ public class ProjectOrganisationViewModel {
 
     private String orgName;
 
+    private long orgId;
+
     private boolean leadOrg;
 
     public ProjectOrganisationViewModel(List<ProjectUserResource> users,
                                         String orgName,
+                                        long orgId,
                                         boolean leadOrg) {
         this.users = users;
         this.orgName = orgName;
         this.leadOrg = leadOrg;
+        this.orgId = orgId;
     }
 
     public ProjectUserResource getFinanceContact() {
@@ -57,5 +61,13 @@ public class ProjectOrganisationViewModel {
 
     public void setLeadOrg(boolean leadOrg) {
         this.leadOrg = leadOrg;
+    }
+
+    public long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(long orgId) {
+        this.orgId = orgId;
     }
 }

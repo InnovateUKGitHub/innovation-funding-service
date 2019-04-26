@@ -99,7 +99,7 @@ public class ProjectTeamViewModelPopulator {
     private ProjectOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, OrganisationResource organisation, boolean isLead) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
                                                                       user -> user.getOrganisation().equals(organisation.getId()));
-        return new ProjectOrganisationViewModel(usersForOrganisation, organisation.getName(), isLead);
+        return new ProjectOrganisationViewModel(usersForOrganisation, organisation.getName(), organisation.getId(), isLead);
     }
 
 
