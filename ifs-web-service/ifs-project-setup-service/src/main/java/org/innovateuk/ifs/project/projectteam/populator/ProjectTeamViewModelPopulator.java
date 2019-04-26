@@ -99,19 +99,30 @@ public class ProjectTeamViewModelPopulator {
 
     private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation) {
 
-        return usersForOrganisation.stream()
-                .map(pu -> {
-                    boolean duplicateExists = usersForOrganisation.stream()
-                            .filter(u -> u.getUser().equals(pu.getUser()))
-                            .count() > 1;
-
-                    return new ProjectOrganisationUserRowViewModel(pu.getEmail(),
-                                                    pu.getUserName(),
-                                                    pu.getUser(),
-                                                    duplicateExists || pu.isProjectManager(),
-                                                    duplicateExists || pu.isFinanceContact());
-                })
+        List<ProjectOrganisationUserRowViewModel> partnerUsers = usersForOrganisation.stream()
+                .filter(pu -> !(pu.isProjectManager() || pu.isFinanceContact()))
+                .map(pu -> new ProjectOrganisationUserRowViewModel(pu.getEmail(),
+                                                                   pu.getUserName(),
+                                                                   pu.getUser(),
+                                                                   false,
+                                                                   false))
                 .distinct()
                 .collect(Collectors.toList());
+
+        Optional<ProjectUserResource> financeContact = simpleFindFirst(usersForOrganisation,
+                                                                       ProjectUserResource::isFinanceContact);
+
+        financeContact.ifPresent(fc ->
+            simpleFindFirst(partnerUsers,
+                            user -> user.getUserId() == fc.getUser()).get().setFinanceContact(true));
+
+        Optional<ProjectUserResource> projectManageer = simpleFindFirst(usersForOrganisation,
+                                                                       ProjectUserResource::isProjectManager);
+
+        projectManageer.ifPresent(pm ->
+                                         simpleFindFirst(partnerUsers,
+                                                         user -> user.getUserId() == pm.getUser()).get().setProjectManager(true));
+
+        return partnerUsers;
     }
 }

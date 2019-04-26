@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.project.projectteam.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class ProjectOrganisationUserRowViewModel {
 
     private static final String PROJECT_MANAGER_ROLE_NAME = "Project manager";
     private static final String FINANCE_CONTACT_ROLE_NAME = "Finance contact";
-    private static final String PARTNER_ROLE_NAME = "Partner";
+    private static final String PARTNER_ROLE_NAME = "-";
     private final String email;
     private final String name;
     private final long userId;
-    private final boolean isProjectManager;
-    private final boolean isFinanceContact;
+    private boolean isProjectManager;
+    private boolean isFinanceContact;
 
     public ProjectOrganisationUserRowViewModel(String email,
                                                String name,
@@ -39,8 +42,16 @@ public class ProjectOrganisationUserRowViewModel {
         return isFinanceContact;
     }
 
+    public void setFinanceContact(boolean isFinanceContact) {
+        this.isFinanceContact = isFinanceContact;
+    }
+
     public boolean isProjectManager() {
         return isProjectManager;
+    }
+
+    public void setProjectManager(boolean isProjectManager) {
+        this.isProjectManager = isProjectManager;
     }
 
     public String getRolesNames() {
@@ -52,4 +63,34 @@ public class ProjectOrganisationUserRowViewModel {
         return isFinanceContact?
                 FINANCE_CONTACT_ROLE_NAME : PARTNER_ROLE_NAME;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectOrganisationUserRowViewModel that = (ProjectOrganisationUserRowViewModel) o;
+
+        return new EqualsBuilder()
+                .append(email, that.email)
+                .append(name, that.name)
+                .append(userId, that.userId)
+                .append(isFinanceContact, that.isFinanceContact)
+                .append(isProjectManager, that.isProjectManager)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(email)
+                .append(name)
+                .append(userId)
+                .append(isFinanceContact)
+                .append(isProjectManager)
+                .toHashCode();
+    }
+
+
 }
