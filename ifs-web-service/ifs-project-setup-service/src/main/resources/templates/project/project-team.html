@@ -20,76 +20,96 @@
             queries.</p>
         <p class="govuk-body">Everyone below can view all of project setup. If you add a new person they will show as
             pending until they register for the website. Once they register you can assign them a role.</p>
-
         <table class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span></th>
+                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Role</span></th>
                     <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Name</span></th>
-                    <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
+                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Status</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr th:if="${model.userLeadPartner}"
                     class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-width-one-half">
+                    <td class="govuk-table__cell govuk-!-width-one-third">
                         <a th:unless="${model.grantOfferLetterGenerated}"
                            th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project manager</a>
                         <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-quarter"
-                        th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
+                    <td class="govuk-table__cell govuk-!-width-one-third"
+                        th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-quarter govuk-table__cell--numeric">
+                    <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
                         <strong th:if="${model.projectManager == null}" class="incomplete">Incomplete</strong>
                         <strong th:unless="${model.projectManager == null}" class="complete">Complete</strong>
                     </td>
                 </tr>
-                <!--<tr class="govuk-table__row">-->
-                    <!--<td class="govuk-table__cell">-->
-                        <!--<a th:href="@{/project/{id}/details/finance-contact?organisation={organisationId}(id=${model.project.getId()},organisationId=${organisation.id})}" class="govuk-link">Your finance contact</a>-->
-                    <!--</td>-->
-                    <!--<td class="govuk-table__cell"-->
-                        <!--th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id) != null ? model.getFinanceContactForPartnerOrganisation(organisation.id).userName : '-'}">-->
-                    <!--</td>-->
-                    <!--<td class="govuk-table__cell govuk-table__cell&#45;&#45;numeric">-->
-                        <!--<strong th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="incomplete">Incomplete</strong>-->
-                        <!--<strong th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="complete">Complete</strong>-->
-                    <!--</td>-->
-                <!--</tr>-->
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-width-one-third">
+                        <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}" class="govuk-link">Your finance contact</a>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-width-one-third"
+                        th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
+                    </td>
+                    <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                        <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}" class="incomplete">Incomplete</strong>
+                        <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}" class="complete">Complete</strong>
+                    </td>
+                </tr>
             </tbody>
         </table>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+            <th:block th:text="${model.loggedInUserOrg.orgName}"></th:block>
+            <th:block th:if="${model.loggedInUserOrg.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
+        </h2>
+        <table class="govuk-table govuk-!-margin-bottom-2">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Name</th>
+                <th scope="col" class="govuk-table__header">Role</th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body govuk-!-margin-bottom-2">
+            <tr th:each="user : ${model.loggedInUserOrg.users}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
+                <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                    <a th:unless="${model.loggedInUserId == user.userId and !user.isFinanceContact() and !user.isProjectManager()}"
+                       href="/" class="govuk-link">Remove</a>
+                    <!--<a th:unless="${model.loggedInUserId == user.userId and model.user.isFinanceContact() and model.user.isProjectManager()}"-->
+                       <!--href="/" class="govuk-link">Remove</a>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="govuk-body"><a href="/" class="govuk-link">Add team member</a></p>
 
-        <th:block th:each="organisation: ${model.organisations}">
+        <th:block th:each="organisation: ${model.partnerOrgs}"
+                  th:unless="${organisation.orgName.equals(model.loggedInUserOrg.orgName)}">
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                <th:block th:text="${organisation.name}"></th:block>
-                <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}">(Lead)</th:block>
+                <th:block th:text="${organisation.orgName}"></th:block>
+                <th:block th:if="${organisation.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
             </h2>
-            <table th:classappend="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated} ? 'govuk-!-margin-bottom-2'"
-                   class="govuk-table">
+            <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header larger-cols">Name</th>
                         <th scope="col" class="govuk-table__header">Role</th>
-                        <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body govuk-!-margin-bottom-2">
-                    <tr th:each="applicant : ${organisation.applicants}"
+                    <tr th:each="user : ${organisation.users}"
                          class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-half" th:text="${applicant.name}"></td>
-                        <td class="govuk-table__cell govuk-!-width-one-quarter">-</td>
-                        <td class="govuk-table__cell govuk-!-width-one-quarter govuk-table__cell--numeric">
-                            <a href="/" class="govuk-link">Remove</a>
-                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                        <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
                     </tr>
                 </tbody>
             </table>
-            <p th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}"
-               class="govuk-body"><a href="/" class="govuk-link">+ Add team member</a></p>
         </th:block>
 
-        <a th:href="@{/project/{id}(id=${model.project.getId()})}" class="button-secondary">Return to setup your project</a>
+        <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
