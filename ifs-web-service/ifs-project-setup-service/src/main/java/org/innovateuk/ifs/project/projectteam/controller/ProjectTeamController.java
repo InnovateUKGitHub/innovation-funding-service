@@ -19,14 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/project")
 public class ProjectTeamController {
 
-    private final ProjectTeamViewModelPopulator projectTeamPopulator;
+    private ProjectTeamViewModelPopulator projectTeamPopulator;
+
+    ProjectTeamController() {}
 
     @Autowired
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator) {
         this.projectTeamPopulator = projectTeamPopulator;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@PathVariable("projectId") final long projectId,
                                   Model model,

@@ -16,7 +16,7 @@
            scheme="https" secure="true" SSLEnabled="true"
            SSLCertificateFile="/etc/tomcat8/certs/server.crt"
            SSLCertificateKeyFile="/etc/tomcat8/certs/server.key"
-           SSLVerifyClient="optionalNoCA" SSLProtocol="all"
+           certificateVerification="optionalNoCA" SSLProtocol="all"
     />
 
     <Engine name="Catalina" defaultHost="localhost">
