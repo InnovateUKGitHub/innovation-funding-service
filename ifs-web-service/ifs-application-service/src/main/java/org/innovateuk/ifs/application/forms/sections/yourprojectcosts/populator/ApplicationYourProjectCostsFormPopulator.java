@@ -4,7 +4,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +17,6 @@ public class ApplicationYourProjectCostsFormPopulator extends AbstractYourProjec
 
     @Autowired
     private OverheadFileRestService overheadFileRestService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Override
     protected BaseFinanceResource getFinanceResource(long applicationId, long organisationId) {

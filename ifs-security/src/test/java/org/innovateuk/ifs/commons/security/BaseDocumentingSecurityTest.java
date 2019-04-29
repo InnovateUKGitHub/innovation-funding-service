@@ -9,7 +9,6 @@ import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.ProxyUtils;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.After;
 import org.junit.Before;

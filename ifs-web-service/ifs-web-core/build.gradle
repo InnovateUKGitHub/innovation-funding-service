@@ -41,7 +41,7 @@ dependencies {
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "com.google.guava:guava:22.0"
+    compile "com.google.guava:guava:27.1-jre"
 
     compile "org.apache.httpcomponents:httpclient:4.5.1"
     compile "org.apache.httpcomponents:httpasyncclient:4.1.1"

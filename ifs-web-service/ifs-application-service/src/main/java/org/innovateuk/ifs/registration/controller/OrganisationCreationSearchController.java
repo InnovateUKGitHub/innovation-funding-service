@@ -153,10 +153,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
+        String key = String.format("registration.%s.%s", orgTypeEnum.toString(), textKey);
         try {
-            return messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
+            return messageSource.getMessage(key, null, locale);
         } catch (NoSuchMessageException e) {
-            LOG.error("unable to get message", e);
+            LOG.error("unable to get message for key: " + key + " and local: " + locale);
             return messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
     }
