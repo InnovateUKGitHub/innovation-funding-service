@@ -103,7 +103,7 @@ Lead partner can see the project setup page
     [Setup]    log in as a different user           &{lead_applicant_credentials}
     Given the user navigates to the page             ${Project_In_Setup_Page}
     Then the user should see the project setup stages
-    And the user checks for project detail status on team status page   Empire Ltd
+    And the user checks for project detail status on team status page   ${EMPIRE_LTD_NAME}
 
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
