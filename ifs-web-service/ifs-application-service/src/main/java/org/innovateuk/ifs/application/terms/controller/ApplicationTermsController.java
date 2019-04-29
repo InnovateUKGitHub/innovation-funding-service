@@ -33,8 +33,10 @@ public class ApplicationTermsController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
+        model.addAttribute("applicationId", applicationId);
         model.addAttribute("template", competition.getTermsAndConditions().getTemplate());
         model.addAttribute("collaborative", application.isCollaborativeProject());
+
         return "application/terms-and-conditions";
     }
 }

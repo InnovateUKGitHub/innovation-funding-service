@@ -58,6 +58,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
 
         mockMvc.perform(get("/application/{applicationId}/terms-and-conditions", application.getId()))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("applicationId", application.getId()))
                 .andExpect(model().attribute("template", grantTermsAndConditions.getTemplate()))
                 .andExpect(model().attribute("collaborative", collaborative))
                 .andExpect(view().name("application/terms-and-conditions"));

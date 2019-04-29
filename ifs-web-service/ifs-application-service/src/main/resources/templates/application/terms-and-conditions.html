@@ -10,6 +10,10 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
 
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your funding',linkClass='link-back',
+                       linkUrl=@{/application/{applicationId}/form/FUNDING_FINANCES(applicationId=${applicationId})}" />
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:replace="competition/info/__${template}__ :: main/th:block[0] "/>
 
