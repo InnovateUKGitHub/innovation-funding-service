@@ -1,5 +1,5 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
-buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
+buildDocker.dependsOn ":docker:openjdk:buildDocker"
 
 buildscript {
     repositories { jcenter() }

@@ -120,7 +120,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
 
             ofNullable(euGrantTransferResource.getProjectEndDate()).ifPresent(endDate -> {
-                long duration = Period.between(horizon2020StartDate, endDate).getMonths();
+                long duration = Period.between(horizon2020StartDate, endDate).toTotalMonths();
                 domain.getApplication().setDurationInMonths(max(duration, 1L));
                 domain.getApplication().setStartDate(horizon2020StartDate);
             });

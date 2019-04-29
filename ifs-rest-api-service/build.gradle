@@ -33,12 +33,11 @@ artifacts {
 
 dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-hystrix:1.4.4.RELEASE')
-    compile "org.apache.httpcomponents:httpclient:4.5.1"
     compile project(':ifs-resources')
     compile project(':ifs-rest-util')
     compile project(':ifs-commons')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile "org.springframework:spring-test:4.3.15.RELEASE"
+    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
 
 }

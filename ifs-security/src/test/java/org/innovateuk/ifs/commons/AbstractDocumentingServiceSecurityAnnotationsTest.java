@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.PermissionRulesClassResult.fromClassAndPermissionMethods;
-import static org.innovateuk.ifs.commons.ProxyUtils.allUnwrappedComponentsWithClassAnnotations;
-import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.allUnwrappedComponentsWithClassAnnotations;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.unwrapProxies;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;

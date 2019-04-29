@@ -19,7 +19,7 @@ dependencies {
     }
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.4.1"
+        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.3"
     }
 
     compile "org.springframework.boot:spring-boot-starter-actuator"
