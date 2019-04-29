@@ -37,7 +37,7 @@
                         <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-third"
-                        th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
+                        th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
                         <strong th:if="${model.projectManager == null}" class="incomplete">Incomplete</strong>
@@ -49,7 +49,7 @@
                         <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}" class="govuk-link">Your finance contact</a>
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-third"
-                        th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
+                        th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().userName : '-'}">
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
                         <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}" class="incomplete">Incomplete</strong>
@@ -73,7 +73,7 @@
             <tbody class="govuk-table__body govuk-!-margin-bottom-2">
             <tr th:each="user : ${model.loggedInUserOrg.users}"
                 class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.userName}"></td>
                 <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
                 <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
                     <a th:unless="${model.loggedInUserId == user.userId or user.isFinanceContact() or user.isProjectManager()}"
@@ -100,7 +100,7 @@
                 <tbody class="govuk-table__body govuk-!-margin-bottom-2">
                     <tr th:each="user : ${organisation.users}"
                          class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.userName}"></td>
                         <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
                     </tr>
                 </tbody>
