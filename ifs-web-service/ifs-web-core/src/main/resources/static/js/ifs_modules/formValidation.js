@@ -649,6 +649,9 @@ IFS.core.formValidation = (function () {
             valid = false
           }
         }
+      } else if (errorSummary.length) {
+        IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
+        valid = false
       } else if (empty && enabled) {
         field.trigger('ifsAutosave')
         if (!required) {
@@ -658,9 +661,6 @@ IFS.core.formValidation = (function () {
       } else if ((filledOut || fieldsVisited) && enabled) {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         allFields.attr({'data-date': ''})
-        valid = false
-      } else if (errorSummary.length) {
-        IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         valid = false
       } else {
         valid = false
