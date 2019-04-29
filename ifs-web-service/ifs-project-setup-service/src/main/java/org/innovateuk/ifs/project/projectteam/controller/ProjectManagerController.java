@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 
-import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,27 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This controller will handle all requests that are related to the project team.
+ * This controller will handle all requests that are related to the project manager.
  */
-
 @Controller
 @RequestMapping("/project")
-public class ProjectTeamController {
-
-    private final ProjectTeamViewModelPopulator projectTeamPopulator;
-
-    @Autowired
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator) {
-        this.projectTeamPopulator = projectTeamPopulator;
-    }
+public class ProjectManagerController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/team")
+    @GetMapping("/{projectId}/team/project-manager")
     public String viewProjectTeam(@PathVariable("projectId") final long projectId,
                                   Model model,
                                   UserResource loggedInUser) {
-        model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser));
-        return "project/team/project-team";
+        return "project/team/project-manager";
     }
-
 }
