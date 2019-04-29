@@ -106,5 +106,16 @@ public class ProjectTeamViewModel {
         return projectManager;
     }
 
+    public ProjectTeamViewModel addTeamMember(long addTeamMemberOrganisation) {
+        if (loggedInUserOrg.getOrgId() == addTeamMemberOrganisation) {
+            loggedInUserOrg.setAddTeamMember(true);
+            return this;
+        }
+        partnerOrgs.stream()
+                .filter(partner -> partner.getOrgId() == addTeamMemberOrganisation)
+                .findAny()
+                .ifPresent(partner -> partner.setAddTeamMember(true));
+        return this;
+    }
 }
 

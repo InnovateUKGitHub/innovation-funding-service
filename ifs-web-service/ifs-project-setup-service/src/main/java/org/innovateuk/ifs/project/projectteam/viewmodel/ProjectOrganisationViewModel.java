@@ -17,6 +17,8 @@ public class ProjectOrganisationViewModel {
 
     private boolean leadOrg;
 
+    private boolean addTeamMember;
+
     public ProjectOrganisationViewModel(List<ProjectOrganisationUserRowViewModel> users,
                                         String orgName,
                                         long orgId,
@@ -25,6 +27,7 @@ public class ProjectOrganisationViewModel {
         this.orgName = orgName;
         this.leadOrg = leadOrg;
         this.orgId = orgId;
+        this.addTeamMember = false;
     }
 
     public ProjectOrganisationUserRowViewModel getFinanceContact() {
@@ -67,5 +70,13 @@ public class ProjectOrganisationViewModel {
 
     public void setOrgId(long orgId) {
         this.orgId = orgId;
+    }
+
+    public boolean isAddTeamMember() {
+        return addTeamMember;
+    }
+
+    public void setAddTeamMember(boolean addTeamMember) {
+        this.addTeamMember = addTeamMember;
     }
 }

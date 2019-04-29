@@ -58,56 +58,93 @@
                 </tr>
             </tbody>
         </table>
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-            <th:block th:text="${model.loggedInUserOrg.orgName}"></th:block>
-            <th:block th:if="${model.loggedInUserOrg.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
-        </h2>
-        <table class="govuk-table govuk-!-margin-bottom-2">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name</th>
-                <th scope="col" class="govuk-table__header">Role</th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove</span></th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body govuk-!-margin-bottom-2">
-            <tr th:each="user : ${model.loggedInUserOrg.users}"
-                class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
-                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
-                    <a th:unless="${model.loggedInUserId == user.userId and !user.isFinanceContact() and !user.isProjectManager()}"
-                       href="/" class="govuk-link">Remove</a>
-                    <!--<a th:unless="${model.loggedInUserId == user.userId and model.user.isFinanceContact() and model.user.isProjectManager()}"-->
-                       <!--href="/" class="govuk-link">Remove</a>-->
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <p class="govuk-body"><a href="/" class="govuk-link">Add team member</a></p>
 
-        <th:block th:each="organisation: ${model.partnerOrgs}"
-                  th:unless="${organisation.orgName.equals(model.loggedInUserOrg.orgName)}">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                <th:block th:text="${organisation.orgName}"></th:block>
-                <th:block th:if="${organisation.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
+                <th:block th:text="${model.loggedInUserOrg.orgName}"></th:block>
+                <th:block th:if="${model.loggedInUserOrg.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
             </h2>
-            <table class="govuk-table">
+            <table class="govuk-table govuk-!-margin-bottom-2">
                 <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header larger-cols">Name</th>
-                        <th scope="col" class="govuk-table__header">Role</th>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">Role</th>
+                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove</span></th>
+                </tr>
                 </thead>
                 <tbody class="govuk-table__body govuk-!-margin-bottom-2">
-                    <tr th:each="user : ${organisation.users}"
-                         class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
-                        <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
-                    </tr>
+                <tr th:each="user : ${model.loggedInUserOrg.users}"
+                    class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                    <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
+                    <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                        <a th:unless="${model.loggedInUserId == user.userId and !user.isFinanceContact() and !user.isProjectManager()}"
+                           href="/" class="govuk-link">Remove</a>
+                        <!--<a th:unless="${model.loggedInUserId == user.userId and model.user.isFinanceContact() and model.user.isProjectManager()}"-->
+                           <!--href="/" class="govuk-link">Remove</a>-->
+                    </td>
+                </tr>
                 </tbody>
             </table>
-        </th:block>
+            <p class="govuk-body"><button name="add-team-member" th:value="${model.loggedInUserOrg.orgId}" class="button-clear">Add team member</button></p>
+            <div th:attr="aria-hidden=${model.loggedInUserOrg.addTeamMember} ? 'false' : 'true'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="name">
+                        Name
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('name')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                    </th:block>
+                    <input id="name"
+                           th:field="*{name}"
+                           th:errorclass="govuk-input--error"
+                           class="govuk-input govuk-input--width-30"
+                           type="text"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.name.required}" />
+                </div>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="email">
+                        Email
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                    </th:block>
+                    <input id="email"
+                           th:field="*{email}"
+                           th:errorclass="govuk-input--error"
+                           class="govuk-input govuk-input--width-30"
+                           type="email"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.email.required},
+                                        data-email-errormessage=#{validation.standard.email.format}" />
+                </div>
+                <button name="invite-to-project" class="govuk-button" th:value="${model.loggedInUserOrg.orgId}">Invite to project</button>
+            </div>
+
+            <th:block th:each="organisation: ${model.partnerOrgs}"
+                      th:unless="${organisation.orgName.equals(model.loggedInUserOrg.orgName)}">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                    <th:block th:text="${organisation.orgName}"></th:block>
+                    <th:block th:if="${organisation.orgName.equals(model.leadOrg.orgName)}">(Lead)</th:block>
+                </h2>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header larger-cols">Name</th>
+                            <th scope="col" class="govuk-table__header">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body govuk-!-margin-bottom-2">
+                        <tr th:each="user : ${organisation.users}"
+                             class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
+                            <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th:block>
+        </form>
 
         <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
 
