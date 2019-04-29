@@ -76,10 +76,8 @@
                 <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.name}"></td>
                 <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
                 <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
-                    <a th:unless="${model.loggedInUserId == user.userId and !user.isFinanceContact() and !user.isProjectManager()}"
+                    <a th:unless="${model.loggedInUserId == user.userId or user.isFinanceContact() or user.isProjectManager()}"
                        href="/" class="govuk-link">Remove</a>
-                    <!--<a th:unless="${model.loggedInUserId == user.userId and model.user.isFinanceContact() and model.user.isProjectManager()}"-->
-                       <!--href="/" class="govuk-link">Remove</a>-->
                 </td>
             </tr>
             </tbody>
