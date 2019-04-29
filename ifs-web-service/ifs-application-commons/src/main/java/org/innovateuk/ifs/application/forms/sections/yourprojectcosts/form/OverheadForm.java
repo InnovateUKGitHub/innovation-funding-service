@@ -10,7 +10,6 @@ import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
-import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_2020_TOTAL;
 import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 
 public class OverheadForm {
@@ -32,7 +31,7 @@ public class OverheadForm {
 
     public OverheadForm(Overhead overhead, String filename) {
         this.rateType = overhead.getRateType();
-        if (TOTAL.equals(rateType) || HORIZON_2020_TOTAL.equals(rateType)) {
+        if (TOTAL.equals(rateType)) {
             this.totalSpreadsheet = overhead.getRate();
         } else {
             this.totalSpreadsheet = 0;

@@ -100,7 +100,6 @@ public class YourProjectCostsForm {
             case DEFAULT_PERCENTAGE:
                 return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
             case TOTAL:
-            case HORIZON_2020_TOTAL:
                 return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
         }
         return BigDecimal.ZERO;
