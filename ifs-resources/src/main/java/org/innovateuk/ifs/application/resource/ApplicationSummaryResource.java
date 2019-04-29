@@ -140,11 +140,8 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean applicationFundingDecisionIsChangeable() {
-        if(this.manageFundingEmailDate != null && fundingDecision.equals(FundingDecision.FUNDED)) {
-            return false;
-        }
+        return this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED);
 
-        return true;
     }
 
     public boolean isInAssessmentPanel() {
