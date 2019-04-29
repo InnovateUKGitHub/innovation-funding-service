@@ -29,11 +29,16 @@ WHERE setup_complete = 1;
 
 -- insert complete status for each organisation on an application that is already complete, leave blank for applications in flight
 INSERT INTO question_status
-(application_id, question_id)
-SELECT a.id AS application_id,
+(application_id, marked_as_complete_by_id, question_id)
+SELECT pr.application_id AS application_id,
+pr.id AS mark_as_completed_by_id,
 q.id AS question_id
-FROM application a
+FROM process_role pr
+INNER JOIN application a
+ON pr.application_id = a.id
 INNER JOIN question q
 ON q.competition_id = a.competition
-WHERE submitted_date IS NOT NUll;
+WHERE a.submitted_date IS NOT NUll
+AND q.description = "Terms and Conditions"
+GROUP BY pr.application_id, pr.organisation_id;
 
