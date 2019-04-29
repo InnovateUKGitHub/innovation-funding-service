@@ -10,7 +10,7 @@ ${newProjecTeamPage}   ${server}/project-setup/project/4/team
 
 *** Test Cases ***
 The user is able to access project details page
-    Given the user logs-in in new browser    &{collaborator1_credentials}
+    Given the user logs-in in new browser    &{lead_applicant_credentials}
     When the user navigates to the page      ${newProjecTeamPage}
     Then the user should see the element     jQuery = h1:contains("Project team")
 
