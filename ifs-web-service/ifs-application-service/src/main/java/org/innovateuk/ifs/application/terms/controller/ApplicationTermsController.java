@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms;
+package org.innovateuk.ifs.application.terms.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -28,7 +28,7 @@ public class ApplicationTermsController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         model.addAttribute("template", competition.getTermsAndConditions().getTemplate());
-        model.addAttribute("singleOrganisation", !application.isCollaborativeProject());
+        model.addAttribute("collaborative", application.isCollaborativeProject());
         return "application/terms-and-conditions";
     }
 }

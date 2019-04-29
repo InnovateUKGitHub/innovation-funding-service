@@ -14,12 +14,12 @@
         <th:block th:replace="competition/info/__${template}__ :: main/th:block[0] "/>
 
         <!-- /* 1, Where there is only one organisation in the application: */ -->
-        <div th:if="${singleOrganisation}" class="message-alert govuk-!-margin-bottom-6">
+        <div th:unless="${collaborative}" class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end of the page.</p>
         </div>
 
         <!-- /* 2. Where there is more than one organisation in the application: */ -->
-        <div th:unless="${singleOrganisation}" class="message-alert govuk-!-margin-bottom-6">
+        <div th:if="${collaborative}" class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">
                 You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
                 application cannot be submitted until all partners have read and accepted the terms.
