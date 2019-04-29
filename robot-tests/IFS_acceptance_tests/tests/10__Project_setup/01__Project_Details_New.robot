@@ -1,18 +1,23 @@
 *** Settings ***
 Documentation   IFS-5700 - Create new project team page to manage roles in project setup
-Resource            ../CommonResource.robot
-Force Tags          MyTag
-
+...
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
+Resource          PS_Common.robot
+Resource          ../CommonResource.robot
 
 *** Variables ***
 
-${robotVar} =            FooBarBaz
+${notifyPortalRegistrantsPage}   ${server}/project/{projectId}/team
 
+*** Test Cases ***
+The user is able to access project details page
+    Given log
 
-*** Testcases ***
+*** Keywords ***
+Suite Setup
+    The guest user opens the browser
 
-Foo Test Case
-    [tags]              FooTag
-    [Documentation]     Created by John Doe
-    Do An Action        Argument
-    Do Another Action   ${robotVar}
+Suite Teardown
+    The user closes the browser
+
