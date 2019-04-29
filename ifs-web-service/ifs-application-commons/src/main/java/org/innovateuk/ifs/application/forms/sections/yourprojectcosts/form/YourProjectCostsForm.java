@@ -90,7 +90,7 @@ public class YourProjectCostsForm {
 
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
-        return labour.getRows().values().stream().map(LabourRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(labour.getRows());
     }
 
     public BigDecimal getTotalOverheadCosts() {
@@ -106,23 +106,23 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalMaterialCosts() {
-        return materialRows.values().stream().map(MaterialRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(materialRows);
     }
 
     public BigDecimal getTotalCapitalUsageCosts() {
-        return capitalUsageRows.values().stream().map(CapitalUsageRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(capitalUsageRows);
     }
 
     public BigDecimal getTotalSubcontractingCosts() {
-        return subcontractingRows.values().stream().map(SubcontractingRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(subcontractingRows);
     }
 
     public BigDecimal getTotalTravelCosts() {
-        return travelRows.values().stream().map(TravelRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(travelRows);
     }
 
     public BigDecimal getTotalOtherCosts() {
-        return otherRows.values().stream().map(OtherCostRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return calculateTotal(otherRows);
     }
 
     public BigDecimal getOrganisationFinanceTotal() {
@@ -133,5 +133,16 @@ public class YourProjectCostsForm {
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())
                 .add(getTotalOtherCosts());
+    }
+
+    private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {
+        return costRows
+                .values()
+                .stream()
+                .map(AbstractCostRowForm::getTotal)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
     }
 }
