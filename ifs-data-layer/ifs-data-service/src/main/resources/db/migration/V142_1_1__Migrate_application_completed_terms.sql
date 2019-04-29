@@ -1,14 +1,15 @@
 INSERT INTO section
-(display_in_assessment_application_summary, name, competition_id, question_group, section_type)
+(display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type)
 SELECT false AS display_in_assessment_application_summary,
 'Terms and conditions' AS name,
+'1' AS priority,
 c.id AS competition_id,
 false AS question_group,
 'GENERAL' AS section_type
 FROM competition c
 WHERE setup_complete = 1;
 
-INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, competition_id, section_id, question_type)
+INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, competition_id, section_id, question_type, question_setup_type)
 SELECT false AS assign_enabled,
 'Terms and conditions' AS description,
 false AS mark_as_completed_enabled,
@@ -19,7 +20,8 @@ false AS multiple_statuses,
 '11' AS question_number,
 c.id AS competition_id,
 s.id AS section_id,
-'GENERAL' AS question_type
+'GENERAL' AS question_type,
+'TERMS_AND_CONDITIONS' AS question_setup_type
 FROM competition c
 INNER JOIN section s ON
 s.competition_id = c.id AND s.name = 'Terms and conditions'
