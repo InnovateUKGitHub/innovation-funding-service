@@ -110,17 +110,17 @@ the user checks the override value is applied
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
     the user selects the checkbox       agree-terms-page
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
-    the user clicks the button/link     link = link = Back to application overview
+    the user clicks the button/link     link = Application overview
 
 the finance overview is marked as incomplete
     the user clicks the button/link    link = Finances overview
     the user should see the element    jQuery = .warning-alert:contains("This competition only accepts collaborations. At least 2 partners must request funding.")
-    the user clicks the button/link    link = Back to application overview
+    the user clicks the button/link    link = Application overview
 
 the application cannot be submited
     the user clicks the button/link                   link = Review and submit
     the user should see that the element is disabled  jQuery = button:contains("Submit application")
-    the user clicks the button/link                   link = Back to application overview
+    the user clicks the button/link                   link = Application overview
 
 the lead invites already registered user
     the user fills in the inviting steps           ${collaborator1_credentials["email"]}

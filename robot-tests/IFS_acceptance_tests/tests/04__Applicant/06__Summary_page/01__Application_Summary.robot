@@ -44,7 +44,7 @@ Application overview button
     [Tags]
     Given The user navigates to the summary page of the Robot test application
     And the user clicks the button/link              jQuery = button:contains("Technical approach")
-    When the user clicks the button/link             link = Back to application overview
+    When the user clicks the button/link             link = Application overview
     Then the user should see the element             jQuery = h1:contains("Application overview")
 
 *** Keywords ***

@@ -101,7 +101,7 @@ Green check should show when the finances are complete
 
 Finance overview shows as incomplete
     [Documentation]  IFS-3820  IFS-3821
-    Given The user clicks the button/link  link = Back to application overview
+    Given The user clicks the button/link  link = Application overview
     And the user should see the element    jQuery = li:contains("Finances overview") .task-status-incomplete
     When the user clicks the button/link   link = Finances overview
     Then the user should see the element   css = .table-total-tick[src*="icon-alert"]
