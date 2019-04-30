@@ -261,6 +261,7 @@
             </tr>
             </tfoot>
         </table>
+
     </div>
 </th:block>
 
@@ -461,44 +462,51 @@
             </div>
         </th:block>
         <th:block th:case="'TOTAL'">
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Calculated overheads</th>
-                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span>
-                        </th>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-form-group download">
-                            <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation
-                                spreadsheet</h3>
-                            <ul>
-                                <li th:if="${form.overhead.filename} != null"><a
-                                    th:href="@{${'/application/download/overheadfile/'+form.overhead.costId}}"
-                                    th:text="${form.overhead.filename}" class="govuk-link">Overhead calculation
-                                    spreadsheet.pdf</a></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    </tbody>
-                    <tfoot class="govuk-table__foot">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Total cost of overheads as calculated in the
-                            spreadsheet
-                        </th>
-                        <td class="govuk-table__cell alignright" data-current-overhead-total=""
-                            th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}" id="section-total-overhead">
-                            &pound;<th:block th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}">
-                            0
-                        </th:block>
-                        </td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
+            <th:block th:insert="application/your-project-costs-fragments :: total_content" />
+        </th:block>
+        <th:block th:case="'HORIZON_2020_TOTAL'">
+            <th:block th:insert="application/your-project-costs-fragments :: total_content" />
         </th:block>
     </th:block>
+</th:block>
+
+<th:block th:fragment="total_content">
+    <div class="table-overflow">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Calculated overheads</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span>
+                </th>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-form-group download">
+                    <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation
+                        spreadsheet</h3>
+                    <ul>
+                        <li th:if="${form.overhead.filename} != null"><a
+                            th:href="@{${'/application/download/overheadfile/'+form.overhead.costId}}"
+                            th:text="${form.overhead.filename}" class="govuk-link">Overhead calculation
+                            spreadsheet.pdf</a></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot class="govuk-table__foot">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">Total cost of overheads as calculated in the
+                    spreadsheet
+                </th>
+                <td class="govuk-table__cell alignright" data-current-overhead-total=""
+                    th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}" id="section-total-overhead">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}">
+                    0
+                </th:block>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </th:block>
 
 <!--/***************************
