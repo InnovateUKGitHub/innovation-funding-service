@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.service;
+package org.innovateuk.ifs.project.projectteam;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectTeamRestServiceImpl extends BaseRestService implements ProjectTeamRestService {
 
-    private String projectRestURL = "/project/%d/team";
+    private String projectRestURL = "/project/%d/team/%s";
 
     @Override
     public RestResult<Void> inviteProjectMember(Long projectId, ProjectUserInviteResource inviteResource) {
-        return null;
+        return postWithRestResult(String.format(projectRestURL, projectId, "/invite"), inviteResource, Void.class);
     }
 }
