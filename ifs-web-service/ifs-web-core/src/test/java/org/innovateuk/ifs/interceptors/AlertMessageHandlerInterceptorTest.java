@@ -3,8 +3,6 @@ package org.innovateuk.ifs.interceptors;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
