@@ -32,8 +32,6 @@ public class Materials extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer quantity;
 
-    private BigDecimal total = BigDecimal.ZERO; // calculated, no validation
-
     public Materials() {
         this.name = getCostType().getType();
     }
@@ -65,10 +63,10 @@ public class Materials extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        if(quantity!=null && cost!=null) {
+        // calculated, no validation
+        BigDecimal total = BigDecimal.ZERO;
+        if (quantity != null && cost != null) {
             total = cost.multiply(new BigDecimal(quantity));
-        } else {
-            total = BigDecimal.ZERO;
         }
         return total;
     }
