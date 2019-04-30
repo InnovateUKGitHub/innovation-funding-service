@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.validation;
+package org.innovateuk.ifs.validation;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

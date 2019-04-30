@@ -132,12 +132,12 @@ public class ProjectTeamViewModelPopulator {
                 simpleFindFirst(partnerUsers,
                         user -> user.getId() == fc.getUser()).get().setFinanceContact(true));
 
-        Optional<ProjectUserResource> projectManageer = simpleFindFirst(usersForOrganisation,
-                ProjectUserResource::isProjectManager);
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(usersForOrganisation,
+                                                                       ProjectUserResource::isProjectManager);
 
-        projectManageer.ifPresent(pm ->
-                simpleFindFirst(partnerUsers,
-                        user -> user.getId() == pm.getUser()).get().setProjectManager(true));
+        projectManager.ifPresent(pm ->
+                                         simpleFindFirst(partnerUsers,
+                                                         user -> user.getId() == pm.getUser()).get().setProjectManager(true));
 
         return partnerUsers;
     }

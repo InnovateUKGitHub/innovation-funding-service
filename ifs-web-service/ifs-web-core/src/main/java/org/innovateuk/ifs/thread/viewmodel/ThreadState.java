@@ -6,5 +6,5 @@ package org.innovateuk.ifs.thread.viewmodel;
 public enum ThreadState {
     LAST_POST_BY_INTERNAL_USER,
     LAST_POST_BY_EXTERNAL_USER,
-    CLOSED;
+    CLOSED
 }

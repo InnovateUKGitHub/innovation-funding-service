@@ -70,6 +70,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
     }
 
+    @PermissionRule(value = "ACCESS_PROJECT_TEAM_SECTION", description = "A partner can access the Project Team section when their Companies House data is complete or not required")
+    public boolean partnerCanAccessProjectTeamSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
+    }
+
     @PermissionRule(value = "ACCESS_FINANCE_CONTACT_PAGE", description = "A partner can access the Finance Contact " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean partnerCanAccessFinanceContactPage(ProjectCompositeId projectCompositeId, UserResource user) {

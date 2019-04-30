@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.commons.ProxyUtils.methodLevel;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.methodLevel;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**

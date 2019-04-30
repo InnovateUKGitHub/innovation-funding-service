@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,12 +38,15 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 @RequestMapping("/project")
 public class ProjectTeamController {
 
-    private final ProjectTeamViewModelPopulator projectTeamPopulator;
-    private final ProjectDetailsService projectDetailsService;
-    private final ProjectService projectService;
-    private final OrganisationRestService organisationRestService;
-    private final ProjectTeamRestService projectTeamRestService;
+    private ProjectTeamViewModelPopulator projectTeamPopulator;
+    private ProjectDetailsService projectDetailsService;
+    private ProjectService projectService;
+    private OrganisationRestService organisationRestService;
+    private ProjectTeamRestService projectTeamRestService;
 
+    ProjectTeamController() {}
+
+    @Autowired
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator, ProjectDetailsService projectDetailsService, ProjectService projectService, OrganisationRestService organisationRestService, ProjectTeamRestService projectTeamRestService) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;
@@ -51,7 +55,7 @@ public class ProjectTeamController {
         this.projectTeamRestService = projectTeamRestService;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
                                   BindingResult bindingResult,
