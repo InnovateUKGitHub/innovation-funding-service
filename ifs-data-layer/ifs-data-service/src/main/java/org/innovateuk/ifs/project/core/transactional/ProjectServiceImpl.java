@@ -206,6 +206,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     @Transactional
+    public ServiceResult<Void> removeUser(long projectId, long userId) {
+        return getProject(projectId).andOnSuccess(project -> removeUserFromProject(userId, project));
+    }
+
+    private ServiceResult<Void> removeUserFromProject(long userId, Project project) {
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> handleProjectOffline(long projectId) {
 
         return getProject(projectId).andOnSuccess(
