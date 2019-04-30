@@ -80,8 +80,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
 
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
 
@@ -92,6 +90,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         );
 
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(applicationId, applicationOrganisations);
+
 
         SectionResource section = sectionService.getFinanceSection(competition.getId());
 
@@ -154,6 +154,12 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     showDetailedFinanceLink);
         }
 
+    }
+
+    private OrganisationResource getLeadOrganisation(Long applicationId, List<OrganisationResource> applicationOrganisations) {
+        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+
+        return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {

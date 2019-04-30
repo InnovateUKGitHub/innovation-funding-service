@@ -95,10 +95,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
         List<OrganisationResource> partners = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-
+        OrganisationResource leadOrganisation = getLeadOrganisation(application.getId(), partners);
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
@@ -149,5 +147,10 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams),
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
         );
+    }
+
+    private OrganisationResource getLeadOrganisation(long applicationId, List<OrganisationResource> applicationOrganisations) {
+        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
     }
 }

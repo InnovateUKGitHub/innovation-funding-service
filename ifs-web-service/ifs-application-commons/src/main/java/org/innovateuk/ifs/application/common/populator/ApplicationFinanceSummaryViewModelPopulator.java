@@ -13,7 +13,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -73,15 +72,15 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
+        final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
+        OrganisationResource leadOrganisation = getLeadOrganisation(applicationId, applicationOrganisations);
+
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
-        final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
 
         boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
@@ -105,6 +104,11 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 eachCollaboratorFinanceSectionId,
                 yourFinancesCompleteForAllOrganisations
         );
+    }
+
+    private OrganisationResource getLeadOrganisation(long applicationId, List<OrganisationResource> applicationOrganisations) {
+        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
