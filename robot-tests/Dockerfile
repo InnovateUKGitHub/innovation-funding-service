@@ -9,11 +9,29 @@ RUN apt-get update && \
     apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
+ARG GID=993
+ARG UID=996
+ARG PW=default
+
+ENV GID=993
+ENV UID=996
+ENV PW=default
+
+RUN groupadd -g ${GID} gluster
+RUN useradd -p ${PW} -u ${UID} -g ${GID} gluster
+
+VOLUME /mnt/ifs_storage
+
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
+COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 COPY ./ ./
+RUN find . -type d -exec chmod 777 {} +
 
-CMD ["./os_run_tests.sh", "-q"]
+USER gluster
+
+ENTRYPOINT ["./set-umask0002.sh"]
+CMD ["sh", "-c", "./os_run_tests.sh -q"]

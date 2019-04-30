@@ -7,13 +7,34 @@ EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
-VOLUME /tmp
+VOLUME /mnt/ifs_storage
+
+RUN apt-get update && apt-get install rsync mysql-client -y
+
+RUN groupadd -g @glusterGID@ gluster
+RUN useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
+
+RUN mkdir /tmp/ifs
+RUN mkdir /tmp/virus-scan-holding
+RUN mkdir /tmp/virus-scan-scanned
+
+RUN chown -R gluster:gluster /tmp/ifs
+RUN chown -R gluster:gluster /tmp/virus-scan-holding
+RUN chown -R gluster:gluster /tmp/virus-scan-scanned
+
+RUN chmod 777 /tmp/ifs
+RUN chmod 777 /tmp/virus-scan-holding
+RUN chmod 777 /tmp/virus-scan-scanned
 
 ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
+ADD set-umask0002.sh set-umask0002.sh 
+
 ADD @app_name@-@version@.jar app.jar
 
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1
-ENTRYPOINT exec java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar
+USER gluster
+ENTRYPOINT ["./set-umask0002.sh"] 
+CMD ["sh", "-c", "java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar"]
