@@ -158,7 +158,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
     private OrganisationResource getLeadOrganisation(Long applicationId, List<OrganisationResource> applicationOrganisations) {
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-
         return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
     }
 
