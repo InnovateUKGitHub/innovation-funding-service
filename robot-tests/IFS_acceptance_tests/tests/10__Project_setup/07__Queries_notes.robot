@@ -25,15 +25,18 @@ Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
+*** Variables ***
+${dreambit_finance_checks}     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}
+
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    Given Logging in and Error Checking   &{internal_finance_credentials}
-    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
-    And the user clicks the button/link   jQuery = .button-secondary:contains("Queries")
-    Then the user should see the element  jQuery = h2:contains("Queries")
-    When the user clicks the button/link  jQuery = .govuk-button:contains("Post a new query")
+    [Setup]  Logging in and Error Checking   &{internal_finance_credentials}
+    Given the user navigates to the page     ${dreambit_finance_checks}/eligibility
+    And the user clicks the button/link      jQuery = .button-secondary:contains("Queries")
+    And the user should see the element      jQuery = h2:contains("Queries")
+    When the user clicks the button/link     jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected  Eligibility   id = section
 
 Queries section is linked from viability and this selects viability on the query dropdown
@@ -51,57 +54,40 @@ Queries section is linked to from the main finance check summary page
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     When the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the element     jQuery = h2:contains("Queries")
-
-Queries section contains finance contact name, email and telephone
-    [Documentation]    INFUND-4840
-    [Tags]
-    When the user should see the element    jQuery = #main-content p:nth-of-type(1):contains("Becky Mason")
-    And the user should see the element     jQuery = #main-content p:nth-of-type(1):contains("3578109078")
-    And the user should see the element     jQuery = #main-content p:nth-of-type(1):contains(${PublicSector_lead_applicant_credentials["email"]})
+    And queries section contains finance contact name, email and telephone
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    When the user clicks the button/link    jQuery = .govuk-button:contains("Post a new query")
+    Given the user clicks the button/link                       jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the option in the drop-down menu   Viability      id = section
     And the user should see the option in the drop-down menu    Eligibility    id = section
 
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    When the user uploads the file        name = attachment  ${valid_pdf}
+    Given the user uploads the file       name = attachment  ${valid_pdf}
     Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query/new-query
-    When the user clicks the button/link  name = removeAttachment
-    Then the user should not see the element     jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
+    Given the user navigates to the page        ${dreambit_finance_checks}/query/new-query
+    When the user clicks the button/link        name = removeAttachment
+    Then the user should not see the element    jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
     And the user should not see an error in the page
 
 Project finance user can upload more than one file and remove it
     [Documentation]    INFUND-4840
     [Tags]
-    When the user uploads the file        name = attachment    ${valid_pdf}
-    Then the user clicks the button/link  jQuery = h3:contains("Supporting documentation") ~ ul:contains("testing.pdf") .button-clear:contains("Remove")
+    Given the user uploads the file        name = attachment    ${valid_pdf}
+    Then the user clicks the button/link  jQuery = h3:contains("Supporting documentation") ~ ul:contains("${valid_pdf}") .button-clear:contains("Remove")
 
-Post new query server side validations
+Post new query client and server side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link     jQuery = .govuk-button:contains("Post query")
-    Then the user should see the element     jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
-    And the user should see the element      jQuery = label[for = "query"] + .govuk-error-message:contains(${empty_field_warning_message})
-    And the user should see a summary error  ${empty_field_warning_message}
-
-Post new query client side validations
-    [Documentation]    INFUND-4840
-    [Tags]
-    When Set Focus To Element                   link = Sign out
-    And the user enters text to a text field    id = queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
-    When the user enters text to a text field    css = .editor    this is some query text
-    Then the user should not see the element    jQuery = label[for = "query] + .govuk-error-message:contains(${empty_field_warning_message})
+    Given the user should see post a new query client side validations
+    Then the user should see post a new query sever side validations
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -121,22 +107,16 @@ New query can be cancelled
 Query can be re-entered (Eligibility)
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    When the user navigates to the page    ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
-    And the user clicks the button/link    jQuery = .govuk-button:contains("Post a new query")
-    And the user enters text to a text field    id = queryTitle    an eligibility query's title
-    And the user enters text to a text field    css = .editor    this is some query text
-    And the user uploads the file               name = attachment    ${valid_pdf}
-    And the user uploads the file               name = attachment    ${valid_pdf}
+    Given the user navigates to the page         ${dreambit_finance_checks}/query
+    When the user clicks the button/link         jQuery = .govuk-button:contains("Post a new query")
+    Then the user enters a new query details
 
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
     [Tags]  HappyPath
-    When the user clicks the button/link      jQuery = .govuk-button:contains("Post query")
-    Then the user should not see the element  jQuery = .govuk-button:contains("Post query")
-    When the user expands the section         an eligibility query's title
-    Then the user should see the element      jQuery = .govuk-heading-s:contains("Lee Bowman - Innovate UK (Finance team)")
-    When the user should see the element      jQuery = .govuk-heading-s:contains("${today}")
-    Then the user should see the element      css = #post-new-response  # Respond button
+    Given the user clicks the button/link      jQuery = .govuk-button:contains("Post query")
+    And the user should not see the element    jQuery = .govuk-button:contains("Post query")
+    Then the user should see submitted query details
 
 Query Section dropdown filters the queries displayed
     [Documentation]    INFUND-4840 INFUND-4844
@@ -202,7 +182,7 @@ Applicant - Response to query server side validations
     When the user clicks the button/link    jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     And the user clicks the button/link     jQuery = .govuk-button:contains("Post response")
     Then the user should see a field error  ${empty_field_warning_message}
-#    TODO commmented due to IFS-2622
+#    TODO commmented due to IFS-5804
 #    And the user should see a summary error            ${empty_field_warning_message}
 
 Applicant - Response to query client side validations
@@ -306,7 +286,7 @@ Project Finance user is able to mark a query discussion as complete
     [Documentation]  IFS-1987
     [Tags]
     Given log in as a different user     &{internal_finance_credentials}
-    When the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
+    When the user navigates to the page  ${dreambit_finance_checks}/query
     And the user expands the section     an eligibility query's title
     Then the query conversation can be resolved by  Lee Bowman  eligibility
     And the user should not see the element         jQuery = h2:contains("an eligibility query's title") + [id^="finance-checks-internal-query"] a:contains("Respond")
@@ -334,7 +314,7 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
+    Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
     And the user clicks the button/link   jQuery = .button-secondary:contains("Notes")
     Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
 
@@ -544,3 +524,35 @@ The query conversation can be resolved by
 the user should not be able to respond to resolved queries
     the user should not see the element  jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     the user should not see the element  jQuery = h2:contains("viability") + [id^="finance-checks-query"] a[id^="post-new-response"]
+
+queries section contains finance contact name, email and telephone
+    the user should see the element     jQuery = #main-content p:nth-of-type(1):contains("Becky Mason")
+    the user should see the element     jQuery = #main-content p:nth-of-type(1):contains("3578109078")
+    the user should see the element     jQuery = #main-content p:nth-of-type(1):contains(${PublicSector_lead_applicant_credentials["email"]})
+
+the user should see post a new query client side validations
+    the user enters text to a text field    id = queryTitle   ${empty}
+    the user enters text to a text field    css = .editor   ${empty}
+    Set Focus To Element                    link = Sign out
+    the user should see the element         jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
+    the user should see the element         jQuery = label[for = "query"] + .govuk-error-message:contains(${empty_field_warning_message})
+
+the user should see post a new query sever side validations
+    the user clicks the button/link         jQuery = .govuk-button:contains("Post query")
+    the user should see a field and summary error    ${empty_field_warning_message}
+    the user should see a field and summary error    ${empty_field_warning_message}
+    the user enters text to a text field    id = queryTitle    an eligibility query's title
+    the user enters text to a text field    css = .editor    this is some query text
+    the user should not see an error in the page
+
+the user enters a new query details
+    the user enters text to a text field     id = queryTitle    an eligibility query's title
+    the user enters text to a text field     css = .editor    this is some query text
+    the user uploads the file                name = attachment    ${valid_pdf}
+    the user uploads the file                name = attachment    ${valid_pdf}
+
+the user should see submitted query details
+    the user expands the section         an eligibility query's title
+    the user should see the element      jQuery = .govuk-heading-s:contains("Lee Bowman - Innovate UK (Finance team)")
+    the user should see the element      jQuery = .govuk-heading-s:contains("${today}")
+    the user should see the element      css = #post-new-response  # Respond button
