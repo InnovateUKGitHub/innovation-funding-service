@@ -3,10 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project team'" />
 </head>
-<body class="govuk-template__body">
+<body class="govuk-template__body project-detail">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
@@ -23,35 +24,35 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Role</span></th>
+                    <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span></th>
                     <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Name</span></th>
-                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Status</span></th>
+                    <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
                 <tr th:if="${model.userLeadPartner}"
                     class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-width-one-third">
+                    <td class="govuk-table__cell">
                         <a th:unless="${model.grantOfferLetterGenerated}"
                            th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project manager</a>
                         <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-third"
+                    <td class="govuk-table__cell"
                         th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                    <td class="govuk-table__cell">
                         <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
                         <strong th:unless="${model.projectManager == null}" class="complete-status">Complete</strong>
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-width-one-third">
+                    <td class="govuk-table__cell">
                         <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}" class="govuk-link">Your finance contact</a>
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-third"
+                    <td class="govuk-table__cell"
                         th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().userName : '-'}">
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                    <td class="govuk-table__cell">
                         <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}" class="incomplete-status">Incomplete</strong>
                         <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}" class="complete-status">Complete</strong>
                     </td>
@@ -65,19 +66,22 @@
         <table class="govuk-table govuk-!-margin-bottom-2">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name</th>
+                <th scope="col" class="govuk-table__header larger-cols">Name</th>
                 <th scope="col" class="govuk-table__header">Role</th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove</span></th>
+                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Remove</span></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body govuk-!-margin-bottom-2">
             <tr th:each="user : ${model.loggedInUserOrg.users}"
                 class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.userName}"></td>
-                <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.getRolesNames()}">-</td>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                <td class="govuk-table__cell" th:text="${user.userName}"></td>
+                <td class="govuk-table__cell" th:text="${user.getRolesNames()}">-</td>
+                <td class="govuk-table__cell">
+                    <th:block th:insert="fragments/modals :: modal-project-team-remove" />
                     <a th:unless="${model.loggedInUserId == user.userId or user.isFinanceContact() or user.isProjectManager()}"
-                       href="/" class="govuk-link">Remove</a>
+                       data-js-modal="modal-project-team-remove"
+                       th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.userId})}"
+                       class="govuk-link">Remove</a>
                 </td>
             </tr>
             </tbody>
@@ -100,8 +104,8 @@
                 <tbody class="govuk-table__body govuk-!-margin-bottom-2">
                     <tr th:each="user : ${organisation.users}"
                          class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.userName}"></td>
-                        <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
+                        <td class="govuk-table__cell" th:text="${user.userName}"></td>
+                        <td class="govuk-table__cell" th:text="${user.getRolesNames()}">-</td>
                     </tr>
                 </tbody>
             </table>
