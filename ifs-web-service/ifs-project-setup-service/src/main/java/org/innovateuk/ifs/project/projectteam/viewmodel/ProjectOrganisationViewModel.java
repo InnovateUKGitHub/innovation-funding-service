@@ -7,7 +7,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 /**
  * View model backing the Project Details page for Project Setup
  */
-public class ProjectOrganisationViewModel {
+public class ProjectOrganisationViewModel implements Comparable<ProjectOrganisationViewModel> {
 
     private List<ProjectOrganisationUserRowViewModel> users;
 
@@ -17,17 +17,21 @@ public class ProjectOrganisationViewModel {
 
     private boolean leadOrg;
 
-    private boolean addTeamMember;
+    private boolean openAddTeamMemberForm;
+
+    private boolean editable;
 
     public ProjectOrganisationViewModel(List<ProjectOrganisationUserRowViewModel> users,
                                         String orgName,
                                         long orgId,
-                                        boolean leadOrg) {
+                                        boolean leadOrg,
+                                        boolean editable) {
         this.users = users;
         this.orgName = orgName;
         this.leadOrg = leadOrg;
         this.orgId = orgId;
-        this.addTeamMember = false;
+        this.editable = editable;
+        this.openAddTeamMemberForm = false;
     }
 
     public ProjectOrganisationUserRowViewModel getFinanceContact() {
@@ -72,11 +76,37 @@ public class ProjectOrganisationViewModel {
         this.orgId = orgId;
     }
 
-    public boolean isAddTeamMember() {
-        return addTeamMember;
+    public boolean isOpenAddTeamMemberForm() {
+        return openAddTeamMemberForm;
     }
 
-    public void setAddTeamMember(boolean addTeamMember) {
-        this.addTeamMember = addTeamMember;
+    public void setOpenAddTeamMemberForm(boolean openAddTeamMemberForm) {
+        this.openAddTeamMemberForm = openAddTeamMemberForm;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    @Override
+    public int compareTo(ProjectOrganisationViewModel that) {
+        if(this.editable && this.leadOrg) {
+            return -1;
+        } else if (that.editable && that.leadOrg) {
+            return 1;
+        } else if (this.editable) {
+            return -1;
+        } else if (that.editable) {
+            return 1;
+        } else if (this.leadOrg) {
+            return -1;
+        } else if (that.leadOrg) {
+            return 1;
+        }
+        return 0;
     }
 }

@@ -70,7 +70,7 @@ public class ProjectTeamController {
                                 Model model,
                                 UserResource loggedInUser) {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
-                .addTeamMember(organisationId));
+                .openAddTeamMemberForm(organisationId));
         return "project/project-team";
     }
 
@@ -84,7 +84,7 @@ public class ProjectTeamController {
                                   UserResource loggedInUser) {
         Supplier<String> failureView = () -> {
             model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
-                    .addTeamMember(organisationId));
+                    .openAddTeamMemberForm(organisationId));
             return "project/project-team";
         };
 

@@ -10,20 +10,23 @@ public class ProjectOrganisationUserRowViewModel {
     private static final String PARTNER_ROLE_NAME = "-";
     private final String email;
     private final String name;
-    private final long userId;
+    private final long id;
     private boolean isProjectManager;
     private boolean isFinanceContact;
+    private boolean invite;
 
     public ProjectOrganisationUserRowViewModel(String email,
                                                String name,
-                                               long userId,
+                                               long id,
                                                boolean isProjectManager,
-                                               boolean isFinanceContact) {
+                                               boolean isFinanceContact,
+                                               boolean invite) {
         this.email = email;
         this.name = name;
-        this.userId = userId;
+        this.id = id;
         this.isProjectManager = isProjectManager;
         this.isFinanceContact = isFinanceContact;
+        this.invite = invite;
     }
 
     public String getEmail() {
@@ -34,8 +37,8 @@ public class ProjectOrganisationUserRowViewModel {
         return name;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
     public boolean isFinanceContact() {
@@ -54,6 +57,10 @@ public class ProjectOrganisationUserRowViewModel {
         this.isProjectManager = isProjectManager;
     }
 
+    public boolean isInvite() {
+        return invite;
+    }
+
     public String getRolesNames() {
         if(isProjectManager) {
             return isFinanceContact ?
@@ -62,6 +69,10 @@ public class ProjectOrganisationUserRowViewModel {
         }
         return isFinanceContact?
                 FINANCE_CONTACT_ROLE_NAME : PARTNER_ROLE_NAME;
+    }
+
+    public String getDisplayName() {
+        return invite ? name + " (Pending)" : name;
     }
 
     @Override
@@ -75,7 +86,7 @@ public class ProjectOrganisationUserRowViewModel {
         return new EqualsBuilder()
                 .append(email, that.email)
                 .append(name, that.name)
-                .append(userId, that.userId)
+                .append(id, that.id)
                 .append(isFinanceContact, that.isFinanceContact)
                 .append(isProjectManager, that.isProjectManager)
                 .isEquals();
@@ -86,7 +97,7 @@ public class ProjectOrganisationUserRowViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(email)
                 .append(name)
-                .append(userId)
+                .append(id)
                 .append(isFinanceContact)
                 .append(isProjectManager)
                 .toHashCode();
