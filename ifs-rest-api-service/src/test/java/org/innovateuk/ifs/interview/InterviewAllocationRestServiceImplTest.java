@@ -10,6 +10,7 @@ import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestServiceImpl;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -125,7 +126,7 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
         long competitionId = 1L;
         long userId = 1L;
 
-        List<Long> expected = asList(1L);
+        List<Long> expected = Collections.singletonList(1L);
 
         String expectedUrl = format("%s/%s/%s/%s", restUrl, competitionId, "unallocated-application-ids", userId);
 
