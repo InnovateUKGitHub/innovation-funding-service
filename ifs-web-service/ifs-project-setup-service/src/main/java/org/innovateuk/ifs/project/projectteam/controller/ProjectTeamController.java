@@ -68,7 +68,7 @@ public class ProjectTeamController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "add-team-member")
-    public String addTeamMember(@ModelAttribute(value = "form") ProjectTeamForm form,
+    public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
                                 BindingResult bindingResult,
                                 @PathVariable("projectId") final long projectId,
                                 @RequestParam("add-team-member") final long organisationId,
@@ -77,6 +77,12 @@ public class ProjectTeamController {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
                 .openAddTeamMemberForm(organisationId));
         return "project/project-team";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PostMapping(value = "/{projectId}/team", params = "close-add-team-member-form")
+    public String closeAddTeamMemberForm(@PathVariable("projectId") final long projectId) {
+        return String.format("redirect:/project/%d/team", projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")

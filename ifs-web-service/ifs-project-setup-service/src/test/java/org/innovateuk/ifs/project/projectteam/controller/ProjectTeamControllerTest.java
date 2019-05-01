@@ -67,7 +67,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     }
 
     @Test
-    public void addTeamMember() throws Exception {
+    public void openAddTeamMemberForm() throws Exception {
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
         long projectId = 999L;
@@ -88,6 +88,17 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
         assertEquals(expected, actual);
         verify(expected).openAddTeamMemberForm(organisationId);
+    }
+
+    @Test
+    public void closeAddTeamMemberForm() throws Exception {
+        long projectId = 999L;
+
+        mockMvc.perform(post("/project/{id}/team", projectId)
+                .param("close-add-team-member-form", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/project/%d/team", projectId)))
+                .andReturn();
     }
 
     @Test
