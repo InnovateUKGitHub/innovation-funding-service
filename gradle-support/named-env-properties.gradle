@@ -23,7 +23,7 @@ ext.LDAP_USESSL="false"
 //ext.LDAP_URL="ldaps://ldap:666"
 //ext.LDAP_PASSWORD="default"
 
-ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
+ext.CLUSTER_ADDRESS="org-env-0.org.innovateuk.ukri.org"
 
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']

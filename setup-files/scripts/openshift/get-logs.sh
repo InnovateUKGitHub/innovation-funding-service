@@ -52,7 +52,7 @@ mkdir -p $logdir
 
 if [ -z "$TOKEN" ]; then SVC_ACCOUNT_TOKEN=$($OC whoami -t); else SVC_ACCOUNT_TOKEN=${TOKEN}; fi
 
-SVC_ACCOUNT_CLAUSE="--namespace=$PROJECT --token=$SVC_ACCOUNT_TOKEN --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+SVC_ACCOUNT_CLAUSE="--namespace=$PROJECT --token=$SVC_ACCOUNT_TOKEN --server=https://console.org-env-0.org.innovateuk.ukri.org:443 --insecure-skip-tls-verify=true"
 
 $OC project $PROJECT $SVC_ACCOUNT_CLAUSE || exit 1
 
