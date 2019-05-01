@@ -23,7 +23,6 @@ public class QuestionStatus {
     @JoinColumn(name = "markedAsCompleteById", referencedColumnName = "id")
     private ProcessRole markedAsCompleteBy;
 
-    @Column(name = "mark_as_completed_on")
     private ZonedDateTime markedAsCompleteOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
