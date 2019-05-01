@@ -15,6 +15,6 @@ public class OtherFundingCostCategoryTest {
 
     @Test
     public void excludeFromTotalCostShouldReturnBoolean() throws Exception{
-        Assert.assertEquals(otherFundingCostCategory.excludeFromTotalCost(), true);
+        Assert.assertTrue(otherFundingCostCategory.excludeFromTotalCost());
     }
 }
