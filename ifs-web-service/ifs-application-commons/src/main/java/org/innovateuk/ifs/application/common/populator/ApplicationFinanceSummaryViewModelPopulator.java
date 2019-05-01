@@ -15,6 +15,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private ApplicationService applicationService;
     private SectionService sectionService;
     private UserRestService userRestService;
-    private UserService userService;
+    private OrganisationService organisationService;
     private CompetitionRestService competitionRestService;
 
     public ApplicationFinanceSummaryViewModelPopulator(ApplicationService applicationService,
@@ -43,7 +44,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                                        FileEntryRestService fileEntryRestService,
                                                        OrganisationRestService organisationRestService,
                                                        UserRestService userRestService,
-                                                       UserService userService,
+                                                       OrganisationService organisationService,
                                                        CompetitionRestService competitionRestService) {
         this.applicationService = applicationService;
         this.sectionService = sectionService;
@@ -51,7 +52,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
         this.userRestService = userRestService;
-        this.userService = userService;
+        this.organisationService = organisationService;
         this.competitionRestService = competitionRestService;
     }
 
@@ -73,7 +74,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 
         final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
-        OrganisationResource leadOrganisation = getLeadOrganisation(applicationId, applicationOrganisations);
+        OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
 
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
@@ -106,10 +107,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         );
     }
 
-    private OrganisationResource getLeadOrganisation(long applicationId, List<OrganisationResource> applicationOrganisations) {
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
-    }
+
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();

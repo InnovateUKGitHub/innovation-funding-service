@@ -24,7 +24,7 @@ public class ApplicationOverviewUserModelPopulator {
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
         boolean ableToSubmitApplication = isAbleToSubmitApplication(application, userIsLeadApplicant);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(application.getId());
 
         final UserResource leadApplicant;
         if (leadApplicantProcessRole != null) {
