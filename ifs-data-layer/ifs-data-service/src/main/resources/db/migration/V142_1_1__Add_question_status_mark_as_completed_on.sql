@@ -1,3 +1,2 @@
 -- add new timestamp for mark as complete
-ALTER TABLE question_status ADD COLUMN mark_as_completed_on DATETIME;
-
+ALTER TABLE question_status ADD COLUMN marked_as_complete_on DATETIME;
