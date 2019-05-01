@@ -28,7 +28,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         inviteOrganisation.setOrganisationName(organisationName);
         inviteOrganisation.setInviteResources(invites);
 
-        String url = inviteRestUrl + "/createApplicationInvites";
+        String url = inviteRestUrl + "/create-application-invites";
 
         return postWithRestResult(url, inviteOrganisation, Void.class);
     }
@@ -40,7 +40,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         inviteOrganisation.setOrganisation(organisationId);
         inviteOrganisation.setInviteResources(invites);
 
-        String url = inviteRestUrl + "/createApplicationInvites";
+        String url = inviteRestUrl + "/create-application-invites";
 
         return postWithRestResult(url, inviteOrganisation, Void.class);
     }
@@ -53,38 +53,38 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         inviteOrganisation.setInviteResources(invites);
 
 
-        String url = inviteRestUrl + String.format("/createApplicationInvites/%s", applicationId);
+        String url = inviteRestUrl + String.format("/create-application-invites/%s", applicationId);
 
         return postWithRestResult(url, inviteOrganisation, Void.class);
     }
 
     @Override
     public RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
-        String url = inviteRestUrl + "/saveInvites";
+        String url = inviteRestUrl + "/save-invites";
         return postWithRestResult(url, inviteResources, Void.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash, long userId) {
-        String url = inviteRestUrl + String.format("/acceptInvite/%s/%s", inviteHash, userId);
+        String url = inviteRestUrl + String.format("/accept-invite/%s/%s", inviteHash, userId);
         return putWithRestResultAnonymous(url, Void.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId) {
-        String url = inviteRestUrl + String.format("/acceptInvite/%s/%s/%s", inviteHash, userId, organisationId);
+        String url = inviteRestUrl + String.format("/accept-invite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
 
     @Override
     public RestResult<Void> removeApplicationInvite(Long inviteId) {
-        String url = inviteRestUrl + String.format("/removeInvite/%s", inviteId);
+        String url = inviteRestUrl + String.format("/remove-invite/%s", inviteId);
         return deleteWithRestResult(url);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        String url = inviteRestUrl + String.format("/checkExistingUser/%s", inviteHash);
+        String url = inviteRestUrl + String.format("/check-existing-user/%s", inviteHash);
         return getWithRestResultAnonymous(url, Boolean.class);
     }
 
@@ -96,17 +96,17 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
     @Override
     public RestResult<ApplicationInviteResource> getInviteByHash(String hash) {
-        return getWithRestResultAnonymous(inviteRestUrl + "/getInviteByHash/" + hash, ApplicationInviteResource.class);
+        return getWithRestResultAnonymous(inviteRestUrl + "/get-invite-by-hash/" + hash, ApplicationInviteResource.class);
     }
 
     @Override
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getWithRestResultAnonymous(inviteRestUrl + "/getInviteOrganisationByHash/" + hash, InviteOrganisationResource.class);
+        return getWithRestResultAnonymous(inviteRestUrl + "/get-invite-organisation-by-hash/" + hash, InviteOrganisationResource.class);
     }
 
     @Override
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        String url = inviteRestUrl + "/getInvitesByApplicationId/"+ applicationId;
+        String url = inviteRestUrl + "/get-invites-by-application-id/"+ applicationId;
         return getWithRestResult(url, inviteOrganisationResourceListType());
     }
 

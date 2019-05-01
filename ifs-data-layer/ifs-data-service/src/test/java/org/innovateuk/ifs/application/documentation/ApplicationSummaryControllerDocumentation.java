@@ -28,7 +28,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     @Mock
     private ApplicationSummaryService applicationSummaryService;
 
-    private static String baseUrl = "/applicationSummary";
+    private static String baseUrl = "/application-summary";
 
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
@@ -53,7 +53,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(
-                get(baseUrl + "/findByCompetition/{competitionId}/with-funding-decision", competitionId)
+                get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)
                         .param("page", pageIndex + "")
                         .param("sort", sort)
                         .param("size", size + "")
@@ -86,7 +86,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
-                get(baseUrl + "/findByCompetition/{competitionId}/with-funding-decision", competitionId)
+                get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)
                         .param("all", "")
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
@@ -114,7 +114,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
-                get(baseUrl + "/findByCompetition/{competitionId}/all-submitted", competitionId)
+                get(baseUrl + "/find-by-competition/{competitionId}/all-submitted", competitionId)
                         .param("all", "")
                         .param("filter", filter)
                         .param("fundingFilter", fundingFilter.toString())
@@ -145,7 +145,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(informFilter))).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(
-                get(baseUrl + "/findByCompetition/{competitionId}/ineligible", competitionId)
+                get(baseUrl + "/find-by-competition/{competitionId}/ineligible", competitionId)
                         .param("page", pageIndex + "")
                         .param("sort", sort)
                         .param("size", size + "")
@@ -179,7 +179,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getApplicationTeamByApplicationId(applicationId)).thenReturn(serviceSuccess(applicationTeam));
 
         mockMvc.perform(
-                get(baseUrl + "/applicationTeam/{applicationId}", applicationId)
+                get(baseUrl + "/application-team/{applicationId}", applicationId)
                         .contentType(APPLICATION_JSON))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("applicationId").description("The application id")),

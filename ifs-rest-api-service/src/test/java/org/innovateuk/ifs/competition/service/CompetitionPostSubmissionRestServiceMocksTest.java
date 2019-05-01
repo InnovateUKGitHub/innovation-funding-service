@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionPostSubmissionRestServiceImpl> {
 
-    private static final String competitionsRestURL = "/competition/postSubmission";
+    private static final String competitionsRestURL = "/competition/post-submission";
 
     @Override
     protected CompetitionPostSubmissionRestServiceImpl registerRestServiceUnderTest() {

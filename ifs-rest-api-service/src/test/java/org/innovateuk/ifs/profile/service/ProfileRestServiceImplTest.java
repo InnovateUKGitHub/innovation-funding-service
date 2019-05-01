@@ -30,7 +30,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         ProfileSkillsResource expected = newProfileSkillsResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", profileUrl, userId), ProfileSkillsResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/get-profile-skills", profileUrl, userId), ProfileSkillsResource.class, expected, OK);
 
         ProfileSkillsResource response = service.getProfileSkills(userId).getSuccess();
         assertEquals(expected, response);
@@ -41,7 +41,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", profileUrl, userId), profileSkillsEditResource, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/update-profile-skills", profileUrl, userId), profileSkillsEditResource, OK);
 
         RestResult<Void> response = service.updateProfileSkills(userId, profileSkillsEditResource);
         assertTrue(response.isSuccess());
@@ -52,7 +52,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         ProfileAgreementResource expected = newProfileAgreementResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileAgreement", profileUrl, userId), ProfileAgreementResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/get-profile-agreement", profileUrl, userId), ProfileAgreementResource.class, expected, OK);
 
         ProfileAgreementResource response = service.getProfileAgreement(userId).getSuccess();
         assertEquals(expected, response);
@@ -62,7 +62,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
     public void updateProfileAgreement() {
         Long userId = 1L;
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileAgreement", profileUrl, userId), null, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/update-profile-agreement", profileUrl, userId), null, OK);
 
         RestResult<Void> response = service.updateProfileAgreement(userId);
         assertTrue(response.isSuccess());
@@ -73,7 +73,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         UserProfileResource expected = newUserProfileResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", profileUrl, userId), UserProfileResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/get-user-profile", profileUrl, userId), UserProfileResource.class, expected, OK);
 
         UserProfileResource response = service.getUserProfile(userId).getSuccess();
         assertEquals(expected, response);
@@ -84,7 +84,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         UserProfileResource profileDetails = newUserProfileResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateUserProfile", profileUrl, userId), profileDetails, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/update-user-profile", profileUrl, userId), profileDetails, OK);
 
         RestResult<Void> response = service.updateUserProfile(userId, profileDetails);
         assertTrue(response.isSuccess());
@@ -95,7 +95,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
         Long userId = 1L;
         UserProfileStatusResource expected = newUserProfileStatusResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", profileUrl, userId), UserProfileStatusResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/profile-status", profileUrl, userId), UserProfileStatusResource.class, expected, OK);
 
         UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccess();
         assertEquals(expected, response);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
@@ -71,6 +72,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "           SELECT affiliation.id " +
             "           FROM Affiliation affiliation " +
             "           WHERE affiliation.user.id = assessmentParticipant.user.id " +
+            "           AND affiliation.modifiedOn > :startOfTaxYear " +
             "       ) " +
             "       AND profile.skillsAreas IS NOT NULL " +
             "       AND profile.agreement IS NOT NULL) " +
@@ -79,6 +81,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "           SELECT affiliation.id " +
             "           FROM Affiliation affiliation " +
             "           WHERE affiliation.user.id = assessmentParticipant.user.id " +
+            "           AND affiliation.modifiedOn > :startOfTaxYear " +
             "       ) " +
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
@@ -129,25 +132,27 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
-    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                           @Param("status") List<ParticipantStatus> status,
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(long competitionId,
+                                                                           List<ParticipantStatus> status,
                                                                            Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS)
-    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                           @Param("status") List<ParticipantStatus> status);
+    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(long competitionId,
+                                                                           List<ParticipantStatus> status);
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
-                                                                                                        @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                        @Param("status") List<ParticipantStatus> status,
-                                                                                                        @Param("isCompliant") Boolean isCompliant,
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
+                                                                                                        Long innovationAreaId,
+                                                                                                        List<ParticipantStatus> status,
+                                                                                                        Boolean isCompliant,
+                                                                                                        ZonedDateTime startOfTaxYear,
                                                                                                         Pageable pageable);
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    List<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
-                                                                                                        @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                        @Param("status") List<ParticipantStatus> status,
-                                                                                                        @Param("isCompliant") Boolean isCompliant);
+    List<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
+                                                                                                        Long innovationAreaId,
+                                                                                                        List<ParticipantStatus> status,
+                                                                                                        Boolean isCompliant,
+                                                                                                        ZonedDateTime startOfTaxYear);
 
     List<AssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

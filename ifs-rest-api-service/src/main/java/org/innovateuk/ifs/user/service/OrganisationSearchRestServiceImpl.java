@@ -21,21 +21,21 @@ public class OrganisationSearchRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText) {
-        return getWithRestResultAnonymous(organisationRestURL + "/searchOrganisations/" + organisationTypeId + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/" + organisationTypeId + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
     }
 
     @Override
     public RestResult<OrganisationSearchResult> getOrganisation(Long organisationTypeId, String searchOrganisationId) {
-        return getWithRestResultAnonymous(organisationRestURL + "/getOrganisation/" + organisationTypeId + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
+        return getWithRestResultAnonymous(organisationRestURL + "/get-organisation/" + organisationTypeId + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
     }
 
     @Override
     public RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText) {
-        return getWithRestResultAnonymous(organisationRestURL + "/searchOrganisations/enum/" + organisationType.name() + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/enum/" + organisationType.name() + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
     }
 
     @Override
     public RestResult<OrganisationSearchResult> getOrganisation(Enum<?> organisationType, String searchOrganisationId) {
-        return getWithRestResultAnonymous(organisationRestURL + "/getOrganisation/enum/" + organisationType.name() + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
+        return getWithRestResultAnonymous(organisationRestURL + "/get-organisation/enum/" + organisationType.name() + "/" + searchOrganisationId, new ParameterizedTypeReference<OrganisationSearchResult>() {});
     }
 }

@@ -38,7 +38,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.findByQuestionId(questionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminput/findByQuestionId/{id}", questionId))
+        mockMvc.perform(get("/forminput/find-by-question-id/{id}", questionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
@@ -55,7 +55,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.findByQuestionIdAndScope(questionId, scope)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminput/findByQuestionId/{questionId}/scope/{scope}", questionId, scope))
+        mockMvc.perform(get("/forminput/find-by-question-id/{questionId}/scope/{scope}", questionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
@@ -73,7 +73,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.findByCompetitionIdAndScope(competitionId, scope)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/forminput/findByCompetitionId/{competitionId}/scope/{scope}", competitionId, scope))
+        mockMvc.perform(get("/forminput/find-by-competition-id/{competitionId}/scope/{scope}", competitionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));

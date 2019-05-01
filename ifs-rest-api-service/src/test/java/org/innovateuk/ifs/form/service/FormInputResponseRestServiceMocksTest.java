@@ -10,9 +10,9 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -35,10 +35,10 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void getResponsesByApplicationId() {
-        List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
+        List<FormInputResponseResource> returnedResponses = Stream.of(1, 2, 3).map(i -> new FormInputResponseResource()).collect(Collectors.toList());
 
 
-        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/find-responses-by-application/123", formInputResponseListType(), returnedResponses);
 
         List<FormInputResponseResource> responses = service.getResponsesByApplicationId(123L).getSuccess();
         assertEquals(returnedResponses, responses);
@@ -56,7 +56,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
         List<Error> returnedResponses = asList(new Error("A returned string", BAD_REQUEST), new Error("A returned string 2", BAD_REQUEST));
         ValidationMessages validationMessages = new ValidationMessages(returnedResponses);
 
-        setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", ValidationMessages.class, entityUpdates, validationMessages, OK);
+        setupPostWithRestResultExpectations(formInputResponseRestURL + "/save-question-response/", ValidationMessages.class, entityUpdates, validationMessages, OK);
 
         ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccess();
         Assert.assertEquals(returnedResponses, responses.getErrors());
@@ -64,9 +64,9 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void getByFormInputIdAndApplication(){
-        List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
+        List<FormInputResponseResource> returnedResponses = Stream.of(1, 2, 3).map(i -> new FormInputResponseResource()).collect(Collectors.toList());
 
-        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/find-response-by-form-input-id-and-application-id/456/123", formInputResponseListType(), returnedResponses);
 
         List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccess();
         assertEquals(returnedResponses, responses);
@@ -78,7 +78,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
         QuestionSetupType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
-        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionSetupType", applicationId, questionSetupType), FormInputResponseResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "find-by-application-id-and-question-setup-type", applicationId, questionSetupType), FormInputResponseResource.class, expected);
         FormInputResponseResource actual = service.getByApplicationIdAndQuestionSetupType(applicationId, PROJECT_SUMMARY).getSuccess();
         assertEquals(expected, actual);
     }
@@ -89,7 +89,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
         long questionId = 2L;
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
-        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
+        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "find-by-application-id-and-question-id",
                 applicationId, questionId), formInputResponseListType(), expected);
         List<FormInputResponseResource> actual = service.getByApplicationIdAndQuestionId(applicationId, questionId).getSuccess();
         assertEquals(expected, actual);

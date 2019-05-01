@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -640,6 +638,29 @@ public final class CollectionFunctions {
         return simpleAllMatch(asList(array), filterFn);
     }
 
+
+    /**
+     * A simple wrapper around a noneMatch function, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleNoneMatch(Collection<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return true;
+        }
+        return list.stream().noneMatch(filterFn);
+    }
+
+    /**
+     * A simple wrapper around a noneMatch function that takes an array, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleNoneMatch(T[] array, Predicate<T> filterFn) {
+
+        if (array == null || array.length == 0) {
+            return true;
+        }
+
+        return simpleNoneMatch(asList(array), filterFn);
+    }
+
     /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
@@ -708,10 +729,7 @@ public final class CollectionFunctions {
                 return notNullSafe.apply(t1, t2);
             } else if (t1 != null) {
                 return t1;
-            } else if (t2 != null) {
-                return t2;
-            }
-            return null;
+            } else return t2;
         };
     }
 

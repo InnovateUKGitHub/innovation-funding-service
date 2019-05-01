@@ -50,7 +50,7 @@ public class ApplicationResearchCategoryControllerTest extends
                 researchCategoryId))
                 .thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/applicationResearchCategory/researchCategory/{applicationId}", applicationResource
+        mockMvc.perform(post("/application-research-category/research-category/{applicationId}", applicationResource
                 .getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
@@ -68,7 +68,7 @@ public class ApplicationResearchCategoryControllerTest extends
         when(applicationResearchCategoryServiceMock.setResearchCategory(applicationResource.getId(), null))
                 .thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(post("/applicationResearchCategory/researchCategory/{applicationId}", applicationResource
+        mockMvc.perform(post("/application-research-category/research-category/{applicationId}", applicationResource
                 .getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(applicationResource)));
@@ -99,7 +99,7 @@ public class ApplicationResearchCategoryControllerTest extends
                 applicationResource.getId());
         when(questionStatusService.markAsComplete(ids, markedAsCompleteById)).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(post("/applicationResearchCategory/mark-research-category-complete/{applicationId}" +
+        mockMvc.perform(post("/application-research-category/mark-research-category-complete/{applicationId}" +
                         "/{markedAsCompleteById}",
                 applicationResource.getId(), markedAsCompleteById)
                 .contentType(MediaType.APPLICATION_JSON)
