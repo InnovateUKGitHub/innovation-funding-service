@@ -10,10 +10,7 @@ SELECT false                  AS display_in_assessment_application_summary,
        false                  AS question_group,
        'TERMS_AND_CONDITIONS' AS section_type
 FROM competition c
-         INNER JOIN milestone m on c.id = m.competition_id
-WHERE setup_complete
-  AND m.type = 'OPEN_DATE'
-  AND m.date > now();
+WHERE setup_complete;
 
 -- Add the terms question to the terms section
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name,
@@ -32,7 +29,20 @@ SELECT false                  AS assign_enabled,
        'TERMS_AND_CONDITIONS' AS question_setup_type
 FROM competition c
          INNER JOIN section s ON s.competition_id = c.id AND s.section_type = 'TERMS_AND_CONDITIONS'
-         INNER JOIN milestone m on c.id = m.competition_id
-WHERE setup_complete
-  AND m.type = 'OPEN_DATE'
-  AND m.date > now();
+WHERE setup_complete;
+
+-- add a question_status per application/organisation, for all submitted applications
+INSERT INTO question_status (application_id, marked_as_complete, marked_as_complete_by_id, marked_as_complete_on,
+                             question_id)
+SELECT pr.application_id AS application_id,
+       true              AS marked_as_complete,
+       pr.id             AS marked_as_complete_by_id,
+       null              AS marked_as_complete_on, -- null timestamp for existing applications
+       q.id              AS question_id
+FROM process_role pr
+         INNER JOIN application a ON pr.application_id = a.id
+         INNER JOIN question q ON q.competition_id = a.competition
+         INNER JOIN section s ON q.section_id = s.id
+WHERE a.submitted_date IS NOT NUll
+  AND s.section_type = 'TERMS_AND_CONDITIONS'
+GROUP BY pr.application_id, pr.organisation_id;
