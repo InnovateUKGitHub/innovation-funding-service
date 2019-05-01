@@ -64,18 +64,6 @@ public class ApplicationSummaryController {
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
-    @GetMapping("/{applicationId}/summary/new")
-    public String applicationSummary(Model model,
-                                     @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
-
-        model.addAttribute("model", newApplicationSummaryViewModelPopulator.populate(applicationId, NewApplicationSummaryViewModelPopulator.settings(), user));
-
-        return "new/application-summary";
-    }
-
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,

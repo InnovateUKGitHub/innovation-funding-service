@@ -5,15 +5,24 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 /**
  * Holder of model attributes for the Application Team view.
  */
-public class ApplicationTeamSummaryViewModel {
+public class ApplicationTeamSummaryViewModel implements NewQuestionSummaryViewModel {
     private final ApplicationTeamResource team;
 
     public ApplicationTeamSummaryViewModel(ApplicationTeamResource team) {
         this.team = team;
-    }        ApplicationTeamResource teamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccess();
-
+    }
 
     public ApplicationTeamResource getTeam() {
         return team;
+    }
+
+    @Override
+    public String getName() {
+        return "Application team";
+    }
+
+    @Override
+    public String getFragment() {
+        return "application-team";
     }
 }

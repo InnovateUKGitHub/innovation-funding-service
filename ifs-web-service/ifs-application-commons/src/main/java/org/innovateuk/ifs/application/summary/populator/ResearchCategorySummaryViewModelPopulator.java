@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
 import org.innovateuk.ifs.application.summary.viewmodel.NewQuestionSummaryViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -15,8 +15,8 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 public class ResearchCategorySummaryViewModelPopulator implements QuestionSummaryViewModelPopulator {
 
     @Override
-    public NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationResource application) {
-        return new ResearchCategorySummaryViewModel(application.getResearchCategory().getName(), question.getShortName());
+    public NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+        return new ResearchCategorySummaryViewModel(data.getApplication().getResearchCategory().getName(), question.getShortName());
     }
 
     @Override
