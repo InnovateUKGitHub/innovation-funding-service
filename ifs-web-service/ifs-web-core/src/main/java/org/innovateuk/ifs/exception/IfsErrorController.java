@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
-import static org.springframework.http.MediaType.TEXT_HTML;
+
 /**
  * For dealing with errors that do not even reach a controller. For errors that result in a controller throwing an {@link Exception} see {@link ErrorControllerAdvice}
  */

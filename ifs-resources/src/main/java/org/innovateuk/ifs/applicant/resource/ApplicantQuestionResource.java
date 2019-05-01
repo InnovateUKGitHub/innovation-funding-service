@@ -53,10 +53,10 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
 
     @JsonIgnore
     public boolean isCompleteByApplicant(ApplicantResource applicantResource) {
-        return getApplicantQuestionStatuses().stream().filter(status ->
+        return getApplicantQuestionStatuses().stream().anyMatch(status ->
                 Boolean.TRUE.equals(status.getStatus().getMarkedAsComplete()) &&
-                (!this.getQuestion().getMultipleStatuses() ||
-                        (status.getMarkedAsCompleteBy() != null && status.getMarkedAsCompleteBy().hasSameOrganisation(applicantResource)))).count() > 0;
+                        (!this.getQuestion().getMultipleStatuses() ||
+                                (status.getMarkedAsCompleteBy() != null && status.getMarkedAsCompleteBy().hasSameOrganisation(applicantResource))));
     }
 
     public Stream<ApplicantQuestionStatusResource> allAssignedStatuses() {

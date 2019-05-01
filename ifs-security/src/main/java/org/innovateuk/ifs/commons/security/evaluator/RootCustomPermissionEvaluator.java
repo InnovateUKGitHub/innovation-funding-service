@@ -157,10 +157,8 @@ public class RootCustomPermissionEvaluator implements PermissionEvaluator {
                     Method method = beanAndMethod.getRight();
                     if (method.getParameterTypes().length == 2) {
                         Class<?> secondParameterClass = method.getParameterTypes()[1];
-                        if (Authentication.class.isAssignableFrom(secondParameterClass) ||
-                                UserResource.class.isAssignableFrom(secondParameterClass)) {
-                            return false;
-                        }
+                        return !Authentication.class.isAssignableFrom(secondParameterClass) &&
+                                !UserResource.class.isAssignableFrom(secondParameterClass);
                     }
                     return true;
                 }
