@@ -25,7 +25,7 @@ public class PrioritySortingTest {
     @Test
     public void sortingListWorksAsExpectedWithIdentity() {
         List<String> list = new PrioritySorting<>(asList("C", "A", "exceptionElement"), "exceptionElement", Function.identity()).unwrap();
-        assertTrue(list.size() == 3);
+        assertEquals(3, list.size());
         assertEquals(list, asList("exceptionElement", "A", "C"));
     }
 
@@ -33,7 +33,7 @@ public class PrioritySortingTest {
     public void sortingListWorksAsExpectedWithFunction() {
         List<TestResource> orgs = createResources("C", "A", "exceptionElement");
         List<TestResource> list = new PrioritySorting<>(orgs, createResource("exceptionElement"), TestResource::getName).unwrap();
-        assertTrue(list.size() == 3);
+        assertEquals(3, list.size());
         Assert.assertEquals(CollectionFunctions.simpleMap(list, TestResource::getName),
                 CollectionFunctions.simpleMap(createResources("exceptionElement", "A", "C"), TestResource::getName));
     }
@@ -42,7 +42,7 @@ public class PrioritySortingTest {
     public void sortingListWithoutPriorityStillSortsElementsByField() {
         List<TestResource> orgs = createResources("C", "A", "exceptionElement");
         List<TestResource> list = new PrioritySorting<>(orgs, null, TestResource::getName).unwrap();
-        assertTrue(list.size() == 3);
+        assertEquals(3, list.size());
         Assert.assertEquals(CollectionFunctions.simpleMap(list, TestResource::getName),
                 CollectionFunctions.simpleMap(createResources("A", "C", "exceptionElement"), TestResource::getName));
     }

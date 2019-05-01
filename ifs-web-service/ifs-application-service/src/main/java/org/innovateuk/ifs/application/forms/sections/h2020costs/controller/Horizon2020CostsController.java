@@ -11,7 +11,6 @@ import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -52,9 +51,6 @@ public class Horizon2020CostsController extends AsyncAdaptor {
 
     @Autowired
     private UserRestService userRestService;
-
-    @Autowired
-    private OverheadFileRestService overheadFileRestService;
 
     @Autowired
     private YourProjectCostsCompleter completeSectionAction;

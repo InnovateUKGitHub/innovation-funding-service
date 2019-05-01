@@ -16,7 +16,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -57,7 +57,7 @@ public class GrantsFileHandler {
         try {
             deleteDirectory(new File(sourceFileUrl));
             return serviceSuccess();
-        } catch (IOException e){
+        } catch (IOException e) {
             return serviceFailure(new Error(
                     "Could not delete source file", singletonList(sourceFileUrl.toString()), INTERNAL_SERVER_ERROR));
         }

@@ -46,10 +46,7 @@ public class CookieTestUtil {
                 .filter(cookie -> cookie.getName().equals(cookieName))
                 .findAny();
 
-        if (cookieFound.isPresent()) {
-            return encryptor.decrypt(cookieFound.get().getValue());
-        }
+        return cookieFound.map(cookie -> encryptor.decrypt(cookie.getValue())).orElse(null);
 
-        return null;
     }
 }
