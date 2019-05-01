@@ -2,6 +2,7 @@ package org.innovateuk.ifs.applicant.controller;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicantController {
 
     @Autowired
-    private ApplicantService applicationService;
+    private ApplicantService applicantService;
 
     @GetMapping("/{userId}/{applicationId}/question/{questionId}")
     public RestResult<ApplicantQuestionResource> getQuestion(@PathVariable("userId") final Long userId,
                                                                     @PathVariable("applicationId") final Long applicationId,
                                                                     @PathVariable("questionId") final Long questionId) {
-        return applicationService.getQuestion(userId, questionId, applicationId).toGetResponse();
+        return applicantService.getQuestion(userId, questionId, applicationId).toGetResponse();
     }
 
     @GetMapping("/{userId}/{applicationId}/section/{sectionId}")
     public RestResult<ApplicantSectionResource> getSection(@PathVariable("userId") final Long userId,
                                                            @PathVariable("applicationId") final Long applicationId,
                                                            @PathVariable("sectionId") final Long sectionId) {
-        return applicationService.getSection(userId, sectionId, applicationId).toGetResponse();
+        return applicantService.getSection(userId, sectionId, applicationId).toGetResponse();
+    }
+
+    @GetMapping("/{userId}/applications/dashboard" )
+    public RestResult<ApplicantDashboardResource> getApplicantDashboard(@PathVariable("userId") final Long userId) {
+        return applicantService.getApplicantDashboard(userId).toGetResponse();
     }
 
 }

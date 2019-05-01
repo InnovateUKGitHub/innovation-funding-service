@@ -1,7 +1,15 @@
 package org.innovateuk.ifs.applicant.transactional;
 
-import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
@@ -63,6 +71,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private UserService userService;
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private ApplicationDashboardService applicationDashboardService;
 
     @Override
     public ServiceResult<ApplicantQuestionResource> getQuestion(Long userId, Long questionId, Long applicationId) {
@@ -102,6 +112,11 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             });
         }
         return results.toSingle().andOnSuccessReturn(() -> applicant);
+    }
+
+    @Override
+    public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(Long userId) {
+        return applicationDashboardService.getApplicantDashboard(userId);
     }
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
