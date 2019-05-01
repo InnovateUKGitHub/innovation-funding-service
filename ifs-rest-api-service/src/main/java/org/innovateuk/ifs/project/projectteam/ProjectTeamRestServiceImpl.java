@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectTeamRestServiceImpl extends BaseRestService implements ProjectTeamRestService {
 
-    private String projectRestURL = "/project/%d/team/%s";
+    private String projectTeamRestURL = "/project/%d/team/%s";
 
     @Override
     public RestResult<Void> inviteProjectMember(Long projectId, ProjectUserInviteResource inviteResource) {
-        return postWithRestResult(String.format(projectRestURL, projectId, "/invite"), inviteResource, Void.class);
+        return postWithRestResult(String.format(projectTeamRestURL, projectId, "invite"), inviteResource, Void.class);
     }
 }

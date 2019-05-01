@@ -66,6 +66,7 @@ public class ProjectTeamController {
         return "project/project-team";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "add-team-member")
     public String addTeamMember(@ModelAttribute(value = "form") ProjectTeamForm form,
                                 BindingResult bindingResult,
@@ -78,6 +79,7 @@ public class ProjectTeamController {
         return "project/project-team";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "invite-to-project")
     public String inviteToProject(@Valid @ModelAttribute("form") ProjectTeamForm form,
                                   BindingResult bindingResult,
