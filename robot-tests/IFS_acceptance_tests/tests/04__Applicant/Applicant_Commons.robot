@@ -265,6 +265,9 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link = Your funding
+    the user clicks the button/link  link = competition terms and conditions
+    the user should see the element  jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end of the page.")
+    the user goes back to the previous page
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
     the user selects the radio button     otherFunding   false
