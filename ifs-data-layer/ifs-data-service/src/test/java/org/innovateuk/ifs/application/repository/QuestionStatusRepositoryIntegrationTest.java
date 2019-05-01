@@ -29,7 +29,6 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     private long questionId;
     private long applicationId;
 
-
     @Autowired
     private QuestionStatusRepository repository;
 
@@ -72,7 +71,7 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
                 .withId(28L)
                 .build();
 
-        QuestionStatus completedQuestionStatus = new QuestionStatus(questions.get(0), application, targetProcessRole, true);
+        QuestionStatus completedQuestionStatus = new QuestionStatus(questions.get(0), application).markAsComplete(targetProcessRole, ZonedDateTime.now());
         completedQuestionStatus.setAssignee(otherProcessRole, otherProcessRole, ZonedDateTime.now());
 
         List<QuestionStatus> questionStatusesToSave = asList(
