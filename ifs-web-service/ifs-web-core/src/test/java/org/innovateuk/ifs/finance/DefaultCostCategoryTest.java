@@ -44,6 +44,6 @@ public class DefaultCostCategoryTest {
 
     @Test
     public void excludeFromTotalCostShouldReturnBoolean() {
-        Assert.assertEquals(defaultCostCategory.excludeFromTotalCost(), false);
+        Assert.assertFalse(defaultCostCategory.excludeFromTotalCost());
     }
 }

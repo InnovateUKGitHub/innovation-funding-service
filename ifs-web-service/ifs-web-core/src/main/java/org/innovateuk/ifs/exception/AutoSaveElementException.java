@@ -29,7 +29,7 @@ public class AutoSaveElementException extends RuntimeException {
 
         private List<Class<? extends Throwable>> exceptions;
 
-        private HandledExceptions(Class<? extends Throwable> exceptions) {
+        HandledExceptions(Class<? extends Throwable> exceptions) {
             this.exceptions = Arrays.asList(exceptions);
         }
 

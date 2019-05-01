@@ -156,7 +156,7 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
 
     private String cleanString(Object result) {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        String baseUri = request.getScheme() + "://" + request.getServerName().toString();
+        String baseUri = request.getScheme() + "://" + request.getServerName();
 
         return Jsoup.clean((result == null ? "" : result.toString()), baseUri, WHITELIST);
     }
