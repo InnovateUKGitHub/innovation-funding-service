@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.security.ProxyUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 
 import java.lang.annotation.Annotation;
@@ -8,8 +9,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.ProxyUtils.classLevel;
-import static org.innovateuk.ifs.commons.ProxyUtils.methodLevel;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.classLevel;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.methodLevel;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
 /**

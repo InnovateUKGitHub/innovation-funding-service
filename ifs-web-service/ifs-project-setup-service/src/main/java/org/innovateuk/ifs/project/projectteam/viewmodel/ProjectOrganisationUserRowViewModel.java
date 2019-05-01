@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.projectteam.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * View model for a project user in an organisation, used on the Project Team page for Project Setup
+ */
 public class ProjectOrganisationUserRowViewModel {
 
     private static final String PROJECT_MANAGER_ROLE_NAME = "Project manager";
@@ -11,9 +14,10 @@ public class ProjectOrganisationUserRowViewModel {
     private final String email;
     private final String name;
     private final long id;
+    private final boolean invite;
+
     private boolean isProjectManager;
     private boolean isFinanceContact;
-    private boolean invite;
 
     public ProjectOrganisationUserRowViewModel(String email,
                                                String name,

@@ -21,8 +21,8 @@ public class PairFunctionsTest {
 
     @Test
     public void testRightPairIsPresent() {
-        Assert.assertEquals(true, PairFunctions.rightPairIsPresent().test(Pair.of("hello", Optional.of("there"))));
-        Assert.assertEquals(false, PairFunctions.rightPairIsPresent().test(Pair.of("hello", Optional.empty())));
+        Assert.assertTrue(PairFunctions.rightPairIsPresent().test(Pair.of("hello", Optional.of("there"))));
+        Assert.assertFalse(PairFunctions.rightPairIsPresent().test(Pair.of("hello", Optional.empty())));
     }
 
 }

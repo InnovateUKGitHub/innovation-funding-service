@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import opennlp.tools.coref.sim.Gender;
 import org.hibernate.Hibernate;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;

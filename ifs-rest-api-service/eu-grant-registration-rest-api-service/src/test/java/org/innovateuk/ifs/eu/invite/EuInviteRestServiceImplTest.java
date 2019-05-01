@@ -2,7 +2,6 @@ package org.innovateuk.ifs.eu.invite;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
-import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.junit.Before;
 import org.junit.Test;
