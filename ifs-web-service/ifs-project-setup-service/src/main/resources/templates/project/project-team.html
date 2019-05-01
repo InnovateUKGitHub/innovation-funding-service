@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project team'"/>
 </head>
-<body class="govuk-template__body">
+<body class="govuk-template__body project-detail project-team">
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
@@ -14,6 +14,12 @@
               th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Project team',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
@@ -25,37 +31,37 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Role</span></th>
+                <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span></th>
                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Name</span></th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Status</span></th>
+                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             <tr th:if="${model.userLeadPartner}"
                 class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-width-one-third">
+                <td class="govuk-table__cell">
                     <a th:unless="${model.grantOfferLetterGenerated}"
                        th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project
                         manager</a>
                     <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                 </td>
-                <td class="govuk-table__cell govuk-!-width-one-third"
+                <td class="govuk-table__cell"
                     th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
                 </td>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                <td class="govuk-table__cell">
                     <strong th:if="${model.projectManager == null}" class="incomplete">Incomplete</strong>
                     <strong th:unless="${model.projectManager == null}" class="complete">Complete</strong>
                 </td>
             </tr>
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-width-one-third">
+                <td class="govuk-table__cell">
                     <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
                        class="govuk-link">Your finance contact</a>
                 </td>
-                <td class="govuk-table__cell govuk-!-width-one-third"
+                <td class="govuk-table__cell"
                     th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
                 </td>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
+                <td class="govuk-table__cell">
                     <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
                             class="incomplete">Incomplete</strong>
                     <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
@@ -72,37 +78,47 @@
                     <th:block th:text="${organisation.orgName}"></th:block>
                     <th:block th:if="${organisation.leadOrg}">(Lead)</th:block>
                 </h2>
-                <table class="govuk-table">
+                <table class="govuk-table"
+                       th:classappend="${organisation.editable ? 'govuk-!-margin-bottom-2' : ''}">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header larger-cols">Name</th>
                         <th scope="col" class="govuk-table__header">Role</th>
-                        <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove</span></th>
+                        <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
-                    <tbody class="govuk-table__body govuk-!-margin-bottom-2">
+                    <tbody class="govuk-table__body">
                     <tr th:each="user : ${organisation.users}"
                         class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-third" th:text="${user.displayName}"></td>
-                        <td class="govuk-table__cell govuk-!-width-two-thirds" th:text="${user.getRolesNames()}">-</td>
-                        <td class="govuk-table__cell govuk-!-width-one-third govuk-table__cell--numeric">
-                            <a th:if="${organisation.editable and !user.isFinanceContact() and !user.isProjectManager()}"
+                        <td class="govuk-table__cell"
+                            th:text="${user.displayName}"
+                            th:classappend="${user.invite ? 'hint' : ''}"></td>
+                        <td class="govuk-table__cell"
+                            th:text="${user.getRolesNames()}"
+                            th:classappend="${user.invite ? 'hint' : ''}">-</td>
+                        <td class="govuk-table__cell">
+                            <a th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}"
                                href="/" class="govuk-link">Remove</a>
-                            <!--<a th:unless="${model.loggedInUserId == user.userId and model.user.isFinanceContact() and model.user.isProjectManager()}"-->
-                            <!--href="/" class="govuk-link">Remove</a>-->
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <th:block th:if="${organisation.editable}">
-                    <p class="govuk-body">
-                        <button name="add-team-member" th:value="${organisation.orgId}" class="button-clear">
-                            Add team member
-                        </button>
-                    </p>
-                    <div th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
-                        <div class="govuk-form-group"
-                             th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                <table id="invite-user" th:if="${organisation.editable}"
+                       class="govuk-table govuk-!-margin-bottom-2"
+                       th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-visually-hidden">Name</th>
+                        <th scope="col" class="govuk-table__header govuk-visually-hidden">Email</th>
+                        <th scope="col" class="govuk-table__header govuk-visually-hidden">Invite</th>
+                        <th scope="col" class="govuk-table__header smaller-col govuk-visually-hidden">Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row form-group-row-validated"
+                        th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
+                        <td class="govuk-table__cell govuk-form-group"
+                            th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-label--s" for="name">
                                 Name
                             </label>
@@ -117,9 +133,9 @@
                                    type="text"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.standard.name.required}"/>
-                        </div>
-                        <div class="govuk-form-group"
-                             th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                        </td>
+                        <td class="govuk-table__cell govuk-form-group"
+                            th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-label--s" for="email">
                                 Email
                             </label>
@@ -135,11 +151,32 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.standard.email.required},
                                         data-email-errormessage=#{validation.standard.email.format}"/>
-                        </div>
-                        <button name="invite-to-project" class="govuk-button" th:value="${organisation.orgId}">
-                            Invite to project
+                        </td>
+                        <td class="govuk-table__cell">
+                            <button name="invite-to-project"
+                                    class="govuk-button govuk-!-margin-top-6"
+                                    th:value="${organisation.orgId}">
+                                Invite to project
+                            </button>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <button class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
+                                    data-hide-form="invite-user">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <th:block th:if="${organisation.editable}">
+                    <p class="govuk-body">
+                        <button name="add-team-member"
+                                th:value="${organisation.orgId}"
+                                class="button-clear"
+                                data-show-form="invite-user">
+                            Add team member
                         </button>
-                    </div>
+                    </p>
                 </th:block>
             </th:block>
         </form>
