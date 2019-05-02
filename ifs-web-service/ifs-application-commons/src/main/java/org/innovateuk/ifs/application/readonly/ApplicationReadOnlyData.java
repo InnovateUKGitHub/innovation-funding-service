@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.summary;
+package org.innovateuk.ifs.application.readonly;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 
-public class ApplicationSummaryData {
+public class ApplicationReadOnlyData {
 
     private final CompetitionResource competition;
     private final ApplicationResource application;
@@ -30,7 +30,7 @@ public class ApplicationSummaryData {
     private final Map<Long, QuestionStatusResource> questionToQuestionStatus;
 
 
-    public ApplicationSummaryData(ApplicationResource application, CompetitionResource competition, UserResource user, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses) {
+    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource user, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -79,7 +79,7 @@ public class ApplicationSummaryData {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationSummaryData that = (ApplicationSummaryData) o;
+        ApplicationReadOnlyData that = (ApplicationReadOnlyData) o;
 
         return new EqualsBuilder()
                 .append(competition, that.competition)

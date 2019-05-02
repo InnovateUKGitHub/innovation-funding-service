@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <th:block th:insert="new/application-summary :: summary (${model.applicationSummaryViewModel})" />
+                <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

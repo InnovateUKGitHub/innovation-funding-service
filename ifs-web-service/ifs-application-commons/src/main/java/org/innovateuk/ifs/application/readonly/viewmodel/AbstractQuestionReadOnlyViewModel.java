@@ -1,19 +1,19 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.Optional;
 
-public abstract class AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
+public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
     private final long applicationId;
     private final long questionId;
     private final String name;
     private final boolean complete;
 
-    public AbstractQuestionSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
+    public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();

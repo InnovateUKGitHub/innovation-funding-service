@@ -101,10 +101,10 @@
 </th:block>
 
 <th:block th:fragment="application-team (model)">
-    <th:block th:insert="new/application-summary :: organisation(${model.team.leadOrganisation}, true, '0')" />
+    <th:block th:insert="application/readonly/application-read-only :: organisation(${model.team.leadOrganisation}, true, '0')" />
     <br />
     <th:block th:each="organisation,status : ${model.team.partnerOrganisations}">
-        <th:block th:insert="new/application-summary :: organisation(${organisation}, false, ${status.index + 1})"/>
+        <th:block th:insert="application/readonly/application-read-only :: organisation(${organisation}, false, ${status.index + 1})"/>
         <br />
     </th:block>
 </th:block>

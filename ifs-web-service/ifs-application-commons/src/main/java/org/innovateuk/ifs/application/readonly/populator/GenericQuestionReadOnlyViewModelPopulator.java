@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.viewmodel.GenericQuestionSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowSummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -17,10 +17,10 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class GenericQuestionSummaryViewModelPopulator implements QuestionSummaryViewModelPopulator {
+public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator {
 
     @Override
-    public ApplicationRowSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+    public ApplicationQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToFormInputs().get(question.getId());
         Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> FormInputType.TEXTAREA.equals(formInput.getType()))
                 .findAny();
@@ -34,7 +34,7 @@ public class GenericQuestionSummaryViewModelPopulator implements QuestionSummary
         Optional<FormInputResponseResource> appendixResponse = appendix
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        return new GenericQuestionSummaryViewModel(data, question, questionName(question),
+        return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 textResponse.map(FormInputResponseResource::getValue).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),

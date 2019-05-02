@@ -1,5 +1,11 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -7,12 +13,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.ApplicationSummarySettings;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowGroupSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowsSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.FinanceSummaryViewModel;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -51,16 +51,14 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationRowsSummaryViewModelPopulatorTest {
+public class ApplicationReadOnlyViewModelPopulatorTest {
 
     @InjectMocks
-    private ApplicationRowsSummaryViewModelPopulator populator;
+    private ApplicationReadOnlyViewModelPopulator populator;
 
     @Mock
     private ApplicationRestService applicationRestService;
@@ -81,7 +79,7 @@ public class ApplicationRowsSummaryViewModelPopulatorTest {
     private QuestionRestService questionRestService;
 
     @Mock
-    private FinanceSummaryViewModelPopulator financeSummaryViewModelPopulator;
+    private FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator;
 
     @Mock
     private QuestionStatusRestService questionStatusRestService;
@@ -93,7 +91,7 @@ public class ApplicationRowsSummaryViewModelPopulatorTest {
     private AsyncFuturesGenerator futuresGeneratorMock;
 
     @Mock
-    private List<QuestionSummaryViewModelPopulator<?>> mocklist;
+    private List<QuestionReadOnlyViewModelPopulator<?>> mocklist;
 
     @Before
     public void setupExpectations() {
@@ -104,9 +102,9 @@ public class ApplicationRowsSummaryViewModelPopulatorTest {
     public void populate() {
         long applicationId = 1L;
         UserResource user = newUserResource().build();
-        ApplicationSummarySettings settings = ApplicationSummarySettings.defaultSettings().setIncludeQuestionLinks(true).setIncludeStatuses(true);
+        ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings().setIncludeQuestionLinks(true).setIncludeStatuses(true);
 
-        QuestionSummaryViewModelPopulator mockPopulator = mock(QuestionSummaryViewModelPopulator.class);
+        QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
         setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
@@ -129,9 +127,9 @@ public class ApplicationRowsSummaryViewModelPopulatorTest {
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
 
-        ApplicationSummaryData expectedData = new ApplicationSummaryData(application, competition, user, questions, formInputs, responses, questionStatuses);
-        ApplicationRowSummaryViewModel expectedRowModel = mock(ApplicationRowSummaryViewModel.class);
-        FinanceSummaryViewModel expectedFinanceSummary = mock(FinanceSummaryViewModel.class);
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, questions, formInputs, responses, questionStatuses);
+        ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
+        FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
         when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
@@ -144,18 +142,18 @@ public class ApplicationRowsSummaryViewModelPopulatorTest {
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(mockPopulator.populate(questions.get(0), expectedData)).thenReturn(expectedRowModel);
 
-        ApplicationRowsSummaryViewModel viewModel = populator.populate(applicationId, user, settings);
+        ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
         assertEquals(viewModel.getSettings(), settings);
         assertEquals(viewModel.getSections().size(), 2);
 
-        Iterator<ApplicationRowGroupSummaryViewModel> iterator = viewModel.getSections().iterator();
-        ApplicationRowGroupSummaryViewModel sectionWithQuestion = iterator.next();
+        Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
+        ApplicationSectionReadOnlyViewModel sectionWithQuestion = iterator.next();
 
         assertEquals(sectionWithQuestion.getName(), "Section with questions");
         assertEquals(sectionWithQuestion.getQuestions().iterator().next(), expectedRowModel);
 
-        ApplicationRowGroupSummaryViewModel financeSection = iterator.next();
+        ApplicationSectionReadOnlyViewModel financeSection = iterator.next();
         assertEquals(financeSection.getName(), "Finance section");
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 

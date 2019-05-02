@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
-public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
+public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
     private final String displayName;
     private final String question;
@@ -11,7 +11,7 @@ public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryView
     private final String appendixFilename;
     private final Long appendixId;
 
-    public GenericQuestionSummaryViewModel(ApplicationSummaryData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
@@ -8,8 +8,8 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdo
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.viewmodel.FinanceSummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.Future;
 
 @Component
-public class FinanceSummaryViewModelPopulator extends AsyncAdaptor {
+public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
@@ -31,7 +31,7 @@ public class FinanceSummaryViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SectionRestService sectionRestService;
 
-    public FinanceSummaryViewModel populate(ApplicationSummaryData data) {
+    public FinanceReadOnlyViewModel populate(ApplicationReadOnlyData data) {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
@@ -39,7 +39,7 @@ public class FinanceSummaryViewModelPopulator extends AsyncAdaptor {
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
         Future<ApplicationFundingBreakdownViewModel> applicationFundingBreakdownViewModel = async(() -> applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()));
 
-        return new FinanceSummaryViewModel(
+        return new FinanceReadOnlyViewModel(
                 application.getId(),
                 competition.isFullyFunded(),
                 resolve(financeSection).getId(),

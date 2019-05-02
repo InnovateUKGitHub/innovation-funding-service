@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.viewmodel.NewGrantAgreementSummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.viewmodel.GrantAgreementReadOnlyViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
@@ -14,19 +14,19 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class GrantAgreementSummaryPopulator implements QuestionSummaryViewModelPopulator<NewGrantAgreementSummaryViewModel> {
+public class GrantAgreementReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<GrantAgreementReadOnlyViewModel> {
 
     private final EuGrantTransferRestService grantTransferRestService;
 
-    public GrantAgreementSummaryPopulator(EuGrantTransferRestService grantTransferRestService) {
+    public GrantAgreementReadOnlyPopulator(EuGrantTransferRestService grantTransferRestService) {
         this.grantTransferRestService = grantTransferRestService;
     }
 
     @Override
-    public NewGrantAgreementSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+    public GrantAgreementReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         Optional<FileEntryResource> grantAgreement = grantTransferRestService.findGrantAgreement(data.getApplication().getId()).getOptionalSuccessObject();
 
-        return new NewGrantAgreementSummaryViewModel(data, question,
+        return new GrantAgreementReadOnlyViewModel(data, question,
                 grantAgreement.map(FileEntryResource::getName).orElse(null));
     }
 

@@ -1,21 +1,21 @@
-package org.innovateuk.ifs.application.summary;
+package org.innovateuk.ifs.application.readonly;
 
-public class ApplicationSummarySettings {
+public class ApplicationReadOnlySettings {
 
     private boolean includeStatuses = false;
     private boolean includeQuestionLinks = false;
 
-    private ApplicationSummarySettings() {}
+    private ApplicationReadOnlySettings() {}
 
-    public static ApplicationSummarySettings defaultSettings() {
-        return new ApplicationSummarySettings();
+    public static ApplicationReadOnlySettings defaultSettings() {
+        return new ApplicationReadOnlySettings();
     }
 
     public boolean isIncludeStatuses() {
         return includeStatuses;
     }
 
-    public ApplicationSummarySettings setIncludeStatuses(boolean includeStatuses) {
+    public ApplicationReadOnlySettings setIncludeStatuses(boolean includeStatuses) {
         this.includeStatuses = includeStatuses;
         return this;
     }
@@ -24,7 +24,7 @@ public class ApplicationSummarySettings {
         return includeQuestionLinks;
     }
 
-    public ApplicationSummarySettings setIncludeQuestionLinks(boolean includeQuestionLinks) {
+    public ApplicationReadOnlySettings setIncludeQuestionLinks(boolean includeQuestionLinks) {
         this.includeQuestionLinks = includeQuestionLinks;
         return this;
     }

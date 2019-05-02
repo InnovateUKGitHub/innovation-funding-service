@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
 
 public class ApplicationSummaryViewModel {
-    private final ApplicationRowsSummaryViewModel applicationSummaryViewModel;
+    private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final ApplicationResource application;
     private final CompetitionResource competition;
     private final boolean projectWithdrawn;
@@ -22,8 +23,8 @@ public class ApplicationSummaryViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
 
-    public ApplicationSummaryViewModel(ApplicationRowsSummaryViewModel applicationSummaryViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
-        this.applicationSummaryViewModel = applicationSummaryViewModel;
+    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
+        this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.application = application;
         this.competition = competition;
         this.projectWithdrawn = projectWithdrawn;
@@ -39,8 +40,8 @@ public class ApplicationSummaryViewModel {
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
     }
 
-    public ApplicationRowsSummaryViewModel getApplicationSummaryViewModel() {
-        return applicationSummaryViewModel;
+    public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
+        return applicationReadOnlyViewModel;
     }
 
     public ApplicationResource getApplication() {

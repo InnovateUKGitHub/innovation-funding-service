@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="summary(model)">
+<th:block th:fragment="collapsible-list(model)">
 
     <th:block th:each="section : ${model.sections}">
 
@@ -19,7 +19,7 @@
                     </th:block>
                 </h3>
                 <div class="question">
-                    <th:block th:insert="new/question-summaries :: ${question.fragment} (${question})"/>
+                    <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
                     <th:block th:if="${model.settings.includeQuestionLinks && question.editUrl != null}">
                         <div class="form-footer govuk-!-margin-top-6">

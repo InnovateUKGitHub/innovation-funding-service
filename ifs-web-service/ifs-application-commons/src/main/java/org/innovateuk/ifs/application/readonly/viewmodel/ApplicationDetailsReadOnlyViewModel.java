@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
+public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
     private final String competitionName;
     private final String applicationName;
@@ -17,7 +17,7 @@ public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryV
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
 
-    public ApplicationDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
+    public ApplicationDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         super(data, question);
         this.competitionName = data.getCompetition().getName();
         this.applicationName = data.getApplication().getName();

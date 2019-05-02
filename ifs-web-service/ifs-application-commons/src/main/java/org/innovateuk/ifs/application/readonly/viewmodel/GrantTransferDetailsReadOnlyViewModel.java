@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class GrantTransferDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
+public class GrantTransferDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
     private final String grantAgreementNumber;
 
@@ -25,11 +25,11 @@ public class GrantTransferDetailsSummaryViewModel extends AbstractQuestionSummar
 
     private final EuActionTypeResource actionType;
 
-    public GrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
+    public GrantTransferDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this(data, question, null, null, null, null, null, null, null, null);
     }
 
-    public GrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
+    public GrantTransferDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
         super(data, question);
         this.grantAgreementNumber = grantAgreementNumber;
         this.participantId = participantId;

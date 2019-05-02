@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
 import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -8,11 +8,11 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.ApplicationSummarySettings;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowsSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowGroupSummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,7 +35,7 @@ import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class ApplicationRowsSummaryViewModelPopulator extends AsyncAdaptor {
+public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     private ApplicationRestService applicationRestService;
 
@@ -49,15 +49,15 @@ public class ApplicationRowsSummaryViewModelPopulator extends AsyncAdaptor {
 
     private QuestionRestService questionRestService;
 
-    private FinanceSummaryViewModelPopulator financeSummaryViewModelPopulator;
+    private FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator;
 
     private QuestionStatusRestService questionStatusRestService;
 
     private OrganisationRestService organisationRestService;
 
-    private Map<QuestionSetupType, QuestionSummaryViewModelPopulator<?>> populatorMap;
+    private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
-    public ApplicationRowsSummaryViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceSummaryViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, List<QuestionSummaryViewModelPopulator<?>> populators) {
+    public ApplicationReadOnlyViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, List<QuestionReadOnlyViewModelPopulator<?>> populators) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.formInputRestService = formInputRestService;
@@ -72,48 +72,48 @@ public class ApplicationRowsSummaryViewModelPopulator extends AsyncAdaptor {
                 populator.questionTypes().forEach(type -> populatorMap.put(type, populator)));
     }
 
-    public ApplicationRowsSummaryViewModel populate(long applicationId, UserResource user, ApplicationSummarySettings settings) {
+    public ApplicationReadOnlyViewModel populate(long applicationId, UserResource user, ApplicationReadOnlySettings settings) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         return populate(application, competition, user, settings);
     }
 
-    public ApplicationRowsSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationSummarySettings settings) {
+    public ApplicationReadOnlyViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationReadOnlySettings settings) {
         Future<List<QuestionResource>> questionsFuture = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
         Future<List<FormInputResource>> formInputsFuture = async(() -> formInputRestService.getByCompetitionId(competition.getId()).getSuccess());
         Future<List<FormInputResponseResource>> formInputResponsesFuture = async(() -> formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> questionStatusesFuture = getQuestionStatuses(application, user, settings);
-        ApplicationSummaryData data = new ApplicationSummaryData(application, competition, user, resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
 
-        Set<ApplicationRowGroupSummaryViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
+        Set<ApplicationSectionReadOnlyViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
                 .stream()
                 .filter(section -> section.getParentSection() == null)
                 .map(section -> async(() -> sectionView(section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationRowsSummaryViewModel(settings, sectionViews);
+        return new ApplicationReadOnlyViewModel(settings, sectionViews);
     }
 
-    private ApplicationRowGroupSummaryViewModel sectionView(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
+    private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         if (!section.getChildSections().isEmpty()) {
             return sectionsWithChildren(section, settings, data);
         }
-        Set<ApplicationRowSummaryViewModel> questionViews = section.getQuestions()
+        Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
                 .map(question ->  populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationRowGroupSummaryViewModel(section.getName(), questionViews);
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), questionViews);
     }
 
     //Currently only the finance section has child sections.
-    private ApplicationRowGroupSummaryViewModel sectionsWithChildren(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
-        ApplicationRowSummaryViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationRowGroupSummaryViewModel(section.getName(), asSet(finance));
+    private ApplicationSectionReadOnlyViewModel sectionsWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
+        ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
     }
 
-    public ApplicationRowSummaryViewModel populateQuestionViewModel(QuestionResource question, ApplicationSummaryData data, ApplicationSummarySettings settings) {
+    public ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
             return populatorMap.get(question.getQuestionSetupType()).populate(question, data);
         } else {
@@ -121,7 +121,7 @@ public class ApplicationRowsSummaryViewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private Future<List<QuestionStatusResource>> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationSummarySettings settings) {
+    private Future<List<QuestionStatusResource>> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeStatuses()) {
             return ConcurrentUtils.constantFuture(Collections.emptyList());
         }

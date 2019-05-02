@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.application.summary.viewmodel;
+package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 
-public class FinanceSummaryViewModel implements ApplicationRowSummaryViewModel {
+public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
     private final long applicationId;
     private final boolean fullyFunded;
@@ -15,7 +15,7 @@ public class FinanceSummaryViewModel implements ApplicationRowSummaryViewModel {
     private final boolean collaborativeProject;
     private final boolean open;
 
-    public FinanceSummaryViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject, boolean open) {
+    public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject, boolean open) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;

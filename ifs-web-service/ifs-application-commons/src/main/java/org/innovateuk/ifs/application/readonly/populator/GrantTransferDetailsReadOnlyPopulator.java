@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.application.summary.populator;
+package org.innovateuk.ifs.application.readonly.populator;
 
-import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.viewmodel.GrantTransferDetailsSummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.viewmodel.GrantTransferDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
@@ -14,19 +14,19 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryViewModelPopulator<GrantTransferDetailsSummaryViewModel> {
+public class GrantTransferDetailsReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<GrantTransferDetailsReadOnlyViewModel> {
 
     private final EuGrantTransferRestService grantTransferRestService;
 
-    public GrantTransferDetailsSummaryPopulator(EuGrantTransferRestService grantTransferRestService) {
+    public GrantTransferDetailsReadOnlyPopulator(EuGrantTransferRestService grantTransferRestService) {
         this.grantTransferRestService = grantTransferRestService;
     }
 
     @Override
-    public GrantTransferDetailsSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+    public GrantTransferDetailsReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         Optional<EuGrantTransferResource> grantTransferResource = grantTransferRestService.findDetailsByApplicationId(data.getApplication().getId()).getOptionalSuccessObject();
         if (grantTransferResource.isPresent()) {
-            return new GrantTransferDetailsSummaryViewModel(
+            return new GrantTransferDetailsReadOnlyViewModel(
                     data,
                     question,
                     grantTransferResource.get().getGrantAgreementNumber(),
@@ -41,7 +41,7 @@ public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryView
                             .orElse(null)
             );
         }
-        return new GrantTransferDetailsSummaryViewModel(data, question);
+        return new GrantTransferDetailsReadOnlyViewModel(data, question);
     }
 
     @Override
