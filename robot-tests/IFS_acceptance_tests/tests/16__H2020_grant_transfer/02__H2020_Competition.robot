@@ -89,19 +89,20 @@ The user is able to see that the application is now in project setup
     the user should see the element   link = H2020 Grant Transfer
 
 The inernal user is able to progress an application to project set up
-    the user clicks the button/link   link = H2020 Grant Transfer
-    the user should see the element   jQuery = h1:contains("Open")
-    the user clicks the button/link   link = Input and review funding decision
-    the user selects the checkbox     app-row-1
-    the user clicks the button/link   jQuery = button:contains("Successful")
-    the user clicks the button/link   link = Competition
-    the user clicks the button/link   jQuery = a:contains("Manage funding notifications")
-    the user selects the checkbox     app-row-178
-    the user clicks the button/link   jQuery = button:contains("Write and send email")
-    the user clicks the button/link   css = button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link   jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    the user clicks the button/link   link = Competition
-    the user clicks the button/link   link = All competitions
+    the user clicks the button/link       link = H2020 Grant Transfer
+    the user should see the element       jQuery = h1:contains("Open")
+    the user clicks the button/link       link = Input and review funding decision
+    the user selects the checkbox         app-row-1
+    the user clicks the button/link       jQuery = button:contains("Successful")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name   Project name
+    the user selects the checkbox         app-row-${id}
+    the user clicks the button/link       jQuery = button:contains("Write and send email")
+    the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       link = All competitions
 
 The user starts an H2020 applcation
    the user navigates to the page                  ${server}/competition/${competitionId}/overview
