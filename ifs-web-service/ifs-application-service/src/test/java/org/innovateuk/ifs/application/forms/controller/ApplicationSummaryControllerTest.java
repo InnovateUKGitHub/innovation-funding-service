@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryContr
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
@@ -52,8 +53,10 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    private void applicationSummary() throws Exception {
-        CompetitionResource competition = newCompetitionResource().build();
+    public void applicationSummary() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
+                .build();
         ApplicationResource app = newApplicationResource().build();
         app.setCompetition(competition.getId());
         when(applicationService.getById(app.getId())).thenReturn(app);

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -29,18 +28,16 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 @Controller
 @RequestMapping("/application")
 public class ReviewAndSubmitController {
-    private static final String FORM_ATTR_NAME = "applicationSubmitForm";
+    public static final String FORM_ATTR_NAME = "applicationSubmitForm";
 
     private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
-    private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationService applicationService, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter) {
+    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.reviewAndSubmitViewModelPopulator = reviewAndSubmitViewModelPopulator;
-        this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.applicationModelPopulator = applicationModelPopulator;
@@ -111,7 +108,7 @@ public class ReviewAndSubmitController {
                                     UserResource user,
                                     HttpServletResponse response) {
 
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
@@ -131,7 +128,7 @@ public class ReviewAndSubmitController {
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
                                    @PathVariable long applicationId) {
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         if (!application.isSubmitted()) {
             return "redirect:/application/" + applicationId;
