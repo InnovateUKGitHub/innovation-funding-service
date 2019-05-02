@@ -53,7 +53,7 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    };
+    }
 
     /**
      * Get a list of properties (name, description, state, comments) for all permission rules
@@ -96,7 +96,7 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
                         urlParameters.append("&");
                     }
                     urlParameters.append(expression.getName()).append("={").append(expression.getName()).append("}");
-                };
+                }
 
                 rows.add(new String[] {contextPath+p+urlParameters.toString(), httpMethod.toString(), ruleString, ruleName, ruleDesc});
             });

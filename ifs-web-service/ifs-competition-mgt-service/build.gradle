@@ -55,7 +55,7 @@ dependencies {
     compile project(':ifs-web-service:ifs-assessment-commons')
     compile project(':ifs-rest-api-service:eu-grant-registration-rest-api-service')
 
-    compile 'org.apache.commons:commons-collections4:4.1'
+    compile 'org.apache.commons:commons-collections4:4.3'
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')

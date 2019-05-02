@@ -10,5 +10,5 @@ public enum  ProjectActivityStates {
     PENDING,
     COMPLETE,
     REJECTED,
-    VIEW;
+    VIEW
 }

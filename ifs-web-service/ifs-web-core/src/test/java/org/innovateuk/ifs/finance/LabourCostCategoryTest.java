@@ -89,11 +89,11 @@ public class LabourCostCategoryTest {
 
     @Test
     public void getWorkingDaysPerYearCostItemShouldReturnNullWhenWorkingDaysPerYearCostItemIsNull() throws Exception{
-        Assert.assertEquals(null, labourCostCategory.getWorkingDaysPerYearCostItem());
+        Assert.assertNull(labourCostCategory.getWorkingDaysPerYearCostItem());
     }
 
     @Test
     public void excludeFromTotalCostShouldReturnBoolean() {
-        Assert.assertEquals(labourCostCategory.excludeFromTotalCost(), false);
+        Assert.assertFalse(labourCostCategory.excludeFromTotalCost());
     }
 }

@@ -94,7 +94,7 @@ public class RestCacheMethodInterceptorTest {
         Assert.assertEquals(4, base.numberTimesMethod1Called);
     }
 
-    private final InvocationHandler forBaseWithInterceptor(final Object base, final MethodInterceptor interceptor) {
+    private InvocationHandler forBaseWithInterceptor(final Object base, final MethodInterceptor interceptor) {
         return new InvocationHandler() {
             public Object invoke(final Object proxy, final Method method, Object[] args) throws Throwable {
                 final Object[] arguments = args == null ? new Object[0] : args;

@@ -44,11 +44,7 @@ public final class RestLookupCallbacks {
             Optional<T> result,
             Error failureResponse) {
 
-        if(result.isPresent()){
-            return restSuccess(result.get());
-        }else{
-            return restFailure(failureResponse);
-        }
+        return result.map(RestResult::restSuccess).orElseGet(() -> restFailure(failureResponse));
     }
 
     /**
@@ -158,10 +154,7 @@ public final class RestLookupCallbacks {
         return restSuccess(list.iterator().next());
     }
     public static <T> RestResult<T> getOptionalElementOrFail(Optional<T> item) {
-        if (!item.isPresent()) {
-            return RestResult.restFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
-        }
-        return restSuccess(item.get());
+        return item.map(RestResult::restSuccess).orElseGet(() -> RestResult.restFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED));
     }
 
     /**

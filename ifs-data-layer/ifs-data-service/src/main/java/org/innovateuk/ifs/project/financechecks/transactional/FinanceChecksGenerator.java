@@ -103,7 +103,8 @@ public class FinanceChecksGenerator {
             List<FinanceRowMetaValue> metaValues = simpleMap(original.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
             newRow.setFinanceRowMetadata(metaValues);
             newRow.setDescription(original.getDescription());
-            newRow.setItem(original.getItem());
+            // map H2020 totals directly to conventional totals as they are treated exactly the same in project setup
+            newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
             newRow.setName(original.getName());
             newRow.setQuantity(original.getQuantity());
             newRow.setQuestion(original.getQuestion());
