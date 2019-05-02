@@ -21,11 +21,6 @@ public class ApplicationTeamSummaryViewModel extends AbstractQuestionSummaryView
     }
 
     @Override
-    public String getName() {
-        return "Application team";
-    }
-
-    @Override
     public String getFragment() {
         return "application-team";
     }

@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
 
-    private final String name;
     private final String competitionName;
     private final String applicationName;
     private final LocalDate startDate;
@@ -20,7 +19,6 @@ public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryV
 
     public ApplicationDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
         super(data, question);
-        this.name = question.getShortName();
         this.competitionName = data.getCompetition().getName();
         this.applicationName = data.getApplication().getName();
         this.startDate = data.getApplication().getStartDate();
@@ -66,11 +64,6 @@ public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryV
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

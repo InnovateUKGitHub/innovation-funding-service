@@ -58,7 +58,7 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
 
     @Override
     public String getName() {
-        return "Finance summary";
+        return fullyFunded ? "Funding breakdown" : "Finance summary";
     }
 
     @Override

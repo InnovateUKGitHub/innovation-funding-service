@@ -5,15 +5,15 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 
 public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
 
-    private final String name;
+    private final String displayName;
     private final String question;
     private final String answer;
     private final String appendixFilename;
     private final Long appendixId;
 
-    public GenericQuestionSummaryViewModel(ApplicationSummaryData data, QuestionResource questionResource, String name, String question, String answer, String appendixFilename, Long appendixId) {
+    public GenericQuestionSummaryViewModel(ApplicationSummaryData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId) {
         super(data, questionResource);
-        this.name = name;
+        this.displayName = displayName;
         this.question = question;
         this.answer = answer;
         this.appendixFilename = appendixFilename;
@@ -38,7 +38,7 @@ public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryView
 
     @Override
     public String getName() {
-        return name;
+        return displayName;
     }
 
     @Override
