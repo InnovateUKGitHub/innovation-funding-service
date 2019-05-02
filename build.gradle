@@ -48,7 +48,7 @@ buildscript {
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'

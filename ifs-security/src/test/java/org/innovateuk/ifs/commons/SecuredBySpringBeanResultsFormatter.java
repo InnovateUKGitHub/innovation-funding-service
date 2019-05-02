@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
-import static org.innovateuk.ifs.commons.ProxyUtils.getMethodCallDescription;
+import static org.innovateuk.ifs.commons.security.ProxyUtils.getMethodCallDescription;
 
 
 /**
