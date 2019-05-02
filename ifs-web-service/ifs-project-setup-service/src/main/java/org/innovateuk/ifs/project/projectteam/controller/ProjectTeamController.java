@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +20,6 @@ public class ProjectTeamController {
 
     private ProjectTeamViewModelPopulator projectTeamPopulator;
 
-    ProjectTeamController() {}
-
-    @Autowired
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator) {
         this.projectTeamPopulator = projectTeamPopulator;
     }
