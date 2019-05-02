@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -58,6 +59,7 @@ public class ReviewAndSubmitController {
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
     @GetMapping("/{applicationId}/review-and-submit")
+    @AsyncMethod
     public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
