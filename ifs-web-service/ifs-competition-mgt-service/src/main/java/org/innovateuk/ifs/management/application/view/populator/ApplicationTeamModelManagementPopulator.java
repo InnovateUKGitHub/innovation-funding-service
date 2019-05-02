@@ -1,4 +1,3 @@
-
 package org.innovateuk.ifs.management.application.view.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
