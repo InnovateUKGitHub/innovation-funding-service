@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
-import org.innovateuk.ifs.application.summary.viewmodel.NewGrantTransferDetailsSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
@@ -14,7 +14,7 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryViewModelPopulator<NewGrantTransferDetailsSummaryViewModel> {
+public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryViewModelPopulator<GrantTransferDetailsSummaryViewModel> {
 
     private final EuGrantTransferRestService grantTransferRestService;
 
@@ -23,10 +23,10 @@ public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryView
     }
 
     @Override
-    public NewGrantTransferDetailsSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+    public GrantTransferDetailsSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
         Optional<EuGrantTransferResource> grantTransferResource = grantTransferRestService.findDetailsByApplicationId(data.getApplication().getId()).getOptionalSuccessObject();
         if (grantTransferResource.isPresent()) {
-            return new NewGrantTransferDetailsSummaryViewModel(
+            return new GrantTransferDetailsSummaryViewModel(
                     data,
                     question,
                     grantTransferResource.get().getGrantAgreementNumber(),
@@ -41,7 +41,7 @@ public class GrantTransferDetailsSummaryPopulator implements QuestionSummaryView
                             .orElse(null)
             );
         }
-        return new NewGrantTransferDetailsSummaryViewModel(data, question);
+        return new GrantTransferDetailsSummaryViewModel(data, question);
     }
 
     @Override

@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -16,7 +14,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,20 +32,14 @@ public class ReviewAndSubmitController {
     private static final String FORM_ATTR_NAME = "applicationSubmitForm";
 
     private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
-    private QuestionService questionService;
-    private QuestionRestService questionRestService;
-    private UserRestService userRestService;
     private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, QuestionService questionService, QuestionRestService questionRestService, UserRestService userRestService, ApplicationService applicationService, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter) {
+    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationService applicationService, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.reviewAndSubmitViewModelPopulator = reviewAndSubmitViewModelPopulator;
-        this.questionService = questionService;
-        this.questionRestService = questionRestService;
-        this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;

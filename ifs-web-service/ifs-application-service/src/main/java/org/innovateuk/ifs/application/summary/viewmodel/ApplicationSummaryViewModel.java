@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import java.time.LocalDate;
 
 public class ApplicationSummaryViewModel {
-    private final NewApplicationSummaryViewModel applicationSummaryViewModel;
+    private final ApplicationRowsSummaryViewModel applicationSummaryViewModel;
     private final ApplicationResource application;
     private final CompetitionResource competition;
     private final boolean projectWithdrawn;
@@ -22,7 +22,7 @@ public class ApplicationSummaryViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
 
-    public ApplicationSummaryViewModel(NewApplicationSummaryViewModel applicationSummaryViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
+    public ApplicationSummaryViewModel(ApplicationRowsSummaryViewModel applicationSummaryViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
         this.applicationSummaryViewModel = applicationSummaryViewModel;
         this.application = application;
         this.competition = competition;
@@ -39,7 +39,7 @@ public class ApplicationSummaryViewModel {
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
     }
 
-    public NewApplicationSummaryViewModel getApplicationSummaryViewModel() {
+    public ApplicationRowsSummaryViewModel getApplicationSummaryViewModel() {
         return applicationSummaryViewModel;
     }
 

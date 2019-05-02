@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.summary.populator;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
 import org.innovateuk.ifs.application.summary.viewmodel.GenericQuestionSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.NewQuestionSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowSummaryViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -20,7 +20,7 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 public class GenericQuestionSummaryViewModelPopulator implements QuestionSummaryViewModelPopulator {
 
     @Override
-    public NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
+    public ApplicationRowSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToFormInputs().get(question.getId());
         Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> FormInputType.TEXTAREA.equals(formInput.getType()))
                 .findAny();

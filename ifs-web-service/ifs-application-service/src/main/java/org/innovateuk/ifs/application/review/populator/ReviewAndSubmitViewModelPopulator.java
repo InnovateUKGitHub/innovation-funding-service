@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.review.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.summary.populator.NewApplicationSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.summary.viewmodel.NewApplicationSummaryViewModel;
+import org.innovateuk.ifs.application.summary.populator.ApplicationRowsSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowsSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.application.summary.ApplicationSummarySettings.
 public class ReviewAndSubmitViewModelPopulator {
 
     @Autowired
-    private NewApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
+    private ApplicationRowsSummaryViewModelPopulator applicationRowsSummaryViewModelPopulator;
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -35,7 +35,7 @@ public class ReviewAndSubmitViewModelPopulator {
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         boolean isApplicationReadyForSubmit = applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
 
-        NewApplicationSummaryViewModel applicationSummaryViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
+        ApplicationRowsSummaryViewModel applicationSummaryViewModel = applicationRowsSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
                 .setIncludeQuestionLinks(true)
                 .setIncludeStatuses(true));
         return new ReviewAndSubmitViewModel(applicationSummaryViewModel, application, competition,

@@ -4,12 +4,12 @@ import org.innovateuk.ifs.application.summary.ApplicationSummarySettings;
 
 import java.util.Set;
 
-public class NewApplicationSummaryViewModel {
+public class ApplicationRowsSummaryViewModel {
 
     private final ApplicationSummarySettings settings;
-    private final Set<NewSectionSummaryViewModel> sections;
+    private final Set<ApplicationRowGroupSummaryViewModel> sections;
 
-    public NewApplicationSummaryViewModel(ApplicationSummarySettings settings, Set<NewSectionSummaryViewModel> sections) {
+    public ApplicationRowsSummaryViewModel(ApplicationSummarySettings settings, Set<ApplicationRowGroupSummaryViewModel> sections) {
         this.settings = settings;
         this.sections = sections;
     }
@@ -18,7 +18,7 @@ public class NewApplicationSummaryViewModel {
         return settings;
     }
 
-    public Set<NewSectionSummaryViewModel> getSections() {
+    public Set<ApplicationRowGroupSummaryViewModel> getSections() {
         return sections;
     }
 }

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 
-public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
+public class FinanceSummaryViewModel implements ApplicationRowSummaryViewModel {
 
     private final long applicationId;
     private final boolean fullyFunded;

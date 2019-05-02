@@ -7,7 +7,7 @@ import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class NewGrantTransferDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+public class GrantTransferDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
 
     private final String grantAgreementNumber;
 
@@ -25,11 +25,11 @@ public class NewGrantTransferDetailsSummaryViewModel extends AbstractQuestionSum
 
     private final EuActionTypeResource actionType;
 
-    public NewGrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
+    public GrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
         this(data, question, null, null, null, null, null, null, null, null);
     }
 
-    public NewGrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
+    public GrantTransferDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
         super(data, question);
         this.grantAgreementNumber = grantAgreementNumber;
         this.participantId = participantId;

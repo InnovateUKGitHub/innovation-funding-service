@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.summary.viewmodel;
 import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
-public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
 
     private final String displayName;
     private final String question;

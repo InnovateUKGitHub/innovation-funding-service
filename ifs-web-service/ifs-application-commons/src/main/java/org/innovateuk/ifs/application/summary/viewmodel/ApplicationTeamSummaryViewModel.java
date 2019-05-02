@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 /**
  * Holder of model attributes for the Application Team view.
  */
-public class ApplicationTeamSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+public class ApplicationTeamSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
     private final ApplicationTeamResource team;
 
 

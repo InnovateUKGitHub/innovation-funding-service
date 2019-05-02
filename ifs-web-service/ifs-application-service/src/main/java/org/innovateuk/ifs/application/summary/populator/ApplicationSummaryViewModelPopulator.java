@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.NewApplicationSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowsSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.application.summary.ApplicationSummarySettings.
 public class ApplicationSummaryViewModelPopulator {
 
     @Autowired
-    private NewApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
+    private ApplicationRowsSummaryViewModelPopulator applicationSummaryViewModelPopulator;
 
     @Autowired
     private UserService userService;
@@ -27,7 +27,7 @@ public class ApplicationSummaryViewModelPopulator {
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, boolean support) {
 
-        NewApplicationSummaryViewModel applicationSummaryViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
+        ApplicationRowsSummaryViewModel applicationSummaryViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
         return new ApplicationSummaryViewModel(applicationSummaryViewModel, application, competition,
                 isProjectWithdrawn(application.getId()), support);
     }

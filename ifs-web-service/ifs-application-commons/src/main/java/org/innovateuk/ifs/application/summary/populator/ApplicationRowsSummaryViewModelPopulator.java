@@ -10,9 +10,9 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
 import org.innovateuk.ifs.application.summary.ApplicationSummarySettings;
-import org.innovateuk.ifs.application.summary.viewmodel.NewApplicationSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.NewQuestionSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.NewSectionSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowsSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowSummaryViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationRowGroupSummaryViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,7 +35,7 @@ import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class NewApplicationSummaryViewModelPopulator extends AsyncAdaptor {
+public class ApplicationRowsSummaryViewModelPopulator extends AsyncAdaptor {
 
     private ApplicationRestService applicationRestService;
 
@@ -57,7 +57,7 @@ public class NewApplicationSummaryViewModelPopulator extends AsyncAdaptor {
 
     private Map<QuestionSetupType, QuestionSummaryViewModelPopulator<?>> populatorMap;
 
-    public NewApplicationSummaryViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceSummaryViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, List<QuestionSummaryViewModelPopulator<?>> populators) {
+    public ApplicationRowsSummaryViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceSummaryViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, List<QuestionSummaryViewModelPopulator<?>> populators) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.formInputRestService = formInputRestService;
@@ -72,48 +72,48 @@ public class NewApplicationSummaryViewModelPopulator extends AsyncAdaptor {
                 populator.questionTypes().forEach(type -> populatorMap.put(type, populator)));
     }
 
-    public NewApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationSummarySettings settings) {
+    public ApplicationRowsSummaryViewModel populate(long applicationId, UserResource user, ApplicationSummarySettings settings) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         return populate(application, competition, user, settings);
     }
 
-    public NewApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationSummarySettings settings) {
+    public ApplicationRowsSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationSummarySettings settings) {
         Future<List<QuestionResource>> questionsFuture = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
         Future<List<FormInputResource>> formInputsFuture = async(() -> formInputRestService.getByCompetitionId(competition.getId()).getSuccess());
         Future<List<FormInputResponseResource>> formInputResponsesFuture = async(() -> formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> questionStatusesFuture = getQuestionStatuses(application, user, settings);
         ApplicationSummaryData data = new ApplicationSummaryData(application, competition, user, resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
 
-        Set<NewSectionSummaryViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
+        Set<ApplicationRowGroupSummaryViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
                 .stream()
                 .filter(section -> section.getParentSection() == null)
                 .map(section -> async(() -> sectionView(section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new NewApplicationSummaryViewModel(settings, sectionViews);
+        return new ApplicationRowsSummaryViewModel(settings, sectionViews);
     }
 
-    private NewSectionSummaryViewModel sectionView(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
+    private ApplicationRowGroupSummaryViewModel sectionView(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
         if (!section.getChildSections().isEmpty()) {
             return sectionsWithChildren(section, settings, data);
         }
-        Set<NewQuestionSummaryViewModel> questionViews = section.getQuestions()
+        Set<ApplicationRowSummaryViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
                 .map(question ->  populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new NewSectionSummaryViewModel(section.getName(), questionViews);
+        return new ApplicationRowGroupSummaryViewModel(section.getName(), questionViews);
     }
 
     //Currently only the finance section has child sections.
-    private NewSectionSummaryViewModel sectionsWithChildren(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
-        NewQuestionSummaryViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new NewSectionSummaryViewModel(section.getName(), asSet(finance));
+    private ApplicationRowGroupSummaryViewModel sectionsWithChildren(SectionResource section, ApplicationSummarySettings settings, ApplicationSummaryData data) {
+        ApplicationRowSummaryViewModel finance = financeSummaryViewModelPopulator.populate(data);
+        return new ApplicationRowGroupSummaryViewModel(section.getName(), asSet(finance));
     }
 
-    public NewQuestionSummaryViewModel populateQuestionViewModel(QuestionResource question, ApplicationSummaryData data, ApplicationSummarySettings settings) {
+    public ApplicationRowSummaryViewModel populateQuestionViewModel(QuestionResource question, ApplicationSummaryData data, ApplicationSummarySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
             return populatorMap.get(question.getQuestionSetupType()).populate(question, data);
         } else {

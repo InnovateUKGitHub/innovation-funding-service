@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
 
     private final String competitionName;
     private final String applicationName;

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.Optional;
 
-public abstract class AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+public abstract class AbstractQuestionSummaryViewModel implements ApplicationRowSummaryViewModel {
 
     private final long applicationId;
     private final long questionId;

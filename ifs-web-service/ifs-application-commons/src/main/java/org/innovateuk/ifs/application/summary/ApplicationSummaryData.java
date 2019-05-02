@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.summary;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -69,6 +71,38 @@ public class ApplicationSummaryData {
 
     public Map<Long, QuestionStatusResource> getQuestionToQuestionStatus() {
         return questionToQuestionStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationSummaryData that = (ApplicationSummaryData) o;
+
+        return new EqualsBuilder()
+                .append(competition, that.competition)
+                .append(application, that.application)
+                .append(user, that.user)
+                .append(questionIdToQuestion, that.questionIdToQuestion)
+                .append(questionIdToFormInputs, that.questionIdToFormInputs)
+                .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
+                .append(questionToQuestionStatus, that.questionToQuestionStatus)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competition)
+                .append(application)
+                .append(user)
+                .append(questionIdToQuestion)
+                .append(questionIdToFormInputs)
+                .append(formInputIdToFormInputResponses)
+                .append(questionToQuestionStatus)
+                .toHashCode();
     }
 }
 
