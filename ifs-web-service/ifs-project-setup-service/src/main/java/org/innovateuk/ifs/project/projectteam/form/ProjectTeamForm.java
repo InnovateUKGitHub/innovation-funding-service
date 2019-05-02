@@ -11,9 +11,9 @@ public class ProjectTeamForm {
     @NotBlank(message = "{validation.standard.name.required}")
     private String name;
 
-    @NotBlank(message = "{validation.invite.email.required}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @Size(max = 254, message = "{validation.standard.email.length.max}")
+    @NotBlank(message = "{validation.invite.email.format.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.invite.email.format.required}")
+    @Size(max = 254, message = "{validation.invite.email.format.required}")
     private String email;
 
     public String getName() {
