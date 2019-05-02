@@ -16,7 +16,7 @@ public class ResearchCategorySummaryViewModelPopulator implements QuestionSummar
 
     @Override
     public NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
-        return new ResearchCategorySummaryViewModel(data.getApplication().getResearchCategory().getName(), question.getShortName());
+        return new ResearchCategorySummaryViewModel(data, question);
     }
 
     @Override

@@ -11,13 +11,54 @@
         <!--/* Show the collapsible sections */-->
         <th:block th:each="question : ${section.questions}">
             <div class="collapsible">
-                <h3 th:text="${question.name}"></h3>
+                <h3>
+                    <span th:text="${question.name}"></span>
+                    <th:block th:if="${model.settings.includeStatuses}">
+                        <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
+                        <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+                    </th:block>
+                </h3>
                 <div class="question">
                     <th:block th:insert="new/question-summaries :: ${question.fragment} (${question})"/>
+
+                    <th:block th:if="${model.settings.includeQuestionLinks && question.editUrl != null}">
+                        <div class="form-footer govuk-!-margin-top-6">
+                            <a class="govuk-link" th:href="${question.editUrl}">Return and edit</a>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </th:block>
     </th:block>
 </th:block>
+
+<th:block th:fragment="organisation(organisation, isLead, orgId)">
+    <h2 class="govuk-heading-m">
+        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
+    </h2>
+
+    <h3 class="govuk-heading-s">Organisation type</h3>
+    <p class="govuk-body" th:text="${organisation.organisationTypeName}">ORGANISATION TYPE</p>
+
+    <div class="table-overflow govuk-!-margin-top-6">
+        <table class="govuk-table" th:id="${'applicationTeamOrganisationUser' + orgId}">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header width-30-percent" scope="col">Full name</th>
+                <th class="govuk-table__header width-30-percent" scope="col">Email</th>
+                <th class="govuk-table__header width-30-percent" scope="col">Telephone</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="user : ${organisation.users}">
+                <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
+                <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
+                <td class="govuk-table__cell" th:text="${user.phoneNumber}">0800</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
 
 </html>

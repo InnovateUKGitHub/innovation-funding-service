@@ -4,5 +4,7 @@ public interface NewQuestionSummaryViewModel {
 
     String getName();
     String getFragment();
+    String getEditUrl();
+    boolean isComplete();
 
 }

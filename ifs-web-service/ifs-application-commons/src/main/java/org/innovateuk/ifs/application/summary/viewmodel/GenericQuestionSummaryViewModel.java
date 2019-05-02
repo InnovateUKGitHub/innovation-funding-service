@@ -1,22 +1,22 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
-public class GenericQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
+import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+
+public class GenericQuestionSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
 
     private final String name;
     private final String question;
     private final String answer;
     private final String appendixFilename;
-    private final long applicationId;
-    private final long questionId;
     private final Long appendixId;
 
-    public GenericQuestionSummaryViewModel(String name, String question, String answer, String appendixFilename, long applicationId, long questionId, Long appendixId) {
+    public GenericQuestionSummaryViewModel(ApplicationSummaryData data, QuestionResource questionResource, String name, String question, String answer, String appendixFilename, Long appendixId) {
+        super(data, questionResource);
         this.name = name;
         this.question = question;
         this.answer = answer;
         this.appendixFilename = appendixFilename;
-        this.applicationId = applicationId;
-        this.questionId = questionId;
         this.appendixId = appendixId;
     }
 
@@ -32,14 +32,6 @@ public class GenericQuestionSummaryViewModel implements NewQuestionSummaryViewMo
         return appendixFilename;
     }
 
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public long getQuestionId() {
-        return questionId;
-    }
-
     public Long getAppendixId() {
         return appendixId;
     }
@@ -53,4 +45,5 @@ public class GenericQuestionSummaryViewModel implements NewQuestionSummaryViewMo
     public String getFragment() {
         return "generic";
     }
+
 }

@@ -61,31 +61,6 @@
                 </th:block>
             </dl>
         </div>
-        <div class="govuk-grid-column-one-half">
-            <th:block th:if="${showApplicationTeamLink}">
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${originQuery}"
-                           class="govuk-link">
-                            view contributors and collaborators
-                        </a>
-                    </li>
-                    <li th:with="procurementCompetition=${competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-                        <th:block th:if="${procurementCompetition}">
-                            <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank"
-                                                     class="govuk-link">view the draft contract</a> (opens in new
-                                window).</p>
-                        </th:block>
-                        <th:block th:unless="${procurementCompetition}">
-                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}"
-                               class="govuk-link">
-                                view the award terms and conditions
-                            </a>
-                        </th:block>
-                    </li>
-                </ul>
-            </th:block>
-        </div>
     </div>
 </th:block>
 
@@ -126,40 +101,12 @@
 </th:block>
 
 <th:block th:fragment="application-team (model)">
-    <th:block th:insert="new/question-summaries :: organisation(${model.team.leadOrganisation}, true, '0')" />
+    <th:block th:insert="new/application-summary :: organisation(${model.team.leadOrganisation}, true, '0')" />
     <br />
     <th:block th:each="organisation,status : ${model.team.partnerOrganisations}">
-        <th:block th:insert="new/question-summaries :: organisation(${organisation}, false, ${status.index + 1})"/>
+        <th:block th:insert="new/application-summary :: organisation(${organisation}, false, ${status.index + 1})"/>
         <br />
     </th:block>
-</th:block>
-
-<th:block th:fragment="organisation(organisation, isLead, orgId)">
-    <h2 class="govuk-heading-m">
-        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
-    </h2>
-
-    <h3 class="govuk-heading-s">Organisation type</h3>
-    <p class="govuk-body" th:text="${organisation.organisationTypeName}">ORGANISATION TYPE</p>
-
-    <div class="table-overflow govuk-!-margin-top-6">
-        <table class="govuk-table" th:id="${'applicationTeamOrganisationUser' + orgId}">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header width-30-percent" scope="col">Full name</th>
-                <th class="govuk-table__header width-30-percent" scope="col">Email</th>
-                <th class="govuk-table__header width-30-percent" scope="col">Telephone</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row" th:each="user : ${organisation.users}">
-                <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
-                <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
-                <td class="govuk-table__cell" th:text="${user.phoneNumber}">0800</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
 </th:block>
 
 </html>

@@ -7,9 +7,9 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.util.Set;
 
-public interface QuestionSummaryViewModelPopulator {
+public interface QuestionSummaryViewModelPopulator<M extends NewQuestionSummaryViewModel> {
 
-    NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data);
+    M populate(QuestionResource question, ApplicationSummaryData data);
 
     Set<QuestionSetupType> questionTypes();
 }

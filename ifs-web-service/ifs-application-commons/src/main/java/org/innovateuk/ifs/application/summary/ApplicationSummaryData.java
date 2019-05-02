@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -24,9 +25,10 @@ public class ApplicationSummaryData {
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToFormInputs;
     private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    private final Map<Long, QuestionStatusResource> questionToQuestionStatus;
 
 
-    public ApplicationSummaryData(ApplicationResource application, CompetitionResource competition, UserResource user, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses) {
+    public ApplicationSummaryData(ApplicationResource application, CompetitionResource competition, UserResource user, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -36,6 +38,9 @@ public class ApplicationSummaryData {
         this.questionIdToFormInputs = Multimaps.index(formInputs, FormInputResource::getQuestion);
         this.formInputIdToFormInputResponses = formInputResponses.stream()
                 .collect(toMap(FormInputResponseResource::getFormInput, Function.identity()));
+        this.questionToQuestionStatus = questionStatuses.stream()
+                .filter(status -> status.getMarkedAsCompleteBy() != null)
+                .collect(toMap(QuestionStatusResource::getQuestion, Function.identity()));
     }
 
     public Map<Long, QuestionResource> getQuestionIdToQuestion() {
@@ -60,6 +65,10 @@ public class ApplicationSummaryData {
 
     public Map<Long, FormInputResponseResource> getFormInputIdToFormInputResponses() {
         return formInputIdToFormInputResponses;
+    }
+
+    public Map<Long, QuestionStatusResource> getQuestionToQuestionStatus() {
+        return questionToQuestionStatus;
     }
 }
 

@@ -23,7 +23,7 @@ public class ApplicationTeamSummaryViewModelPopulator implements QuestionSummary
 
     @Override
     public NewQuestionSummaryViewModel populate(QuestionResource question, ApplicationSummaryData data) {
-        return new ApplicationTeamSummaryViewModel(applicationSummaryRestService.getApplicationTeam(data.getApplication().getId()).getSuccess());
+        return new ApplicationTeamSummaryViewModel(applicationSummaryRestService.getApplicationTeam(data.getApplication().getId()).getSuccess(), data, question);
     }
 
     @Override

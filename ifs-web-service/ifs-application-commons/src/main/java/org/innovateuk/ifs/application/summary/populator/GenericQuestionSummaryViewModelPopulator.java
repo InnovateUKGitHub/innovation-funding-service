@@ -34,12 +34,10 @@ public class GenericQuestionSummaryViewModelPopulator implements QuestionSummary
         Optional<FormInputResponseResource> appendixResponse = appendix
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        return new GenericQuestionSummaryViewModel(questionName(question),
+        return new GenericQuestionSummaryViewModel(data, question, questionName(question),
                 question.getName(),
                 textResponse.map(FormInputResponseResource::getValue).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                data.getApplication().getId(),
-                question.getId(),
                 appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null)
         );
     }

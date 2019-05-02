@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.application.summary.ApplicationSummaryData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationDetailsSummaryViewModel implements NewQuestionSummaryViewModel {
+public class ApplicationDetailsSummaryViewModel extends AbstractQuestionSummaryViewModel implements NewQuestionSummaryViewModel {
 
     private final String name;
     private final String competitionName;
@@ -19,17 +18,18 @@ public class ApplicationDetailsSummaryViewModel implements NewQuestionSummaryVie
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
 
-    public ApplicationDetailsSummaryViewModel(QuestionResource question, ApplicationResource application, CompetitionResource competition) {
+    public ApplicationDetailsSummaryViewModel(ApplicationSummaryData data, QuestionResource question) {
+        super(data, question);
         this.name = question.getShortName();
-        this.competitionName = competition.getName();
-        this.applicationName = application.getName();
-        this.startDate = application.getStartDate();
-        this.duration = application.getDurationInMonths();
-        this.resubmission = application.getResubmission();
-        this.canSelectInnovationArea = competition.getInnovationAreas().size() > 1;
-        this.innovationAreaName = application.getInnovationArea().getName();
-        this.previousApplicationNumber = application.getPreviousApplicationNumber();
-        this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.competitionName = data.getCompetition().getName();
+        this.applicationName = data.getApplication().getName();
+        this.startDate = data.getApplication().getStartDate();
+        this.duration = data.getApplication().getDurationInMonths();
+        this.resubmission = data.getApplication().getResubmission();
+        this.canSelectInnovationArea = data.getCompetition().getInnovationAreas().size() > 1;
+        this.innovationAreaName = data.getApplication().getInnovationArea().getName();
+        this.previousApplicationNumber = data.getApplication().getPreviousApplicationNumber();
+        this.previousApplicationTitle = data.getApplication().getPreviousApplicationTitle();
     }
 
     public String getCompetitionName() {
@@ -77,4 +77,5 @@ public class ApplicationDetailsSummaryViewModel implements NewQuestionSummaryVie
     public String getFragment() {
         return "application-details";
     }
+
 }

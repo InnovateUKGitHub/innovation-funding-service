@@ -14,7 +14,6 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final boolean collaborativeProject;
 
-
     public FinanceSummaryViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
@@ -65,5 +64,15 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
     @Override
     public String getFragment() {
         return "finance-summary";
+    }
+
+    @Override
+    public boolean isComplete() {
+        return getApplicationFinanceSummaryViewModel().getYourFinancesCompleteForAllOrganisations() ;
+    }
+
+    @Override
+    public String getEditUrl() {
+        return null;
     }
 }
