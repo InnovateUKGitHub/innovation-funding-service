@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.application.summary.controller;
 
-import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.summary.populator.NewApplicationSummaryViewModelPopulator;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -26,7 +25,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static org.innovateuk.ifs.application.forms.controller.ApplicationSubmitController.APPLICATION_SUBMIT_FROM_ATTR_NAME;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
@@ -45,13 +43,12 @@ public class ApplicationSummaryController {
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
     private EuGrantTransferRestService euGrantTransferRestService;
-    private NewApplicationSummaryViewModelPopulator newApplicationSummaryViewModelPopulator;
 
     public ApplicationSummaryController() {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService, UserService userService, UserRestService userRestService, CompetitionRestService competitionRestService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService, NewApplicationSummaryViewModelPopulator newApplicationSummaryViewModelPopulator) {
+    public ApplicationSummaryController(ApplicationService applicationService, UserService userService, UserRestService userRestService, CompetitionRestService competitionRestService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService) {
         this.applicationService = applicationService;
         this.userService = userService;
         this.userRestService = userRestService;
@@ -59,35 +56,26 @@ public class ApplicationSummaryController {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
         this.euGrantTransferRestService = euGrantTransferRestService;
-        this.newApplicationSummaryViewModelPopulator = newApplicationSummaryViewModelPopulator;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     @GetMapping("/{applicationId}/summary")
+    @AsyncMethod
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
-
-        if (!model.containsAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME)) {
-            model.addAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, new ApplicationSubmitForm());
-        }
-
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-
         boolean isSupport = isSupport(user);
         if ((competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) && !isSupport) {
             return redirectToFeedback(applicationId, queryParams);
         }
-
         UserResource userForModel;
         if (isSupport) {
             ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRoleOrNull(applicationId);
@@ -97,7 +85,7 @@ public class ApplicationSummaryController {
         }
 
         model.addAttribute("originQuery", originQuery);
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, form, isSupport));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, isSupport));
         return "application-summary";
     }
 

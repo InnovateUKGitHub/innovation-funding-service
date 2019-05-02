@@ -13,8 +13,9 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final boolean collaborativeProject;
+    private final boolean open;
 
-    public FinanceSummaryViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject) {
+    public FinanceSummaryViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject, boolean open) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
@@ -22,6 +23,7 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.collaborativeProject = collaborativeProject;
+        this.open = open;
     }
 
     public long getApplicationId() {
@@ -53,7 +55,7 @@ public class FinanceSummaryViewModel implements NewQuestionSummaryViewModel {
     }
 
     public boolean isOpen() {
-        return true;
+        return open;
     }
 
     @Override

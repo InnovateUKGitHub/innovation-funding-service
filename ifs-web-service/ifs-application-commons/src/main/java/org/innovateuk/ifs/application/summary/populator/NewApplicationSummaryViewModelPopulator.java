@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
+import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.application.summary.ApplicationSummarySettings;
 import org.innovateuk.ifs.application.summary.viewmodel.NewApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.NewQuestionSummaryViewModel;
 import org.innovateuk.ifs.application.summary.viewmodel.NewSectionSummaryViewModel;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -27,12 +29,13 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.Future;
 
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class NewApplicationSummaryViewModelPopulator {
+public class NewApplicationSummaryViewModelPopulator extends AsyncAdaptor {
 
     private ApplicationRestService applicationRestService;
 
@@ -76,13 +79,17 @@ public class NewApplicationSummaryViewModelPopulator {
     }
 
     public NewApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationSummarySettings settings) {
-        List<QuestionResource> questions = questionRestService.findByCompetition(application.getCompetition()).getSuccess();
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionId(competition.getId()).getSuccess();
-        List<FormInputResponseResource> formInputResponses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
+        Future<List<QuestionResource>> questionsFuture = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
+        Future<List<FormInputResource>> formInputsFuture = async(() -> formInputRestService.getByCompetitionId(competition.getId()).getSuccess());
+        Future<List<FormInputResponseResource>> formInputResponsesFuture = async(() -> formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess());
+        Future<List<QuestionStatusResource>> questionStatusesFuture = getQuestionStatuses(application, user, settings);
+        ApplicationSummaryData data = new ApplicationSummaryData(application, competition, user, resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
+
         Set<NewSectionSummaryViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .map(section -> sectionView(section, settings, new ApplicationSummaryData(application, competition, user, questions, formInputs, formInputResponses, getQuestionStatuses(application, user, settings))))
+                .map(section -> async(() -> sectionView(section, settings, data)))
+                .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
         return new NewApplicationSummaryViewModel(settings, sectionViews);
@@ -114,12 +121,14 @@ public class NewApplicationSummaryViewModelPopulator {
         }
     }
 
-    private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationSummarySettings settings) {
+    private Future<List<QuestionStatusResource>> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationSummarySettings settings) {
         if (!settings.isIncludeStatuses()) {
-            return Collections.emptyList();
+            return ConcurrentUtils.constantFuture(Collections.emptyList());
         }
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
-        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
+        return async(() ->{
+            OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
+            return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
+        });
     }
 
 

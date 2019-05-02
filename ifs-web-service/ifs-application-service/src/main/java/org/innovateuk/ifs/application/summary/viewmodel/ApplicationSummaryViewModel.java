@@ -1,80 +1,54 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
-import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
-import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
-import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-public class ApplicationSummaryViewModel {
+import java.time.LocalDate;
 
-    private final ApplicationResource currentApplication;
-    private final CompetitionResource currentCompetition;
-    private final boolean applicationReadyForSubmit;
-    private final SummaryViewModel summaryViewModel;
-    private final ApplicationTeamViewModel applicationTeamViewModel;
-    private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
-    private final GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel;
-    private final GrantAgreementSummaryViewModel grantAgreementSummaryViewModel;
-    private final boolean userIsLeadApplicant;
+public class ApplicationSummaryViewModel {
+    private final NewApplicationSummaryViewModel applicationSummaryViewModel;
+    private final ApplicationResource application;
+    private final CompetitionResource competition;
     private final boolean projectWithdrawn;
     private final boolean support;
-    private final boolean collaborativeProject;
 
-    public ApplicationSummaryViewModel(ApplicationResource currentApplication,
-                                       CompetitionResource currentCompetition,
-                                       boolean applicationReadyForSubmit,
-                                       SummaryViewModel summaryViewModel,
-                                       ApplicationTeamViewModel applicationTeamViewModel,
-                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
-                                       boolean userIsLeadApplicant,
-                                       boolean projectWithdrawn,
-                                       boolean support,
-                                       boolean collaborativeProject,
-                                       GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel,
-                                       GrantAgreementSummaryViewModel grantAgreementSummaryViewModel) {
-        this.currentApplication = currentApplication;
-        this.currentCompetition = currentCompetition;
-        this.applicationReadyForSubmit = applicationReadyForSubmit;
-        this.summaryViewModel = summaryViewModel;
-        this.applicationTeamViewModel = applicationTeamViewModel;
-        this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
-        this.userIsLeadApplicant = userIsLeadApplicant;
+    private final String competitionName;
+    private final String applicationName;
+    private final LocalDate startDate;
+    private final Long duration;
+    private final Boolean resubmission;
+    private final boolean canSelectInnovationArea;
+    private final String innovationAreaName;
+    private final String previousApplicationNumber;
+    private final String previousApplicationTitle;
+
+    public ApplicationSummaryViewModel(NewApplicationSummaryViewModel applicationSummaryViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
+        this.applicationSummaryViewModel = applicationSummaryViewModel;
+        this.application = application;
+        this.competition = competition;
         this.projectWithdrawn = projectWithdrawn;
         this.support = support;
-        this.collaborativeProject = collaborativeProject;
-        this.grantTransferDetailsSummaryViewModel = grantTransferDetailsSummaryViewModel;
-        this.grantAgreementSummaryViewModel = grantAgreementSummaryViewModel;
+        this.competitionName = competition.getName();
+        this.applicationName = application.getName();
+        this.startDate = application.getStartDate();
+        this.duration = application.getDurationInMonths();
+        this.resubmission = application.getResubmission();
+        this.canSelectInnovationArea = competition.getInnovationAreas().size() > 1;
+        this.innovationAreaName = application.getInnovationArea().getName();
+        this.previousApplicationNumber = application.getPreviousApplicationNumber();
+        this.previousApplicationTitle = application.getPreviousApplicationTitle();
     }
 
-    public ApplicationResource getCurrentApplication() {
-        return currentApplication;
+    public NewApplicationSummaryViewModel getApplicationSummaryViewModel() {
+        return applicationSummaryViewModel;
     }
 
-    public CompetitionResource getCurrentCompetition() {
-        return currentCompetition;
+    public ApplicationResource getApplication() {
+        return application;
     }
 
-    public boolean isApplicationReadyForSubmit() {
-        return applicationReadyForSubmit;
-    }
-
-    public SummaryViewModel getSummaryViewModel() {
-        return summaryViewModel;
-    }
-
-    public ApplicationTeamViewModel getApplicationTeamViewModel() {
-        return applicationTeamViewModel;
-    }
-
-    public ResearchCategorySummaryViewModel getResearchCategorySummaryViewModel() {
-        return researchCategorySummaryViewModel;
-    }
-
-    public boolean isUserIsLeadApplicant() {
-        return userIsLeadApplicant;
+    public CompetitionResource getCompetition() {
+        return competition;
     }
 
     public boolean isProjectWithdrawn() {
@@ -85,24 +59,39 @@ public class ApplicationSummaryViewModel {
         return support;
     }
 
-    public boolean isCollaborativeProject() {
-        return collaborativeProject;
+    public String getCompetitionName() {
+        return competitionName;
     }
 
-    public GrantTransferDetailsSummaryViewModel getGrantTransferDetailsSummaryViewModel() {
-        return grantTransferDetailsSummaryViewModel;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public GrantAgreementSummaryViewModel getGrantAgreementSummaryViewModel() {
-        return grantAgreementSummaryViewModel;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    /* view logic. */
-    public boolean getApplicationIsClosed() {
-        return !currentCompetition.isOpen() || !currentApplication.isOpen();
+    public Long getDuration() {
+        return duration;
     }
 
-    public boolean getApplicationIsReadOnly() {
-        return !currentCompetition.isOpen() || !currentApplication.isOpen();
+    public Boolean getResubmission() {
+        return resubmission;
+    }
+
+    public boolean isCanSelectInnovationArea() {
+        return canSelectInnovationArea;
+    }
+
+    public String getInnovationAreaName() {
+        return innovationAreaName;
+    }
+
+    public String getPreviousApplicationNumber() {
+        return previousApplicationNumber;
+    }
+
+    public String getPreviousApplicationTitle() {
+        return previousApplicationTitle;
     }
 }

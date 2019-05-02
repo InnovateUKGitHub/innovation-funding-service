@@ -36,6 +36,7 @@ public class FinanceSummaryViewModelPopulator {
                 applicationFinanceSummaryViewModelPopulator.populate(application.getId(), data.getUser()),
                 applicationResearchParticipationViewModelPopulator.populate(application.getId()),
                 applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()),
-                application.isCollaborativeProject());
+                application.isCollaborativeProject(),
+                data.getApplication().isOpen() && data.getCompetition().isOpen());
     }
 }
