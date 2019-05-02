@@ -48,7 +48,7 @@ public class ProjectTeamController {
     public String removeUser(@PathVariable("projectId") final long projectId,
                              @PathVariable("userId") final long userId) {
         projectRestService.removeUser(projectId, userId).getSuccess();
-        return "redirect:/project/" + projectId + "/project-team";
+        return "redirect:/project/" + projectId + "/team";
     }
 
 }

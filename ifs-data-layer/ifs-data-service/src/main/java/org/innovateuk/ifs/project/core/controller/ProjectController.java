@@ -63,12 +63,6 @@ public class ProjectController {
         return projectService.withdrawProject(projectId).toPostWithBodyResponse();
     }
 
-    @PostMapping("/{projectId}/remove-user/{userId}")
-    public RestResult<Void> removeUser(@PathVariable("projectId") final long projectId,
-                                       @PathVariable("userId") final long userId) {
-        return projectService.removeUser(projectId, userId).toPostResponse();
-    }
-
     @PostMapping("/{projectId}/handle-offline")
     public RestResult<Void> handleProjectOffline(@PathVariable("projectId") final long projectId) {
         return projectService.handleProjectOffline(projectId).toPostWithBodyResponse();

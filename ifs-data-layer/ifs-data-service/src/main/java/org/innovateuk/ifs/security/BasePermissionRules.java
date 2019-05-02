@@ -91,6 +91,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return partnerProjectUser != null;
     }
 
+    protected boolean isSameProjectOrganisation(long projectId, long firstUserId, long secondUserId) {
+        List<ProjectUser> projectUserOneRoles = projectUserRepository.findByProjectIdAndUserId(projectId, firstUserId);
+        List<ProjectUser> projectUserTwoRoles = projectUserRepository.findByProjectIdAndUserId(projectId, secondUserId);
+        return !projectUserOneRoles.isEmpty() && !projectUserTwoRoles.isEmpty() &&
+                projectUserOneRoles.get(0).getOrganisation().equals(projectUserTwoRoles.get(0).getOrganisation());
+    }
+
     protected boolean isLeadPartner(long projectId, long userId) {
 
         Project project = projectRepository.findById(projectId).get();
@@ -134,4 +141,5 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
         return ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
+
 }

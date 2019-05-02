@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.error;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -212,6 +213,9 @@ public enum CommonFailureKeys implements ErrorTemplate {
     CREATE_PROJECT_FROM_APPLICATION_FAILS(BAD_REQUEST),
     PROJECT_HAS_SOLE_PARTNER(BAD_REQUEST),
     PROJECT_CANNOT_BE_UPDATED_ONCE_WITHDRAWN(BAD_REQUEST),
+    CANNOT_REMOVE_PROJECT_MANAGER_FROM_PROJECT(BAD_REQUEST),
+    CANNOT_REMOVE_FINANCE_CONTACT_FROM_PROJECT(BAD_REQUEST),
+    CANNOT_REMOVE_YOURSELF_FROM_PROJECT(BAD_REQUEST),
 
     /**
      * Non IFS competitions.
