@@ -35,6 +35,5 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                 .andExpect(status().isOk());
 
         verify(projectTeamService).removeUser(composite);
-
     }
 }

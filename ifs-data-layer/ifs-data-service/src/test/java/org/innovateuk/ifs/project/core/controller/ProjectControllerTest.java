@@ -125,11 +125,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void removeUser() throws Exception {
-        
-    }
-
-    @Test
     public void handleProjectOffline() throws Exception {
         Long projectId = 456L;
         when(projectServiceMock.handleProjectOffline(projectId)).thenReturn(serviceSuccess());

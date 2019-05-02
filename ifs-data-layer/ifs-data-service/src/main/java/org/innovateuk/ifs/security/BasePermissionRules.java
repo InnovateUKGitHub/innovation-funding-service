@@ -141,5 +141,4 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
         return ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
-
 }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.commons.error;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.http.HttpStatus.*;
 

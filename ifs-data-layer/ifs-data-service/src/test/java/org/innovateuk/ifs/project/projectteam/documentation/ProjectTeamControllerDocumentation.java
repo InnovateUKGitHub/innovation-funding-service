@@ -24,7 +24,6 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
         return new ProjectTeamController();
     }
 
-
     @Mock
     private ProjectTeamService projectTeamService;
 
@@ -42,7 +41,6 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
                                 pathParameters(
                                         parameterWithName("projectId").description("Id of project the user will be removed from"),
                                         parameterWithName("userId").description("Id of the user to be removed from the project"))));
-
 
         verify(projectTeamService).removeUser(composite);
     }
