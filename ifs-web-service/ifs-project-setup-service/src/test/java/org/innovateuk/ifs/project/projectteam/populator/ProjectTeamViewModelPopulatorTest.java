@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -89,6 +90,7 @@ public class ProjectTeamViewModelPopulatorTest {
         List<ProjectUserInviteResource> invites = newProjectUserInviteResource()
                 .withName("Mr Invite")
                 .withOrganisation(partnerOne.getId())
+                .withStatus(InviteStatus.SENT)
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);

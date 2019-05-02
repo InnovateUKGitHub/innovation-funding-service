@@ -49,8 +49,8 @@
                     th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
                 </td>
                 <td class="govuk-table__cell">
-                    <strong th:if="${model.projectManager == null}" class="incomplete">Incomplete</strong>
-                    <strong th:unless="${model.projectManager == null}" class="complete">Complete</strong>
+                    <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
+                    <strong th:unless="${model.projectManager == null}" class="complete-status">Complete</strong>
                 </td>
             </tr>
             <tr class="govuk-table__row">
@@ -63,9 +63,9 @@
                 </td>
                 <td class="govuk-table__cell">
                     <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
-                            class="incomplete">Incomplete</strong>
+                            class="incomplete-status">Incomplete</strong>
                     <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
-                            class="complete">Complete</strong>
+                            class="complete-status">Complete</strong>
                 </td>
             </tr>
             </tbody>
@@ -149,8 +149,7 @@
                                    class="govuk-input govuk-input--width-30"
                                    type="email"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.email.required},
-                                        data-email-errormessage=#{validation.standard.email.format}"/>
+                                   th:attr="data-required-errormessage=#{validation.invite.email.format.required}"/>
                         </td>
                         <td class="govuk-table__cell">
                             <button name="invite-to-project"
