@@ -579,26 +579,25 @@ IFS.core.formValidation = (function () {
       field.addClass('js-visited')
       var valid
 
-      var d = dateGroup.find('.day input')
-      var m = dateGroup.find('.month input')
-      var y = dateGroup.find('.year input')
-      var h
+      var day = dateGroup.find('.day input')
+      var month = dateGroup.find('.month input')
+      var year = dateGroup.find('.year input')
+      var hour
       if (field.closest('tr').find('.time select').length > 0) {
-        h = dateGroup.find('.time option[data-time]:selected').attr('data-time')
+        hour = dateGroup.find('.time option[data-time]:selected').attr('data-time')
       } else {
-        h = dateGroup.find('.time [data-time]').attr('data-time')
+        hour = dateGroup.find('.time [data-time]').attr('data-time')
       }
       var addWeekDay = dateGroup.find('.js-addWeekDay')
 
-      var allFields = d.add(m).add(y)
+      var allFields = day.add(month).add(year)
       var allFieldsArray = jQuery.makeArray(allFields)
-      var fieldsVisited = allFields.hasClass('js-visited')
+      var fieldsVisited = (day.hasClass('js-visited') && month.hasClass('js-visited') && year.hasClass('js-visited'))
       var filledOut = allFieldsArray.every(function (element) { return jQuery(element).val().length > 0 })
-      var enabled = !allFields.is('[readonly]')
-      var required = allFields.is('[required]')
+      var enabled = !day.is('[readonly]') || !month.is('[readonly]') || !year.is('[readonly]')
+      var required = (day.attr('required') && month.attr('required') && year.attr('required'))
       var empty = allFieldsArray.every(function (element) { return jQuery(element).val().length === 0 })
       var errorSummary = jQuery('.govuk-error-summary')
-
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
       allFields.attr({
         'data-number-showmessage': 'none',
@@ -606,26 +605,26 @@ IFS.core.formValidation = (function () {
         'data-max-showmessage': 'none'
       })
       var validNumbers = allFieldsArray.every(function (element) { return IFS.core.formValidation.checkNumber(jQuery(element)) }) &&
-        IFS.core.formValidation.checkMin(y) && IFS.core.formValidation.checkMax(y)
+        IFS.core.formValidation.checkMin(year) && IFS.core.formValidation.checkMax(year)
 
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
       if (validNumbers && filledOut) {
-        var day = d.length ? parseInt(d.val(), 10) : 1
-        var month = parseInt(m.val(), 10)
-        var year = parseInt(y.val(), 10)
-        var date = new Date(year, month - 1, day) // parse as date to check if it is a valid date
-        if (h !== undefined) {
-          date.setHours(h, 0, 0, 0)
+        var validDay = day.length ? parseInt(day.val(), 10) : 1
+        var validMonth = parseInt(month.val(), 10)
+        var validYear = parseInt(year.val(), 10)
+        var date = new Date(validYear, validMonth - 1, validDay) // parse as date to check if it is a valid date
+        if (hour !== undefined) {
+          date.setHours(hour, 0, 0, 0)
         } else {
           date.setHours(0, 0, 0, 0)
         }
 
-        if ((date.getDate() === day) && (date.getMonth() + 1 === month) && (date.getFullYear() === year)) {
+        if ((date.getDate() === validDay) && (date.getMonth() + 1 === validMonth) && (date.getFullYear() === validYear)) {
           valid = true
           IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
 
-          allFields.attr('data-date', day + '-' + month + '-' + year)
+          allFields.attr('data-date', validDay + '-' + validMonth + '-' + validYear)
           // adding day of week which is not really validation
           // so could be better of somewhere else
           if (addWeekDay.length) {
@@ -650,23 +649,18 @@ IFS.core.formValidation = (function () {
             valid = false
           }
         }
-      } else if (empty) {
-        if (enabled) {
-          field.trigger('ifsAutosave')
-          if (!required) {
-            valid = true
-            IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
-          } else {
-            valid = false
-            IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
-          }
+      } else if (errorSummary.length) {
+        IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
+        valid = false
+      } else if (empty && enabled) {
+        field.trigger('ifsAutosave')
+        if (!required) {
+          valid = true
+          IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
         }
       } else if ((filledOut || fieldsVisited) && enabled) {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         allFields.attr({'data-date': ''})
-        valid = false
-      } else if (errorSummary.length) {
-        IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         valid = false
       } else {
         valid = false
