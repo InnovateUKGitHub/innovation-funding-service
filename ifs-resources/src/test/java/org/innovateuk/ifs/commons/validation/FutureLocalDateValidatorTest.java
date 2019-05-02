@@ -71,7 +71,7 @@ public class FutureLocalDateValidatorTest {
         Iterator<ConstraintViolation<TestLocalDateForm>> iter = violations.iterator();
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
-        assertTrue(!violations.isEmpty());
+        assertFalse(violations.isEmpty());
         assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 
@@ -86,7 +86,7 @@ public class FutureLocalDateValidatorTest {
         Iterator<ConstraintViolation<TestLocalDateForm>> iter = violations.iterator();
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
-        assertTrue(!violations.isEmpty());
+        assertFalse(violations.isEmpty());
         assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 
@@ -101,7 +101,7 @@ public class FutureLocalDateValidatorTest {
         Iterator<ConstraintViolation<TestLocalDateForm>> iter = violations.iterator();
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
-        assertTrue(!violations.isEmpty());
+        assertFalse(violations.isEmpty());
         assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 }

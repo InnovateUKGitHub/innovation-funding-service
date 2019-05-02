@@ -35,7 +35,7 @@ public class AlertResourceBuilderTest {
                 .withValidToDate(expectedValidToDate)
                 .build();
 
-        assertEquals(Long.valueOf(expectedId), alertResource.getId());
+        assertEquals(expectedId, alertResource.getId());
         assertEquals(expectedMessage, alertResource.getMessage());
         assertEquals(expectedType, alertResource.getType());
         assertEquals(expectedValidFromDate, alertResource.getValidFromDate());
@@ -59,14 +59,14 @@ public class AlertResourceBuilderTest {
                 .build(2);
 
         final AlertResource first = alertResources.get(0);
-        assertEquals(Long.valueOf(expectedIds[0]), first.getId());
+        assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedMessages[0], first.getMessage());
         assertEquals(expectedTypes[0], first.getType());
         assertEquals(expectedValidFromDates[0], first.getValidFromDate());
         assertEquals(expectedValidToDates[0], first.getValidToDate());
 
         final AlertResource second = alertResources.get(1);
-        assertEquals(Long.valueOf(expectedIds[1]), second.getId());
+        assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedMessages[1], second.getMessage());
         assertEquals(expectedTypes[1], second.getType());
         assertEquals(expectedValidFromDates[1], second.getValidFromDate());

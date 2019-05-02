@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 
 public class PreviousApplicationResourceBuilder extends BaseBuilder<PreviousApplicationResource, PreviousApplicationResourceBuilder> {
 

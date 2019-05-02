@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons;
+package org.innovateuk.ifs.commons.security;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.aop.Advisor;

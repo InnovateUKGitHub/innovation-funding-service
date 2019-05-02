@@ -5,5 +5,5 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
  */
 public enum PublicContentStatus {
     IN_PROGRESS,
-    COMPLETE;
+    COMPLETE
 }
