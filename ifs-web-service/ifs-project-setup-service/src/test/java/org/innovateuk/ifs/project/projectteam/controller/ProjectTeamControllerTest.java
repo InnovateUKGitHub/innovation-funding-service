@@ -27,7 +27,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Override
     protected ProjectTeamController supplyControllerUnderTest() {
-        return new ProjectTeamController();
+        return new ProjectTeamController(populator);
     }
 
     @Mock
