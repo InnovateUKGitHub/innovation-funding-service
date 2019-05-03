@@ -20,7 +20,7 @@ public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<Proj
         RestResult<Void> result = service.inviteProjectMember(projectId, projectUserInviteResource);
 
         assertTrue(result.isSuccess());
-        setupPostWithRestResultVerifications(String.format("/project/%d/team/invite", projectId), Void.class);
+        setupPostWithRestResulVerifications(String.format("/project/%d/team/invite", projectId), projectUserInviteResource);
     }
 
     @Override
