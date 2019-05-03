@@ -45,7 +45,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private OrganisationRestService organisationRestService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
-    private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
     private SectionService sectionService;
     private OrganisationService organisationService;
@@ -55,7 +54,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
                                                          OrganisationRestService organisationRestService,
-                                                         CompetitionRestService competitionRestService,
                                                          ApplicationService applicationService,
                                                          SectionService sectionService,
                                                          QuestionRestService questionRestService,
@@ -67,7 +65,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
-        this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.organisationService = organisationService;
@@ -78,7 +75,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
 
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
@@ -93,7 +89,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
 
 
-        SectionResource section = sectionService.getFinanceSection(competition.getId());
+        SectionResource section = sectionService.getFinanceSection(application.getCompetition());
 
         final List<String> pendingOrganisationNames = getPendingOrganisationNames(applicationOrganisations, applicationId);
 
@@ -119,13 +115,13 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         // Finance Section will be null for EOI Competitions
         if (section != null) {
             sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-            List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competition.getId(), section);
+            List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(application.getCompetition(), section);
 
             Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
-                    getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competition.getId());
+                    getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, application.getCompetition());
 
             Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
-                    getFinanceSectionChildrenQuestionFormInputs(competition.getId(), financeSectionChildrenQuestionsMap);
+                    getFinanceSectionChildrenQuestionFormInputs(application.getCompetition(), financeSectionChildrenQuestionsMap);
 
             return new ApplicationFundingBreakdownViewModel(
                     organisationFinanceOverview.getTotalPerType(),
