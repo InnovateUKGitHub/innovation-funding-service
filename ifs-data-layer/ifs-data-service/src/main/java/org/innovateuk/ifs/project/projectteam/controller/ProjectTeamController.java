@@ -19,9 +19,6 @@ public class ProjectTeamController {
 
     private ProjectTeamService projectTeamService;
 
-    public ProjectTeamController() {}
-
-    @Autowired
     public ProjectTeamController(ProjectTeamService projectTeamService) {
         this.projectTeamService = projectTeamService;
     }

@@ -15,13 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<ProjectTeamController> {
 
 
-    @Override
-    protected ProjectTeamController supplyControllerUnderTest() {
-        return new ProjectTeamController();
-    }
-
     @Mock
     private ProjectTeamService projectTeamService;
+
+    @Override
+    protected ProjectTeamController supplyControllerUnderTest() {
+        return new ProjectTeamController(projectTeamService);
+    }
 
     @Test
     public void removeUser() throws Exception {
