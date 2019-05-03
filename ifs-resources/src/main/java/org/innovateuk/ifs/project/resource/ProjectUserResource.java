@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 
 public class ProjectUserResource {
     private Long id;
@@ -95,6 +96,11 @@ public class ProjectUserResource {
     @JsonIgnore
     public boolean isFinanceContact() {
         return role.equals(FINANCE_CONTACT.getId());
+    }
+
+    @JsonIgnore
+    public boolean isProjectManager() {
+        return role.equals(PROJECT_MANAGER.getId());
     }
 
     public String getEmail() {
