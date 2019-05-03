@@ -7,5 +7,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface ProjectTeamService {
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
-    ServiceResult<Void> inviteTeamMember(Long projectId, ProjectUserInviteResource inviteResource);
+    ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource);
 }

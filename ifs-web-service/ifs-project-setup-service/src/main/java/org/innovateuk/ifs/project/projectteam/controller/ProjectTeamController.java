@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * This controller will handle all requests that are related to the project team.
@@ -161,8 +162,7 @@ public class ProjectTeamController {
     }
 
     private Optional<ProjectUserInviteResource> getSavedInvite(Long projectId, ProjectUserInviteResource invite) {
-
-        return projectDetailsService.getInvitesByProject(projectId).getSuccess().stream()
-                .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
+        return simpleFindFirst(projectDetailsService.getInvitesByProject(projectId).getSuccess(),
+                i -> i.getEmail().equals(invite.getEmail()));
     }
 }

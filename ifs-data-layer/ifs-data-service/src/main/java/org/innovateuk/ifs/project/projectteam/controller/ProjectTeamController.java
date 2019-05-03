@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * ProjectController exposes Project Details data and operations through a REST API.
+ * ProjectController exposes Project Team data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/project")
@@ -19,7 +19,7 @@ public class ProjectTeamController {
     private ProjectTeamService projectTeamService;
 
     @PostMapping("/{projectId}/team/invite")
-    public RestResult<Void> inviteTeamMember(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> inviteTeamMember(@PathVariable("projectId") final long projectId,
                                              @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectTeamService.inviteTeamMember(projectId, inviteResource).toPostResponse();
     }

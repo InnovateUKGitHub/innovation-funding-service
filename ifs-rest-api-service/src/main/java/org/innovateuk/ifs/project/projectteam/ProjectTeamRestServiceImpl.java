@@ -11,7 +11,7 @@ public class ProjectTeamRestServiceImpl extends BaseRestService implements Proje
     private String projectTeamRestURL = "/project/%d/team/%s";
 
     @Override
-    public RestResult<Void> inviteProjectMember(Long projectId, ProjectUserInviteResource inviteResource) {
+    public RestResult<Void> inviteProjectMember(long projectId, ProjectUserInviteResource inviteResource) {
         return postWithRestResult(String.format(projectTeamRestURL, projectId, "invite"), inviteResource, Void.class);
     }
 }

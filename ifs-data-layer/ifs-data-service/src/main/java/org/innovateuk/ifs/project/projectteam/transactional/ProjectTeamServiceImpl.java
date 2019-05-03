@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 
 /**
- * Transactional and secure service for Project Details processing work
+ * Transactional and secure service for Project Team processing work
  */
 @Service
 public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implements ProjectTeamService {
@@ -63,13 +63,13 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteTeamMember(Long projectId, ProjectUserInviteResource inviteResource) {
+    public ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource) {
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MEMBER));
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {
 
         ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectResource);
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
@@ -84,7 +84,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         return new UserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ProjectUserInviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(long projectId, ProjectUserInviteResource inviteResource) {
         Project project = projectRepository.findById(projectId).get();
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
