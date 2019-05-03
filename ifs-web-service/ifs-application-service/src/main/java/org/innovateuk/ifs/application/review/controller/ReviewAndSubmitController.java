@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Controller
 @RequestMapping("/application")
@@ -44,8 +47,9 @@ public class ReviewAndSubmitController {
     private UserService userService;
     private QuestionStatusRestService questionStatusRestService;
     private UserRestService userRestService;
+    private QuestionRestService questionRestService;
 
-    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter, UserService userService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService) {
+    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter, UserService userService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService, QuestionRestService questionRestService) {
         this.reviewAndSubmitViewModelPopulator = reviewAndSubmitViewModelPopulator;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
@@ -54,6 +58,7 @@ public class ReviewAndSubmitController {
         this.userService = userService;
         this.questionStatusRestService = questionStatusRestService;
         this.userRestService = userRestService;
+        this.questionRestService = questionRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
@@ -114,7 +119,7 @@ public class ReviewAndSubmitController {
         if (messages.isEmpty()) {
             return redirectToReview(applicationId);
         } else {
-            return redirectToQuestion(applicationId, questionId);
+            return handleMarkAsCompleteFailure(applicationId, questionId, processRole);
         }
     }
 
@@ -211,5 +216,20 @@ public class ReviewAndSubmitController {
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
+    }
+
+    private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {
+        questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId());
+
+        if (isResearchCategoryQuestion(questionId)) {
+            return "redirect:/application/" + applicationId + "/form/question/" + questionId + "/research-category?mark_as_complete=true";
+        }
+
+        return "redirect:/application/" + applicationId + "/form/question/edit/" + questionId + "?mark_as_complete=true";
+    }
+
+    private boolean isResearchCategoryQuestion(long questionId) {
+        QuestionResource question = questionRestService.findById(questionId).getSuccess();
+        return question.getQuestionSetupType() == RESEARCH_CATEGORY;
     }
 }

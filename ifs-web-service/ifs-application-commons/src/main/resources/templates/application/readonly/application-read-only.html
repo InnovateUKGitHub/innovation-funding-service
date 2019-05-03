@@ -5,57 +5,65 @@
 
     <th:block th:each="section : ${model.sections}">
 
-        <h2 th:text="${section.name}"
-            class="govuk-heading-m govuk-!-margin-top-6"/>
+        <section>
+            <h2 th:text="${section.name}"
+                class="govuk-heading-m govuk-!-margin-top-6"/>
 
-        <!--/* Show the collapsible sections */-->
-        <th:block th:each="question : ${section.questions}">
-            <div class="collapsible">
-                <h3>
-                    <span th:text="${question.name}"></span>
-                    <th:block th:if="${model.settings.includeStatuses}">
-                        <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
-                        <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
-                    </th:block>
-                </h3>
-                <div class="question">
-                    <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+            <!--/* Show the collapsible sections */-->
+            <th:block th:each="question : ${section.questions}">
+                <div class="collapsible">
+                    <h3>
+                        <span th:text="${question.name}"></span>
+                        <th:block th:if="${model.settings.includeStatuses}">
+                            <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
+                            <div th:unless="${question.isComplete()}" class="section-status section-incomplete">
+                                Incomplete
+                            </div>
+                        </th:block>
+                    </h3>
+                    <div class="question">
+                        <th:block
+                            th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
-                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post"
-                          th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
+                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+                              method="post"
+                              th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
 
-                        <div class="form-footer govuk-!-margin-top-6">
-                            <button class="govuk-button button-clear"
-                                    type="submit"
-                                    name="complete"
-                                    th:if="${question.shouldDisplayMarkAsComplete()}"
-                                    th:value="${question.questionId}">
-                                Mark as complete
-                            </button>
-                            <button class="govuk-button button-clear"
-                                    type="submit"
-                                    name="assign"
-                                    th:unless="${question.lead && !question.complete}"
-                                    th:value="${question.questionId}">
-                                Assign to lead for review
-                            </button>
-                            <button class="govuk-button button-clear"
-                                    type="submit"
-                                    th:name="${question.complete ? 'incomplete' : 'edit'}"
-                                    th:value="${question.questionId}">
-                                Return and edit
-                            </button>
-                        </div>
-                    </form>
+                            <div class="form-footer govuk-!-margin-top-6">
+                                <button class="govuk-button button-clear"
+                                        type="submit"
+                                        name="complete"
+                                        th:if="${question.shouldDisplayMarkAsComplete()}"
+                                        th:value="${question.questionId}">
+                                    Mark as complete
+                                </button>
+                                <button class="govuk-button button-clear"
+                                        type="submit"
+                                        name="assign"
+                                        th:unless="${question.lead && !question.complete}"
+                                        th:value="${question.questionId}">
+                                    Assign to lead for review
+                                </button>
+                                <button class="govuk-button button-clear"
+                                        type="submit"
+                                        th:name="${question.complete ? 'incomplete' : 'edit'}"
+                                        th:value="${question.questionId}">
+                                    Return and edit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </th:block>
+            </th:block>
+        </section>
     </th:block>
 </th:block>
 
 <th:block th:fragment="organisation(organisation, isLead, orgId)">
     <h2 class="govuk-heading-m">
-        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
+        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">
+            Organisation name
+        </th:block>
     </h2>
 
     <h3 class="govuk-heading-s">Organisation type</h3>
@@ -72,7 +80,9 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="user : ${organisation.users}">
-                <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
+                <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve
+                    Smith
+                </td>
                 <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
                 <td class="govuk-table__cell" th:text="${user.phoneNumber}">0800</td>
             </tr>

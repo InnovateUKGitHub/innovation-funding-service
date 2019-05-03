@@ -17,6 +17,17 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${model.application.name},size='govuk-heading-xl'" />
                 </th:block>
 
+                <th:block th:if="${model.competition.isH2020()}"
+                          th:insert="fragments/elements :: h2020-information-panel" />
+
+                <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
+
+                <div th:if="${!model.application.isSubmitted()}">
+                    <div class="warning-alert">
+                        <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
+                    </div>
+                </div>
+                
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
@@ -49,18 +60,10 @@
                         </dl>
                     </div>
                 </div>
-                <th:block th:if="${model.competition.isH2020()}"
-                          th:insert="fragments/elements :: h2020-information-panel" />
 
-                <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
-
-                <div th:if="${!model.application.isSubmitted()}">
-                    <div class="warning-alert">
-                        <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
-                    </div>
-                </div>
-
-                <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
+                <th:block th:with="supportUserAndSummaryPage = ${model.support}">
+                    <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
+                </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

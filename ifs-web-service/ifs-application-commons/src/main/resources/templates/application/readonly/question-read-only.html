@@ -96,7 +96,7 @@
 
         <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
         <th:block ifs:global="${model.applicationFundingBreakdownViewModel}"
-                  th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${true}, supportUserAndSummaryPage=${false})"/>
+                  th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${true}, supportUserAndSummaryPage=${supportUserAndSummaryPage ?: false })"/>
     </div>
 </th:block>
 
