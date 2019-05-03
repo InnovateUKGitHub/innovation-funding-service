@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,9 +44,6 @@ public class ProjectTeamController {
     private OrganisationRestService organisationRestService;
     private ProjectTeamRestService projectTeamRestService;
 
-    ProjectTeamController() {}
-
-    @Autowired
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator, ProjectDetailsService projectDetailsService, ProjectService projectService, OrganisationRestService organisationRestService, ProjectTeamRestService projectTeamRestService) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;

@@ -22,9 +22,9 @@ public class ApplicationOverviewUserModelPopulator {
 
     public ApplicationOverviewUserViewModel populate(ApplicationResource application, long userId) {
 
-        boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        boolean ableToSubmitApplication = isAbleToSubmitApplication(application, userIsLeadApplicant);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(application.getId());
+        boolean userIsLeadApplicant = leadApplicantProcessRole != null  && leadApplicantProcessRole.getUser().equals(userId);
+        boolean ableToSubmitApplication = isAbleToSubmitApplication(application,userIsLeadApplicant);
 
         final UserResource leadApplicant;
         if (leadApplicantProcessRole != null) {
@@ -34,8 +34,8 @@ public class ApplicationOverviewUserModelPopulator {
         }
 
         return new ApplicationOverviewUserViewModel(userIsLeadApplicant,
-                                                    leadApplicant,
-                                                    ableToSubmitApplication);
+                leadApplicant,
+                ableToSubmitApplication);
     }
 
     private boolean isAbleToSubmitApplication(ApplicationResource application, boolean userIsLeadApplicant) {
