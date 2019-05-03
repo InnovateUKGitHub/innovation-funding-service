@@ -88,27 +88,23 @@ Check if target start date can be changed until SP approval
     [Tags]  HappyPath
     Given the user logs-in in new browser    &{lead_applicant_credentials_sp}
     When the user navigates to the page   ${server}/project-setup/project/${PS_SP_Project_Id}/details
+    And the user should see the element  jQuery = #start-date:contains("1 Jan 2020")
     And the user changes the start date   2021
     Then the user should see the element  jQuery = #start-date:contains("1 Jan 2021")
-    When the user changes the start date  2020
-    Then the user should see the element  jQuery = #start-date:contains("1 Jan 2020")
 
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/finance-check
-    Then the user should see the element    jQuery = a.eligibility-0:contains("Approved")
-    And the user should see the element     jQuery = a.eligibility-1:contains("Approved")
-    And the user should see the element     jQuery = a.eligibility-2:contains("Approved")
-    Then the user should see the element    css = .generate-spend-profile-main-button
+    Then the user should see finance eligibilty approved and able to generate spend profile
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]  HappyPath
-    When the user clicks the button/link    css = .generate-spend-profile-main-button
-    Then the user should see the element    jQuery = p:contains("This will generate a flat spend profile for all project partners.")
-    When the user clicks the button/link    jQuery = button:contains("Cancel")
+    Given the user clicks the button/link    css = .generate-spend-profile-main-button
+    Then the user should see the element     jQuery = p:contains("This will generate a flat spend profile for all project partners.")
+    When the user clicks the button/link     jQuery = button:contains("Cancel")
 
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
@@ -865,3 +861,9 @@ the user opens the csv file and checks the content
     ${totalRow} =          get from list  ${contents}  8
     ${totalFirstMonth} =   get from list  ${totalRow}  1
     should be equal        ${totalFirstMonth}  4243.00
+
+the user should see finance eligibilty approved and able to generate spend profile
+    the user should see the element     jQuery = a.eligibility-0:contains("Approved")
+    the user should see the element     jQuery = a.eligibility-1:contains("Approved")
+    the user should see the element     jQuery = a.eligibility-2:contains("Approved")
+    the user should see the element     css = .generate-spend-profile-main-button
