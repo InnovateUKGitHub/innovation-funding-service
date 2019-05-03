@@ -25,9 +25,12 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Mock
     private UserRestService userRestService;
 
+    @Mock
+    private UserService userService;
+
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, userRestService);
+        return new OrganisationServiceImpl(organisationRestService, userRestService, userService);
     }
 
     @Test
