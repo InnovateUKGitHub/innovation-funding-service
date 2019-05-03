@@ -23,9 +23,9 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private FileEntryRestService fileEntryRestService;
     private ApplicationService applicationService;
     private SectionService sectionService;
-    private UserService userService;
+    private OrganisationService organisationService;
     private InviteService inviteService;
     private UserRestService userRestService;
 
@@ -58,7 +58,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          SectionService sectionService,
                                                          QuestionRestService questionRestService,
                                                          FormInputRestService formInputRestService,
-                                                         UserService userService,
+                                                         OrganisationService organisationService,
                                                          InviteService inviteService,
                                                          UserRestService userRestService) {
         super(sectionService, formInputRestService, questionRestService);
@@ -67,7 +67,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.sectionService = sectionService;
-        this.userService = userService;
+        this.organisationService = organisationService;
         this.inviteService = inviteService;
         this.userRestService = userRestService;
     }
@@ -76,8 +76,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         ApplicationResource application = applicationService.getById(applicationId);
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
 
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
 
@@ -88,6 +86,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         );
 
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
+        OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
+
 
         SectionResource section = sectionService.getFinanceSection(application.getCompetition());
 
