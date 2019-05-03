@@ -3,6 +3,7 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5719 - Add team members in Project setup
 ...
+...             IFS-5718 - Remove team members in Project setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -53,6 +54,17 @@ A new team member is able to accept the inviation from non lead partner and see 
     Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Ludlow.  1
     When the user creates a new account                     Testerina   Testington   ${nonLeadNewMemberEmail}
     Then the user is able to access the project             ${nonLeadNewMemberEmail}
+
+A user is able to remove a team member
+    [Documentation]  IFS-5718
+    [Setup]  log in as a different user        &{collaborator1_credentials}
+    Given the user navigates to the page       ${newProjecTeamPage}
+    When the user clicks the button/link       jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
+    And the user clicks the button/link        jQuery = button:contains("Remove user")
+    Then the user should not see the element   jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
+
+A user who has been removed is no longer able to access the project
+    Given log in as a different user   ${nonLeadNewMemberEmail}
 
 *** Keywords ***
 The user is able to access the project
