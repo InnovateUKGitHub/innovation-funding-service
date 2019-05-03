@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
-import org.apache.commons.lang3.concurrent.ConcurrentUtils;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -8,11 +12,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
-import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -24,8 +23,10 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -55,9 +56,11 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     private OrganisationRestService organisationRestService;
 
+    private UserRestService userRestService;
+
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
-    public ApplicationReadOnlyViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, List<QuestionReadOnlyViewModelPopulator<?>> populators) {
+    public ApplicationReadOnlyViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, UserRestService userRestService, List<QuestionReadOnlyViewModelPopulator<?>> populators) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.formInputRestService = formInputRestService;
@@ -67,6 +70,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         this.financeSummaryViewModelPopulator = financeSummaryViewModelPopulator;
         this.questionStatusRestService = questionStatusRestService;
         this.organisationRestService = organisationRestService;
+        this.userRestService = userRestService;
         this.populatorMap = new HashMap<>();
         populators.forEach(populator ->
                 populator.questionTypes().forEach(type -> populatorMap.put(type, populator)));
@@ -82,10 +86,12 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionResource>> questionsFuture = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
         Future<List<FormInputResource>> formInputsFuture = async(() -> formInputRestService.getByCompetitionId(competition.getId()).getSuccess());
         Future<List<FormInputResponseResource>> formInputResponsesFuture = async(() -> formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess());
-        Future<List<QuestionStatusResource>> questionStatusesFuture = getQuestionStatuses(application, user, settings);
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
+        Future<List<QuestionStatusResource>> questionStatusesFuture = async(() -> getQuestionStatuses(application, user, settings));
+        Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
+        Future<Optional<ProcessRoleResource>> processRoleFuture = async(() -> getProcessRole(application, user, settings));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
 
-        Set<ApplicationSectionReadOnlyViewModel> sectionViews = sectionRestService.getByCompetition(application.getCompetition()).getSuccess()
+        Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
                 .map(section -> async(() -> sectionView(section, settings, data)))
@@ -95,9 +101,10 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationReadOnlyViewModel(settings, sectionViews);
     }
 
+
     private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         if (!section.getChildSections().isEmpty()) {
-            return sectionsWithChildren(section, settings, data);
+            return sectionWithChildren(section, settings, data);
         }
         Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
@@ -108,7 +115,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     }
 
     //Currently only the finance section has child sections.
-    private ApplicationSectionReadOnlyViewModel sectionsWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
+    private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
         return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
     }
@@ -121,14 +128,20 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private Future<List<QuestionStatusResource>> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
+    private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeStatuses()) {
-            return ConcurrentUtils.constantFuture(Collections.emptyList());
+            return Collections.emptyList();
         }
-        return async(() ->{
-            OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
-            return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
-        });
+        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
+        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
+    }
+
+
+    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
+        if (!settings.isIncludeQuestionLinks()) {
+            return Optional.empty();
+        }
+        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
     }
 
 

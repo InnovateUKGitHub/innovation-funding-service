@@ -60,7 +60,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     @Override
     public String getName() {
-        return fullyFunded ? "Funding breakdown" : "Finance summary";
+        return fullyFunded ? "Funding breakdown" : "Finances summary";
     }
 
     @Override
@@ -74,7 +74,18 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     }
 
     @Override
-    public String getEditUrl() {
-        return null;
+    public boolean shouldDisplayActions() {
+        return false;
     }
+
+    @Override
+    public boolean shouldDisplayMarkAsComplete() {
+        return false;
+    }
+
+    @Override
+    public boolean isLead() {
+        return false; // not required
+    }
+
 }

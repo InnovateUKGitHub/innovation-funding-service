@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Optional;
 
@@ -12,13 +13,29 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final long questionId;
     private final String name;
     private final boolean complete;
+    private final boolean displayActions;
+    private final boolean lead;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
-        Optional<QuestionStatusResource> questionStatus = Optional.ofNullable(data.getQuestionToQuestionStatus().get(question.getId()));
-        this.complete = questionStatus.map(QuestionStatusResource::getMarkedAsComplete).orElse(false);
+        this.lead = data.getProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
+        Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
+                .get(question.getId())
+                .stream()
+                .filter(status -> status.getMarkedAsComplete() != null)
+                .findFirst();
+        this.complete = completeStatus.map(QuestionStatusResource::getMarkedAsComplete).orElse(false);
+        Optional<QuestionStatusResource> assignedStatus = data.getQuestionToQuestionStatus()
+                .get(question.getId())
+                .stream()
+                .filter(status -> status.getAssignee() != null)
+                .findFirst();
+        boolean assignedToUser = assignedStatus
+                .map(status ->  data.getProcessRole().isPresent() && status.getAssignee().equals(data.getProcessRole().get().getId()))
+                .orElse(false);
+        this.displayActions = lead || assignedToUser;
     }
 
     public long getApplicationId() {
@@ -40,8 +57,18 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     }
 
     @Override
-    public String getEditUrl() {
-        return String.format("/application/%d/form/question/%d", applicationId, questionId);
+    public boolean shouldDisplayActions() {
+        return displayActions;
+    }
+
+    @Override
+    public boolean shouldDisplayMarkAsComplete() {
+        return isLead() && !isComplete();
+    }
+
+    @Override
+    public boolean isLead() {
+        return lead;
     }
 
 }

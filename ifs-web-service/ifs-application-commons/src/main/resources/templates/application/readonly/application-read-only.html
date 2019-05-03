@@ -21,11 +21,32 @@
                 <div class="question">
                     <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
-                    <th:block th:if="${model.settings.includeQuestionLinks && question.editUrl != null}">
+                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post"
+                          th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
+
                         <div class="form-footer govuk-!-margin-top-6">
-                            <a class="govuk-link" th:href="${question.editUrl}">Return and edit</a>
+                            <button class="govuk-button button-clear"
+                                    type="submit"
+                                    name="complete"
+                                    th:if="${question.shouldDisplayMarkAsComplete()}"
+                                    th:value="${question.questionId}">
+                                Mark as complete
+                            </button>
+                            <button class="govuk-button button-clear"
+                                    type="submit"
+                                    name="assign"
+                                    th:unless="${question.lead && !question.complete}"
+                                    th:value="${question.questionId}">
+                                Assign to lead for review
+                            </button>
+                            <button class="govuk-button button-clear"
+                                    type="submit"
+                                    th:name="${question.complete ? 'incomplete' : 'edit'}"
+                                    th:value="${question.questionId}">
+                                Return and edit
+                            </button>
                         </div>
-                    </th:block>
+                    </form>
                 </div>
             </div>
         </th:block>

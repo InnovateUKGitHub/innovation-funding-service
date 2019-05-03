@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
-public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String displayName;
     private final String question;

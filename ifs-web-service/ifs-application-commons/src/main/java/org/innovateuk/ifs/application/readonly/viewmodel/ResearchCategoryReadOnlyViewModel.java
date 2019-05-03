@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
-public class ResearchCategoryReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class ResearchCategoryReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String researchCategory;
 

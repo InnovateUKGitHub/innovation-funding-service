@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
-public class GrantAgreementReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class GrantAgreementReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String filename;
 
@@ -20,4 +20,10 @@ public class GrantAgreementReadOnlyViewModel extends AbstractQuestionReadOnlyVie
     public String getFragment() {
         return "grant-agreement";
     }
+
+    @Override
+    public boolean shouldDisplayMarkAsComplete() {
+        return false;
+    }
+
 }

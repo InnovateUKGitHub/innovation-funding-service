@@ -5,14 +5,19 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
@@ -35,13 +41,19 @@ public class ReviewAndSubmitController {
     private CompetitionRestService competitionRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    private UserService userService;
+    private QuestionStatusRestService questionStatusRestService;
+    private UserRestService userRestService;
 
-    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter) {
+    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter, UserService userService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService) {
         this.reviewAndSubmitViewModelPopulator = reviewAndSubmitViewModelPopulator;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.applicationModelPopulator = applicationModelPopulator;
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.userService = userService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.userRestService = userRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
@@ -69,10 +81,10 @@ public class ReviewAndSubmitController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         if (competition.isFullyFunded()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                String errorCode = competition.isH2020()?
+                String errorCode = competition.isH2020() ?
                         "validation.application.h2020.terms.required" :
                         "validation.application.procurement.terms.required";
-                bindingResult.rejectValue("agreeTerms",errorCode);
+                bindingResult.rejectValue("agreeTerms", errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
                 return String.format("redirect:/application/%d/summary", applicationId);
@@ -82,6 +94,62 @@ public class ReviewAndSubmitController {
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return String.format("redirect:/application/%d/confirm-submit", applicationId);
     }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/review-and-submit", params = "edit")
+    public String editQuestion(@PathVariable long applicationId,
+                               @RequestParam("edit") long questionId) {
+        return redirectToQuestion(applicationId, questionId);
+    }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/review-and-submit", params = "complete")
+    public String completeQuestion(@PathVariable long applicationId,
+                                   @RequestParam("complete") long questionId,
+                                     UserResource user) {
+        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        List<ValidationMessages> messages = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId()).getSuccess();
+        if (messages.isEmpty()) {
+            return redirectToReview(applicationId);
+        } else {
+            return redirectToQuestion(applicationId, questionId);
+        }
+    }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/review-and-submit", params = "assign")
+    public String assignQuestionToLead(@PathVariable long applicationId,
+                                 @RequestParam("assign") long questionId,
+                                       UserResource user) {
+
+        ProcessRoleResource assignTo = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        ProcessRoleResource assignFrom = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        questionStatusRestService.assign(questionId, applicationId, assignTo.getId(), assignFrom.getId()).getSuccess();
+        return redirectToReview(applicationId);
+    }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping(value = "/{applicationId}/review-and-submit", params = "incomplete")
+    public String incompleteQuestion(@PathVariable long applicationId,
+                                     @RequestParam("incomplete") long questionId,
+                                     UserResource user) {
+        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId());
+        return redirectToQuestion(applicationId, questionId);
+    }
+
+    private String redirectToQuestion(long applicationId, long questionId) {
+        return String.format("redirect:/application/%d/form/question/%d", applicationId, questionId);
+    }
+
+    private String redirectToReview(long applicationId) {
+        return String.format("redirect:/application/%d/review-and-submit", applicationId);
+    }
+
 
     @SecuredBySpring(value = "APPLICANT_CONFIRM_SUBMIT", description = "Applicants can confirm they wish to submit their applications")
     @PreAuthorize("hasAuthority('applicant')")

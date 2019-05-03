@@ -7,7 +7,7 @@ import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class GrantTransferDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class GrantTransferDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String grantAgreementNumber;
 
@@ -76,5 +76,10 @@ public class GrantTransferDetailsReadOnlyViewModel extends AbstractQuestionReadO
     @Override
     public String getFragment() {
         return "grant-transfer-details";
+    }
+
+    @Override
+    public boolean shouldDisplayMarkAsComplete() {
+        return false;
     }
 }

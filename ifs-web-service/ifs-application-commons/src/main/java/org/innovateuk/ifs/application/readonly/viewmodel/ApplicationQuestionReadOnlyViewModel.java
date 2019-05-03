@@ -4,7 +4,9 @@ public interface ApplicationQuestionReadOnlyViewModel {
 
     String getName();
     String getFragment();
-    String getEditUrl();
     boolean isComplete();
+    boolean shouldDisplayActions();
+    boolean shouldDisplayMarkAsComplete();
+    boolean isLead();
 
 }

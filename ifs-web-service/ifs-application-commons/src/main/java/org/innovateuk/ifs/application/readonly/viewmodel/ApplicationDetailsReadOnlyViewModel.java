@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String competitionName;
     private final String applicationName;
