@@ -112,7 +112,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                                 .build(1))
                         .build());
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+        when(userService.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
         when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
@@ -174,7 +174,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                                 .build(1))
                         .build());
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+        when(userService.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
         when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 
@@ -244,7 +244,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                                 .build(1))
                         .build());
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+        when(userService.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn
                 (leadApplicantProcessRoleResource);
         when(userRestService.retrieveUserById(leadApplicantProcessRoleResource.getUser())).thenReturn(restSuccess(leadApplicant));
 

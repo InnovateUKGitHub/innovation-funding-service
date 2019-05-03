@@ -174,7 +174,7 @@ public class ApplicationTeamModelPopulator {
     }
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(applicationResource.getId());
         return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
