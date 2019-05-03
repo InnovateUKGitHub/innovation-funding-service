@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.aspectj.weaver.ast.Or;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
@@ -175,6 +176,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
         when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(rtoOrganisationTypeResource));
+
+        when(organisationService.getLeadOrganisation(anyLong(), anyList())).thenReturn(new OrganisationResource());
+
     }
 
     public void setupCompetition() {
@@ -388,9 +392,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         .withApplicationState(ApplicationState.CREATED).withResearchCategory
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
-
-        Map<Long, ApplicationResource> idsToApplicationResources = applications.stream().collect(toMap(a -> a.getId()
-                , a -> a));
 
         Role role1 = Role.LEADAPPLICANT;
         Role role2 = Role.COLLABORATOR;
