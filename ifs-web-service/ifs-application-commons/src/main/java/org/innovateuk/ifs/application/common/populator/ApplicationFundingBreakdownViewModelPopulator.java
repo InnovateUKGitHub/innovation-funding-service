@@ -156,7 +156,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
     }
 
-
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }

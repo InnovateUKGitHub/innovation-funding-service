@@ -185,8 +185,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         when(userRestService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(organisationService.getLeadOrganisation(anyLong(),any())).thenReturn(new OrganisationResource());
 
-        when(organisationService.getLeadOrganisation(anyLong(),any())).thenReturn(new OrganisationResource());
-
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(aggregateResource));
 

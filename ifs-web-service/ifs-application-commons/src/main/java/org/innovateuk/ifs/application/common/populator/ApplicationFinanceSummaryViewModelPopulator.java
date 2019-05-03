@@ -107,8 +107,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         );
     }
 
-
-
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }

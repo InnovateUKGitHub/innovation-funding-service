@@ -147,6 +147,4 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
         );
     }
-
-
 }
