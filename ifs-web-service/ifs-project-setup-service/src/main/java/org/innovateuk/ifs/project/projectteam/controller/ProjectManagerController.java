@@ -58,7 +58,7 @@ public class ProjectManagerController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/team/project-manager")
-    public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
+    public String updateProjectManager(@PathVariable("projectId") final long projectId, Model model,
                                        @Valid @ModelAttribute("form") ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        UserResource loggedInUser) {
@@ -73,17 +73,17 @@ public class ProjectManagerController {
         });
     }
 
-    private void populateOriginalProjectManagerForm(final Long projectId, ProjectManagerForm projectManagerForm) {
+    private void populateOriginalProjectManagerForm(final long projectId, ProjectManagerForm projectManagerForm) {
         Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
         projectManagerForm.setProjectManager(existingProjectManager.map(ProjectUserResource::getUser).orElse(null));
     }
 
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+    private Optional<ProjectUserResource> getProjectManager(long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
-    private String doViewProjectManager(Model model, Long projectId, UserResource loggedInUser) {
+    private String doViewProjectManager(Model model, long projectId, UserResource loggedInUser) {
 
         List<ProjectUserResource> leadOrgPartners = projectService.getLeadPartners(projectId);
         if(!userIsLeadPartner(leadOrgPartners, loggedInUser)) {
@@ -103,7 +103,7 @@ public class ProjectManagerController {
         return "redirect:/project/" + projectId + "/team";
     }
 
-    private void populateProjectManagerModel(Model model, final Long projectId, final List<ProjectUserResource> leadOrgPartners) {
+    private void populateProjectManagerModel(Model model, final long projectId, final List<ProjectUserResource> leadOrgPartners) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName());
