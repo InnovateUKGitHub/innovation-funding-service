@@ -19,11 +19,14 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
     private UserRestService userRestService;
+    private UserService userService;
+
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
-                                   UserRestService userRestService) {
+                                   UserRestService userRestService, UserService userService) {
         this.organisationRestService = organisationRestService;
         this.userRestService = userRestService;
+        this.userService = userService;
     }
 
     @Override
@@ -77,5 +80,10 @@ public class OrganisationServiceImpl implements OrganisationService {
                 .filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
+    }
+
+    public OrganisationResource getLeadOrganisation(long applicationId, List<OrganisationResource> applicationOrganisations) {
+        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRole(applicationId);
+        return applicationOrganisations.stream().filter(org -> org.getId().equals(leadApplicantUser.getOrganisationId())).findFirst().orElse(null);
     }
 }
