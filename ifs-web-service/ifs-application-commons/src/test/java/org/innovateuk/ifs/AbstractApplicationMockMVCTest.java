@@ -1,6 +1,5 @@
 package org.innovateuk.ifs;
 
-import org.aspectj.weaver.ast.Or;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
