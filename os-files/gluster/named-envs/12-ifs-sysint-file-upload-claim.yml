@@ -10,5 +10,4 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      ifs-sysint: "ifssysint"
-  volumeName: "ifs-sysint-fileupload-vol"
+      ifssysint: "ifssysint"
