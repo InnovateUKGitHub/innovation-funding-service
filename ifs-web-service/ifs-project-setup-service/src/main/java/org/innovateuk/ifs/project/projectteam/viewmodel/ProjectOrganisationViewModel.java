@@ -5,7 +5,7 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * View model backing the Project Details page for Project Setup
+ * View model for an organisation, used on the Project Team page for Project Setup
  */
 public class ProjectOrganisationViewModel {
 

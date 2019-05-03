@@ -71,7 +71,7 @@ An internal user is able to progress an H2020 grant transfer to project set up
     [Documentation]  IFS-5700
     [Setup]  log in as a different user   &{Comp_admin1_credentials}
     Given the inernal user is able to progress an application to project set up
-
+    Then the user is able to see that the application is now in project setup
 
 *** Keywords ***
 Custom Suite Setup
@@ -84,17 +84,25 @@ Custom Suite Setup
     Set suite variable  ${lastYear}
     Connect to database  @{database}
 
+The user is able to see that the application is now in project setup
+    the user clicks the button/link   jQuery = a:contains("Project setup")
+    the user should see the element   link = H2020 Grant Transfer
+
 The inernal user is able to progress an application to project set up
-    the user clicks the button/link   link = H2020 Grant Transfer
-    the user should see the element   jQuery = h1:contains("Open")
-    the user clicks the button/link   link = Input and review funding decision
-    the user selects the checkbox     app-row-1
-    the user clicks the button/link   jQuery = button:contains("Successful")
-    the user goes back to the previous page
-    the user clicks the button/link   jQuery = button:contains("Manage funding notifications")
-    the user selects the checkbox     app-row-178
-    the user clicks the button/link   jQuery = button:contains("Write and send email")
-    the user clicks the button/link   jQuery = button:contains("Send email to all applicants")
+    the user clicks the button/link       link = H2020 Grant Transfer
+    the user should see the element       jQuery = h1:contains("Open")
+    the user clicks the button/link       link = Input and review funding decision
+    the user selects the checkbox         app-row-1
+    the user clicks the button/link       jQuery = button:contains("Successful")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name   Project name
+    the user selects the checkbox         app-row-${id}
+    the user clicks the button/link       jQuery = button:contains("Write and send email")
+    the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       link = All competitions
 
 The user starts an H2020 applcation
    the user navigates to the page                  ${server}/competition/${competitionId}/overview
@@ -400,5 +408,5 @@ Validate the user is unable to submit an incomplete application
     Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
 
 Custom Suite Teardown
-    #the user closes the browser
-    #disconnect from database
+    the user closes the browser
+    disconnect from database

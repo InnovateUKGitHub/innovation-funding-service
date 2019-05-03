@@ -26,11 +26,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class ProjectTeamViewModelPopulator {
 
-    private final ProjectService projectService;
+    private ProjectService projectService;
 
-    private final CompetitionRestService competitionRestService;
+    private CompetitionRestService competitionRestService;
 
-    private final StatusService statusService;
+    private StatusService statusService;
+
+    ProjectTeamViewModelPopulator() {}
 
     @Autowired
     public ProjectTeamViewModelPopulator(
@@ -116,10 +118,10 @@ public class ProjectTeamViewModelPopulator {
             simpleFindFirst(partnerUsers,
                             user -> user.getUserId() == fc.getUser()).get().setFinanceContact(true));
 
-        Optional<ProjectUserResource> projectManageer = simpleFindFirst(usersForOrganisation,
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(usersForOrganisation,
                                                                        ProjectUserResource::isProjectManager);
 
-        projectManageer.ifPresent(pm ->
+        projectManager.ifPresent(pm ->
                                          simpleFindFirst(partnerUsers,
                                                          user -> user.getUserId() == pm.getUser()).get().setProjectManager(true));
 

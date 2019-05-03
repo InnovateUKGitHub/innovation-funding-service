@@ -3,24 +3,27 @@ package org.innovateuk.ifs.project.projectteam.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * View model for a project user in an organisation, used on the Project Team page for Project Setup
+ */
 public class ProjectOrganisationUserRowViewModel {
 
     private static final String PROJECT_MANAGER_ROLE_NAME = "Project manager";
     private static final String FINANCE_CONTACT_ROLE_NAME = "Finance contact";
     private static final String PARTNER_ROLE_NAME = "-";
     private final String email;
-    private final String name;
+    private final String userName;
     private final long userId;
     private boolean isProjectManager;
     private boolean isFinanceContact;
 
     public ProjectOrganisationUserRowViewModel(String email,
-                                               String name,
+                                               String userName,
                                                long userId,
                                                boolean isProjectManager,
                                                boolean isFinanceContact) {
         this.email = email;
-        this.name = name;
+        this.userName = userName;
         this.userId = userId;
         this.isProjectManager = isProjectManager;
         this.isFinanceContact = isFinanceContact;
@@ -30,8 +33,8 @@ public class ProjectOrganisationUserRowViewModel {
         return email;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
     public long getUserId() {
@@ -74,7 +77,7 @@ public class ProjectOrganisationUserRowViewModel {
 
         return new EqualsBuilder()
                 .append(email, that.email)
-                .append(name, that.name)
+                .append(userName, that.userName)
                 .append(userId, that.userId)
                 .append(isFinanceContact, that.isFinanceContact)
                 .append(isProjectManager, that.isProjectManager)
@@ -85,7 +88,7 @@ public class ProjectOrganisationUserRowViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(email)
-                .append(name)
+                .append(userName)
                 .append(userId)
                 .append(isFinanceContact)
                 .append(isProjectManager)

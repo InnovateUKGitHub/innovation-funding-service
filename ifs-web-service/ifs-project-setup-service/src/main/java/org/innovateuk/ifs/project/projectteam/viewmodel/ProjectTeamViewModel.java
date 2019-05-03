@@ -4,11 +4,10 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 
 import java.util.List;
 
+/**
+ * View model backing the Project Team page for Project Setup
+ */
 public class ProjectTeamViewModel {
-
-    /**
-     * View model backing the Project Details page for Project Setup
-     */
 
     private String competitionName;
     private String projectName;

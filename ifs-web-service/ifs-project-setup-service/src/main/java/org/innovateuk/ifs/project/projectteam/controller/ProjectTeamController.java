@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/project")
 public class ProjectTeamController {
 
-    private final ProjectTeamViewModelPopulator projectTeamPopulator;
+    private ProjectTeamViewModelPopulator projectTeamPopulator;
 
-    @Autowired
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator) {
         this.projectTeamPopulator = projectTeamPopulator;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@PathVariable("projectId") final long projectId,
                                   Model model,

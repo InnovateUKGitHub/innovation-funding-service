@@ -221,7 +221,7 @@ hr,
   cursor: pointer;
 }
 
-.incomplete {
+.incomplete-status {
   @extend %action-required;
   @include govuk-font(16);
   font-weight: bold;
@@ -229,7 +229,7 @@ hr,
   text-align: right;
 }
 
-.complete {
+.complete-status {
   @extend %icon-tick;
   @include govuk-font(16);
   background-size: 14px;
