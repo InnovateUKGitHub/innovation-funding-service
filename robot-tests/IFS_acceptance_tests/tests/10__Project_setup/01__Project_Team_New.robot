@@ -9,10 +9,10 @@ Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${newProjecTeamPage}       ${server}/project-setup/project/4/team
+${projectNumber}           4
+${newProjecTeamPage}       ${server}/project-setup/project/${projectNumber}/team
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
-${password}                Passw0rd
 
 *** Test Cases ***
 The lead partner is able to access project details page
@@ -69,8 +69,8 @@ A user who has been removed is no longer able to access the project
 *** Keywords ***
 The user is able to access the project
     [Arguments]  ${email}
-    the user logs-in in new browser   ${email}   ${password}
-    the user should see the element   link = Magic material
+    the user logs-in in new browser   ${email}   ${short_password}
+    the user should see the element   link = ${PS_PD_Application_Title}
 
 The user creates a new account
     [Arguments]   ${firstName}   ${lastName}   ${email}
@@ -91,7 +91,7 @@ The user fills in account details
     the user enters text to a text field   id = firstName     ${firstName}
     the user enters text to a text field   id = lastName      ${lastName}
     the user enters text to a text field   id = phoneNumber   07123456789
-    the user enters text to a text field   id = password      ${password}
+    the user enters text to a text field   id = password      ${short_password}
     the user selects the checkbox          termsAndConditions
 
 The user adds a new team member
