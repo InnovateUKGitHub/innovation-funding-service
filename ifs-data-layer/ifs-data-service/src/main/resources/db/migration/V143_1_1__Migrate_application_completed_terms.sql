@@ -1,4 +1,4 @@
--- Add terms and conditions section and question to existing, unopened, competitions
+-- IFS-5816 Add terms and conditions section and question to existing, unopened, competitions
 
 -- New terms and conditions section
 INSERT INTO section
