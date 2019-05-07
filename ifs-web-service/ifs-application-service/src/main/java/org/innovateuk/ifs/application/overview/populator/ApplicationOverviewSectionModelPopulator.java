@@ -43,7 +43,7 @@ public class ApplicationOverviewSectionModelPopulator {
     public ApplicationOverviewSectionViewModel populate(CompetitionResource competition,
                                                         ApplicationResource application, Long userId) {
 
-        final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
+        final List<SectionResource> allSections = sectionService.getAllByCompetitionIdExcludingTerms(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         List<ApplicantSectionResource> parentApplicantSections = simpleMap(parentSections,
                 sectionResource -> applicantRestService.getSection(userId, application.getId(),

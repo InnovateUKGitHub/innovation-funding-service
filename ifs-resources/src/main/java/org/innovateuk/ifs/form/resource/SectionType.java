@@ -6,14 +6,14 @@ import java.util.Optional;
  * This enum marks sections as a given type.
  */
 public enum SectionType {
-	FINANCE(),
+	FINANCE,
 	PROJECT_COST_FINANCES(FINANCE),
     PROJECT_LOCATION(FINANCE),
 	ORGANISATION_FINANCES(FINANCE),
 	FUNDING_FINANCES(FINANCE),
-    OVERVIEW_FINANCES(),
-	GENERAL(),
-    TERMS_AND_CONDITIONS();
+    OVERVIEW_FINANCES,
+	GENERAL,
+    TERMS_AND_CONDITIONS;
 
     private final SectionType parent;
 

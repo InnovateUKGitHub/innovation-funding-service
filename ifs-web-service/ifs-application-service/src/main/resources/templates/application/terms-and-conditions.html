@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Award terms and conditions'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Award terms and conditions'"/>
 </head>
 <body class="govuk-template__body">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your funding',linkClass='link-back',
-                       linkUrl=@{/application/{applicationId}/form/FUNDING_FINANCES(applicationId=${applicationId})}" />
+                       linkUrl=@{/application/{applicationId}/form/FUNDING_FINANCES(applicationId=${applicationId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:replace="competition/info/__${template}__ :: main/th:block[0] "/>
 
         <!-- /* 1, Where there is only one organisation in the application: */ -->
         <div th:unless="${collaborative}" class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end of the page.</p>
+            <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
+                of the page.</p>
         </div>
 
         <!-- /* 2. Where there is more than one organisation in the application: */ -->
@@ -30,11 +31,33 @@
             </p>
         </div>
 
-        <th:block th:replace="competition/info/__${template}__ :: main/[>0] "/>
+        <th:block th:replace="competition/info/__${template}__ :: main/[!th:insert][>0] "/>
+
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
+        <form novalidate="novalidate" method="post" class="application-overview">
+            <div class="govuk-form-group">
+
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input"
+                           type="checkbox"
+                           data-switches-button-status="#agree-terms-button"/>
+                    <label class="govuk-label govuk-checkboxes__label">
+                        I agree to the award terms and conditions set out by Innovate UK.
+                    </label>
+                </div>
+            </div>
+            <button type="submit" th:disabled="true"
+                    id="agree-terms-button"
+                    data-auto-complete-submit=""
+                    class="govuk-button">Agree and continue
+            </button>
+            <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
+        </form>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>

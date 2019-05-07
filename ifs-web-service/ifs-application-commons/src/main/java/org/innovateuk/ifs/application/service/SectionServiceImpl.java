@@ -99,7 +99,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<SectionResource> getAllByCompetitionId(final Long competitionId) {
+    public List<SectionResource> getAllByCompetitionId(final long competitionId) {
         return sectionRestService.getByCompetition(competitionId).getSuccess();
     }
 
@@ -171,7 +171,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionResource getFinanceSection(Long competitionId) {
+    public SectionResource getFinanceSection(long competitionId) {
         return getSingleSectionByType(competitionId, SectionType.FINANCE);
     }
 
