@@ -87,10 +87,10 @@ Check if target start date can be changed until SP approval
     [Documentation]    IFS-1576
     [Tags]  HappyPath
     Given the user logs-in in new browser    &{lead_applicant_credentials_sp}
-    When the user navigates to the page   ${server}/project-setup/project/${PS_SP_Project_Id}/details
-    And the user should see the element  jQuery = #start-date:contains("1 Jan 2020")
-    And the user changes the start date   2021
-    Then the user should see the element  jQuery = #start-date:contains("1 Jan 2021")
+    When the user navigates to the page      ${server}/project-setup/project/${PS_SP_Project_Id}/details
+    And the user changes the start date      2021
+    Then the user should see the element     jQuery = #start-date:contains("1 Jan 2021")
+    [Teardown]  the user changes the start date   2020
 
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
@@ -111,17 +111,14 @@ Project finance sends a query to lead organisation
     [Documentation]    IFS-2062
     [Tags]
     Given the user navigates to the page      ${server}/project-setup-management/project/${PS_SP_Project_Id}/finance-check/organisation/${Ooba_Lead_Org_Id}/query
-    When the user clicks the button/link      link = Post a new query
-    And the user enters text to a text field  id = queryTitle  Eligibility query's title
-    And the user enters text to a text field  css = .editor    Eligibility query
-    Then the user clicks the button/link      jQuery = .govuk-button:contains("Post query")
+    Then the project finance user post a new query
 
 Lead partner responds to query
     [Documentation]    IFS-2062
     [Tags]
     [Setup]  Log in as a different user        &{lead_applicant_credentials_sp}
     Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/finance-checks
-    When the user clicks the button/link       link = Respond
+    And the user clicks the button/link        link = Respond
     When the user enters text to a text field  css = .editor  Responding to finance query
     Then the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
 
@@ -130,16 +127,8 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
-    And the user clicks the button/link     jQuery = a:contains("Generate spend profile")
-    And the user clicks the button/link     link = ${PS_SP_Application_Title}
-    When the user clicks the button/link    css = .generate-spend-profile-main-button
-    And the user clicks the button/link     css = #generate-spend-profile-modal-button
-    Then the user should see the element    jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(6) td:nth-of-type(4).ok
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
-    Then the user should not see the element  link = ${Ooba_Lead_Org_Name}
-    And the user reads his email            ${PS_SP_Lead_PM_Email}  ${PS_Competition_Name}: Your spend profile is available for project ${PS_SP_Application_No}  The finance checks for all partners in the project have now been completed
+    Then the project finance user generate spend profile
+    And the project finance user should not see query responses flagged
 
 Project Finance should no longer see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
@@ -152,97 +141,34 @@ Lead partner can view spend profile page
     [Tags]  HappyPath
     [Setup]    Log in as a different user            &{lead_applicant_credentials_sp}
     Given the user clicks the button/link            link = ${PS_SP_Application_Title}
-    When the user clicks the button/link             link = View the status of partners
-    Then the user should see the element             jQuery = h1:contains("Project team status")
-    And the user should see the element              css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).action
-    When the user clicks the button/link             link = Set up your project
-    Then the user should see the element             css = li.require-action:nth-child(6)
-    When the user clicks the button/link             link = Spend profile
-    And the user should not see the element          link = Total project profile spend
-    And the user clicks the button/link              link = ${Ooba_Lead_Org_Name}
-    Then the user should not see an error in the page
-    And the user should see the element              jQuery = p:contains("We have reviewed and confirmed your project costs.")
-    And the user should see the element              jQuery = h2:contains("${Ooba_Lead_Org_Name} - Spend profile")
-    And the user clicks the button/link              link = Spend profile overview
-    And the user should see the element              jQUery = p:contains("This overview shows the spend profile status of each organisation in your project.")
+    Then the lead partner can view the generated spend profile
     [Teardown]    the user goes back to the previous page
 
-Lead partner can see correct project start date and duration
-    [Documentation]    INFUND-3970
+Lead partner can see project details and calculations on spend profile
+    [Documentation]    INFUND-3970  INFUND-3764  INFUND-6148
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2020")
-    And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
-
-Calculations in the spend profile table
-    [Documentation]    INFUND-3764, INFUND-6148
-    [Tags]
-    Given the user should see the element  css = .spend-profile-table
-    Then the user should see the element   jQuery = th:contains("Labour") ~ td.fix-right:contains("£3,081")
-    And the user should see the element    jQuery = th:contains("Overheads") ~ td.fix-right:contains("£0")
-    And the user should see the element    jQuery = th:contains("Materials") ~ td.fix-right:contains("£100,200")
-    And the user should see the element    jQuery = th:contains("Capital usage") ~ td.fix-right:contains("£552")
-    And the user should see the element    jQuery = th:contains("Subcontracting") ~ td.fix-right:contains("£90,000")
-    And the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td.fix-right:contains("£5,970")
-    And the user should see the element    jQuery = th:contains("Other costs") ~ td.fix-right:contains("£1,100")
-    #${duration} is No of Months + 1, due to header
-    And the sum of tds equals the total    .spend-profile-table  1  50  3081    # Labour
-    And the sum of tds equals the total    .spend-profile-table  3  50  100200  # Materials
-    And the sum of tds equals the total    .spend-profile-table  5  50  90000   # Subcontracting
-    And the sum of tds equals the total    .spend-profile-table  6  50  5970    # Travel & subsistence
-    And the sum of tds equals the total    .spend-profile-table  7  50  1100    # Other costs
+    Given the lead partner can see correct project start date and duration
+    And the lead partner can see calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]  HappyPath
-    Given the user navigates to the page  ${external_spendprofile_summary}/review
-    When the user should see the element  jQuery = .govuk-main-wrapper th:contains("Financial year") + th:contains("Project spend")
-    Then the user should see the element  jQuery = .govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£12,668")
+    Given the user navigates to the page     ${external_spendprofile_summary}/review
+    Then the user should see the element     jQuery = .govuk-main-wrapper th:contains("Financial year") + th:contains("Project spend")
+    And the user should see the element      jQuery = .govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£12,668")
 
-Lead partner can edit his spend profile with invalid values and see the error messages
+Spend profile: validations
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
     [Tags]  HappyPath
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
-    Then the user should see the element       jQuery = th:contains("Labour") + td input
-    When the user enters text to a text field  jQuery = th:contains("Labour") + td input   520
-    And Set Focus To Element                   jQuery = th:contains("Overheads") + td input
-    Then the user should see the element       jQuery = .govuk-error-summary:contains("Unable to submit spend profile.")
-    And the user should see the element        jQuery = .govuk-form-group--error th:contains("Labour")
-    And the user should see the element        jQuery = th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue = "3528"]
-    # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
-    And the user should see the element        jQuery = .govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£13,115")
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    Then the user should see the element       jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
-    Then the user enters text to a text field  jQuery = th:contains("Labour") + td input  10
-    And the user should not see the element    jQuery = .govuk-form-group--error th:contains("Labour")
-    When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  -55
-    And Set Focus To Element                   jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
-    And Set Focus To Element                   jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    Then the user should not see an error in the page
-    When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
-    And Set Focus To Element                   css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
-    And the user should not see the element    css = .govuk-error-summary__list
+    Given the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
+    Then the lead partner can edit his spend profile with invalid values and see the error messages
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]  HappyPath
     Given the user navigates to the page       ${external_spendprofile_summary}/review
     When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
-    And the user should see the element        css = table [type = "number"]    # checking here that the table is not read-only
-    Then the user should see the element       jQuery = th:contains("Labour") + td input
-    When the user enters text to a text field  jQuery = th:contains("Labour") + td input  14
-    And Set Focus To Element                   jQuery = th:contains("Labour") ~ td:nth-child(4) input
-    Then the user should see the element       jQuery = th:contains("Labour") ~ td.fix-right input[data-calculation-rawvalue = "3022"]
-    When the user enters text to a text field  jQuery = th:contains("Subcontracting") ~ td:nth-child(5) input  0
-    And Set Focus To Element                   jQuery = th:contains("Subcontracting") ~ td:nth-child(7) input
-    Then the user should see the element       jQuery = th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue = "90000"]
-    And the user should not see the element    jQuery = .govuk-error-summary:contains("Unable to save spend profile")
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    Then the user should not see the element   jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
+    Then the user enter valid values and save changes
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -867,3 +793,99 @@ the user should see finance eligibilty approved and able to generate spend profi
     the user should see the element     jQuery = a.eligibility-1:contains("Approved")
     the user should see the element     jQuery = a.eligibility-2:contains("Approved")
     the user should see the element     css = .generate-spend-profile-main-button
+
+the project finance user post a new query
+    the user clicks the button/link         link = Post a new query
+    the user enters text to a text field    id = queryTitle  Eligibility query's title
+    the user enters text to a text field    css = .editor    Eligibility query
+    the user clicks the button/link         jQuery = .govuk-button:contains("Post query")
+
+the project finance user generate spend profile
+    the user clicks the button/link     jQuery = a:contains("Generate spend profile")
+    the user clicks the button/link     link = ${PS_SP_Application_Title}
+    the user clicks the button/link     css = .generate-spend-profile-main-button
+    the user clicks the button/link     css = #generate-spend-profile-modal-button
+    the user should see the element     jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+
+the project finance user should not see query responses flagged
+    the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    the user should see the element        css = #table-project-status tr:nth-of-type(6) td:nth-of-type(4).ok
+    the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
+    the user should not see the element    link = ${Ooba_Lead_Org_Name}
+    the user reads his email               ${PS_SP_Lead_PM_Email}  ${PS_Competition_Name}: Your spend profile is available for project ${PS_SP_Application_No}  The finance checks for all partners in the project have now been completed
+
+the lead partner can view the generated spend profile
+    the user clicks the button/link             link = View the status of partners
+    the user should see the element             jQuery = h1:contains("Project team status")
+    the user should see the element             css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).action
+    the user clicks the button/link             link = Set up your project
+    the user should see the element             css = li.require-action:nth-child(6)
+    the user clicks the button/link             link = Spend profile
+    the user should not see the element         link = Total project profile spend
+    the user clicks the button/link             link = ${Ooba_Lead_Org_Name}
+    the user should not see an error in the page
+    the user should see the element              jQuery = p:contains("We have reviewed and confirmed your project costs.")
+    the user should see the element              jQuery = h2:contains("${Ooba_Lead_Org_Name} - Spend profile")
+    the user clicks the button/link              link = Spend profile overview
+    the user should see the element              jQUery = p:contains("This overview shows the spend profile status of each organisation in your project.")
+
+the lead partner can see correct project start date and duration
+    the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2020")
+    the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
+
+the lead partner can see calculations in the spend profile table
+    the user should see the element    css = .spend-profile-table
+    the user should see the element    jQuery = th:contains("Labour") ~ td.fix-right:contains("£3,081")
+    the user should see the element    jQuery = th:contains("Overheads") ~ td.fix-right:contains("£0")
+    the user should see the element    jQuery = th:contains("Materials") ~ td.fix-right:contains("£100,200")
+    the user should see the element    jQuery = th:contains("Capital usage") ~ td.fix-right:contains("£552")
+    the user should see the element    jQuery = th:contains("Subcontracting") ~ td.fix-right:contains("£90,000")
+    the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td.fix-right:contains("£5,970")
+    the user should see the element    jQuery = th:contains("Other costs") ~ td.fix-right:contains("£1,100")
+    #${duration} is No of Months + 1, due to header
+    the sum of tds equals the total    .spend-profile-table  1  50  3081    # Labour
+    the sum of tds equals the total    .spend-profile-table  3  50  100200  # Materials
+    the sum of tds equals the total    .spend-profile-table  5  50  90000   # Subcontracting
+    the sum of tds equals the total    .spend-profile-table  6  50  5970    # Travel & subsistence
+    the sum of tds equals the total    .spend-profile-table  7  50  1100    # Other costs
+
+the lead partner can edit his spend profile with invalid values and see the error messages
+    the user should see the element         jQuery = th:contains("Labour") + td input
+    the user enters text to a text field    jQuery = th:contains("Labour") + td input   520
+    Set Focus To Element                    jQuery = th:contains("Overheads") + td input
+    the user should see the element         jQuery = .govuk-error-summary:contains("Unable to submit spend profile.")
+    the user should see the element         jQuery = .govuk-form-group--error th:contains("Labour")
+    the user should see the element         jQuery = th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue = "3528"]
+    # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
+    the user should see the element         jQuery = .govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£13,115")
+    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    the user should see the element         jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
+    the user clicks the button/link         jQuery = .button-secondary:contains("Edit spend profile")
+    the user enters text to a text field    jQuery = th:contains("Labour") + td input  10
+    the user should not see the element     jQuery = .govuk-form-group--error th:contains("Labour")
+    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  -55
+    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
+    the user should see the element         jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
+    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
+    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
+    the user should see the element         jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
+    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    the user should not see an error in the page
+    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
+    Set Focus To Element                    css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
+    the user should not see the element     css = .govuk-error-summary__list
+
+the user enter valid values and save changes
+    the user should see the element         css = table [type = "number"]    # checking here that the table is not read-only
+    the user should see the element         jQuery = th:contains("Labour") + td input
+    the user enters text to a text field    jQuery = th:contains("Labour") + td input  14
+    Set Focus To Element                    jQuery = th:contains("Labour") ~ td:nth-child(4) input
+    the user should see the element         jQuery = th:contains("Labour") ~ td.fix-right input[data-calculation-rawvalue = "3022"]
+    the user enters text to a text field    jQuery = th:contains("Subcontracting") ~ td:nth-child(5) input  0
+    Set Focus To Element                    jQuery = th:contains("Subcontracting") ~ td:nth-child(7) input
+    the user should see the element         jQuery = th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue = "90000"]
+    the user should not see the element     jQuery = .govuk-error-summary:contains("Unable to save spend profile")
+    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    the user should not see the element     jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
+
+
