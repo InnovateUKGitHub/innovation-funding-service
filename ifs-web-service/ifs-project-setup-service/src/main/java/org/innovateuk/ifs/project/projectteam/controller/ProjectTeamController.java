@@ -77,9 +77,9 @@ public class ProjectTeamController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping("/{projectId}/team/remove-user/{userId}")
+    @PostMapping(value = "/{projectId}/team", params = "remove-team-member")
     public String removeUser(@PathVariable("projectId") final long projectId,
-                             @PathVariable("userId") final long userId) {
+                             @RequestParam("remove-team-member") final long userId) {
         projectRestService.removeUser(projectId, userId).getSuccess();
         return "redirect:/project/" + projectId + "/team";
     }
