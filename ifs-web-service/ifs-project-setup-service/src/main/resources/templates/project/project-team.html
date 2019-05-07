@@ -47,7 +47,7 @@
                     <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                 </td>
                 <td class="govuk-table__cell"
-                    th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
+                    th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
                 </td>
                 <td class="govuk-table__cell">
                     <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
