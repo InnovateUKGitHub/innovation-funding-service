@@ -167,7 +167,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           Error firstNameError = fieldError("firstName", "", "validation.standard.firstname.required", "");
           Error lastNameError = fieldError("lastName", "", "validation.standard.lastname.required", "");
-          Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^[a-zA-Z0-9._%+-^[^{}|]*$]+@[a-zA-Z0-9.-^[^{}|]*$]+\\.[a-zA-Z^[^0-9{}|]*$]{2,}$");
+          Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^$|^[a-zA-Z0-9._%+-^[^{}|]*$]+@[a-zA-Z0-9.-^[^{}|]*$]+\\.[a-zA-Z^[^0-9{}|]*$]{2,}$");
           Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$");
 
           MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -178,7 +178,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
           assertEquals(6, response.getErrors().size());
-          asList(firstNameError, lastNameError, emailError, phoneNumberError).forEach(e -> {
+          asList(firstNameError, lastNameError, phoneNumberError).forEach(e -> {
               String fieldName = e.getFieldName();
               String errorKey = e.getErrorKey();
               List<Error> matchingErrors = simpleFilter(response.getErrors(), error ->
