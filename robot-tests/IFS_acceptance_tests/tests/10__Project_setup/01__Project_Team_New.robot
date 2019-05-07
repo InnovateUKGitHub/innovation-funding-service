@@ -64,7 +64,8 @@ A user is able to remove a team member
     Then the user should not see the element   jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
 
 A user who has been removed is no longer able to access the project
-    Given log in as a different user   ${nonLeadNewMemberEmail}
+    Given log in as a different user           ${nonLeadNewMemberEmail}   ${short_password}
+    Then the user should not see the element   link = ${PS_PD_Application_Title}
 
 *** Keywords ***
 The user is able to access the project
