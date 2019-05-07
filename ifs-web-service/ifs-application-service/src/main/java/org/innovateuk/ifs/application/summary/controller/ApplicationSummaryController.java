@@ -91,7 +91,7 @@ public class ApplicationSummaryController {
 
         UserResource userForModel;
         if (isSupport) {
-            ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+            ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRole(applicationId);
             userForModel = userRestService.retrieveUserById(leadProcessRoleResource.getUser()).getSuccess();
         } else {
             userForModel = user;

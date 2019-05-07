@@ -122,7 +122,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
 
-        when(userService.getLeadApplicantProcessRoleOrNull(projectResource.getApplication())).thenReturn(processRoleResource);
+        when(userService.getLeadApplicantProcessRole(projectResource.getApplication())).thenReturn(processRoleResource);
 
         when(organisationRestService.getOrganisationById(processRoleResource.getOrganisationId())).thenReturn(restSuccess(organisationResource));
 
