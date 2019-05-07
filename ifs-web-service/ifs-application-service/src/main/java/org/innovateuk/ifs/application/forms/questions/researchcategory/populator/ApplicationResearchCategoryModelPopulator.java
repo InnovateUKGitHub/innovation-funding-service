@@ -84,7 +84,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
     }
 
     private String getLeadApplicantName(long applicationId) {
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(applicationId);
         UserResource user = userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
         return user.getName();
     }

@@ -23,6 +23,8 @@ public class QuestionStatus {
     @JoinColumn(name = "markedAsCompleteById", referencedColumnName = "id")
     private ProcessRole markedAsCompleteBy;
 
+    private ZonedDateTime markedAsCompleteOn;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questionId", referencedColumnName = "id")
     private Question question;
@@ -42,13 +44,10 @@ public class QuestionStatus {
     private Boolean notified;
 
     public QuestionStatus() {
-        // no-arg constructor
     }
 
-    public QuestionStatus(Question question, Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+    public QuestionStatus(Question question, Application application) {
         this.application = application;
-        this.markedAsComplete = markedAsComplete;
-        this.markedAsCompleteBy = markedAsCompleteBy;
         this.question = question;
     }
 
@@ -69,10 +68,6 @@ public class QuestionStatus {
         return markedAsComplete;
     }
 
-    public void setMarkedAsCompleteBy(ProcessRole markedAsCompleteBy) {
-        this.markedAsCompleteBy = markedAsCompleteBy;
-    }
-
     public ProcessRole getMarkedAsCompleteBy() {
         return markedAsCompleteBy;
     }
@@ -89,8 +84,11 @@ public class QuestionStatus {
         return assignedDate;
     }
 
-    public void markAsComplete() {
+    public QuestionStatus markAsComplete(ProcessRole markedAsCompleteBy, ZonedDateTime markedAsCompleteOn) {
         this.markedAsComplete = true;
+        this.markedAsCompleteBy = markedAsCompleteBy;
+        this.markedAsCompleteOn = markedAsCompleteOn;
+        return this;
     }
 
     public void markAsInComplete() {
@@ -124,5 +122,9 @@ public class QuestionStatus {
     @JsonIgnore
     public Application getApplication() {
         return this.application;
+    }
+
+    public ZonedDateTime getMarkedAsCompleteOn() {
+        return markedAsCompleteOn;
     }
 }

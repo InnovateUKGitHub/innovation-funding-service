@@ -240,9 +240,11 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()): new ArrayList<>();
 
         if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-        } else if (markAsComplete) {
-            questionStatus.markAsComplete();
+            questionStatus = new QuestionStatus(question, application);
+        }
+
+        if (markAsComplete) {
+            questionStatus.markAsComplete(markedAsCompleteBy, now());
         } else {
             questionStatus.markAsInComplete();
         }

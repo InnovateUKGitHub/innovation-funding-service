@@ -24,7 +24,7 @@ public class BasePermissionRules {
     }
 
     private long getLeadApplicantId(Long applicationId) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationId).getUser();
+        return userService.getLeadApplicantProcessRole(applicationId).getUser();
     }
 
     public boolean applicationNotYetSubmitted(Long applicationId) {
