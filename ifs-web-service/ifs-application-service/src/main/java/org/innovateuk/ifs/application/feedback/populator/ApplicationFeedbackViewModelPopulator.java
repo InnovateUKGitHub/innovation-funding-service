@@ -26,10 +26,9 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
@@ -45,7 +44,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     private OrganisationRestService organisationRestService;
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
-    private UserService userService;
+    private OrganisationService organisationService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
@@ -60,7 +59,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     public ApplicationFeedbackViewModelPopulator(OrganisationRestService organisationRestService,
                                                  ApplicationService applicationService,
                                                  CompetitionRestService competitionRestService,
-                                                 UserService userService,
+                                                 OrganisationService organisationService,
                                                  FileEntryRestService fileEntryRestService,
                                                  FinanceService financeService,
                                                  AssessmentRestService assessmentRestService,
@@ -77,7 +76,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
-        this.userService = userService;
+        this.organisationService = organisationService;
         this.fileEntryRestService = fileEntryRestService;
         this.financeService = financeService;
         this.assessmentRestService = assessmentRestService;
@@ -95,10 +94,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
         List<OrganisationResource> partners = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-
+        OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(application.getId(), partners);
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
