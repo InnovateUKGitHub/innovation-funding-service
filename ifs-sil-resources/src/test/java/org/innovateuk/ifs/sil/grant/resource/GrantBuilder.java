@@ -28,6 +28,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     private String orgProjectRole = "lead";
     private String contactRole = "finance_contact";
     private String orgSize = "MEDIUM";
+    private String postcode = "123 ABC";
     private int participantCount = 1;
     private int costCategoryCount = 2;
     private int durationInMonths = 12;
@@ -152,6 +153,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
         participant.setOverheadRate(overheadRate);
         participant.setAwardRate(awardRate);
         participant.setOrgSize(orgSize);
+        participant.setPostcode(postcode);
         return participant;
     }
 
