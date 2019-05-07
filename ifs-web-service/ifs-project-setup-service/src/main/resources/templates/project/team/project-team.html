@@ -46,7 +46,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-width-one-third">
-                        <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}" class="govuk-link">Your finance contact</a>
+                        <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}" class="govuk-link">Your finance contact</a>
                     </td>
                     <td class="govuk-table__cell govuk-!-width-one-third"
                         th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().userName : '-'}">
