@@ -15,7 +15,8 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance Contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <p class="govuk-body">Select your finance contact. You can change your finance contact up until your grant offer letter is generated. They will:</p>
+        <p class="govuk-body">Select your finance contact. You can change your finance contact up until your grant offer letter is generated.
+            <br/>They will:</p>
 
         <ul class="govuk-list govuk-list--bullet">
             <li>provide bank details for your organisation</li>
@@ -51,7 +52,7 @@
             </fieldset>
 
             <div class="govuk-form-group">
-                <button class="govuk-button" type="submit">Save Finance Contact</button>
+                <button class="govuk-button" type="submit">Save finance contact</button>
             </div>
 
         </form>
