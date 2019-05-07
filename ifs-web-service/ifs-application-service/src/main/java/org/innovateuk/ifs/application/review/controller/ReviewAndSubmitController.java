@@ -130,7 +130,7 @@ public class ReviewAndSubmitController {
                                  @RequestParam("assign") long questionId,
                                        UserResource user) {
 
-        ProcessRoleResource assignTo = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        ProcessRoleResource assignTo = userService.getLeadApplicantProcessRole(applicationId);
         ProcessRoleResource assignFrom = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.assign(questionId, applicationId, assignTo.getId(), assignFrom.getId()).getSuccess();
         return redirectToReview(applicationId);

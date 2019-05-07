@@ -23,6 +23,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -48,6 +50,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -126,8 +129,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
+        ProcessRoleResource processRole = newProcessRoleResource().build();
 
-        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, questions, formInputs, responses, questionStatuses);
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses);
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
