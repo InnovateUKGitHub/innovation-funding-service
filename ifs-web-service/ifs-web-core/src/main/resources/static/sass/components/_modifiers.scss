@@ -220,3 +220,21 @@ hr,
 .govuk-back-link {
   cursor: pointer;
 }
+
+.incomplete-status {
+  @extend %action-required;
+  @include govuk-font(16);
+  font-weight: bold;
+  padding-left: 20px;
+  text-align: right;
+}
+
+.complete-status {
+  @extend %icon-tick;
+  @include govuk-font(16);
+  background-size: 14px;
+  color: $govuk-button-colour;
+  font-weight: bold;
+  padding-left: 20px;
+  text-align: right;
+}

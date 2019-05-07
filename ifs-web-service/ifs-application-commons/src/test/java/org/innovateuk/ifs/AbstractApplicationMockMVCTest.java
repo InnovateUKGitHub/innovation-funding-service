@@ -175,6 +175,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
         when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(rtoOrganisationTypeResource));
+
+        when(organisationService.getLeadOrganisation(anyLong(), anyList())).thenReturn(new OrganisationResource());
+
     }
 
     public void setupCompetition() {
@@ -389,9 +392,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
 
-        Map<Long, ApplicationResource> idsToApplicationResources = applications.stream().collect(toMap(a -> a.getId()
-                , a -> a));
-
         Role role1 = Role.LEADAPPLICANT;
         Role role2 = Role.COLLABORATOR;
         Role assessorRole = Role.ASSESSOR;
@@ -523,11 +523,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn
                 (Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0).getId())).thenReturn(processRole1);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1).getId())).thenReturn(processRole2);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2).getId())).thenReturn(processRole3);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
+        when(userService.getLeadApplicantProcessRole(applications.get(0).getId())).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRole(applications.get(1).getId())).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRole(applications.get(2).getId())).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRole(applications.get(3).getId())).thenReturn(processRole4);
+        when(userService.getLeadApplicantProcessRole(applications.get(4).getId())).thenReturn(processRole11);
 
         when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
