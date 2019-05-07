@@ -84,6 +84,7 @@ public class ProjectTeamController {
         return "redirect:/project/" + projectId + "/team";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "add-team-member")
     public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
                                 BindingResult bindingResult,
