@@ -31,7 +31,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetProjectById() {
+    public void getProjectById() {
         ProjectResource returnedResponse = new ProjectResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123", ProjectResource.class, returnedResponse);
         ProjectResource result = service.getProjectById(123L).getSuccess();
@@ -39,7 +39,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetProjectUsers() {
+    public void getProjectUsers() {
         List<ProjectUserResource> users = Stream.of(1,2,3).map(i -> new ProjectUserResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(projectRestURL + "/123/project-users", projectUserResourceList(), users);
         RestResult<List<ProjectUserResource>> result = service.getProjectUsersForProject(123L);
@@ -48,7 +48,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testFindByUserId() {
+    public void findByUserId() {
 
         List<ProjectResource> projects = Stream.of(1,2,3).map(i -> new ProjectResource()).collect(Collectors.toList());
 
@@ -63,7 +63,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetByApplicationId() {
+    public void getByApplicationId() {
         ProjectResource projectResource = new ProjectResource();
 
         setupGetWithRestResultExpectations(projectRestURL + "/application/" + 123L, ProjectResource.class, projectResource);
@@ -76,7 +76,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetProjectManager() {
+    public void getProjectManager() {
         ProjectUserResource returnedResponse = new ProjectUserResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123/project-manager", ProjectUserResource.class, returnedResponse);
         ProjectUserResource result = service.getProjectManager(123L).getSuccess();
@@ -84,14 +84,14 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetProjectManagerNotFound() {
+    public void getProjectManagerNotFound() {
         setupGetWithRestResultExpectations(projectRestURL + "/123/project-manager", ProjectUserResource.class, null, NOT_FOUND);
         Optional<ProjectUserResource> result = service.getProjectManager(123L).toOptionalIfNotFound().getSuccess();
         assertFalse(result.isPresent());
     }
 
     @Test
-    public void testGetPartnerOrganisation() {
+    public void getPartnerOrganisation() {
         PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123/partner/234", PartnerOrganisationResource.class, partnerOrg);
         RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
@@ -100,14 +100,14 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testGetPartnerOrganisationNotFound() {
+    public void getPartnerOrganisationNotFound() {
         setupGetWithRestResultExpectations(projectRestURL + "/123/partner/234", PartnerOrganisationResource.class, null, NOT_FOUND);
         RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
         assertTrue(result.isFailure());
     }
 
     @Test
-    public void testCreateProjectFromApplicationId() {
+    public void createProjectFromApplicationId() {
         ProjectResource projectResource = newProjectResource().build();
         setupPostWithRestResultExpectations(projectRestURL + "/create-project/application/123", ProjectResource.class, null,  projectResource, OK);
         RestResult<ProjectResource> result = service.createProjectFromApplicationId(123L);
@@ -116,7 +116,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
-    public void testWithdrawProject() {
+    public void withdrawProject() {
         long projectId = 123L;
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/withdraw", null, OK );
         RestResult<Void> result = service.withdrawProject(projectId);
@@ -141,4 +141,5 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/complete-offline", Void.class);
         assertTrue(result.isSuccess());
     }
+
 }

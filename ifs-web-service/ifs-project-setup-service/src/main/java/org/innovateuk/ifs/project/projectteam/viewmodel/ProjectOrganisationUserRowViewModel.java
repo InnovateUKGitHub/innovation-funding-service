@@ -12,33 +12,37 @@ public class ProjectOrganisationUserRowViewModel {
     private static final String FINANCE_CONTACT_ROLE_NAME = "Finance contact";
     private static final String PARTNER_ROLE_NAME = "-";
     private final String email;
-    private final String userName;
-    private final long userId;
+    private final String name;
+    private final long id;
+    private final boolean invite;
+
     private boolean isProjectManager;
     private boolean isFinanceContact;
 
     public ProjectOrganisationUserRowViewModel(String email,
-                                               String userName,
-                                               long userId,
+                                               String name,
+                                               long id,
                                                boolean isProjectManager,
-                                               boolean isFinanceContact) {
+                                               boolean isFinanceContact,
+                                               boolean invite) {
         this.email = email;
-        this.userName = userName;
-        this.userId = userId;
+        this.name = name;
+        this.id = id;
         this.isProjectManager = isProjectManager;
         this.isFinanceContact = isFinanceContact;
+        this.invite = invite;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
     public boolean isFinanceContact() {
@@ -57,6 +61,10 @@ public class ProjectOrganisationUserRowViewModel {
         this.isProjectManager = isProjectManager;
     }
 
+    public boolean isInvite() {
+        return invite;
+    }
+
     public String getRolesNames() {
         if(isProjectManager) {
             return isFinanceContact ?
@@ -65,6 +73,10 @@ public class ProjectOrganisationUserRowViewModel {
         }
         return isFinanceContact?
                 FINANCE_CONTACT_ROLE_NAME : PARTNER_ROLE_NAME;
+    }
+
+    public String getDisplayName() {
+        return invite ? name + " (Pending)" : name;
     }
 
     @Override
@@ -77,8 +89,8 @@ public class ProjectOrganisationUserRowViewModel {
 
         return new EqualsBuilder()
                 .append(email, that.email)
-                .append(userName, that.userName)
-                .append(userId, that.userId)
+                .append(name, that.name)
+                .append(id, that.id)
                 .append(isFinanceContact, that.isFinanceContact)
                 .append(isProjectManager, that.isProjectManager)
                 .isEquals();
@@ -88,8 +100,8 @@ public class ProjectOrganisationUserRowViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(email)
-                .append(userName)
-                .append(userId)
+                .append(name)
+                .append(id)
                 .append(isFinanceContact)
                 .append(isProjectManager)
                 .toHashCode();
