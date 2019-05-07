@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectTeamViewModel;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,16 +15,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,8 +35,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                                          projectDetailsService,
                                          projectService,
                                          organisationRestService,
-                                         projectTeamRestService,
-                                         projectRestService);
+                                         projectTeamRestService);
     }
 
     @Mock
@@ -56,9 +52,6 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Mock
     private ProjectTeamRestService projectTeamRestService;
-
-    @Mock
-    private ProjectRestService projectRestService;
 
     @Test
     public void viewProjectTeam() throws Exception {
@@ -161,12 +154,12 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         long userId = 444L;
         long projectId = 555L;
 
-        when(projectRestService.removeUser(projectId, userId)).thenReturn(restSuccess());
+        when(projectTeamRestService.removeUser(projectId, userId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/" + projectId + "/team")
                 .param("remove-team-member", String.valueOf(userId)))
                 .andExpect(status().is3xxRedirection());
 
-        verify(projectRestService).removeUser(projectId, userId);
+        verify(projectTeamRestService).removeUser(projectId, userId);
     }
 }

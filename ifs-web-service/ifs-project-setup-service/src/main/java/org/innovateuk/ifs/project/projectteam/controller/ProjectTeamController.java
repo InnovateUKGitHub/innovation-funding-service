@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,10 +17,6 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,20 +44,16 @@ public class ProjectTeamController {
     private OrganisationRestService organisationRestService;
     private ProjectTeamRestService projectTeamRestService;
 
-    private ProjectRestService projectRestService;
-
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
                                  ProjectDetailsService projectDetailsService,
                                  ProjectService projectService,
                                  OrganisationRestService organisationRestService,
-                                 ProjectTeamRestService projectTeamRestService,
-                                 ProjectRestService projectRestService) {
+                                 ProjectTeamRestService projectTeamRestService) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;
         this.projectService = projectService;
         this.organisationRestService = organisationRestService;
         this.projectTeamRestService = projectTeamRestService;
-        this.projectRestService = projectRestService;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -80,7 +71,7 @@ public class ProjectTeamController {
     @PostMapping(value = "/{projectId}/team", params = "remove-team-member")
     public String removeUser(@PathVariable("projectId") final long projectId,
                              @RequestParam("remove-team-member") final long userId) {
-        projectRestService.removeUser(projectId, userId).getSuccess();
+        projectTeamRestService.removeUser(projectId, userId).getSuccess();
         return "redirect:/project/" + projectId + "/team";
     }
 

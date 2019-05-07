@@ -22,8 +22,6 @@ public interface ProjectRestService {
 
     RestResult<Void> withdrawProject(long projectId);
 
-    RestResult<Void> removeUser(long projectId, long userId);
-
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);

@@ -21,7 +21,7 @@ public class ProjectTeamController {
         this.projectTeamService = projectTeamService;
     }
 
-    @PostMapping("/{projectId}/remove-user/{userId}")
+    @PostMapping("/{projectId}/team/remove-user/{userId}")
     public RestResult<Void> removeUser(@PathVariable("projectId") final long projectId,
                                        @PathVariable("userId") final long userId) {
         ProjectUserCompositeId composite = new ProjectUserCompositeId(projectId, userId);

@@ -142,13 +142,4 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
     }
 
-    @Test
-    public void removeUser() {
-        long projectId = 654L;
-        long userId = 987L;
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/remove-user/" + userId, null, OK);
-        RestResult<Void> result = service.removeUser(projectId, userId);
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/remove-user/" + userId, Void.class);
-        assertTrue(result.isSuccess());
-    }
 }

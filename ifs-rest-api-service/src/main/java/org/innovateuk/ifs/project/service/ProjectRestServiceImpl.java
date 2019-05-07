@@ -70,11 +70,6 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> removeUser(long projectId, long userId) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/remove-user/" + userId);
-    }
-
-    @Override
     public RestResult<Void> handleProjectOffline(long projectId) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/handle-offline");
     }

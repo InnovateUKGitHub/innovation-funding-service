@@ -33,7 +33,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
         when(projectTeamService.removeUser(composite)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/remove-user/{userId}", projectId, userId))
+        mockMvc.perform(post("/project/{projectId}/team/remove-user/{userId}", projectId, userId))
                 .andExpect(status().isOk());
 
         verify(projectTeamService).removeUser(composite);
