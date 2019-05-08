@@ -61,7 +61,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
     private ApplicationProgressService applicationProgressServiceMock;
 
     @Test
-    public void assignTest() throws Exception {
+    public void assignTest() {
         final long applicationId = 1232L;
         final long questionId = 2228L;
         final long assigneeId = 51234L;
@@ -94,7 +94,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void markTeamAsInComplete() throws Exception {
+    public void markTeamAsInComplete() {
         ProcessRole markedAsInCompleteBy = newProcessRole().build();
         Application application = newApplication().build();
         Question question = newQuestion().build();
@@ -123,7 +123,7 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         inOrder.verify(questionRepositoryMock).findById(question.getId());
         inOrder.verify(questionStatusRepositoryMock).findByQuestionIdAndApplicationId(question.getId(), application.getId());
         inOrder.verify(questionStatusRepositoryMock).save(createQuestionStatusLambdaMatcher(question,
-                application, markedAsInCompleteBy, false));
+                application, null, false));
         inOrder.verify(applicationProgressServiceMock).updateApplicationProgress(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
