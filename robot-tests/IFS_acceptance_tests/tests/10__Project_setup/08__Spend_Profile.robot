@@ -103,8 +103,8 @@ Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]  HappyPath
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    Then the user should see the element     jQuery = p:contains("This will generate a flat spend profile for all project partners.")
-    When the user clicks the button/link     jQuery = button:contains("Cancel")
+    When the user should see the element     jQuery = p:contains("This will generate a flat spend profile for all project partners.")
+    Then the user clicks the button/link     jQuery = button:contains("Cancel")
 
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
@@ -215,8 +215,8 @@ Non-lead partner marks Spend Profile as complete
 
 Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
-    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_Project_Id}
-    And the user should see the element     css = ul li.complete:nth-child(6)
+    [Setup]  the user navigates to the page    ${server}/project-setup/project/${PS_SP_Project_Id}
+    Given the user should see the element     css = ul li.complete:nth-child(6)
     When the user clicks the button/link    link = View the status of partners
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user should see the element     css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(6)
@@ -738,7 +738,6 @@ the non lead partner able to see the submitted spend profile
 project Manager doesn't have the option to send spend profiles until all partners have marked as complete
     the user clicks the button/link        link = Spend profile
     the user should not see the element    jQuery = .govuk-button:contains("Review spend profiles")
-    #The complete name of the button is anyways not selected. Please use the short version of it.
 
 the user should see the validation messages triggred
     the user should see a summary error         Your total costs are higher than your eligible costs.

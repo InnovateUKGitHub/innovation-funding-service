@@ -33,9 +33,7 @@ Queries section is linked from eligibility and this selects eligibility on the q
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     [Setup]  Logging in and Error Checking   &{internal_finance_credentials}
-    Given the user navigates to the page     ${dreambit_finance_checks}/eligibility
-    And the user clicks the button/link      jQuery = .button-secondary:contains("Queries")
-    And the user should see the element      jQuery = h2:contains("Queries")
+    Given the user navigates to queries page
     When the user clicks the button/link     jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected  Eligibility   id = section
 
@@ -571,3 +569,8 @@ the user should see the note comments client side validations
     the user enters text to a text field     css = .editor  ${empty}
     Set Focus To Element                     jQuery = .govuk-button:contains("Save comment")
     the user should see a field error        ${empty_field_warning_message}
+
+the user navigates to queries page
+    the user navigates to the page       ${dreambit_finance_checks}/eligibility
+    the user clicks the button/link      jQuery = .button-secondary:contains("Queries")
+    the user should see the element      jQuery = h2:contains("Queries")
