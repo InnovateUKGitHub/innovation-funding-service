@@ -28,18 +28,10 @@ function tailorToAppInstance() {
     cp -r robot-tests robot-tests-tmp
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/os_run_tests.sh
-    # [ ! -z "${ROBOT_COMMAND}" ] && ROBOT_COMMAND=", "${ROBOT_COMMAND}
-    # sed -i.bak "s#\"./os_run_tests.sh\",\ \"-q\"#\"./os_run_tests.sh\",\ \"-q\"${ROBOT_COMMAND}#g" robot-tests-tmp/Dockerfile
-
-    # [ ! -z "${ROBOT_COMMAND}" ] && ROBOT_COMMAND=" "${ROBOT_COMMAND}
-
     if [[  ! -z "${ROBOT_COMMAND}" ]]; then
       ROBOT_COMMAND=" "$ROBOT_COMMAND;
       sed -i.bak "s#./os_run_tests.sh\ -q#./os_run_tests.sh\ -q$ROBOT_COMMAND#g" robot-tests-tmp/Dockerfile
     fi
-
-    # sed -i.bak "s#\[\"./os_run_tests.sh\", \"-q\"\]#[\"./os_run_tests.sh\", \"-q\", $ROBOT_COMMAND]#g" robot-tests-tmp/Dockerfile
-
 }
 
 function cleanUp() {
@@ -48,9 +40,11 @@ function cleanUp() {
 }
 
 function buildAndPushTestImages() {
-    # docker build --build-arg SVC_ACCOUNT_CLAUSE_ARG=${SVC_ACCOUNT_CLAUSE} -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
-    # docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
-    docker build --build-arg GID=${System_env_bamboo_gluster_GID} --build-arg UID=${System_env_bamboo_gluster_UID} --build-arg PW=${System_env_bamboo_gluster_user_password} -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
+    docker build --build-arg GID=${System_env_bamboo_gluster_GID} \
+                 --build-arg UID=${System_env_bamboo_gluster_UID} \
+                 --build-arg PW=${System_env_bamboo_gluster_user_password} \
+                 -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
+
     docker login -p ${SVC_ACCOUNT_TOKEN} -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }

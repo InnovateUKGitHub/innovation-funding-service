@@ -2,8 +2,6 @@
 
 # Define some functions for later use
 
-set -x
-
 function coloredEcho() {
     local exp=$1;
     local color=$2;

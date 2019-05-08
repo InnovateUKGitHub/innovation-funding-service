@@ -315,13 +315,13 @@ task createProject(dependsOn: deleteProject) {
                 args 'patch', 'namespace', "${openshiftEnv}", "-p", '{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"purpose=perftesting\"}}}', "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
             }
 
-            for( String user : System.env.bamboo_openshift_at_users.split(',') ) {
+            for( String user : System.env.bamboo_openshift_at_users.split(', ') ) {
                 exec {
                     executable 'oc'
                     args 'adm', 'policy', 'add-role-to-user', 'admin', "${user}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
                 }
             }
-        } 
+        }
     }
 }
 
