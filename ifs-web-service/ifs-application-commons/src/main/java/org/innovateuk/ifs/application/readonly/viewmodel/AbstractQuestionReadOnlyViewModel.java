@@ -3,9 +3,11 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
@@ -33,9 +35,13 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .filter(status -> status.getAssignee() != null)
                 .findFirst();
         boolean assignedToUser = assignedStatus
-                .map(status ->  data.getProcessRole().isPresent() && status.getAssignee().equals(data.getProcessRole().get().getId()))
+                .map(isAssignedToProcessRole(data.getProcessRole()))
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
+    }
+
+    private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
+        return status ->  processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
     }
 
     public long getApplicationId() {

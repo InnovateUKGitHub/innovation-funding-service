@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
@@ -130,7 +131,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeStatuses()) {
-            return Collections.emptyList();
+            return emptyList();
         }
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
         return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();

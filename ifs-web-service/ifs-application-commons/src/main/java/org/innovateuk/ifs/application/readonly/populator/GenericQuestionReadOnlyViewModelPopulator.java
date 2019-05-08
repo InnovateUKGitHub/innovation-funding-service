@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -17,10 +16,10 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator {
+public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
 
     @Override
-    public ApplicationQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
+    public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToFormInputs().get(question.getId());
         Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> FormInputType.TEXTAREA.equals(formInput.getType()))
                 .findAny();

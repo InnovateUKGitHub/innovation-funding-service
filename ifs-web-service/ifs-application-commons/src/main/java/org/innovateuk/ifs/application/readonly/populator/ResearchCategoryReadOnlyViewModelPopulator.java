@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ResearchCategoryReadOnlyViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -12,10 +11,10 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
-public class ResearchCategoryReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator {
+public class ResearchCategoryReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ResearchCategoryReadOnlyViewModel> {
 
     @Override
-    public ApplicationQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
+    public ResearchCategoryReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         return new ResearchCategoryReadOnlyViewModel(data, question);
     }
 

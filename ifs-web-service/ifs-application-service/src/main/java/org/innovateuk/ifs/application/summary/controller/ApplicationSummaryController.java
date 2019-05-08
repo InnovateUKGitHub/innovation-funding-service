@@ -48,7 +48,13 @@ public class ApplicationSummaryController {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService, UserService userService, UserRestService userRestService, CompetitionRestService competitionRestService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService) {
+    public ApplicationSummaryController(ApplicationService applicationService,
+                                        UserService userService,
+                                        UserRestService userRestService,
+                                        CompetitionRestService competitionRestService,
+                                        InterviewAssignmentRestService interviewAssignmentRestService,
+                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
+                                        EuGrantTransferRestService euGrantTransferRestService) {
         this.applicationService = applicationService;
         this.userService = userService;
         this.userRestService = userRestService;
@@ -97,7 +103,6 @@ public class ApplicationSummaryController {
         return getFileResponseEntity(euGrantTransferRestService.downloadGrantAgreement(applicationId).getSuccess(),
                 euGrantTransferRestService.findGrantAgreement(applicationId).getSuccess());
     }
-
 
     private boolean isSupport(UserResource user) {
         return user.hasRole(SUPPORT);

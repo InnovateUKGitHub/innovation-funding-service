@@ -6,15 +6,14 @@ import org.innovateuk.ifs.application.common.populator.ApplicationResearchPartic
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Future;
@@ -22,14 +21,20 @@ import java.util.concurrent.Future;
 @Component
 public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
 
-    @Autowired
-    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
-    @Autowired
-    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-    @Autowired
-    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
-    @Autowired
-    private SectionRestService sectionRestService;
+    private final ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+    private final ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+    private final ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+    private final SectionRestService sectionRestService;
+
+    public FinanceReadOnlyViewModelPopulator(ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
+                                             ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
+                                             ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
+                                             SectionRestService sectionRestService) {
+        this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
+        this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
+        this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
+        this.sectionRestService = sectionRestService;
+    }
 
     public FinanceReadOnlyViewModel populate(ApplicationReadOnlyData data) {
         CompetitionResource competition = data.getCompetition();
