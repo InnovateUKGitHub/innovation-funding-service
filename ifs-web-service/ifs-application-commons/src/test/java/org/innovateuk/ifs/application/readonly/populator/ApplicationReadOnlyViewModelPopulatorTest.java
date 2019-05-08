@@ -26,6 +26,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,10 +92,13 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private AsyncFuturesGenerator futuresGeneratorMock;
+    private List<QuestionReadOnlyViewModelPopulator<?>> mocklist;
 
     @Mock
-    private List<QuestionReadOnlyViewModelPopulator<?>> mocklist;
+    private UserRestService userRestService;
+
+    @Mock
+    private AsyncFuturesGenerator futuresGeneratorMock;
 
     @Before
     public void setupExpectations() {
@@ -122,7 +126,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
         List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
-        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(1);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .build(1);
         OrganisationResource organisation = newOrganisationResource().build();
         List<SectionResource> sections = newSectionResource()
                 .withName("Section with questions", "Finance section")
@@ -144,6 +150,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
         when(mockPopulator.populate(questions.get(0), expectedData)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
