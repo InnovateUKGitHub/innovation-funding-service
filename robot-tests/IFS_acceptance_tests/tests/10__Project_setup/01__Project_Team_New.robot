@@ -65,7 +65,7 @@ A user is able to remove a team member
 
 A user who has been removed is no longer able to access the project
     Given log in as a different user           ${nonLeadNewMemberEmail}   ${short_password}
-    Then the user should not see the element   jQuery = li:contains(Project number) h3:contains("Magic material")
+    Then the user should not see the element   jQuery = li:contains("Project number") h3:contains("Magic material")
 
 *** Keywords ***
 The user is able to access the project
