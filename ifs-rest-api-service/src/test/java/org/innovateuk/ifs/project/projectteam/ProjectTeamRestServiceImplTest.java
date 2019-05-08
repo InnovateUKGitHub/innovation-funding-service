@@ -29,9 +29,9 @@ public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<Proj
     public void removeUser() {
         long projectId = 654L;
         long userId = 987L;
-        setupPostWithRestResultExpectations(String.format("/project/%d/remove-user/%d", projectId, userId), null, OK);
+        setupPostWithRestResultExpectations(String.format("/project/%d/team/remove-user/%d", projectId, userId), null, OK);
         RestResult<Void> result = service.removeUser(projectId, userId);
-        setupPostWithRestResultVerifications(String.format("/project/%d/remove-user/%d", projectId, userId), Void.class);
+        setupPostWithRestResultVerifications(String.format("/project/%d/team/remove-user/%d", projectId, userId), Void.class);
         assertTrue(result.isSuccess());
     }
 
