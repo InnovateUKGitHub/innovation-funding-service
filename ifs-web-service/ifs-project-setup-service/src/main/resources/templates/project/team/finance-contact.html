@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project team',linkUrl=@{/project/{id}/team(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance Contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <p class="govuk-body">Select your finance contact. You can change your finance contact up until your grant offer letter is generated.
             <br/>They will:</p>
