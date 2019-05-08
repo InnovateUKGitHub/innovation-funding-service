@@ -22,4 +22,7 @@ public interface OrganisationService {
     SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations);
 
     Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles);
-}
+
+    OrganisationResource getLeadOrganisation(long applicationId, List<OrganisationResource> applicationOrganisations);
+
+    }

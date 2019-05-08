@@ -85,15 +85,11 @@
                         </li>
                         <li th:unless="${model.readOnly}">
                             <a class="disabled govuk-link" aria-disabled="true"
-                               th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP}">
+                               th:unless="${model.isInviteAssessorsLinkEnabled()}">
                                 Invite assessors to assess the competition
                             </a>
                             <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}"
-                               th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP}"
+                               th:if="${model.isInviteAssessorsLinkEnabled()}"
                                class="govuk-link">
                                 Invite assessors to assess the competition
                             </a>

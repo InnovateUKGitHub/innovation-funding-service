@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
@@ -82,10 +83,12 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (financeUtil.isUsingJesFinances(competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess(), organisation.getOrganisationType().getId())) {
+        CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
+
+        if(competition.isH2020() || financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType().getId())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
-            viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);
+            viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
         }
 
         ProjectFinance projectFinanceForOrganisation =
@@ -100,7 +103,8 @@ public class FinanceChecksGenerator {
             List<FinanceRowMetaValue> metaValues = simpleMap(original.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
             newRow.setFinanceRowMetadata(metaValues);
             newRow.setDescription(original.getDescription());
-            newRow.setItem(original.getItem());
+            // map H2020 totals directly to conventional totals as they are treated exactly the same in project setup
+            newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
             newRow.setName(original.getName());
             newRow.setQuantity(original.getQuantity());
             newRow.setQuestion(original.getQuestion());

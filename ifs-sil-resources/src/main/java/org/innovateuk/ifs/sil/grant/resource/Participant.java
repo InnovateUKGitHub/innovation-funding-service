@@ -15,9 +15,14 @@ import java.util.Collection;
 public class Participant {
 
     private Long orgId;
+
     private String orgType;
+
     private String orgProjectRole;
+
     private String orgSize;
+
+    private String postcode;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private long contactId;
@@ -25,7 +30,6 @@ public class Participant {
     private String contactRole;
 
     private String contactEmail;
-
 
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
@@ -130,6 +134,14 @@ public class Participant {
         this.forecasts = forecasts;
     }
 
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
     public static Participant createProjectTeamParticipant(
             long orgId,
             String orgType,
@@ -138,6 +150,7 @@ public class Participant {
             String contactRole,
             String contactEmail,
             String orgSize,
+            String postcode,
             BigDecimal capLimit,
             BigDecimal awardRate,
             BigDecimal overheadRate,
@@ -151,6 +164,7 @@ public class Participant {
         projectTeamParticipant.contactRole = contactRole;
         projectTeamParticipant.contactEmail = contactEmail;
         projectTeamParticipant.orgSize = orgSize;
+        projectTeamParticipant.postcode = postcode;
         projectTeamParticipant.capLimit = capLimit;
         projectTeamParticipant.awardRate = awardRate;
         projectTeamParticipant.overheadRate = overheadRate;
