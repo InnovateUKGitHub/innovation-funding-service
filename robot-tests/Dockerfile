@@ -9,6 +9,16 @@ RUN apt-get update && \
     apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
+ARG BAMBOO_CREDS
+ARG BAMBOO_URL
+ARG BAMBOO_PLAN_PROJ
+ARG BAMBOO_BUILD_NO
+
+ENV BAMBOO_CREDS=$BAMBOO_CREDS
+ENV BAMBOO_URL=$BAMBOO_URL
+ENV BAMBOO_PLAN_PROJ=$BAMBOO_PLAN_PROJ
+ENV BAMBOO_BUILD_NO=$BAMBOO_BUILD_NO
+
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
