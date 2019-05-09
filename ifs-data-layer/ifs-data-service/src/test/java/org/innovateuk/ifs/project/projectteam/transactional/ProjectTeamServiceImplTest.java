@@ -57,6 +57,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -69,7 +70,7 @@ import static org.mockito.Mockito.*;
 public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamServiceImpl> {
 
     @Mock
-    private NotificationService notificationService;
+    private NotificationService notificationServiceMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -93,22 +94,17 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     private ProjectUserInviteMapper projectInviteMapperMock;
 
     @Mock
-    private SystemNotificationSource systemNotificationSource;
+    private SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    private ProjectUserRepository projectUserRepository;
-
-    @Mock
-    private UserRepository userRepository;
-
+    private UserRepository userRepositoryMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
-    private Long otherUserId = 8L;
 
     private Application application;
     private Organisation organisation;
@@ -222,8 +218,8 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        Notification notification = new Notification(systemNotificationSource, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
-        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
+        Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
                 serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         ProjectUserInvite projectInvite = newProjectUserInvite()
@@ -276,8 +272,8 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        Notification notification = new Notification(systemNotificationSource, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
-        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+        Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ProjectUserInvite projectInvite = newProjectUserInvite().
                 withEmail("a@b.com").
@@ -290,7 +286,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         assertTrue(result.isSuccess());
 
-        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
 
         verify(projectUserInviteRepositoryMock).save(projectInvite);
     }
@@ -301,7 +297,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(Collections.singletonList(Role.PARTNER))
+                                .withRolesGlobal(singletonList(Role.PARTNER))
                                 .build());
 
         User userToRemove = newUser().build();
@@ -310,16 +306,20 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
                 .withUser(userToRemove)
                 .build();
 
-        Project project = newProject().withProjectUsers(singletonList(projectUserToRemove)).build();
+        Project project = newProject()
+                .withProjectProcess(newProjectProcess()
+                                            .withProjectUser(newProjectUser()
+                                                                     .withUser(newUser().build())
+                                                                     .build())
+                                            .build())
+                .withProjectUsers(singletonList(projectUserToRemove)).build();
 
-        when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
-        when(projectUserRepository.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(singletonList(projectUserToRemove));
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
 
         service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
 
-        verify(projectRepository).findById(project.getId());
-        verify(projectUserRepository).findByProjectIdAndUserId(project.getId(), userToRemove.getId());
+        verify(projectRepositoryMock).findById(project.getId());
 
         assertTrue(project.getProjectUsers().isEmpty());
     }
@@ -341,15 +341,15 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         Project project = newProject().withProjectUsers(singletonList(projectUserToRemove)).build();
 
-        when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
-        when(projectUserRepository.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectUserRepositoryMock.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
                 singletonList(projectUserToRemove));
 
         service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
 
-        verify(projectRepository).findById(project.getId());
-        verifyZeroInteractions(projectUserRepository);
+        verify(projectRepositoryMock).findById(project.getId());
+        verifyZeroInteractions(projectUserRepositoryMock);
 
         assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }
@@ -371,15 +371,15 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         Project project = newProject().withProjectUsers(singletonList(projectUserToRemove)).build();
 
-        when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
-        when(projectUserRepository.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectUserRepositoryMock.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
                 singletonList(projectUserToRemove));
 
         service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
 
-        verify(projectRepository).findById(project.getId());
-        verifyZeroInteractions(projectUserRepository);
+        verify(projectRepositoryMock).findById(project.getId());
+        verifyZeroInteractions(projectUserRepositoryMock);
 
         assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }

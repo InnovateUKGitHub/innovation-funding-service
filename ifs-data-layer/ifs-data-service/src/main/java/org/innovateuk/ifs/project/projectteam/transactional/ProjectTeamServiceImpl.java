@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -65,6 +66,8 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -207,6 +210,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
         ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectResource);
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        projectUserInviteRepository.save(projectInvite);
 
         Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(projectInvite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, projectResource));
 
