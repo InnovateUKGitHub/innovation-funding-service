@@ -50,7 +50,6 @@ public class ApplicationTermsController {
     @GetMapping
     public String getTerms(@PathVariable long applicationId, UserResource user, Model model) {
         model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId));
-
         return "application/terms-and-conditions";
     }
 
