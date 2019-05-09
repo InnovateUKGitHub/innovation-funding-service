@@ -196,6 +196,7 @@ class GrantMapper {
                 lookupLiveProjectsRoleName(contactUser.getRole().name()),
                 contactUser.getUser().getEmail(),
                 organisationSizeOrAcademic,
+                partnerOrganisation.getPostcode(),
                 BigDecimal.valueOf(applicationFinance.getMaximumFundingLevel()),
                 awardPercentage,
                 grantCalculator.getOverheadPercentage(),

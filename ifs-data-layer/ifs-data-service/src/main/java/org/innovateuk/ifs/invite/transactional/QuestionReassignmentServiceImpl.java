@@ -9,10 +9,11 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.time.ZonedDateTime.now;
 
 
 /**
@@ -105,14 +106,14 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
             ProcessRole assignedBy =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignedBy(), reassignTo, leadApplicantRole);
 
-            questionStatus.setAssignee(assignee, assignedBy, ZonedDateTime.now());
+            questionStatus.setAssignee(assignee, assignedBy, now());
         }
 
         if (questionStatus.getMarkedAsCompleteBy() != null) {
             ProcessRole markedAsCompleteBy =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getMarkedAsCompleteBy(), reassignTo, leadApplicantRole);
 
-            questionStatus.setMarkedAsCompleteBy(markedAsCompleteBy);
+            questionStatus.markAsComplete(markedAsCompleteBy, questionStatus.getMarkedAsCompleteOn());
         }
 
         return questionStatus;

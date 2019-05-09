@@ -131,7 +131,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         //Comp admin user doesn't have user organisation
         long applicantId;
         if (!userOrganisation.isPresent())  {
-            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
+            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(application.getId());
             applicantId = leadApplicantProcessRole.getUser();
             userOrganisation = organisationService.getOrganisationForUser(applicantId, userApplicationRoles);
         } else {
