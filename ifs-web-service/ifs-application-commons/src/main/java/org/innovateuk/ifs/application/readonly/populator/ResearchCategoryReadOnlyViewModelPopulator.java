@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static java.util.Collections.singleton;
 
 @Component
 public class ResearchCategoryReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ResearchCategoryReadOnlyViewModel> {
@@ -20,6 +20,6 @@ public class ResearchCategoryReadOnlyViewModelPopulator implements QuestionReadO
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(QuestionSetupType.RESEARCH_CATEGORY);
+        return singleton(QuestionSetupType.RESEARCH_CATEGORY);
     }
 }

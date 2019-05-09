@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static java.util.Collections.singleton;
 
 @Component
 public class GrantTransferDetailsReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<GrantTransferDetailsReadOnlyViewModel> {
@@ -46,7 +46,7 @@ public class GrantTransferDetailsReadOnlyPopulator implements QuestionReadOnlyVi
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(QuestionSetupType.GRANT_TRANSFER_DETAILS);
+        return singleton(QuestionSetupType.GRANT_TRANSFER_DETAILS);
     }
 
 }

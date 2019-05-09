@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
@@ -21,10 +23,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToFormInputs().get(question.getId());
-        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> FormInputType.TEXTAREA.equals(formInput.getType()))
+        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA))
                 .findAny();
 
-        Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> FormInputType.FILEUPLOAD.equals(formInput.getType()))
+        Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
                 .findAny();
 
         Optional<FormInputResponseResource> textResponse = textInput
@@ -42,13 +44,13 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private String questionName(QuestionResource question) {
-        return question.getQuestionSetupType() == QuestionSetupType.ASSESSED_QUESTION ?
+        return question.getQuestionSetupType() == ASSESSED_QUESTION ?
                 String.format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
     }
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(QuestionSetupType.ASSESSED_QUESTION, QuestionSetupType.SCOPE, QuestionSetupType.PUBLIC_DESCRIPTION, QuestionSetupType.PROJECT_SUMMARY);
+        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY);
     }
 }

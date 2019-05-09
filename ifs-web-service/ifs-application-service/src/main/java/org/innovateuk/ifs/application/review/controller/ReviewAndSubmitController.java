@@ -100,7 +100,8 @@ public class ReviewAndSubmitController {
         return String.format("redirect:/application/%d/confirm-submit", applicationId);
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_RETURN_AND_EDIT",
+            description = "Applicants can return to edit questions from the review and submit page")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "edit")
     public String editQuestion(@PathVariable long applicationId,
@@ -108,7 +109,8 @@ public class ReviewAndSubmitController {
         return redirectToQuestion(applicationId, questionId);
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_MARK_AS_COMPLETE",
+            description = "Applicants can mark questions as complete from the review and submit page")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "complete")
     public String completeQuestion(@PathVariable long applicationId,
@@ -122,8 +124,8 @@ public class ReviewAndSubmitController {
             return handleMarkAsCompleteFailure(applicationId, questionId, processRole);
         }
     }
-
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_ASSIGN",
+            description = "Applicants can assign questions from the review and submit page")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "assign")
     public String assignQuestionToLead(@PathVariable long applicationId,
@@ -136,7 +138,8 @@ public class ReviewAndSubmitController {
         return redirectToReview(applicationId);
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_MARK_AS_INCOMPLETE",
+            description = "Applicants can mark questions as incomplete from the review and submit page")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "incomplete")
     public String incompleteQuestion(@PathVariable long applicationId,
