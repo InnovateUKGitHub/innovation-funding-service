@@ -34,7 +34,10 @@ public class ApplicationOverviewData {
     private final List<Long> completedSectionIds;
     private final UserResource user;
 
-    public ApplicationOverviewData(CompetitionResource competition, ApplicationResource application, List<SectionResource> sections, List<QuestionResource> questions, List<ProcessRoleResource> processRoles, OrganisationResource organisation, List<QuestionStatusResource> statuses, List<ApplicationInviteResource> invites, List<Long> completedSectionIds, UserResource user) {
+    public ApplicationOverviewData(CompetitionResource competition, ApplicationResource application, List<SectionResource> sections,
+                                   List<QuestionResource> questions, List<ProcessRoleResource> processRoles,
+                                   OrganisationResource organisation, List<QuestionStatusResource> statuses,
+                                   List<ApplicationInviteResource> invites, List<Long> completedSectionIds, UserResource user) {
         this.competition = competition;
         this.application = application;
         this.sections = sections.stream()

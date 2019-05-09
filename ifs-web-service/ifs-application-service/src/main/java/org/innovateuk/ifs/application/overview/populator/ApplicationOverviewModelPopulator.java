@@ -20,7 +20,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -38,35 +37,34 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QU
 @Component
 public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
-    @Autowired
-    private CompetitionRestService competitionRestService;
+    private final CompetitionRestService competitionRestService;
+    private final SectionRestService sectionRestService;
+    private final QuestionRestService questionRestService;
+    private final UserRestService userRestService;
+    private final MessageSource messageSource;
+    private final OrganisationRestService organisationRestService;
+    private final QuestionStatusRestService questionStatusRestService;
+    private final SectionStatusRestService sectionStatusRestService;
+    private final InviteService inviteService;
+    private final QuestionService questionService;
 
-    @Autowired
-    private SectionRestService sectionRestService;
-
-    @Autowired
-    private QuestionRestService questionRestService;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private QuestionStatusRestService questionStatusRestService;
-
-    @Autowired
-    private SectionStatusRestService sectionStatusRestService;
-
-    @Autowired
-    private InviteService inviteService;
-
-    @Autowired
-    private QuestionService questionService;
+    public ApplicationOverviewModelPopulator(CompetitionRestService competitionRestService, SectionRestService sectionRestService,
+                                             QuestionRestService questionRestService, UserRestService userRestService,
+                                             MessageSource messageSource, OrganisationRestService organisationRestService,
+                                             QuestionStatusRestService questionStatusRestService,
+                                             SectionStatusRestService sectionStatusRestService, InviteService inviteService,
+                                             QuestionService questionService) {
+        this.competitionRestService = competitionRestService;
+        this.sectionRestService = sectionRestService;
+        this.questionRestService = questionRestService;
+        this.userRestService = userRestService;
+        this.messageSource = messageSource;
+        this.organisationRestService = organisationRestService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.sectionStatusRestService = sectionStatusRestService;
+        this.inviteService = inviteService;
+        this.questionService = questionService;
+    }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess());
@@ -83,7 +81,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             questionService.removeNotifications(notifications);
         });
 
-        ApplicationOverviewData data = new ApplicationOverviewData(resolve(competition), application, resolve(sections), resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses), resolve(invites), resolve(completedSectionIds), user);
+        ApplicationOverviewData data = new ApplicationOverviewData(resolve(competition), application, resolve(sections),
+                resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses), resolve(invites),
+                resolve(completedSectionIds), user);
 
         Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
                 .values()
