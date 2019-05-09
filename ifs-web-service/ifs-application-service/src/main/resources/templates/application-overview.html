@@ -72,7 +72,6 @@
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.title}" />
                     <p class="govuk-body" th:text="${section.subTitle}" />
-
                     <ul class="task-list">
                         <li th:each="row : ${section.rows}">
                             <div class="task">
@@ -109,48 +108,6 @@
                                 <span>Complete</span>
                             </div>
                         </li>
-
-
-
-
-
-
-
-
-
-
-
-
-<!--/*
-                        <th:block th:unless="${model.section.hasSubSection(section.id)}">
-                            <th:block th:insert="application/single-section-details :: sectionDetails (questionAssignees=${model.assignable.questionAssignees},
-                            userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, applicationId=${model.applicationId}, currentUser=${currentUser})"></th:block>
-                        </th:block>
-                        <th:block th:if="${model.section.hasSubSection(section.id)}">
-                            <li th:each="childSection : ${model.section.subSections.get(section.id)}"
-                                th:unless="${fullyFundedCompetition and childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}">
-                                <div class="task">
-                                    <h3 class="govuk-heading-s">
-                                        <a th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${model.applicationId},sectionId=${childSection.id})}"
-                                           th:text="${childSection.name}"
-                                           class="govuk-link" />
-                                    </h3>
-                                </div>
-                                <div
-                                    th:if="${childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).FINANCE}"
-                                    th:with="complete=${model.completed.financeSectionComplete}"
-                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
-                                </div>
-                                <div
-                                    th:if="${model.user.userIsLeadApplicant && childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}"
-                                    th:with="complete=${model.completed.financeOverviewSectionComplete}"
-                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
-                                </div>
-                            </li>
-                        </th:block>
-                        */-->
                     </ul>
                 </section>
             </th:block>
