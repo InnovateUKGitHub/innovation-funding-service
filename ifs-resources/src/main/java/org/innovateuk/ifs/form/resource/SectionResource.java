@@ -132,6 +132,7 @@ public class SectionResource {
 		return type;
 	}
 
+    @JsonIgnore
 	public boolean isTermsAndConditions() {
         return this.type == SectionType.TERMS_AND_CONDITIONS;
     }
