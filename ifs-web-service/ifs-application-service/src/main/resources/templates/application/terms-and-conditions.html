@@ -58,25 +58,21 @@
                  */-->
             </form>
         </th:block>
-        <th:block th:if="${model.termsAccepted}">
-
-            <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
-                <h1 class="govuk-panel__title">
-                    Terms and conditions accepted
-                </h1>
-                <div th:unless="${model.migratedTerms}" class="govuk-panel__body">
-                    at <span th:text="${#temporals.format(model.termsAcceptedOn, 'h:mma')}"> 6:10pm</span>
-                    on <span th:text="${#temporals.format(model.termsAcceptedOn, 'd MMMM yyyy')}"> 08 May 2019</span>
-                    by <span th:text="${model.termsAcceptedByName}"> Tom Baldwin</span>
-                </div>
+        <div class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
+            <div class="form-footer__actions">
+                Terms and conditions accepted
+                at <span th:text="${#temporals.format(model.termsAcceptedOn, 'h:mma')}"> 6:10pm</span>
+                on <span th:text="${#temporals.format(model.termsAcceptedOn, 'd MMMM yyyy')}"> 08 May 2019</span>
+                by <span th:text="${model.termsAcceptedByName}"> Tom Baldwin</span>.
             </div>
+        </div>
+        <div>
             <a class="button-secondary" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}">Return
                 to application overview</a>
-            <!--/*
-                    <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
-            */-->
-        </th:block>
-
+        </div>
+        <!--/*
+        <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
+        */-->
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer"/>
