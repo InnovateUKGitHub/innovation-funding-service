@@ -30,7 +30,7 @@ items:
           ports: {}
           restartPolicy:
             never: {}
-   test: false
+    test: false
     triggers:
     - type: ConfigChange
   status: {}
