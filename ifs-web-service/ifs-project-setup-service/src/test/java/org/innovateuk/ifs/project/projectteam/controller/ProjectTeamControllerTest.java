@@ -86,7 +86,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         MvcResult result = mockMvc.perform(post("/project/{id}/team", projectId)
                 .param("add-team-member", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/project-team"))
+                .andExpect(view().name("project/team/project-team"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
