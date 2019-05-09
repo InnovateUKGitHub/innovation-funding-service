@@ -49,6 +49,6 @@ public class ApplicationTermsViewModel {
     }
 
     public boolean isMigratedTerms() {
-        return termsAcceptedOn == null;
+        return termsAccepted && termsAcceptedOn == null;
     }
 }

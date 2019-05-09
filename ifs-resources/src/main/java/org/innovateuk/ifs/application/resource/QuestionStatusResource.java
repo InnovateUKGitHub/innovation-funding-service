@@ -11,7 +11,7 @@ public class QuestionStatusResource {
     private Boolean markedAsComplete;
     private Long markedAsCompleteBy;
     private ZonedDateTime markedAsCompleteOn;
-    private String markedAsCompleteByUserId;
+    private long markedAsCompleteByUserId;
     private String markedAsCompleteByUserName;
     private Long question;
     private Long assignee;
@@ -172,11 +172,11 @@ public class QuestionStatusResource {
         this.markedAsCompleteOn = markedAsCompleteOn;
     }
 
-    public String getMarkedAsCompleteByUserId() {
+    public long getMarkedAsCompleteByUserId() {
         return markedAsCompleteByUserId;
     }
 
-    public void setMarkedAsCompleteByUserId(String markedAsCompleteByUserId) {
+    public void setMarkedAsCompleteByUserId(long markedAsCompleteByUserId) {
         this.markedAsCompleteByUserId = markedAsCompleteByUserId;
     }
 

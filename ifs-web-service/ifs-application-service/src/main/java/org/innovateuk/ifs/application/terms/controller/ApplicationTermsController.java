@@ -33,7 +33,6 @@ public class ApplicationTermsController {
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private UserRestService userRestService;
-
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
 
     public ApplicationTermsController(ApplicationRestService applicationRestService,

@@ -127,7 +127,7 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
                         applicantQuestionsSection3)
                 .build(3);
 
-        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
+        when(sectionService.getAllByCompetitionIdExcludingTerms(competition.getId())).thenReturn(allSections);
         when(sectionService.filterParentSections(allSections)).thenReturn(parentSections);
 
         forEachWithIndex(parentSections, (index, sectionResource) ->
@@ -173,7 +173,7 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
         assertEquals(parentSections.get(2).getId(), result.getFinanceSectionId());
         assertEquals("Finances description", result.getSections().get(1).getDescription());
 
-        verify(sectionService).getAllByCompetitionId(competition.getId());
+        verify(sectionService).getAllByCompetitionIdExcludingTerms(competition.getId());
         verify(sectionService).filterParentSections(allSections);
         verify(applicantRestService, times(parentSections.size())).getSection(eq(userId), eq(application.getId()),
                 isA(Long.class));
