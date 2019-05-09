@@ -3,9 +3,14 @@ package org.innovateuk.ifs.application.terms.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -24,10 +29,21 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     private ApplicationRestService applicationRestServiceMock;
     @Mock
     private CompetitionRestService competitionRestServiceMock;
+    @Mock
+    private SectionService sectionService;
+    @Mock
+    private QuestionService questionService;
+    @Mock
+    private QuestionStatusRestService questionStatusRestService;
+    @Mock
+    private OrganisationService organisationService;
+    @Mock
+    private UserRestService userRestService;
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
-        return new ApplicationTermsController(applicationRestServiceMock, competitionRestServiceMock);
+        return new ApplicationTermsController(applicationRestServiceMock, competitionRestServiceMock,
+                sectionService, questionService, questionStatusRestService, organisationService, userRestService);
     }
 
     @Test

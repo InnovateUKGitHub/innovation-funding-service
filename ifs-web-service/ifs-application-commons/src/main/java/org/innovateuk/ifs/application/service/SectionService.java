@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionService {
-    List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);
+    List<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
 
     void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
 
@@ -41,15 +41,17 @@ public interface SectionService {
 
     void removeSectionsQuestionsWithType(SectionResource section, FormInputType type);
 
-    SectionResource getSectionByQuestionId(Long questionId);
+    SectionResource getSectionByQuestionId(long questionId);
 
-    Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
+    Set<Long> getQuestionsForSectionAndSubsections(long sectionId);
 
-    List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);
+    List<SectionResource> getSectionsForCompetitionByType(long competitionId, SectionType type);
 
     SectionResource getFinanceSection(long competitionId);
 
-    SectionResource getOrganisationFinanceSection(Long competitionId);
+    SectionResource getTermsAndConditionsSection(long competitionId);
+
+    SectionResource getOrganisationFinanceSection(long competitionId);
 
     List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }
