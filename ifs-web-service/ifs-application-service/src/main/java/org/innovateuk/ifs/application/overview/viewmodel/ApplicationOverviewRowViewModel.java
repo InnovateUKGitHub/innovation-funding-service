@@ -34,8 +34,6 @@ public class ApplicationOverviewRowViewModel {
         return assignButtonsViewModel;
     }
 
-
-
     public boolean isAssignable() {
         return assignButtonsViewModel.isPresent();
     }
