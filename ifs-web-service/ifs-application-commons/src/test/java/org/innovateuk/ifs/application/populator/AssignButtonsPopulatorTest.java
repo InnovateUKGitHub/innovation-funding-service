@@ -96,7 +96,10 @@ public class AssignButtonsPopulatorTest {
 
     private ApplicantResourceBuilder applicantResource(boolean lead) {
         return newApplicantResource()
-                .withProcessRole(newProcessRoleResource().withRole(lead ? LEADAPPLICANT : COLLABORATOR).build())
+                .withProcessRole(newProcessRoleResource()
+                        .withRole(lead ? LEADAPPLICANT : COLLABORATOR)
+                        .withUser(newUserResource().build())
+                        .build())
                 .withOrganisation(newOrganisationResource().build());
     }
 }
