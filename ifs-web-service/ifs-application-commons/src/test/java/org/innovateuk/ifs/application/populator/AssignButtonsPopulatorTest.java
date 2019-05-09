@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
@@ -59,7 +60,7 @@ public class AssignButtonsPopulatorTest {
         AssignButtonsViewModel viewModel = assignButtonsPopulator.populate(question, question, hideAssignButtons);
 
         assertThat(viewModel.getAssignedBy(), equalTo(assignedBy.getProcessRole()));
-        assertThat(viewModel.getAssignableApplicants(), equalTo(question.getApplicants()));
+        assertThat(viewModel.getAssignableApplicants(), equalTo(question.getApplicants().stream().map(ApplicantResource::getProcessRole).collect(toList())));
         assertThat(viewModel.getAssignee(), equalTo(assignee.getProcessRole()));
         assertThat(viewModel.getLeadApplicant(), equalTo(assignee.getProcessRole()));
         assertThat(viewModel.getCurrentApplicant(), equalTo(assignee.getProcessRole()));
