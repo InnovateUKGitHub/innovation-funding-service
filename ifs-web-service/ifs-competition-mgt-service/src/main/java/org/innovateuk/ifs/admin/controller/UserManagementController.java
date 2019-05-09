@@ -6,6 +6,7 @@ import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -22,8 +23,8 @@ import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,14 +57,21 @@ public class UserManagementController extends AsyncAdaptor {
 
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
 
-    @Autowired
     private UserRestService userRestService;
 
-    @Autowired
     private InviteUserRestService inviteUserRestService;
 
-    @Autowired
     private InternalUserService internalUserService;
+
+    UserManagementController() {super(null);}
+
+    @Autowired
+    public UserManagementController(AsyncFuturesGenerator asyncFuturesGenerator, UserRestService userRestService, InviteUserRestService inviteUserRestService, InternalUserService internalUserService) {
+        super(asyncFuturesGenerator);
+        this.userRestService = userRestService;
+        this.inviteUserRestService = inviteUserRestService;
+        this.internalUserService = internalUserService;
+    }
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",

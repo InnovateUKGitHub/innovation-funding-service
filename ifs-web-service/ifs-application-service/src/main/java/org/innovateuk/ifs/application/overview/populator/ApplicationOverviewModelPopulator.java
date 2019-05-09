@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -48,12 +49,13 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final InviteService inviteService;
     private final QuestionService questionService;
 
-    public ApplicationOverviewModelPopulator(CompetitionRestService competitionRestService, SectionRestService sectionRestService,
-                                             QuestionRestService questionRestService, UserRestService userRestService,
-                                             MessageSource messageSource, OrganisationRestService organisationRestService,
-                                             QuestionStatusRestService questionStatusRestService,
+    public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
+                                             SectionRestService sectionRestService, QuestionRestService questionRestService,
+                                             UserRestService userRestService, MessageSource messageSource,
+                                             OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService, InviteService inviteService,
                                              QuestionService questionService) {
+        super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
         this.questionRestService = questionRestService;

@@ -58,19 +58,19 @@ public class AssignButtonsPopulatorTest {
         when(inviteService.getPendingInvitationsByApplicationId(question.getApplication().getId())).thenReturn(invites);
         AssignButtonsViewModel viewModel = assignButtonsPopulator.populate(question, question, hideAssignButtons);
 
-        assertThat(viewModel.getAssignedBy(), equalTo(assignedBy));
+        assertThat(viewModel.getAssignedBy(), equalTo(assignedBy.getProcessRole()));
         assertThat(viewModel.getAssignableApplicants(), equalTo(question.getApplicants()));
-        assertThat(viewModel.getAssignee(), equalTo(assignee));
-        assertThat(viewModel.getLeadApplicant(), equalTo(assignee));
-        assertThat(viewModel.getCurrentApplicant(), equalTo(assignee));
+        assertThat(viewModel.getAssignee(), equalTo(assignee.getProcessRole()));
+        assertThat(viewModel.getLeadApplicant(), equalTo(assignee.getProcessRole()));
+        assertThat(viewModel.getCurrentApplicant(), equalTo(assignee.getProcessRole()));
         assertThat(viewModel.getQuestion(), equalTo(question.getQuestion()));
         assertThat(viewModel.getPendingAssignableUsers(), equalTo(invites));
 
         assertThat(viewModel.isAssigned(), equalTo(true));
         assertThat(viewModel.isAssignedByCurrentUser(), equalTo(false));
         assertThat(viewModel.isAssignedByLead(), equalTo(false));
-        assertThat(viewModel.isAssignedTo(assignee), equalTo(true));
-        assertThat(viewModel.isAssignedTo(assignedBy), equalTo(false));
+        assertThat(viewModel.isAssignedTo(assignee.getProcessRole()), equalTo(true));
+        assertThat(viewModel.isAssignedTo(assignedBy.getProcessRole()), equalTo(false));
         assertThat(viewModel.isAssignedToLead(), equalTo(true));
         assertThat(viewModel.isHideAssignButtons(), equalTo(hideAssignButtons));
         assertThat(viewModel.isNotAssigned(), equalTo(false));
