@@ -134,11 +134,11 @@ The user can check that the sections are read only
     the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
-    the user clicks the button/link        css = .section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user clicks the button/link        css = section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery = button:contains("Edit")
-    the user clicks the button/link        css = .section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user clicks the button/link        css = section:nth-of-type(2) .collapsible:nth-of-type(10)
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
-    the user clicks the button/link        css = .section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user clicks the button/link        css = section:nth-of-type(3) .collapsible:nth-of-type(1)
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
 
 the submit button should be disabled
@@ -205,7 +205,7 @@ Your Project costs section is read-only once application is marked as complete
     the user should not see the element        css = input
 
 the user can submit their application
-    the user should be redirected to the correct page  summary
+    the user should be redirected to the correct page  review-and-submit
     the applicant clicks Yes in the submit modal
     the user should be redirected to the correct page  track
     And the user should see the element                     jQuery = h2:contains("Application submitted")

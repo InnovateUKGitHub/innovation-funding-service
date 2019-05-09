@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.finance.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -94,21 +93,6 @@ public class FinanceServiceImpl implements FinanceService {
                 failure -> emptyList(),
                 success -> success
         );
-    }
-
-    @Override
-    public ValidationMessages addCost(Long applicationFinanceId, Long questionId) {
-        return financeRowRestService.add(applicationFinanceId, questionId, null).getSuccess();
-    }
-
-    @Override
-    public RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
-        return applicationFinanceRestService.addFinanceDocument(applicationFinanceId, contentType, contentLength, originalFilename, file);
-    }
-
-    @Override
-    public RestResult<Void> removeFinanceDocument(Long applicationFinanceId) {
-        return applicationFinanceRestService.removeFinanceDocument(applicationFinanceId);
     }
 
     @Override

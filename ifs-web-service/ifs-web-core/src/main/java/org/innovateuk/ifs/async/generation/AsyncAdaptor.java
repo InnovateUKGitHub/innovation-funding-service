@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.async.generation;
 
 import org.innovateuk.ifs.async.generation.handler.*;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * A convenience subclass that provides delegate methods through to {@link AsyncFuturesGenerator}, for more concise writing of async
@@ -75,5 +78,13 @@ public abstract class AsyncAdaptor {
 
     protected void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futures, long timeoutValue) {
         AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(futures, timeoutValue );
+    }
+
+    protected <T> T resolve(Future<T> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IFSRuntimeException(e);
+        }
     }
 }

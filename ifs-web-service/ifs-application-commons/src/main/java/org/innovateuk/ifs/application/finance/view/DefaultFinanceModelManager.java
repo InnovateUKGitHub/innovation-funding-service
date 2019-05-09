@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.Form;
@@ -25,7 +24,6 @@ import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -64,36 +62,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
-    //TODO: make sure this function is not going to be used anymore - IFS-3801
-    @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
-
-        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
-
-        if (applicationFinanceResource != null) {
-            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
-            model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
-            model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
-            model.addAttribute("organisationType", organisationType);
-            model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
-            model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-            model.addAttribute("maximumGrantClaimPercentage", applicationFinanceResource.getMaximumFundingLevel());
-            model.addAttribute("financeView", "finance");
-            model.addAttribute("financeQuestions", CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
-            addGrantClaim(model, form, applicationFinanceResource);
-        }
-    }
-
-    private void addGrantClaim(Model model, Form form, ApplicationFinanceResource applicationFinanceResource) {
-        if (applicationFinanceResource.getGrantClaim() != null) {
-            model.addAttribute("organisationGrantClaimPercentage", ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
-            model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
-            String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
-            String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
-            form.addFormInput(formInputKey, formInputValue);
-        }
-    }
 
     @Override
     public FinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
@@ -166,17 +134,5 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             }
         }
         return null;
-    }
-
-    @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
-        if (FinanceRowType.LABOUR == costType) {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
-            model.addAttribute("costCategory", costCategory);
-        }
-        model.addAttribute("type", costType.getType());
-        model.addAttribute("question", questionRestService.findById(questionId).getSuccess());
-        model.addAttribute("cost", costItem);
     }
 }
