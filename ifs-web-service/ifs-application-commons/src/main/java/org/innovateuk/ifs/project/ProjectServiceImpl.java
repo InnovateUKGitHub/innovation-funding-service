@@ -108,7 +108,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public boolean isUserLeadPartner(Long projectId, Long userId) {
-        return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
+        return simpleAnyMatch(getLeadPartners(projectId),
+                              projectUser -> projectUser.getUser().equals(userId));
     }
 
     @Override

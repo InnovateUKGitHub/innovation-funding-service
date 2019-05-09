@@ -42,7 +42,7 @@
                 class="govuk-table__row">
                 <td class="govuk-table__cell">
                     <a th:unless="${model.grantOfferLetterGenerated}"
-                       th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project
+                       th:href="@{/project/{id}/team/project-manager(id=${model.projectId})}" class="govuk-link">Project
                         manager</a>
                     <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                 </td>
@@ -56,7 +56,7 @@
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
+                    <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
                        class="govuk-link">Your finance contact</a>
                 </td>
                 <td class="govuk-table__cell"

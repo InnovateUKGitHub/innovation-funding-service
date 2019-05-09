@@ -32,7 +32,7 @@ The lead partner is able to add a new team member
     [Documentation]  IFS-5719
     Given the user adds a new team member  Tester   ${leadNewMemberEmail}
     Then the user should see the element   jQuery = td:contains("Tester (Pending)")
-    [Teardown]   the user logs out if they are logged in
+    [Teardown]   Logout as user
 
 A new team member is able to accept the inviation from lead partner and see projec set up
     [Documentation]  IFS-5719
