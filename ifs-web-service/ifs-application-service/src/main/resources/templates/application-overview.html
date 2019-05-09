@@ -22,7 +22,7 @@
 
         <div class="govuk-!-margin-bottom-6">
             <div class="message-alert" th:if="${model.application.completion.intValue() == 100 and !model.application.submitted and model.lead}">
-                <p class="govuk-body">Now your application is complete, you need to <a th:href="'#application-overview-submit-cta'}">review and submit</a> at the bottom of this page.</p>
+                <p class="govuk-body">Now your application is complete, you need to <a href="#application-overview-submit-cta">review and submit</a> at the bottom of this page.</p>
             </div>
         </div>
 
