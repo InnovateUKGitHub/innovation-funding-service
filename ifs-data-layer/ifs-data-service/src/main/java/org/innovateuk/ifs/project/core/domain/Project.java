@@ -123,6 +123,10 @@ public class Project implements ProcessActivity {
         return projectUsers.remove(projectUser);
     }
 
+    public boolean removeProjectUsers(List<ProjectUser> projectUserstoRemove) {
+        return projectUsers.removeAll(projectUserstoRemove);
+    }
+
     public ProjectUser getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole role, Organisation organisation) {
         List<ProjectUser> matchingUser = simpleFilter(projectUsers, projectUser -> projectUser.getRole()==role && projectUser.getOrganisation().equals(organisation));
 

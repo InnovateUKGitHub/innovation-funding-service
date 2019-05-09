@@ -38,6 +38,12 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         });
     }
 
+    public QuestionStatusResourceBuilder withQuestion(Long question) {
+        return with(questionStatus -> {
+            questionStatus.setQuestion(question);
+        });
+    }
+
     public QuestionStatusResourceBuilder withMarkedAsCompleteOn(ZonedDateTime... dates) {
         return withArray((date, questionStatusResource) -> questionStatusResource.setMarkedAsCompleteOn(date), dates);
     }
