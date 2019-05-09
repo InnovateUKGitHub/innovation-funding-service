@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -57,6 +58,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     @Test
     public void applicationOverview() throws Exception {
         ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withApplicationState(ApplicationState.CREATED)
                 .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
@@ -82,6 +84,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withRole(LEADAPPLICANT).build()));
 
         mockMvc.perform(post("/application/" + application.getId()).param(ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
