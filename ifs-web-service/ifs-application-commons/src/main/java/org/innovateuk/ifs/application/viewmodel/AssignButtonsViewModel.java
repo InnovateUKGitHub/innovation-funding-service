@@ -1,58 +1,58 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;
 
 public class AssignButtonsViewModel {
-    private ApplicantResource assignedBy;
-    private ApplicantResource assignee;
-    private ApplicantResource leadApplicant;
-    private ApplicantResource currentApplicant;
+    private ProcessRoleResource assignedBy;
+    private ProcessRoleResource assignee;
+    private ProcessRoleResource leadApplicant;
+    private ProcessRoleResource currentApplicant;
     private QuestionResource question;
-    private List<ApplicantResource> assignableApplicants;
+    private List<ProcessRoleResource> assignableApplicants;
     private List<ApplicationInviteResource> pendingAssignableUsers;
     private boolean hideAssignButtons;
 
-    public ApplicantResource getAssignedBy() {
+    public ProcessRoleResource getAssignedBy() {
         return assignedBy;
     }
 
-    public void setAssignedBy(ApplicantResource assignedBy) {
+    public void setAssignedBy(ProcessRoleResource assignedBy) {
         this.assignedBy = assignedBy;
     }
 
-    public ApplicantResource getAssignee() {
+    public ProcessRoleResource getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(ApplicantResource assignee) {
+    public void setAssignee(ProcessRoleResource assignee) {
         this.assignee = assignee;
     }
 
-    public ApplicantResource getLeadApplicant() {
+    public ProcessRoleResource getLeadApplicant() {
         return leadApplicant;
     }
 
-    public void setLeadApplicant(ApplicantResource leadApplicant) {
+    public void setLeadApplicant(ProcessRoleResource leadApplicant) {
         this.leadApplicant = leadApplicant;
     }
 
-    public ApplicantResource getCurrentApplicant() {
+    public ProcessRoleResource getCurrentApplicant() {
         return currentApplicant;
     }
 
-    public void setCurrentApplicant(ApplicantResource currentApplicant) {
+    public void setCurrentApplicant(ProcessRoleResource currentApplicant) {
         this.currentApplicant = currentApplicant;
     }
 
-    public List<ApplicantResource> getAssignableApplicants() {
+    public List<ProcessRoleResource> getAssignableApplicants() {
         return assignableApplicants;
     }
 
-    public void setAssignableApplicants(List<ApplicantResource> assignableApplicants) {
+    public void setAssignableApplicants(List<ProcessRoleResource> assignableApplicants) {
         this.assignableApplicants = assignableApplicants;
     }
 
@@ -85,8 +85,8 @@ public class AssignButtonsViewModel {
         return isAssignedTo(currentApplicant);
     }
 
-    public boolean isAssignedTo(ApplicantResource applicant) {
-        return (isNotAssigned() && applicant.isLead()) || (isAssigned() && assignee.isSameUser(applicant));
+    public boolean isAssignedTo(ProcessRoleResource role) {
+        return (isNotAssigned() && role.getRole().isLeadApplicant()) || (isAssigned() && assignee.getUser().equals(role.getUser()));
     }
 
     public boolean isNotAssigned() {
@@ -97,14 +97,14 @@ public class AssignButtonsViewModel {
     }
 
     public boolean getCurrentUserIsLead() {
-        return currentApplicant.isLead();
+        return currentApplicant.getRole().isLeadApplicant();
     }
 
     public boolean isAssignedByLead() {
-        return assignedBy.isLead();
+        return assignedBy.getRole().isLeadApplicant();
     }
 
-    public boolean isAssignedByCurrentUser() { return assignedBy.isSameUser(currentApplicant); }
+    public boolean isAssignedByCurrentUser() { return assignedBy.getUser().equals(currentApplicant.getUser()); }
 
-    public boolean isAssignedToLead() { return assignee.isLead(); }
+    public boolean isAssignedToLead() { return assignee.getRole().isLeadApplicant(); }
 }
