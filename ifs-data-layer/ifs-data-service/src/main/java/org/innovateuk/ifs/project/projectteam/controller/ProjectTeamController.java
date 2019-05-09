@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectteam.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectteam.transactional.ProjectTeamService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,8 +15,19 @@ import javax.validation.Valid;
 @RequestMapping("/project")
 public class ProjectTeamController {
 
-    @Autowired
     private ProjectTeamService projectTeamService;
+
+    public ProjectTeamController(ProjectTeamService projectTeamService) {
+        this.projectTeamService = projectTeamService;
+    }
+
+    @PostMapping("/{projectId}/team/remove-user/{userId}")
+    public RestResult<Void> removeUser(@PathVariable("projectId") final long projectId,
+                                       @PathVariable("userId") final long userId) {
+        ProjectUserCompositeId composite = new ProjectUserCompositeId(projectId, userId);
+        return projectTeamService.removeUser(composite).toPostResponse();
+    }
+
 
     @PostMapping("/{projectId}/team/invite")
     public RestResult<Void> inviteTeamMember(@PathVariable("projectId") final long projectId,

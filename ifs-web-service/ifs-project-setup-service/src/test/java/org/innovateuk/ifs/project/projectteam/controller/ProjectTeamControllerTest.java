@@ -22,9 +22,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,17 +31,25 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Override
     protected ProjectTeamController supplyControllerUnderTest() {
-        return new ProjectTeamController(populator, projectDetailsService, projectService, organisationRestService, projectTeamRestService);
+        return new ProjectTeamController(populator,
+                                         projectDetailsService,
+                                         projectService,
+                                         organisationRestService,
+                                         projectTeamRestService);
     }
 
     @Mock
     private ProjectTeamViewModelPopulator populator;
+
     @Mock
     private ProjectDetailsService projectDetailsService;
+
     @Mock
     private ProjectService projectService;
+
     @Mock
     private OrganisationRestService organisationRestService;
+
     @Mock
     private ProjectTeamRestService projectTeamRestService;
 
@@ -58,7 +64,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
         MvcResult result = mockMvc.perform(get("/project/{id}/team", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/project-team"))
+                .andExpect(view().name("project/team/project-team"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
@@ -80,7 +86,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         MvcResult result = mockMvc.perform(post("/project/{id}/team", projectId)
                 .param("add-team-member", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/project-team"))
+                .andExpect(view().name("project/team/project-team"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
@@ -141,4 +147,19 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         verify(projectTeamRestService).inviteProjectMember(projectId, projectUserInviteResource);
     }
 
+    @Test
+    public void removeUser() throws Exception {
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+        long userId = 444L;
+        long projectId = 555L;
+
+        when(projectTeamRestService.removeUser(projectId, userId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/team")
+                .param("remove-team-member", String.valueOf(userId)))
+                .andExpect(status().is3xxRedirection());
+
+        verify(projectTeamRestService).removeUser(projectId, userId);
+    }
 }

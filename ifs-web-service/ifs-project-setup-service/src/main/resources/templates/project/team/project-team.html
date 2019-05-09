@@ -7,6 +7,7 @@
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
@@ -41,12 +42,12 @@
                 class="govuk-table__row">
                 <td class="govuk-table__cell">
                     <a th:unless="${model.grantOfferLetterGenerated}"
-                       th:href="@{/project/{id}/details/project-manager(id=${model.projectId})}" class="govuk-link">Project
+                       th:href="@{/project/{id}/team/project-manager(id=${model.projectId})}" class="govuk-link">Project
                         manager</a>
                     <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
                 </td>
                 <td class="govuk-table__cell"
-                    th:text="${model.projectManager != null ? model.projectManager?.name : '-'}">
+                    th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
                 </td>
                 <td class="govuk-table__cell">
                     <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
@@ -55,7 +56,7 @@
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a th:href="@{/project/{projectId}/details/finance-contact?organisation={organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
+                    <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
                        class="govuk-link">Your finance contact</a>
                 </td>
                 <td class="govuk-table__cell"
@@ -97,8 +98,12 @@
                             th:text="${user.getRolesNames()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-</td>
                         <td class="govuk-table__cell">
-                            <a th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}"
-                               href="/" class="govuk-link">Remove</a>
+                            <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}">
+                                <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})" />
+                                <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
+                                   th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
+                                   class="govuk-link">Remove</a>
+                            </th:block>
                         </td>
                     </tr>
                     </tbody>

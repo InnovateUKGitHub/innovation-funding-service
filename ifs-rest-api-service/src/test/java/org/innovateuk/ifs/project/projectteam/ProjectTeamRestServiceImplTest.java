@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.OK;
 
 public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<ProjectTeamRestServiceImpl> {
 
@@ -21,6 +22,17 @@ public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<Proj
 
         assertTrue(result.isSuccess());
         setupPostWithRestResulVerifications(String.format("/project/%d/team/invite", projectId), projectUserInviteResource);
+    }
+
+
+    @Test
+    public void removeUser() {
+        long projectId = 654L;
+        long userId = 987L;
+        setupPostWithRestResultExpectations(String.format("/project/%d/team/remove-user/%d", projectId, userId), null, OK);
+        RestResult<Void> result = service.removeUser(projectId, userId);
+        setupPostWithRestResultVerifications(String.format("/project/%d/team/remove-user/%d", projectId, userId), Void.class);
+        assertTrue(result.isSuccess());
     }
 
     @Override

@@ -24,10 +24,13 @@ import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +38,7 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -53,19 +57,20 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamServiceImpl> {
 
     @Mock
-    private NotificationService notificationService;
+    private NotificationService notificationServiceMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -89,12 +94,17 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     private ProjectUserInviteMapper projectInviteMapperMock;
 
     @Mock
-    private SystemNotificationSource systemNotificationSource;
+    private SystemNotificationSource systemNotificationSourceMock;
+
+    @Mock
+    private ProjectUserRepository projectUserRepositoryMock;
+
+    @Mock
+    private UserRepository userRepositoryMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
-    private Long otherUserId = 8L;
 
     private Application application;
     private Organisation organisation;
@@ -208,8 +218,8 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        Notification notification = new Notification(systemNotificationSource, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
-        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
+        Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
                 serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         ProjectUserInvite projectInvite = newProjectUserInvite()
@@ -262,8 +272,8 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
-        Notification notification = new Notification(systemNotificationSource, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
-        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+        Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ProjectUserInvite projectInvite = newProjectUserInvite().
                 withEmail("a@b.com").
@@ -276,9 +286,102 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         assertTrue(result.isSuccess());
 
-        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
 
         verify(projectUserInviteRepositoryMock).save(projectInvite);
+    }
+
+    @Test
+    public void removeUser() {
+
+        User loggedInUser = newUser().build();
+        setLoggedInUser(newUserResource()
+                                .withId(loggedInUser.getId())
+                                .withRolesGlobal(singletonList(Role.PARTNER))
+                                .build());
+
+        User userToRemove = newUser().build();
+        ProjectUser projectUserToRemove = newProjectUser()
+                .withRole(PROJECT_PARTNER)
+                .withUser(userToRemove)
+                .build();
+
+        Project project = newProject()
+                .withProjectProcess(newProjectProcess()
+                                            .withProjectUser(newProjectUser()
+                                                                     .withUser(newUser().build())
+                                                                     .build())
+                                            .build())
+                .withProjectUsers(singletonList(projectUserToRemove)).build();
+
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+
+        service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
+
+        verify(projectRepositoryMock).findById(project.getId());
+
+        assertTrue(project.getProjectUsers().isEmpty());
+    }
+
+    @Test
+    public void removeUserFailsFinanceContact() {
+
+        User loggedInUser = newUser().build();
+        setLoggedInUser(newUserResource()
+                                .withId(loggedInUser.getId())
+                                .withRolesGlobal(Collections.singletonList(Role.PARTNER))
+                                .build());
+
+        User userToRemove = newUser().build();
+        ProjectUser projectUserToRemove = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT)
+                .withUser(userToRemove)
+                .build();
+
+        Project project = newProject().withProjectUsers(singletonList(projectUserToRemove)).build();
+
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectUserRepositoryMock.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
+                singletonList(projectUserToRemove));
+
+        service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
+
+        verify(projectRepositoryMock).findById(project.getId());
+        verifyZeroInteractions(projectUserRepositoryMock);
+
+        assertTrue(project.getProjectUsers().contains(projectUserToRemove));
+    }
+
+    @Test
+    public void removeUserFailsProjectManager() {
+
+        User loggedInUser = newUser().build();
+        setLoggedInUser(newUserResource()
+                                .withId(loggedInUser.getId())
+                                .withRolesGlobal(Collections.singletonList(Role.PARTNER))
+                                .build());
+
+        User userToRemove = newUser().build();
+        ProjectUser projectUserToRemove = newProjectUser()
+                .withRole(PROJECT_MANAGER)
+                .withUser(userToRemove)
+                .build();
+
+        Project project = newProject().withProjectUsers(singletonList(projectUserToRemove)).build();
+
+        when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(loggedInUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectUserRepositoryMock.findByProjectIdAndUserId(project.getId(), userToRemove.getId())).thenReturn(
+                singletonList(projectUserToRemove));
+
+        service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
+
+        verify(projectRepositoryMock).findById(project.getId());
+        verifyZeroInteractions(projectUserRepositoryMock);
+
+        assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }
 
     @Override

@@ -44,7 +44,11 @@ public class ProjectTeamController {
     private OrganisationRestService organisationRestService;
     private ProjectTeamRestService projectTeamRestService;
 
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator, ProjectDetailsService projectDetailsService, ProjectService projectService, OrganisationRestService organisationRestService, ProjectTeamRestService projectTeamRestService) {
+    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
+                                 ProjectDetailsService projectDetailsService,
+                                 ProjectService projectService,
+                                 OrganisationRestService organisationRestService,
+                                 ProjectTeamRestService projectTeamRestService) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;
         this.projectService = projectService;
@@ -60,7 +64,15 @@ public class ProjectTeamController {
                                   Model model,
                                   UserResource loggedInUser) {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser));
-        return "project/project-team";
+        return "project/team/project-team";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PostMapping(value = "/{projectId}/team", params = "remove-team-member")
+    public String removeUser(@PathVariable("projectId") final long projectId,
+                             @RequestParam("remove-team-member") final long userId) {
+        projectTeamRestService.removeUser(projectId, userId).getSuccess();
+        return "redirect:/project/" + projectId + "/team";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -73,7 +85,7 @@ public class ProjectTeamController {
                                 UserResource loggedInUser) {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
                 .openAddTeamMemberForm(organisationId));
-        return "project/project-team";
+        return "project/team/project-team";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -94,7 +106,7 @@ public class ProjectTeamController {
         Supplier<String> failureView = () -> {
             model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
                     .openAddTeamMemberForm(organisationId));
-            return "project/project-team";
+            return "project/team/project-team";
         };
 
         Supplier<String> successView = () -> String.format("redirect:/project/%d/team", projectId);
