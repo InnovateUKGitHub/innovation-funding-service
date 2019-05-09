@@ -14,7 +14,6 @@ public class ProjectTeamViewModel {
     private long projectId;
     private List<ProjectOrganisationViewModel> partnerOrgs;
     private ProjectOrganisationViewModel loggedInUserOrg;
-    private ProjectOrganisationViewModel leadOrg;
     private ProjectUserResource projectManager;
     private boolean userLeadPartner;
     private long loggedInUserId;
@@ -29,7 +28,6 @@ public class ProjectTeamViewModel {
                                 long projectId,
                                 List<ProjectOrganisationViewModel> partnerOrgs,
                                 ProjectOrganisationViewModel loggedInUserOrg,
-                                ProjectOrganisationViewModel leadOrg,
                                 ProjectUserResource projectManager,
                                 boolean userLeadPartner,
                                 long loggedInUserId,
@@ -43,7 +41,6 @@ public class ProjectTeamViewModel {
         this.projectId = projectId;
         this.partnerOrgs = partnerOrgs;
         this.loggedInUserOrg = loggedInUserOrg;
-        this.leadOrg = leadOrg;
         this.projectManager = projectManager;
         this.userLeadPartner = userLeadPartner;
         this.loggedInUserId = loggedInUserId;
@@ -67,14 +64,6 @@ public class ProjectTeamViewModel {
 
     public List<ProjectOrganisationViewModel> getPartnerOrgs() {
         return partnerOrgs;
-    }
-
-    public ProjectOrganisationViewModel getLoggedInUserOrg() {
-        return loggedInUserOrg;
-    }
-
-    public ProjectOrganisationViewModel getLeadOrg() {
-        return leadOrg;
     }
 
     public boolean isUserLeadPartner() {
@@ -105,5 +94,16 @@ public class ProjectTeamViewModel {
         return projectManager;
     }
 
+    public ProjectOrganisationViewModel getLoggedInUserOrg() {
+        return loggedInUserOrg;
+    }
+
+    public ProjectTeamViewModel openAddTeamMemberForm(long organisationId) {
+        partnerOrgs.stream()
+                .filter(partner -> partner.getOrgId() == organisationId)
+                .findAny()
+                .ifPresent(partner -> partner.setOpenAddTeamMemberForm(true));
+        return this;
+    }
 }
 
