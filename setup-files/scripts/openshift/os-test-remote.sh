@@ -37,7 +37,7 @@ function cleanUp() {
 }
 
 function buildAndPushTestImages() {
-    docker build --build-arg BAMBOO_CREDS_ARG=${bamboo_creds} --build-arg BAMBOO_URL_ARG=${bamboo_url} --build-arg BAMBOO_PLAN_PROJ_ARG=${bamboo_plan_proj} --build-arg BAMBOO_BUILD_NO_ARG=${bamboo_plan_no} -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
+    docker build --build-arg BAMBOO_CREDS_ARG=${bamboo_creds} --build-arg BAMBOO_URL_ARG=${bamboo_url} --build-arg BAMBOO_PLAN_PROJ_ARG=${bamboo_plan_proj} --build-arg BAMBOO_BUILD_NO_ARG=${bamboo_build_no} -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
     docker login -p ${SVC_ACCOUNT_TOKEN} -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
