@@ -5,10 +5,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -37,8 +37,8 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value="Controller",
         description = "Only applicants on an application are allowed to view the corresponding application overview",
-        securedType = ApplicationController.class)
-public class ApplicationController {
+        securedType = ApplicationOverviewController.class)
+public class ApplicationOverviewController {
 
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
     private QuestionService questionService;
@@ -46,7 +46,7 @@ public class ApplicationController {
     private ApplicationRestService applicationRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public ApplicationController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
+    public ApplicationOverviewController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
                                  QuestionService questionService,
                                  UserRestService userRestService,
                                  ApplicationRestService applicationRestService,
@@ -59,8 +59,8 @@ public class ApplicationController {
     }
 
     @GetMapping("/{applicationId}")
-    public String applicationOverview(ApplicationForm form,
-                                     Model model,
+    @AsyncMethod
+    public String applicationOverview(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId)
@@ -74,15 +74,9 @@ public class ApplicationController {
             return format("redirect:/application/%s/track", application.getId());
         }
 
-        if (form == null) {
-            form = new ApplicationForm();
-        }
-
-        form.setApplication(application);
         changeApplicationStatusToOpen(application, user);
 
-        Long userId = user.getId();
-        model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
+        model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, user));
         return "application-overview";
     }
 
