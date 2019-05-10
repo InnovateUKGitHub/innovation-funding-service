@@ -101,7 +101,8 @@
                             th:text="${user.getRolesNames()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-
                         </td>
-                        <td class="govuk-table__cell hint">
+                        <td class="govuk-table__cell"
+                            th:classappend="${user.invite ? 'hint' : ''}">
                             <th:block th:if="${organisation.editable}">
                                 <th:block
                                     th:if="${!user.invite and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}">
