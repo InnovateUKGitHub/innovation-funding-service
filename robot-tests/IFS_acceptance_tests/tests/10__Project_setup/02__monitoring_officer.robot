@@ -34,6 +34,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5418 Assign MO: Internal navigation
 ...
 ...               IFS-5686 MO - external user view
+...
+...               IFS-5859 MO View: Show Spend Profile navigation of all partners
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -127,9 +129,10 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
-    [Documentation]  IFS-4209
+    [Documentation]  IFS-4209  IFS-5859
     Given the user clicks the button/link    link = ${PS_LP_Application_Title}
-    Then the user should see the project set view
+    When the user should see the project set view
+    Then the MO user is able to access all of the links
 
 MO sees the application feedback
     [Documentation]  IFS-5298
@@ -224,7 +227,33 @@ Comp admin assign project existing IFS user MO
     Then the user logs in and checks for assigned projects
 
 *** Keywords ***
-standard verification for email address follows
+The MO user is able to access all of the links
+    the user is able to see Project details section
+    the user is able to see Documents section
+    the user is able to see Monitoring officer section
+    the user is able to see Spend profile section
+
+The user is able to see Project details section
+    the user clicks the button/link   link = Project details
+    the user should see the element   jQuery = h1:contains("Project details")
+    the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+The user is able to see Documents section
+    the user clicks the button/link   link = Documents
+    the user should see the element   jQuery = h1:contains("Documents")
+    the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+The user is able to see Monitoring officer section
+    the user clicks the button/link   jQuery = a:contains("Monitoring Officer")
+    the user should see the element   jQuery = h1:contains("Monitoring Officer")
+    the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+The user is able to see Spend profile section
+    the user clicks the button/link   link = Spend profile
+    the user should see the element   jQuery = h2:contains("Partner progress")
+    the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
     the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_symbols}
@@ -236,7 +265,7 @@ standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_at}
     the user should see a field error       ${enter_a_valid_email}
 
-the user should not see the validation error
+The user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
     Set Focus To Element      jQuery = .govuk-button:contains("Assign Monitoring Officer")
@@ -244,7 +273,7 @@ the user should not see the validation error
     ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
-the user edits the MO details
+The user edits the MO details
     search for MO   Orvill  Orville Gibbs
     the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
     the user clicks the button/link    link = Back
@@ -256,13 +285,13 @@ Custom suite setup
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 
-the user should see the correct address
+The user should see the correct address
     the user should see the element       jQuery = p:contains("3722 Corben Point")
     the user should see the element       jQuery = p:contains("London")
     the user should see the element       jQuery = p:contains("London")
     the user should see the element       jQuery = p:contains("E17 5LR")
 
-the user should see the project set view
+The user should see the project set view
     the user should see the element    jQuery = h1:contains("Monitor project")
     the user should see the element    jQuery = a:contains("Project details")
     the user should see the element    jQuery = a:contains("Documents")
@@ -271,7 +300,7 @@ the user should see the project set view
     the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
 
-the user enters the details
+The user enters the details
     the user enters text to a text field    id = firstName  Tom
     the user enters text to a text field    id = lastName   Poly
     the user enters text to a text field    id = phoneNumber  123456789
@@ -282,25 +311,25 @@ MO enter details and create account
     the user should not see an error in the page
     the user clicks the button/link         jQuery = button:contains("Create account")
 
-the user checks for validations
+The user checks for validations
     the user enters text to a text field    id = firstName  ${empty}
     the user enters text to a text field    id = lastName   ${empty}
     the user enters text to a text field    id = phoneNumber  ${empty}
 
-the user checks for details and password validations
+The user checks for details and password validations
     the user checks for validations
     the user enters text to a text field    id = password  ${empty}
 
-the user should see client side validations
+The user should see client side validations
     the user should see a field error    Please enter a first name.
     the user should see a field error    Please enter a last name.
     the user should see a field error    Please enter a phone number.
 
-the user should see client side validations triggered correctly
+The user should see client side validations triggered correctly
     the user should see client side validations
     the user should see a field error    Password must contain at least one lower case letter.
 
-the user should see server side validations
+The user should see server side validations
     [Arguments]  ${button}
     the user clicks the button/link                  jQuery = button:contains("${button}")
     the user should see a field and summary error    Please enter a first name.
@@ -310,40 +339,40 @@ the user should see server side validations
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 
-the user should see server side validations triggered correctly
+The user should see server side validations triggered correctly
     the user should see server side validations      Create account
     the user should see a field and summary error    Password must be at least 8 characters.
     the user should see a field and summary error    Please enter your password.
 
-comp admin remove project assigned to MO
+Comp admin remove project assigned to MO
     [Arguments]  ${project_name}
     the user should not see assigned project in Select a project to assign search field
     the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
     the user clicks the button/link     jQuery = td:contains("${project_name}") ~ td a:contains("Remove")
 
-the user should not see assigned project in Select a project to assign search field
+The user should not see assigned project in Select a project to assign search field
     input text                             id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
-the internal user assign project to MO
+The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
     input text                          id = projectId    ${search_ID}
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 
-comp admin assign and remove project to MO
+Comp admin assign and remove project to MO
     the internal user assign project to MO        ${Assign_Project_ID}  ${Assign_Project}
     comp admin remove project assigned to MO      ${Assign_Project}
 
-search for MO
+Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
     input text                          id = userId    ${MO_name}
     the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
-the user should see exisitng IFS user details and add phone number
+The user should see exisitng IFS user details and add phone number
     the user should see the element          jQuery = .message-alert:contains("We have found a user with this email address.")
     the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${assessor2_credentials["email"]}")
     the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Felix")
@@ -352,32 +381,32 @@ the user should see exisitng IFS user details and add phone number
     the user enters text to a text field     id = phoneNumber   1234567890
     the user clicks the button/link          jQuery = button:contains("Add monitoring officer")
 
-phone number: validations checks
+Phone number: validations checks
     the user enters text to a text field             id = phoneNumber    ${empty}
     the user should see a field error                Please enter a phone number.
     the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 
-the user logs in and checks for assigned projects
+The user logs in and checks for assigned projects
     the user reads his email and clicks the link    ${assessor2_credentials["email"]}   ${PROJECT_SETUP_COMPETITION_NAME}   The project Elbow grease has been assigned to you as the Monitoring Officer  1
     logging in and error checking                   &{assessor2_credentials}
     the user clicks the button/link                 id = dashboard-link-MONITORING_OFFICER
     the user should see the element                 jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element                 jQuery = .status:contains("Monitor project")
 
-the user navigate to assign MO page
+The user navigate to assign MO page
     the user navigates to the page         ${server}/management/dashboard/project-setup
     the user clicks the button/link        link = Assign monitoring officers
 
-the user adds MO email address
+The user adds MO email address
     log in as a different user              &{Comp_admin1_credentials}
     the user navigate to assign MO page
     the user clicks the button/link         link = Add a monitoring officer
     the user enters text to a text field    id = emailAddress  tom@poly.io
     the user clicks the button/link         jQuery = button[type="submit"]
 
-the user should see assigned MO details
+The user should see assigned MO details
     the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     the user should see the element                css = ul li.complete:nth-child(3)
     the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Nilesh Patti.
