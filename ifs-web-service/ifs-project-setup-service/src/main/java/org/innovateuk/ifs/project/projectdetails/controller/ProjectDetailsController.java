@@ -71,6 +71,7 @@ public class ProjectDetailsController {
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/new-details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
                                      UserResource loggedInUser) {
