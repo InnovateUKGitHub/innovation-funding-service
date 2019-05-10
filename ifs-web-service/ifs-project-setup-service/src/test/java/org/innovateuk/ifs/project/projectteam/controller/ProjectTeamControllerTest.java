@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopu
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -166,8 +165,6 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Test
     public void removeInvite() throws Exception {
-        UserResource loggedInUser = newUserResource().withRoleGlobal(Role.APPLICANT).build();
-        setLoggedInUser(loggedInUser);
 
         long inviteId = 777L;
         long projectId = 888L;
@@ -178,6 +175,6 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                                 .param("remove-invite", String.valueOf(inviteId)))
                 .andExpect(status().is3xxRedirection());
 
-        verify(projectTeamRestService).removeUser(projectId, inviteId);
+        verify(projectTeamRestService).removeInvite(projectId, inviteId);
     }
 }
