@@ -6,7 +6,6 @@ import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -57,21 +56,14 @@ public class UserManagementController extends AsyncAdaptor {
 
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
 
+    @Autowired
     private UserRestService userRestService;
 
+    @Autowired
     private InviteUserRestService inviteUserRestService;
 
-    private InternalUserService internalUserService;
-
-    UserManagementController() {super(null);}
-
     @Autowired
-    public UserManagementController(AsyncFuturesGenerator asyncFuturesGenerator, UserRestService userRestService, InviteUserRestService inviteUserRestService, InternalUserService internalUserService) {
-        super(asyncFuturesGenerator);
-        this.userRestService = userRestService;
-        this.inviteUserRestService = inviteUserRestService;
-        this.internalUserService = internalUserService;
-    }
+    private InternalUserService internalUserService;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
