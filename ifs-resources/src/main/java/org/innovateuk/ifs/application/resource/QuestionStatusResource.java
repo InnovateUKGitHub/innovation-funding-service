@@ -16,6 +16,7 @@ public class QuestionStatusResource {
     private Long application;
     private Long assignedBy;
     private Boolean notified;
+    private Long organisationId;
 
     // Following are needed by the view
     private String assigneeName;
@@ -41,6 +42,14 @@ public class QuestionStatusResource {
         this.assignedDate = assignedDate;
         this.assignedBy = assignedBy.getId();
         this.notified = false;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public Long getId() {
