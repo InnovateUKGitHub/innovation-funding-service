@@ -105,7 +105,6 @@ public class ProjectTeamController {
                 .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()).getSuccess());
     }
 
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "add-team-member")
     public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,

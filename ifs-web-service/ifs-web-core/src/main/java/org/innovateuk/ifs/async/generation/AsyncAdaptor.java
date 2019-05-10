@@ -20,6 +20,12 @@ public abstract class AsyncAdaptor {
     @Autowired
     private AsyncFuturesGenerator asyncFuturesGenerator;
 
+    public AsyncAdaptor() {}
+
+    public AsyncAdaptor(AsyncFuturesGenerator asyncFuturesGenerator) {
+        this.asyncFuturesGenerator = asyncFuturesGenerator;
+    }
+
     protected <T> CompletableFuture<T> async(ExceptionThrowingSupplier<T> supplier) {
         return asyncFuturesGenerator.async(supplier);
     }
