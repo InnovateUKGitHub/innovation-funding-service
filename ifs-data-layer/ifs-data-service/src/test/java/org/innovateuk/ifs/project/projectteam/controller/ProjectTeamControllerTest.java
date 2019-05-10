@@ -43,14 +43,13 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     public void removeInvite() throws Exception {
         long projectId = 456L;
         long inviteId = 789L;
-        ProjectUserCompositeId composite = new ProjectUserCompositeId(projectId, inviteId);
 
-        when(projectTeamService.removeUser(composite)).thenReturn(serviceSuccess());
+        when(projectTeamService.removeInvite(inviteId, projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/team/remove-invite/{inviteId}", projectId, inviteId))
                 .andExpect(status().isOk());
 
-        verify(projectTeamService).removeInvite(composite);
+        verify(projectTeamService).removeInvite(inviteId, projectId);
     }
 
     @Test

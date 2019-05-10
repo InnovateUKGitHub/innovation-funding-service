@@ -45,13 +45,14 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -387,16 +388,58 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     @Test
     public void removeInviteFailsWrongProject() {
 
+        Project project = newProject().build();
+        Project wrongProject = newProject().build();
+        ProjectUserInvite invite = newProjectUserInvite()
+                .withProject(wrongProject)
+                .withStatus(SENT)
+                .build();
+
+        when(projectUserInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+
+        ServiceResult<Void> result = service.removeInvite(invite.getId(), project.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT));
+
+        verify(projectUserInviteRepositoryMock, never()).delete(invite);
     }
 
     @Test
     public void removeInviteFailsWrongStatus() {
 
+        Project project = newProject().build();
+        ProjectUserInvite invite = newProjectUserInvite()
+                .withProject(project)
+                .withStatus(OPENED)
+                .build();
+
+        when(projectUserInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+
+        ServiceResult<Void> result = service.removeInvite(invite.getId(), project.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_INVITE_ALREADY_OPENED));
+
+        verify(projectUserInviteRepositoryMock, never()).delete(invite);
     }
 
     @Test
     public void removeInviteSucceeds() {
 
+        Project project = newProject().build();
+        ProjectUserInvite invite = newProjectUserInvite()
+                .withProject(project)
+                .withStatus(SENT)
+                .build();
+
+        when(projectUserInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+
+        ServiceResult<Void> result = service.removeInvite(invite.getId(), project.getId());
+        assertTrue(result.isSuccess());
+
+        verify(projectUserInviteRepositoryMock).delete(invite);
     }
 
     @Override

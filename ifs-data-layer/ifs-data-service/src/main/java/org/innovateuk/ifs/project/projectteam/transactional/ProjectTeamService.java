@@ -14,7 +14,7 @@ public interface ProjectTeamService {
     ServiceResult<Void> removeUser(ProjectUserCompositeId composite);
 
     @PreAuthorize("hasPermission(#projectUserInviteResourceId, 'org.innovateuk.ifs.invite.resource.ProjectUserInviteResource', 'DELETE_PROJECT_INVITE')")
-    ServiceResult<Void> removeInvite(Long projectUserInviteResourceId);
+    ServiceResult<Void> removeInvite(long projectUserInviteResourceId, long projectId);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource);

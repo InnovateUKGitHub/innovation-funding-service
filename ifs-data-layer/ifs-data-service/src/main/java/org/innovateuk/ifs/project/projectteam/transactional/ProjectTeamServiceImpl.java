@@ -105,10 +105,14 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> removeInvite(Long projectUserInviteResourceId) {
-        return getInvite(projectUserInviteResourceId)
-                .andOnSuccess(invite -> validateInvite(invite)
-                        .andOnSuccess(() -> deleteInvite(invite)));
+    public ServiceResult<Void> removeInvite(long inviteId, long projectId) {
+        return getInvite(inviteId)
+                .andOnSuccess(invite -> getProject(projectId)
+                    .andOnSuccess(project -> validateInvite(invite, project)
+                        .andOnSuccess(() -> deleteInvite(invite)
+                        )
+                    )
+                );
     }
 
     private ServiceResult<ProjectUserInvite> getInvite(long inviteId) {
@@ -116,9 +120,12 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                     notFoundError(ProjectUserInvite.class, inviteId));
     }
 
-    private ServiceResult<Void> validateInvite(ProjectUserInvite invite) {
-        if(!invite.getStatus().equals(InviteStatus.SENT)) {
+    private ServiceResult<Void> validateInvite(ProjectUserInvite invite, Project project) {
+        if(!invite.getTarget().equals(project)) {
             return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
+        }
+        if(!invite.getStatus().equals(InviteStatus.SENT)) {
+            return serviceFailure(PROJECT_INVITE_ALREADY_OPENED);
         }
         return serviceSuccess();
     }
