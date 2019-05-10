@@ -1,0 +1,15 @@
+package org.innovateuk.ifs.application.readonly.populator;
+
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
+
+import java.util.Set;
+
+public interface QuestionReadOnlyViewModelPopulator<M extends ApplicationQuestionReadOnlyViewModel> {
+
+    M populate(QuestionResource question, ApplicationReadOnlyData data);
+
+    Set<QuestionSetupType> questionTypes();
+}

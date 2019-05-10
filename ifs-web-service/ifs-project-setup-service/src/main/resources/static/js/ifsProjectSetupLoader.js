@@ -24,6 +24,11 @@ IFS.projectSetup.loadOrder = {
       IFS.projectSetup.spendProfile.init()
     }
   },
+  'project-team': {
+    init: function () {
+      IFS.projectSetup.projectTeam.init()
+    }
+  },
   common: {
     init: function () {
       IFS.projectSetup.clearInputs.init()
