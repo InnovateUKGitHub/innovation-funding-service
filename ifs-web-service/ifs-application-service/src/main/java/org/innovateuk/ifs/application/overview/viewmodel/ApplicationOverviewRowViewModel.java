@@ -4,6 +4,9 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 
 import java.util.Optional;
 
+/**
+ * View model for each row with a link in the application overview page.
+ */
 public class ApplicationOverviewRowViewModel {
 
     private final String title;
