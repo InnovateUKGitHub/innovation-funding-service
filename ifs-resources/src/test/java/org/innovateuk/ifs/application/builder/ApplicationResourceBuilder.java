@@ -108,4 +108,17 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     public ApplicationResourceBuilder withStateAidAgreed(Boolean... stateAidAgreeds) {
         return withArray((stateAidAgreed, application) -> application.setStateAidAgreed(stateAidAgreed), stateAidAgreeds);
     }
+
+    public ApplicationResourceBuilder withResubmission(Boolean... resubmissions) {
+        return withArray((resubmission, application) -> setField("resubmission", resubmission, application), resubmissions);
+    }
+
+    public ApplicationResourceBuilder withPreviousApplicationNumber(String... numbers) {
+        return withArray((number, application) -> setField("previousApplicationNumber", number, application), numbers);
+    }
+
+    public ApplicationResourceBuilder withPreviousApplicationTitle(String... titles) {
+        return withArray((title, application) -> setField("previousApplicationTitle", title, application), titles);
+    }
+
 }

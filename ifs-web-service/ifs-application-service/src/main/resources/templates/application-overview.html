@@ -113,9 +113,8 @@
             </th:block>
         </form>
 
-
     <a th:id="${model.lead ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
-       class="govuk-button" th:href="@{/application/{id}/summary(id=${model.application.id})}"
+       class="govuk-button" th:href="@{/application/{id}/review-and-submit(id=${model.application.id})}"
        th:text="${model.lead ? 'Review and submit' : 'Review'}" />
     <a id="application-overview-print"
        class="button-clear"
