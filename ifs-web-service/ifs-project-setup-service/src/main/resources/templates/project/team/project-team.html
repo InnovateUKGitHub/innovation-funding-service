@@ -105,9 +105,6 @@
                                    class="govuk-link">Remove</a>
                             </th:block>
                             <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and user.invite}">
-                                <!--<a th:href="@{/project/{projectId}/team?remove-invite={inviteId}(projectId=${model.projectId},userId=${user.id})}">-->
-                                    <!---->
-                                <!--</a>-->
                                 <button class="button-clear" type="submit" name="remove-invite" th:value="${user.id}">Remove</button>
                             </th:block>
 
