@@ -112,7 +112,7 @@
         </form>
 
     <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
-       class="govuk-button" th:href="@{/application/{id}/summary(id=${model.applicationId})}"
+       class="govuk-button" th:href="@{/application/{id}/review-and-submit(id=${model.applicationId})}"
        th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
     <a id="application-overview-print"
        class="button-clear"

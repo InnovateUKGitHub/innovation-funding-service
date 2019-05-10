@@ -8,7 +8,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationSearchResultListType;

@@ -1,12 +1,33 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.project.security.ProjectApplicationPermissionRules;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Optional.empty;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
+
+    private ApplicationPermissionRules applicationRules;
+    private ProjectApplicationPermissionRules projectApplicationPermissionRules;
+    private ApplicationLookupStrategy applicationLookupStrategy;
+
+    @Before
+    public void lookupPermissionRules() {
+        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        projectApplicationPermissionRules = getMockPermissionRulesBean(ProjectApplicationPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
+    }
 
     @Test
     public void test_getApplicationSummariesByCompetitionId() {
@@ -45,9 +66,22 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test
     public void test_getApplicationTeamByApplicationId() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getApplicationTeamByApplicationId(1L),
-                PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, ASSESSOR);
+        final long applicationId = 1L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource()
+                .build());
+        assertAccessDenied(
+                () -> classUnderTest.getApplicationTeamByApplicationId(applicationId),
+                () -> {
+                    verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class),
+                            isA(UserResource.class));
+                    verify(projectApplicationPermissionRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(isA(ApplicationResource.class),
+                            isA(UserResource.class));
+                    verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA
+                            (UserResource.class));
+                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(isA
+                            (ApplicationResource.class), isA(UserResource.class));
+                }
+        );
     }
 
     @Test

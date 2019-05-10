@@ -37,6 +37,12 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         });
     }
 
+    public QuestionStatusResourceBuilder withQuestion(Long question) {
+        return with(questionStatus -> {
+            questionStatus.setQuestion(question);
+        });
+    }
+
     @Override
     protected QuestionStatusResource createInitial() {
         return new QuestionStatusResource();

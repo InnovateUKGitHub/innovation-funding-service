@@ -14,6 +14,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.join;
@@ -137,14 +138,14 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
             if (isSecuredAtClassLevel(service)) {
                 Class<?> serviceClass = service.getClass();
                 // Currently if its secured at class level we need a SecuredBySpring annotation.
-                if (!hasOneOf(serviceClass, asList(SecuredBySpring.class))) {
+                if (!hasOneOf(serviceClass, Collections.singletonList(SecuredBySpring.class))) {
                     classLevelFailures.add(serviceClass);
                 }
             }
             // Now for all of the methods
             for (Method method : service.getClass().getMethods()) {
                 if (methodNeedsSecuring(method)) {
-                    if (requiresSecuredBySpringAnnotation(method) && !hasOneOf(method, asList(SecuredBySpring.class))) {
+                    if (requiresSecuredBySpringAnnotation(method) && !hasOneOf(method, Collections.singletonList(SecuredBySpring.class))) {
                         methodLevelFailures.add(method);
                     }
                 }

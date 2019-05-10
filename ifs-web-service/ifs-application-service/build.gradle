@@ -41,7 +41,9 @@ def enabled = project.hasProperty('ifs.application-service.enabled') ? project.p
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-application-commons/build/classes")
     dependsOn ":ifs-web-service:ifs-web-core:build"
+    dependsOn ":ifs-web-service:ifs-application-commons:build"
 }
 
 dependencies {

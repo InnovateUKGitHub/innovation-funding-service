@@ -45,7 +45,7 @@ public class CompetitionProjectsStatusResource {
     }
 
     public List<ProjectStatusResource> getProjectStatusResources() {
-        return ofNullable(projectStatusResources).map(identity()).orElse(new ArrayList<>());
+        return ofNullable(projectStatusResources).orElse(new ArrayList<>());
     }
 
     public void setProjectStatusResources(List<ProjectStatusResource> projectStatusResources) {

@@ -131,11 +131,6 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         form.setFormInput(values);
     }
 
-    protected void addSectionsMarkedAsComplete(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
-        addSectionsMarkedAsComplete(viewModel, applicantSection, completedSectionsByOrganisation);
-    }
-
     protected void addSectionsMarkedAsComplete(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection, Map<Long, Set<Long>> completedSectionsByOrganisation) {
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(applicantSection.getCurrentApplicant().getOrganisation().getId());
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);

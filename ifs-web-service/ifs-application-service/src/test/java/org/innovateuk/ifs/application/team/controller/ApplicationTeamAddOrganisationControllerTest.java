@@ -231,16 +231,14 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 new ApplicantInviteForm("", "")), form.getApplicants());
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(3, bindingResult.getFieldErrorCount());
+        assertEquals(2, bindingResult.getFieldErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount("applicants[1].name"));
-        assertEquals(2, bindingResult.getFieldErrorCount("applicants[1].email"));
+        assertEquals(1, bindingResult.getFieldErrorCount("applicants[1].email"));
         assertTrue(bindingResult.hasFieldErrors("applicants[1].name"));
         assertEquals("Please enter a name.", bindingResult.getFieldError("applicants[1].name").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("applicants[1].email"));
         assertTrue(bindingResult.getFieldErrors("applicants[1].email").stream()
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter an email address.")));
-        assertTrue(bindingResult.getFieldErrors("applicants[1].email").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a valid email address.")));
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
@@ -445,7 +443,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
     private UserResource setupLeadApplicant(ApplicationResource applicationResource) {
         UserResource leadApplicant = newUserResource().build();
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(newProcessRoleResource()
+        when(userService.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn(newProcessRoleResource()
                 .withUser(leadApplicant)
                 .build());
         return leadApplicant;
