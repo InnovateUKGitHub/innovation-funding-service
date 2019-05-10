@@ -29,6 +29,7 @@ import java.util.concurrent.Future;
 
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
 
@@ -103,6 +104,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             rows = section.getChildSections()
                     .stream()
                     .map(data.getSections()::get)
+                    .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
                     .map(childSection -> new ApplicationOverviewRowViewModel(childSection.getName(),
                             String.format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
                             data.getCompletedSectionIds().contains(childSection.getId()),
