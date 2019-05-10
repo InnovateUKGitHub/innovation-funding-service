@@ -19,4 +19,9 @@ public class ProjectTeamRestServiceImpl extends BaseRestService implements Proje
     public RestResult<Void> removeUser(long projectId, long userId) {
         return postWithRestResult(String.format(projectTeamRestURL + "/%d", projectId, "remove-user", userId));
     }
+
+    @Override
+    public RestResult<Void> removeInvite(long projectId, long inviteId) {
+        return postWithRestResult(String.format(projectTeamRestURL + "/%d", projectId, "remove-invite", inviteId));
+    }
 }

@@ -28,6 +28,12 @@ public class ProjectTeamController {
         return projectTeamService.removeUser(composite).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/team/remove-invite/{inviteId}")
+    public RestResult<Void> removeInvite(@PathVariable("projectId") final long projectId,
+                                       @PathVariable("inviteId") final long inviteId) {
+        return projectTeamService.removeInvite(inviteId).toPostResponse();
+    }
+
 
     @PostMapping("/{projectId}/team/invite")
     public RestResult<Void> inviteTeamMember(@PathVariable("projectId") final long projectId,
