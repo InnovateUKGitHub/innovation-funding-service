@@ -85,7 +85,7 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header larger-cols">Name</th>
                         <th scope="col" class="govuk-table__header">Role</th>
-                        <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Remove</span></th>
+                        <th scope="col" class="govuk-table__header width-200"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -97,18 +97,19 @@
                         <td class="govuk-table__cell"
                             th:text="${user.getRolesNames()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-</td>
-                        <td class="govuk-table__cell">
-                            <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and !user.invite}">
-                                <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})" />
-                                <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
-                                   th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
-                                   class="govuk-link">Remove</a>
-                            </th:block>
-                            <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and user.invite}">
-                                <!--<a th:href="@{/project/{projectId}/team?remove-invite={inviteId}(projectId=${model.projectId},userId=${user.id})}">-->
-                                    <!---->
-                                <!--</a>-->
-                                <button class="button-clear" type="submit" name="remove-invite" th:value="${user.id}">Remove</button>
+                        <td class="govuk-table__cell hint">
+                            <th:block th:if="${organisation.editable}">
+                                <th:block th:if="${!user.invite and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}">
+                                    <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})" />
+                                    <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
+                                       th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
+                                       class="govuk-link">Remove</a>
+                                </th:block>
+                                <th:block th:if="${user.invite}">
+                                    <button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-invite" th:value="${user.id}">Resend invite</button>
+                                    |
+                                    <button class="button-clear govuk-!-margin-left-1" type="submit" name="remove-invite" th:value="${user.id}">Remove</button>
+                                </th:block>
                             </th:block>
 
 

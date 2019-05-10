@@ -34,7 +34,6 @@ public class ProjectTeamController {
         return projectTeamService.removeInvite(inviteId).toPostResponse();
     }
 
-
     @PostMapping("/{projectId}/team/invite")
     public RestResult<Void> inviteTeamMember(@PathVariable("projectId") final long projectId,
                                              @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
