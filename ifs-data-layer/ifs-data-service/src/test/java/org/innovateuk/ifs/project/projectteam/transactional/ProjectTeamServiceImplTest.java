@@ -384,6 +384,21 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }
 
+    @Test
+    public void removeInviteFailsWrongProject() {
+
+    }
+
+    @Test
+    public void removeInviteFailsWrongStatus() {
+
+    }
+
+    @Test
+    public void removeInviteSucceeds() {
+
+    }
+
     @Override
     protected ProjectTeamServiceImpl supplyServiceUnderTest() {
         ProjectTeamServiceImpl projectTeamService =  new ProjectTeamServiceImpl();

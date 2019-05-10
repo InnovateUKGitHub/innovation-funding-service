@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.*;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -51,6 +53,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secure service for Project Team processing work
@@ -98,6 +101,31 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     enum Notifications {
         INVITE_PROJECT_MEMBER
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeInvite(Long projectUserInviteResourceId) {
+        return getInvite(projectUserInviteResourceId)
+                .andOnSuccess(invite -> validateInvite(invite)
+                        .andOnSuccess(() -> deleteInvite(invite)));
+    }
+
+    private ServiceResult<ProjectUserInvite> getInvite(long inviteId) {
+        return find(projectUserInviteRepository.findById(inviteId),
+                    notFoundError(ProjectUserInvite.class, inviteId));
+    }
+
+    private ServiceResult<Void> validateInvite(ProjectUserInvite invite) {
+        if(!invite.getStatus().equals(InviteStatus.SENT)) {
+            return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> deleteInvite(ProjectUserInvite invite) {
+        projectUserInviteRepository.delete(invite);
+        return serviceSuccess();
     }
 
     @Override

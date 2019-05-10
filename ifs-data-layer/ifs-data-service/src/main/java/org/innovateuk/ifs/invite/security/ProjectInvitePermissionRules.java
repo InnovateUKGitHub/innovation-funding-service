@@ -29,6 +29,10 @@ public class ProjectInvitePermissionRules extends BasePermissionRules {
         return isUserPartnerOnProjectWithinSameOrganisation(invite, user);
     }
 
+    @PermissionRule(value = "DELETE_PROJECT_INVITE", description = "A user can delete a project invite that they are partners on and belong to same organisation")
+    public boolean partnersOnProjectCanDeleteInvite(final ProjectUserInviteResource invite, UserResource user) {
+        return isUserPartnerOnProjectWithinSameOrganisation(invite, user);
+    }
 
     private boolean isUserPartnerOnProjectWithinSameOrganisation(final ProjectUserInviteResource invite, UserResource user) {
         if (invite.getProject() != null && invite.getOrganisation() != null) {
