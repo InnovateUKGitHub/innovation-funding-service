@@ -219,13 +219,12 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, long organisationId) {
         return questionStatuses.stream().
                 filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisationId().equals(organisationId)))
-                .filter(qs -> qs.getMarkedAsComplete() != null)
-                .filter(qs -> qs.getMarkedAsComplete())
                 .collect(Collectors.toList());
     }
 
     private List<QuestionStatus> filterByMarkedAsComplete(final List<QuestionStatus> questionStatuses) {
         return questionStatuses.stream()
+                .filter(qs -> qs.getMarkedAsCompleteBy() != null)
                 .filter(qs -> qs.getMarkedAsComplete() != null)
                 .filter(qs -> qs.getMarkedAsComplete())
                 .collect(Collectors.toList());
