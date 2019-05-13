@@ -85,7 +85,7 @@
                         <span>-</span>
                     </th:block>
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell text-align-right">
                     <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}"
                        th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
                        class="govuk-link">Edit</a>
