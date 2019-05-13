@@ -130,17 +130,6 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     @Override
-    public ServiceResult<FinanceRowItem> addCostWithoutPersisting(final Long applicationFinanceId, final Long questionId) {
-        return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
-                getOpenOrLaterApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-                    FinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
-                    return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow) cost));
-                })
-        );
-    }
-
-    @Override
     @Transactional
     public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
         Application application = financeRowRepository.findById(id).get().getTarget().getApplication();
