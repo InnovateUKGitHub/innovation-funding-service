@@ -61,31 +61,31 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                     Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
 
                     return serviceSuccess(sections.stream()
-                            .filter(section -> isSectionComplete(section, getQuestionIdsByOrganisation(applicationId), application, organisationId, organisations))
+                            .filter(section -> isSectionComplete(section, getCompletedQuestionsGroupedByOrganisationId(applicationId), application, organisationId, organisations))
                             .map(Section::getId)
                             .collect(toSet()));
                 });
     }
 
-    private boolean isFinanceOverviewComplete(Application application, Map<Long, List<Long>> organisationQuestionIds, Set<Long> organisationIds) {
+    private boolean isFinanceOverviewComplete(Application application, Map<Long, List<Long>> completedQuestionsByOrganisations, Set<Long> applicationOrganisations) {
         List<Section> sections = application.getCompetition().getSections();
 
         Section financeSection = sections.stream().filter(section -> section.getType() == FINANCE).collect(toList()).get(0);
 
-        for (long organisationId : organisationIds) {
-            if (!organisationQuestionIds.containsKey(organisationId)) {
+        for (long organisationId : applicationOrganisations) {
+            if (!completedQuestionsByOrganisations.containsKey(organisationId)) {
                 return false;
             }
 
             Map<Long, List<Long>> map = new HashMap<>();
-            map.put(organisationId, organisationQuestionIds.get(organisationId));
+            map.put(organisationId, completedQuestionsByOrganisations.get(organisationId));
 
             if (!isSectionComplete(
                     financeSection,
                     map,
                     application,
                     organisationId,
-                    organisationIds)) {
+                    applicationOrganisations)) {
                 return false;
             }
         }
@@ -171,7 +171,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         for (Long organisationId : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
             for (Section section : sections) {
-                if (isSectionComplete(section, getQuestionIdsByOrganisation(application.getId()), application, organisationId, organisations)) {
+                if (isSectionComplete(section, getCompletedQuestionsGroupedByOrganisationId(application.getId()), application, organisationId, organisations)) {
                     completedSections.add(section.getId());
                 }
             }
@@ -181,24 +181,24 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private boolean isSectionComplete(Section section,
-                                      Map<Long, List<Long>> organisationQuestionIds,
+                                      Map<Long, List<Long>> completedQuestionsByOrganisations,
                                       Application application,
                                       long organisationId,
-                                      Set<Long> organisationIds) {
+                                      Set<Long> applicationOrganisations) {
 
         if (section.getType() == OVERVIEW_FINANCES) {
-            return isFinanceOverviewComplete(application, organisationQuestionIds, organisationIds);
+            return isFinanceOverviewComplete(application, completedQuestionsByOrganisations, applicationOrganisations);
         }
 
         if (section.hasChildSections()) {
             for (Section childSection : section.getChildSections()) {
-                return isSectionComplete(childSection, organisationQuestionIds, application, organisationId, organisationIds);
+                return isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
             }
         }
 
         for (Question question : section.getQuestions()) {
-            if (!organisationQuestionIds.containsKey(organisationId)
-                    || !organisationQuestionIds.get(organisationId).contains((question.getId()))) {
+            if (!completedQuestionsByOrganisations.containsKey(organisationId)
+                    || !completedQuestionsByOrganisations.get(organisationId).contains((question.getId()))) {
                 return false;
             }
         }
@@ -206,13 +206,13 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         return true;
     }
 
-    private Map<Long, List<Long>> getQuestionIdsByOrganisation(long applicationId) {
+    private Map<Long, List<Long>> getCompletedQuestionsGroupedByOrganisationId(long applicationId) {
 
-        Map<Long, List<QuestionStatusResource>> organisationQuestionStatuses = questionStatusService.findByApplication(applicationId).getSuccess()
+        Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = questionStatusService.findCompletedQuestionsByApplicationId(applicationId).getSuccess()
                 .stream()
                 .collect(Collectors.groupingBy(qs -> qs.getCompletedByOrganisation()));
 
-        return organisationQuestionStatuses
+        return completedQuestionStatuses
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey,
