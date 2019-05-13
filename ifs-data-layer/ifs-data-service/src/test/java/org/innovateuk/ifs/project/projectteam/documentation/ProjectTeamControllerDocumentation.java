@@ -61,7 +61,7 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
                 .andDo(document("project/{method-name}",
                                 pathParameters(
                                         parameterWithName("projectId").description("Id of project the user was invited to"),
-                                        parameterWithName("userId").description("Id of the invite to be removed"))));
+                                        parameterWithName("inviteId").description("Id of the invite to be removed"))));
 
         verify(projectTeamService).removeInvite(inviteId, projectId);
     }
