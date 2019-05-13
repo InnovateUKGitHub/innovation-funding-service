@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 
 public class ApplicationTermsViewModel {
     private final long applicationId;
+    private final long questionId;
     private final String competitionTermsTemplate;
     private final boolean collaborativeApplication;
     private final boolean termsAccepted;
@@ -11,12 +12,14 @@ public class ApplicationTermsViewModel {
     private final ZonedDateTime termsAcceptedOn;
 
     public ApplicationTermsViewModel(long applicationId,
+                                     long questionId,
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
                                      boolean termsAccepted,
                                      String termsAcceptedByName,
                                      ZonedDateTime termsAcceptedOn) {
         this.applicationId = applicationId;
+        this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.collaborativeApplication = collaborativeApplication;
         this.termsAccepted = termsAccepted;
@@ -26,6 +29,10 @@ public class ApplicationTermsViewModel {
 
     public long getApplicationId() {
         return applicationId;
+    }
+
+    public long getQuestionId() {
+        return questionId;
     }
 
     public String getCompetitionTermsTemplate() {

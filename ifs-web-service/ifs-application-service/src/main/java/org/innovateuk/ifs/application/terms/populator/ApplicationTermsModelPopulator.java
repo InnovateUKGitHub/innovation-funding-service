@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.terms.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,7 +24,6 @@ public class ApplicationTermsModelPopulator {
 
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
-    private SectionService sectionService;
     private UserRestService userRestService;
     private OrganisationService organisationService;
     private QuestionStatusRestService questionStatusRestService;
@@ -38,18 +36,14 @@ public class ApplicationTermsModelPopulator {
                                           QuestionStatusRestService questionStatusRestService) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
         this.userRestService = userRestService;
         this.organisationService = organisationService;
         this.questionStatusRestService = questionStatusRestService;
     }
 
-    public ApplicationTermsViewModel populate(UserResource currentUser, long applicationId) {
+    public ApplicationTermsViewModel populate(UserResource currentUser, long applicationId, long termsQuestionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        SectionResource termsAndConditionsSection = sectionService.getTermsAndConditionsSection(competition.getId());
-        long termsQuestionId = termsAndConditionsSection.getQuestions().get(0);
-
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         OrganisationResource organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles).get();
 
@@ -71,6 +65,7 @@ public class ApplicationTermsModelPopulator {
 
         return new ApplicationTermsViewModel(
                 applicationId,
+                termsQuestionId,
                 competition.getTermsAndConditions().getTemplate(),
                 application.isCollaborativeProject(),
                 termsAccepted,

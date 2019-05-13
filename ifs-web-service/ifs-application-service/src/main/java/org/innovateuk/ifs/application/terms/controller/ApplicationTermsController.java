@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.application.terms.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.terms.populator.ApplicationTermsModelPopulator;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -19,12 +20,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
-@RequestMapping("/application/{applicationId}/terms-and-conditions")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "Controller",
         description = "Only applicants are allowed to view the application terms",
@@ -36,43 +41,51 @@ public class ApplicationTermsController {
     private SectionService sectionService;
     private UserRestService userRestService;
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
+    private QuestionStatusRestService questionStatusRestService;
 
     public ApplicationTermsController(ApplicationRestService applicationRestService,
                                       CompetitionRestService competitionRestService,
                                       SectionService sectionService,
                                       UserRestService userRestService,
+                                      QuestionStatusRestService questionStatusRestService,
                                       ApplicationTermsModelPopulator applicationTermsModelPopulator) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
+        this.questionStatusRestService = questionStatusRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;
     }
 
     @GetMapping
     public String getTerms(@PathVariable long applicationId,
+                           @PathVariable long questionId,
                            UserResource user,
                            Model model,
                            @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form) {
-        model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId));
+        model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId, questionId));
         return "application/terms-and-conditions";
     }
 
     @PostMapping
     public String acceptTerms(@PathVariable long applicationId,
+                              @PathVariable long questionId,
                               UserResource user,
                               Model model,
                               @Valid @ModelAttribute(name = "form") ApplicationTermsForm form,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> getTerms(applicationId, user, model, form);
+        Supplier<String> failureView = () -> getTerms(applicationId, questionId, user, model, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-            SectionResource termsAndConditionsSection = sectionService.getTermsAndConditionsSection(application.getCompetition());
+
             ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            sectionService.markAsComplete(termsAndConditionsSection.getId(), applicationId, processRole.getId());
-            return format("redirect:/application/%d/terms-and-conditions", applicationId);
+            RestResult<List<ValidationMessages>> result = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId());
+
+            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(
+                            failureView,
+                            () -> format("redirect:%s%d/form/question/%d/terms-and-conditions", APPLICATION_BASE_URL, applicationId, questionId));
         });
     }
 }
