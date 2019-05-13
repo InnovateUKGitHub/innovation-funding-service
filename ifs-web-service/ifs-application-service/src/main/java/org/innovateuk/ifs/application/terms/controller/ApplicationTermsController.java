@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.terms.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -55,9 +54,7 @@ public class ApplicationTermsController {
                            UserResource user,
                            Model model,
                            @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form) {
-
         model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId));
-
         return "application/terms-and-conditions";
     }
 
@@ -72,8 +69,7 @@ public class ApplicationTermsController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-            SectionResource termsAndConditionsSection = sectionService.getTermsAndConditionsSection(competition.getId());
+            SectionResource termsAndConditionsSection = sectionService.getTermsAndConditionsSection(application.getCompetition());
             ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             sectionService.markAsComplete(termsAndConditionsSection.getId(), applicationId, processRole.getId());
             return format("redirect:/application/%d/terms-and-conditions", applicationId);
