@@ -197,10 +197,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         }
 
         for (Question question : section.getQuestions()) {
-            if (!organisationQuestionIds.containsKey(organisationId)) {
-                return false;
-            }
-            if (!organisationQuestionIds.get(organisationId).contains((question.getId()))) {
+            if (!organisationQuestionIds.containsKey(organisationId)
+                    || !organisationQuestionIds.get(organisationId).contains((question.getId()))) {
                 return false;
             }
         }
@@ -212,9 +210,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         Map<Long, List<QuestionStatusResource>> organisationQuestionStatuses = questionStatusService.findByApplication(applicationId).getSuccess()
                 .stream()
-                .collect(Collectors.groupingBy(qs -> qs.getOrganisationId()));
+                .collect(Collectors.groupingBy(qs -> qs.getCompletedByOrganisation()));
 
-       return organisationQuestionStatuses
+        return organisationQuestionStatuses
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey,
