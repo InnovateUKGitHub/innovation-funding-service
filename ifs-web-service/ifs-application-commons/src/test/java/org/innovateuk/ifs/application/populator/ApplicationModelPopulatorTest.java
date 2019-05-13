@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -10,9 +9,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -162,45 +158,5 @@ public class ApplicationModelPopulatorTest {
         verify(model).addAttribute("currentApplication", applicationResource);
         verify(model).addAttribute("currentCompetition", competitionResource);
         verifyNoMoreInteractions(model);
-    }
-
-    @Test
-    public void testAddOrganisationAndUserFinanceDetails() {
-        Long competitionId = 1L;
-        Long applicationId = 2L;
-        Long userId = 3L;
-        Long organisationId = 3L;
-        Long userOrganisationId = 45L;
-        OrganisationResource userOrganisation = newOrganisationResource().withId(userOrganisationId).build();
-
-        UserResource user = newUserResource()
-                .withId(userId).build();
-        Model model = mock(Model.class);
-        ApplicationForm form = new ApplicationForm();
-        SectionResource financeSection = newSectionResource().build();
-        List<QuestionResource> costsQuestions = QuestionResourceBuilder.newQuestionResource().build(2);
-        Long organisationType = 1L;
-        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
-        CompetitionResource competition = newCompetitionResource().build();
-
-        when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
-        when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
-        when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
-
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(financeViewHandlerProvider.getFinanceModelManager(competition, organisationType)).thenReturn(financeModelManager);
-
-        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();
-        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form, organisationId);
-
-        //verify model attributes
-        verify(model).addAttribute("currentUser", user);
-        verifyNoMoreInteractions(model);
-
-        //Verify model calls
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
-        verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

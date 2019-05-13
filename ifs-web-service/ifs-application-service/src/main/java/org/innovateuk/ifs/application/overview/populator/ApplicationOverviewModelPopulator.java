@@ -1,94 +1,168 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
+import org.innovateuk.ifs.application.overview.ApplicationOverviewData;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
-import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
-import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.Future;
+
+import static java.util.stream.Collectors.toCollection;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
 
 /**
  * view model for the application overview page
  */
 @Component
-public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
+public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
-    private CompetitionRestService competitionRestService;
-    private UserRestService userRestService;
-    private OrganisationService organisationService;
-    private ProjectService projectService;
-    private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
-    private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
-    private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
-    private ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator;
+    private final CompetitionRestService competitionRestService;
+    private final SectionRestService sectionRestService;
+    private final QuestionRestService questionRestService;
+    private final UserRestService userRestService;
+    private final MessageSource messageSource;
+    private final OrganisationRestService organisationRestService;
+    private final QuestionStatusRestService questionStatusRestService;
+    private final SectionStatusRestService sectionStatusRestService;
+    private final InviteService inviteService;
+    private final QuestionService questionService;
 
-    public ApplicationOverviewModelPopulator(CompetitionRestService competitionRestService,
-                                             UserRestService userRestService,
-                                             OrganisationService organisationService,
-                                             SectionService sectionService,
-                                             QuestionService questionService,
-                                             QuestionRestService questionRestService,
-                                             ProjectService projectService,
-                                             ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator,
-                                             ApplicationCompletedModelPopulator applicationCompletedModelPopulator,
-                                             ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator,
-                                             ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator) {
-        super(sectionService, questionService, questionRestService);
+    public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
+                                             SectionRestService sectionRestService, QuestionRestService questionRestService,
+                                             UserRestService userRestService, MessageSource messageSource,
+                                             OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
+                                             SectionStatusRestService sectionStatusRestService, InviteService inviteService,
+                                             QuestionService questionService) {
+        super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
+        this.sectionRestService = sectionRestService;
+        this.questionRestService = questionRestService;
         this.userRestService = userRestService;
-        this.organisationService = organisationService;
-        this.projectService = projectService;
-        this.applicationOverviewSectionModelPopulator = applicationOverviewSectionModelPopulator;
-        this.applicationCompletedModelPopulator = applicationCompletedModelPopulator;
-        this.applicationOverviewAssignableModelPopulator = applicationOverviewAssignableModelPopulator;
-        this.applicationOverviewUserModelPopulator = applicationOverviewUserModelPopulator;
+        this.messageSource = messageSource;
+        this.organisationRestService = organisationRestService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.sectionStatusRestService = sectionStatusRestService;
+        this.inviteService = inviteService;
+        this.questionService = questionService;
     }
 
-    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
-        ProjectResource projectResource = projectService.getByApplicationId(application.getId());
-        boolean projectWithdrawn = (projectResource != null && projectResource.isWithdrawn());
+    public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
+        Future<OrganisationResource> organisation = async(() -> organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess());
+        Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
+        Future<List<SectionResource>> sections = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
+        Future<List<QuestionResource>> questions = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
+        Future<List<ProcessRoleResource>> processRoles = async(() -> userRestService.findProcessRole(application.getId()).getSuccess());
+        Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
+        Future<List<ApplicationInviteResource>> invites = async(() -> inviteService.getPendingInvitationsByApplicationId(application.getId()));
+        Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
 
-        ApplicationOverviewUserViewModel userViewModel = applicationOverviewUserModelPopulator.populate(application, userId);
-        ApplicationOverviewAssignableViewModel assignableViewModel = applicationOverviewAssignableModelPopulator.populate(application, userOrganisation, userId);
-        ApplicationCompletedViewModel completedViewModel = applicationCompletedModelPopulator.populate(application, userOrganisation);
-        ApplicationOverviewSectionViewModel sectionViewModel = applicationOverviewSectionModelPopulator.populate(competition, application, userId);
+        async(() -> {
+            List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(resolve(statuses), user.getId());
+            questionService.removeNotifications(notifications);
+        });
 
-        int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
+        ApplicationOverviewData data = new ApplicationOverviewData(resolve(competition), application, resolve(sections),
+                resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses), resolve(invites),
+                resolve(completedSectionIds), user);
 
-        return new ApplicationOverviewViewModel(
-                application.getId(),
-                application.getName(),
-                application.getApplicationState(),
-                application.isSubmitted(),
-                projectWithdrawn,
-                competition,
-                userOrganisation.orElse(null),
-                completedQuestionsPercentage,
-                userViewModel,
-                assignableViewModel,
-                completedViewModel,
-                sectionViewModel);
+        Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
+                .values()
+                .stream()
+                .filter(section -> section.getParentSection() == null)
+                .map(section -> sectionViewModel(section, data))
+                .collect(toCollection(LinkedHashSet::new));
+
+        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels);
+    }
+
+    private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
+        Set<ApplicationOverviewRowViewModel> rows;
+        if (!section.getChildSections().isEmpty()) {
+            rows = section.getChildSections()
+                    .stream()
+                    .map(data.getSections()::get)
+                    .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
+                    .map(childSection -> new ApplicationOverviewRowViewModel(childSection.getName(),
+                            String.format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
+                            data.getCompletedSectionIds().contains(childSection.getId()),
+                            Optional.empty())
+                    )
+                    .collect(toCollection(LinkedHashSet::new));
+        } else {
+            rows = section.getQuestions()
+                    .stream()
+                    .map(data.getQuestions()::get)
+                    .map(question -> new ApplicationOverviewRowViewModel(getQuestionTitle(question),
+                            String.format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                            data.getStatuses().get(question.getId()).stream().anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete()),
+                            getAssignableViewModel(question, data))
+                    )
+                    .collect(toCollection(LinkedHashSet::new));
+        }
+        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(),
+                section.getName().equals("Finances") ? getFinanceSectionSubTitle(data.getCompetition()) : section.getDescription(),
+                rows);
+    }
+
+    private Optional<AssignButtonsViewModel> getAssignableViewModel(QuestionResource question, ApplicationOverviewData data) {
+        if (!question.isAssignEnabled()) {
+            return Optional.empty();
+        } else {
+            AssignButtonsViewModel viewModel = new AssignButtonsViewModel();
+            Optional<QuestionStatusResource> maybeStatus = data.getStatuses().get(question.getId())
+                    .stream()
+                    .filter(status -> status.getAssignee() != null)
+                    .findFirst();
+
+            viewModel.setCurrentApplicant(data.getUserProcessRole());
+            viewModel.setLeadApplicant(data.getLeadApplicant());
+            viewModel.setAssignableApplicants(new ArrayList<>(data.getProcessRoles().values()));
+            viewModel.setPendingAssignableUsers(data.getInvites());
+            viewModel.setQuestion(question);
+
+            viewModel.setAssignedBy(maybeStatus.map(status -> data.getProcessRoles().get(status.getAssignedBy())).orElse(null));
+            viewModel.setAssignee(maybeStatus.map(status -> data.getProcessRoles().get(status.getAssignee())).orElse(null));
+            return Optional.of(viewModel);
+        }
+    }
+
+    private String getQuestionTitle(QuestionResource question) {
+        return question.getQuestionSetupType() == ASSESSED_QUESTION ?
+                String.format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
+                question.getShortName();
+    }
+
+    private String getFinanceSectionSubTitle(CompetitionResource competition) {
+        if (competition.isFullyFunded()) {
+            return "Submit your organisation's project finances.";
+        } else if (competition.getCollaborationLevel() == SINGLE) {
+            return messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault());
+        } else {
+            return messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
+        }
     }
 
 }
