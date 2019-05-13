@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
@@ -58,19 +59,19 @@ public class AssignButtonsPopulatorTest {
         when(inviteService.getPendingInvitationsByApplicationId(question.getApplication().getId())).thenReturn(invites);
         AssignButtonsViewModel viewModel = assignButtonsPopulator.populate(question, question, hideAssignButtons);
 
-        assertThat(viewModel.getAssignedBy(), equalTo(assignedBy));
-        assertThat(viewModel.getAssignableApplicants(), equalTo(question.getApplicants()));
-        assertThat(viewModel.getAssignee(), equalTo(assignee));
-        assertThat(viewModel.getLeadApplicant(), equalTo(assignee));
-        assertThat(viewModel.getCurrentApplicant(), equalTo(assignee));
+        assertThat(viewModel.getAssignedBy(), equalTo(assignedBy.getProcessRole()));
+        assertThat(viewModel.getAssignableApplicants(), equalTo(question.getApplicants().stream().map(ApplicantResource::getProcessRole).collect(toList())));
+        assertThat(viewModel.getAssignee(), equalTo(assignee.getProcessRole()));
+        assertThat(viewModel.getLeadApplicant(), equalTo(assignee.getProcessRole()));
+        assertThat(viewModel.getCurrentApplicant(), equalTo(assignee.getProcessRole()));
         assertThat(viewModel.getQuestion(), equalTo(question.getQuestion()));
         assertThat(viewModel.getPendingAssignableUsers(), equalTo(invites));
 
         assertThat(viewModel.isAssigned(), equalTo(true));
         assertThat(viewModel.isAssignedByCurrentUser(), equalTo(false));
         assertThat(viewModel.isAssignedByLead(), equalTo(false));
-        assertThat(viewModel.isAssignedTo(assignee), equalTo(true));
-        assertThat(viewModel.isAssignedTo(assignedBy), equalTo(false));
+        assertThat(viewModel.isAssignedTo(assignee.getProcessRole()), equalTo(true));
+        assertThat(viewModel.isAssignedTo(assignedBy.getProcessRole()), equalTo(false));
         assertThat(viewModel.isAssignedToLead(), equalTo(true));
         assertThat(viewModel.isHideAssignButtons(), equalTo(hideAssignButtons));
         assertThat(viewModel.isNotAssigned(), equalTo(false));
@@ -95,7 +96,10 @@ public class AssignButtonsPopulatorTest {
 
     private ApplicantResourceBuilder applicantResource(boolean lead) {
         return newApplicantResource()
-                .withProcessRole(newProcessRoleResource().withRole(lead ? LEADAPPLICANT : COLLABORATOR).build())
+                .withProcessRole(newProcessRoleResource()
+                        .withRole(lead ? LEADAPPLICANT : COLLABORATOR)
+                        .withUser(newUserResource().build())
+                        .build())
                 .withOrganisation(newOrganisationResource().build());
     }
 }

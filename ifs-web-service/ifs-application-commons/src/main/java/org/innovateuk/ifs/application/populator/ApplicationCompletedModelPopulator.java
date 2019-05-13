@@ -20,8 +20,8 @@ public class ApplicationCompletedModelPopulator extends AbstractApplicationModel
         super(sectionService, questionService, questionRestService);
     }
 
-    public ApplicationCompletedViewModel populate(ApplicationResource application, Optional<OrganisationResource>
-            userOrganisation) {
-        return getCompletedDetails(application, userOrganisation);
+    public ApplicationCompletedViewModel populate(ApplicationResource application, OrganisationResource
+            organisation) {
+        return getCompletedDetails(application, Optional.of(organisation));
     }
 }
