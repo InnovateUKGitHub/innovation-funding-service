@@ -15,6 +15,16 @@
                        linkUrl=@{/application/{applicationId}/form/FUNDING_FINANCES(applicationId=${model.applicationId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
 
         <!-- /* 1, Where there is only one organisation in the application: */ -->
@@ -36,14 +46,15 @@
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
         <th:block th:unless="${model.termsAccepted}">
-            <form novalidate="novalidate" method="post" class="application-overview"
+            <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
                   th:action="@{terms-and-conditions}">
                 <div class="govuk-form-group">
 
                     <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input"
-                               type="checkbox"
-                               data-switches-button-status="#agree-terms-button"/>
+                               type="checkbox" data-switches-button-status="#agree-terms-button"
+                               id="agreed"
+                               th:field="*{agreed}" />
                         <label class="govuk-label govuk-checkboxes__label">
                             I agree to the award terms and conditions set out by Innovate UK.
                         </label>
