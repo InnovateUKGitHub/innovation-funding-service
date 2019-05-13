@@ -43,6 +43,12 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         });
     }
 
+    public QuestionStatusResourceBuilder withCompletedByOrganisation(Long organisation) {
+        return with(questionStatus -> {
+            questionStatus.setCompletedByOrganisation(organisation);
+        });
+    }
+
     public QuestionStatusResourceBuilder withAssignee(Long assignee) {
         return with(questionStatus -> {
             questionStatus.setAssignee(assignee);
