@@ -53,7 +53,7 @@ public class ApplicationTermsController {
         return "application/terms-and-conditions";
     }
 
-    @PostMapping("/accept")
+    @PostMapping
     public String acceptTerms(@PathVariable long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
