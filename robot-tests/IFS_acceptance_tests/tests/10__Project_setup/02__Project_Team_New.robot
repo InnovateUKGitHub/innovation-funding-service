@@ -9,8 +9,7 @@ Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${projectNumber}           4
-${newProjecTeamPage}       ${server}/project-setup/project/${projectNumber}/team
+${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/team
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
 
