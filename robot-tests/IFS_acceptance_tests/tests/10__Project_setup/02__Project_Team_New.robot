@@ -15,7 +15,7 @@ ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
 
 *** Test Cases ***
-The lead partner is able to access project details page
+The lead partner is able to access project team page
     [Documentation]  IFS-5700
     Given the user logs-in in new browser    &{lead_applicant_credentials}
     When the user navigates to the page      ${newProjecTeamPage}
