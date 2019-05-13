@@ -10,4 +10,5 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      ifssysint: "ifssysint"
+      # ifssysint: "ifssysint"
+      dev: "dev"
