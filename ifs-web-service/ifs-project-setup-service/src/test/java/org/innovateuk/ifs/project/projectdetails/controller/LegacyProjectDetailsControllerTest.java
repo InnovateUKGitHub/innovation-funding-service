@@ -154,7 +154,7 @@ public class LegacyProjectDetailsControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/detail"))
+                .andExpect(view().name("project/legacy-details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
@@ -214,7 +214,7 @@ public class LegacyProjectDetailsControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/detail"))
+                .andExpect(view().name("project/legacy-details"))
                 .andReturn();
 
         LegacyProjectDetailsViewModel model = (LegacyProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
@@ -350,7 +350,7 @@ public class LegacyProjectDetailsControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/detail"))
+                .andExpect(view().name("project/legacy-details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 

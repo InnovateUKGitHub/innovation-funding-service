@@ -98,7 +98,7 @@ public class ProjectDetailsController {
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
-        return "project/new-details";
+        return "project/details";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -129,7 +129,7 @@ public class ProjectDetailsController {
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, true, true));
 
-        return "project/new-details";
+        return "project/details";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")

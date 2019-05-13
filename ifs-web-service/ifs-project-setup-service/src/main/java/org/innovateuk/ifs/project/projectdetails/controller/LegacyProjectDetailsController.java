@@ -121,7 +121,7 @@ public class LegacyProjectDetailsController {
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), allProjectDetailsFinanceContactsAndProjectLocationsAssigned,
                 getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
-        return "project/detail";
+        return "project/legacy-details";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -152,7 +152,7 @@ public class LegacyProjectDetailsController {
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
                 getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, true, true));
 
-        return "project/detail";
+        return "project/legacy-details";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")

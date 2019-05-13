@@ -140,7 +140,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         MvcResult result = mockMvc.perform(get("/project/{id}/new-details", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/new-details"))
+                .andExpect(view().name("project/details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
@@ -195,7 +195,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         MvcResult result = mockMvc.perform(get("/project/{id}/new-readonly", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/new-details"))
+                .andExpect(view().name("project/details"))
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
