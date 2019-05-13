@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.application.terms.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.terms.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -36,22 +33,13 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
         securedType = ApplicationTermsController.class)
 public class ApplicationTermsController {
 
-    private ApplicationRestService applicationRestService;
-    private CompetitionRestService competitionRestService;
-    private SectionService sectionService;
     private UserRestService userRestService;
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
     private QuestionStatusRestService questionStatusRestService;
 
-    public ApplicationTermsController(ApplicationRestService applicationRestService,
-                                      CompetitionRestService competitionRestService,
-                                      SectionService sectionService,
-                                      UserRestService userRestService,
+    public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,
                                       ApplicationTermsModelPopulator applicationTermsModelPopulator) {
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
         this.userRestService = userRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;

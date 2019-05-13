@@ -96,7 +96,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
                 application.getId(), organisation.getId())).thenReturn(restSuccess(emptyList()));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId());
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
         assertEquals((long)application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -144,7 +144,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
                 application.getId(), organisation.getId())).thenReturn(restSuccess(emptyList()));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId());
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
         assertEquals((long)application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -201,7 +201,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
                 application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId());
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
         assertEquals((long)application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -257,7 +257,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
                 application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId());
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
         assertEquals((long)application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -315,7 +315,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
                 application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId());
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
         assertEquals((long)application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
