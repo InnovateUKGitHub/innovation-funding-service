@@ -4,14 +4,18 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-5719 - Add team members in Project setup
 ...
 ...             IFS-5718 - Remove team members in Project setup
+...
+...             IFS-5723 - Remove a pending invitation
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Application_Title}/team
+${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/team
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
+${removeInviteEmail}       remove@test.nom
 
 *** Test Cases ***
 The lead partner is able to access project details page
@@ -63,10 +67,21 @@ A user is able to remove a team member
     Then the user should not see the element   jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
 
 A user who has been removed is no longer able to access the project
+    [Documentation]  IFS-5718
     Given log in as a different user           ${nonLeadNewMemberEmail}   ${short_password}
     Then the user should not see the element   jQuery = li:contains("Project number") h3:contains("Magic material")
 
+A partner is able to remove a pending invitation
+    [Documentation]  IFS-5723
+    [Setup]    the user logs-in in new browser    &{lead_applicant_credentials}
+    Given the user navigates to the page          ${newProjecTeamPage}
+    When  the user adds a new team member         Removed   ${removeInviteEmail}
+    Then the user is abe to remove the pending invitation
+
+
 *** Keywords ***
+The user is abe to remove the pending invitation
+
 The user is able to access the project
     [Arguments]  ${email}
     the user logs-in in new browser   ${email}   ${short_password}
