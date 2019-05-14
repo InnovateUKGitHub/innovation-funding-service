@@ -1,5 +1,5 @@
 -- IFS-2123: add a new question for 'Research category' to the competition templates. All subsequent competitions
---  that are created will include this new question.
+-- that are created will include this new question.
 
 -- Bump the priority of all the existing questions to to make space for the 'Research category' question at the top
 UPDATE question SET priority = priority + 1 WHERE question_type="GENERAL" AND competition_id IN (

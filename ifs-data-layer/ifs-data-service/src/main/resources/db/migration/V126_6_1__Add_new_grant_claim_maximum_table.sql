@@ -3,14 +3,14 @@
 -- Remove some spurious duplicates in grant claim maximum which violate the unique row constraint
 -- They can be seen by executing this query:
 -- SELECT
---   id,
---   competition_type_id,
---   category_id,
---   organisation_type_id,
---   organisation_size_id,
---   maximum
+-- id,
+-- competition_type_id,
+-- category_id,
+-- organisation_type_id,
+-- organisation_size_id,
+-- maximum
 -- FROM
---   grant_claim_maximum
+-- grant_claim_maximum
 -- WHERE organisation_size_id IS NULL
 -- ORDER BY competition_type_id, category_id, organisation_type_id, id;
 

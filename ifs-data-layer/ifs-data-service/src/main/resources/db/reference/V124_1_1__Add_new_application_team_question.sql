@@ -1,7 +1,7 @@
 -- IFS-3088: add a new question for 'Application Team' to the competition templates. All subsequent competitions
---  that are created will include this new question.
+-- that are created will include this new question.
 -- Also set a new question type LEAD_ONLY for this question and for 'Application Details' to mark them as pages that
---  do not display using form_inputs like standard questions.
+-- do not display using form_inputs like standard questions.
 
 -- Bump the priority of all the existing questions to to make space for the 'Application team' question at the top
 UPDATE question SET priority = priority + 1 WHERE question_type="GENERAL" AND competition_id IN (

@@ -1,4 +1,4 @@
---Update finance check for project that will be used in setup with growth table values
+-- Update finance check for project that will be used in setup with growth table values
 SELECT @comp_id := id FROM competition WHERE name = 'Internet of Things';
 SELECT @app_id := id FROM application WHERE competition = @comp_id AND name = 'Sensing & Control network using the lighting infrastructure';
 SELECT @project_id := id FROM project WHERE application_id = @app_id;
@@ -32,7 +32,7 @@ INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_i
 INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230000', @financial_turnover_id, @process_role_id_4, @app_id);
 INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560', @financial_headcount_id, @process_role_id_4, @app_id);
 
---Update project in setup to use the non growth table values
+-- Update project in setup to use the non growth table values
 SELECT @comp_id_2 := id FROM competition WHERE name = 'Rolling stock future developments';
 SELECT @app_id_2 := id FROM application WHERE competition = @comp_id_2 AND name = 'High-speed rail and its effects on air quality';
 SELECT @project_id_2 := id FROM project WHERE application_id = @app_id_2;
