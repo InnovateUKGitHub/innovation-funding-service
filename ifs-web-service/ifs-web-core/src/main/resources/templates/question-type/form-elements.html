@@ -275,13 +275,13 @@
              th:unless="${model.currentUserIsLead}">
           <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
           <span th:unless="${model.assignedToLead}">You have assigned this question to</span>
-          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}" />
+          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.userName}" />
         </div>
 
         <div class="assignee govuk-body" th:unless="${model.assignedByCurrentUser}"
              th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
             <th:block th:if="${model.assignedByLead}">This question is assigned to
-              <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}"/>
+              <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.userName}"/>
             </th:block>
         </div>
     </th:block>
@@ -293,7 +293,7 @@
       <th:block th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
         <button type="submit"
                 name="assign_question"
-                th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
+                th:value="${question.id}+'_'+${model.assignedBy.id}"
                 th:class="'button-clear'">Assign to lead for review
         </button>
       </th:block>
@@ -335,7 +335,7 @@
         <span class="secondary-notification govuk-body"
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
-              th:with="name=${model.assignee.name}">
+              th:with="name=${model.assignee.userName}">
             <span class="assign-name" th:text="${name}">NAME</span>
         </span>
     </th:block>
@@ -360,12 +360,12 @@
             <label th:for="'assign'+${question.id}">Assign question to</label>
             <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
                 <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
-                    <option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"
+                    <option th:value="${question.id}+'_'+${assignableApplicant.id}"
                             th:unless="${model.isAssignedTo(assignableApplicant)}"
-                            th:text="${assignableApplicant.name}"
+                            th:text="${assignableApplicant.userName}"
                     />
                     <option th:if="${model.isAssignedTo(assignableApplicant)}"
-                            th:text="${assignableApplicant.name}"
+                            th:text="${assignableApplicant.userName}"
                             selected="selected"
                             disabled="disabled"/>
                 </th:block>
@@ -405,7 +405,7 @@
     <span class="secondary-notification govuk-body secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
         <th:block th:unless="${model.currentUserIsLead}">Assigned to</th:block>
         <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
-              th:with="name=${model.assignee.name}">
+              th:with="name=${model.assignee.userName}">
 
         </span>
     </span>
@@ -419,7 +419,7 @@
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
     <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
-      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.userName}"></span>
     </span>
   </th:block>
 </th:block>
