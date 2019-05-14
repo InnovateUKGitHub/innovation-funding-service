@@ -6,14 +6,13 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
@@ -37,7 +36,10 @@ public class ProjectTeamViewModelPopulator {
 
     private final ProjectDetailsService projectDetailsService;
 
-    public ProjectTeamViewModelPopulator(ProjectService projectService, CompetitionRestService competitionRestService, StatusService statusService, ProjectDetailsService projectDetailsService) {
+    public ProjectTeamViewModelPopulator(ProjectService projectService,
+                                         CompetitionRestService competitionRestService,
+                                         StatusService statusService,
+                                         ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.statusService = statusService;
@@ -46,49 +48,41 @@ public class ProjectTeamViewModelPopulator {
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
+
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        ProjectUserResource loggedInProjectUser = simpleFindFirst(projectUsers,
-                pu -> pu.getUser().equals(loggedInUser.getId())).get();
-        OrganisationResource loggedInUserOrg = simpleFindFirst(projectOrganisations,
-                org -> org.getId().equals(loggedInProjectUser.getOrganisation())).get();
 
 
         List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
 
-        boolean isLead = loggedInUserOrg.equals(leadOrganisation);
-
         List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
-                        invitedUsers,
-                        org,
-                        org.equals(leadOrganisation),
-                        org.equals(loggedInUserOrg)))
+                                                              invitedUsers,
+                                                              org,
+                                                              org.equals(leadOrganisation),
+                                                              true))
                 .sorted()
                 .collect(toList());
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
-        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
-        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
                 projectResource.getName(),
                 projectResource.getId(),
                 partnerOrgModels,
-                partnerOrgModels.stream().filter(org -> org.getOrgId() == loggedInUserOrg.getId()).findFirst().orElse(null),
+                null,
                 getProjectManager(projectResource.getId()).orElse(null),
-                isLead,
+                false,
                 loggedInUser.getId(),
-                monitoringOfficerAssigned,
-                spendProfileGenerated,
-                statusAccessor.isGrantOfferLetterGenerated(),
-                false);
+                false,
+                false,
+                false,
+                true);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
@@ -98,9 +92,9 @@ public class ProjectTeamViewModelPopulator {
 
     private ProjectOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean editable) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
-                user -> user.getOrganisation().equals(organisation.getId()));
+                                                                      user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
-                invite -> invite.getOrganisation().equals(organisation.getId()));
+                                                                              invite -> invite.getOrganisation().equals(organisation.getId()));
         return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
     }
 
@@ -109,30 +103,30 @@ public class ProjectTeamViewModelPopulator {
         List<ProjectOrganisationUserRowViewModel> partnerUsers = usersForOrganisation.stream()
                 .filter(pu -> !(pu.isProjectManager() || pu.isFinanceContact()))
                 .map(pu -> new ProjectOrganisationUserRowViewModel(pu.getEmail(),
-                        pu.getUserName(),
-                        pu.getUser(),
-                        false,
-                        false,
-                        false))
+                                                                   pu.getUserName(),
+                                                                   pu.getUser(),
+                                                                   false,
+                                                                   false,
+                                                                   false))
                 .distinct()
                 .collect(toList());
 
         partnerUsers.addAll(invitesForOrganistaion.stream()
-                .filter(invite -> invite.getStatus() != InviteStatus.OPENED)
-                .map(invite -> new ProjectOrganisationUserRowViewModel(invite.getEmail(),
-                        invite.getName(),
-                        invite.getId(),
-                        false,
-                        false,
-                        true))
-                .collect(toList()));
+                                    .filter(invite -> invite.getStatus() != InviteStatus.OPENED)
+                                    .map(invite -> new ProjectOrganisationUserRowViewModel(invite.getEmail(),
+                                                                                           invite.getName(),
+                                                                                           invite.getId(),
+                                                                                           false,
+                                                                                           false,
+                                                                                           true))
+                                    .collect(toList()));
 
         Optional<ProjectUserResource> financeContact = simpleFindFirst(usersForOrganisation,
-                ProjectUserResource::isFinanceContact);
+                                                                       ProjectUserResource::isFinanceContact);
 
         financeContact.ifPresent(fc ->
-                simpleFindFirst(partnerUsers,
-                        user -> user.getId() == fc.getUser()).get().setFinanceContact(true));
+                                         simpleFindFirst(partnerUsers,
+                                                         user -> user.getId() == fc.getUser()).get().setFinanceContact(true));
 
         Optional<ProjectUserResource> projectManager = simpleFindFirst(usersForOrganisation,
                                                                        ProjectUserResource::isProjectManager);
@@ -143,4 +137,5 @@ public class ProjectTeamViewModelPopulator {
 
         return partnerUsers;
     }
+
 }

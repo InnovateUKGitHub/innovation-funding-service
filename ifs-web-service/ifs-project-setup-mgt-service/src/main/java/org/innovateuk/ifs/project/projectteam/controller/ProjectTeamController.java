@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -9,10 +10,10 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
-import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +38,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/competition/{competitionId}/project")
 public class ProjectTeamController {
 
     private ProjectTeamViewModelPopulator projectTeamPopulator;
@@ -47,7 +48,12 @@ public class ProjectTeamController {
     private ProjectTeamRestService projectTeamRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator, ProjectDetailsService projectDetailsService, ProjectService projectService, OrganisationRestService organisationRestService, ProjectTeamRestService projectTeamRestService, CookieFlashMessageFilter cookieFlashMessageFilter) {
+    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
+                                 ProjectDetailsService projectDetailsService,
+                                 ProjectService projectService,
+                                 OrganisationRestService organisationRestService,
+                                 ProjectTeamRestService projectTeamRestService,
+                                 CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;
         this.projectService = projectService;
@@ -56,7 +62,8 @@ public class ProjectTeamController {
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project team page")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
                                   BindingResult bindingResult,
@@ -67,15 +74,8 @@ public class ProjectTeamController {
         return "projectteam/project-team";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping(value = "/{projectId}/team", params = "remove-team-member")
-    public String removeUser(@PathVariable("projectId") final long projectId,
-                             @RequestParam("remove-team-member") final long userId) {
-        projectTeamRestService.removeUser(projectId, userId).getSuccess();
-        return "redirect:/project/" + projectId + "/team";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can remove invites")
     @PostMapping(value = "/{projectId}/team", params = "remove-invite")
     public String removeInvite(@PathVariable("projectId") final long projectId,
                                @RequestParam("remove-invite") final long inviteId) {
@@ -83,14 +83,62 @@ public class ProjectTeamController {
         return "redirect:/project/" + projectId + "/team";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
+    @PostMapping(value = "/{projectId}/team", params = "add-team-member")
+    public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
+                                        BindingResult bindingResult,
+                                        @PathVariable("projectId") final long projectId,
+                                        @RequestParam("add-team-member") final long organisationId,
+                                        Model model,
+                                        UserResource loggedInUser) {
+        model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
+                .openAddTeamMemberForm(organisationId));
+        return "projectteam/project-team";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
+    @PostMapping(value = "/{projectId}/team", params = "close-add-team-member-form")
+    public String closeAddTeamMemberForm(@PathVariable("projectId") final long projectId,
+                                         @PathVariable("competitionId") final long competitionId) {
+        return String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
+    @PostMapping(value = "/{projectId}/team", params = "invite-to-project")
+    public String inviteToProject(@Valid @ModelAttribute("form") ProjectTeamForm form,
+                                  BindingResult bindingResult,
+                                  ValidationHandler validationHandler,
+                                  @PathVariable("projectId") final long projectId,
+                                  @PathVariable("competitionId") final long competitionId,
+                                  @RequestParam("invite-to-project") final long organisationId,
+                                  Model model,
+                                  UserResource loggedInUser) {
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
+                    .openAddTeamMemberForm(organisationId));
+            return "projectteam/project-team";
+        };
+
+        Supplier<String> successView = () -> String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
+
+        return sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
+                          failureView, successView, projectId, organisationId,
+                          (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can resend invites")
     @PostMapping(value = "/{projectId}/team", params = "resend-invite")
     public String resendInvite(@PathVariable("projectId") final long projectId,
+                               @PathVariable("competitionId") final long competitionId,
                                @RequestParam("resend-invite") final long inviteId,
                                HttpServletResponse response) {
         resendInvite(inviteId, projectId, (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
         cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
-        return "redirect:/project/" + projectId + "/team";
+        return "redirect:/competition/" + competitionId + "/project/" + projectId + "/team";
     }
 
     private void resendInvite(Long id, Long projectId, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
@@ -103,47 +151,6 @@ public class ProjectTeamController {
 
         existingInvite
                 .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()).getSuccess());
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping(value = "/{projectId}/team", params = "add-team-member")
-    public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
-                                BindingResult bindingResult,
-                                @PathVariable("projectId") final long projectId,
-                                @RequestParam("add-team-member") final long organisationId,
-                                Model model,
-                                UserResource loggedInUser) {
-        model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
-                .openAddTeamMemberForm(organisationId));
-        return "projectteam/project-team";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping(value = "/{projectId}/team", params = "close-add-team-member-form")
-    public String closeAddTeamMemberForm(@PathVariable("projectId") final long projectId) {
-        return String.format("redirect:/project/%d/team", projectId);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping(value = "/{projectId}/team", params = "invite-to-project")
-    public String inviteToProject(@Valid @ModelAttribute("form") ProjectTeamForm form,
-                                  BindingResult bindingResult,
-                                  ValidationHandler validationHandler,
-                                  @PathVariable("projectId") final long projectId,
-                                  @RequestParam("invite-to-project") final long organisationId,
-                                  Model model,
-                                  UserResource loggedInUser) {
-        Supplier<String> failureView = () -> {
-            model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
-                    .openAddTeamMemberForm(organisationId));
-            return "projectteam/project-team";
-        };
-
-        Supplier<String> successView = () -> String.format("redirect:/project/%d/team", projectId);
-
-        return sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
-                failureView, successView, projectId, organisationId,
-                (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
     }
 
 
@@ -201,6 +208,7 @@ public class ProjectTeamController {
 
     private Optional<ProjectUserInviteResource> getSavedInvite(Long projectId, ProjectUserInviteResource invite) {
         return simpleFindFirst(projectDetailsService.getInvitesByProject(projectId).getSuccess(),
-                i -> i.getEmail().equals(invite.getEmail()));
+                               i -> i.getEmail().equals(invite.getEmail()));
     }
 }
+
