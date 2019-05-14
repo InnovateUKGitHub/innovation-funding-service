@@ -220,7 +220,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Test
     public void testAddCompletedDetails() {
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(7L).build();
         Long organisationId = 3L;
         OrganisationResource userOrganisation = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId).build();
