@@ -17,7 +17,7 @@ VALUES
    @system_maintenance_user_id);
 
 -- Update link from template ATI competition to new version of terms and conditions so these become the default Ts&Cs
--- used for new competitions of ATI type.
+--  used for new competitions of ATI type.
 SET @ati_terms_and_conditions_id=(SELECT id FROM terms_and_conditions WHERE name='Aerospace Technology Institute (ATI)' AND version='2');
 SET @ati_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Aerospace Technology Institute');
 

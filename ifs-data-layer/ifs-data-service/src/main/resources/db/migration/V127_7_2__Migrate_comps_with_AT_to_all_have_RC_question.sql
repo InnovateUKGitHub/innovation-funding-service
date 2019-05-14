@@ -1,5 +1,5 @@
 -- IFS-4110: Script to fix a bug introduced by IFS-2123 that applicants could not choose a research category option
--- on the Application details page, nor from the Application overview menu.
+--   on the Application details page, nor from the Application overview menu.
 -- This brings 'in-between' competitions up-to-date with the latest view of the application form, which previously had a
 -- backwards compatible view.
 
@@ -44,8 +44,8 @@ CREATE TEMPORARY TABLE applications_with_category_set_and_details_complete (
 );
 
 -- 2. Fill it with the ids of applications where the Application Details page was already marked as complete,
--- but only if they have also chosen a research category (which could have happenned before IFS-2123 was deployed).
--- note: a missing question_status entry is synonymous with 'incomplete'.
+--    but only if they have also chosen a research category (which could have happenned before IFS-2123 was deployed).
+--    note: a missing question_status entry is synonymous with 'incomplete'.
 INSERT INTO applications_with_category_set_and_details_complete
     SELECT id FROM application a
         -- If the application is in one of the affected competitions...
