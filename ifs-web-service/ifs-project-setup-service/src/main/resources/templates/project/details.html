@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details'" />
+</head>
+<body class="govuk-template__body project-detail">
+
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/modals :: modal-project-details" />
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}/new-details(projectId='4')}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle='Magic material',size='govuk-heading-xl'" />
+        <p class="govuk-body">We need this information to set up your project.</p>
+        <h2 class="govuk-heading-m">Project information</h2>
+        <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
+        <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
+        <p class="govuk-body"></p>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Action</span></th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Information</span></th>
+                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}" class="govuk-link">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
+                </td>
+                <td class="govuk-table__cell" id="start-date">
+                    <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
+                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <strong th:if="${model.project.targetStartDate == null}" id="start-date-status" class="incomplete-status">Incomplete</strong>
+                    <strong th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="complete-status">Complete</strong>
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Correspondence address</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Correspondence address</th:block>
+                </td>
+                <td class="govuk-table__cell" id="project-address">
+                    <th:block th:if="${model.project.address.id == null}">-</th:block>
+                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <strong th:if="${model.project.address.id == null}" id="project-address-status" class="incomplete-status">Incomplete</strong>
+                    <strong th:unless="${model.project.address.id == null}" id="project-address-status" class="complete-status">Complete</strong>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <h2 class="govuk-heading-m">Project location</h2>
+        <p class="govuk-body">Each partner must provide a project location. We will assign the Monitoring Officer based on the location.</p>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header larger-cols">Partner</th>
+                <th scope="col" class="govuk-table__header">Project location</th>
+                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Actions</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="organisation: ${model.organisations}">
+                <td class="govuk-table__cell">
+                    <th:block th:text="${organisation.name}">organisation name</th:block>
+                    <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
+                        <span th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}" />
+                    </th:block>
+                    <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
+                        <span>-</span>
+                    </th:block>
+                </td>
+                <td class="govuk-table__cell text-align-right">
+                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}"
+                       th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
+                       class="govuk-link">Edit</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>

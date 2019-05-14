@@ -138,6 +138,7 @@ function clearOldReports() {
 
 function markAsComplete(){
   touch ${scriptDir}/testsComplete
+  curl -D- -u "${BAMBOO_CREDS}" -X PUT "${BAMBOO_URL}/${BAMBOO_PLAN_PROJ}-${BAMBOO_BUILD_NO}?stage=COLLECT&executeAllStages=true" 
 }
 
 # ====================================
