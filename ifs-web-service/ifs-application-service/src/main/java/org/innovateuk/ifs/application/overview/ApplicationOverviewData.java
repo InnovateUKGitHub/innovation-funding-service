@@ -15,8 +15,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 public class ApplicationOverviewData {
@@ -41,11 +41,11 @@ public class ApplicationOverviewData {
         this.competition = competition;
         this.application = application;
         this.sections = sections.stream()
-            .collect(toMap(SectionResource::getId, Function.identity()));;
+            .collect(toMap(SectionResource::getId, identity()));
         this.questions = questions.stream()
-            .collect(toMap(QuestionResource::getId, Function.identity()));
+            .collect(toMap(QuestionResource::getId, identity()));
         this.processRoles = processRoles.stream()
-            .collect(toMap(ProcessRoleResource::getId, Function.identity()));
+            .collect(toMap(ProcessRoleResource::getId, identity()));
         this.organisation = organisation;
         this.statuses = Multimaps.index(statuses, QuestionStatusResource::getQuestion);
         this.userProcessRole = processRoles.stream().filter(role -> role.getUser().equals(user.getId())).findFirst().orElseThrow(ObjectNotFoundException::new);

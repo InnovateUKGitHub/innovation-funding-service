@@ -27,14 +27,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -147,7 +145,10 @@ public class ApplicationOverviewModelPopulatorTest {
 
         assertEquals(2, viewModel.getSections().size());
 
-        Iterator<ApplicationOverviewSectionViewModel> sectionIterator = viewModel.getSections().iterator();
+        Iterator<ApplicationOverviewSectionViewModel> sectionIterator = viewModel.getSections()
+                .stream()
+                .sorted(comparing(ApplicationOverviewSectionViewModel::getId))
+                .iterator();
 
         ApplicationOverviewSectionViewModel sectionWithQuestions = sectionIterator.next();
         assertEquals("Section with questions", sectionWithQuestions.getTitle());
