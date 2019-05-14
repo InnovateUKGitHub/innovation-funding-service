@@ -96,7 +96,7 @@ public class ProjectTeamController {
                                         UserResource loggedInUser) {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
                 .openAddTeamMemberForm(organisationId));
-        return String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
+        return "projectteam/project-team";
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")

@@ -84,7 +84,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Test
     public void openAddTeamMemberForm() throws Exception {
-        UserResource loggedInUser = newUserResource().build();
+        UserResource loggedInUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
         setLoggedInUser(loggedInUser);
         long projectId = 999L;
         long competitionId = 888L;
