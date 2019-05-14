@@ -7,6 +7,8 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+
 /**
  * Permission rules for ProjectInvite Service
  */
@@ -32,6 +34,11 @@ public class ProjectInvitePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "DELETE_PROJECT_INVITE", description = "A user can delete a project invite that they are partners on and belong to same organisation")
     public boolean partnersOnProjectCanDeleteInvite(final ProjectUserInviteResource invite, UserResource user) {
         return isUserPartnerOnProjectWithinSameOrganisation(invite, user);
+    }
+
+    @PermissionRule(value = "DELETE_PROJECT_INVITE", description = "Internal users can delete invites to any project")
+    public boolean internalUsersCanDeleteInvite(final ProjectUserInviteResource invite, UserResource user) {
+        return isInternal(user);
     }
 
     private boolean isUserPartnerOnProjectWithinSameOrganisation(final ProjectUserInviteResource invite, UserResource user) {
