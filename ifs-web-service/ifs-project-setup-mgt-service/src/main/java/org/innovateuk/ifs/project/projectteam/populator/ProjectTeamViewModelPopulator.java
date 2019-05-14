@@ -63,8 +63,8 @@ public class ProjectTeamViewModelPopulator {
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
                                                               invitedUsers,
                                                               org,
-                                                              org.equals(leadOrganisation),
-                                                              true))
+                                                              false,
+                                                              true))  // all organisations editable for internal users
                 .sorted()
                 .collect(toList());
 
