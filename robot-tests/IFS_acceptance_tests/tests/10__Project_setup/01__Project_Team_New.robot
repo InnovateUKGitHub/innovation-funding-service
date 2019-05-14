@@ -63,7 +63,7 @@ A user is able to remove a team member
     [Setup]  log in as a different user        &{collaborator1_credentials}
     Given the user navigates to the page       ${newProjecTeamPage}
     When the user clicks the button/link       jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
-    And the user clicks the button/link        jQuery = td:contains("Testerina Testington") button:contains("Remove")
+    And the user clicks the button/link        jQuery = td:contains("Testerina Testington") button:contains("Remove user")
     Then the user should not see the element   jQuery = td:contains("Testerina Testington")~ td:contains("Remove")
 
 A user who has been removed is no longer able to access the project
