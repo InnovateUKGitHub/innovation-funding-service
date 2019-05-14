@@ -8,7 +8,7 @@ spec:
   resources:
      requests:
        # storage: 20G
-       storage: 500Mi
+       storage: 500M
   selector:
     matchLabels:
       # ifssysint: "ifssysint"
