@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectteam.form;
+package org.innovateuk.ifs.projectteam.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 

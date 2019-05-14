@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectteam.viewmodel;
+package org.innovateuk.ifs.projectteam.viewmodel;
 
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 

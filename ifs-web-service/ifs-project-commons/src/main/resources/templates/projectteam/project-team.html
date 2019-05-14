@@ -7,7 +7,7 @@
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
-<th:block th:insert="fragments/modals :: modal-overlay"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
@@ -32,11 +32,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span>
-                </th>
+                <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span></th>
                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Name</span></th>
-                <th scope="col" class="govuk-table__header smaller-col"><span
-                    class="govuk-visually-hidden">Status</span></th>
+                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -56,21 +54,23 @@
                     <strong th:unless="${model.projectManager == null}" class="complete-status">Complete</strong>
                 </td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
-                       class="govuk-link">Your finance contact</a>
-                </td>
-                <td class="govuk-table__cell"
-                    th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
-                </td>
-                <td class="govuk-table__cell">
-                    <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
-                            class="incomplete-status">Incomplete</strong>
-                    <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
-                            class="complete-status">Complete</strong>
-                </td>
-            </tr>
+            <th:block th:unless="${model.isReadOnly()}">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
+                           class="govuk-link">Your finance contact</a>
+                    </td>
+                    <td class="govuk-table__cell"
+                        th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
+                    </td>
+                    <td class="govuk-table__cell">
+                        <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
+                                class="incomplete-status">Incomplete</strong>
+                        <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
+                                class="complete-status">Complete</strong>
+                    </td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
 
@@ -87,8 +87,7 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header larger-cols">Name</th>
                         <th scope="col" class="govuk-table__header">Role</th>
-                        <th scope="col" class="govuk-table__header width-200"><span
-                            class="govuk-visually-hidden">Remove</span></th>
+                        <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -99,28 +98,19 @@
                             th:classappend="${user.invite ? 'hint' : ''}"></td>
                         <td class="govuk-table__cell"
                             th:text="${user.getRolesNames()}"
-                            th:classappend="${user.invite ? 'hint' : ''}">-
-                        </td>
-                        <td class="govuk-table__cell"
-                            th:classappend="${user.invite ? 'hint' : ''}">
-                            <th:block th:if="${organisation.editable}">
-                                <th:block
-                                    th:if="${!user.invite and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}">
-                                    <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
-                                    <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
-                                       th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
-                                       class="govuk-link">Remove</a>
-                                </th:block>
-                                <th:block th:if="${user.invite}">
-                                    <button class="button-clear govuk-!-margin-right-1" type="submit"
-                                            name="resend-invite" th:value="${user.id}">Resend invite
-                                    </button>
-                                    |
-                                    <button class="button-clear govuk-!-margin-left-1" type="submit"
-                                            name="remove-invite" th:value="${user.id}">Remove
-                                    </button>
-                                </th:block>
+                            th:classappend="${user.invite ? 'hint' : ''}">-</td>
+                        <td class="govuk-table__cell">
+                            <th:block th:if="${organisation.editable and !model.isReadOnly() and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and !user.invite}">
+                                <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})" />
+                                <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
+                                   th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
+                                   class="govuk-link">Remove</a>
                             </th:block>
+                            <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and user.invite}">
+                                <button class="button-clear" type="submit" name="remove-invite" th:value="${user.id}">Remove</button>
+                            </th:block>
+
+
                         </td>
                     </tr>
                     </tbody>
@@ -211,7 +201,7 @@
 
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>
-<th:block th:insert="fragments/service-layout :: body-end"/>
+<!--<th:block th:insert="fragments/service-layout :: body-end"/>-->
 
 </body>
 </html>
