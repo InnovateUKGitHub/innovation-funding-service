@@ -73,7 +73,7 @@
             <div class="form-footer__actions">
                 Terms and conditions accepted
                 <th:block th:unless="${model.migratedTerms}">
-                    at <span th:text="${#temporals.format(model.termsAcceptedOn, 'h:mma')}"> 6:10pm</span>
+                    at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn, 'h:mma'))}"> 6:10pm</span>
                     on <span th:text="${#temporals.format(model.termsAcceptedOn, 'd MMMM yyyy')}"> 08 May 2019</span>
                     by <span th:text="${model.termsAcceptedByName}"> Tom Baldwin</span>.
                 </th:block>
