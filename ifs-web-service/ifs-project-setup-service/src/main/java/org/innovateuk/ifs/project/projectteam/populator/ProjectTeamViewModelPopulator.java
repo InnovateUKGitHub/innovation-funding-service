@@ -73,8 +73,6 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
-        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
@@ -85,8 +83,6 @@ public class ProjectTeamViewModelPopulator {
                 getProjectManager(projectResource.getId()).orElse(null),
                 isLead,
                 loggedInUser.getId(),
-                monitoringOfficerAssigned,
-                spendProfileGenerated,
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false);
     }

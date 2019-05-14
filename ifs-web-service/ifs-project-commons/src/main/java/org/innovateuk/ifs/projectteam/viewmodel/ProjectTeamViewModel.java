@@ -18,10 +18,8 @@ public class ProjectTeamViewModel {
     private boolean userLeadPartner;
     private long loggedInUserId;
 
-    private boolean monitoringOfficerAssigned;
-    private boolean spendProfileGenerated;
     private boolean grantOfferLetterGenerated;
-    private boolean readOnlyView;
+    private boolean internalUserView;
 
     public ProjectTeamViewModel(String competitionName,
                                 String projectName,
@@ -31,10 +29,8 @@ public class ProjectTeamViewModel {
                                 ProjectUserResource projectManager,
                                 boolean userLeadPartner,
                                 long loggedInUserId,
-                                boolean monitoringOfficerAssigned,
-                                boolean spendProfileGenerated,
                                 boolean grantOfferLetterGenerated,
-                                boolean readOnlyView) {
+                                boolean internalUserView) {
 
         this.competitionName = competitionName;
         this.projectName = projectName;
@@ -44,10 +40,8 @@ public class ProjectTeamViewModel {
         this.projectManager = projectManager;
         this.userLeadPartner = userLeadPartner;
         this.loggedInUserId = loggedInUserId;
-        this.monitoringOfficerAssigned = monitoringOfficerAssigned;
-        this.spendProfileGenerated = spendProfileGenerated;
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
-        this.readOnlyView = readOnlyView;
+        this.internalUserView = internalUserView;
     }
 
     public String getCompetitionName() {
@@ -74,16 +68,8 @@ public class ProjectTeamViewModel {
         return loggedInUserId;
     }
 
-    public boolean isReadOnly() {
-        return readOnlyView;
-    }
-
-    public boolean isMonitoringOfficerAssigned() {
-        return monitoringOfficerAssigned;
-    }
-
-    public boolean isSpendProfileGenerated() {
-        return spendProfileGenerated;
+    public boolean isInternalUserView() {
+        return internalUserView;
     }
 
     public boolean isGrantOfferLetterGenerated() {

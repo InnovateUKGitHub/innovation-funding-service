@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.projectteam.viewmodel;
 
-import org.innovateuk.ifs.util.CollectionFunctions;
-
 import java.util.List;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * View model for an organisation, used on the Project Team page for Project Setup
@@ -35,12 +35,12 @@ public class ProjectOrganisationViewModel implements Comparable<ProjectOrganisat
     }
 
     public ProjectOrganisationUserRowViewModel getFinanceContact() {
-        return CollectionFunctions.simpleFindFirst(users,
+        return simpleFindFirst(users,
                                                    ProjectOrganisationUserRowViewModel::isFinanceContact).orElse(null);
     }
 
     public ProjectOrganisationUserRowViewModel getProjectManager() {
-        return CollectionFunctions.simpleFindFirst(users,
+        return simpleFindFirst(users,
                                                    ProjectOrganisationUserRowViewModel::isProjectManager).orElse(null);
     }
 

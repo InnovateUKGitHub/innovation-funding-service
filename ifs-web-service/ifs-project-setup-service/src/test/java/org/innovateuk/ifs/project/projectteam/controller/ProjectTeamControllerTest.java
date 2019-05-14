@@ -74,7 +74,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         MvcResult result = mockMvc.perform(get("/project/{id}/team", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/team/project-team"))
-                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
@@ -96,7 +96,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                 .param("add-team-member", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/team/project-team"))
-                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");

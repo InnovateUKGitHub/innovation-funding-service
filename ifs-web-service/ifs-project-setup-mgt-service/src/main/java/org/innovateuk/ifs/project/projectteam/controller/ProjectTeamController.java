@@ -78,9 +78,10 @@ public class ProjectTeamController {
     @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can remove invites")
     @PostMapping(value = "/{projectId}/team", params = "remove-invite")
     public String removeInvite(@PathVariable("projectId") final long projectId,
+                               @PathVariable("competitionId") final long competitionId,
                                @RequestParam("remove-invite") final long inviteId) {
         projectTeamRestService.removeInvite(projectId, inviteId).getSuccess();
-        return "redirect:/project/" + projectId + "/team";
+        return String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
@@ -89,12 +90,13 @@ public class ProjectTeamController {
     public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
                                         BindingResult bindingResult,
                                         @PathVariable("projectId") final long projectId,
+                                        @PathVariable("competitionId") final long competitionId,
                                         @RequestParam("add-team-member") final long organisationId,
                                         Model model,
                                         UserResource loggedInUser) {
         model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser)
                 .openAddTeamMemberForm(organisationId));
-        return "projectteam/project-team";
+        return String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
@@ -138,7 +140,7 @@ public class ProjectTeamController {
                                HttpServletResponse response) {
         resendInvite(inviteId, projectId, (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
         cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
-        return "redirect:/competition/" + competitionId + "/project/" + projectId + "/team";
+        return String.format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
     private void resendInvite(Long id, Long projectId, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {

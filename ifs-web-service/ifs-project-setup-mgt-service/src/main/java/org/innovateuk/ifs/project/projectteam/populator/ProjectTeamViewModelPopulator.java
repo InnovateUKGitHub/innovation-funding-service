@@ -80,8 +80,6 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 loggedInUser.getId(),
                 false,
-                false,
-                false,
                 true);
     }
 
@@ -98,7 +96,7 @@ public class ProjectTeamViewModelPopulator {
         return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
     }
 
-    private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganistaion) {
+    private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganisation) {
 
         List<ProjectOrganisationUserRowViewModel> partnerUsers = usersForOrganisation.stream()
                 .filter(pu -> !(pu.isProjectManager() || pu.isFinanceContact()))
@@ -111,7 +109,7 @@ public class ProjectTeamViewModelPopulator {
                 .distinct()
                 .collect(toList());
 
-        partnerUsers.addAll(invitesForOrganistaion.stream()
+        partnerUsers.addAll(invitesForOrganisation.stream()
                                     .filter(invite -> invite.getStatus() != InviteStatus.OPENED)
                                     .map(invite -> new ProjectOrganisationUserRowViewModel(invite.getEmail(),
                                                                                            invite.getName(),
