@@ -6,7 +6,7 @@ Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${newProjecDetailsPage}       ${server}/project-setup/project/${PS_PD_Application_Title}/new-details
+${newProjecDetailsPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/new-details
 
 *** Test Cases ***
 The lead partner is able to access project details page
