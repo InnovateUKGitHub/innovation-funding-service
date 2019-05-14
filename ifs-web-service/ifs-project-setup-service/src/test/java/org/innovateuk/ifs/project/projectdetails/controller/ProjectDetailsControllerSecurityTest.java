@@ -38,45 +38,6 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     }
 
     @Test
-    public void testViewFinanceContact() {
-        assertSecured(() -> classUnderTest.viewFinanceContact(projectCompositeId.id(), null, null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testUpdateFinanceContact() {
-
-        assertSecured(() -> classUnderTest.updateFinanceContact(projectCompositeId.id(), null, null, null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testInviteFinanceContact() {
-
-        assertSecured(() -> classUnderTest.inviteFinanceContact(null, projectCompositeId.id(), 123L, null, null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testInviteProjectManager() {
-
-        assertSecured(() -> classUnderTest.inviteProjectManager(null, projectCompositeId.id(), null, null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testViewProjectManager() {
-        assertSecured(() -> classUnderTest.viewProjectManager(projectCompositeId.id(), null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testUpdateProjectManager() {
-        assertSecured(() -> classUnderTest.updateProjectManager(projectCompositeId.id(), null, null, null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
     public void testViewStartDate() {
         assertSecured(() -> classUnderTest.viewStartDate(projectCompositeId.id(), null, null, null),
                 permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(projectCompositeId), isA(UserResource.class)));

@@ -44,6 +44,12 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         });
     }
 
+    public QuestionStatusResourceBuilder withAssignee(Long assignee) {
+        return with(questionStatus -> {
+            questionStatus.setAssignee(assignee);
+        });
+    }
+
     public QuestionStatusResourceBuilder withMarkedAsCompleteOn(ZonedDateTime... dates) {
         return withArray((date, questionStatusResource) -> questionStatusResource.setMarkedAsCompleteOn(date), dates);
     }

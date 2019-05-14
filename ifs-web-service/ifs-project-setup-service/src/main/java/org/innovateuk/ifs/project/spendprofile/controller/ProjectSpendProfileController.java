@@ -89,8 +89,7 @@ public class ProjectSpendProfileController {
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        boolean isMonitoringOfficer = projectResource.getProjectMonitoringOfficer() == null ? false :
-                projectResource.getProjectMonitoringOfficer().equals(loggedInUser.getId());
+        boolean isMonitoringOfficer = loggedInUser.getId().equals(projectResource.getMonitoringOfficerUser());
 
         if (isMonitoringOfficer || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
             return viewProjectManagerSpendProfile(model, projectResource, loggedInUser, isMonitoringOfficer);

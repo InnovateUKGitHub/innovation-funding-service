@@ -9,13 +9,12 @@ Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${projectNumber}           4
-${newProjecTeamPage}       ${server}/project-setup/project/${projectNumber}/team
+${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/team
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
 
 *** Test Cases ***
-The lead partner is able to access project details page
+The lead partner is able to access project team page
     [Documentation]  IFS-5700
     Given the user logs-in in new browser    &{lead_applicant_credentials}
     When the user navigates to the page      ${newProjecTeamPage}

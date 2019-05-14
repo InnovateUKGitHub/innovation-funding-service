@@ -653,6 +653,75 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void monitoringOfficerSeesSpendProfileReviewPage() throws Exception {
+
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .withMonitoringOfficerUser(loggedInUser.getId())
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
+
+        List<ProjectUserResource> projectUserResources = newProjectUserResource()
+                .withUser(1L)
+                .withRole(PARTNER)
+                .withOrganisation(organisationId)
+                .build(1);
+
+        List<ProjectUserResource> leadUserResources = newProjectUserResource()
+                .withUser(1L)
+                .withRole(LEADAPPLICANT)
+                .withOrganisation(organisationId)
+                .build(1);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
+                .withId(organisationId)
+                .withName("abc")
+                .build(1);
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(true);
+        partnerOrganisationResource.setOrganisationName(partnerOrganisations.get(0).getName());
+
+        SpendProfileResource spendProfileResource = newSpendProfileResource().build();
+
+        List<Role> roleResources = singletonList(PARTNER);
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
+        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
+
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/spend-profile-review"))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andReturn();
+
+        verify(projectService, never()).getLeadPartners(eq(projectResource.getId()));
+    }
+
+    @Test
     public void viewSpendProfileSuccessfulViewModelPopulationInNonLeadPartnerOrganisation() throws Exception {
 
         Long organisationId = 1L;

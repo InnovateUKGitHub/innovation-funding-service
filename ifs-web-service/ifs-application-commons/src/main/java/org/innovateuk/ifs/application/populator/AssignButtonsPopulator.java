@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.invite.InviteService;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 /**
  * Populator for the {@link AssignButtonsViewModel}
  */
@@ -23,12 +25,12 @@ public class AssignButtonsPopulator {
     public AssignButtonsViewModel populate(AbstractApplicantResource resource, ApplicantQuestionResource question, boolean hideAssignButtons) {
         AssignButtonsViewModel viewModel = new AssignButtonsViewModel();
         viewModel.setAssignedBy(question.allAssignedStatuses()
-                .map(ApplicantQuestionStatusResource::getAssignedBy).findAny().orElse(null));
+                .map(ApplicantQuestionStatusResource::getAssignedBy).map(ApplicantResource::getProcessRole).findAny().orElse(null));
         viewModel.setAssignee(question.allAssignedStatuses()
-                .map(ApplicantQuestionStatusResource::getAssignee).findAny().orElse(null));
-        viewModel.setLeadApplicant(resource.getApplicants().stream().filter(ApplicantResource::isLead).findAny().orElse(null));
-        viewModel.setCurrentApplicant(resource.getCurrentApplicant());
-        viewModel.setAssignableApplicants(resource.getApplicants());
+                .map(ApplicantQuestionStatusResource::getAssignee).map(ApplicantResource::getProcessRole).findAny().orElse(null));
+        viewModel.setLeadApplicant(resource.getApplicants().stream().filter(ApplicantResource::isLead).map(ApplicantResource::getProcessRole).findAny().orElse(null));
+        viewModel.setCurrentApplicant(resource.getCurrentApplicant().getProcessRole());
+        viewModel.setAssignableApplicants(resource.getApplicants().stream().map(ApplicantResource::getProcessRole).collect(Collectors.toList()));
         viewModel.setPendingAssignableUsers(inviteService.getPendingInvitationsByApplicationId(resource.getApplication().getId()));
         viewModel.setHideAssignButtons(hideAssignButtons);
         viewModel.setQuestion(question.getQuestion());

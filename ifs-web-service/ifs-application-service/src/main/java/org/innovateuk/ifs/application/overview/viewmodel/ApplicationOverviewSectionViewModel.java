@@ -1,63 +1,37 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.Set;
 
 /**
  * View model for the application overview - section
  */
 public class ApplicationOverviewSectionViewModel {
-    private List<SectionResource> sections;
-    private Map<Long, List<SectionResource>> subSections;
-    private Map<Long, List<QuestionResource>> sectionQuestions;
-    private Map<Long, AssignButtonsViewModel> assignButtonViewModels;
-    private boolean hasFinanceSection;
-    private Long financeSectionId;
 
-    public ApplicationOverviewSectionViewModel(List<SectionResource> sections,
-                                               Map<Long, List<SectionResource>> subSections,
-                                               Map<Long, List<QuestionResource>> sectionQuestions,
-                                               boolean hasFinanceSection,
-                                               Long financeSectionId,
-                                               Map<Long, AssignButtonsViewModel> assignButtonViewModels) {
-        this.sections = sections;
-        this.subSections = subSections;
-        this.sectionQuestions = sectionQuestions;
-        this.hasFinanceSection = hasFinanceSection;
-        this.financeSectionId = financeSectionId;
-        this.assignButtonViewModels = assignButtonViewModels;
+    private final long id;
+    private final String title;
+    private final String subTitle;
+    private final Set<ApplicationOverviewRowViewModel> rows;
+
+    public ApplicationOverviewSectionViewModel(long id, String title, String subTitle, Set<ApplicationOverviewRowViewModel> rows) {
+        this.id = id;
+        this.title = title;
+        this.subTitle = subTitle;
+        this.rows = rows;
     }
 
-    public List<SectionResource> getSections() {
-        return sections;
+    public long getId() {
+        return id;
     }
 
-    public Map<Long, List<SectionResource>> getSubSections() {
-        return subSections;
+    public String getTitle() {
+        return title;
     }
 
-    public Map<Long, List<QuestionResource>> getSectionQuestions() {
-        return sectionQuestions;
+    public String getSubTitle() {
+        return subTitle;
     }
 
-    public boolean isHasFinanceSection() {
-        return hasFinanceSection;
-    }
-
-    public Long getFinanceSectionId() {
-        return financeSectionId;
-    }
-
-    public Map<Long, AssignButtonsViewModel> getAssignButtonViewModels() {
-        return assignButtonViewModels;
-    }
-
-    public boolean hasSubSection(long sectionId) {
-        return subSections.containsKey(sectionId) && !subSections.get(sectionId).isEmpty();
+    public Set<ApplicationOverviewRowViewModel> getRows() {
+        return rows;
     }
 }
