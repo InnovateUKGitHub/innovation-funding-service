@@ -207,7 +207,9 @@
             </th:block>
         </form>
 
-        <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
+        <th:block th:unless="${model.isInternalUserView()}">
+            <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
