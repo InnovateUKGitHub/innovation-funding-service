@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -18,8 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.singleton;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
@@ -59,9 +63,11 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                     List<Section> sections = application.getCompetition().getSections();
                     List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
                     Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
+                    Map<Long, Question> questions = application.getCompetition().getQuestions().stream().collect(toMap(Question::getId, identity()));
+                    Map<Long, List<Long>> organisationIdToCompletedQuestionIds = getCompletedQuestionsGroupedByOrganisationId(applicationId, singleton(organisationId), questions);
 
                     return serviceSuccess(sections.stream()
-                            .filter(section -> isSectionComplete(section, getCompletedQuestionsGroupedByOrganisationId(applicationId), application, organisationId, organisations))
+                            .filter(section -> isSectionComplete(section, organisationIdToCompletedQuestionIds, application, organisationId, organisations))
                             .map(Section::getId)
                             .collect(toSet()));
                 });
@@ -165,13 +171,15 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         List<Section> sections = application.getCompetition().getSections();
         List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
         Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
+        Map<Long, Question> questions = application.getCompetition().getQuestions().stream().collect(toMap(Question::getId, identity()));
+        Map<Long, List<Long>> organisationIdToCompletedQuestionIds = getCompletedQuestionsGroupedByOrganisationId(application.getId(), organisations, questions);
 
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
 
         for (Long organisationId : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
             for (Section section : sections) {
-                if (isSectionComplete(section, getCompletedQuestionsGroupedByOrganisationId(application.getId()), application, organisationId, organisations)) {
+                if (isSectionComplete(section, organisationIdToCompletedQuestionIds, application, organisationId, organisations)) {
                     completedSections.add(section.getId());
                 }
             }
@@ -206,13 +214,19 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         return true;
     }
 
-    private Map<Long, List<Long>> getCompletedQuestionsGroupedByOrganisationId(long applicationId) {
+    private Map<Long, List<Long>> getCompletedQuestionsGroupedByOrganisationId(long applicationId, Set<Long> organisationIds, Map<Long, Question> questions) {
 
-        Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = questionStatusService.findCompletedQuestionsByApplicationId(applicationId).getSuccess()
-                .stream()
-                .collect(Collectors.groupingBy(qs -> qs.getCompletedByOrganisation()));
+        Multimap<Long, QuestionStatusResource> completedQuestionStatuses = ArrayListMultimap.create();
+        questionStatusService.findCompletedQuestionsByApplicationId(applicationId).getSuccess()
+                .forEach(questionStatus -> {
+                    if (questions.get(questionStatus.getQuestion()).hasMultipleStatuses()) {
+                        completedQuestionStatuses.put(questionStatus.getCompletedByOrganisation(), questionStatus);
+                    } else {
+                        organisationIds.forEach(organisationId -> completedQuestionStatuses.put(organisationId, questionStatus));
+                    }
+                });
 
-        return completedQuestionStatuses
+        return Multimaps.asMap(completedQuestionStatuses)
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey,

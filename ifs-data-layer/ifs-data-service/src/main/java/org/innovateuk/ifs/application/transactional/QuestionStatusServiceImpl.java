@@ -224,7 +224,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     private List<QuestionStatus> filterByMarkedAsComplete(final List<QuestionStatus> questionStatuses) {
         return questionStatuses.stream()
-                .filter(qs -> qs.getMarkedAsCompleteBy() != null)
                 .filter(qs -> qs.getMarkedAsComplete() != null)
                 .filter(qs -> qs.getMarkedAsComplete())
                 .collect(Collectors.toList());
