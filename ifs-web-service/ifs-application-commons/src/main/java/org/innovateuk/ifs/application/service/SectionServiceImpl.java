@@ -12,6 +12,8 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.SectionType.ORGANISATION_FINANCES;
+import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -177,12 +179,12 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionResource getTermsAndConditionsSection(long competitionId) {
-        return getSingleSectionByType(competitionId, SectionType.TERMS_AND_CONDITIONS);
+        return getSingleSectionByType(competitionId, TERMS_AND_CONDITIONS);
     }
 
     @Override
     public SectionResource getOrganisationFinanceSection(long competitionId) {
-        return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
+        return getSingleSectionByType(competitionId, ORGANISATION_FINANCES);
     }
 
     private SectionResource getSingleSectionByType(long competitionId, SectionType type) {
