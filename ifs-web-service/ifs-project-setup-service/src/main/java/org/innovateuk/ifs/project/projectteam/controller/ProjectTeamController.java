@@ -4,6 +4,7 @@ package org.innovateuk.ifs.project.projectteam.controller;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -43,17 +45,15 @@ public class ProjectTeamController {
     private ProjectService projectService;
     private OrganisationRestService organisationRestService;
     private ProjectTeamRestService projectTeamRestService;
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
-                                 ProjectDetailsService projectDetailsService,
-                                 ProjectService projectService,
-                                 OrganisationRestService organisationRestService,
-                                 ProjectTeamRestService projectTeamRestService) {
+    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator, ProjectDetailsService projectDetailsService, ProjectService projectService, OrganisationRestService organisationRestService, ProjectTeamRestService projectTeamRestService, CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectDetailsService = projectDetailsService;
         this.projectService = projectService;
         this.organisationRestService = organisationRestService;
         this.projectTeamRestService = projectTeamRestService;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -81,6 +81,28 @@ public class ProjectTeamController {
                                @RequestParam("remove-invite") final long inviteId) {
         projectTeamRestService.removeInvite(projectId, inviteId).getSuccess();
         return "redirect:/project/" + projectId + "/team";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PostMapping(value = "/{projectId}/team", params = "resend-invite")
+    public String resendInvite(@PathVariable("projectId") final long projectId,
+                               @RequestParam("resend-invite") final long inviteId,
+                               HttpServletResponse response) {
+        resendInvite(inviteId, projectId, (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
+        cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
+        return "redirect:/project/" + projectId + "/team";
+    }
+
+    private void resendInvite(Long id, Long projectId, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
+        Optional<ProjectUserInviteResource> existingInvite = projectDetailsService
+                .getInvitesByProject(projectId)
+                .getSuccess()
+                .stream()
+                .filter(i -> id.equals(i.getId()))
+                .findFirst();
+
+        existingInvite
+                .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()).getSuccess());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")

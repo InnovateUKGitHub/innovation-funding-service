@@ -10,4 +10,5 @@ public interface ProjectTeamRestService {
     RestResult<Void> removeUser(long projectId, long userId);
 
     RestResult<Void> removeInvite(long projectId, long inviteId);
+
 }
