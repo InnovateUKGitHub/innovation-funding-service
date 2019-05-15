@@ -7,6 +7,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5723 - Remove a pending invitation
 ...
+...             IFS-5722 - Resend invitation to add new members (partners)
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -71,15 +73,24 @@ A user who has been removed is no longer able to access the project
     Given log in as a different user           ${nonLeadNewMemberEmail}   ${short_password}
     Then the user should not see the element   jQuery = li:contains("Project number") h3:contains("Magic material")
 
-A partner is able to remove a pending invitation
+A user is able to re-send an invitation
     [Documentation]  IFS-5723
     [Setup]    the user logs-in in new browser              &{lead_applicant_credentials}
     Given the user navigates to the page                    ${newProjecTeamPage}
     When the user adds a new team member                    Removed   ${removeInviteEmail}
-    Then the user is abe to remove the pending invitation
-    And Removed invitee is not able to accept the invite    ${removeInviteEmail}
+    Then the user is able to re-send an invitation
+    And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
+
+A partner is able to remove a pending invitation
+    [Documentation]  IFS-5723
+    Given the user is abe to remove the pending invitation
+    Then Removed invitee is not able to accept the invite    ${removeInviteEmail}
 
 *** Keywords ***
+The user is able to re-send an invitation
+    the user should see the element   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
+    the user clicks the button/link   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
+
 Removed invitee is not able to accept the invite
     [Arguments]    ${email}
     the user reads his email and clicks the link   ${email}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
