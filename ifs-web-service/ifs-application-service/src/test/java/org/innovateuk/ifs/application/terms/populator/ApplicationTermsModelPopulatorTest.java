@@ -245,7 +245,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-//        when(sectionServiceMock.getTermsAndConditionsSection(competition.getId())).thenReturn(termsAndConditionsSection);
         when(userRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
         when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
         when(questionStatusRestServiceMock.findByQuestionAndApplicationAndOrganisation(termsAndConditionsSection.getQuestions().get(0),
