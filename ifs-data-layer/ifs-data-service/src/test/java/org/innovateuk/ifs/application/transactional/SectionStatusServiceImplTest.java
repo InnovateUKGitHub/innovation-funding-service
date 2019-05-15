@@ -55,6 +55,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
                 .build(1);
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
@@ -71,6 +72,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         Competition competition = newCompetition()
                 .withSections(sections)
+                .withQuestions(questions)
                 .build();
 
         Application application = newApplication()
@@ -104,6 +106,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
                 .build(1);
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
@@ -126,6 +129,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         Competition competition = newCompetition()
                 .withSections(asList(financeSection, financeOverviewSection))
+                .withQuestions(questions)
                 .build();
 
         Application application = newApplication()

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -46,6 +47,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withSections(List<Section> sections) {
         return with(competition -> competition.setSections(sections));
+    }
+
+    public CompetitionBuilder withQuestions(List<Question> questions) {
+        return with(competition -> competition.setQuestions(questions));
     }
 
     public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
