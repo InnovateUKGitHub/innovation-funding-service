@@ -2,6 +2,9 @@ package org.innovateuk.ifs.application.terms.viewmodel;
 
 import java.time.ZonedDateTime;
 
+/**
+ * Model attributes for the application terms view.
+ */
 public class ApplicationTermsViewModel {
     private final long applicationId;
     private final long questionId;
