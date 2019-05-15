@@ -107,8 +107,6 @@
                             <th:block th:if="${organisation.editable and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and user.invite}">
                                 <button class="button-clear" type="submit" name="remove-invite" th:value="${user.id}">Remove</button>
                             </th:block>
-
-
                         </td>
                     </tr>
                     </tbody>
