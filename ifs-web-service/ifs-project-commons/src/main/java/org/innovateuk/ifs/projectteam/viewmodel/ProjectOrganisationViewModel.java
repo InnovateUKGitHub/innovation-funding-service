@@ -36,12 +36,12 @@ public class ProjectOrganisationViewModel implements Comparable<ProjectOrganisat
 
     public ProjectOrganisationUserRowViewModel getFinanceContact() {
         return simpleFindFirst(users,
-                                                   ProjectOrganisationUserRowViewModel::isFinanceContact).orElse(null);
+                               ProjectOrganisationUserRowViewModel::isFinanceContact).orElse(null);
     }
 
     public ProjectOrganisationUserRowViewModel getProjectManager() {
         return simpleFindFirst(users,
-                                                   ProjectOrganisationUserRowViewModel::isProjectManager).orElse(null);
+                               ProjectOrganisationUserRowViewModel::isProjectManager).orElse(null);
     }
 
     public List<ProjectOrganisationUserRowViewModel> getUsers() {

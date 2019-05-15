@@ -48,7 +48,6 @@ public class ProjectTeamViewModelPopulator {
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
-
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
@@ -135,5 +134,4 @@ public class ProjectTeamViewModelPopulator {
 
         return partnerUsers;
     }
-
 }
