@@ -8,7 +8,6 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-5723 - Remove a pending invitation
 ...
 ...             IFS-5722 - Resend invitation to add new members (partners)
-...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -129,7 +128,7 @@ The user fills in account details
 
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
-  the user clicks the button/link    jQuery = button:contains("Add team member")
+  the user clicks the button/link        jQuery = button:contains("Add team member")
   the user enters text to a text field   id = name   ${firstName}
   the user enters text to a text field   id = email  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
