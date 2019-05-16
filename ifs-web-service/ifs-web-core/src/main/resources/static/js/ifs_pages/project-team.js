@@ -21,11 +21,18 @@ IFS.core.projectTeam = (function () {
         var form = jQuery('#' + formId)
         IFS.core.projectTeam.toggleForm(jQuery('[data-show-form=' + formId + ']'), form)
         form.find('input').attr('disabled', true)
+        IFS.core.projectTeam.clearErrors()
       })
     },
     toggleForm: function (button, form) {
       button.toggle()
       form.toggle()
+    },
+    clearErrors: function () {
+      jQuery('.govuk-error-summary').remove()
+      jQuery('.govuk-error-message').remove()
+      jQuery('.govuk-form-group--error').removeClass('govuk-form-group--error')
+      jQuery('.govuk-input--error').removeClass('govuk-input--error')
     }
   }
 })()
