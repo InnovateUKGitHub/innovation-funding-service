@@ -60,7 +60,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
                 .withMarkedAsComplete(true)
-                .withCompletedByOrganisation(organisationId)
+                .withMarkedAsCompleteByOrganisationId(organisationId)
                 .withQuestion(questions.get(0).getId())
                 .build(1);
 
@@ -111,7 +111,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
                 .withMarkedAsComplete(true)
-                .withCompletedByOrganisation(organisationId)
+                .withMarkedAsCompleteByOrganisationId(organisationId)
                 .withQuestion(questions.get(0).getId())
                 .build(1);
 

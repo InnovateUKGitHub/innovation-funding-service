@@ -49,8 +49,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setSections(sections));
     }
 
-    public CompetitionBuilder withQuestions(List<Question> questions) {
-        return with(competition -> competition.setQuestions(questions));
+    public CompetitionBuilder withQuestions(List<Question>... questions) {
+        return withArray((question, competition) -> competition.setQuestions(question), questions);
     }
 
     public CompetitionBuilder withSetupComplete(boolean... setupComplete) {

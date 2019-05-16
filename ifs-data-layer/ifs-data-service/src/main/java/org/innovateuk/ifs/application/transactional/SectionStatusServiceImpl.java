@@ -61,9 +61,16 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 andOnSuccess(application -> {
 
                     List<Section> sections = application.getCompetition().getSections();
-                    List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
-                    Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
-                    Map<Long, Question> questions = application.getCompetition().getQuestions().stream().collect(toMap(Question::getId, identity()));
+                    List<ProcessRole> applicantTypeProcessRoles = application.getProcessRoles().stream()
+                        .filter(ProcessRole::isLeadApplicantOrCollaborator)
+                        .collect(toList());
+                    Set<Long> organisations = applicantTypeProcessRoles.stream()
+                            .map(ProcessRole::getOrganisationId)
+                            .collect(toSet());
+                    Map<Long, Question> questions = application.getCompetition()
+                            .getQuestions()
+                            .stream()
+                            .collect(toMap(Question::getId, identity()));
                     Map<Long, List<Long>> organisationIdToCompletedQuestionIds = getCompletedQuestionsGroupedByOrganisationId(applicationId, singleton(organisationId), questions);
 
                     return serviceSuccess(sections.stream()
@@ -200,7 +207,10 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         if (section.hasChildSections()) {
             for (Section childSection : section.getChildSections()) {
-                return isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
+                boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
+                if (!complete) {
+                    return false;
+                }
             }
         }
 
@@ -220,7 +230,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         questionStatusService.findCompletedQuestionsByApplicationId(applicationId).getSuccess()
                 .forEach(questionStatus -> {
                     if (questions.get(questionStatus.getQuestion()).hasMultipleStatuses()) {
-                        completedQuestionStatuses.put(questionStatus.getCompletedByOrganisation(), questionStatus);
+                        completedQuestionStatuses.put(questionStatus.getMarkedAsCompleteByOrganisationId(), questionStatus);
                     } else {
                         organisationIds.forEach(organisationId -> completedQuestionStatuses.put(organisationId, questionStatus));
                     }

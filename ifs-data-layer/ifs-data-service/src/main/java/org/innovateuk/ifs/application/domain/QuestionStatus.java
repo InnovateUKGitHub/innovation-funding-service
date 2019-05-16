@@ -120,11 +120,6 @@ public class QuestionStatus {
     }
 
     @JsonIgnore
-    public Long getOrganisationId() {
-        return this.markedAsCompleteBy.getOrganisationId();
-    }
-
-    @JsonIgnore
     public Application getApplication() {
         return this.application;
     }
