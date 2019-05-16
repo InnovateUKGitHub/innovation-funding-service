@@ -4,6 +4,8 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Test;

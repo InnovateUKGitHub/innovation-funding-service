@@ -2,11 +2,10 @@ package org.innovateuk.ifs.management.competition.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
@@ -22,15 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
@@ -117,8 +111,7 @@ public class CompetitionManagementDashboardController {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
 
         model.addAttribute(MODEL_ATTR, new UpcomingDashboardViewModel(upcomingCompetitions,
-                competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(upcomingCompetitions), new DashboardTabsViewModel(user)));
+                competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "upcoming";
     }
@@ -172,17 +165,17 @@ public class CompetitionManagementDashboardController {
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 
-    private List<String> formatInnovationAreaNames(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionTypes) {
-
-        List<String> formattedList = new ArrayList<>();
-
-        for (Map.Entry<CompetitionStatus, List<CompetitionSearchResultItem>> entry : competitionTypes.entrySet()) {
-            for (CompetitionSearchResultItem competition : entry.getValue()) {
-                formattedList.add(competition.getInnovationAreaNames().stream().collect(joining(", ")));
-            }
-        }
-        return formattedList;
-    }
+//    private List<String> formatInnovationAreaNames(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionTypes) {
+//
+//        List<String> formattedList = new ArrayList<>();
+//
+//        for (Map.Entry<CompetitionStatus, List<CompetitionSearchResultItem>> entry : competitionTypes.entrySet()) {
+//            for (CompetitionSearchResultItem competition : entry.getValue()) {
+//                formattedList.add(competition.getInnovationAreaNames().stream().collect(joining(", ")));
+//            }
+//        }
+//        return formattedList;
+//    }
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR,

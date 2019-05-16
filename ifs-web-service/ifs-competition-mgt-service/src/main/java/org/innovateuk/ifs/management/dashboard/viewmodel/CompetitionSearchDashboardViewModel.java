@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.dashboard.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 
 /**
  * A view model for displaying the competition search results when searched on the dashboard by the internal user.

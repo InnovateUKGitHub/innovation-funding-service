@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,6 +23,9 @@ public class CompetitionController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionSearchService competitionSearchService;
 
     @GetMapping("/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final long id) {
@@ -62,35 +65,35 @@ public class CompetitionController {
     }
 
     @GetMapping("/live")
-    public RestResult<List<CompetitionSearchResultItem>> live() {
-        return competitionService.findLiveCompetitions().toGetResponse();
+    public RestResult<List<LiveCompetitionSearchResultItem>> live() {
+        return competitionSearchService.findLiveCompetitions().toGetResponse();
     }
 
     @GetMapping("/project-setup")
-    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
-        return competitionService.findProjectSetupCompetitions().toGetResponse();
+    public RestResult<List<ProjectSetupCompetitionSearchResultItem>> projectSetup() {
+        return competitionSearchService.findProjectSetupCompetitions().toGetResponse();
     }
 
     @GetMapping("/upcoming")
-    public RestResult<List<CompetitionSearchResultItem>> upcoming() {
-        return competitionService.findUpcomingCompetitions().toGetResponse();
+    public RestResult<List<UpcomingCompetitionSearchResultItem>> upcoming() {
+        return competitionSearchService.findUpcomingCompetitions().toGetResponse();
     }
 
     @GetMapping("/non-ifs")
-    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
-        return competitionService.findNonIfsCompetitions().toGetResponse();
+    public RestResult<List<NonIfsCompetitionSearchResultItem>> nonIfs() {
+        return competitionSearchService.findNonIfsCompetitions().toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")
     public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
-        return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
+        return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
 
     @GetMapping("/count")
     public RestResult<CompetitionCountResource> count() {
-        return competitionService.countCompetitions().toGetResponse();
+        return competitionSearchService.countCompetitions().toGetResponse();
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")

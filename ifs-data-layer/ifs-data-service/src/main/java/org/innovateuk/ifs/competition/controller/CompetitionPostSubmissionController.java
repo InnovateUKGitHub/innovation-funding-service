@@ -4,8 +4,9 @@ import org.innovateuk.ifs.application.transactional.ApplicationNotificationServi
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.competition.resource.search.PreviousCompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class CompetitionPostSubmissionController {
     @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
+    @Autowired
+    private CompetitionSearchService competitionSearchService;
+
     @PutMapping("/{id}/release-feedback")
     public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
         return competitionService.releaseFeedback(competitionId)
@@ -34,8 +38,8 @@ public class CompetitionPostSubmissionController {
     }
 
     @GetMapping("/feedback-released")
-    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
-        return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
+    public RestResult<List<PreviousCompetitionSearchResultItem>> feedbackReleased() {
+        return competitionSearchService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 
     @PutMapping("/{id}/close-assessment")

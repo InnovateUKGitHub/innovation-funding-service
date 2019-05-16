@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.documentation.*;
 import org.innovateuk.ifs.user.resource.UserResource;
