@@ -14,7 +14,6 @@ import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
-import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -51,9 +49,6 @@ public class ProjectTeamViewModelPopulatorTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
-
-    @Mock
-    private StatusService statusService;
 
     @Mock
     private ProjectDetailsService projectDetailsService;
@@ -99,7 +94,6 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
-        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectDetailsService.getInvitesByProject(project.getId())).thenReturn(serviceSuccess(invites));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);

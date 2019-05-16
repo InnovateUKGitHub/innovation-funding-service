@@ -31,8 +31,6 @@ public class ProjectTeamViewModelPopulator {
 
     private final CompetitionRestService competitionRestService;
 
-    private final StatusService statusService;
-
     private final ProjectDetailsService projectDetailsService;
 
     public ProjectTeamViewModelPopulator(ProjectService projectService,
@@ -41,7 +39,6 @@ public class ProjectTeamViewModelPopulator {
                                          ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
-        this.statusService = statusService;
         this.projectDetailsService = projectDetailsService;
     }
 
