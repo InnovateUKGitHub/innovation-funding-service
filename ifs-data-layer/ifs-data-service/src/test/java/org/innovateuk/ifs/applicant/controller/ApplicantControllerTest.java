@@ -10,6 +10,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInPro
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
+import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.documentation.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -58,6 +59,9 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
 
     @Mock
     private ApplicantService applicationService;
+
+    @Mock
+    private ApplicationDashboardService applicationDashboardService;
 
     @Override
     protected ApplicantController supplyControllerUnderTest() {
@@ -181,7 +185,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder().withApplicationId(inSetupId).build();
         DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder().withApplicationId(previousId).build();
 
-        when(applicationService.getApplicantDashboard(USER_ID)).thenReturn(serviceSuccess(new ApplicantDashboardResourceBuilder()
+        when(applicationDashboardService.getApplicantDashboard(USER_ID)).thenReturn(serviceSuccess(new ApplicantDashboardResourceBuilder()
                 .withEuGrantTransfer(singletonList(euGrantTransfer))
                 .withInProgress(singletonList(inProgress))
                 .withInSetup(singletonList(inSetup))

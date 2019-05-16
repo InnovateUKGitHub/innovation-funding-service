@@ -4,6 +4,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
+import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ public class ApplicantController {
 
     @Autowired
     private ApplicantService applicantService;
+    @Autowired
+    private ApplicationDashboardService applicationDashboardService;
 
     @GetMapping("/{userId}/{applicationId}/question/{questionId}")
     public RestResult<ApplicantQuestionResource> getQuestion(@PathVariable("userId") final Long userId,
@@ -37,7 +40,7 @@ public class ApplicantController {
 
     @GetMapping("/{userId}/applications/dashboard" )
     public RestResult<ApplicantDashboardResource> getApplicantDashboard(@PathVariable("userId") final Long userId) {
-        return applicantService.getApplicantDashboard(userId).toGetResponse();
+        return applicationDashboardService.getApplicantDashboard(userId).toGetResponse();
     }
 
 }
