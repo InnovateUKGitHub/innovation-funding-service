@@ -12,7 +12,6 @@ import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
-import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -31,17 +30,13 @@ public class ProjectTeamViewModelPopulator {
 
     private final CompetitionRestService competitionRestService;
 
-    private final StatusService statusService;
-
     private final ProjectDetailsService projectDetailsService;
 
     public ProjectTeamViewModelPopulator(ProjectService projectService,
                                          CompetitionRestService competitionRestService,
-                                         StatusService statusService,
                                          ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
-        this.statusService = statusService;
         this.projectDetailsService = projectDetailsService;
     }
 
@@ -118,16 +113,20 @@ public class ProjectTeamViewModelPopulator {
         Optional<ProjectUserResource> financeContact = simpleFindFirst(usersForOrganisation,
                                                                        ProjectUserResource::isFinanceContact);
 
-        financeContact.ifPresent(fc ->
-                                         simpleFindFirst(partnerUsers,
-                                                         user -> user.getId() == fc.getUser()).get().setFinanceContact(true));
+        financeContact.ifPresent(fc -> partnerUsers.stream()
+                .filter(user -> user.getId() == fc.getUser())
+                .findFirst()
+                .get()
+                .setFinanceContact(true));
 
         Optional<ProjectUserResource> projectManager = simpleFindFirst(usersForOrganisation,
                                                                        ProjectUserResource::isProjectManager);
 
-        projectManager.ifPresent(pm ->
-                                         simpleFindFirst(partnerUsers,
-                                                         user -> user.getId() == pm.getUser()).get().setProjectManager(true));
+        projectManager.ifPresent(pm -> partnerUsers.stream()
+                .filter(user -> user.getId() == pm.getUser())
+                .findFirst()
+                .get()
+                .setProjectManager(true));
 
         return partnerUsers;
     }

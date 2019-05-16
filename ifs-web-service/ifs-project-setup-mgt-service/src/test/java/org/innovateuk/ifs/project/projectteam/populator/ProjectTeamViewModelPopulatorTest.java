@@ -109,7 +109,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertEquals((long) project.getId(), model.getProjectId());
         assertEquals(false, model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
-        assertEquals(true, model.isInternalUserView());
+        assertTrue(model.isInternalUserView());
         assertEquals(2, model.getPartnerOrgs().size());
 
         ProjectOrganisationViewModel partnerOneViewModel = model.getPartnerOrgs().stream().filter(view -> view.getOrgId() == partnerOne.getId()).findAny().get();
