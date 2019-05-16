@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -46,6 +47,11 @@ public class QuestionStatusController {
     @GetMapping({"/findByApplicationAndOrganisation/{applicationId}/{organisationId}", "/find-by-application-and-organisation/{applicationId}/{organisationId}"})
     public RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(@PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId){
         return questionStatusService.findByApplicationAndOrganisation(applicationId, organisationId).toGetResponse();
+    }
+
+    @GetMapping("/find-marked-complete-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}")
+    public RestResult<Optional<QuestionStatusResource>> getMarkedAsCompleteByQuestionApplicationAndOrganisation(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId) {
+        return questionStatusService.findApplicationAndMarkedAsCompleteByOrganisation(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @GetMapping("/{id}")

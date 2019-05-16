@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -174,6 +175,12 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<Optional<QuestionStatusResource>> findApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId) {
+        List<QuestionStatus> questionStatuses =  questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
+        return serviceSuccess(questionStatuses.stream().findFirst().map(questionStatusMapper::mapToResource));
+    }
+
+    @Override
     public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id) {
         return find(questionStatusRepository.findById(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
@@ -213,7 +220,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, long organisationId) {
         return questionStatuses.stream().
                 filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisationId().equals(organisationId)))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
