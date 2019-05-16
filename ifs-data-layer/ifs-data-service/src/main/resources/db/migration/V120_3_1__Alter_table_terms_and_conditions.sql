@@ -1,4 +1,4 @@
---IFS-3093
+-- IFS-3093
 
 SET @system_maintenance_user_id = (SELECT id
                                    FROM user
