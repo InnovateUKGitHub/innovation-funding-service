@@ -173,8 +173,11 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     private ServiceResult<Void> removeUserFromProject(long userId, Project project) {
         // This will cause a delete with orphanRemoval.
-        project.getProjectUsers().removeIf(pu -> pu.getUser().getId().equals(userId));
-        return serviceSuccess();
+        boolean removed = project.getProjectUsers().removeIf(pu -> pu.getUser().getId().equals(userId));
+        if (removed) {
+            return serviceSuccess();
+        }
+        return serviceFailure(CANNOT_REMOVE_YOURSELF_FROM_PROJECT);
     }
 
     private ServiceResult<Project> migrateProcessesFromUserIfNecessary(long userToDeleteId, Project project) {
