@@ -27,6 +27,10 @@ public class SetupSectionStatus {
         }
     }
 
+    public SectionStatus projectTeamSectionStatus() {
+        return HOURGLASS;
+    }
+
     public SectionStatus monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,
                                                         final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {

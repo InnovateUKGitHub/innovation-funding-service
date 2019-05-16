@@ -10,6 +10,7 @@ public class SectionAccessList {
 
     private SectionAccess companiesHouseSection;
     private SectionAccess projectDetailsSection;
+    private SectionAccess projectTeamSection;
     private SectionAccess monitoringOfficerSection;
     private SectionAccess bankDetailsSection;
     private SectionAccess financeChecksSection;
@@ -17,11 +18,18 @@ public class SectionAccessList {
     private SectionAccess documentsSection;
     private SectionAccess grantOfferLetterSection;
 
-    public SectionAccessList(SectionAccess companiesHouseSection, SectionAccess projectDetailsSection, SectionAccess monitoringOfficerSection,
-                             SectionAccess bankDetailsSection, SectionAccess financeChecksSection, SectionAccess spendProfileSection,
-                             SectionAccess documentsSection, SectionAccess grantOfferLetterSection) {
+    public SectionAccessList(SectionAccess companiesHouseSection,
+                             SectionAccess projectDetailsSection,
+                             SectionAccess projectTeamSection,
+                             SectionAccess monitoringOfficerSection,
+                             SectionAccess bankDetailsSection,
+                             SectionAccess financeChecksSection,
+                             SectionAccess spendProfileSection,
+                             SectionAccess documentsSection,
+                             SectionAccess grantOfferLetterSection) {
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
+        this.projectTeamSection = projectTeamSection;
         this.monitoringOfficerSection = monitoringOfficerSection;
         this.bankDetailsSection = bankDetailsSection;
         this.financeChecksSection = financeChecksSection;
@@ -36,6 +44,10 @@ public class SectionAccessList {
 
     public SectionAccess getProjectDetailsSection() {
         return projectDetailsSection;
+    }
+
+    public SectionAccess getProjectTeamSection() {
+        return projectTeamSection;
     }
 
     public SectionAccess getMonitoringOfficerSection() {

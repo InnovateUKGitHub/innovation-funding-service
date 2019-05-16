@@ -11,6 +11,7 @@ import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 public class SectionStatusList {
 
     private SectionStatus projectDetailsStatus;
+    private SectionStatus projectTeamStatus;
     private SectionStatus monitoringOfficerStatus;
     private SectionStatus bankDetailsStatus;
     private SectionStatus financeChecksStatus;
@@ -18,10 +19,16 @@ public class SectionStatusList {
     private SectionStatus documentsStatus;
     private SectionStatus grantOfferLetterStatus;
 
-    public SectionStatusList(SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus, SectionStatus bankDetailsStatus,
-                             SectionStatus financeChecksStatus, SectionStatus spendProfileStatus,
-                             SectionStatus documentsStatus, SectionStatus grantOfferLetterStatus) {
+    public SectionStatusList(SectionStatus projectDetailsStatus,
+                             SectionStatus projectTeamStatus,
+                             SectionStatus monitoringOfficerStatus,
+                             SectionStatus bankDetailsStatus,
+                             SectionStatus financeChecksStatus,
+                             SectionStatus spendProfileStatus,
+                             SectionStatus documentsStatus,
+                             SectionStatus grantOfferLetterStatus) {
         this.projectDetailsStatus = projectDetailsStatus;
+        this.projectTeamStatus = projectTeamStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
@@ -32,6 +39,10 @@ public class SectionStatusList {
 
     public SectionStatus getProjectDetailsStatus() {
         return projectDetailsStatus;
+    }
+
+    public SectionStatus getProjectTeamStatus() {
+        return projectTeamStatus;
     }
 
     public SectionStatus getMonitoringOfficerStatus() {
@@ -60,6 +71,7 @@ public class SectionStatusList {
 
     public boolean isProjectComplete() {
         return projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                &&projectTeamStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
@@ -67,6 +79,6 @@ public class SectionStatusList {
     }
 
     public static SectionStatusList offline() {
-        return new SectionStatusList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+        return new SectionStatusList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
     }
 }

@@ -160,10 +160,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
         boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, process.getProcessState());
+        ProjectActivityStates projectTeamStatus = NOT_STARTED;
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, process.getProcessState());
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
+        Optional<Organisation> leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId());
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
@@ -175,8 +176,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 project.getApplication().getId(),
                 project.getApplication().getId().toString(),
                 getProjectPartnerCount(project.getId()),
-                null != leadOrganisation ? leadOrganisation.getName() : "",
+                leadOrganisation.map(Organisation::getName).orElse(""),
                 projectDetailsStatus,
+                projectTeamStatus,
                 bankDetailsStatus,
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),

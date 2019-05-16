@@ -89,6 +89,25 @@
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
+                <!--/* ========================= Project Team ========================= */-->
+                <li th:class="${model.projectTeamSection.notAccessible} ? 'read-only'" th:classappend="${model.projectTeamStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="govuk-heading-s">
+                            <a th:if="${model.projectTeamSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/team(id=${model.projectId})}"
+                               class="govuk-link">Project team</a>
+                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}"
+                               class="govuk-link">Project
+                                details</a>
+                            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
+                                details
+                            </th:block>
+                        </h2>
+                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Assign a  project manager and finance contact, and decide who can view project setup</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The project manager and finance contact</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectTeamStatus.getSectionStatus()})"/>
+                </li>
                    <!--/* ========================= Documents ========================= */-->
                 <li th:if="${model.competitionDocuments}" th:class="${model.documentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">
                     <div class="task">
