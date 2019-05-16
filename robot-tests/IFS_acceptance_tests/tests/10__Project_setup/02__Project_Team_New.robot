@@ -116,13 +116,6 @@ The user fills in account details
     the user enters text to a text field   id = password      ${short_password}
     the user selects the checkbox          termsAndConditions
 
-The user adds a new team member
-  [Arguments]  ${firstName}  ${email}
-  the user clicks the button/link    jQuery = button:contains("Add team member")
-  the user enters text to a text field   id = name   ${firstName}
-  the user enters text to a text field   id = email  ${email}
-  the user clicks the button/link        jQuery = button:contains("Invite to project")
-
 Custom suite setup
     The guest user opens the browser
 
