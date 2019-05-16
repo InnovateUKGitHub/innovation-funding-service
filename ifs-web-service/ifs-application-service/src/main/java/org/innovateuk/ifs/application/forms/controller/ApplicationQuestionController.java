@@ -42,8 +42,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -216,10 +218,13 @@ public class ApplicationQuestionController {
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
 
-        if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
-        } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+        switch (question.getQuestion().getQuestionSetupType()) {
+            case GRANT_AGREEMENT:
+                return format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+            case GRANT_TRANSFER_DETAILS:
+                return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+            case TERMS_AND_CONDITIONS:
+                return format("redirect:/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId);
         }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);

@@ -19,4 +19,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         return false;
     }
 
+    @Override
+    public boolean shouldDisplayActions() {
+        return false;
+    }
 }
