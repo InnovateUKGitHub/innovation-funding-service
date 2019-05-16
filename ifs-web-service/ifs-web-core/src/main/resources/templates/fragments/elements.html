@@ -123,6 +123,9 @@
     <div th:if="${fileRemoved}" class="event-alert" >
         <p class="govuk-body"><span>File has been removed successfully</span></p>
     </div>
+    <div th:if="${emailSent}" class="event-alert" >
+        <p class="govuk-body"><span>The email has been sent successfully</span></p>
+    </div>
 </th:block>
 
 <!-- =========================== Element: Formatted Date =========================== -->
