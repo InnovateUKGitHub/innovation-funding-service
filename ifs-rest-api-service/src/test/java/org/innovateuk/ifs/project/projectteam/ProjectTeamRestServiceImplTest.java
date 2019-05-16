@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -16,21 +17,21 @@ public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<Proj
     public void inviteProjectMember() {
         long projectId = 1L;
         ProjectUserInviteResource projectUserInviteResource = newProjectUserInviteResource().build();
-        setupPostWithRestResultExpectations(String.format("/project/%d/team/invite", projectId), projectUserInviteResource, HttpStatus.OK);
+        setupPostWithRestResultExpectations(format("/project/%d/team/invite", projectId), projectUserInviteResource, HttpStatus.OK);
 
         RestResult<Void> result = service.inviteProjectMember(projectId, projectUserInviteResource);
 
         assertTrue(result.isSuccess());
-        setupPostWithRestResulVerifications(String.format("/project/%d/team/invite", projectId), projectUserInviteResource);
+        setupPostWithRestResulVerifications(format("/project/%d/team/invite", projectId), projectUserInviteResource);
     }
 
     @Test
     public void removeUser() {
         long projectId = 654L;
         long userId = 987L;
-        setupPostWithRestResultExpectations(String.format("/project/%d/team/remove-user/%d", projectId, userId), null, OK);
+        setupPostWithRestResultExpectations(format("/project/%d/team/remove-user/%d", projectId, userId), null, OK);
         RestResult<Void> result = service.removeUser(projectId, userId);
-        setupPostWithRestResultVerifications(String.format("/project/%d/team/remove-user/%d", projectId, userId), Void.class);
+        setupPostWithRestResultVerifications(format("/project/%d/team/remove-user/%d", projectId, userId), Void.class);
         assertTrue(result.isSuccess());
     }
 
@@ -39,10 +40,10 @@ public class ProjectTeamRestServiceImplTest extends BaseRestServiceUnitTest<Proj
         long projectId = 456L;
         long inviteId = 789L;
         setupPostWithRestResultExpectations(
-                String.format("/project/%d/team/remove-invite/%d", projectId, inviteId), null, OK);
+                format("/project/%d/team/remove-invite/%d", projectId, inviteId), null, OK);
         RestResult<Void> result = service.removeInvite(projectId, inviteId);
         setupPostWithRestResultVerifications(
-                String.format("/project/%d/team/remove-invite/%d", projectId, inviteId), Void.class);
+                format("/project/%d/team/remove-invite/%d", projectId, inviteId), Void.class);
 
         assertTrue(result.isSuccess());
     }
