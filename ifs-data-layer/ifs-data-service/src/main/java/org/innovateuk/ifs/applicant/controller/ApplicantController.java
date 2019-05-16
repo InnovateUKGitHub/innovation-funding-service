@@ -13,16 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * ApplicationController exposes Application data and operations through a REST API.
+ * ApplicantController exposes Application data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/applicant")
 public class ApplicantController {
 
-    @Autowired
     private ApplicantService applicantService;
-    @Autowired
     private ApplicationDashboardService applicationDashboardService;
+
+    public ApplicantController() {
+    }
+
+    @Autowired
+    public ApplicantController(ApplicantService applicantService, ApplicationDashboardService applicationDashboardService) {
+        this.applicantService = applicantService;
+        this.applicationDashboardService = applicationDashboardService;
+    }
 
     @GetMapping("/{userId}/{applicationId}/question/{questionId}")
     public RestResult<ApplicantQuestionResource> getQuestion(@PathVariable("userId") final Long userId,

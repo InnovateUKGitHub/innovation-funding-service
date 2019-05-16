@@ -11,5 +11,5 @@ public interface ApplicantRestService {
 
     ApplicantQuestionResource getQuestion(Long user, Long application, Long question);
     ApplicantSectionResource getSection(Long user, Long application, Long section);
-    ApplicantDashboardResource getApplicantDashboard(Long user);
+    ApplicantDashboardResource getApplicantDashboard(long user);
 }

@@ -11,6 +11,6 @@ import org.springframework.security.core.parameters.P;
 public interface ApplicationDashboardService {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'CAN_VIEW_OWN_DASHBOARD')")
-    ServiceResult<ApplicantDashboardResource> getApplicantDashboard(@P("userId")Long userId);
+    ServiceResult<ApplicantDashboardResource> getApplicantDashboard(@P("userId")long userId);
 
 }

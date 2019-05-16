@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
 import java.time.ZonedDateTime;
@@ -55,23 +56,36 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DashboardPreviousApplicationResource that = (DashboardPreviousApplicationResource) o;
-        return
-                Objects.equal(title, that.title) &&
-                applicationId == that.applicationId &&
-                Objects.equal(competitionTitle, that.competitionTitle) &&
-                dashboardSection == that.dashboardSection &&
-                assignedToMe == that.assignedToMe &&
-                Objects.equal(applicationState, that.applicationState) &&
-                leadApplicant == that.leadApplicant &&
-                Objects.equal(endDate, that.endDate) &&
-                daysLeft == that.daysLeft &&
-                applicationProgress == that.applicationProgress &&
-                assignedToInterview == that.assignedToInterview;
+        return new EqualsBuilder()
+                .append(assignedToMe, that.assignedToMe)
+                .append(leadApplicant, that.leadApplicant)
+                .append(daysLeft, that.daysLeft)
+                .append(applicationProgress, that.applicationProgress)
+                .append(assignedToInterview, that.assignedToInterview)
+                .append(applicationState, that.applicationState)
+                .append(endDate, that.endDate)
+                .append(title, that.title)
+                .append(applicationId, that.applicationId)
+                .append(competitionTitle, that.competitionTitle)
+                .append(dashboardSection, that.dashboardSection)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(title, applicationId, competitionTitle, dashboardSection, assignedToMe, applicationState, leadApplicant, endDate, daysLeft, applicationProgress, assignedToInterview);
+        return new HashCodeBuilder(17, 37)
+                .append(assignedToMe)
+                .append(applicationState)
+                .append(leadApplicant)
+                .append(endDate)
+                .append(daysLeft)
+                .append(applicationProgress)
+                .append(assignedToInterview)
+                .append(title)
+                .append(applicationId)
+                .append(competitionTitle)
+                .append(dashboardSection)
+                .toHashCode();
     }
 
     public static class DashboardPreviousApplicationResourceBuilder {

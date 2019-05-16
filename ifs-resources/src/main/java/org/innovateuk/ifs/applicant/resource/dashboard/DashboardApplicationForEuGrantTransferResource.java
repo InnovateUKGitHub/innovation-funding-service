@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
 /**
@@ -12,7 +13,6 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
     private ApplicationState applicationState;
     private Long projectId;
 
-    // Private constructor to enforce immutability
     private DashboardApplicationForEuGrantTransferResource() {
     }
 
@@ -33,19 +33,28 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DashboardApplicationForEuGrantTransferResource that = (DashboardApplicationForEuGrantTransferResource) o;
-        return
-                Objects.equal(title, that.title) &&
-                applicationId == that.applicationId &&
-                Objects.equal(competitionTitle, that.competitionTitle) &&
-                dashboardSection == that.dashboardSection &&
-                applicationProgress == that.applicationProgress &&
-                Objects.equal(applicationState, that.applicationState) &&
-                Objects.equal(projectId, that.projectId);
+        return new EqualsBuilder()
+                .append(applicationProgress, that.applicationProgress)
+                .append(applicationState, that.applicationState)
+                .append(projectId, that.projectId)
+                .append(title, that.title)
+                .append(applicationId, that.applicationId)
+                .append(competitionTitle, that.competitionTitle)
+                .append(dashboardSection, that.dashboardSection)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(title, applicationId, competitionTitle, dashboardSection, applicationProgress, applicationState, projectId);
+        return new HashCodeBuilder(17, 37)
+                .append(applicationProgress)
+                .append(applicationState)
+                .append(projectId)
+                .append(title)
+                .append(applicationId)
+                .append(competitionTitle)
+                .append(dashboardSection)
+                .toHashCode();
     }
 
     public static class DashboardApplicationForEuGrantTransferResourceBuilder {

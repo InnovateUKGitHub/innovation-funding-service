@@ -28,7 +28,7 @@ public class ApplicantRestServiceImpl extends BaseRestService implements Applica
     }
 
     @Override
-    public ApplicantDashboardResource getApplicantDashboard(Long user) {
+    public ApplicantDashboardResource getApplicantDashboard(long user) {
         String path = format(USER_APPLICATIONS_DASHBOARD, BASE_URL, user);
         return getWithRestResult(path, ApplicantDashboardResource.class).getSuccess();
     }

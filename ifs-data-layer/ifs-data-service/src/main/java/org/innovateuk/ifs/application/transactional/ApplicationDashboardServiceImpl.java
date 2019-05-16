@@ -75,7 +75,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
     private CompetitionService competitionService;
 
     @Override
-    public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(Long userId) {
+    public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
         List<ProjectResource> nonWithdrawnProjects = getNonWithdrawnProjectResources(userId);
         List<ProcessRoleResource> processRoles = usersRolesService.getProcessRolesByUserId(userId).getSuccess();
         List<ProjectResource> projects = projectService.findByUserId(userId).getSuccess();

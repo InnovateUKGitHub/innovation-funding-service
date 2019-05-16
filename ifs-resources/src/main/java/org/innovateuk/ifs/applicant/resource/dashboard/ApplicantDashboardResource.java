@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
@@ -11,7 +12,6 @@ public class ApplicantDashboardResource {
     private List<DashboardApplicationInProgressResource> inProgress;
     private List<DashboardPreviousApplicationResource> previous;
 
-    // Private constructor - use the builder
     private ApplicantDashboardResource() {}
 
     public List<DashboardApplicationInSetupResource> getInSetup() {
@@ -34,16 +34,23 @@ public class ApplicantDashboardResource {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApplicantDashboardResource dashboard = (ApplicantDashboardResource) o;
-        return Objects.equal(inSetup, dashboard.inSetup) &&
-                Objects.equal(euGrantTransfer, dashboard.euGrantTransfer) &&
-                Objects.equal(inProgress, dashboard.inProgress) &&
-                Objects.equal(previous, dashboard.previous);
+        ApplicantDashboardResource that = (ApplicantDashboardResource) o;
+        return new EqualsBuilder()
+                .append(inSetup, that.inSetup)
+                .append(euGrantTransfer, that.euGrantTransfer)
+                .append(inProgress, that.inProgress)
+                .append(previous, that.previous)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(inSetup, euGrantTransfer, inProgress, previous);
+        return new HashCodeBuilder(17, 37)
+                .append(inSetup)
+                .append(euGrantTransfer)
+                .append(inProgress)
+                .append(previous)
+                .toHashCode();
     }
 
     public static class ApplicantDashboardResourceBuilder {

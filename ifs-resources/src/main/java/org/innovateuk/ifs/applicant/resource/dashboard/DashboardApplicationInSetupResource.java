@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Resource representing an application for use in the applicant dashboard.
@@ -27,18 +28,26 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DashboardApplicationInSetupResource that = (DashboardApplicationInSetupResource) o;
-        return
-            Objects.equal(title, that.title) &&
-            applicationId == that.applicationId &&
-            Objects.equal(competitionTitle, that.competitionTitle) &&
-            dashboardSection == that.dashboardSection &&
-            projectId == that.projectId &&
-            Objects.equal(projectTitle, that.projectTitle);
+        return new EqualsBuilder()
+                .append(projectId, that.projectId)
+                .append(projectTitle, that.projectTitle)
+                .append(title, that.title)
+                .append(applicationId, that.applicationId)
+                .append(competitionTitle, that.competitionTitle)
+                .append(dashboardSection, that.dashboardSection)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(title, applicationId, competitionTitle, dashboardSection, projectId, projectTitle);
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(projectTitle)
+                .append(title)
+                .append(applicationId)
+                .append(competitionTitle)
+                .append(dashboardSection)
+                .toHashCode();
     }
 
     public static class DashboardApplicationInSetupResourceBuilder {

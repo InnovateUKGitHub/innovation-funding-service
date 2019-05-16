@@ -20,14 +20,12 @@ import static java.time.ZonedDateTime.now;
 import static java.time.ZonedDateTime.of;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_PROGRESS;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.junit.Assert.assertThat;
 
 /**
  * Testing {@link ApplicantService}
@@ -48,9 +46,8 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         loginSteveSmith();
 
         ServiceResult<ApplicantDashboardResource> result = applicationDashboardService.getApplicantDashboard(USER_ID);
-        assertThat(result.isSuccess(), equalTo(true));
-
         ApplicantDashboardResource dashboard = result.getSuccess();
+
         assertEquals(0, dashboard.getInSetup().size());
         assertEquals(0, dashboard.getEuGrantTransfer().size());
         assertEquals(4, dashboard.getInProgress().size());
