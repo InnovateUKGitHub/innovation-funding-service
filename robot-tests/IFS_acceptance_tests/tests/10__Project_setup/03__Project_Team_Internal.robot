@@ -16,16 +16,7 @@ ${internalInviteeEmail}  internal@invitee.com
 Add new team member Validations
   [Documentation]
   Given the user navigates to the page   ${internalViewTeamPage}
-  When the user adds a new team member   Invitee   ${removeInviteEmail}
-
-Internal admin is able to add a new team member to lead partner
-
-Internal admin is able to add a new team member to non lead partners
-
-Internal admin is able to re-send an invitation
-
-Internal admin is able to remove a pending invitation
-
+  Then the user should see the element   jQuery = h1:contains("Project team")
 
 *** Keywords ***
 Custom suite setup
