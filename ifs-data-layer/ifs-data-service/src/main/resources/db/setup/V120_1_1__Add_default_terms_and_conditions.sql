@@ -6,7 +6,7 @@ INSERT INTO terms_and_conditions (name, template, version)
 
 
 -- Update link from template competition to new version of terms and conditions so these become the default Ts&Cs
---  used for new competitions of Sector, Programme, Generic and EOI type.
+-- used for new competitions of Sector, Programme, Generic and EOI type.
 SET @default_terms_and_conditions_id=(SELECT id FROM terms_and_conditions WHERE name='Innovate UK' AND version=2);
 SET @sector_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Sector');
 SET @programme_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Programme');
