@@ -20,6 +20,6 @@ public class QuestionStatusResourceDocs {
             fieldWithPath("assignedByName").description("The assigned by name of the question status"),
             fieldWithPath("assigneeUserId").description("The assignee user id of the question status"),
             fieldWithPath("assignedByUserId").description("The assigned by user id of the question status"),
-            fieldWithPath("completedByOrganisation").description("The id or the organisation that marked the question as complete"),
+            fieldWithPath("markedAsCompleteByOrganisationId").description("The id of the organisation that marked the question as complete"),
     };
 }
