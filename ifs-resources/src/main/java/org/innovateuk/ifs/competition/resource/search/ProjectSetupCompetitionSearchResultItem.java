@@ -12,6 +12,8 @@ public class ProjectSetupCompetitionSearchResultItem extends AbstractCompetition
     private Integer projectsCount;
     private ZonedDateTime manageFundingEmailDate;
 
+    private ProjectSetupCompetitionSearchResultItem() {} //for jackson
+
     public ProjectSetupCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, Integer projectsCount, ZonedDateTime manageFundingEmailDate) {
         super(id, name, competitionStatus);
         this.innovationAreaNames = innovationAreaNames;

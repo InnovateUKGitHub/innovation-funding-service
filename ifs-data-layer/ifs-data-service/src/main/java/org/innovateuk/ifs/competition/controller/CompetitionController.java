@@ -65,22 +65,22 @@ public class CompetitionController {
     }
 
     @GetMapping("/live")
-    public RestResult<List<LiveCompetitionSearchResultItem>> live() {
+    public RestResult<List<CompetitionSearchResultItem>> live() {
         return competitionSearchService.findLiveCompetitions().toGetResponse();
     }
 
     @GetMapping("/project-setup")
-    public RestResult<List<ProjectSetupCompetitionSearchResultItem>> projectSetup() {
+    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
         return competitionSearchService.findProjectSetupCompetitions().toGetResponse();
     }
 
     @GetMapping("/upcoming")
-    public RestResult<List<UpcomingCompetitionSearchResultItem>> upcoming() {
+    public RestResult<List<CompetitionSearchResultItem>> upcoming() {
         return competitionSearchService.findUpcomingCompetitions().toGetResponse();
     }
 
     @GetMapping("/non-ifs")
-    public RestResult<List<NonIfsCompetitionSearchResultItem>> nonIfs() {
+    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
         return competitionSearchService.findNonIfsCompetitions().toGetResponse();
     }
 

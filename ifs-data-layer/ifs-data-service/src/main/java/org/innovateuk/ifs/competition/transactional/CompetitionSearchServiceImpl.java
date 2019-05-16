@@ -44,13 +44,13 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     private MilestoneService milestoneService;
 
     @Override
-    public ServiceResult<List<LiveCompetitionSearchResultItem>> findLiveCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
         List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::toLiveCompetitionResult));
     }
 
     @Override
-    public ServiceResult<List<ProjectSetupCompetitionSearchResultItem>> findProjectSetupCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             List<Competition> competitions;
             if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
@@ -67,19 +67,19 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<UpcomingCompetitionSearchResultItem>> findUpcomingCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
         List<Competition> competitions = competitionRepository.findUpcoming();
         return serviceSuccess(simpleMap(competitions, this::toUpcomingCompetitionResult));
     }
 
     @Override
-    public ServiceResult<List<NonIfsCompetitionSearchResultItem>> findNonIfsCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
         List<Competition> competitions = competitionRepository.findNonIfs();
         return serviceSuccess(simpleMap(competitions, this::toNonIfsCompetitionSearchReult));
     }
 
     @Override
-    public ServiceResult<List<PreviousCompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
         return serviceSuccess(simpleMap(competitions, this::toPreviousCompetitionSearchResult).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
     }

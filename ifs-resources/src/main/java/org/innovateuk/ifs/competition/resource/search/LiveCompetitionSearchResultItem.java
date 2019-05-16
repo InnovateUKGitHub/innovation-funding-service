@@ -14,6 +14,8 @@ public class LiveCompetitionSearchResultItem extends AbstractCompetitionSearchRe
     private String competitionTypeName;
     private int numberOfApplications;
 
+    private LiveCompetitionSearchResultItem() {} //for jackson
+
     public LiveCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, int numberOfApplications) {
         super(id, name, competitionStatus);
         this.innovationAreaNames = innovationAreaNames;

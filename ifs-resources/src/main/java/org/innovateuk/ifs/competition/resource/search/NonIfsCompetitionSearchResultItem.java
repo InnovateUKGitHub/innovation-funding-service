@@ -10,6 +10,8 @@ public class NonIfsCompetitionSearchResultItem extends AbstractCompetitionSearch
     private Set<String> innovationAreaNames;
     private ZonedDateTime publishDate;
 
+    private NonIfsCompetitionSearchResultItem() {} //for jackson
+
     public NonIfsCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, ZonedDateTime publishDate) {
         super(id, name, competitionStatus);
         this.innovationAreaNames = innovationAreaNames;

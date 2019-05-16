@@ -11,19 +11,19 @@ import java.util.List;
 
 public interface CompetitionSearchService {
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<LiveCompetitionSearchResultItem>> findLiveCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<ProjectSetupCompetitionSearchResultItem>> findProjectSetupCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<UpcomingCompetitionSearchResultItem>> findUpcomingCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<NonIfsCompetitionSearchResultItem>> findNonIfsCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<PreviousCompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
+    ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
-import org.innovateuk.ifs.competition.resource.search.PreviousCompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class CompetitionPostSubmissionController {
     }
 
     @GetMapping("/feedback-released")
-    public RestResult<List<PreviousCompetitionSearchResultItem>> feedbackReleased() {
+    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
         return competitionSearchService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 

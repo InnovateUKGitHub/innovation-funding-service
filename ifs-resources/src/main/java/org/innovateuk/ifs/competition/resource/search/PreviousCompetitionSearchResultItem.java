@@ -11,6 +11,8 @@ public class PreviousCompetitionSearchResultItem extends AbstractCompetitionSear
     private String competitionTypeName;
     private ZonedDateTime openDate;
 
+    private PreviousCompetitionSearchResultItem() {} //for jackson
+
     public PreviousCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, ZonedDateTime openDate) {
         super(id, name, competitionStatus);
         this.innovationAreaNames = innovationAreaNames;

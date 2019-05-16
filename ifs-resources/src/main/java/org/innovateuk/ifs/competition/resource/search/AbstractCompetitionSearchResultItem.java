@@ -8,7 +8,9 @@ public abstract class AbstractCompetitionSearchResultItem implements Competition
     private String name;
     private CompetitionStatus competitionStatus;
 
-    public AbstractCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus) {
+    AbstractCompetitionSearchResultItem() {}
+
+    AbstractCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus) {
         this.id = id;
         this.name = name;
         this.competitionStatus = competitionStatus;

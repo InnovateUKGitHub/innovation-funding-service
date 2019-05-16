@@ -10,6 +10,8 @@ public class UpcomingCompetitionSearchResultItem extends AbstractCompetitionSear
     private String competitionTypeName;
     private String startDateDisplay;
 
+    private UpcomingCompetitionSearchResultItem() {} //for jackson
+
     public UpcomingCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, String startDateDisplay) {
         super(id, name, competitionStatus);
         this.innovationAreaNames = innovationAreaNames;
