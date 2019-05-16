@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -15,9 +16,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -35,7 +40,8 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                                          projectDetailsService,
                                          projectService,
                                          organisationRestService,
-                                         projectTeamRestService);
+                                         projectTeamRestService,
+                                         cookieFlashMessageFilter);
     }
 
     @Mock
@@ -52,6 +58,9 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Mock
     private ProjectTeamRestService projectTeamRestService;
+
+    @Mock
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Test
     public void viewProjectTeam() throws Exception {
@@ -148,6 +157,36 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     }
 
     @Test
+    public void resendInvite() throws Exception {
+        long projectId = 4L;
+        long organisationId = 21L;
+        long inviteId = 3L;
+
+        String invitedUserName = "test";
+        String invitedUserEmail = "test@test.com";
+
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(inviteId)
+                .withProject(projectId).withName("exist test", invitedUserName)
+                .withEmail("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withStatus(SENT)
+                .withLeadOrganisation(leadOrganisation.getId()).build(1);
+
+        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(projectTeamRestService.inviteProjectMember(projectId, existingInvites.get(0))).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/project/{id}/team", projectId)
+                .param("resend-invite", "3"))
+                .andExpect(status().is3xxRedirection());
+
+        verify(projectTeamRestService).inviteProjectMember(projectId, existingInvites.get(0));
+        verify(cookieFlashMessageFilter).setFlashMessage(any(), eq("emailSent"));
+
+    }
+
+    @Test
     public void removeUser() throws Exception {
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
@@ -161,5 +200,20 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                 .andExpect(status().is3xxRedirection());
 
         verify(projectTeamRestService).removeUser(projectId, userId);
+    }
+
+    @Test
+    public void removeInvite() throws Exception {
+
+        long inviteId = 777L;
+        long projectId = 888L;
+
+        when(projectTeamRestService.removeInvite(projectId, inviteId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/team")
+                                .param("remove-invite", String.valueOf(inviteId)))
+                .andExpect(status().is3xxRedirection());
+
+        verify(projectTeamRestService).removeInvite(projectId, inviteId);
     }
 }
