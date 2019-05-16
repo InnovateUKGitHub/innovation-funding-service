@@ -8,9 +8,6 @@ IFS.core.projectTeam = (function () {
     },
     init: function () {
       s = this.settings
-      if (jQuery(s.hideForm).is(':visible')) {
-        jQuery(s.showForm).hide()
-      }
       jQuery('body').on('click', s.showForm, function (e) {
         e.preventDefault()
         var formId = jQuery(this).data('show-form')

@@ -201,7 +201,8 @@
                         <button name="add-team-member"
                                 th:value="${organisation.orgId}"
                                 class="button-clear"
-                                th:attr="data-show-form=${'invite-user-' + organisation.orgId}">
+                                th:attr="data-show-form=${'invite-user-' + organisation.orgId},
+                                         aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
                             Add team member
                         </button>
                     </p>

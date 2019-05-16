@@ -8,7 +8,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
@@ -66,8 +65,6 @@ public class ProjectTeamViewModelPopulator {
                                                               true))  // all organisations editable for internal users
                 .sorted()
                 .collect(toList());
-
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
