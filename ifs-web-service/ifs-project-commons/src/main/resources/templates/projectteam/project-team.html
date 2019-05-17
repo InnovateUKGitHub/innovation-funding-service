@@ -31,7 +31,7 @@
             queries.</p>
         <p class="govuk-body">Everyone below can view all of project setup. If you add a new person they will show as
             pending until they register for the website. Once they register you can assign them a role.</p>
-        <th:block th:unless="${model.isInternalUserView()}">
+        <th:block th:unless="${model.isInternalUserView() or model.isReadOnly()}">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
