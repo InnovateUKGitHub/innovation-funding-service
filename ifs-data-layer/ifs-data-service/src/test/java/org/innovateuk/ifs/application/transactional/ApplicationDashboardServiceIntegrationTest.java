@@ -6,6 +6,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInPro
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -41,6 +42,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
 
     private static final ZonedDateTime END_DATE = of(LocalDate.of(2036, 9, 9), LocalTime.of(12, 0), ZoneId.of("Europe/London"));
 
+    @Ignore
     @Test
     public void testGetApplicantDashboard() {
         loginSteveSmith();
