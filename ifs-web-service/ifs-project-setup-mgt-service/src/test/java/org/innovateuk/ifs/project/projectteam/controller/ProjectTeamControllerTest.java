@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -119,7 +120,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
                                 .param("close-add-team-member-form", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/team", competitionId, projectId)))
+                .andExpect(redirectedUrl(format("/competition/%d/project/%d/team", competitionId, projectId)))
                 .andReturn();
     }
 
@@ -158,7 +159,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                                                    .param("name", userName)
                                                    .param("email", email))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/team", competitionId, projectId)))
+                .andExpect(redirectedUrl(format("/competition/%d/project/%d/team", competitionId, projectId)))
                 .andReturn();
 
         verify(projectTeamRestService).inviteProjectMember(projectId, projectUserInviteResource);

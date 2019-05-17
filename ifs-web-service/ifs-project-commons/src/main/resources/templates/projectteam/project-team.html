@@ -129,7 +129,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <table id="invite-user" th:if="${organisation.editable}"
+                <table th:id="${'invite-user-' + organisation.orgId}" th:if="${organisation.editable}"
                        class="govuk-table govuk-!-margin-bottom-2"
                        th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
                     <thead class="govuk-table__head">
@@ -158,6 +158,7 @@
                                    class="govuk-input govuk-input--width-30"
                                    type="text"
                                    required="required"
+                                   th:disabled="${!organisation.openAddTeamMemberForm}"
                                    th:attr="data-required-errormessage=#{validation.standard.name.required}"/>
                         </td>
                         <td class="govuk-table__cell govuk-form-group"
@@ -175,6 +176,7 @@
                                    class="govuk-input govuk-input--width-30"
                                    type="email"
                                    required="required"
+                                   th:disabled="${!organisation.openAddTeamMemberForm}"
                                    th:attr="data-required-errormessage=#{validation.invite.email.format.required}"/>
                         </td>
                         <td class="govuk-table__cell">
@@ -187,7 +189,7 @@
                         <td class="govuk-table__cell">
                             <button name="close-add-team-member-form"
                                     class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
-                                    data-hide-form="invite-user">
+                                    th:attr="data-hide-form=${'invite-user-' + organisation.orgId}">
                                 Remove
                             </button>
                         </td>
@@ -199,7 +201,8 @@
                         <button name="add-team-member"
                                 th:value="${organisation.orgId}"
                                 class="button-clear"
-                                data-show-form="invite-user">
+                                th:attr="data-show-form=${'invite-user-' + organisation.orgId},
+                                         aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
                             Add team member
                         </button>
                     </p>
