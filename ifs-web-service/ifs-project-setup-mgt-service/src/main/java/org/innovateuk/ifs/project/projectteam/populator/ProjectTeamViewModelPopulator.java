@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -61,6 +61,9 @@ public class ProjectTeamViewModelPopulator {
                 .sorted()
                 .collect(toList());
 
+        // these roles have read only views, the support users and ifs admins can edit
+        boolean isReadOnly = loggedInUser.hasAnyRoles(INNOVATION_LEAD, STAKEHOLDER, COMP_ADMIN, PROJECT_FINANCE);
+
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
                 projectResource.getName(),
@@ -71,7 +74,8 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 loggedInUser.getId(),
                 false,
-                true);
+                true,
+                isReadOnly);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {

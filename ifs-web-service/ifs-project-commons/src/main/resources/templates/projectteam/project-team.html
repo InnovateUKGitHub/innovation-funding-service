@@ -107,7 +107,7 @@
                         </td>
                         <td class="govuk-table__cell"
                             th:classappend="${user.invite ? 'hint' : ''}">
-                            <th:block th:if="${organisation.editable}">
+                            <th:block th:if="${organisation.editable and !model.isReadOnly()}">
                                 <th:block
                                     th:if="${!user.invite and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager()}">
                                     <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
@@ -129,7 +129,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <table th:id="${'invite-user-' + organisation.orgId}" th:if="${organisation.editable}"
+                <table th:id="${'invite-user-' + organisation.orgId}" th:if="${organisation.editable and !model.isReadOnly()}"
                        class="govuk-table govuk-!-margin-bottom-2"
                        th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
                     <thead class="govuk-table__head">
@@ -196,7 +196,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <th:block th:if="${organisation.editable}">
+                <th:block th:if="${organisation.editable and !model.isReadOnly()}">
                     <p class="govuk-body">
                         <button name="add-team-member"
                                 th:value="${organisation.orgId}"

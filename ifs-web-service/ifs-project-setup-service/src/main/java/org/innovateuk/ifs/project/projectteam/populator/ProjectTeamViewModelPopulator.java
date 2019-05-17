@@ -37,7 +37,10 @@ public class ProjectTeamViewModelPopulator {
 
     private final ProjectDetailsService projectDetailsService;
 
-    public ProjectTeamViewModelPopulator(ProjectService projectService, CompetitionRestService competitionRestService, StatusService statusService, ProjectDetailsService projectDetailsService) {
+    public ProjectTeamViewModelPopulator(ProjectService projectService,
+                                         CompetitionRestService competitionRestService,
+                                         StatusService statusService,
+                                         ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.statusService = statusService;
@@ -61,6 +64,7 @@ public class ProjectTeamViewModelPopulator {
         List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
 
         boolean isLead = loggedInUserOrg.equals(leadOrganisation);
+        boolean isMonitoringOfficer = loggedInUser.getId().equals(projectResource.getMonitoringOfficerUser());
 
         List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
@@ -84,7 +88,8 @@ public class ProjectTeamViewModelPopulator {
                 isLead,
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
-                false);
+                false,
+                isMonitoringOfficer);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
