@@ -88,17 +88,4 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         List<Long> response = service.getCompletedSectionIds(123L, 456L).getSuccess();
         assertEquals(returnedResponse, response);
     }
-
-    @Test
-    public void getIncompleteSectionIds() {
-
-        String expectedUrl = sectionRestUrl + "/get-incomplete-sections/123";
-        List<Long> returnedResponse = asList(1L, 2L, 3L);
-
-        setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
-
-        // now run the method under test
-        List<Long> response = service.getIncompletedSectionIds(123L).getSuccess();
-        assertEquals(returnedResponse, response);
-    }
 }
