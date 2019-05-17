@@ -79,7 +79,7 @@
                 </th:block>
                 <th:block th:unless="${customLink}">
                     <th:block th:if="${projectSetup}">
-                        <a th:href="@{/project-setup-management/competition/{competitionId}/status(competitionId=${competition.id})}"
+                        <a th:href="@{~/project-setup-management/competition/{competitionId}/status(competitionId=${competition.id})}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
