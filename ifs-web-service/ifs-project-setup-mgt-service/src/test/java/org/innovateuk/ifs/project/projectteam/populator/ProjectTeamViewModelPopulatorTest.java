@@ -7,14 +7,13 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
-import org.innovateuk.ifs.status.StatusService;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -36,6 +34,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -52,14 +51,11 @@ public class ProjectTeamViewModelPopulatorTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private StatusService statusService;
-
-    @Mock
     private ProjectDetailsService projectDetailsService;
 
     @Test
     public void populate() {
-        UserResource loggedInUser = newUserResource().withId(123L).build();
+        UserResource loggedInUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).withId(123L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Imaginative competition name")
                 .build();
@@ -98,7 +94,6 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
-        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectDetailsService.getInvitesByProject(project.getId())).thenReturn(serviceSuccess(invites));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
@@ -108,7 +103,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertEquals((long) project.getId(), model.getProjectId());
         assertEquals(false, model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
-        assertEquals(false, model.isInternalUserView());
+        assertTrue(model.isInternalUserView());
         assertEquals(2, model.getPartnerOrgs().size());
 
         ProjectOrganisationViewModel partnerOneViewModel = model.getPartnerOrgs().stream().filter(view -> view.getOrgId() == partnerOne.getId()).findAny().get();
@@ -129,3 +124,4 @@ public class ProjectTeamViewModelPopulatorTest {
     }
 
 }
+

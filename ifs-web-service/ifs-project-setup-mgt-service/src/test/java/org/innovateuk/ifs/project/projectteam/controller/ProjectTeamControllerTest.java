@@ -21,7 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -72,14 +74,14 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
         long projectId = 999L;
+        long competitionId = 888L;
         ProjectTeamViewModel expected = mock(ProjectTeamViewModel.class);
 
         when(populator.populate(projectId, loggedInUser)).thenReturn(expected);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/team", projectId))
+        MvcResult result = mockMvc.perform(get("/competition/{compId}/project/{projectId}/team", competitionId, projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("projectteam/project-team"))
-                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
@@ -88,20 +90,20 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Test
     public void openAddTeamMemberForm() throws Exception {
-        UserResource loggedInUser = newUserResource().build();
+        UserResource loggedInUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
         setLoggedInUser(loggedInUser);
         long projectId = 999L;
+        long competitionId = 888L;
         long organisationId = 3L;
         ProjectTeamViewModel expected = mock(ProjectTeamViewModel.class);
 
         when(populator.populate(projectId, loggedInUser)).thenReturn(expected);
         when(expected.openAddTeamMemberForm(organisationId)).thenReturn(expected);
 
-        MvcResult result = mockMvc.perform(post("/project/{id}/team", projectId)
-                .param("add-team-member", String.valueOf(organisationId)))
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
+                                                   .param("add-team-member", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("projectteam/project-team"))
-                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
@@ -113,19 +115,21 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     @Test
     public void closeAddTeamMemberForm() throws Exception {
         long projectId = 999L;
+        long competitionId = 888L;
 
-        mockMvc.perform(post("/project/{id}/team", projectId)
-                .param("close-add-team-member-form", ""))
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
+                                .param("close-add-team-member-form", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/project/%d/team", projectId)))
+                .andExpect(redirectedUrl(format("/competition/%d/project/%d/team", competitionId, projectId)))
                 .andReturn();
     }
 
     @Test
     public void inviteToProject() throws Exception {
-        UserResource loggedInUser = newUserResource().build();
+        UserResource loggedInUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
         setLoggedInUser(loggedInUser);
         long projectId = 999L;
+        long competitionId = 888L;
         ProjectTeamViewModel expected = mock(ProjectTeamViewModel.class);
         String email = "someone@gmail.com";
         String userName = "Some One";
@@ -147,15 +151,15 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectDetailsService.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
-        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(asList(projectUserInviteResource)));
+        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(singletonList(projectUserInviteResource)));
         when(projectTeamRestService.inviteProjectMember(projectId, projectUserInviteResource)).thenReturn(restSuccess());
 
-        MvcResult result = mockMvc.perform(post("/project/{id}/team", projectId)
-                .param("invite-to-project", String.valueOf(organisationResource.getId()))
-                .param("name", userName)
-                .param("email", email))
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
+                                                   .param("invite-to-project", String.valueOf(organisationResource.getId()))
+                                                   .param("name", userName)
+                                                   .param("email", email))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/project/%d/team", projectId)))
+                .andExpect(redirectedUrl(format("/competition/%d/project/%d/team", competitionId, projectId)))
                 .andReturn();
 
         verify(projectTeamRestService).inviteProjectMember(projectId, projectUserInviteResource);
@@ -164,6 +168,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     @Test
     public void resendInvite() throws Exception {
         long projectId = 4L;
+        long competitionId = 5L;
         long organisationId = 21L;
         long inviteId = 3L;
 
@@ -182,29 +187,12 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
         when(projectTeamRestService.inviteProjectMember(projectId, existingInvites.get(0))).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/project/{id}/team", projectId)
-                .param("resend-invite", "3"))
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
+                                .param("resend-invite", "3"))
                 .andExpect(status().is3xxRedirection());
 
         verify(projectTeamRestService).inviteProjectMember(projectId, existingInvites.get(0));
         verify(cookieFlashMessageFilter).setFlashMessage(any(), eq("emailSent"));
-
-    }
-
-    @Test
-    public void removeUser() throws Exception {
-        UserResource loggedInUser = newUserResource().build();
-        setLoggedInUser(loggedInUser);
-        long userId = 444L;
-        long projectId = 555L;
-
-        when(projectTeamRestService.removeUser(projectId, userId)).thenReturn(restSuccess());
-
-        mockMvc.perform(post("/project/" + projectId + "/team")
-                .param("remove-team-member", String.valueOf(userId)))
-                .andExpect(status().is3xxRedirection());
-
-        verify(projectTeamRestService).removeUser(projectId, userId);
     }
 
     @Test
@@ -212,10 +200,11 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
         long inviteId = 777L;
         long projectId = 888L;
+        long competitionId = 999L;
 
         when(projectTeamRestService.removeInvite(projectId, inviteId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/team")
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/team")
                                 .param("remove-invite", String.valueOf(inviteId)))
                 .andExpect(status().is3xxRedirection());
 
