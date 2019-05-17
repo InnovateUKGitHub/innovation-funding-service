@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.project.projectteam.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectteam.controller.ProjectTeamController;
 import org.innovateuk.ifs.project.projectteam.transactional.ProjectTeamService;
 import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -47,6 +47,23 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
                                         parameterWithName("userId").description("Id of the user to be removed from the project"))));
 
         verify(projectTeamService).removeUser(composite);
+    }
+
+    @Test
+    public void removeInvite() throws Exception {
+        long projectId = 456L;
+        long inviteId = 789L;
+
+        when(projectTeamService.removeInvite(inviteId, projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/team/remove-invite/{inviteId}", projectId, inviteId))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                                pathParameters(
+                                        parameterWithName("projectId").description("Id of project the user was invited to"),
+                                        parameterWithName("inviteId").description("Id of the invite to be removed"))));
+
+        verify(projectTeamService).removeInvite(inviteId, projectId);
     }
 
     @Test

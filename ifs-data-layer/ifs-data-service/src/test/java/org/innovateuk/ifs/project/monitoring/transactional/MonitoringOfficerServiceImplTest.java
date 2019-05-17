@@ -249,7 +249,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
 
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(null).build()));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer().build()));
         when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceSuccess(newLegacyMonitoringOfficerResource()
                 .withEmail(email)
                 .withFirstName(firstName)
@@ -273,7 +273,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     public void findMonitoringOfficerForProject_notFound() {
         long projectId = 1L;
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(null).build()));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer().build()));
         when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceFailure(CommonErrors.notFoundError(LegacyMonitoringOfficer.class)));
 
         ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);

@@ -700,6 +700,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void isViewingOwnDashboard() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.isViewingOwnDashboard(user, user));
+    }
+
+    @Test
+    public void isNotViewingOwnDashboard() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.isViewingOwnDashboard(user, anotherUser));
+    }
+
+    @Test
     public void ifsAdminCanViewAnyUsersProfile() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
