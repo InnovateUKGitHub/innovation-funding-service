@@ -1,0 +1,102 @@
+2019-05-13 14:46:52,268 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2019-05-13 14:46:52,298 INFO o.a.j.JMeter: Loading user properties from: /usr/local/Cellar/jmeter/5.0/libexec/bin/user.properties
+2019-05-13 14:46:52,299 INFO o.a.j.JMeter: Loading system properties from: /usr/local/Cellar/jmeter/5.0/libexec/bin/system.properties
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: Copyright (c) 1998-2018 The Apache Software Foundation
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: Version 5.0 r1840935
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: java.version=1.8.0_161
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: os.name=Mac OS X
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: os.arch=x86_64
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: os.version=10.13.3
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: file.encoding=UTF-8
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: Max memory     =1073741824
+2019-05-13 14:46:52,307 INFO o.a.j.JMeter: Available Processors =4
+2019-05-13 14:46:52,313 INFO o.a.j.JMeter: Default Locale=English (EN)
+2019-05-13 14:46:52,314 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2019-05-13 14:46:52,314 INFO o.a.j.JMeter: JMeterHome=/usr/local/Cellar/jmeter/5.0/libexec
+2019-05-13 14:46:52,314 INFO o.a.j.JMeter: user.dir  =/Users/valfrost/innovation-funding-service/taurus
+2019-05-13 14:46:52,314 INFO o.a.j.JMeter: PWD       =/Users/valfrost/innovation-funding-service/taurus
+2019-05-13 14:46:52,328 INFO o.a.j.JMeter: IP: 192.168.1.69 Name: Vals-MBP.lan FullName: vals-mbp.lan
+2019-05-13 14:46:55,527 INFO o.a.j.g.a.LookAndFeelCommand: Installing Darcula LAF
+2019-05-13 14:46:55,566 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.bulenkov.darcula.DarculaLaf [Darcula]
+2019-05-13 14:46:55,566 INFO o.a.j.JMeter: Setting LAF to: com.bulenkov.darcula.DarculaLaf
+2019-05-13 14:46:55,779 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2019-05-13 14:46:56,647 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2019-05-13 14:46:56,647 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2019-05-13 14:46:59,279 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-05-13 14:46:59,280 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-05-13 14:46:59,280 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-05-13 14:46:59,280 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-05-13 14:46:59,280 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2019-05-13 14:46:59,280 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2019-05-13 14:46:59,761 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2019-05-13 14:46:59,761 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file /usr/local/Cellar/jmeter/5.0/libexec/bin/proxyserver.jks
+2019-05-13 14:46:59,953 INFO o.a.j.s.FileServer: Default base='/Users/valfrost/innovation-funding-service/taurus'
+2019-05-13 14:47:00,286 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2019-05-13 14:47:00,286 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2019-05-13 14:47:00,286 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2019-05-13 14:47:00,287 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2019-05-13 14:49:55,669 INFO o.a.j.g.a.Load: Loading file: /Users/valfrost/innovation-funding-service/taurus/applicant_new.jmx
+2019-05-13 14:49:55,669 INFO o.a.j.s.FileServer: Set new base='/Users/valfrost/innovation-funding-service/taurus'
+2019-05-13 14:49:55,850 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2019-05-13 14:49:55,903 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2019-05-13 14:49:55,905 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2019-05-13 14:49:55,908 INFO o.a.j.s.SaveService: Loading file: /Users/valfrost/innovation-funding-service/taurus/applicant_new.jmx
+2019-05-13 14:49:55,970 INFO o.a.j.p.h.c.CacheManager: Will only cache the following methods: [GET]
+2019-05-13 14:49:55,971 INFO o.a.j.p.h.c.CookieManager: Settings: Delete null: true Check: true Allow variable: true Save: false Prefix: COOKIE_
+2019-05-13 14:49:56,382 INFO o.a.j.s.FileServer: Set new base='/Users/valfrost/innovation-funding-service/taurus'
+2019-05-13 14:50:15,581 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2019-05-13 14:50:15,583 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2019-05-13 14:50:15,583 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2019-05-13 14:50:15,593 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2019-05-13 14:50:15,747 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Competition Management
+2019-05-13 14:50:15,747 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group Competition Management.
+2019-05-13 14:50:15,747 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2019-05-13 14:50:15,748 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=10 perThread=10000.0 delayedStart=false
+2019-05-13 14:50:15,753 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2019-05-13 14:50:15,753 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2019-05-13 14:50:15,765 INFO o.a.j.t.JMeterThread: Thread started: Competition Management 1-1
+2019-05-13 14:50:15,770 INFO o.a.j.s.FileServer: Stored: user_data.csv
+2019-05-13 14:50:15,770 ERROR o.a.j.t.JMeterThread: Test failed!
+java.lang.IllegalArgumentException: File user_data.csv must exist and be readable
+	at org.apache.jmeter.services.FileServer.createBufferedReader(FileServer.java:424) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.services.FileServer.getReader(FileServer.java:390) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.services.FileServer.getParsedLine(FileServer.java:372) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.config.CSVDataSet.iterationStart(CSVDataSet.java:202) ~[ApacheJMeter_components.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.fireIterationStart(GenericController.java:399) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.fireIterEvents(GenericController.java:391) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.next(GenericController.java:160) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.LoopController.next(LoopController.java:134) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.threads.AbstractThreadGroup.next(AbstractThreadGroup.java:87) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.threads.JMeterThread.run(JMeterThread.java:251) [ApacheJMeter_core.jar:5.0 r1840935]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+2019-05-13 14:50:15,778 INFO o.a.j.t.JMeterThread: Thread finished: Competition Management 1-1
+2019-05-13 14:50:15,778 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2019-05-13 14:50:15,779 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2019-05-13 14:50:35,614 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2019-05-13 14:50:35,614 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2019-05-13 14:50:35,623 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2019-05-13 14:50:35,720 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Competition Management
+2019-05-13 14:50:35,721 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group Competition Management.
+2019-05-13 14:50:35,721 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2019-05-13 14:50:35,721 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=10 perThread=10000.0 delayedStart=false
+2019-05-13 14:50:35,722 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2019-05-13 14:50:35,722 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2019-05-13 14:50:35,723 INFO o.a.j.t.JMeterThread: Thread started: Competition Management 1-1
+2019-05-13 14:50:35,724 INFO o.a.j.s.FileServer: Stored: user_data.csv
+2019-05-13 14:50:35,724 ERROR o.a.j.t.JMeterThread: Test failed!
+java.lang.IllegalArgumentException: File user_data.csv must exist and be readable
+	at org.apache.jmeter.services.FileServer.createBufferedReader(FileServer.java:424) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.services.FileServer.getReader(FileServer.java:390) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.services.FileServer.getParsedLine(FileServer.java:372) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.config.CSVDataSet.iterationStart(CSVDataSet.java:202) ~[ApacheJMeter_components.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.fireIterationStart(GenericController.java:399) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.fireIterEvents(GenericController.java:391) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.GenericController.next(GenericController.java:160) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.control.LoopController.next(LoopController.java:134) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.threads.AbstractThreadGroup.next(AbstractThreadGroup.java:87) ~[ApacheJMeter_core.jar:5.0 r1840935]
+	at org.apache.jmeter.threads.JMeterThread.run(JMeterThread.java:251) [ApacheJMeter_core.jar:5.0 r1840935]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+2019-05-13 14:50:35,724 INFO o.a.j.t.JMeterThread: Thread finished: Competition Management 1-1
+2019-05-13 14:50:35,725 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2019-05-13 14:50:35,725 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
