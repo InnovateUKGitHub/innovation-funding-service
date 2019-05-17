@@ -81,7 +81,10 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(simpleMap(competitions, this::toPreviousCompetitionSearchResult).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
+        return serviceSuccess(competitions.stream()
+                .map(this::toPreviousCompetitionSearchResult)
+                .sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate()))
+                .collect(Collectors.toList()));
     }
 
     @Override

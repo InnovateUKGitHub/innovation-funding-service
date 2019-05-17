@@ -7,19 +7,13 @@ import java.util.Set;
 
 public class NonIfsCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
-    private Set<String> innovationAreaNames;
     private ZonedDateTime publishDate;
 
     private NonIfsCompetitionSearchResultItem() {} //for jackson
 
     public NonIfsCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, ZonedDateTime publishDate) {
-        super(id, name, competitionStatus, null);
-        this.innovationAreaNames = innovationAreaNames;
+        super(id, name, competitionStatus, null, innovationAreaNames);
         this.publishDate = publishDate;
-    }
-
-    public Set<String> getInnovationAreaNames() {
-        return innovationAreaNames;
     }
 
     public ZonedDateTime getPublishDate() {

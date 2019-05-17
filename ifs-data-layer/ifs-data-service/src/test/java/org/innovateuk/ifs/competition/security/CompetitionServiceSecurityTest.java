@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
@@ -17,7 +16,6 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -141,70 +139,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void findLiveCompetitions() {
-        UserResource user = new UserResource();
-        setLoggedInUser(user);
-
-        when(classUnderTestMock.findLiveCompetitions())
-                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findLiveCompetitions();
-        assertEquals(0, results.getSuccess().size());
-
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verifyNoMoreInteractions(rules);
-    }
-
-    @Test
-    public void findProjectSetupCompetitions() {
-        UserResource user = new UserResource();
-        setLoggedInUser(user);
-
-        when(classUnderTestMock.findProjectSetupCompetitions())
-                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
-        assertEquals(0, results.getSuccess().size());
-
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verifyNoMoreInteractions(rules);
-    }
-
-    @Test
-    public void findUpcomingCompetitions() {
-        UserResource user = new UserResource();
-        setLoggedInUser(user);
-
-        when(classUnderTestMock.findUpcomingCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findUpcomingCompetitions();
-        assertEquals(0, results.getSuccess().size());
-
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verifyNoMoreInteractions(rules);
-    }
-
-    @Test
-    public void countCompetitions() {
-
-
-        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> verifyNoMoreInteractions(rules));
-    }
-
-    @Test
-    public void searchCompetitions() {
-        setLoggedInUser(new UserResource());
-
-        assertAccessDenied(() -> classUnderTest.searchCompetitions("string", 1, 1), () -> verifyNoMoreInteractions(rules));
-    }
-
-    @Test
     public void closeAssessment() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessors(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
@@ -222,23 +156,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     @Test
     public void manageInformState() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.manageInformState(1L), PROJECT_FINANCE, COMP_ADMIN);
-    }
-
-    @Test
-    public void findFeedbackReleasedCompetitions() {
-        UserResource user = new UserResource();
-        setLoggedInUser(user);
-
-        when(classUnderTestMock.findFeedbackReleasedCompetitions())
-                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
-        assertEquals(0, results.getSuccess().size());
-
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
-        verifyNoMoreInteractions(rules);
     }
 
     @Test

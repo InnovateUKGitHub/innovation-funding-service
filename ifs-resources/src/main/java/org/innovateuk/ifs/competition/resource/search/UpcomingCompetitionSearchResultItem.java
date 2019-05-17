@@ -6,19 +6,13 @@ import java.util.Set;
 
 public class UpcomingCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
-    private Set<String> innovationAreaNames;
     private String startDateDisplay;
 
     private UpcomingCompetitionSearchResultItem() {} //for jackson
 
     public UpcomingCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, String startDateDisplay) {
-        super(id, name, competitionStatus, competitionTypeName);
-        this.innovationAreaNames = innovationAreaNames;
+        super(id, name, competitionStatus, competitionTypeName, innovationAreaNames);
         this.startDateDisplay = startDateDisplay;
-    }
-
-    public Set<String> getInnovationAreaNames() {
-        return innovationAreaNames;
     }
 
     public String getStartDateDisplay() {

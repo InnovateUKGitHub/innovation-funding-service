@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.competition.controller.CompetitionManagementDashboardController;
@@ -24,7 +24,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -32,7 +31,8 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -73,11 +73,10 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Before
     public void setUp() {
-
-        competitions = new HashMap<>();
-        addInnovationAreaNamesToCompetitions(competitions);
         counts = new CompetitionCountResource();
-
+        competitions = new HashMap<>();
+        CompetitionSearchResultItem openItem = newLiveCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
+        competitions.put(CompetitionStatus.OPEN, asList(openItem));
         when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
     }
 
@@ -186,11 +185,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         verify(bankDetailsRestService, only()).countPendingBankDetailsApprovals();
     }
 
-    private void addInnovationAreaNamesToCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions) {
-        CompetitionSearchResultItem openItem = newCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
-        competitions.put(CompetitionStatus.OPEN, asList(openItem));
-    }
-
     @Test
     public void upcomingDashboard() throws Exception {
 
@@ -207,7 +201,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         UpcomingDashboardViewModel viewModel = (UpcomingDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO), viewModel.getFormattedInnovationAreas());
     }
 
     @Test
@@ -239,8 +232,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void previousDashboard() throws Exception {
 
         List<CompetitionSearchResultItem> competitions = new ArrayList<>();
-        competitions.add(newCompetitionSearchResultItem().withId(111L).withOpenDate(ZonedDateTime.now()).build());
-        competitions.add(newCompetitionSearchResultItem().withId(222L).withOpenDate(ZonedDateTime.now().plusMinutes(10L)).build());
+        competitions.add(newPreviousCompetitionSearchResultItem().withId(111L).build());
+        competitions.add(newPreviousCompetitionSearchResultItem().withId(222L).build());
         CompetitionCountResource counts = new CompetitionCountResource();
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionMap = new HashMap<>();
