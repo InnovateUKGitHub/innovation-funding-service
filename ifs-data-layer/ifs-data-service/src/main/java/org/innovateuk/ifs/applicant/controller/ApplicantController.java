@@ -46,7 +46,7 @@ public class ApplicantController {
     }
 
     @GetMapping("/{userId}/applications/dashboard" )
-    public RestResult<ApplicantDashboardResource> getApplicantDashboard(@PathVariable("userId") final Long userId) {
+    public RestResult<ApplicantDashboardResource> getApplicantDashboard(@PathVariable("userId") final long userId) {
         return applicationDashboardService.getApplicantDashboard(userId).toGetResponse();
     }
 

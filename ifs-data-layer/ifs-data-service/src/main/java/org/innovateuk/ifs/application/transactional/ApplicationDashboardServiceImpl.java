@@ -14,7 +14,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
@@ -34,6 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -52,7 +52,7 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
- * Transactional and secured service focused around the processing of Applications.
+ * Transactional and secured service that generates a dashboard of applications for a user.
  */
 @Service
 public class ApplicationDashboardServiceImpl extends BaseTransactionalService implements ApplicationDashboardService {
@@ -76,16 +76,15 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
-        List<ProjectResource> nonWithdrawnProjects = getNonWithdrawnProjectResources(userId);
-        List<ProcessRoleResource> processRoles = usersRolesService.getProcessRolesByUserId(userId).getSuccess();
         List<ProjectResource> projects = projectService.findByUserId(userId).getSuccess();
+        List<ProcessRoleResource> processRoles = usersRolesService.getProcessRolesByUserId(userId).getSuccess();
         List<ApplicationResource> applications = findByUserId(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getCompetitionsById(applications, projects);
 
-        List<DashboardApplicationInSetupResource> inSetup = getUserApplicationsInSetup(nonWithdrawnProjects, competitionsById);
-        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(nonWithdrawnProjects, processRoles, competitionsById, applications);
+        List<DashboardApplicationInSetupResource> inSetup = getUserApplicationsInSetup(projects, competitionsById);
+        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(projects, processRoles, applications, competitionsById);
         List<DashboardApplicationInProgressResource> inProgress = getUserApplicationsInProgress(processRoles, competitionsById, applications);
-        List<DashboardPreviousApplicationResource> previous = getUserPreviousApplications(userId, processRoles, projects, competitionsById);
+        List<DashboardPreviousApplicationResource> previous = getUserPreviousApplications(projects, processRoles, competitionsById, userId);
 
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResourceBuilder()
                 .withInSetup(inSetup)
@@ -97,9 +96,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         return serviceSuccess(applicantDashboardResource);
     }
 
-    private List<DashboardApplicationInSetupResource> getUserApplicationsInSetup(List<ProjectResource> nonWithdrawnProjects, Map<Long, CompetitionResource> competitionsById) {
-        return nonWithdrawnProjects
+    private List<DashboardApplicationInSetupResource> getUserApplicationsInSetup(List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
+        return projects
                 .stream()
+                .filter(isNotWithdrawn())
                 .map(project -> {
                     CompetitionResource competition = competitionsById.get(project.getCompetition());
                     if (competition.isH2020()) {
@@ -119,7 +119,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardApplicationForEuGrantTransferResource> getUserApplicationsForEuGrantTransfers(List<ProjectResource> nonWithdrawnProjectResources, List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById, List<ApplicationResource> applications) {
+    private List<DashboardApplicationForEuGrantTransferResource> getUserApplicationsForEuGrantTransfers(List<ProjectResource> projects, List<ProcessRoleResource> processRoles, List<ApplicationResource> applications, Map<Long, CompetitionResource> competitionsById) {
         List<Long> applicantProcessRoleIds = processRoles
                 .stream()
                 .filter(this::hasAnApplicantRole)
@@ -132,8 +132,9 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .filter(application -> competitionsById.get(application.getCompetition()).isH2020())
                 .collect(toList());
 
-        Map<Long, ProjectResource> euGrantTransferProjects = nonWithdrawnProjectResources
+        Map<Long, ProjectResource> euGrantTransferProjects = projects
                 .stream()
+                .filter(isNotWithdrawn())
                 .filter(projectResource -> projectIsForEuGrantFundingCompetition(projectResource, competitionsById))
                 .collect(toMap(ProjectResource::getApplication, identity()));
 
@@ -201,7 +202,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardPreviousApplicationResource> getUserPreviousApplications(Long userId, List<ProcessRoleResource> processRoles, List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardPreviousApplicationResource> getUserPreviousApplications(List<ProjectResource> projects, List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById, long userId) {
         List<ApplicationResource> nonH2020ApplicationsForUser = filterApplicationsForUserForNonH2020Competitions(userId, processRoles, projects, competitionsById);
 
         return nonH2020ApplicationsForUser
@@ -256,6 +257,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         } else {
             return false;
         }
+    }
+
+    private Predicate<ProjectResource> isNotWithdrawn() {
+        return projectResource -> !projectResource.isWithdrawn();
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
@@ -315,16 +320,6 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .stream()
                 .map(ProcessRole::getApplicationId)
                 .collect(toSet());
-    }
-
-    private List<ProjectResource> getNonWithdrawnProjectResources(long userId) {
-        return projectUserRepository.findByUserId(userId)
-                .stream()
-                .map(ProjectUser::getProcess)
-                .distinct()
-                .map(projectMapper::mapToResource)
-                .filter(projectResource -> !projectResource.isWithdrawn())
-                .collect(toList());
     }
 
     private boolean applicationFinished(ApplicationResource application) {

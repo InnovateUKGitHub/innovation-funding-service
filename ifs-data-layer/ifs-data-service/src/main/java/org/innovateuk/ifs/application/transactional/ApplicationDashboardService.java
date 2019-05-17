@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 
 /**
- * Security annotated interface for {@ApplicationServiceImpl}.
+ * Security annotated interface for {@ApplicationDashboardServiceImpl}.
  */
 public interface ApplicationDashboardService {
 
