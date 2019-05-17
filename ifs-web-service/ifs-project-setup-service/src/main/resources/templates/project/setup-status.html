@@ -104,7 +104,7 @@
                             </th:block>
                         </h2>
                         <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Assign a  project manager and finance contact, and decide who can view project setup</p>
-                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The project manager and finance contact</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">TODO IFS-5710 Add read only content here</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectTeamStatus.getSectionStatus()})"/>
                 </li>

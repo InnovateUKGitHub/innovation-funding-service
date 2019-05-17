@@ -53,7 +53,7 @@ public class SetupSectionAccessibilityHelper {
         }
 
         if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                                                           "Unable to access Project Team section until Companies House details are complete for Organisation")) {
+                 "Unable to access Project Team section until Companies House details are complete for Organisation")) {
             return ACCESSIBLE;
         }
 
@@ -234,6 +234,10 @@ public class SetupSectionAccessibilityHelper {
         if (!setupProgressChecker.isProjectDetailsSubmitted()) {
 
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
+        }
+
+        if (!setupProgressChecker.isProjectTeamSubmitted()) {
+            return fail("Unable to access Spend Profile section until the Prject Team section is complete");
         }
 
         if (!setupProgressChecker.isSpendProfileGenerated()) {

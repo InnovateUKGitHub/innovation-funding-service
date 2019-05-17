@@ -160,7 +160,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
         boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, process.getProcessState());
-        ProjectActivityStates projectTeamStatus = NOT_STARTED;
+        ProjectActivityStates projectTeamStatus = getProjectTeamStatus(project, process.getProcessState());
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, process.getProcessState());
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
@@ -211,6 +211,29 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates createProjectDetailsCompetitionStatus(Project project) {
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
+
+    private ProjectActivityStates getProjectTeamStatus(Project project, ProjectState processState) {
+        if (processState.isOffline()) {
+            return VIEW;
+        }
+
+        if (projectManagerAndFinanceContactsAllSelected(project)) {
+            return COMPLETE;
+        }
+
+        return PENDING;
+    }
+
+    private boolean projectManagerAndFinanceContactsAllSelected(Project project) {
+        if(simpleNoneMatch(project.getProjectUsers(),
+                           ProjectUser::isProjectManager)) {
+            return false;
+        }
+
+        // TODO IFS-5710 add logic once business decision has been made
+        return true;
+    }
+
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
