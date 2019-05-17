@@ -466,7 +466,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
-        when(sectionService.getInCompleted(applications.get(0).getId())).thenReturn(asList(3L, 4L));
         when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole1));
         when(userRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn

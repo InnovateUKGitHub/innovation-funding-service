@@ -41,8 +41,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     @Autowired
     private QuestionStatusService questionStatusService;
 
-
-
     private final Long userId = SecuritySetter.basicSecurityUser.getId();
     private final Long applicationId = 1L;
     private final Long questionId = 13L;
@@ -53,7 +51,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     private Long competitionId = 1L;
     public static final long QUESTION_ID_WITH_MULTIPLE = 35L;
 
-
     @Before
     public void setup(){
         question = questionRepository.findById(questionId).orElse(null);
@@ -61,7 +58,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
 
         addBasicSecurityUser();
     }
-
 
     @Override
     @Autowired
