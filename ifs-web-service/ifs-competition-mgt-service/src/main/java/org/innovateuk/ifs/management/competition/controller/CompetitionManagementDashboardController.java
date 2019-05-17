@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
 @Controller
@@ -165,24 +164,12 @@ public class CompetitionManagementDashboardController {
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 
-//    private List<String> formatInnovationAreaNames(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionTypes) {
-//
-//        List<String> formattedList = new ArrayList<>();
-//
-//        for (Map.Entry<CompetitionStatus, List<CompetitionSearchResultItem>> entry : competitionTypes.entrySet()) {
-//            for (CompetitionSearchResultItem competition : entry.getValue()) {
-//                formattedList.add(competition.getInnovationAreaNames().stream().collect(joining(", ")));
-//            }
-//        }
-//        return formattedList;
-//    }
-
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR,
                 new CompetitionSearchDashboardViewModel(
                         competitionDashboardSearchService.searchCompetitions(searchQuery, page),
                         searchQuery,
-                        isInternal(user)));
+                        user));
         return TEMPLATE_PATH + "search";
     }
 

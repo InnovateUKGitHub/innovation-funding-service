@@ -79,7 +79,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+    public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
         return serviceSuccess(simpleMap(competitions, this::toPreviousCompetitionSearchResult).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
     }
@@ -104,11 +104,11 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                 competition.getId(),
                 competition.getName(),
                 competition.getCompetitionStatus(),
+                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 ofNullable(competition.getInnovationAreas()).orElseGet(Collections::emptySet)
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 applicationRepository.countByCompetitionId(competition.getId())
         );
     }
@@ -118,11 +118,11 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                 competition.getId(),
                 competition.getName(),
                 competition.getCompetitionStatus(),
+                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 ofNullable(competition.getInnovationAreas()).orElseGet(Collections::emptySet)
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.countByApplicationCompetitionId(competition.getId()),
                 applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition.getId()).getManageFundingEmailDate()
         );
@@ -133,11 +133,11 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                 competition.getId(),
                 competition.getName(),
                 competition.getCompetitionStatus(),
+                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 ofNullable(competition.getInnovationAreas()).orElseGet(Collections::emptySet)
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 competition.startDateDisplay()
         );
     }
@@ -168,11 +168,11 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                 competition.getId(),
                 competition.getName(),
                 competition.getCompetitionStatus(),
+                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 ofNullable(competition.getInnovationAreas()).orElseGet(Collections::emptySet)
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 openDate
         );
     }

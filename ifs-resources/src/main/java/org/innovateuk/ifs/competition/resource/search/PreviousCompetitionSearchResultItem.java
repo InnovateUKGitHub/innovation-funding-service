@@ -8,24 +8,18 @@ import java.util.Set;
 public class PreviousCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
     private Set<String> innovationAreaNames;
-    private String competitionTypeName;
     private ZonedDateTime openDate;
 
     private PreviousCompetitionSearchResultItem() {} //for jackson
 
-    public PreviousCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, ZonedDateTime openDate) {
-        super(id, name, competitionStatus);
+    public PreviousCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, ZonedDateTime openDate) {
+        super(id, name, competitionStatus, competitionTypeName);
         this.innovationAreaNames = innovationAreaNames;
-        this.competitionTypeName = competitionTypeName;
         this.openDate = openDate;
     }
 
     public Set<String> getInnovationAreaNames() {
         return innovationAreaNames;
-    }
-
-    public String getCompetitionTypeName() {
-        return competitionTypeName;
     }
 
     public ZonedDateTime getOpenDate() {

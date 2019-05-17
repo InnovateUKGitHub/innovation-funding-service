@@ -31,4 +31,8 @@ public abstract class DashboardViewModel {
     public List<CompetitionSearchResultItem> getAllCompetitions(){
         return competitions.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
+
+    public boolean isSupportUser() {
+        return tabs.support();
+    }
 }

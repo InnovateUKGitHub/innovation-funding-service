@@ -13,7 +13,7 @@ public class NonIfsCompetitionSearchResultItem extends AbstractCompetitionSearch
     private NonIfsCompetitionSearchResultItem() {} //for jackson
 
     public NonIfsCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, ZonedDateTime publishDate) {
-        super(id, name, competitionStatus);
+        super(id, name, competitionStatus, null);
         this.innovationAreaNames = innovationAreaNames;
         this.publishDate = publishDate;
     }

@@ -7,13 +7,15 @@ public abstract class AbstractCompetitionSearchResultItem implements Competition
     private long id;
     private String name;
     private CompetitionStatus competitionStatus;
+    private String competitionTypeName;
 
     AbstractCompetitionSearchResultItem() {}
 
-    AbstractCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus) {
+    public AbstractCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName) {
         this.id = id;
         this.name = name;
         this.competitionStatus = competitionStatus;
+        this.competitionTypeName = competitionTypeName;
     }
 
     @Override
@@ -28,5 +30,9 @@ public abstract class AbstractCompetitionSearchResultItem implements Competition
     @Override
     public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
+    }
+
+    public String getCompetitionTypeName() {
+        return competitionTypeName;
     }
 }

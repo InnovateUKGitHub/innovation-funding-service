@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.management.dashboard.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
 /**
  * A view model for displaying the competition search results when searched on the dashboard by the internal user.
@@ -9,12 +13,12 @@ public class CompetitionSearchDashboardViewModel {
 
     private final CompetitionSearchResult competitions;
     private String searchQuery;
-    private boolean isInternalUser;
+    private UserResource user;
 
-    public CompetitionSearchDashboardViewModel(CompetitionSearchResult competitions, String searchQuery, boolean isInternalUser) {
+    public CompetitionSearchDashboardViewModel(CompetitionSearchResult competitions, String searchQuery, UserResource user) {
         this.competitions = competitions;
         this.searchQuery = searchQuery;
-        this.isInternalUser = isInternalUser;
+        this.user = user;
     }
 
     public CompetitionSearchResult getCompetitions() {
@@ -30,10 +34,10 @@ public class CompetitionSearchDashboardViewModel {
     }
 
     public boolean isInternalUser() {
-        return isInternalUser;
+        return isInternal(user);
     }
 
-    public void setInternalUser(boolean internalUser) {
-        isInternalUser = internalUser;
+    public boolean isSupportUser() {
+        return isSupport(user);
     }
 }

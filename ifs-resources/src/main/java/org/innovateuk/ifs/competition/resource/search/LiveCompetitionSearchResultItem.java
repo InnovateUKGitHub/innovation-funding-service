@@ -11,15 +11,13 @@ import java.util.TreeSet;
 public class LiveCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
     private Set<String> innovationAreaNames;
-    private String competitionTypeName;
     private int numberOfApplications;
 
     private LiveCompetitionSearchResultItem() {} //for jackson
 
-    public LiveCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, int numberOfApplications) {
-        super(id, name, competitionStatus);
+    public LiveCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, int numberOfApplications) {
+        super(id, name, competitionStatus, competitionTypeName);
         this.innovationAreaNames = innovationAreaNames;
-        this.competitionTypeName = competitionTypeName;
         this.numberOfApplications = numberOfApplications;
     }
 
@@ -33,10 +31,6 @@ public class LiveCompetitionSearchResultItem extends AbstractCompetitionSearchRe
 
     public int getNumberOfApplications() {
         return numberOfApplications;
-    }
-
-    public String getCompetitionTypeName() {
-        return competitionTypeName;
     }
 
 }

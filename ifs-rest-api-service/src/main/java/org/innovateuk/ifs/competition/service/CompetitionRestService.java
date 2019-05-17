@@ -15,20 +15,6 @@ import java.util.List;
 public interface CompetitionRestService {
     RestResult<List<CompetitionResource>> getAll();
 
-    RestResult<List<LiveCompetitionSearchResultItem>> findLiveCompetitions();
-
-    RestResult<List<ProjectSetupCompetitionSearchResultItem>> findProjectSetupCompetitions();
-
-    RestResult<List<UpcomingCompetitionSearchResultItem>> findUpcomingCompetitions();
-
-    RestResult<List<NonIfsCompetitionSearchResultItem>> findNonIfsCompetitions();
-
-    RestResult<List<PreviousCompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
-
-    RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
-
-    RestResult<CompetitionCountResource> countCompetitions();
-
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
 
     RestResult<List<UserResource>> findInnovationLeads(long competitionId);

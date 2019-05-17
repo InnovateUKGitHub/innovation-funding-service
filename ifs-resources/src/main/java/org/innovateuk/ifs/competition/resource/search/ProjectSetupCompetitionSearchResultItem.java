@@ -8,26 +8,20 @@ import java.util.Set;
 public class ProjectSetupCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
     private Set<String> innovationAreaNames;
-    private String competitionTypeName;
     private Integer projectsCount;
     private ZonedDateTime manageFundingEmailDate;
 
     private ProjectSetupCompetitionSearchResultItem() {} //for jackson
 
-    public ProjectSetupCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, Set<String> innovationAreaNames, String competitionTypeName, Integer projectsCount, ZonedDateTime manageFundingEmailDate) {
-        super(id, name, competitionStatus);
+    public ProjectSetupCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, Integer projectsCount, ZonedDateTime manageFundingEmailDate) {
+        super(id, name, competitionStatus, competitionTypeName);
         this.innovationAreaNames = innovationAreaNames;
-        this.competitionTypeName = competitionTypeName;
         this.projectsCount = projectsCount;
         this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
     public Set<String> getInnovationAreaNames() {
         return innovationAreaNames;
-    }
-
-    public String getCompetitionTypeName() {
-        return competitionTypeName;
     }
 
     public Integer getProjectsCount() {

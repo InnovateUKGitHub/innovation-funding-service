@@ -4,10 +4,10 @@ package org.innovateuk.ifs.management.dashboard.service;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.search.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.service.CompetitionSearchRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,42 +26,38 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     public static final int COMPETITION_PAGE_SIZE = 20;
 
     @Autowired
-    private CompetitionRestService competitionRestService;
+    private CompetitionSearchRestService competitionSearchRestService;
 
     @Autowired
     private ApplicationRestService applicationRestService;
 
-    @Autowired
-    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
-
-
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getLiveCompetitions() {
-        return mapToStatus(competitionRestService.findLiveCompetitions().getSuccess());
+        return mapToStatus(competitionSearchRestService.findLiveCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionRestService.findProjectSetupCompetitions().getSuccess());
+        return mapToStatus(competitionSearchRestService.findProjectSetupCompetitions().getSuccess());
     }
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
-        return mapToStatus(competitionRestService.findUpcomingCompetitions().getSuccess());
+        return mapToStatus(competitionSearchRestService.findUpcomingCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions() {
-        return mapToStatus(competitionRestService.findNonIfsCompetitions().getSuccess());
+        return mapToStatus(competitionSearchRestService.findNonIfsCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions() {
-        return mapToPrevious(competitionRestService.findFeedbackReleasedCompetitions().getSuccess());
+        return mapToPrevious(competitionSearchRestService.findFeedbackReleasedCompetitions().getSuccess());
     }
 
     @Override
     public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        CompetitionSearchResult searchResult = competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccess();
+        CompetitionSearchResult searchResult = competitionSearchRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccess();
         searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
         return searchResult;
     }
@@ -73,7 +69,7 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Override
     public CompetitionCountResource getCompetitionCounts() {
-        return competitionRestService.countCompetitions().getSuccess();
+        return competitionSearchRestService.countCompetitions().getSuccess();
     }
 
     private <T extends CompetitionSearchResultItem> Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<T> resources) {
