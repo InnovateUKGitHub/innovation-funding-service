@@ -54,8 +54,6 @@ public class ApplicationTermsModelPopulator {
                 .map(QuestionStatusResource::getMarkedAsComplete)
                 .orElse(false);
 
-
-
         String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
                 .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
                 .orElse(null);
