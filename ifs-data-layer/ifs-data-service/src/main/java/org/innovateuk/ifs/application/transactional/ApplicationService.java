@@ -2,16 +2,20 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;

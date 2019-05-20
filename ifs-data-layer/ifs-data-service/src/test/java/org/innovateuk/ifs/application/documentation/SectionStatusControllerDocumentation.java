@@ -159,23 +159,4 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
                         )
                 ));
     }
-
-    @Test
-    public void getIncompleteSections() throws Exception {
-        final long applicationId = 1L;
-
-        when(sectionStatusServiceMock.getIncompleteSections(applicationId)).thenReturn(serviceSuccess(asList(1L, 2L)));
-
-        mockMvc.perform(get(baseURI + "/get-incomplete-sections/{applicationId}", applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of incomplete sections")
-                        )
-                ));
-    }
 }

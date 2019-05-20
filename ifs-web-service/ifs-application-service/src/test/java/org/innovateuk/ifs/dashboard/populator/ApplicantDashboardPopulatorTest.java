@@ -1,22 +1,17 @@
 package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewModel;
+import org.innovateuk.ifs.dashboard.viewmodel.InProgressDashboardRowViewModel;
+import org.innovateuk.ifs.dashboard.viewmodel.InSetupDashboardRowViewModel;
+import org.innovateuk.ifs.dashboard.viewmodel.PreviousDashboardRowViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,26 +19,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
+import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing populator {@link ApplicantDashboardPopulator}
@@ -51,126 +41,137 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
+    @Mock
+    private ApplicantRestService applicantRestService;
+
     @InjectMocks
     private ApplicantDashboardPopulator populator;
 
-    private CompetitionResource competitionResource;
+    private static final ZonedDateTime TOMORROW = ZonedDateTime.now().plusDays(1);
+    private static final ZonedDateTime YESTERDAY = ZonedDateTime.now().minusDays(1);
 
-    protected UserResource loggedInUser = newUserResource().withId(1L)
-            .withFirstName("James")
-            .withLastName("Watts")
-            .withEmail("james.watts@email.co.uk")
-            .withRolesGlobal(singletonList(Role.APPLICANT))
-            .withUID("2aerg234-aegaeb-23aer").build();
-
-    private final static Long APPLICATION_ID_IN_PROGRESS = 1L;
-    private final static Long APPLICATION_ID_IN_FINISH = 10L;
-    private final static Long APPLICATION_ID_SUBMITTED = 100L;
-    private final static Long PROJECT_ID_IN_PROJECT = 5L;
-    private final static Long PROJECT_ID_IN_PROJECT_WITHDRAWN = 6L;
-    private final static Long APPLICATION_ID_IN_PROJECT = 15L;
-    private final static Long APPLICATION_ID_IN_PROJECT_WITHDRAWN = 150L;
-    private final static Long APPLICATION_ID_HORIZON_2020 = 50L;
-
-    @Mock
-    private ApplicationRestService applicationRestService;
-
-    @Mock
-    private ProjectRestService projectRestService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
-
-    @Mock
-    private QuestionRestService questionRestService;
-
-    @Mock
-    private UserRestService userRestService;
-
-    @Mock
-    private InterviewAssignmentRestService interviewAssignmentRestService;
+    private long userId = 1L;
 
     @Before
     public void setup() {
-        super.setup();
-        competitionResource = newCompetitionResource()
-                .withId(1L)
-                .with(name("Competition x"))
-                .withStartDate(ZonedDateTime.now().minusDays(2))
-                .withEndDate(ZonedDateTime.now().plusDays(5))
-                .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withMinProjectDuration(1)
-                .withMaxProjectDuration(36)
-                .build();
-        CompetitionResource compInProjectSetup = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
-                .build();
-        CompetitionResource horizon2020Competition = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withCompetitionTypeName("Horizon 2020")
-                .build();
-
-
-        List<ApplicationResource> allApplications = newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_HORIZON_2020)
-                .withCompetition(competitionResource.getId(), competitionResource.getId(), compInProjectSetup.getId(), compInProjectSetup.getId(), compInProjectSetup.getId(), horizon2020Competition.getId())
-                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED, ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.APPROVED, ApplicationState.OPEN)
-                .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.OPEN)
-                .withCompletion(BigDecimal.valueOf(50))
-                .build(6);
-
-        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(allApplications));
-
-        when(projectRestService.findByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProjectResource()
-                .withId(PROJECT_ID_IN_PROJECT, PROJECT_ID_IN_PROJECT_WITHDRAWN)
-                .withApplication(APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN)
-                .withProjectState(ProjectState.SETUP, ProjectState.WITHDRAWN)
-                .withCompetition(1L, 2L)
-                .build(2)));
-
-        when(applicationRestService.getApplicationById(APPLICATION_ID_IN_PROJECT)).thenReturn(restSuccess(newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROJECT)
-                .withApplicationState(ApplicationState.SUBMITTED)
-                .withCompetition(competitionResource.getId()).build()));
-
-        when(applicationRestService.getApplicationById(APPLICATION_ID_IN_PROJECT_WITHDRAWN)).thenReturn(restSuccess(newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROJECT_WITHDRAWN)
-                .withApplicationState(ApplicationState.SUBMITTED)
-                .withCompetition(competitionResource.getId()).build()));
-
-        when(competitionRestService.getCompetitionById(compInProjectSetup.getId())).thenReturn(restSuccess(compInProjectSetup));
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(competitionRestService.getCompetitionById(horizon2020Competition.getId())).thenReturn(restSuccess(horizon2020Competition));
-
-        when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
-
-        when(userRestService.findProcessRoleByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_HORIZON_2020)
-                .withRole(LEADAPPLICANT, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR)
-                .build(6)));
-
-        UserResource user = UserResourceBuilder.newUserResource().withId(loggedInUser.getId()).withRolesGlobal(singletonList(Role.APPLICANT)).build();
-        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(user));
-        when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_SUBMITTED)).thenReturn(restSuccess(true));
-        when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_IN_PROGRESS)).thenReturn(restSuccess(true));
-
-        QuestionResource applicationTeamQuestion = newQuestionResource().build();
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionResource.getId(),
-                APPLICATION_TEAM)).thenReturn(restSuccess(applicationTeamQuestion));
+        setupDashboard();
     }
 
     @Test
-    public void populate() {
-        ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId(), "originQuery");
+    public void populateProjects() {
+        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
 
-        assertFalse(viewModel.getInProgress().isEmpty());
+        assertEquals(1, viewModel.getProjects().size());
+
+        InSetupDashboardRowViewModel inSetupViewModel = viewModel.getProjects().get(0);
+
+        assertEquals("Project Title", inSetupViewModel.getTitle());
+        assertEquals(3L, inSetupViewModel.getProjectId());
+        assertEquals(format("/project-setup/project/%d", 3L), inSetupViewModel.getLinkUrl());
+        assertEquals("Project Title", inSetupViewModel.getProjectTitle());
+    }
+
+    @Test
+    public void populateEuGrantTransfers() {
+        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+
         assertFalse(viewModel.getEuGrantTransfers().isEmpty());
-        assertFalse(viewModel.getPrevious().isEmpty());
-        assertFalse(viewModel.getProjects().isEmpty());
+
+        EuGrantTransferDashboardRowViewModel euGrantViewModel = viewModel.getEuGrantTransfers().get(0);
+
+        assertEquals(format("/project-setup/project/%d", 5L), euGrantViewModel.getLinkUrl());
+        assertEquals("Title", euGrantViewModel.getTitle());
+        assertEquals(1, euGrantViewModel.getApplicationProgress());
+        assertEquals(FALSE, euGrantViewModel.isIneligible());
+        assertEquals(FALSE, euGrantViewModel.isInProgress());
+        assertEquals(FALSE, euGrantViewModel.isSubmitted());
+        assertEquals(TRUE, euGrantViewModel.isSuccessful());
+    }
+
+    @Test
+    public void populateInProgress() {
+        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
 
         assertEquals(1, viewModel.getInProgress().size());
 
-        verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
-        assertEquals("Application in progress", viewModel.getApplicationInProgressText());
+        InProgressDashboardRowViewModel inProgressViewModel = viewModel.getInProgress().get(0);
+
+        assertEquals(format("/application/%d", 6L), inProgressViewModel.getLinkUrl());
+        assertEquals(format("%d%% complete", 99), inProgressViewModel.getProgressMessage());
+        assertEquals("Title", inProgressViewModel.getTitle());
+        assertEquals(99, inProgressViewModel.getApplicationProgress());
+        assertEquals(1, inProgressViewModel.getDaysLeft());
+        assertEquals(23, inProgressViewModel.getHoursLeftBeforeSubmit());
+        assertEquals(FALSE, inProgressViewModel.isApplicationComplete());
+        assertEquals(FALSE, inProgressViewModel.isAssignedToInterview());
+        assertEquals(FALSE, inProgressViewModel.isClosingToday());
+        assertEquals(TRUE, inProgressViewModel.isLeadApplicant());
+        assertEquals(FALSE, inProgressViewModel.isSubmitted());
+        assertEquals(TRUE, inProgressViewModel.isWithin24Hours());
+    }
+
+    @Test
+    public void populatePrevious() {
+        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+
+        assertEquals(1, viewModel.getPrevious().size());
+
+        PreviousDashboardRowViewModel previousViewModel = viewModel.getPrevious().get(0);
+
+        assertEquals(format("/application/%d/summary", 7L), previousViewModel.getLinkUrl());
+        assertEquals("Title", previousViewModel.getTitle());
+        assertEquals(FALSE, previousViewModel.isApproved());
+        assertEquals(TRUE, previousViewModel.isCreatedOrOpen());
+        assertEquals(FALSE, previousViewModel.isInformedIneligible());
+        assertEquals(FALSE, previousViewModel.isRejected());
+        assertEquals(FALSE, previousViewModel.isWithdrawn());
+    }
+
+    private void setupDashboard() {
+        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder()
+                .withCompetitionTitle("Competition Title")
+                .withProjectId(3L)
+                .withProjectTitle("Project Title")
+                .build();
+
+        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withTitle("Title")
+                .withApplicationProgress(1)
+                .withApplicationState(APPROVED)
+                .withCompetitionTitle("Competition Title")
+                .withProjectId(5L)
+                .build();
+
+        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder()
+                .withTitle("Title")
+                .withEndDate(TOMORROW)
+                .withDaysLeft(1)
+                .withApplicationProgress(99)
+                .withAssignedToInterview(FALSE)
+                .withApplicationId(6L)
+                .withLeadApplicant(TRUE)
+                .withApplicationState(APPROVED)
+                .build();
+
+        DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder()
+                .withTitle("Title")
+                .withApplicationId(7L)
+                .withApplicationProgress(50)
+                .withApplicationState(OPEN)
+                .withAssignedToInterview(TRUE)
+                .withAssignedToMe(TRUE)
+                .withDaysLeft(0)
+                .withEndDate(YESTERDAY)
+                .withLeadApplicant(FALSE)
+                .build();
+
+        ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResource.ApplicantDashboardResourceBuilder()
+                .withInSetup(singletonList(inSetup))
+                .withEuGrantTransfer(singletonList(euGrantTransfer))
+                .withInProgress(singletonList(inProgress))
+                .withPrevious(singletonList(previous))
+                .build();
+
+        when(applicantRestService.getApplicantDashboard(userId)).thenReturn(applicantDashboardResource);
     }
 }

@@ -1,22 +1,34 @@
-package org.innovateuk.ifs.applicant.documentation;
+package org.innovateuk.ifs.applicant.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
-import org.innovateuk.ifs.applicant.controller.ApplicantController;
+import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
+import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.documentation.*;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.test.web.servlet.MvcResult;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResponseResourceBuilder.newApplicantFormInputResponseResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource.ApplicantDashboardResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -28,6 +40,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -37,7 +50,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicantControllerDocumentation extends BaseControllerMockMVCTest<ApplicantController> {
+public class ApplicantControllerTest extends BaseControllerMockMVCTest<ApplicantController> {
 
     private static final long USER_ID = 1L;
     private static final long QUESTION_ID = 1L;
@@ -46,6 +59,9 @@ public class ApplicantControllerDocumentation extends BaseControllerMockMVCTest<
 
     @Mock
     private ApplicantService applicationService;
+
+    @Mock
+    private ApplicationDashboardService applicationDashboardService;
 
     @Override
     protected ApplicantController supplyControllerUnderTest() {
@@ -155,6 +171,38 @@ public class ApplicantControllerDocumentation extends BaseControllerMockMVCTest<
                         .andWithPrefix("applicantChildrenSections[].", sectionFieldsWithoutCurrentApplicant)
                 ));
 
+    }
+
+    @Test
+    public void  getApplicantDashboard() throws Exception {
+        long euGrantTransferId = 1L;
+        long inProgressId = 2L;
+        long inSetupId = 3L;
+        long previousId = 4L;
+
+        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder().withApplicationId(euGrantTransferId).build();
+        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder().withApplicationId(inProgressId).build();
+        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder().withApplicationId(inSetupId).build();
+        DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder().withApplicationId(previousId).build();
+
+        when(applicationDashboardService.getApplicantDashboard(USER_ID)).thenReturn(serviceSuccess(new ApplicantDashboardResourceBuilder()
+                .withEuGrantTransfer(singletonList(euGrantTransfer))
+                .withInProgress(singletonList(inProgress))
+                .withInSetup(singletonList(inSetup))
+                .withPrevious(singletonList(previous))
+                .build()));
+
+        MvcResult mvcResult = mockMvc.perform(get("/applicant/{user}/applications/dashboard", USER_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ApplicantDashboardResource result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ApplicantDashboardResource.class);
+
+        assertEquals(euGrantTransferId, result.getEuGrantTransfer().get(0).getApplicationId());
+        assertEquals(inProgressId, result.getInProgress().get(0).getApplicationId());
+        assertEquals(inSetupId, result.getInSetup().get(0).getApplicationId());
+        assertEquals(previousId, result.getPrevious().get(0).getApplicationId());
     }
 
     private ApplicantSectionResourceBuilder applicantSectionResource() {
