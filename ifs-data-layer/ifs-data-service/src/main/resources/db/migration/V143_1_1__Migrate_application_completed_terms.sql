@@ -18,7 +18,7 @@ INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, mu
 SELECT false                        AS assign_enabled,
        'Award terms and conditions' AS description,
        true                         AS mark_as_completed_enabled,
-       false                        AS multiple_statuses,
+       true                         AS multiple_statuses,
        'Award terms and conditions' AS name,
        'Award terms and conditions' AS short_name,
        '1'                          AS priority,

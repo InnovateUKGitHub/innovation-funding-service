@@ -47,19 +47,17 @@ public class ApplicationTermsModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         OrganisationResource organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles).get();
 
-        Optional<QuestionStatusResource> optionalQuestionStatus =
-                questionStatusRestService.findByQuestionAndApplicationAndOrganisation(termsQuestionId, application.getId(), organisation.getId())
-                        .getSuccess()
-                        .stream()
-                        .findFirst();
+        Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
+                questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(termsQuestionId, applicationId, organisation.getId()).getSuccess();
 
-        boolean termsAccepted = optionalQuestionStatus
+        boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
                 .map(QuestionStatusResource::getMarkedAsComplete)
                 .orElse(false);
-        String termsAcceptedByName = optionalQuestionStatus
+
+        String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
                 .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
                 .orElse(null);
-        ZonedDateTime termsAcceptedOn = optionalQuestionStatus
+        ZonedDateTime termsAcceptedOn = optionalMarkedAsCompleteQuestionStatus
                 .map(QuestionStatusResource::getMarkedAsCompleteOn)
                 .orElse(null);
 

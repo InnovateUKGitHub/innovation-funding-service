@@ -69,7 +69,7 @@
                  */-->
             </form>
         </th:block>
-        <div class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
+        <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
             <div class="form-footer__actions">
                 Terms and conditions accepted
                 <th:block th:unless="${model.migratedTerms}">

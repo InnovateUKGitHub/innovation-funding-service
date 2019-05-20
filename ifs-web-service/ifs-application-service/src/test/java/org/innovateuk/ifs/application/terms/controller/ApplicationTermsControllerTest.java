@@ -101,7 +101,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().hasNoErrors())
-                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId));
+                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions#terms-accepted", application.getId(), questionId));
 
         InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock);
         inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
