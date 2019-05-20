@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.management.application.view.controller;
 
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
+import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
+import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -23,7 +23,6 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,14 +34,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
@@ -75,9 +72,29 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
+    @Autowired
+    private ManagementApplicationPopulator managementApplicationPopulator;
+
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}")
+    @AsyncMethod
+    public String newApplicationSummary(@PathVariable("applicationId") final Long applicationId,
+                                        @PathVariable("competitionId") final Long competitionId,
+                                        @ModelAttribute(value = "ineligibleForm", binding = false) IneligibleApplicationForm form,
+                                        BindingResult bindingResult,
+                                        @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                        @RequestParam MultiValueMap<String, String> queryParams,
+                                        UserResource user,
+                                        Model model) {
+        model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user, origin, queryParams));
+        return "new-competition-mgt-application-overview";
+    }
+
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @GetMapping("/{applicationId}/old")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute(name = "form", binding = false) ApplicationForm form,
@@ -98,7 +115,7 @@ public class CompetitionManagementApplicationController {
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                    @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
-                                   @ModelAttribute("form") @Valid ApplicationForm applicationForm,
+                                   @ModelAttribute("ineligibleForm") @Valid IneligibleApplicationForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    HttpServletRequest request,
@@ -109,22 +126,20 @@ public class CompetitionManagementApplicationController {
         // (causing issues with back links).
         // TODO: IFS-253 bind query parameters to maps properly
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
-
-        validateIfTryingToMarkAsIneligible(applicationForm.getIneligibleReason(), validationHandler);
-
+        Supplier<String> failureVew = () -> newApplicationSummary(applicationId, competitionId, form, bindingResult, origin, queryParams, user, model);
         return validationHandler.failNowOrSucceedWith(
-                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, assessorId, queryParams, model),
-                () -> competitionManagementApplicationService
-                                .markApplicationAsIneligible(
-                                        applicationId,
-                                        competitionId,
-                                        assessorId,
-                                        origin,
-                                        queryParams,
-                                        applicationForm,
-                                        user,
-                                        model)
-        );
+                failureVew,
+                () -> {
+                    IneligibleOutcomeResource ineligibleOutcomeResource =
+                            new IneligibleOutcomeResource(form.getIneligibleReason());
+
+                    RestResult<Void> result = applicationRestService.markAsIneligible(applicationId, ineligibleOutcomeResource);
+
+                    return validationHandler.addAnyErrors(result.getErrors())
+                            .failNowOrSucceedWith(
+                                    failureVew,
+                                    () -> "redirect:/competition/" + competitionId + "/applications/ineligible");
+                });
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -159,7 +174,8 @@ public class CompetitionManagementApplicationController {
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download/**")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             @PathVariable(value = "fileName", required = false) final String fileName,
@@ -219,12 +235,5 @@ public class CompetitionManagementApplicationController {
 
     private boolean hasProcessRole(UserResource user) {
         return !(user.hasRole(IFS_ADMINISTRATOR) || isInternal(user) || user.hasRole(STAKEHOLDER));
-    }
-
-    private void validateIfTryingToMarkAsIneligible(String ineligibleReason,
-                                                    ValidationHandler validationHandler) {
-        if (ineligibleReason == null || ineligibleReason.isEmpty()) {
-            validationHandler.addAnyErrors(ServiceResult.serviceFailure(Arrays.asList(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST))), toField("ineligibleReason"));
-        }
     }
 }

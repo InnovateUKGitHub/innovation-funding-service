@@ -3,10 +3,8 @@ package org.innovateuk.ifs.management.application.view.service;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -89,36 +87,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         return "competition-mgt-application-overview";
     }
 
-
-
-    @Override
-    public String markApplicationAsIneligible(long applicationId,
-                                              long competitionId,
-                                              Optional<Long> assessorId,
-                                              String origin,
-                                              MultiValueMap<String, String> queryParams,
-                                              ApplicationForm applicationForm,
-                                              UserResource user,
-                                              Model model) {
-        IneligibleOutcomeResource ineligibleOutcomeResource =
-                new IneligibleOutcomeResource(applicationForm.getIneligibleReason());
-
-        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, ineligibleOutcomeResource);
-
-        if (result != null && result.isSuccess()) {
-            return "redirect:/competition/" + competitionId + "/applications/ineligible";
-        } else {
-            return displayApplicationOverview(user,
-                    competitionId,
-                    applicationForm,
-                    origin,
-                    queryParams,
-                    model,
-                    applicationService.getById(applicationId),
-                    assessorId
-            );
-        }
-    }
 
     @Override
     public String validateApplicationAndCompetitionIds(Long applicationId, Long competitionId, Function<ApplicationResource, String> success) {
