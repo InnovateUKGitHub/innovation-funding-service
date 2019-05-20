@@ -9,8 +9,7 @@ SELECT false                  AS display_in_assessment_application_summary,
        c.id                   AS competition_id,
        false                  AS question_group,
        'TERMS_AND_CONDITIONS' AS section_type
-FROM competition c
-WHERE setup_complete;
+FROM competition c;
 
 -- Add the terms question to the terms section
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name,
