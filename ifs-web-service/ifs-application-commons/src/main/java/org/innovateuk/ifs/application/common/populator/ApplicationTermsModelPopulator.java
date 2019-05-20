@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.application.terms.populator;
+package org.innovateuk.ifs.application.common.populator;
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.terms.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -19,11 +19,14 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
+
 @Component
 public class ApplicationTermsModelPopulator {
 
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
+    private SectionService sectionService;
     private UserRestService userRestService;
     private OrganisationService organisationService;
     private QuestionStatusRestService questionStatusRestService;
@@ -36,6 +39,7 @@ public class ApplicationTermsModelPopulator {
                                           QuestionStatusRestService questionStatusRestService) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
+        this.sectionService = sectionService;
         this.userRestService = userRestService;
         this.organisationService = organisationService;
         this.questionStatusRestService = questionStatusRestService;
@@ -68,6 +72,17 @@ public class ApplicationTermsModelPopulator {
                 application.isCollaborativeProject(),
                 termsAccepted,
                 termsAcceptedByName,
-                termsAcceptedOn);
+                termsAcceptedOn,
+                isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
+    }
+
+    private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
+        long termsAndConditionsSectionId =
+                sectionService.getSectionsForCompetitionByType(competitionId, TERMS_AND_CONDITIONS).get(0).getId();
+
+        return sectionService.getCompletedSectionsByOrganisation(applicationId)
+                .values()
+                .stream()
+                .allMatch(completedSections -> completedSections.contains(termsAndConditionsSectionId));
     }
 }

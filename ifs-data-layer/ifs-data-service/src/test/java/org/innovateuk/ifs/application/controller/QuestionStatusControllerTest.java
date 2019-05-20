@@ -59,7 +59,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         List<QuestionStatusResource> questionStatuses = QuestionStatusResourceBuilder.newQuestionStatusResource()
                 .build(1);
 
-        when(questionStatusService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId,
+        when(questionStatusService.getQuestionStatusByQuestionIdAndApplicationIdAndOrganisationId(questionId,
                 applicationId, organisationId)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/question-status/find-by-question-and-application-and-organisation/" + questionId + "/" +

@@ -34,7 +34,7 @@ public class QuestionStatusController {
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
     @GetMapping({"/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}", "/find-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}"})
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") Long organisationId) {
-        return questionStatusService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
+        return questionStatusService.getQuestionStatusByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")

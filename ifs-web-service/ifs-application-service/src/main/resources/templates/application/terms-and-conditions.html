@@ -12,7 +12,7 @@
 
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your funding',linkClass='link-back',
-                       linkUrl=@{/application/{applicationId}/form/FUNDING_FINANCES(applicationId=${model.applicationId})}"/>
+                       linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 

@@ -16,7 +16,7 @@ public interface QuestionStatusRepository extends CrudRepository<QuestionStatus,
     List<QuestionStatus> findByQuestionIdAndApplicationId(Long questionId, Long applicationId);
     List<QuestionStatus> findByQuestionIdAndApplicationIdAndMarkedAsComplete(Long questionId, Long applicationId, boolean markedAsComplete);
     List<QuestionStatus> findByQuestionIdIsInAndApplicationId(List<Long> questionIds, Long applicationId);
-    List<QuestionStatus> findByApplicationId(Long applicationId);
+    List<QuestionStatus> findByApplicationId(long applicationId);
     List<QuestionStatus> findByApplicationIdAndAssigneeIdOrAssignedById(Long applicationId, Long assigneeId, Long assignedById);
     int countByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId);
     List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteById(Long applicationId, Long markedAsCompleteById);
