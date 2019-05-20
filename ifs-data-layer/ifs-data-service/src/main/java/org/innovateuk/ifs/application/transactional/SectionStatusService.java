@@ -34,9 +34,6 @@ public interface SectionStatusService {
                                                 long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<List<Long>> getIncompleteSections(final long applicationId);
-
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> sectionsCompleteForAllOrganisations(long applicationId);
 
 }

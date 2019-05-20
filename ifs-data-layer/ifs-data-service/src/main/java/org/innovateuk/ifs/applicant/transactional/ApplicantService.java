@@ -15,4 +15,5 @@ public interface ApplicantService {
 
     @NotSecured(value = "Service should only be calling other services to receive data and should be using their permission rules.", mustBeSecuredByOtherServices = false)
     ServiceResult<ApplicantSectionResource> getSection(Long userId, Long sectionId, Long applicationId);
+
 }

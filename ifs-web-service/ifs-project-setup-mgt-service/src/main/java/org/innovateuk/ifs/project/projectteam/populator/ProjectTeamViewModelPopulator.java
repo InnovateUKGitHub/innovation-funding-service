@@ -61,8 +61,8 @@ public class ProjectTeamViewModelPopulator {
                 .sorted()
                 .collect(toList());
 
-        // these roles have read only views, the support users and ifs admins can edit
-        boolean isReadOnly = loggedInUser.hasAnyRoles(INNOVATION_LEAD, STAKEHOLDER, COMP_ADMIN, PROJECT_FINANCE);
+        // support users and ifs admins can edit, other internal users have read only view only
+        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
