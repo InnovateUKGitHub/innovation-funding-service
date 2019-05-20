@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -39,11 +37,10 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     private Long applicationId;
     private Long sectionId;
     private Long collaboratorIdOne;
-    private Long collaboratorOneProcessRole;
     private Long leadApplicantProcessRole;
     private Long leadApplicantOrganisationId;
     private Long collaboratorOneOrganisationId;
-    private Long sectionIdYourFinances;
+    private Long sectionIdYourProjectCostsFinances;
     private Long fundingSection;
 
     @Before
@@ -57,9 +54,8 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
 
         collaboratorIdOne = 8L;
         collaboratorOneOrganisationId = 6L;
-        collaboratorOneProcessRole = 9L;
 
-        sectionIdYourFinances = 7L;
+        sectionIdYourProjectCostsFinances = 16L;
         fundingSection = 18L;
         addBasicSecurityUser();
     }
@@ -68,30 +64,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     @Override
     protected void setControllerUnderTest(SectionStatusController controller) {
         this.controller = controller;
-    }
-
-    @Test
-    public void getCompletedSections() {
-        section = sectionRepository.findById(sectionIdYourFinances).get();
-        assertEquals("Your finances", section.getName());
-        assertTrue(section.hasChildSections());
-        assertEquals(3, section.getChildSections().size());
-
-        assertEquals(0,
-                controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
-
-        controller.markAsNotRequired(section.getId(), applicationId, leadApplicantProcessRole);
-
-        // 4 including Your finances
-        assertEquals(4,
-                controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
-
-        // Mark one question as incomplete.
-        questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-	    Question question = questionService.getQuestionById(28L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
-        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccess());
-
-        assertEquals(2, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
     }
 
     @Test

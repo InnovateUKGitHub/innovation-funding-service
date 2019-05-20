@@ -40,6 +40,19 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     }
 
     @Test
+    public void removeInvite() throws Exception {
+        long projectId = 456L;
+        long inviteId = 789L;
+
+        when(projectTeamService.removeInvite(inviteId, projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/team/remove-invite/{inviteId}", projectId, inviteId))
+                .andExpect(status().isOk());
+
+        verify(projectTeamService).removeInvite(inviteId, projectId);
+    }
+
+    @Test
     public void inviteTeamMember() throws Exception {
         long projectId = 1L;
         ProjectUserInviteResource invite = newProjectUserInviteResource().build();

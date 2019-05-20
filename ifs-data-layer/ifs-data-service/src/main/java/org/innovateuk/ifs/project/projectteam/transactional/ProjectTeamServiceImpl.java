@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.*;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -51,6 +53,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secure service for Project Team processing work
@@ -67,7 +70,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private NotificationService notificationService;
 
     @Autowired
-    ProjectUserInviteRepository projectUserInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -98,6 +101,38 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     enum Notifications {
         INVITE_PROJECT_MEMBER
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeInvite(long inviteId, long projectId) {
+        return getInvite(inviteId)
+                .andOnSuccess(invite -> getProject(projectId)
+                    .andOnSuccess(project -> validateInvite(invite, project)
+                        .andOnSuccess(() -> deleteInvite(invite)
+                        )
+                    )
+                );
+    }
+
+    private ServiceResult<ProjectUserInvite> getInvite(long inviteId) {
+        return find(projectUserInviteRepository.findById(inviteId),
+                    notFoundError(ProjectUserInvite.class, inviteId));
+    }
+
+    private ServiceResult<Void> validateInvite(ProjectUserInvite invite, Project project) {
+        if(!invite.getTarget().equals(project)) {
+            return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
+        }
+        if(!invite.getStatus().equals(InviteStatus.SENT)) {
+            return serviceFailure(PROJECT_INVITE_ALREADY_OPENED);
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> deleteInvite(ProjectUserInvite invite) {
+        projectUserInviteRepository.delete(invite);
+        return serviceSuccess();
     }
 
     @Override
@@ -137,11 +172,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> removeUserFromProject(long userId, Project project) {
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<ProjectUser> projectUsersToDelete = simpleFilter(projectUsers,
-                                                              pu -> pu.getUser().getId().equals(userId));
-        projectUserRepository.deleteAll(projectUsersToDelete);
-        if(project.removeProjectUsers(projectUsersToDelete)) {
+        // This will cause a delete with orphanRemoval.
+        boolean removed = project.getProjectUsers().removeIf(pu -> pu.getUser().getId().equals(userId));
+        if (removed) {
             return serviceSuccess();
         }
         return serviceFailure(CANNOT_REMOVE_YOURSELF_FROM_PROJECT);

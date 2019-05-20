@@ -273,6 +273,11 @@ public class UserPermissionRules {
         return hasPermissionToGrantMonitoringOfficerRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
     }
 
+    @PermissionRule(value = "CAN_VIEW_OWN_DASHBOARD", description = "User is requesting own dashboard")
+    public boolean isViewingOwnDashboard(UserResource userToView, UserResource user) {
+        return userToView.getId().equals(user.getId());
+    }
+
     private boolean hasPermissionToGrantMonitoringOfficerRole(UserResource user) {
         return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }

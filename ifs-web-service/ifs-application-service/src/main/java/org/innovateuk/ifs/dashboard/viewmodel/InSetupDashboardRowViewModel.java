@@ -5,12 +5,12 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * View model for each project row in the 'Project' section of the applicant dashboard.
  */
-public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<ProjectDashboardRowViewModel> {
+public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InSetupDashboardRowViewModel> {
 
     private final long projectId;
     private final String projectTitle;
 
-    public ProjectDashboardRowViewModel(String title,
+    public InSetupDashboardRowViewModel(String title,
                                         long applicationId,
                                         String competitionTitle,
                                         long projectId,
@@ -39,7 +39,7 @@ public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowV
     }
 
     @Override
-    public int compareTo(ProjectDashboardRowViewModel o) {
+    public int compareTo(InSetupDashboardRowViewModel o) {
         return Long.compare(projectId, o.getProjectId());
     }
 }

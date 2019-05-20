@@ -8,11 +8,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ProjectDashboardRowViewModelTest {
+public class InSetupDashboardRowViewModelTest {
 
     @Test
     public void testConstruct() {
-        ProjectDashboardRowViewModel viewModel = new ProjectDashboardRowViewModel("Application", 1L,
+        InSetupDashboardRowViewModel viewModel = new InSetupDashboardRowViewModel("Application", 1L,
                 "Competition", 2L, "Project");
 
         assertThat(viewModel.getLinkUrl(), equalTo("/project-setup/project/2"));
@@ -21,7 +21,7 @@ public class ProjectDashboardRowViewModelTest {
 
     @Test
     public void testNullTitle() {
-        ProjectDashboardRowViewModel viewModel = new ProjectDashboardRowViewModel("Application", 1L,
+        InSetupDashboardRowViewModel viewModel = new InSetupDashboardRowViewModel("Application", 1L,
                 "Competition", 2L, "");
 
         assertThat(viewModel.getTitle(), equalTo("Competition"));
