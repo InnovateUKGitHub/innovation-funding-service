@@ -4,14 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -96,22 +92,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeService.addApplicationFinance(userId, applicationId);
             // ugly fix since the addApplicationFinance method does not return the correct results.
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        }
-
-        Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        if (!application.isSubmitted() && competition.isOpen()) {
-            // add cost for each cost question
-            for (QuestionResource question : costsQuestions) {
-                FinanceRowType costType = costTypeForQuestion(question);
-                if (costType != null) {
-                    FinanceRowCostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-                    FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
-                    category.addCost(costItem);
-                }
-            }
         }
         return applicationFinanceResource;
     }
