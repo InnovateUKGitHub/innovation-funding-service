@@ -509,7 +509,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
-        ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project, partnerOrganisation) : financeContactStatus;
+        ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project) : financeContactStatus;
         ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
@@ -592,8 +592,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
     }
 
-    private ProjectActivityStates createProjectTeamStatus(Project project, Organisation organisation) {
-        boolean complete = getFinanceContact(project, organisation).isPresent() && getProjectManager(project).isPresent();
+    private ProjectActivityStates createProjectTeamStatus(Project project) {
+
+        boolean complete = projectManagerAndFinanceContactsAllSelected(project);
         return complete? COMPLETE : ACTION_REQUIRED;
     }
 
