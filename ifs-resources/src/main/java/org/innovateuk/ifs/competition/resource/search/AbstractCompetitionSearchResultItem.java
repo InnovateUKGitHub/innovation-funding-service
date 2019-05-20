@@ -12,7 +12,6 @@ public abstract class AbstractCompetitionSearchResultItem implements Competition
     private String competitionTypeName;
     private Set<String> innovationAreaNames;
 
-
     AbstractCompetitionSearchResultItem() {}
 
     public AbstractCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames) {

@@ -36,6 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Service
 public class CompetitionSearchServiceImpl extends BaseTransactionalService implements CompetitionSearchService {
+    private static final String LITERAL_PERCENT = "%%";
 
     @Autowired
     private PublicContentService publicContentService;
@@ -46,18 +47,17 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
         List<Competition> competitions = competitionRepository.findLive();
-        return serviceSuccess(simpleMap(competitions, this::toLiveCompetitionResult));
+        return serviceSuccess(competitions.stream()
+                .map(this::toLiveCompetitionResult)
+                .collect(toList()));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            List<Competition> competitions;
-            if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-                competitions = competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId());
-            } else {
-                competitions = competitionRepository.findProjectSetup();
-            }
+            List<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId())
+                    : competitionRepository.findProjectSetup();
 
             return serviceSuccess(competitions.stream()
                     .map(this::toProjectSetupCompetitionResult)
@@ -69,13 +69,17 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
         List<Competition> competitions = competitionRepository.findUpcoming();
-        return serviceSuccess(simpleMap(competitions, this::toUpcomingCompetitionResult));
+        return serviceSuccess(competitions.stream()
+                .map(this::toUpcomingCompetitionResult)
+                .collect(toList()));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
         List<Competition> competitions = competitionRepository.findNonIfs();
-        return serviceSuccess(simpleMap(competitions, this::toNonIfsCompetitionSearchReult));
+        return serviceSuccess(competitions.stream()
+                .map(this::toNonIfsCompetitionSearchReult)
+                .collect(toList()));
     }
 
     @Override
@@ -89,16 +93,15 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
-        String searchQueryLike = String.format("%%%s%%", searchQuery);
+        String searchQueryLike = "%" + searchQuery + "%";
         PageRequest pageRequest = new PageRequest(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
             } else if (user.hasRole(SUPPORT)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
-            } else {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
             }
+            return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
         });
     }
 
@@ -159,13 +162,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     private PreviousCompetitionSearchResultItem toPreviousCompetitionSearchResult(Competition competition) {
-        ZonedDateTime openDate;
         ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId());
-        if (openDateMilestone.isSuccess()) {
-            openDate = openDateMilestone.getSuccess().getDate();
-        } else {
-            openDate = null;
-        }
+        ZonedDateTime openDate = openDateMilestone.getOptionalSuccessObject().map(MilestoneResource::getDate).orElse(null);
 
         return new PreviousCompetitionSearchResultItem(
                 competition.getId(),
