@@ -27,8 +27,9 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus projectTeamSectionStatus() {
-        return HOURGLASS;
+    public SectionStatus projectTeamSectionStatus(final ProjectActivityStates projectTeamStatus) {
+        return COMPLETE.equals(projectTeamStatus) ?
+                TICK : FLAG;
     }
 
     public SectionStatus monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,

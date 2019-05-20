@@ -154,37 +154,30 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         boolean isLeadPartner = isLeadPartner(teamStatus, organisation);
 
-        boolean isProjectDetailsProcessCompleted = isLeadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(
-                teamStatus,
-                partnerProjectLocationRequired
-        )
-                : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
+        boolean isProjectDetailsProcessCompleted =
+                isLeadPartner ?
+                        checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired)
+                        : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
 
         boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
 
-        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(
-                teamStatus,
-                partnerProjectLocationRequired
-        );
+        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus,
+                                                                                                                               partnerProjectLocationRequired);
 
-        boolean requiredProjectDetailsForMonitoringOfficerComplete = requiredProjectDetailsForMonitoringOfficerComplete(
-                partnerProjectLocationRequired,
-                isProjectDetailsSubmitted,
-                teamStatus
-        );
+        boolean requiredProjectDetailsForMonitoringOfficerComplete =
+                requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired,
+                                                                   isProjectDetailsSubmitted,
+                                                                   teamStatus);
 
         SetupSectionStatus sectionStatus = new SetupSectionStatus();
 
         SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(
                 isProjectDetailsProcessCompleted,
                 awaitingProjectDetailsActionFromOtherPartners,
-                isLeadPartner
-        );
-        SectionStatus projectTeamStatus = sectionStatus.projectTeamSectionStatus();
-        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(
-                monitoringOfficer.isPresent(),
-                requiredProjectDetailsForMonitoringOfficerComplete
-        );
+                isLeadPartner);
+        SectionStatus projectTeamStatus = sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus());
+        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(),
+                                                                                             requiredProjectDetailsForMonitoringOfficerComplete);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(

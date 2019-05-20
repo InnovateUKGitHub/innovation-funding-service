@@ -213,27 +213,16 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates getProjectTeamStatus(Project project, ProjectState processState) {
-        if (processState.isOffline()) {
-            return VIEW;
-        }
-
-        if (projectManagerAndFinanceContactsAllSelected(project)) {
-            return COMPLETE;
-        }
-
-        return PENDING;
+        return projectManagerAndFinanceContactsAllSelected(project) ?
+                COMPLETE : PENDING;
     }
 
     private boolean projectManagerAndFinanceContactsAllSelected(Project project) {
-        if(simpleNoneMatch(project.getProjectUsers(),
-                           ProjectUser::isProjectManager)) {
-            return false;
-        }
-
-        //TODO
-        return true;
+        return getProjectManager(project).isPresent()
+                && project.getOrganisations()
+                .stream()
+                .allMatch(org -> getFinanceContact(project, org).isPresent());
     }
-
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
