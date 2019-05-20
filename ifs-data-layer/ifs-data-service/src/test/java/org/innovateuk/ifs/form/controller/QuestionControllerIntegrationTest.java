@@ -115,22 +115,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetPreviousQuestionBySection() throws Exception {
-        QuestionResource previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccess();
-        assertNotNull(previousQuestion);
-        assertNotNull(previousQuestion.getId());
-        assertEquals(16L , previousQuestion.getId().longValue());
-    }
-
-    @Test
-    public void testGetNextQuestionBySection() throws Exception {
-        QuestionResource nextQuestion = controller.getNextQuestionBySection(10L).getSuccess();
-        assertNotNull(nextQuestion);
-        assertNotNull(nextQuestion.getId());
-        assertEquals(40L, nextQuestion.getId().longValue());
-    }
-
-    @Test
     public void testGetQuestionByIdAndAssessmentId() throws Exception {
         loginFelixWilson();
         Long questionId = 1L;
