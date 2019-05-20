@@ -69,7 +69,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private NotificationService notificationService;
 
     @Autowired
-    ProjectUserInviteRepository projectUserInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -171,11 +171,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> removeUserFromProject(long userId, Project project) {
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<ProjectUser> projectUsersToDelete = simpleFilter(projectUsers,
-                                                              pu -> pu.getUser().getId().equals(userId));
-        projectUserRepository.deleteAll(projectUsersToDelete);
-        if(project.removeProjectUsers(projectUsersToDelete)) {
+        // This will cause a delete with orphanRemoval.
+        boolean removed = project.getProjectUsers().removeIf(pu -> pu.getUser().getId().equals(userId));
+        if (removed) {
             return serviceSuccess();
         }
         return serviceFailure(CANNOT_REMOVE_YOURSELF_FROM_PROJECT);
