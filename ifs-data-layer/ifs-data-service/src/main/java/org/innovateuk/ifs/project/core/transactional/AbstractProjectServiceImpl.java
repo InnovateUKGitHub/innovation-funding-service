@@ -7,6 +7,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -17,5 +18,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected Optional<ProjectUser> getFinanceContact(final Project project, final Organisation organisation) {
         return simpleFindFirst(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()
                 && pu.getOrganisation().getId().equals(organisation.getId()));
+    }
+
+    protected Optional<ProjectUser> getProjectManager(final Project project) {
+        return simpleFindAny(project.getProjectUsers(),
+                               pu -> pu.getRole().isProjectManager());
     }
 }

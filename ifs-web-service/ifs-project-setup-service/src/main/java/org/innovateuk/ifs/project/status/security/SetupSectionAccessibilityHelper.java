@@ -236,8 +236,8 @@ public class SetupSectionAccessibilityHelper {
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
-        if (!setupProgressChecker.isProjectTeamSubmitted()) {
-            return fail("Unable to access Spend Profile section until the Prject Team section is complete");
+        if (!setupProgressChecker.isProjectTeamCompleted()) {
+            return fail("Unable to access Spend Profile section until the Project Team section is complete");
         }
 
         if (!setupProgressChecker.isSpendProfileGenerated()) {

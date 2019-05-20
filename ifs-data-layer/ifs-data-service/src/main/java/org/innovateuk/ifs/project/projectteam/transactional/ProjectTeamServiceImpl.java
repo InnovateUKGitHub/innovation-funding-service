@@ -16,11 +16,10 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
-import org.innovateuk.ifs.project.core.domain.*;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
@@ -29,6 +28,7 @@ import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
+import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -42,7 +42,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -52,7 +51,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -219,11 +218,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     private ProjectUser chooseMigrationTarget(Project project, long leadOrgId, long userToDeleteId) {
         return getProjectManager(project).orElse(chooseRandomMemberOfLeadOrg(project, leadOrgId, userToDeleteId));
-    }
-
-    private Optional<ProjectUser> getProjectManager(Project project) {
-        return simpleFindAny(project.getProjectUsers(),
-                             pu -> pu.getRole().equals(PROJECT_MANAGER));
     }
 
     private ProjectUser chooseRandomMemberOfLeadOrg(Project project, long leadOrgId, long userToDeleteId) {
