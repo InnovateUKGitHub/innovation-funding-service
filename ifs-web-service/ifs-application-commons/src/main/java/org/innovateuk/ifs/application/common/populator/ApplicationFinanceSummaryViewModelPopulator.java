@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -56,7 +55,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.competitionRestService = competitionRestService;
     }
 
-    public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
+    public ApplicationFinanceSummaryViewModel   populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();

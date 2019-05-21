@@ -84,18 +84,31 @@
                     </th:block>
                 </dl>
             </div>
-            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-                <th:block th:if="${procurementCompetition}">
-                    <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
-                </th:block>
-                <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link govuk-!-font-size-19">View the award terms and conditions</a>
-                </th:block>
+            <div class="govuk-grid-column-one-half">
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}+${model.originQuery}" class="govuk-link">
+                            view contributors and collaborators
+                        </a>
+                    </li>
+                    <li th:with="procurementCompetition=${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+                        <th:block th:if="${procurementCompetition}">
+                            <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link">view the draft contract</a> (opens in new window).</p>
+                        </th:block>
+                        <th:block th:unless="${procurementCompetition}">
+                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link">
+                                view the award terms and conditions
+                            </a>
+                        </th:block>
+                    </li>
+                </ul>
             </div>
         </div>
 
 
-        <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
+        <th:block th:with="isApplicant=${false}">
+            <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
+        </th:block>
 
         <div class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"

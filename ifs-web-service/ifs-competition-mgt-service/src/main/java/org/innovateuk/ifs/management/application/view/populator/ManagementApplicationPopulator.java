@@ -74,6 +74,7 @@ public class ManagementApplicationPopulator {
                 application,
                 competition,
                 backUrl,
+                originQuery,
                 ineligibilityViewModel,
                 applicationReadOnlyViewModel,
                 getAppendices(applicationId),
