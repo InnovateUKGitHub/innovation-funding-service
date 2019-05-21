@@ -27,8 +27,7 @@ SELECT false                        AS assign_enabled,
        'GENERAL'                    AS question_type,
        'TERMS_AND_CONDITIONS'       AS question_setup_type
 FROM competition c
-         INNER JOIN section s ON s.competition_id = c.id AND s.section_type = 'TERMS_AND_CONDITIONS'
-WHERE setup_complete;
+INNER JOIN section s ON s.competition_id = c.id AND s.section_type = 'TERMS_AND_CONDITIONS';
 
 -- add a question_status per application/organisation, for all submitted applications
 INSERT INTO question_status (application_id, marked_as_complete, marked_as_complete_by_id, marked_as_complete_on,
