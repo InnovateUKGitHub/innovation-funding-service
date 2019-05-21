@@ -156,7 +156,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         boolean isProjectDetailsProcessCompleted =
                 isLeadPartner ?
-                        checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired)
+                        checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)
                         : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
 
         boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
@@ -267,24 +267,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation, boolean partnerProjectLocationRequired) {
-        boolean financeContactSubmitted = statusAccessor.isFinanceContactSubmitted(organisation);
 
-        return partnerProjectLocationRequired ? financeContactSubmitted && statusAccessor.isPartnerProjectLocationSubmitted(organisation)
-                : financeContactSubmitted;
+        return !partnerProjectLocationRequired || statusAccessor.isPartnerProjectLocationSubmitted(organisation);
     }
 
-    public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
-
+    public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
-
-        boolean projectDetailsAndAllFinanceContactComplete =  COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
-
-        return partnerProjectLocationRequired ? projectDetailsAndAllFinanceContactComplete
-                && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
-                && allOtherPartnersProjectLocationStatusComplete(teamStatus)
-                : projectDetailsAndAllFinanceContactComplete;
+        return leadPartnerStatus.getProjectDetailsStatus().equals(COMPLETE);
     }
 
     private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
@@ -297,15 +286,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private boolean isAwaitingWhenProjectLocationRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
         return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
                 && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
-                && (!allOtherPartnersFinanceContactStatusComplete(teamStatus) || !allOtherPartnersProjectLocationStatusComplete(teamStatus));
+                && !allOtherPartnersProjectLocationStatusComplete(teamStatus);
     }
 
     private boolean isAwaitingWhenProjectLocationNotRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
-        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus());
     }
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {

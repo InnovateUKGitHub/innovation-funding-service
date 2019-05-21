@@ -83,9 +83,9 @@
                                 details
                             </th:block>
                         </h2>
-                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the contact details, proposed start date and
+                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the proposed start date and
                             location of the project.</p>
-                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The contact details, start date and location of the project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The start date and location of the project.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
@@ -103,8 +103,8 @@
                                 details
                             </th:block>
                         </h2>
-                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Assign a  project manager and finance contact, and decide who can view project setup</p>
-                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">TODO IFS-5710 Add read only content here</p>
+                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Add people to your project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The people on your project.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectTeamStatus.getSectionStatus()})"/>
                 </li>

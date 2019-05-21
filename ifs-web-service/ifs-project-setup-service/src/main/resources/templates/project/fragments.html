@@ -8,6 +8,7 @@
     </th>
 
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectTeamStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.documentsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />

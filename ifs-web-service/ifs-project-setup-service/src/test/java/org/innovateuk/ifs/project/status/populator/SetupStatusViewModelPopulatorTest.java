@@ -1170,6 +1170,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withProjectTeamStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
