@@ -19,7 +19,7 @@ import org.innovateuk.ifs.competition.resource.search.PreviousCompetitionSearchR
 import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -48,7 +48,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -66,7 +66,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Mock
-    private PublicContentService publicContentService;
+    private PublicContentRepository publicContentRepository;
 
     @Mock
     private MilestoneService milestoneService;
@@ -119,7 +119,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void findLiveCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findLive()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccess();
@@ -131,8 +130,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findProjectSetupCompetitions() {
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(publicContentService.findByCompetitionId(expectedCompetitions.get(0).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
-        when(publicContentService.findByCompetitionId(expectedCompetitions.get(1).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetup()).thenReturn(expectedCompetitions);
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
@@ -151,8 +148,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(publicContentService.findByCompetitionId(expectedCompetitions.get(0).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
-        when(publicContentService.findByCompetitionId(expectedCompetitions.get(1).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(expectedCompetitions);
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
@@ -167,7 +162,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void findUpcomingCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findUpcoming()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findUpcomingCompetitions().getSuccess();
@@ -178,7 +172,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void findNonIfsCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(newPublicContent().build());
         when(competitionRepositoryMock.findNonIfs()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccess();
@@ -190,8 +184,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findPreviousCompetitions() {
         Long competition2Id = 2L;
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
-        when(publicContentService.findByCompetitionId(competition2Id)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
         MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
@@ -213,7 +205,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void findPreviousCompetitions_NoOpenDate() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceFailure(GENERAL_UNEXPECTED_ERROR));
 
@@ -293,7 +284,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
         when(competitionRepositoryMock.search(searchLike, pageRequest)).thenReturn(queryResponse);
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccess();
 
         assertEquals(totalElements, response.getTotalElements());
@@ -358,8 +348,6 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         } else if (user.hasRole(SUPPORT)) {
             when(competitionRepositoryMock.searchForSupportUser(searchLike, pageRequest)).thenReturn(queryResponse);
         }
-
-        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
     }
 
     private void searchCompetitionsAssertions(long totalElements, int totalPages, int page, int size,
