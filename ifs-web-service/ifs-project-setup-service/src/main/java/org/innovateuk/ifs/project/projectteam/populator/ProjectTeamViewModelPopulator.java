@@ -6,9 +6,9 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectTeamViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -73,8 +73,6 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
-        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
@@ -85,8 +83,6 @@ public class ProjectTeamViewModelPopulator {
                 getProjectManager(projectResource.getId()).orElse(null),
                 isLead,
                 loggedInUser.getId(),
-                monitoringOfficerAssigned,
-                spendProfileGenerated,
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false);
     }
@@ -99,9 +95,9 @@ public class ProjectTeamViewModelPopulator {
     private ProjectOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean editable) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
                 user -> user.getOrganisation().equals(organisation.getId()));
-        List<ProjectUserInviteResource> invitesForOrganistaion = simpleFilter(totalInvites,
+        List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                 invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganistaion), organisation.getName(), organisation.getId(), isLead, editable);
+        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
     }
 
     private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganistaion) {

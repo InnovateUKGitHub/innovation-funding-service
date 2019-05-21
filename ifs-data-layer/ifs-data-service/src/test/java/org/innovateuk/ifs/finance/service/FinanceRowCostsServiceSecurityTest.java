@@ -14,27 +14,18 @@ import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsServiceImpl;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -209,23 +200,6 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
         classUnderTest.getCostItems(applicationFinanceId, questionId);
         verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
-    }
-
-    @Test
-    public void testAddProjectCostWithoutPersisting() {
-        final long projectFinanceId = 1L;
-        final long questionId = 2L;
-
-        EnumSet<Role> nonProjectFinanceRoles = complementOf(of(PROJECT_FINANCE));
-        nonProjectFinanceRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
-            try {
-                classUnderTest.addCostWithoutPersisting(projectFinanceId, questionId);
-                Assert.fail("Should not have been able to add a project cost without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
     }
 
     private ServiceResult<List<FinanceRowItem>> getCostItems() {

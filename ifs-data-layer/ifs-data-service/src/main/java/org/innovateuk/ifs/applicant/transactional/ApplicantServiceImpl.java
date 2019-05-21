@@ -1,6 +1,12 @@
 package org.innovateuk.ifs.applicant.transactional;
 
-import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;

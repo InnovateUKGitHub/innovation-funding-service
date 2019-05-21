@@ -8,6 +8,13 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-5723 - Remove a pending invitation
 ...
 ...             IFS-5722 - Resend invitation to add new members (partners)
+...
+...             IFS-5720 - Add team members (internal)
+...
+...             IFS-5721 - Resend invitation to add new members (internal)
+...
+...             IFS-5721 - Remove a pending invitation (internal)
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -17,6 +24,8 @@ ${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/t
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
 ${removeInviteEmail}       remove@test.nom
+${internalViewTeamPage}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
+${internalInviteeEmail}    internal@invitee.com
 
 *** Test Cases ***
 The lead partner is able to access project team page
@@ -85,6 +94,12 @@ A partner is able to remove a pending invitation
     Given the user is abe to remove the pending invitation
     Then Removed invitee is not able to accept the invite    ${removeInviteEmail}
 
+An internal user is able to access the project team page
+    [Documentation]  IFS-5720
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page   ${internalViewTeamPage}
+    Then the user should see the element   jQuery = h1:contains("Project team")
+
 *** Keywords ***
 The user is able to re-send an invitation
     the user should see the element   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
@@ -125,13 +140,6 @@ The user fills in account details
     the user enters text to a text field   id = phoneNumber   07123456789
     the user enters text to a text field   id = password      ${short_password}
     the user selects the checkbox          termsAndConditions
-
-The user adds a new team member
-  [Arguments]  ${firstName}  ${email}
-  the user clicks the button/link        jQuery = button:contains("Add team member")
-  the user enters text to a text field   id = name   ${firstName}
-  the user enters text to a text field   id = email  ${email}
-  the user clicks the button/link        jQuery = button:contains("Invite to project")
 
 Custom suite setup
     The guest user opens the browser
