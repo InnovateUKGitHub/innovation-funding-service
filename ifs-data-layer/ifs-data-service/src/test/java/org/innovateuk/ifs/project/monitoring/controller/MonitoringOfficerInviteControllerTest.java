@@ -6,7 +6,6 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
-import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -44,9 +43,9 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
     @Override
     protected MonitoringOfficerInviteController supplyControllerUnderTest() {
         return new MonitoringOfficerInviteController(monitoringOfficerInviteServiceMock,
-                                                     registrationServiceMock,
-                                                     crmServiceMock,
-                                                     userServiceMock);
+                registrationServiceMock,
+                crmServiceMock,
+                userServiceMock);
     }
 
     @Test
@@ -78,6 +77,7 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
 
         verify(monitoringOfficerInviteServiceMock, only()).getInviteByHash(hash);
     }
+
     @Test
     public void createMonitoringOfficer() throws Exception {
         String hash = "hash";
@@ -117,12 +117,20 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
     public void addMonitoringOfficerRole() throws Exception {
         String hash = "hash";
 
-        when(monitoringOfficerInviteServiceMock.addMonitoringOfficerRole(hash)).thenReturn(serviceSuccess());
+        User user = newUser().build();
+
+        when(monitoringOfficerInviteServiceMock.addMonitoringOfficerRole(hash)).thenReturn(serviceSuccess(user));
+        when(crmServiceMock.syncCrmContact(user.getId())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/monitoring-officer-registration/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
                 .andExpect(status().is2xxSuccessful());
 
-        verify(monitoringOfficerInviteServiceMock, only()).addMonitoringOfficerRole(hash);
+
+        InOrder inOrder = inOrder(monitoringOfficerInviteServiceMock, crmServiceMock);
+
+        inOrder.verify(monitoringOfficerInviteServiceMock).addMonitoringOfficerRole(hash);
+        inOrder.verify(crmServiceMock).syncCrmContact(user.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
 
@@ -136,7 +144,7 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
                 .build();
 
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
-                user.getFirstName(), user.getLastName(), user.getPhoneNumber(),  user.getEmail());
+                user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getEmail());
 
         when(userServiceMock.findByEmail(user.getEmail()))
                 .thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
@@ -145,8 +153,8 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
                 .thenReturn(serviceSuccess(user));
 
         mockMvc.perform(post("/monitoring-officer-registration/create-pending-monitoring-officer")
-                                .content(toJson(resource))
-                                .contentType(MediaType.APPLICATION_JSON))
+                .content(toJson(resource))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(userServiceMock).findByEmail(user.getEmail());
