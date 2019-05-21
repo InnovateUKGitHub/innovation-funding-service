@@ -19,8 +19,6 @@ public abstract class BaseModelPopulator {
         return form;
     }
 
-
-
     protected Boolean isApplicationInViewMode(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         if(!application.isOpen() || !userOrganisation.isPresent()){
             return Boolean.TRUE;

@@ -9,6 +9,7 @@ public enum QuestionSetupType {
     APPLICATION_DETAILS("Application details"),
     RESEARCH_CATEGORY("Research category"),
     APPLICATION_TEAM("Application team"),
+    TERMS_AND_CONDITIONS("T&C"),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement");

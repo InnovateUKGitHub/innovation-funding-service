@@ -28,7 +28,6 @@ public class SectionStatusController {
     @GetMapping("/get-completed-sections/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getCompletedSections(@PathVariable("applicationId") final long applicationId,
                                                       @PathVariable("organisationId") final long organisationId) {
-
         return sectionStatusService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
@@ -56,11 +55,6 @@ public class SectionStatusController {
     @GetMapping("/all-sections-marked-as-complete/{applicationId}")
     public RestResult<Boolean> allSectionsMarkedAsComplete(@PathVariable("applicationId") final long applicationId) {
         return sectionStatusService.sectionsCompleteForAllOrganisations(applicationId).toGetResponse();
-    }
-
-    @GetMapping("/get-incomplete-sections/{applicationId}")
-    public RestResult<List<Long>> getIncompleteSections(@PathVariable("applicationId") final long applicationId) {
-        return sectionStatusService.getIncompleteSections(applicationId).toGetResponse();
     }
 
 }

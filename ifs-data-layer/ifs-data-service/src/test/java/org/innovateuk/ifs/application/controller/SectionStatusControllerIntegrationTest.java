@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.SecuritySetter;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +19,6 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -69,34 +64,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     @Override
     protected void setControllerUnderTest(SectionStatusController controller) {
         this.controller = controller;
-    }
-
-    @Test
-    public void getCompletedSections() {
-        section = sectionRepository.findById(sectionIdYourProjectCostsFinances).get();
-        assertEquals("Your project costs", section.getName());
-        assertTrue(section.hasChildSections());
-        assertEquals(7, section.getChildSections().size());
-
-        assertEquals(7,
-                controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
-        assertEquals(7,
-                controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
-
-        // Mark one question as incomplete.
-        questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-	    Question question = questionService.getQuestionById(28L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
-        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccess());
-
-        assertEquals(6, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
-
-        UserResource collaborator = newUserResource().withId(collaboratorIdOne).build();
-        SecuritySetter.swapOutForUser(collaborator);
-        assertEquals(7, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
-
-        section = sectionRepository.findById(11L).get();
-        assertEquals("Materials", section.getName());
-        assertFalse(section.hasChildSections());
     }
 
     @Test

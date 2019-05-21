@@ -17,6 +17,5 @@ public interface SectionStatusRestService {
     RestResult<Void> markAsInComplete(long sectionId, long applicationId, long markedAsInCompleteById);
     RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(long applicationId);
     RestResult<List<Long>> getCompletedSectionIds(long applicationId, long organisationId);
-    RestResult<List<Long>> getIncompletedSectionIds(long applicationId);
     RestResult<Boolean> allSectionsMarkedAsComplete(long applicationId);
 }

@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -86,7 +87,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById))
                 .andOnSuccess((question, application, assignee, assignedBy) -> {
 
-                    if(!isAssignableUser(ids.applicationId, assignee.getUser().getId())) {
+                    if (!isAssignableUser(ids.applicationId, assignee.getUser().getId())) {
                         return serviceFailure(ASSIGNEE_SHOULD_BE_APPLICANT);
                     }
 
@@ -121,8 +122,8 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                     .filter(Question::isMarkAsCompletedEnabled)
                     .filter(q -> simpleAnyMatch(questionStatuses, qs ->
                             qs.getQuestion().getId().equals(q.getId()) &&
-                                ((q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(false)) ||
-                                        (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(false)))
+                                    ((q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(false)) ||
+                                            (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(false)))
                     )).map(Question::getId).collect(Collectors.toSet());
             return serviceSuccess(markedAsCompleteQuestions);
         });
@@ -174,14 +175,24 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<List<QuestionStatusResource>> findCompletedQuestionsByApplicationId(long applicationId) {
+        return serviceSuccess(questionStatusRepository.findByApplicationId(applicationId).stream()
+                .filter(qs -> qs.getMarkedAsComplete() != null)
+                .filter(QuestionStatus::getMarkedAsComplete)
+                .map(questionStatusMapper::mapToResource)
+                .collect(toList()));
+    }
+
+    @Override
     public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id) {
         return find(questionStatusRepository.findById(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(long applicationId, long assigneeId){
+    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(long applicationId, long assigneeId) {
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
+
     private Boolean isMarkedAsCompleteForOrganisation(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
         return !questionStatuses.isEmpty();
@@ -221,7 +232,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
     }
 
-    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus){
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
 
         QuestionStatus questionStatus = null;
 
@@ -237,12 +248,14 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
 
-        List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()): new ArrayList<>();
+        List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()) : new ArrayList<>();
 
         if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-        } else if (markAsComplete) {
-            questionStatus.markAsComplete();
+            questionStatus = new QuestionStatus(question, application);
+        }
+
+        if (markAsComplete) {
+            questionStatus.markAsComplete(markedAsCompleteBy, now());
         } else {
             questionStatus.markAsInComplete();
         }

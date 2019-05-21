@@ -25,6 +25,7 @@ public class EuContactForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.eugrant.jobtitle.required}")
     private String jobTitle;
 
+    @NotBlank(message = "{validation.eugrant.email.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.eugrant.email.required}")
     private String email;
 

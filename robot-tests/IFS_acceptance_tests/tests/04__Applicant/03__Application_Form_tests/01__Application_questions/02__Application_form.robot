@@ -212,7 +212,7 @@ Log in and create a new application for the Aerospace competition
 
 the user should no longer see the Mark-as-complete-link
     [Arguments]  ${Section}
-    the user navigates to the page       ${server}/application/${appId}/summary
+    the user navigates to the page       ${server}/application/${appId}/review-and-submit
     the user should see the element      jQuery = .collapsible:contains("${Section}") button:contains("Return and edit")
 
 Custom suite teardown
