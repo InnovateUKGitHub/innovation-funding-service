@@ -15,7 +15,6 @@ import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfil
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,6 +34,8 @@ import static org.hamcrest.Matchers.any;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
@@ -83,9 +84,9 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();
         CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
-        Assert.assertEquals(1L, viewModel.getOpenQueryCount());
-        Assert.assertEquals(4L, viewModel.getPendingSpendProfilesCount());
-        Assert.assertEquals(TRUE, viewModel.isShowTabs());
+        assertEquals(1L, viewModel.getOpenQueryCount());
+        assertEquals(4L, viewModel.getPendingSpendProfilesCount());
+        assertTrue(viewModel.isShowTabs());
     }
 
     @Test
@@ -102,9 +103,9 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andReturn();
 
         CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
-        Assert.assertEquals(0L, viewModel.getOpenQueryCount());
-        Assert.assertEquals(0L, viewModel.getPendingSpendProfilesCount());
-        Assert.assertEquals(TRUE, viewModel.isShowTabs());
+        assertEquals(0L, viewModel.getOpenQueryCount());
+        assertEquals(0L, viewModel.getPendingSpendProfilesCount());
+        assertTrue(viewModel.isShowTabs());
         verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
         verify(competitionPostSubmissionRestService, never()).countPendingSpendProfiles(competitionId);
     }
@@ -130,17 +131,17 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(model().attribute("model", any(CompetitionOpenQueriesViewModel.class)))
                 .andReturn();
         CompetitionOpenQueriesViewModel viewModel = (CompetitionOpenQueriesViewModel) result.getModelAndView().getModel().get("model");
-        Assert.assertEquals(123L, viewModel.getCompetitionId());
-        Assert.assertEquals("comp1", viewModel.getCompetitionName());
-        Assert.assertEquals(1L, viewModel.getOpenQueryCount());
-        Assert.assertEquals(1, viewModel.getOpenQueries().size());
-        Assert.assertEquals(1L, viewModel.getOpenQueries().get(0).getApplicationId().longValue());
-        Assert.assertEquals(2L, viewModel.getOpenQueries().get(0).getOrganisationId().longValue());
-        Assert.assertEquals("org", viewModel.getOpenQueries().get(0).getOrganisationName());
-        Assert.assertEquals(3L, viewModel.getOpenQueries().get(0).getProjectId().longValue());
-        Assert.assertEquals("proj", viewModel.getOpenQueries().get(0).getProjectName());
-        Assert.assertEquals(4L, viewModel.getPendingSpendProfilesCount());
-        Assert.assertEquals(TRUE, viewModel.isShowTabs());
+        assertEquals(123L, viewModel.getCompetitionId());
+        assertEquals("comp1", viewModel.getCompetitionName());
+        assertEquals(1L, viewModel.getOpenQueryCount());
+        assertEquals(1, viewModel.getOpenQueries().size());
+        assertEquals(1L, viewModel.getOpenQueries().get(0).getApplicationId().longValue());
+        assertEquals(2L, viewModel.getOpenQueries().get(0).getOrganisationId().longValue());
+        assertEquals("org", viewModel.getOpenQueries().get(0).getOrganisationName());
+        assertEquals(3L, viewModel.getOpenQueries().get(0).getProjectId().longValue());
+        assertEquals("proj", viewModel.getOpenQueries().get(0).getProjectName());
+        assertEquals(4L, viewModel.getPendingSpendProfilesCount());
+        assertTrue(viewModel.isShowTabs());
     }
 
     @Test
@@ -165,12 +166,12 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andReturn();
 
         CompetitionPendingSpendProfilesViewModel viewModel = (CompetitionPendingSpendProfilesViewModel) result.getModelAndView().getModel().get("model");
-        Assert.assertEquals(123L, viewModel.getCompetitionId());
-        Assert.assertEquals("comp1", viewModel.getCompetitionName());
-        Assert.assertEquals(pendingSpendProfiles, viewModel.getPendingSpendProfiles());
-        Assert.assertEquals(4L, viewModel.getOpenQueryCount());
-        Assert.assertEquals(2, viewModel.getPendingSpendProfilesCount());
-        Assert.assertEquals(TRUE, viewModel.isShowTabs());
+        assertEquals(123L, viewModel.getCompetitionId());
+        assertEquals("comp1", viewModel.getCompetitionName());
+        assertEquals(pendingSpendProfiles, viewModel.getPendingSpendProfiles());
+        assertEquals(4L, viewModel.getOpenQueryCount());
+        assertEquals(2, viewModel.getPendingSpendProfilesCount());
+        assertTrue(viewModel.isShowTabs());
     }
 
     @Test
