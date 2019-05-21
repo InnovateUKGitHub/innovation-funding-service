@@ -2,12 +2,9 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,9 +19,6 @@ public abstract class BaseFinanceOverviewViewModel {
     protected BigDecimal totalOtherFunding;
 
     protected SectionResource financeSection;
-    protected List<SectionResource> financeSectionChildren;
-    protected Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap;
-    protected Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs;
 
     public BigDecimal getFinanceTotal() {
         return financeTotal;
@@ -80,30 +74,6 @@ public abstract class BaseFinanceOverviewViewModel {
 
     public void setFinanceSection(SectionResource financeSection) {
         this.financeSection = financeSection;
-    }
-
-    public List<SectionResource> getFinanceSectionChildren() {
-        return financeSectionChildren;
-    }
-
-    public void setFinanceSectionChildren(List<SectionResource> financeSectionChildren) {
-        this.financeSectionChildren = financeSectionChildren;
-    }
-
-    public Map<Long, List<QuestionResource>> getFinanceSectionChildrenQuestionsMap() {
-        return financeSectionChildrenQuestionsMap;
-    }
-
-    public void setFinanceSectionChildrenQuestionsMap(Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap) {
-        this.financeSectionChildrenQuestionsMap = financeSectionChildrenQuestionsMap;
-    }
-
-    public Map<Long, List<FormInputResource>> getFinanceSectionChildrenQuestionFormInputs() {
-        return financeSectionChildrenQuestionFormInputs;
-    }
-
-    public void setFinanceSectionChildrenQuestionFormInputs(Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs) {
-        this.financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionFormInputs;
     }
 
     public Boolean getHasAcademicFileEntries() {

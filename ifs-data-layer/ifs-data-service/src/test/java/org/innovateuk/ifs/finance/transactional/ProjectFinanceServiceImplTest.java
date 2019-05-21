@@ -205,21 +205,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testAddCostWithoutPersisting(){
-        ServiceResult<FinanceRowItem> result = service.addCostWithoutPersisting(newFinance.getId(), question.getId());
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testAddCostWithoutPersistingWhenQFromDiffComp(){
-        Competition anotherCompetition = newCompetition().build();
-        Question questionFromAnotherCompetition = newQuestion().withCompetition(anotherCompetition).build();
-        ServiceResult<FinanceRowItem> result = service.addCostWithoutPersisting(newFinance.getId(), questionFromAnotherCompetition.getId());
-        assertTrue(result.isFailure());
-        assertTrue(result.getErrors().contains(notFoundError(Question.class)));
-    }
-
-    @Test
     public void testDeleteCost() {
         ServiceResult<Void> result = service.deleteCost(materialCost.getId());
         assertTrue(result.isSuccess());

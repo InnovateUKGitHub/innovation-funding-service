@@ -43,17 +43,6 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
     }
     
     @Test
-    public void addShouldCreateNewCostWithoutPersisting() throws Exception{
-
-        when(financeRowCostsServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
-
-        mockMvc.perform(post("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(financeRowCostsServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
-    }
-
-    @Test
     public void updateShouldReturnBadRequestOnMissingBody() throws Exception {
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON))
