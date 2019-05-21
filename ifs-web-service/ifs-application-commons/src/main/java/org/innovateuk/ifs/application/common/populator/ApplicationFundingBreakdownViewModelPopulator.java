@@ -9,13 +9,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
@@ -27,7 +22,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -76,7 +70,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         ApplicationResource application = applicationService.getById(applicationId);
 
-
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
@@ -87,7 +80,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
         OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
-
 
         SectionResource section = sectionService.getFinanceSection(application.getCompetition());
 
@@ -114,23 +106,11 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         // Finance Section will be null for EOI Competitions
         if (section != null) {
-            sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-            List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(application.getCompetition(), section);
-
-            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
-                    getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, application.getCompetition());
-
-            Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
-                    getFinanceSectionChildrenQuestionFormInputs(application.getCompetition(), financeSectionChildrenQuestionsMap);
-
             return new ApplicationFundingBreakdownViewModel(
                     organisationFinanceOverview.getTotalPerType(),
                     organisationFinanceOverview.getTotal(),
                     applicationOrganisations,
                     section,
-                    financeSubSectionChildren,
-                    financeSectionChildrenQuestionsMap,
-                    financeSectionChildrenQuestionFormInputs,
                     leadOrganisation,
                     organisationFinanceOverview.getFinancesByOrganisation(),
                     pendingOrganisationNames,

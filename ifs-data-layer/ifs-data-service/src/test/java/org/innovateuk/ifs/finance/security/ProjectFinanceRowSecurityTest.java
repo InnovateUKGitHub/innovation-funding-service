@@ -35,20 +35,6 @@ public class ProjectFinanceRowSecurityTest extends BaseServiceSecurityTest<Proje
     }
 
     @Test
-    public void testAddCostWithoutPersisting(){
-        when(projectFinanceLookupStrategy.getProjectFinance(1L)).thenReturn(newProjectFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.addCostWithoutPersisting(1L, 2L),
-                () -> {
-                    verify(projectFinancePermissionRules)
-                            .partnersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules)
-                            .internalUsersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
-                }
-        );
-    }
-
-    @Test
     public void testFinanceChecksDetails(){
         when(classUnderTestMock.financeChecksDetails(1L, 2L))
                 .thenReturn(serviceSuccess(newProjectFinanceResource().build()));

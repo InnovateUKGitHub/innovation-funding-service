@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
@@ -64,25 +63,6 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)));
     }
-
-    @Test
-    public void getIncompleteSectionsTest() throws Exception {
-        // Initial data setup is not necessary, but gives an indication of how the data model should be.
-        List<Section> completedSections = newSection().build(2);
-        List<Section> incompleteSections = newSection().build(2);
-        List<Section> allSections = new ArrayList<>();
-        allSections.addAll(completedSections);
-        allSections.addAll(incompleteSections);
-        List<Long> incompleteSectionIds = incompleteSections.stream().map(s -> s.getId()).collect(toList());
-        Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
-        when(sectionStatusServiceMock.getIncompleteSections(application.getId()))
-                .thenReturn(serviceSuccess(incompleteSectionIds));
-
-        mockMvc.perform(get("/section-status/get-incomplete-sections/" + application.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)));
-    }
-
 
     @Test
     public void markSectionAsComplete() throws Exception {

@@ -26,28 +26,24 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         return new QuestionStatusResourceBuilder(emptyList()).with(uniqueIds());
     }
 
-    public QuestionStatusResourceBuilder withApplication(ApplicationResource application) {
-        return with(questionStatus -> {
-            questionStatus.setApplication(application.getId());
-        });
+    public QuestionStatusResourceBuilder withApplication(ApplicationResource... applications) {
+        return withArray((application, status) -> status.setApplication(application.getId()), applications);
     }
 
-    public QuestionStatusResourceBuilder withMarkedAsComplete(Boolean markedAsComplete) {
-        return with(questionStatus -> {
-            questionStatus.setMarkedAsComplete(markedAsComplete);
-        });
+    public QuestionStatusResourceBuilder withMarkedAsComplete(Boolean... markedAsCompletes) {
+        return withArray((markedAsComplete, status) -> status.setMarkedAsComplete(markedAsComplete), markedAsCompletes);
     }
 
-    public QuestionStatusResourceBuilder withQuestion(Long question) {
-        return with(questionStatus -> {
-            questionStatus.setQuestion(question);
-        });
+    public QuestionStatusResourceBuilder withQuestion(Long... questions) {
+        return withArray((question, status) -> status.setQuestion(question), questions);
     }
 
-    public QuestionStatusResourceBuilder withAssignee(Long assignee) {
-        return with(questionStatus -> {
-            questionStatus.setAssignee(assignee);
-        });
+    public QuestionStatusResourceBuilder withMarkedAsCompleteByOrganisationId(Long... organisationIds) {
+        return withArray((organisationId, status) -> status.setMarkedAsCompleteByOrganisationId(organisationId), organisationIds);
+    }
+
+    public QuestionStatusResourceBuilder withAssignee(Long... assignees) {
+        return withArray((assignee, status) -> status.setAssignee(assignee), assignees);
     }
 
     public QuestionStatusResourceBuilder withMarkedAsCompleteOn(ZonedDateTime... dates) {

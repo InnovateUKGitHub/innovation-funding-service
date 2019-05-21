@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.finance.view;
 import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
@@ -26,12 +25,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                                      final DefaultFinanceRowRestService defaultFinanceRowRestService) {
         super(defaultFinanceRowRestService);
         this.financeService = financeService;
-    }
-
-    @Override
-    public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return getFinanceRowRestService().addWithoutPersisting(applicationFinance.getId(), questionId).getSuccess();
     }
 
     @Override

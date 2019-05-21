@@ -62,5 +62,10 @@ IFS.core.loadOrder = {
     finalize: function () {
       IFS.core.overheads.init()
     }
+  },
+  'project-team': {
+    init: function () {
+      IFS.core.projectTeam.init()
+    }
   }
 }

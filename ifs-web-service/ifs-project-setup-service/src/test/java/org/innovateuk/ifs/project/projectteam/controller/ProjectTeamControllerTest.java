@@ -7,13 +7,16 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
-import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -37,11 +40,9 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     @Override
     protected ProjectTeamController supplyControllerUnderTest() {
         return new ProjectTeamController(populator,
-                                         projectDetailsService,
-                                         projectService,
-                                         organisationRestService,
                                          projectTeamRestService,
-                                         cookieFlashMessageFilter);
+                                         cookieFlashMessageFilter,
+                                         projectInviteHelper);
     }
 
     @Mock
@@ -62,6 +63,10 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Spy
+    @InjectMocks
+    private ProjectInviteHelper projectInviteHelper;
+
     @Test
     public void viewProjectTeam() throws Exception {
         UserResource loggedInUser = newUserResource().build();
@@ -73,8 +78,8 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
         MvcResult result = mockMvc.perform(get("/project/{id}/team", projectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/team/project-team"))
-                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andExpect(view().name("projectteam/project-team"))
+                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
@@ -95,8 +100,8 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         MvcResult result = mockMvc.perform(post("/project/{id}/team", projectId)
                 .param("add-team-member", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/team/project-team"))
-                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andExpect(view().name("projectteam/project-team"))
+                .andExpect(model().attributeDoesNotExist("internalUserView"))
                 .andReturn();
 
         ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
