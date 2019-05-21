@@ -3,7 +3,7 @@
 -- New terms and conditions section
 INSERT INTO section
 (display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type)
-SELECT false                  AS display_in_assessment_application_summary,
+SELECT true                   AS display_in_assessment_application_summary,
        'Terms and conditions' AS name,
        '11'                   AS priority,
        c.id                   AS competition_id,
