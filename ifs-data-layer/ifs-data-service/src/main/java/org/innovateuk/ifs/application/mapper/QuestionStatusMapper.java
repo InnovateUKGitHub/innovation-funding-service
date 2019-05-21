@@ -26,7 +26,8 @@ public abstract class QuestionStatusMapper  extends BaseMapper<QuestionStatus, Q
             @Mapping(source = "assignedBy.user.name", target = "assignedByName"),
             @Mapping(source = "assignedBy.user.id", target = "assignedByUserId"),
             @Mapping(source = "markedAsCompleteBy.user.id", target = "markedAsCompleteByUserId"),
-            @Mapping(source = "markedAsCompleteBy.user.name", target = "markedAsCompleteByUserName")
+            @Mapping(source = "markedAsCompleteBy.user.name", target = "markedAsCompleteByUserName"),
+            @Mapping(source = "markedAsCompleteBy.organisationId", target = "markedAsCompleteByOrganisationId")
     })
     @Override
     public abstract QuestionStatusResource mapToResource(QuestionStatus domain);

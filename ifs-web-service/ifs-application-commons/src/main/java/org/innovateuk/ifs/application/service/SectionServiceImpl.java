@@ -60,11 +60,6 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<Long> getInCompleted(Long applicationId) {
-        return sectionStatusRestService.getIncompletedSectionIds(applicationId).getSuccess();
-    }
-
-    @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
         return sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
     }

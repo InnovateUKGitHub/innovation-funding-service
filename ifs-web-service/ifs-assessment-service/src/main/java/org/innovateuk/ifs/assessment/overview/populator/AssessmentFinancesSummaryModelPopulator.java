@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummaryViewModel;
@@ -15,18 +14,19 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedSet;
 
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 
@@ -117,21 +117,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         if (section == null) {
             return;
         }
-
-        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-
         model.addAttribute("financeSection", section);
-        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
-        model.addAttribute("financeSectionChildren", financeSubSectionChildren);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
-                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
-                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
-
-        model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
-        model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 }
 

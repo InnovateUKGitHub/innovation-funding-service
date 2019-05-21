@@ -19,6 +19,7 @@ public class QuestionStatusResource {
     private Long application;
     private Long assignedBy;
     private Boolean notified;
+    private Long markedAsCompleteByOrganisationId;
 
     // Following are needed by the view
     private String assigneeName;
@@ -174,6 +175,14 @@ public class QuestionStatusResource {
 
     public long getMarkedAsCompleteByUserId() {
         return markedAsCompleteByUserId;
+    }
+
+    public Long getMarkedAsCompleteByOrganisationId() {
+        return markedAsCompleteByOrganisationId;
+    }
+
+    public void setMarkedAsCompleteByOrganisationId(Long markedAsCompleteByOrganisationId) {
+        this.markedAsCompleteByOrganisationId = markedAsCompleteByOrganisationId;
     }
 
     public void setMarkedAsCompleteByUserId(long markedAsCompleteByUserId) {

@@ -181,6 +181,15 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<List<QuestionStatusResource>> findCompletedQuestionsByApplicationId(long applicationId) {
+        return serviceSuccess(questionStatusRepository.findByApplicationId(applicationId).stream()
+                .filter(qs -> qs.getMarkedAsComplete() != null)
+                .filter(QuestionStatus::getMarkedAsComplete)
+                .map(questionStatusMapper::mapToResource)
+                .collect(toList()));
+    }
+
+    @Override
     public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id) {
         return find(questionStatusRepository.findById(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
