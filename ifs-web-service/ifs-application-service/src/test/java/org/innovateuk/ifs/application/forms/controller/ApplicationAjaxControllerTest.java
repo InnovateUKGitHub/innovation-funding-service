@@ -4,8 +4,6 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,24 +63,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
         // save actions should always succeed.
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
-    }
-
-    @Test
-    public void testAjaxAddCost() throws Exception {
-        FinanceRowItem costItem = new Materials();
-        when(defaultFinanceFormHandler.addCostWithoutPersisting(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
-        mockMvc.perform(
-                get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
-        );
-    }
-
-    @Test
-    public void testAjaxRemoveCost() throws Exception {
-        ValidationMessages costItemMessages = new ValidationMessages();
-        when(financeRowRestService.add(anyLong(), anyLong(), any())).thenReturn(restSuccess(costItemMessages));
-        mockMvc.perform(
-                get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
-        );
     }
 
     @Test
