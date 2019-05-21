@@ -51,6 +51,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     private SystemNotificationSource systemNotificationSource;
 
     @Override
+    @Transactional
     public ServiceResult<Void> update(UUID id, EuGrantResource euGrantResource) {
         return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
@@ -68,6 +69,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<EuGrantResource> create() {
         return serviceSuccess(euGrantMapper.mapToResource(euGrantRepository.save(new EuGrant())));
     }

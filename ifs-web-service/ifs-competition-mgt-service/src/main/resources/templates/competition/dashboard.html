@@ -96,14 +96,14 @@
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                         <th:block th:if="${competition.competitionStatus.inFlight}">
-                            <a  th:if="${model.supportUser}"
-                                th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}"
+                            <a th:if="${model.supportUser}"
+                               th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}"
                                class="govuk-link">
                                 <th:block th:insert="competition/dashboard :: competition-name"/>
                             </a>
-                            <a  th:unless="${model.supportUser}"
-                                th:href="@{/competition/{competitionId}(competitionId=${competition.id})}"
-                                class="govuk-link">
+                            <a th:unless="${model.supportUser}"
+                               th:href="@{/competition/{competitionId}(competitionId=${competition.id})}"
+                               class="govuk-link">
                                 <th:block th:insert="competition/dashboard :: competition-name"/>
                             </a>
                         </th:block>
