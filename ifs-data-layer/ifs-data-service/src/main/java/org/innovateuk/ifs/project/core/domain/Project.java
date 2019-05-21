@@ -61,7 +61,7 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project")
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project", fetch = FetchType.LAZY)
     private MonitoringOfficer projectMonitoringOfficer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -89,7 +89,7 @@ public class Project implements ProcessActivity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
     private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
-    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true)
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
 
 

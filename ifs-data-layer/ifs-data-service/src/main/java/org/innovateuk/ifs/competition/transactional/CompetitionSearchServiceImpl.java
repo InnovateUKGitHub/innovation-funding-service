@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.resource.search.*;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +39,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     private static final String LITERAL_PERCENT = "%%";
 
     @Autowired
-    private PublicContentService publicContentService;
+    private PublicContentRepository publicContentRepository;
 
     @Autowired
     private MilestoneService milestoneService;
@@ -157,7 +157,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                publicContentService.findByCompetitionId(competition.getId()).getSuccess().getPublishDate()
+                publicContentRepository.findByCompetitionId(competition.getId()).getPublishDate()
         );
     }
 
