@@ -71,9 +71,30 @@ addUserToShibboleth() {
   echo "employeeType: active"
   echo "userPassword:: $password"
   echo ""
-
 }
 
+addACCUserToShibboleth() {
+  IFS=$'\t' read -r -a array <<< "$1"
+  uid=$(uuidgen)
+  email="${array[0]}"
+
+  echo "dn: uid=$uid,$LDAP_DOMAIN"
+  echo "uid: $uid"
+  echo "mail: $email"
+  echo "sn:: IA=="
+  echo "cn:: IA=="
+  echo "objectClass: inetOrgPerson"
+  echo "objectClass: person"
+  echo "objectClass: top"
+  echo "employeeType: active"
+  echo "userPassword:: $password"
+  echo ""
+}
+
+getAccUsersFromCSV() {
+    curl -0 -u <user>:<password> https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
+    while IFS=, read -a csv_line;do echo "${csv_line[2]}";done < users.csv
+}
 # Main
 
 wipeLdapUsers
@@ -82,4 +103,10 @@ IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
 do
   addUserToShibboleth $u
+done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+
+IFS=$'\n'
+for u in $(getAccUsersFromCSV)
+do
+  addACCUserToShibboleth $u
 done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
