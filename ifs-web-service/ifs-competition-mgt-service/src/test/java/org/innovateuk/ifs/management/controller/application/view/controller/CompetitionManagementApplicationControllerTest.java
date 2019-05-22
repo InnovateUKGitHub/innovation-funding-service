@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.controller.application.view.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
@@ -79,7 +79,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Mock
     private ManagementApplicationPopulator managementApplicationPopulator;
-
 
     @Test
     public void displayApplicationOverviewAsCompAdmin() throws Exception {

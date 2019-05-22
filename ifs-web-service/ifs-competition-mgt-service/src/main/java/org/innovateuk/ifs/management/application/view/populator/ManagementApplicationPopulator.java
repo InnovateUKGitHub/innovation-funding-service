@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.application.view.populator;
 
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.resource.AppendixResource;
+import org.innovateuk.ifs.application.resource.AppendixViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -69,7 +69,6 @@ public class ManagementApplicationPopulator {
         queryParams.put("applicationId", asList(String.valueOf(application.getId())));
         String backUrl = buildBackUrl(ManagementApplicationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
 
-
         return new ManagementApplicationViewModel(
                 application,
                 competition,
@@ -84,14 +83,14 @@ public class ManagementApplicationPopulator {
 
     }
 
-    private List<AppendixResource> getAppendices(Long applicationId) {
+    private List<AppendixViewModel> getAppendices(Long applicationId) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         return responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
-                    return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
+                    return new AppendixViewModel(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).
                 collect(Collectors.toList());
     }

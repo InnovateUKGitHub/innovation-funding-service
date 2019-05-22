@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.resource.AppendixResource;
+import org.innovateuk.ifs.application.resource.AppendixViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -16,7 +16,7 @@ public class ManagementApplicationViewModel {
     private final String originQuery;
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
-    private final List<AppendixResource> appendices;
+    private final List<AppendixViewModel> appendices;
     private final boolean canMarkAsIneligible;
     private final boolean canReinstate;
 
@@ -31,7 +31,7 @@ public class ManagementApplicationViewModel {
     private final String previousApplicationTitle;
 
 
-    public ManagementApplicationViewModel(ApplicationResource application, CompetitionResource competition, String backUrl, String originQuery, ApplicationOverviewIneligibilityViewModel ineligibility, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, List<AppendixResource> appendices, boolean canMarkAsIneligible, boolean canReinstate) {
+    public ManagementApplicationViewModel(ApplicationResource application, CompetitionResource competition, String backUrl, String originQuery, ApplicationOverviewIneligibilityViewModel ineligibility, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, List<AppendixViewModel> appendices, boolean canMarkAsIneligible, boolean canReinstate) {
         this.application = application;
         this.competition = competition;
         this.backUrl = backUrl;
@@ -77,7 +77,7 @@ public class ManagementApplicationViewModel {
         return applicationReadOnlyViewModel;
     }
 
-    public List<AppendixResource> getAppendices() {
+    public List<AppendixViewModel> getAppendices() {
         return appendices;
     }
 

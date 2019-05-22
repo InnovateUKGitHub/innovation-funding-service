@@ -8,12 +8,12 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
  * This is used for displaying a list of appendix files at the bottom of comp admin read only application view
  * See INFUND-2283 and prototype page 1968-admin-readonly-application
  */
-public class AppendixResource extends FileEntryResource {
+public class AppendixViewModel extends FileEntryResource {
     private Long applicationId;
     private String title;
     private Long formInputId;
 
-    public AppendixResource(Long applicationId, Long formInputId, String title, FileEntryResource fileEntryResource) {
+    public AppendixViewModel(Long applicationId, Long formInputId, String title, FileEntryResource fileEntryResource) {
         super(fileEntryResource.getId(), fileEntryResource.getName(), fileEntryResource.getMediaType(), fileEntryResource.getFilesizeBytes());
         this.applicationId = applicationId;
         this.title = title;
