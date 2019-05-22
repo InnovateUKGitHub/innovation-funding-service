@@ -74,9 +74,10 @@ addUserToShibboleth() {
 }
 
 addACCUserToShibboleth() {
-  IFS=$'\t' read -r -a array <<< "$1"
-  uid=$(uuidgen)
-  email="${array[0]}"
+while IFS=, read -a csv_line;
+do
+  uid="${csv_line[0]}"
+  email="${csv_line[1]}"
 
   echo "dn: uid=$uid,$LDAP_DOMAIN"
   echo "uid: $uid"
@@ -89,11 +90,18 @@ addACCUserToShibboleth() {
   echo "employeeType: active"
   echo "userPassword:: $password"
   echo ""
+ done < emailsAndUUids.csv | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
 }
 
-getAccUsersFromCSV() {
-    curl -0 -u <user>:<password> https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
-    while IFS=, read -a csv_line;do echo "${csv_line[2]}";done < users.csv
+downloadAccUserCsv() {
+    echo "Starting download"
+    echo "=================="
+#    Download users from repository
+    curl -0 -u ${bamboo_acc_username}:${bamboo_acc_password} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
+#    Remove first line of column names
+    tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
+#    Create new Csv with emails and new generated UUID
+    awk -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3} {close("uuidgen")}' users.csv > emailsAndUUids.csv
 }
 # Main
 
@@ -105,8 +113,5 @@ do
   addUserToShibboleth $u
 done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
 
-IFS=$'\n'
-for u in $(getAccUsersFromCSV)
-do
-  addACCUserToShibboleth $u
-done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+downloadAccUserCsv
+addACCUserToShibboleth
