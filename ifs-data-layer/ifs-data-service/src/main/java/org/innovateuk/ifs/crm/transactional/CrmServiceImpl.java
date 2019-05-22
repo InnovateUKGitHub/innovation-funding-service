@@ -52,20 +52,19 @@ public class CrmServiceImpl implements CrmService {
                     return result;
                 });
             }
-            syncMOCrmContact(userId);
+            syncMOCrmContact(user);
 
             return serviceSuccess();
         });
     }
 
-    private void syncMOCrmContact(long userId) {
-        userService.getUserById(userId).andOnSuccess(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                SilContact silContact = monitoringOfficerToSilContact(user);
-                getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-            }
-            return serviceSuccess();
-        });
+    private void syncMOCrmContact(UserResource user) {
+
+        if (user.hasRole(MONITORING_OFFICER)) {
+            SilContact silContact = monitoringOfficerToSilContact(user);
+            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+        }
+
     }
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
