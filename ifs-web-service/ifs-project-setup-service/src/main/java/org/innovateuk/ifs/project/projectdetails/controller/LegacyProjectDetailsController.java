@@ -54,7 +54,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 /**
  * This controller will handle all requests that are related to project details.
  */
-@ZeroDowntime(reference = "IFS-TODO", description = "Remove this controller entirely as part of next deploy")
+@ZeroDowntime(reference = "IFS-5921", description = "Remove this controller entirely as part of next deploy")
 @Controller
 @RequestMapping("/project")
 public class LegacyProjectDetailsController {

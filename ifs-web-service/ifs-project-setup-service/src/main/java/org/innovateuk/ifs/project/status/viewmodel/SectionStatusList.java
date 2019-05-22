@@ -71,7 +71,7 @@ public class SectionStatusList {
 
     public boolean isProjectComplete() {
         return projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                &&projectTeamStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && projectTeamStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
