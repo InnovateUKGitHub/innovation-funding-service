@@ -4,7 +4,7 @@ VOLUME /tmp
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y mysql-client ldap-utils
-RUN apt-get install uuid-runtime
+RUN apt-get install uuid-runtime -y
 COPY db/ /flyway/sql/db
 COPY *.sh /
 
