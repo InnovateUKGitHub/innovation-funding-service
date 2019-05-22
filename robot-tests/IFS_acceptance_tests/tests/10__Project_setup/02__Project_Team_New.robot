@@ -15,6 +15,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5721 - Remove a pending invitation (internal)
 ...
+...             IFS-5901 - Change access permisions to update project team members in project setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -28,11 +30,41 @@ ${internalViewTeamPage}    ${server}/project-setup-management/competition/${PROJ
 ${internalInviteeEmail}    internal@invitee.com
 
 *** Test Cases ***
+Monitoring Officers has a read only view of the Project team page
+    [Documentation]  IFS-5901
+    Given the user logs-in in new browser   &{monitoring_officer_one_credentials}
+    When the user navigates to the page     ${server}/project-setup/project/14/team
+    Then the user should see the read only view of Project team page
+
+Innovation lead has a read only view of the Project team page
+    [Documentation]  IFS-5901
+    Given log in as a different user      &{innovation_lead_one}
+    When the user navigates to the page   ${internalViewTeamPage}
+    Then the user should see the read only view of Project team page
+
+Stakeholder has a read only view of the Project team page
+    [Documentation]  IFS-5901
+    Given log in as a different user      &{stakeholder_user}
+    When the user navigates to the page   ${server}/project-setup-management/competition/16/project/8/team
+    Then the user should see the read only view of Project team page
+
+Comp admin has a read only view of the Project team page
+    [Documentation]  IFS-5901
+    Given log in as a different user      &{Comp_admin1_credentials}
+    When the user navigates to the page   ${internalViewTeamPage}
+    Then the user should see the read only view of Project team page
+
+Project finance has a read only view of the Project team page
+    [Documentation]  IFS-5901
+    Given log in as a different user      &{internal_finance_credentials}
+    When the user navigates to the page   ${internalViewTeamPage}
+    Then the user should see the read only view of Project team page
+
 The lead partner is able to access project team page
     [Documentation]  IFS-5700
-    Given the user logs-in in new browser    &{lead_applicant_credentials}
-    When the user navigates to the page      ${newProjecTeamPage}
-    Then the user should see the element     jQuery = h1:contains("Project team")
+    Given log in as a different user       &{lead_applicant_credentials}
+    When the user navigates to the page    ${newProjecTeamPage}
+    Then the user should see the element   jQuery = h1:contains("Project team")
 
 Verify add new team member field validation
     [Documentation]  IFS-5719
@@ -44,8 +76,9 @@ Verify add new team member field validation
 
 The lead partner is able to add a new team member
     [Documentation]  IFS-5719
-    Given the user adds a new team member   Tester   ${leadNewMemberEmail}
-    Then the user should see the element    jQuery = td:contains("Tester (Pending)")
+    Given the user clicks the button/link  jQuery = button:contains("Add team member")
+    When the user adds a new team member   Tester   ${leadNewMemberEmail}
+    Then the user should see the element   jQuery = td:contains("Tester (Pending)")
     [Teardown]   Logout as user
 
 A new team member is able to accept the inviation from lead partner and see projec set up
@@ -58,6 +91,7 @@ Non Lead partner is able to add a new team member
     [Documentation]  IFS-5719
     [Setup]  log in as a different user    &{collaborator1_credentials}
     Given the user navigates to the page   ${newProjecTeamPage}
+    And the user clicks the button/link    jQuery = button:contains("Add team member")
     When the user adds a new team member   Testerina   ${nonLeadNewMemberEmail}
     Then the user should see the element   jQuery = td:contains("Testerina (Pending)")
     [Teardown]   the user logs out if they are logged in
@@ -85,6 +119,7 @@ A user is able to re-send an invitation
     [Documentation]  IFS-5723
     [Setup]    the user logs-in in new browser              &{lead_applicant_credentials}
     Given the user navigates to the page                    ${newProjecTeamPage}
+    And the user clicks the button/link                    jQuery = button:contains("Add team member")
     When the user adds a new team member                    Removed   ${removeInviteEmail}
     Then the user is able to re-send an invitation
     And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
@@ -100,7 +135,36 @@ An internal user is able to access the project team page
     Given the user navigates to the page   ${internalViewTeamPage}
     Then the user should see the element   jQuery = h1:contains("Project team")
 
+Css user is able to add a new team member to all partners
+    [Documentation]  IFS-5901
+    [Setup]  log in as a different user    &{support_user_credentials}
+    Given the user navigates to the page   ${internalViewTeamPage}
+    Then the user is able to add team memebers to all partner organisations
+
 *** Keywords ***
+The user is able to add team memebers to all partner organisations
+    the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ p:first button:contains("Add team member")
+    the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=name]  cssAdded1
+    the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=email]  1${removeInviteEmail}
+    the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first button:contains("Invite to project")
+    the user should see the element        jQuery = td:contains("cssAdded1 (Pending)")
+    the user clicks the button/link        jQuery = h2:contains("EGGS")~ p:first button:contains("Add team member")
+    the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=name]  cssAdded2
+    the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=email]  2${removeInviteEmail}
+    the user clicks the button/link        jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first button:contains("Invite to project")
+    the user should see the element        jQuery = td:contains("cssAdded2 (Pending)")
+    the user clicks the button/link        jQuery = h2:contains("Ludlow")~ p:first button:contains("Add team member")
+    the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=name]  cssAdded3
+    the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=email]  3${removeInviteEmail}
+    the user clicks the button/link        jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first button:contains("Invite to project")
+    the user should see the element        jQuery = td:contains("cssAdded3 (Pending)")
+
+The user should see the read only view of Project team page
+    the user should see the element       jQuery = h1:contains("Project team")
+    the user should not see the element   jQuery = button:contains("Add team member")
+    the user should not see the element   jQuery = button:contains("Remove")
+    the user should not see the element   jQuery = button:contains("Resend invite")
+
 The user is able to re-send an invitation
     the user should see the element   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
     the user clicks the button/link   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
@@ -145,5 +209,5 @@ Custom suite setup
     The guest user opens the browser
 
 Custom suite teardown
-   The user closes the browser
+    The user closes the browser
 
