@@ -12,6 +12,7 @@ items:
     DB_HOST: "${DB_HOST}"
     DB_PORT: "${DB_PORT}"
     ACC_USERNAME: "${ACC_USERNAME}"
+    ACC_PASSWORD: "${ACC_PASSWORD}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -82,6 +83,11 @@ items:
           configMapKeyRef:
             name: db-config
             key: ACC_USERNAME
+      - name: ACC_PASSWORD
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: ACC_PASSWORD
       - name: LDAP_HOST
         valueFrom:
           configMapKeyRef:

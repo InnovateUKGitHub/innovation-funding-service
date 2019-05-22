@@ -99,7 +99,7 @@ downloadAccUserCsv() {
     echo "User is"
     echo "${ACC_USERNAME}"
 #    Download users from repository
-    curl -0 -u ${ACC_USERNAME}:${bamboo_acc_password} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
+    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
 #    Remove first line of column names
     tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
 #    Create new Csv with emails and new generated UUID
