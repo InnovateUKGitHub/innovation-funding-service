@@ -9,14 +9,12 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.application.view.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -41,7 +39,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -64,14 +61,11 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
     @Autowired
-    private CompetitionManagementApplicationService competitionManagementApplicationService;
-    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
     private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
-
     @Autowired
     private ManagementApplicationPopulator managementApplicationPopulator;
 
@@ -88,24 +82,7 @@ public class CompetitionManagementApplicationController {
                                         UserResource user,
                                         Model model) {
         model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user, origin, queryParams));
-        return "new-competition-mgt-application-overview";
-    }
-
-
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @GetMapping("/{applicationId}/old")
-    public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
-                                             @PathVariable("competitionId") final Long competitionId,
-                                             @ModelAttribute(name = "form", binding = false) ApplicationForm form,
-                                             UserResource user,
-                                             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                             @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
-                                             @RequestParam MultiValueMap<String, String> queryParams,
-                                             Model model) {
-        return competitionManagementApplicationService
-                .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
-                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
+        return "competition-mgt-application-overview";
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -203,8 +180,7 @@ public class CompetitionManagementApplicationController {
                                              @PathVariable("competitionId") Long competitionId,
                                              UserResource user,
                                              Model model) {
-        return competitionManagementApplicationService
-                .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
+        return applicationPrintPopulator.print(applicationId, model, user);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -234,6 +210,6 @@ public class CompetitionManagementApplicationController {
     }
 
     private boolean hasProcessRole(UserResource user) {
-        return !(user.hasRole(IFS_ADMINISTRATOR) || isInternal(user) || user.hasRole(STAKEHOLDER));
+        return !(isInternal(user) || user.hasRole(STAKEHOLDER));
     }
 }
