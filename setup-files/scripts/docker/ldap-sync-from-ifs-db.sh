@@ -97,7 +97,7 @@ downloadAccUserCsv() {
     echo "Starting download 1"
     echo "=================="
     echo "User is"
-    echo "${bamboo_acc_username}"
+    echo "${ACC_USERNAME}"
 #    Download users from repository
     curl -0 -u ${bamboo_acc_username}:${bamboo_acc_password} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
 #    Remove first line of column names

@@ -85,39 +85,6 @@ addUserToShibboleth() {
   echo ""
 }
 
-addACCUserToShibboleth() {
-while IFS=, read -a csv_line;
-do
-  uid="${csv_line[0]}"
-  email="${csv_line[1]}"
-
-  echo "dn: uid=$uid,$LDAP_DOMAIN"
-  echo "uid: $uid"
-  echo "mail: $email"
-  echo "sn:: IA=="
-  echo "cn:: IA=="
-  echo "objectClass: inetOrgPerson"
-  echo "objectClass: person"
-  echo "objectClass: top"
-  echo "employeeType: active"
-  echo "userPassword:: $password"
-  echo ""
- done < emailsAndUUids.csv | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
-}
-
-downloadAccUserCsv() {
-    echo "Starting download 2"
-    echo "=================="
-    echo "User is"
-    echo "${bamboo_acc_username}"
-#    Download users from repository
-    curl -0 -u ${bamboo_acc_username}:${bamboo_acc_password} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
-#    Remove first line of column names
-    tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
-#    Create new Csv with emails and new generated UUID
-    awk -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3} {close("uuidgen")}' users.csv > emailsAndUUids.csv
-}
-
 # Escape single quote for use in sql where clauses.
 escaped() {
   echo $1 | sed "s/'/\\\\'/g"
@@ -125,13 +92,6 @@ escaped() {
 
 # Main
 wipeLdapUsers
-
-echo "Start of script"
-echo "==============="
-downloadAccUserCsv
-echo "Start of adding to shib"
-echo "==============="
-addACCUserToShibboleth
 
 for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
 do
