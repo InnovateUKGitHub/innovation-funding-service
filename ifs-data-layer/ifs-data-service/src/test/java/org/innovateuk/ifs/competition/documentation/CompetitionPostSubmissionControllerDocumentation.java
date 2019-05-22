@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.documentation.CompetitionOpenQueryResourceDocs;
-import org.innovateuk.ifs.documentation.CompetitionSearchResultItemDocs;
 import org.innovateuk.ifs.documentation.SpendProfileStatusResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -57,21 +55,6 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                                 parameterWithName("id").description("id of the competition for the notifications")
                         ))
                 );
-    }
-
-    @Test
-    public void feedbackReleased() throws Exception {
-        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        mockMvc.perform(get("/competition/post-submission/feedback-released")
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
-                ));
     }
 
     @Test

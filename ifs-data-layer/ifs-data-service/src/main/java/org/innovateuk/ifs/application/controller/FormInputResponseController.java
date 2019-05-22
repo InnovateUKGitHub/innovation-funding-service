@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -35,35 +34,30 @@ public class FormInputResponseController {
 
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findResponsesByApplication/{applicationId}", "/find-responses-by-application/{applicationId}"})
+    @GetMapping("/find-responses-by-application/{applicationId}")
     public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final long applicationId) {
         return formInputResponseService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", "/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}"})
+    @GetMapping("/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}")
     public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final long formInputId,
                                                                                        @PathVariable("applicationId") final long applicationId) {
         return formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}", "/find-by-application-id-and-question-setup-type/{applicationId}/{questionSetupType}"})
+    @GetMapping("/find-by-application-id-and-question-setup-type/{applicationId}/{questionSetupType}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionSetupType(@PathVariable long applicationId,
                                                                                          @PathVariable QuestionSetupType questionSetupType) {
         return formInputResponseService.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByApplicationIdAndQuestionId/{applicationId}/{questionId}", "/find-by-application-id-and-question-id/{applicationId}/{questionId}"})
+    @GetMapping("/find-by-application-id-and-question-id/{applicationId}/{questionId}")
     public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
                                                                                         @PathVariable long questionId) {
         return formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/saveQuestionResponse", "/save-question-response"})
+    @PostMapping("/save-question-response")
     public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();

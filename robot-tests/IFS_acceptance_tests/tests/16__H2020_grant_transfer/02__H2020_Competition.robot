@@ -4,6 +4,7 @@ Documentation  IFS-5158 - Competition Template
 ...            IFS-5247 - Application details page
 ...
 ...            IFS-5700 - Create new project team page to manage roles in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
