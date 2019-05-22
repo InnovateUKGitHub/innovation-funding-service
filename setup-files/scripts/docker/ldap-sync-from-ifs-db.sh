@@ -74,7 +74,7 @@ addUserToShibboleth() {
 }
 
 addACCUserToShibboleth() {
-while IFS=, read -a csv_line;
+while IFS=" " read -a csv_line;
 do
   uid="${csv_line[0]}"
   email="${csv_line[1]}"
@@ -94,10 +94,6 @@ do
 }
 
 downloadAccUserCsv() {
-    echo "Starting download 1"
-    echo "=================="
-    echo "User is"
-    echo "${ACC_USERNAME}"
 #    Download users from repository
     curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
 #    Remove first line of column names
@@ -109,11 +105,7 @@ downloadAccUserCsv() {
 
 wipeLdapUsers
 
-echo "Start of script"
-echo "==============="
 downloadAccUserCsv
-echo "Start of adding to shib"
-echo "==============="
 addACCUserToShibboleth
 
 IFS=$'\n'
