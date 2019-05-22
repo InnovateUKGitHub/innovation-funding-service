@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,6 @@ public class CompetitionPostSubmissionController {
         return competitionService.releaseFeedback(competitionId)
                 .andOnSuccess(() -> applicationNotificationService.notifyApplicantsByCompetition(competitionId))
                 .toPutResponse();
-    }
-
-    @GetMapping("/feedback-released")
-    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
-        return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 
     @PutMapping("/{id}/close-assessment")

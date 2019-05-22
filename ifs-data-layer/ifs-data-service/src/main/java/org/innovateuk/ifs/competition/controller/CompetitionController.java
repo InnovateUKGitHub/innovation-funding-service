@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -57,39 +54,7 @@ public class CompetitionController {
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();
     }
-
-    @GetMapping("/live")
-    public RestResult<List<CompetitionSearchResultItem>> live() {
-        return competitionService.findLiveCompetitions().toGetResponse();
-    }
-
-    @GetMapping("/project-setup")
-    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
-        return competitionService.findProjectSetupCompetitions().toGetResponse();
-    }
-
-    @GetMapping("/upcoming")
-    public RestResult<List<CompetitionSearchResultItem>> upcoming() {
-        return competitionService.findUpcomingCompetitions().toGetResponse();
-    }
-
-    @GetMapping("/non-ifs")
-    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
-        return competitionService.findNonIfsCompetitions().toGetResponse();
-    }
-
-    @GetMapping("/search/{page}/{size}")
-    public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
-                                                      @PathVariable("page") int page,
-                                                      @PathVariable("size") int size) {
-        return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
-    }
-
-    @GetMapping("/count")
-    public RestResult<CompetitionCountResource> count() {
-        return competitionService.countCompetitions().toGetResponse();
-    }
-
+    
     @PutMapping("{id}/update-terms-and-conditions/{tcId}")
     public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
