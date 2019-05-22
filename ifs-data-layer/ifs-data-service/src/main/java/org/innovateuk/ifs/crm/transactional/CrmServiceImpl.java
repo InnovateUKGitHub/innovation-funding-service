@@ -41,7 +41,7 @@ public class CrmServiceImpl implements CrmService {
         return userService.getUserById(userId).andOnSuccess(user -> {
 
             if (!user.isInternalUser()) {
-                organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
+                organisationService.getAllByUserId(userId).andOnSuccessReturnVoid(organisations -> {
                     ServiceResult<Void> result = serviceSuccess();
                     for (OrganisationResource organisation : organisations) {
                         result = result.andOnSuccess(() -> {
@@ -49,7 +49,6 @@ public class CrmServiceImpl implements CrmService {
                             getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                         });
                     }
-                    return result;
                 });
             }
             syncMOCrmContact(user);

@@ -245,7 +245,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return monitoringOfficerInviteRepository;
     }
 
-    private  ServiceResult<User> applyMonitoringOfficerRoleFromInvite(MonitoringOfficerInvite invite) {
+    private ServiceResult<User> applyMonitoringOfficerRoleFromInvite(MonitoringOfficerInvite invite) {
         invite.getUser().addRole(MONITORING_OFFICER);
         return serviceSuccess(userRepository.save(invite.getUser()));
     }
