@@ -77,6 +77,11 @@ items:
           configMapKeyRef:
             name: db-config
             key: DB_PASS
+      - name: ACC_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: ACC_USERNAME
       - name: LDAP_HOST
         valueFrom:
           configMapKeyRef:
@@ -117,9 +122,4 @@ items:
           configMapKeyRef:
             name: flyway-config
             key: SYSTEM_USER_UUID
-      - name: ACC_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: db-config
-              key: ACC_USERNAME
     restartPolicy: Never
