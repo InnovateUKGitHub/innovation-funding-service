@@ -40,10 +40,6 @@ public class YourFundingFormValidator {
         if (TRUE.equals(form.getOtherFunding())) {
             validateOtherFundingRows(form.getOtherFundingRows(), errors);
         }
-
-        if (!TRUE.equals(form.getTermsAgreed())) {
-            errors.rejectValue("termsAgreed", "validation.field.must.not.be.blank");
-        }
     }
 
     private void validateOtherFundingRows(Map<String, OtherFundingRowForm> rows, Errors errors) {
