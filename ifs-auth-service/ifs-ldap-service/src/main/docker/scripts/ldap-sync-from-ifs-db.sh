@@ -124,15 +124,15 @@ escaped() {
 # Main
 wipeLdapUsers
 
-for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
-do
-  addUserToShibboleth "$u"
-done | ldapadd -H ldapi:/// -D "cn=admin,$domain" -w "$
-ldappass"
-
 echo "Start of script"
 echo "==============="
 downloadAccUserCsv
 echo "Start of adding to shib"
 echo "==============="
 addACCUserToShibboleth
+
+for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
+do
+  addUserToShibboleth "$u"
+done | ldapadd -H ldapi:/// -D "cn=admin,$domain" -w "$
+ldappass"
