@@ -482,6 +482,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
         projectTeamStatusResource.setProjectState(process.getProcessState());
+        projectTeamStatusResource.setProjectManagerAssigned(getProjectManager(project).isPresent());
 
         return serviceSuccess(projectTeamStatusResource);
     }
