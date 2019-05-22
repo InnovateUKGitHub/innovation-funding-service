@@ -11,8 +11,6 @@ items:
     DB_PASS: "${DB_PASS}"
     DB_HOST: "${DB_HOST}"
     DB_PORT: "${DB_PORT}"
-    ACC_USERNAME: "${ACC_USERNAME}"
-    ACC_PASSWORD: "${ACC_PASSWORD}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -20,6 +18,13 @@ items:
   data:
     FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
     SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: bitbucket-config
+  data:
+    ACC_USERNAME: "${ACC_USERNAME}"
+    ACC_PASSWORD: "${ACC_PASSWORD}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -81,12 +86,12 @@ items:
       - name: ACC_USERNAME
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: bitbucket-config
             key: ACC_USERNAME
       - name: ACC_PASSWORD
         valueFrom:
           configMapKeyRef:
-            name: db-config
+            name: bitbucket-config
             key: ACC_PASSWORD
       - name: LDAP_HOST
         valueFrom:
