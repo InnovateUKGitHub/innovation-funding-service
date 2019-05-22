@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -46,20 +45,17 @@ public class CompetitionController {
         return competitionService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/{id}/getOrganisationTypes", "/{id}/get-organisation-types"})
+    @GetMapping("/{id}/get-organisation-types")
     public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findAll", "/find-all"})
+    @GetMapping("/find-all")
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();
     }
-
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PutMapping({"{id}/updateTermsAndConditions/{tcId}", "{id}/update-terms-and-conditions/{tcId}"})
+    
+    @PutMapping("{id}/update-terms-and-conditions/{tcId}")
     public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
