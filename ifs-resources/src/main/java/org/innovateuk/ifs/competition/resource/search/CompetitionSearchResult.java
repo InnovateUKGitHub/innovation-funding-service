@@ -1,12 +1,13 @@
-package org.innovateuk.ifs.competition.resource;
+package org.innovateuk.ifs.competition.resource.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.commons.resource.PageResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.Map;
 
-public class CompetitionSearchResult extends PageResource<CompetitionSearchResultItem> {
+public class CompetitionSearchResult extends PageResource<AbstractCompetitionSearchResultItem> {
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mappedCompetitions;
 

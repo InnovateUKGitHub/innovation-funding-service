@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -29,14 +28,12 @@ public class OrganisationTypeController {
         return service.findOne(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getAll", "/get-all"})
+    @GetMapping("/get-all")
     public RestResult<List<OrganisationTypeResource>> findAll() {
         return service.findAll().toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getTypeForOrganisation/{organisationId}", "/get-type-for-organisation/{organisationId}"})
+    @GetMapping("/get-type-for-organisation/{organisationId}")
     public RestResult<OrganisationTypeResource> findTypeForOrganisation(@PathVariable Long organisationId) {
         return organisationService.findById(organisationId).
                 andOnSuccess(organisation -> service.findOne(organisation.getOrganisationType())).

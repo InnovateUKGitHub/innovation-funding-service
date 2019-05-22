@@ -4,18 +4,16 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spendProfileStatusResourceListType;
 import static org.junit.Assert.*;
 
 public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionPostSubmissionRestServiceImpl> {
@@ -34,19 +32,6 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         RestResult<Void> result = service.releaseFeedback(competitionId);
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void findFeedbackReleasedCompetitions() {
-
-        List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/feedback-released", competitionSearchResultItemListType(), returnedResponse);
-
-        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccess();
-        assertNotNull(responses);
-        assertEquals(returnedResponse, responses);
     }
 
     @Test
