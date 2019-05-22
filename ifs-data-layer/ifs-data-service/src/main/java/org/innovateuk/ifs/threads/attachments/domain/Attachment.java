@@ -22,7 +22,7 @@ public class Attachment {
     @NotNull
     private User uploader;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, unique = true)
     private FileEntry fileEntry;
 
