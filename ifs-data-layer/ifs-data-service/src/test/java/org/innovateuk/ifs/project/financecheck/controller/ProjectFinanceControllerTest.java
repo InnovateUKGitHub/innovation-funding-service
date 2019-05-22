@@ -133,7 +133,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectFinanceRowServiceMock.financeChecksDetails(123L, 456L)).thenReturn(serviceSuccess(projectFinanceResource));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/project/{projectId}/organisation/{organisationId}/financeDetails", "123", "456"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/project/{projectId}/organisation/{organisationId}/finance-details", "123", "456"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectFinanceResource)));
 

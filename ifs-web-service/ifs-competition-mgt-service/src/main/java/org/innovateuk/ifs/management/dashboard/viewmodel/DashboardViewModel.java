@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.dashboard.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
@@ -30,5 +30,9 @@ public abstract class DashboardViewModel {
 
     public List<CompetitionSearchResultItem> getAllCompetitions(){
         return competitions.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public boolean isSupportUser() {
+        return tabs.support();
     }
 }

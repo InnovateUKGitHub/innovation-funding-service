@@ -2,7 +2,8 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
@@ -27,35 +28,6 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
         return getWithRestResult(competitionsRestURL + "/find-all", competitionResourceListType());
     }
 
-    @Override
-    public RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/live", competitionSearchResultItemListType());
-    }
-
-    @Override
-    public RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/project-setup", competitionSearchResultItemListType());
-    }
-
-    @Override
-    public RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/upcoming", competitionSearchResultItemListType());
-    }
-
-    @Override
-    public RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
-    }
-
-    @Override
-    public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
-        return getWithRestResult(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class);
-    }
-
-    @Override
-    public RestResult<CompetitionCountResource> countCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/count", CompetitionCountResource.class);
-    }
 
     @Override
     public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
