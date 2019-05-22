@@ -78,10 +78,10 @@ items:
             name: db-config
             key: DB_PASS
       - name: ACC_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: db-config
-              key: ACC_USERNAME
+        valueFrom:
+          configMapKeyRef:
+            name: db-config
+            key: ACC_USERNAME
       - name: LDAP_HOST
         valueFrom:
           configMapKeyRef:
