@@ -117,4 +117,9 @@ items:
           configMapKeyRef:
             name: flyway-config
             key: SYSTEM_USER_UUID
+      - name: ACC_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: ACC_USERNAME
     restartPolicy: Never
