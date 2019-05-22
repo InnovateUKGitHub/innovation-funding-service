@@ -37,23 +37,32 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
+
         return userService.getUserById(userId).andOnSuccess(user -> {
+
+            if (!user.isInternalUser()) {
+                organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
+                    ServiceResult<Void> result = serviceSuccess();
+                    for (OrganisationResource organisation : organisations) {
+                        result = result.andOnSuccess(() -> {
+                            SilContact silContact = externalUserToSilContact(user, organisation);
+                            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+                        });
+                    }
+                    return result;
+                });
+            }
+            syncMOCrmContact(userId);
+
+            return serviceSuccess();
+        });
+    }
+
+    private void syncMOCrmContact(long userId) {
+        userService.getUserById(userId).andOnSuccess(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
                 SilContact silContact = monitoringOfficerToSilContact(user);
-                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-            } else {
-                if (!user.isInternalUser()) {
-                    return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
-                        ServiceResult<Void> result = serviceSuccess();
-                        for (OrganisationResource organisation : organisations) {
-                            result = result.andOnSuccess(() -> {
-                                SilContact silContact = externalUserToSilContact(user, organisation);
-                                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-                            });
-                        }
-                        return result;
-                    });
-                }
+                getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
             }
             return serviceSuccess();
         });
@@ -97,7 +106,7 @@ public class CrmServiceImpl implements CrmService {
         SilOrganisation moSilOrganisation = new SilOrganisation();
         moSilOrganisation.setName("IFS MO Company");
         moSilOrganisation.setRegistrationNumber("");
-        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFSMO01"));
+        moSilOrganisation.setSrcSysOrgId("IFSMO01");
 
         silContact.setOrganisation(moSilOrganisation);
 
