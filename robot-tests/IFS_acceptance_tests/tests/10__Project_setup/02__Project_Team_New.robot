@@ -23,6 +23,9 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/team
+${moProjectID}             ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
+${steakHolderCompId}       ${competition_ids["Rolling stock future developments"]}
+${steakHolderProjectId}    ${project_ids["High-speed rail and its effects on water quality"]}
 ${leadNewMemberEmail}      test@test.nom
 ${nonLeadNewMemberEmail}   testerina@test.nom
 ${removeInviteEmail}       remove@test.nom
@@ -33,7 +36,7 @@ ${internalInviteeEmail}    internal@invitee.com
 Monitoring Officers has a read only view of the Project team page
     [Documentation]  IFS-5901
     Given the user logs-in in new browser   &{monitoring_officer_one_credentials}
-    When the user navigates to the page     ${server}/project-setup/project/14/team
+    When the user navigates to the page     ${server}/project-setup/project/${moProjectID}/team
     Then the user should see the read only view of Project team page
 
 Innovation lead has a read only view of the Project team page
@@ -45,7 +48,7 @@ Innovation lead has a read only view of the Project team page
 Stakeholder has a read only view of the Project team page
     [Documentation]  IFS-5901
     Given log in as a different user      &{stakeholder_user}
-    When the user navigates to the page   ${server}/project-setup-management/competition/16/project/8/team
+    When the user navigates to the page   ${server}/project-setup-management/competition/${steakHolderCompId}/project/${steakHolderProjectId}/team
     Then the user should see the read only view of Project team page
 
 Comp admin has a read only view of the Project team page
