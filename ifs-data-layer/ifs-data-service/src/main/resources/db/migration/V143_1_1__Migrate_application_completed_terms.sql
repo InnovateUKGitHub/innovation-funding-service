@@ -2,13 +2,14 @@
 
 -- New terms and conditions section
 INSERT INTO section
-(display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type)
-SELECT true                   AS display_in_assessment_application_summary,
-       'Terms and conditions' AS name,
-       '11'                   AS priority,
-       c.id                   AS competition_id,
-       false                  AS question_group,
-       'TERMS_AND_CONDITIONS' AS section_type
+(display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type, description)
+SELECT true                                                             AS display_in_assessment_application_summary,
+       'Terms and conditions'                                           AS name,
+       '11'                                                             AS priority,
+       c.id                                                             AS competition_id,
+       false                                                            AS question_group,
+       'TERMS_AND_CONDITIONS'                                           AS section_type,
+       'You must agree to these before you submit your application.'    AS description
 FROM competition c;
 
 -- Add the terms question to the terms section
