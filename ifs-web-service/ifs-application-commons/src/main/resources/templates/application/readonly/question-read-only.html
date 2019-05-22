@@ -75,7 +75,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)" th:with="isApplicant = ${isApplicant || isApplicant == null}">
+<th:block th:fragment="finance-summary (model)" th:with="isApplicant = ${isApplicant == null || isApplicant}">
     <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
         provided by all partners in this project.</p>
 
