@@ -49,8 +49,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
 public class CompetitionManagementApplicationController {
-
-    public String PROJECT_SETUP_MANAGEMENT_SERVICE = "project-setup-management";
+    public static String PROJECT_SETUP_MANAGEMENT_SERVICE = "project-setup-management";
 
     @Autowired
     private ProcessRoleService processRoleService;
