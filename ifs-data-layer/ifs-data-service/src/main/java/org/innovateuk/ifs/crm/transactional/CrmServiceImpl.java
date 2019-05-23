@@ -40,24 +40,29 @@ public class CrmServiceImpl implements CrmService {
 
         return userService.getUserById(userId).andOnSuccess(user -> {
 
-            if (!user.isInternalUser()) {
-                organisationService.getAllByUserId(userId).andOnSuccessReturnVoid(organisations -> {
-                    ServiceResult<Void> result = serviceSuccess();
-                    for (OrganisationResource organisation : organisations) {
-                        result = result.andOnSuccess(() -> {
-                            SilContact silContact = externalUserToSilContact(user, organisation);
-                            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-                        });
-                    }
-                });
-            }
-            syncMOCrmContact(user);
+            syncExternalUser(user);
+            syncMonitoringOfficer(user);
 
             return serviceSuccess();
         });
     }
 
-    private void syncMOCrmContact(UserResource user) {
+    private void syncExternalUser(UserResource user) {
+        if (!user.isInternalUser()) {
+            organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
+                ServiceResult<Void> result = serviceSuccess();
+                for (OrganisationResource organisation : organisations) {
+                    result = result.andOnSuccess(() -> {
+                        SilContact silContact = externalUserToSilContact(user, organisation);
+                        getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+                    });
+                }
+                return serviceSuccess();
+            });
+        }
+    }
+
+    private void syncMonitoringOfficer(UserResource user) {
 
         if (user.hasRole(MONITORING_OFFICER)) {
             SilContact silContact = monitoringOfficerToSilContact(user);
