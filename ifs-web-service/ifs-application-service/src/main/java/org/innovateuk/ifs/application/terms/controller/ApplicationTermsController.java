@@ -40,21 +40,20 @@ public class ApplicationTermsController {
     private UserRestService userRestService;
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
     private QuestionStatusRestService questionStatusRestService;
-
+    private ApplicationRestService applicationRestService;
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
-    private ApplicationRestService applicationRestService;
 
     public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,
-                                      ApplicationTermsModelPopulator applicationTermsModelPopulator,
+                                      ApplicationRestService applicationRestService,
                                       ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator,
-                                      ApplicationRestService applicationRestService) {
+                                      ApplicationTermsModelPopulator applicationTermsModelPopulator) {
         this.userRestService = userRestService;
         this.questionStatusRestService = questionStatusRestService;
+        this.applicationRestService = applicationRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;
         this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
-        this.applicationRestService = applicationRestService;
     }
 
     @GetMapping
@@ -94,8 +93,7 @@ public class ApplicationTermsController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (!application.isOpen()) {
             throw new ForbiddenActionException("Cannot view partners on a non-open application");
-        }
-        else if (!application.isCollaborativeProject()) {
+        } else if (!application.isCollaborativeProject()) {
             throw new ForbiddenActionException("Cannot view partners on a non-collaborative application");
         }
 
