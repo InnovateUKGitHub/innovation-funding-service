@@ -133,6 +133,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Before
     public void setUpDefaults() {
         partnerStatusFlagChecks.put("projectDetailsStatus", SectionStatus.FLAG);
+        partnerStatusFlagChecks.put("projectTeamStatus", SectionStatus.FLAG);
         partnerStatusFlagChecks.put("monitoringOfficerStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("bankDetailsStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("financeChecksStatus", SectionStatus.EMPTY);
@@ -152,6 +153,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withFinanceChecksStatus(NOT_STARTED)
                         .withIsLeadPartner(true)
@@ -1098,6 +1100,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withProjectTeamStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
@@ -1111,8 +1114,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withProjectDetailsStatus(COMPLETE).
                         build(1))
-                .withProjectState(LIVE).
-                build();
+                .withProjectState(LIVE)
+                .withProjectManagerAssigned(true)
+                .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
@@ -1557,6 +1561,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private void assertStatuses(SetupStatusViewModel viewModel) {
         assertTrue(partnerStatusFlagChecks.get("projectDetailsStatus") == viewModel.getProjectDetailsStatus());
+        assertTrue(partnerStatusFlagChecks.get("projectTeamStatus") == viewModel.getProjectTeamStatus());
         assertTrue(partnerStatusFlagChecks.get("monitoringOfficerStatus") == viewModel.getMonitoringOfficerStatus());
         assertTrue(partnerStatusFlagChecks.get("bankDetailsStatus") == viewModel.getBankDetailsStatus());
         assertTrue(partnerStatusFlagChecks.get("financeChecksStatus") == viewModel.getFinanceChecksStatus());
