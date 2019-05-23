@@ -280,18 +280,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 
-        return partnerProjectLocationRequired ? isAwaitingWhenProjectLocationRequired(teamStatus, leadPartnerStatus)
-                : isAwaitingWhenProjectLocationNotRequired(teamStatus, leadPartnerStatus);
+        return partnerProjectLocationRequired && isAwaitingWhenProjectLocationRequired(teamStatus, leadPartnerStatus);
     }
 
     private boolean isAwaitingWhenProjectLocationRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
         return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
                 && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
                 && !allOtherPartnersProjectLocationStatusComplete(teamStatus);
-    }
-
-    private boolean isAwaitingWhenProjectLocationNotRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
-        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus());
     }
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
