@@ -36,7 +36,7 @@ public class ApplicationTermsPartnerModelPopulator {
         this.organisationService = organisationService;
     }
 
-    public ApplicationTermsPartnerViewModel populate(long applicationId) {
+    public ApplicationTermsPartnerViewModel populate(long applicationId, long questionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         long termsAndConditionsSectionId = sectionService.getTermsAndConditionsSection(application.getCompetition()).getId();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
@@ -49,7 +49,7 @@ public class ApplicationTermsPartnerModelPopulator {
                 .map(ProcessRoleResource::getOrganisationId)
                 .get();
 
-        List<Long> orgSections = sectionService.getCompletedSectionsByOrganisation(applicationId)
+        List<Long> acceptedOrgs = sectionService.getCompletedSectionsByOrganisation(applicationId)
                 .entrySet()
                 .stream()
                 .filter(t -> t.getValue().contains(termsAndConditionsSectionId))
@@ -61,11 +61,11 @@ public class ApplicationTermsPartnerModelPopulator {
                 .map(o -> new ApplicationTermsPartnerRowViewModel(
                         o.getName(),
                         o.getId() == leadOrganisationId,
-                        orgSections.contains(termsAndConditionsSectionId))
+                        acceptedOrgs.contains(o.getId()))
                 )
                 .sorted((o1, o2) -> o1.isLead() ? 1 : 0)
                 .collect(toList());
 
-        return new ApplicationTermsPartnerViewModel(applicationId, partners);
+        return new ApplicationTermsPartnerViewModel(applicationId, questionId, partners);
     }
 }

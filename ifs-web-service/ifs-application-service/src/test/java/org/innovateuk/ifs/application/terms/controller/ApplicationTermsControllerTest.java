@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.terms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
@@ -38,10 +39,13 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
     private ApplicationTermsModelPopulator applicationTermsModelPopulatorMock;
+    @Mock
+    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulatorMock;
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
-        return new ApplicationTermsController(userRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
+        return new ApplicationTermsController(userRestServiceMock, questionStatusRestServiceMock,
+                applicationTermsModelPopulatorMock, applicationTermsPartnerModelPopulatorMock);
     }
 
     @Test

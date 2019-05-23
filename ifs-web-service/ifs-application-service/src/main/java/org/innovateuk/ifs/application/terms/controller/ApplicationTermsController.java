@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.terms.controller;
 
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
@@ -37,12 +38,16 @@ public class ApplicationTermsController {
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
     private QuestionStatusRestService questionStatusRestService;
 
+    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
+
     public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,
-                                      ApplicationTermsModelPopulator applicationTermsModelPopulator) {
+                                      ApplicationTermsModelPopulator applicationTermsModelPopulator,
+                                      ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator) {
         this.userRestService = userRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;
+        this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
     }
 
     @GetMapping
@@ -75,5 +80,11 @@ public class ApplicationTermsController {
                             failureView,
                             () -> format("redirect:%s%d/form/question/%d/terms-and-conditions#terms-accepted", APPLICATION_BASE_URL, applicationId, questionId));
         });
+    }
+
+    @GetMapping("/partner-status")
+    public String getPartnerStatus(@PathVariable long applicationId, @PathVariable long questionId, Model model) {
+        model.addAttribute("model", applicationTermsPartnerModelPopulator.populate(applicationId, questionId));
+        return "application/terms-and-conditions-partner-status";
     }
 }

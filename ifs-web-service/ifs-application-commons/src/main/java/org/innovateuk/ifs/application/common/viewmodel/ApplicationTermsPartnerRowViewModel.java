@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 public class ApplicationTermsPartnerRowViewModel {
-    private final String organisationName;
+    private final String name;
     private final boolean lead;
     private final boolean termsAccepted;
 
-    public ApplicationTermsPartnerRowViewModel(String organisationName, boolean lead, boolean termsAccepted) {
-        this.organisationName = organisationName;
+    public ApplicationTermsPartnerRowViewModel(String name, boolean lead, boolean termsAccepted) {
+        this.name = name;
         this.lead = lead;
         this.termsAccepted = termsAccepted;
     }
 
-    public String getOrganisationName() {
-        return organisationName;
+    public String getName() {
+        return name;
     }
 
     public boolean isLead() {
