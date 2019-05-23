@@ -230,8 +230,9 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
 
     @Override
     @Transactional
-    public ServiceResult<Void> addMonitoringOfficerRole(String hash) {
-        return getByHash(hash).andOnSuccess(this::applyMonitoringOfficerRoleFromInvite);
+    public ServiceResult<User> addMonitoringOfficerRole(String hash) {
+        return getByHash(hash)
+                .andOnSuccess(this::applyMonitoringOfficerRoleFromInvite);
     }
 
     @Override
@@ -244,9 +245,8 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
         return monitoringOfficerInviteRepository;
     }
 
-    private  ServiceResult<Void> applyMonitoringOfficerRoleFromInvite(MonitoringOfficerInvite invite) {
+    private ServiceResult<User> applyMonitoringOfficerRoleFromInvite(MonitoringOfficerInvite invite) {
         invite.getUser().addRole(MONITORING_OFFICER);
-        userRepository.save(invite.getUser());
-        return serviceSuccess();
+        return serviceSuccess(userRepository.save(invite.getUser()));
     }
 }

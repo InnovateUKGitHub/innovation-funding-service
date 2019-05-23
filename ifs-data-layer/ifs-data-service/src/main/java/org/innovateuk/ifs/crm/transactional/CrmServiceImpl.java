@@ -37,26 +37,33 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
+
         return userService.getUserById(userId).andOnSuccess(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                SilContact silContact = monitoringOfficerToSilContact(user);
-                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-            } else {
-                if (!user.isInternalUser()) {
-                    return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
-                        ServiceResult<Void> result = serviceSuccess();
-                        for (OrganisationResource organisation : organisations) {
-                            result = result.andOnSuccess(() -> {
-                                SilContact silContact = externalUserToSilContact(user, organisation);
-                                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-                            });
-                        }
-                        return result;
-                    });
-                }
+
+            if (!user.isInternalUser()) {
+                organisationService.getAllByUserId(userId).andOnSuccessReturnVoid(organisations -> {
+                    ServiceResult<Void> result = serviceSuccess();
+                    for (OrganisationResource organisation : organisations) {
+                        result = result.andOnSuccess(() -> {
+                            SilContact silContact = externalUserToSilContact(user, organisation);
+                            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+                        });
+                    }
+                });
             }
+            syncMOCrmContact(user);
+
             return serviceSuccess();
         });
+    }
+
+    private void syncMOCrmContact(UserResource user) {
+
+        if (user.hasRole(MONITORING_OFFICER)) {
+            SilContact silContact = monitoringOfficerToSilContact(user);
+            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+        }
+
     }
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
@@ -97,7 +104,7 @@ public class CrmServiceImpl implements CrmService {
         SilOrganisation moSilOrganisation = new SilOrganisation();
         moSilOrganisation.setName("IFS MO Company");
         moSilOrganisation.setRegistrationNumber("");
-        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFSMO01"));
+        moSilOrganisation.setSrcSysOrgId("IFSMO01");
 
         silContact.setOrganisation(moSilOrganisation);
 
