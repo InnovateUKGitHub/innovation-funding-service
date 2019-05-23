@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.spendprofile;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.util.DateUtil;
-import org.innovateuk.ifs.util.FinancialYearDate;
+import org.innovateuk.ifs.project.spendprofile.util.DateUtil;
+import org.innovateuk.ifs.project.spendprofile.util.FinancialYearDate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

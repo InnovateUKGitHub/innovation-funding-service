@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.util;
+package org.innovateuk.ifs.application.util;
 
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.util.MathFunctions.percentage;
+import static org.innovateuk.ifs.application.util.MathFunctions.percentage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
