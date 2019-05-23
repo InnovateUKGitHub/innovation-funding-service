@@ -12,6 +12,8 @@ IFS.core.projectTeam = (function () {
         e.preventDefault()
         var formId = jQuery(this).data('show-form')
         var form = jQuery('#' + formId)
+        // hide the other buttons as a safety net
+        jQuery(s.showForm).not(jQuery(this)).hide()
         IFS.core.projectTeam.toggleForm(jQuery(this), form)
         form.find('input').attr('disabled', false)
       })
@@ -19,6 +21,8 @@ IFS.core.projectTeam = (function () {
         e.preventDefault()
         var formId = jQuery(this).data('hide-form')
         var form = jQuery('#' + formId)
+        // show the other buttons
+        jQuery(s.showForm).not(jQuery('[data-show-form=' + formId + ']')).show()
         IFS.core.projectTeam.toggleForm(jQuery('[data-show-form=' + formId + ']'), form)
         form.find('input').attr('disabled', true)
         IFS.core.projectTeam.clearErrors()

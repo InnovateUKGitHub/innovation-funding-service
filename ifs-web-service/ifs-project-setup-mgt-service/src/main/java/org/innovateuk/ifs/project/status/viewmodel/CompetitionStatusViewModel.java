@@ -18,14 +18,16 @@ public class CompetitionStatusViewModel {
     private boolean showTabs;
 
     public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource,
-                                      boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap,
-                                      long openQueryCount, long pendingSpendProfilesCount, boolean showTabs) {
+                                      boolean hasProjectFinanceRole,
+                                      Map<Long, StatusPermission> projectStatusPermissionsMap,
+                                      long openQueryCount,
+                                      long pendingSpendProfilesCount) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
-        this.canExportBankDetails = canExportBankDetails;
+        this.canExportBankDetails = hasProjectFinanceRole;
         this.statusPermissions = projectStatusPermissionsMap;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
-        this.showTabs = showTabs;
+        this.showTabs = hasProjectFinanceRole;
     }
 
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {

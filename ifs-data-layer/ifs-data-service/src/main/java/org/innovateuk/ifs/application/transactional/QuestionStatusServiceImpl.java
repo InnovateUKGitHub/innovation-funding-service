@@ -157,7 +157,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationIdAndOrganisationId(long questionId, long applicationId, long organisationId) {
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }

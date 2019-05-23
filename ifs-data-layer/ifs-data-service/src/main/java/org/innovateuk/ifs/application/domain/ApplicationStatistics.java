@@ -33,7 +33,7 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @OneToOne(mappedBy = "target", optional=false)
+    @OneToOne(mappedBy = "target", optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
 
     @OneToMany(mappedBy = "applicationId")

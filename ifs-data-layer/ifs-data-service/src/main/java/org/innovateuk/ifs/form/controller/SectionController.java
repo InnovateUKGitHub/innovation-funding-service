@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -29,44 +28,37 @@ public class SectionController {
         return sectionService.getById(sectionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getNextSection/{sectionId}", "/get-next-section/{sectionId}"})
+    @GetMapping("/get-next-section/{sectionId}")
     public RestResult<SectionResource> getNextSection(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getNextSection(sectionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getPreviousSection/{sectionId}", "/get-previous-section/{sectionId}"})
+    @GetMapping("/get-previous-section/{sectionId}")
     public RestResult<SectionResource> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getPreviousSection(sectionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getSectionByQuestionId/{questionId}", "/get-section-by-question-id/{questionId}"})
+    @GetMapping("/get-section-by-question-id/{questionId}")
     public RestResult<SectionResource> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
         return sectionService.getSectionByQuestionId(questionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getQuestionsForSectionAndSubsections/{sectionId}", "/get-questions-for-section-and-subsections/{sectionId}"})
+    @GetMapping("/get-questions-for-section-and-subsections/{sectionId}")
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(@PathVariable("sectionId") final Long sectionId){
         return sectionService.getQuestionsForSectionAndSubsections(sectionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getSectionsByCompetitionIdAndType/{competitionId}/{type}", "/get-sections-by-competition-id-and-type/{competitionId}/{type}"})
+    @GetMapping("/get-sections-by-competition-id-and-type/{competitionId}/{type}")
     public RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(@PathVariable("competitionId") final Long competitionId, @PathVariable("type") SectionType type) {
         return sectionService.getSectionsByCompetitionIdAndType(competitionId, type).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getByCompetition/{competitionId}", "/get-by-competition/{competitionId}"})
+    @GetMapping("/get-by-competition/{competitionId}")
     public RestResult<List<SectionResource>> getSectionsByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
         return sectionService.getByCompetitionId(competitionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getByCompetitionIdVisibleForAssessment/{competitionId}", "/get-by-competition-id-visible-for-assessment/{competitionId}"})
+    @GetMapping("/get-by-competition-id-visible-for-assessment/{competitionId}")
     public RestResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(@PathVariable("competitionId") long competitionId) {
         return sectionService.getByCompetitionIdVisibleForAssessment(competitionId).toGetResponse();
     }

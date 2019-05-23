@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,7 @@ import java.util.Optional;
  * It is mainly used at present for getting summaries of applications for showing in the competition manager views.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-@RequestMapping({"/applicationSummary", "/application-summary"})
+@RequestMapping("/application-summary")
 public class ApplicationSummaryController {
     private static final String DEFAULT_PAGE_SIZE = "20";
 
@@ -30,8 +28,7 @@ public class ApplicationSummaryController {
     @Autowired
     private CompetitionSummaryService competitionSummaryService;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}", "/find-by-competition/{competitionId}"})
+    @GetMapping("/find-by-competition/{competitionId}")
     public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -41,14 +38,12 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getCompetitionSummary/{id}", "/get-competition-summary/{id}"})
+    @GetMapping("/get-competition-summary/{id}")
     public RestResult<CompetitionSummaryResource> getCompetitionSummary(@PathVariable("id") Long id) {
         return competitionSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}/all-submitted", "/find-by-competition/{competitionId}/all-submitted"})
+    @GetMapping("/find-by-competition/{competitionId}/all-submitted")
     public RestResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
@@ -56,8 +51,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}/submitted", "/find-by-competition/{competitionId}/submitted"})
+    @GetMapping("/find-by-competition/{competitionId}/submitted")
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -69,8 +63,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}/not-submitted", "/find-by-competition/{competitionId}/not-submitted"})
+    @GetMapping("/find-by-competition/{competitionId}/not-submitted")
     public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -79,8 +72,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}/with-funding-decision", "/find-by-competition/{competitionId}/with-funding-decision"})
+    @GetMapping("/find-by-competition/{competitionId}/with-funding-decision")
     public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -92,8 +84,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, sendFilter, fundingFilter).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping(value = {"/findByCompetition/{competitionId}/with-funding-decision", "/find-by-competition/{competitionId}/with-funding-decision"}, params = "all")
+    @GetMapping(value = "/find-by-competition/{competitionId}/with-funding-decision", params = "all")
     public RestResult<List<Long>> getWithFundingDecisionApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
@@ -102,8 +93,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, filter, sendFilter, fundingFilter).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByCompetition/{competitionId}/ineligible", "/find-by-competition/{competitionId}/ineligible"})
+    @GetMapping("/find-by-competition/{competitionId}/ineligible")
     public RestResult<ApplicationSummaryPageResource> getIneligibleApplicationsSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -114,8 +104,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, informFilter).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/applicationTeam/{applicationId}", "/application-team/{applicationId}"})
+    @GetMapping("/application-team/{applicationId}")
     public RestResult<ApplicationTeamResource> getApplicationTeamByApplicationId(@PathVariable("applicationId") long applicationId) {
         return applicationSummaryService.getApplicationTeamByApplicationId(applicationId).toGetResponse();
     }

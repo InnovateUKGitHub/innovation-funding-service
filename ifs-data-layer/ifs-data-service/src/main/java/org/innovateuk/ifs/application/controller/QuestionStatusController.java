@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,34 +16,29 @@ import java.util.Set;
  * QuestionStatusController exposes question status data and operations through a REST API.
  * It is mainly used at present for getting question statuses for given question in given application.
  */
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
 @RestController
-@RequestMapping({"/questionStatus", "question-status"})
+@RequestMapping("question-status")
 public class QuestionStatusController {
 
     @Autowired
     private QuestionStatusService questionStatusService;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByQuestionAndApplication/{questionId}/{applicationId}", "/find-by-question-and-application/{questionId}/{applicationId}"})
+    @GetMapping("/find-by-question-and-application/{questionId}/{applicationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId) {
         return questionStatusService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}", "/find-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}"})
-    public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") Long organisationId) {
-        return questionStatusService.getQuestionStatusByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
+    @GetMapping("/find-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}")
+    public RestResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId) {
+        return questionStatusService.getQuestionStatusForOrganisationOnApplication(questionId, applicationId, organisationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}", "/find-by-question-ids-and-application-id-and-organisation-id/{questionIds}/{applicationId}/{organisationId}"})
+    @GetMapping("/find-by-question-ids-and-application-id-and-organisation-id/{questionIds}/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId){
         return questionStatusService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByApplicationAndOrganisation/{applicationId}/{organisationId}", "/find-by-application-and-organisation/{applicationId}/{organisationId}"})
+    @GetMapping("/find-by-application-and-organisation/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(@PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId){
         return questionStatusService.findByApplicationAndOrganisation(applicationId, organisationId).toGetResponse();
     }
@@ -59,8 +53,7 @@ public class QuestionStatusController {
         return questionStatusService.getQuestionStatusResourceById(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getAssignedQuestionsCountByApplicationIdAndAssigneeId/{applicationId}/{assigneeId}", "/get-assigned-questions-count-by-application-id-and-assignee-id/{applicationId}/{assigneeId}"})
+    @GetMapping("/get-assigned-questions-count-by-application-id-and-assignee-id/{applicationId}/{assigneeId}")
     public RestResult<Integer> getAssignedQuestionsCountByApplicationIdAndAssigneeId(@PathVariable("applicationId") final long applicationId,
                                                                                      @PathVariable("assigneeId") final long assigneeId) {
         return questionStatusService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId).toGetResponse();
