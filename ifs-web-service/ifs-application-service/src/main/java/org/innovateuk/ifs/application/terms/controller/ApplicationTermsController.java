@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.terms.controller;
 
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
-import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -40,14 +43,18 @@ public class ApplicationTermsController {
 
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
+    private ApplicationRestService applicationRestService;
+
     public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,
                                       ApplicationTermsModelPopulator applicationTermsModelPopulator,
-                                      ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator) {
+                                      ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator,
+                                      ApplicationRestService applicationRestService) {
         this.userRestService = userRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;
         this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
+        this.applicationRestService = applicationRestService;
     }
 
     @GetMapping
@@ -84,7 +91,15 @@ public class ApplicationTermsController {
 
     @GetMapping("/partner-status")
     public String getPartnerStatus(@PathVariable long applicationId, @PathVariable long questionId, Model model) {
-        model.addAttribute("model", applicationTermsPartnerModelPopulator.populate(applicationId, questionId));
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        if (!application.isOpen()) {
+            throw new ForbiddenActionException("Cannot view partners on a non-open application");
+        }
+        else if (!application.isCollaborativeProject()) {
+            throw new ForbiddenActionException("Cannot view partners on a non-collaborative application");
+        }
+
+        model.addAttribute("model", applicationTermsPartnerModelPopulator.populate(application, questionId));
         return "application/terms-and-conditions-partner-status";
     }
 }
