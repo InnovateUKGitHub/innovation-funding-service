@@ -6,9 +6,13 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.web.bind.annotation.*;
+
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
@@ -48,7 +52,7 @@ public class MonitoringOfficerInviteController {
     public RestResult<Void> createPendingMonitoringOfficer(@RequestBody MonitoringOfficerCreateResource resource) {
 
         boolean userAlreadyExists = userService.findByEmail(resource.getEmailAddress()).isSuccess();
-        if (userAlreadyExists) {
+        if(userAlreadyExists) {
             return restSuccess();
         }
 
@@ -70,9 +74,6 @@ public class MonitoringOfficerInviteController {
 
     @PostMapping("/monitoring-officer/add-monitoring-officer-role/{inviteHash}")
     public RestResult<Void> addMonitoringOfficerRole(@PathVariable("inviteHash") String hash) {
-        return monitoringOfficerInviteService.addMonitoringOfficerRole(hash)
-                .andOnSuccess(user -> crmService.syncCrmContact(user.getId()))
-                .toPostResponse();
-
+        return monitoringOfficerInviteService.addMonitoringOfficerRole(hash).toPostResponse();
     }
 }
