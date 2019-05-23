@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -21,16 +20,13 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class ApplicationTermsPartnerModelPopulator {
 
-    private ApplicationRestService applicationRestService;
     private SectionService sectionService;
     private UserRestService userRestService;
     private OrganisationService organisationService;
 
-    public ApplicationTermsPartnerModelPopulator(ApplicationRestService applicationRestService,
-                                                 SectionService sectionService,
+    public ApplicationTermsPartnerModelPopulator(SectionService sectionService,
                                                  UserRestService userRestService,
                                                  OrganisationService organisationService) {
-        this.applicationRestService = applicationRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
         this.organisationService = organisationService;
@@ -62,7 +58,7 @@ public class ApplicationTermsPartnerModelPopulator {
                         o.getId() == leadOrganisationId,
                         acceptedOrgs.contains(o.getId()))
                 )
-                .sorted((o1, o2) -> o1.isLead() ? 1 : 0)
+                .sorted((o1, o2) -> o1.isLead() ? -1 : 1)
                 .collect(toList());
 
         return new ApplicationTermsPartnerViewModel(application.getId(), questionId, partners);
