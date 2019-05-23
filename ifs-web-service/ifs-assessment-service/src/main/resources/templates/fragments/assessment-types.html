@@ -67,9 +67,10 @@
 <div th:fragment="assessor_score (field)">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label govuk-label--s" th:for="formInput[__${field.id}__]">Question score</label>
+        <span id="question-score-hint" class="govuk-visually-hidden govuk-hint">Mark the question out of <th:block th:text="${model.maximumScore}"></th:block></span>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"/>
         <select class="govuk-select govuk-!-width-one-quarter assessor-question-score"
-                aria-describedby="info"
+                aria-describedby="question-score-hint"
                 th:id="formInput[__${field.id}__]"
                 th:field="*{formInput[__${field.id}__]}"
                 th:attr="data-required-errormessage=#{validation.assessor.score.notAnInteger}"
