@@ -29,8 +29,8 @@ public class QuestionStatusController {
     }
 
     @GetMapping("/find-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}")
-    public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") Long organisationId) {
-        return questionStatusService.getQuestionStatusByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
+    public RestResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId) {
+        return questionStatusService.getQuestionStatusForOrganisationOnApplication(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @GetMapping("/find-by-question-ids-and-application-id-and-organisation-id/{questionIds}/{applicationId}/{organisationId}")
