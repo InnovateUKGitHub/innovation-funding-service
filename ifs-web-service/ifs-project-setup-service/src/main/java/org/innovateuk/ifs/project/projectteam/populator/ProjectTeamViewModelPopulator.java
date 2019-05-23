@@ -37,7 +37,10 @@ public class ProjectTeamViewModelPopulator {
 
     private final ProjectDetailsService projectDetailsService;
 
-    public ProjectTeamViewModelPopulator(ProjectService projectService, CompetitionRestService competitionRestService, StatusService statusService, ProjectDetailsService projectDetailsService) {
+    public ProjectTeamViewModelPopulator(ProjectService projectService,
+                                         CompetitionRestService competitionRestService,
+                                         StatusService statusService,
+                                         ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.statusService = statusService;
@@ -48,19 +51,26 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        boolean isMonitoringOfficer = loggedInUser.getId().equals(projectResource.getMonitoringOfficerUser());
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        ProjectUserResource loggedInProjectUser = simpleFindFirst(projectUsers,
-                pu -> pu.getUser().equals(loggedInUser.getId())).get();
-        OrganisationResource loggedInUserOrg = simpleFindFirst(projectOrganisations,
-                org -> org.getId().equals(loggedInProjectUser.getOrganisation())).get();
 
+        OrganisationResource loggedInUserOrg;
+        if(isMonitoringOfficer) {
+            loggedInUserOrg = null;
+        } else {
+            ProjectUserResource loggedInProjectUser = simpleFindFirst(projectUsers,
+                                                  pu -> pu.getUser().equals(loggedInUser.getId())).get();
+
+            loggedInUserOrg = simpleFindFirst(projectOrganisations,
+                                              org -> org.getId().equals(loggedInProjectUser.getOrganisation())).get();
+        }
 
         List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
 
-        boolean isLead = loggedInUserOrg.equals(leadOrganisation);
+        boolean isLead = leadOrganisation.equals(loggedInUserOrg);
 
         List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
@@ -70,6 +80,7 @@ public class ProjectTeamViewModelPopulator {
                         org.equals(loggedInUserOrg)))
                 .sorted()
                 .collect(toList());
+        ProjectOrganisationViewModel loggedInUserOrgModel = getLoggedInUserOrgModel(partnerOrgModels, loggedInUserOrg, isMonitoringOfficer);
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
@@ -79,12 +90,13 @@ public class ProjectTeamViewModelPopulator {
                 projectResource.getName(),
                 projectResource.getId(),
                 partnerOrgModels,
-                partnerOrgModels.stream().filter(org -> org.getOrgId() == loggedInUserOrg.getId()).findFirst().orElse(null),
+                loggedInUserOrgModel,
                 getProjectManager(projectResource.getId()).orElse(null),
                 isLead,
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
-                false);
+                false,
+                isMonitoringOfficer);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
@@ -98,6 +110,18 @@ public class ProjectTeamViewModelPopulator {
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                 invite -> invite.getOrganisation().equals(organisation.getId()));
         return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
+    }
+
+    private ProjectOrganisationViewModel getLoggedInUserOrgModel(List<ProjectOrganisationViewModel> partnerOrgModels,
+                                                                 OrganisationResource loggedInUserOrg,
+                                                                 boolean isMonitoringOfficer) {
+        if(isMonitoringOfficer) {
+            return null;
+        }
+        return partnerOrgModels.stream()
+                .filter(org -> org.getOrgId() == loggedInUserOrg.getId())
+                .findFirst()
+                .orElse(null);
     }
 
     private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganistaion) {

@@ -141,7 +141,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusService.markTeamAsInComplete(ids, markedAsInCompleteById)).thenReturn(serviceSuccess(emptyList
                 ()));
 
-        mockMvc.perform(put("/questionStatus/mark-team-as-in-complete/{questionId}/{applicationId" +
+        mockMvc.perform(put("/question-status/mark-team-as-in-complete/{questionId}/{applicationId" +
                         "}/{markedAsInCompleteById}",
                 questionId, applicationId, markedAsInCompleteById))
                 .andExpect(status().isOk());

@@ -37,7 +37,6 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
-
         return userService.getUserById(userId).andOnSuccess(user -> {
 
             syncExternalUser(user);
@@ -109,7 +108,7 @@ public class CrmServiceImpl implements CrmService {
         SilOrganisation moSilOrganisation = new SilOrganisation();
         moSilOrganisation.setName("IFS MO Company");
         moSilOrganisation.setRegistrationNumber("");
-        moSilOrganisation.setSrcSysOrgId("IFSMO01");
+        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFSMO01"));
 
         silContact.setOrganisation(moSilOrganisation);
 

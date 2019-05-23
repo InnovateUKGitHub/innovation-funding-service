@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -33,8 +32,7 @@ public class MilestoneController {
         return milestoneService.getAllMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/{competitionId}/getByType", "/{competitionId}/get-by-type"})
+    @GetMapping("/{competitionId}/get-by-type")
     public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam("type") final MilestoneType type,
                                                                             @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();

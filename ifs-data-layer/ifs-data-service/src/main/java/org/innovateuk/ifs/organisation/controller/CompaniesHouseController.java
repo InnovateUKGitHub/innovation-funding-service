@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.transactional.CompaniesHouseApiService;

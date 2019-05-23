@@ -3,7 +3,6 @@ package org.innovateuk.ifs.eugrant.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.mapper.EuGrantMapper;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
@@ -36,6 +35,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
+@Transactional(readOnly = true)
 public class EuGrantServiceImpl implements EuGrantService {
 
     @Autowired
@@ -51,6 +51,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     private SystemNotificationSource systemNotificationSource;
 
     @Override
+    @Transactional
     public ServiceResult<Void> update(UUID id, EuGrantResource euGrantResource) {
         return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
@@ -68,6 +69,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<EuGrantResource> create() {
         return serviceSuccess(euGrantMapper.mapToResource(euGrantRepository.save(new EuGrant())));
     }
