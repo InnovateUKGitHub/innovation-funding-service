@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.terms.controller;
 
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
-import org.innovateuk.ifs.application.terms.populator.ApplicationTermsModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;

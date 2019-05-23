@@ -49,8 +49,6 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
                 "20", existingRow
         ));
 
-        form.setTermsAgreed(false);
-
         BindingResult bindingResult = new DataBinder(form).getBindingResult();
         UserResource user = newUserResource().build();
         long applicationId = 2L;
@@ -67,11 +65,5 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].source"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].date"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].fundingAmount"));
-
-        assertTrue(bindingResult.hasFieldErrors("termsAgreed"));
-
-
-
-
     }
 }

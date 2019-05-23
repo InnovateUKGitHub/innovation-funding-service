@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms.viewmodel;
+package org.innovateuk.ifs.application.common.viewmodel;
 
 import java.time.ZonedDateTime;
 
@@ -13,6 +13,7 @@ public class ApplicationTermsViewModel {
     private final boolean termsAccepted;
     private final String termsAcceptedByName;
     private final ZonedDateTime termsAcceptedOn;
+    private final boolean termsAcceptedByAllOrganisations;
 
     public ApplicationTermsViewModel(long applicationId,
                                      long questionId,
@@ -20,7 +21,8 @@ public class ApplicationTermsViewModel {
                                      boolean collaborativeApplication,
                                      boolean termsAccepted,
                                      String termsAcceptedByName,
-                                     ZonedDateTime termsAcceptedOn) {
+                                     ZonedDateTime termsAcceptedOn,
+                                     boolean termsAcceptedByAllOrganisations) {
         this.applicationId = applicationId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
@@ -28,6 +30,7 @@ public class ApplicationTermsViewModel {
         this.termsAccepted = termsAccepted;
         this.termsAcceptedByName = termsAcceptedByName;
         this.termsAcceptedOn = termsAcceptedOn;
+        this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
     }
 
     public long getApplicationId() {
@@ -48,6 +51,10 @@ public class ApplicationTermsViewModel {
 
     public boolean isTermsAccepted() {
         return termsAccepted;
+    }
+
+    public boolean isTermsAcceptedByAllOrganisations() {
+        return termsAcceptedByAllOrganisations;
     }
 
     public String getTermsAcceptedByName() {

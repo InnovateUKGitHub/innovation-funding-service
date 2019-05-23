@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
@@ -106,7 +107,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
                     .map(childSection -> new ApplicationOverviewRowViewModel(childSection.getName(),
-                            String.format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
+                            format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
                             data.getCompletedSectionIds().contains(childSection.getId()),
                             Optional.empty())
                     )
@@ -116,7 +117,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getQuestions()::get)
                     .map(question -> new ApplicationOverviewRowViewModel(getQuestionTitle(question),
-                            String.format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                            format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
                             data.getStatuses().get(question.getId()).stream().anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete()),
                             getAssignableViewModel(question, data))
                     )
@@ -151,7 +152,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     private String getQuestionTitle(QuestionResource question) {
         return question.getQuestionSetupType() == ASSESSED_QUESTION ?
-                String.format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
+                format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
     }
 

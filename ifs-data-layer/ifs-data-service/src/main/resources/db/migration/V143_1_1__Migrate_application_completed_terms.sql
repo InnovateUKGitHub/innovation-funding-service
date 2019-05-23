@@ -2,15 +2,15 @@
 
 -- New terms and conditions section
 INSERT INTO section
-(display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type)
-SELECT false                  AS display_in_assessment_application_summary,
-       'Terms and conditions' AS name,
-       '11'                   AS priority,
-       c.id                   AS competition_id,
-       false                  AS question_group,
-       'TERMS_AND_CONDITIONS' AS section_type
-FROM competition c
-WHERE setup_complete;
+(display_in_assessment_application_summary, name, priority, competition_id, question_group, section_type, description)
+SELECT false                                                            AS display_in_assessment_application_summary,
+       'Terms and conditions'                                           AS name,
+       '11'                                                             AS priority,
+       c.id                                                             AS competition_id,
+       false                                                            AS question_group,
+       'TERMS_AND_CONDITIONS'                                           AS section_type,
+       'You must agree to these before you submit your application.'    AS description
+FROM competition c;
 
 -- Add the terms question to the terms section
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name,
@@ -28,8 +28,7 @@ SELECT false                        AS assign_enabled,
        'GENERAL'                    AS question_type,
        'TERMS_AND_CONDITIONS'       AS question_setup_type
 FROM competition c
-         INNER JOIN section s ON s.competition_id = c.id AND s.section_type = 'TERMS_AND_CONDITIONS'
-WHERE setup_complete;
+INNER JOIN section s ON s.competition_id = c.id AND s.section_type = 'TERMS_AND_CONDITIONS';
 
 -- add a question_status per application/organisation, for all submitted applications
 INSERT INTO question_status (application_id, marked_as_complete, marked_as_complete_by_id, marked_as_complete_on,
