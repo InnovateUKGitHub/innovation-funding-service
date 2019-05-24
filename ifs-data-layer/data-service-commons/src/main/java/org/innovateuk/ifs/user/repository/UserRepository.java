@@ -31,6 +31,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Override
     List<User> findAll();
 
+    List<User> findByRoles(Role role);
+
     List<User> findByRolesAndStatusIn(Role role, Collection<UserStatus> statuses);
 
     List<User> findByRolesOrderByFirstNameAscLastNameAsc(Role role);

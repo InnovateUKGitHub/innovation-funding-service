@@ -37,13 +37,13 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
-    private MonitoringOfficerRepository monitoringOfficerRepository;
-    private ProjectRepository projectRepository;
-    private UserRepository userRepository;
-    private MonitoringOfficerInviteService monitoringOfficerInviteService;
-    private ProjectMapper projectMapper;
-    private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
-    private UserMapper userMapper;
+    private final MonitoringOfficerRepository monitoringOfficerRepository;
+    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
+    private final MonitoringOfficerInviteService monitoringOfficerInviteService;
+    private final ProjectMapper projectMapper;
+    private final LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+    private final UserMapper userMapper;
 
     public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository, ProjectRepository projectRepository, UserRepository userRepository, MonitoringOfficerInviteService monitoringOfficerInviteService, ProjectMapper projectMapper, LegacyMonitoringOfficerService legacyMonitoringOfficerService, UserMapper userMapper) {
         this.monitoringOfficerRepository = monitoringOfficerRepository;

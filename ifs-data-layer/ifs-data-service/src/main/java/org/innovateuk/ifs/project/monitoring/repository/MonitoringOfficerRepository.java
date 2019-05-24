@@ -30,7 +30,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "project.application.id," +
             "project.name) " +
             "FROM Project project " +
-            "LEFT JOIN MonitoringOfficer monitoringOfficer ON monitoringOfficer.id = project.projectMonitoringOfficer " +
+            "LEFT JOIN MonitoringOfficer monitoringOfficer ON monitoringOfficer.id = project.projectMonitoringOfficer.id " +
             "WHERE " +
             "   monitoringOfficer.id IS NULL " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES +
