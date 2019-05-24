@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.exception.SummaryDataUnavailableException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -58,8 +57,7 @@ public class ApplicationDownloadController {
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/downloadByCompetition/{competitionId}", "/download-by-competition/{competitionId}"})
+    @GetMapping("/download-by-competition/{competitionId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
         ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);

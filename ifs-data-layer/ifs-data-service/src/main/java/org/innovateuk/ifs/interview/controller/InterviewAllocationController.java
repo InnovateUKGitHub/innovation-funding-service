@@ -39,8 +39,7 @@ public class InterviewAllocationController {
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
-
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
+    @ZeroDowntime(reference = "IFS-5917", description = "remove camelCase mapping in h2020 sprint 8")
     @GetMapping({"/{competitionId}/allocated-applications-assessorId/{assessorId}", "/{competitionId}/allocated-applications-assessor-id/{assessorId}"})
     public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(
             @PathVariable long competitionId,

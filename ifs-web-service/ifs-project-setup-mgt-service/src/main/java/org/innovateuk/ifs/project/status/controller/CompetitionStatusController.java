@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
+import org.innovateuk.ifs.project.status.populator.CompetitionStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
@@ -30,7 +29,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This RestController exposes ways of fetching the current status of a competition projects in a view-friendly
@@ -42,15 +40,16 @@ public class CompetitionStatusController {
 
     @Autowired
     private StatusRestService statusRestService;
-
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
-
     @Autowired
     private CompetitionRestService competitionRestService;
-
     @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
+    @Autowired
+    private CompetitionStatusViewModelPopulator competitionStatusViewModelPopulator;
+
+    private static final String MODEL = "model";
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
@@ -66,14 +65,9 @@ public class CompetitionStatusController {
                                            @PathVariable Long competitionId,
                                            @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString) {
 
-        boolean isUserRoleProjectFinance = loggedInUser.hasRole(PROJECT_FINANCE);
+        CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString);
+        model.addAttribute(MODEL, viewModel);
 
-        model.addAttribute("model",
-                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess(),
-                        loggedInUser,
-                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess() : 0L,
-                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0,
-                        isUserRoleProjectFinance).get());
         return "project/competition-status-all";
     }
 
@@ -82,7 +76,7 @@ public class CompetitionStatusController {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
-        model.addAttribute("model",
+        model.addAttribute(MODEL,
                 new CompetitionOpenQueriesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccess(),
                         competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccess(),
                         competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess(),
@@ -100,7 +94,7 @@ public class CompetitionStatusController {
         long openQueryCount = competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess();
         List<SpendProfileStatusResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccess();
 
-        model.addAttribute("model",
+        model.addAttribute(MODEL,
                 new CompetitionPendingSpendProfilesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccess(),
                         pendingSpendProfiles,
                         openQueryCount,

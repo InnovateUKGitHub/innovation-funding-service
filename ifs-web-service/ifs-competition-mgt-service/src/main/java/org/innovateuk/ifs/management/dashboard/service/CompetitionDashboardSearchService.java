@@ -2,8 +2,7 @@ package org.innovateuk.ifs.management.dashboard.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
@@ -22,12 +21,13 @@ public interface CompetitionDashboardSearchService {
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions();
 
+    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions();
+
     CompetitionSearchResult searchCompetitions(String searchQuery, int page);
 
     ApplicationPageResource wildcardSearchByApplicationId(String searchString, int pageNumber, int pageSize);
 
     CompetitionCountResource getCompetitionCounts();
 
-    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions();
 
 }

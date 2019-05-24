@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.resource.AgreementResource;
@@ -21,8 +20,7 @@ public class AgreementController {
     @Autowired
     private AgreementService agreementService;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findCurrent", "/find-current"})
+    @GetMapping("/find-current")
     public RestResult<AgreementResource> findCurrent() {
         return agreementService.getCurrent().toGetResponse();
     }

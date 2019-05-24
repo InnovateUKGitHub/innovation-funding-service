@@ -72,7 +72,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     @Test
     public void test_findByCompetitionId() {
         List<FormInput> competitionInputs = repository.findByCompetitionIdAndActiveTrueOrderByPriorityAsc(1L);
-        assertEquals(61, competitionInputs.size());
+        assertEquals(54, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());
@@ -97,7 +97,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     @Test
     public void test_findByCompetitionIdAndScope() {
         List<FormInput> competitionInputs = repository.findByCompetitionIdAndScopeAndActiveTrueOrderByPriorityAsc(1L, APPLICATION);
-        assertEquals(38, competitionInputs.size());
+        assertEquals(31, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
         assertEquals(Long.valueOf(1), first.getId());

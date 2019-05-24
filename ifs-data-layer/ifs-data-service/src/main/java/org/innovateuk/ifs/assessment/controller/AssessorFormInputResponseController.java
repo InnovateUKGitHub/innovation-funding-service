@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,7 @@ import java.util.List;
  * Exposes CRUD operations through a REST API to manage {@link org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse} related data.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-@RequestMapping({"/assessorFormInputResponse", "/assessor-form-input-response"})
+@RequestMapping("/assessor-form-input-response")
 public class AssessorFormInputResponseController {
 
     @Autowired

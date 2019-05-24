@@ -14,6 +14,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.search.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -142,6 +143,26 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionSearchResultItem>> competitionSearchResultItemListType() {
         return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<LiveCompetitionSearchResultItem>> liveCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<LiveCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<UpcomingCompetitionSearchResultItem>> upcomingCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<UpcomingCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<NonIfsCompetitionSearchResultItem>> nonIfsCompetitionSearchReultItemListType() {
+        return new ParameterizedTypeReference<List<NonIfsCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProjectSetupCompetitionSearchResultItem>> projectSetupCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<ProjectSetupCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>> previousCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>>() {};
     }
 
     public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {
