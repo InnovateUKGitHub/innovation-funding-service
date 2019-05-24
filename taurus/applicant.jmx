@@ -219,7 +219,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">2</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -1543,7 +1543,7 @@
         <hashTree/>
       </hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
-        <stringProp name="filename">users_csv</stringProp>
+        <stringProp name="filename">${users_csv}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">username,password,application_id,form_id,application_details_question_id,project_summary_question_id,public_description_question_id,project_exploitation_question_id,economic_benefit_question_id,funding_question_id,adding_value_question_id,your_finance_section_id,finance_overview_section_id,project_summary_form_input_id,public_description_form_input_id,project_exploitation_form_input_id,economic_benefit_form_input_id,funding_form_input_id,adding_value_form_input_id,travel_subsistence_row_id,travel_subsistence_question_id,other_funding_row_id,other_funding_question_id,application_name,research_page_id,org_id,project_costs_id,project_location,your_organisation</stringProp>
         <stringProp name="delimiter">,</stringProp>
