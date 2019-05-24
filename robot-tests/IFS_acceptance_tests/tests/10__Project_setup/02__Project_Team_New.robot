@@ -17,6 +17,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5901 - Change access permisions to update project team members in project setup
 ...
+...             IFS-5710 - Add project team section to setup your project page
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -144,7 +146,71 @@ Css user is able to add a new team member to all partners
     Given the user navigates to the page   ${internalViewTeamPage}
     Then the user is able to add team memebers to all partner organisations
 
+Dashboard status updates correctly for internal and external users
+    [Documentation]  IFS-5710
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the Project team status for internal user is incomplete
+    When all partners complete the Project team section
+    Then the Project team status appears as complete for the internal user
+
+Academic Partner nominates Finance contact
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
+    [Tags]  HappyPath
+    [Setup]    Log in as a different user       &{collaborator2_credentials}
+    Given the user navigates to the page         ${Project_In_Setup_Page}
+    Then the academic user selects a finance contact and update project location
+
 *** Keywords ***
+
+The Project team status for internal user is incomplete
+    the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
+    the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Incomplete")
+
+All partners complete the Project team section
+    non lead partners complete the Project team section
+    lead partner completes the Project team section
+
+Non lead partners complete the Project team section
+    log in as a different user                &{collaborator2_alternative_user_credentials}
+    the user navigates to the Project team page from the dashboard
+    the user selects their finance contact    financeContact2
+    the user clicks the button/link           link = Set up your project
+    the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+    log in as a different user                &{collaborator1_credentials}
+    the user navigates to the Project team page from the dashboard
+    the user selects their finance contact    financeContact2
+    the user clicks the button/link           link = Set up your project
+    the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+Lead partner completes the Project team section
+    log in as a different user               &{lead_applicant_credentials}
+    the user clicks the button/link          link = ${PS_PD_Application_Title}
+    the user should see the element          jQuery = ul li:contains("Project team") span:contains("To be completed")
+    the user clicks the button/link          link = Project team
+    the user selects their finance contact   financeContact2
+    the user clicks the button/link          link = Project manager
+    the user selects the radio button        projectManager   projectManager1
+    the user clicks the button/link          jQuery = button:contains("Save project manager")
+    the user clicks the button/link          link = Set up your project
+    the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The Project team status appears as complete for the internal user
+    log in as a different user    &{Comp_admin1_credentials}
+    the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
+    the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
+
+
+The user selects their finance contact
+    [Arguments]  ${financeContactName}
+    the user clicks the button/link     link = Your finance contact
+    the user selects the radio button   financeContact   ${financeContactName}
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+
+
+The user navigates to the Project team page from the dashboard
+    the user clicks the button/link   link = ${PS_PD_Application_Title}
+    the user clicks the button/link   link = Project team
+
 The user is able to add team memebers to all partner organisations
     the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ p:first button:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=name]  cssAdded1

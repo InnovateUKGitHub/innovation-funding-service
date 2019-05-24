@@ -35,7 +35,7 @@ Resource          PS_Common.robot
 # Another valid B account pair: 51406795 - 404745 #
 
 # Note that the Bank details scenario where the Partner is not eligible for funding
-# is tested in the File 01__project_details.robot
+# is tested in the File 01__Project_Details.robot
 
 *** Test Cases ***
 Project Finance should not be able to access bank details page
