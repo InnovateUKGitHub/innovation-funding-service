@@ -62,7 +62,7 @@
     </ul>
 </th:block>
 
-<div th:fragment="dashboard-row">
+<th:block th:fragment="dashboard-row">
     <div class="govuk-grid-column-one-third">
         <h3 class="govuk-heading-s">
             <a th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${competition.id})}"
@@ -122,12 +122,12 @@
         </div>
         <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${cell4}"></p></div>
     </div>
-</div>
+</th:block>
 
 
-<div th:fragment="competition-name">
+<th:block th:fragment="competition-name">
     <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
     <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
-</div>
+</th:block>
 
 </html>
