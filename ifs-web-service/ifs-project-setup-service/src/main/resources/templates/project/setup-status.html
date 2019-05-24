@@ -85,7 +85,7 @@
                         </h2>
                         <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the proposed start date and
                             location of the project.</p>
-                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The start date and location of the project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The proposed start date and location of the project.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>

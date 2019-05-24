@@ -153,13 +153,6 @@ Dashboard status updates correctly for internal and external users
     When all partners complete the Project team section
     Then the Project team status appears as complete for the internal user
 
-Academic Partner nominates Finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
-    [Tags]  HappyPath
-    [Setup]    Log in as a different user       &{collaborator2_credentials}
-    Given the user navigates to the page         ${Project_In_Setup_Page}
-    Then the academic user selects a finance contact and update project location
-
 *** Keywords ***
 
 The Project team status for internal user is incomplete
