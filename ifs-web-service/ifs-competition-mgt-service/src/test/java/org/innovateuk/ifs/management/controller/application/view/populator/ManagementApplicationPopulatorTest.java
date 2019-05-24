@@ -53,7 +53,7 @@ public class ManagementApplicationPopulatorTest {
     private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
 
     @Mock
-    private ApplicationReadOnlyViewModelPopulator applicationSummaryViewModelPopulator;
+    private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
 
     @Mock
     private ApplicationRestService applicationRestService;
@@ -87,7 +87,7 @@ public class ManagementApplicationPopulatorTest {
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings())).thenReturn(mock(ApplicationReadOnlyViewModel.class));
+        when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings())).thenReturn(mock(ApplicationReadOnlyViewModel.class));
         when(applicationOverviewIneligibilityModelPopulator.populateModel(application, competition)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
 
         FormInputResource appendix = newFormInputResource().build();
