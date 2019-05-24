@@ -70,9 +70,9 @@ public class MonitoringOfficerController {
 
     @PostMapping("/search-by-email")
     public String searchByEmail(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
-                         BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model) {
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                Model model) {
         if (validationHandler.hasErrors()) {
             return "project/monitoring-officer/search-by-email";
         }
@@ -101,17 +101,18 @@ public class MonitoringOfficerController {
 
     @PostMapping("/{userId}/assign-role")
     public String assignRole(@PathVariable long userId,
-                         @Valid @ModelAttribute(FORM) MonitoringOfficerAssignRoleForm form,
-                         BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model) {
+                             @Valid @ModelAttribute(FORM) MonitoringOfficerAssignRoleForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler,
+                             Model model) {
         if (validationHandler.hasErrors()) {
             model.addAttribute(MODEL, monitoringOfficerAssignRoleViewModelPopulator.populate(userId));
             model.addAttribute(FORM, form);
             return "project/monitoring-officer/assign-role";
         }
-        updateUserPhoneNumber(userId, form.getPhoneNumber());
+
         userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
+        updateUserPhoneNumber(userId, form.getPhoneNumber());
 
         return monitoringOfficerProjectsRedirect(userId);
     }
@@ -121,7 +122,7 @@ public class MonitoringOfficerController {
                          Model model) {
         MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
         model.addAttribute("emailAddress", emailAddress);
-        model.addAttribute(FORM , form);
+        model.addAttribute(FORM, form);
         return "project/monitoring-officer/create-new";
     }
 
@@ -133,22 +134,22 @@ public class MonitoringOfficerController {
 
         Supplier<String> failureView = () -> {
             model.addAttribute("emailAddress", form.getEmailAddress());
-            model.addAttribute(FORM , form);
+            model.addAttribute(FORM, form);
             return "project/monitoring-officer/create-new";
         };
 
         return validationHandler
                 .failNowOrSucceedWith(failureView, () -> {
                     MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
-                                                                                                   form.getLastName(),
-                                                                                                   form.getPhoneNumber(),
-                                                                                                   form.getEmailAddress());
+                            form.getLastName(),
+                            form.getPhoneNumber(),
+                            form.getEmailAddress());
 
-                    RestResult<Void> result =  monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
+                    RestResult<Void> result = monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
                     return validationHandler
                             .addAnyErrors(result)
                             .failNowOrSucceedWith(failureView,
-                                                  () -> "redirect:/monitoring-officer/view-all");
+                                    () -> "redirect:/monitoring-officer/view-all");
                 });
     }
 
@@ -202,7 +203,7 @@ public class MonitoringOfficerController {
     @GetMapping("/view-monitoring-officer")
     public String redirectToMoProjectPage(@ModelAttribute("form") MonitoringOfficerViewAllForm form) {
         // required to allow auto complete to send back the data about the selection
-        if(form == null || form.getUserId() == null) {
+        if (form == null || form.getUserId() == null) {
             return "redirect://monitoring-officer/view-all";
         }
 
