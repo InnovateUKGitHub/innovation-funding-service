@@ -38,25 +38,36 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                SilContact silContact = monitoringOfficerToSilContact(user);
-                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-            } else {
-                if (!user.isInternalUser()) {
-                    return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
-                        ServiceResult<Void> result = serviceSuccess();
-                        for (OrganisationResource organisation : organisations) {
-                            result = result.andOnSuccess(() -> {
-                                SilContact silContact = externalUserToSilContact(user, organisation);
-                                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
-                            });
-                        }
-                        return result;
-                    });
-                }
-            }
+
+            syncExternalUser(user);
+            syncMonitoringOfficer(user);
+
             return serviceSuccess();
         });
+    }
+
+    private void syncExternalUser(UserResource user) {
+        if (!user.isInternalUser()) {
+            organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
+                ServiceResult<Void> result = serviceSuccess();
+                for (OrganisationResource organisation : organisations) {
+                    result = result.andOnSuccess(() -> {
+                        SilContact silContact = externalUserToSilContact(user, organisation);
+                        getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+                    });
+                }
+                return serviceSuccess();
+            });
+        }
+    }
+
+    private void syncMonitoringOfficer(UserResource user) {
+
+        if (user.hasRole(MONITORING_OFFICER)) {
+            SilContact silContact = monitoringOfficerToSilContact(user);
+            getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
+        }
+
     }
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
