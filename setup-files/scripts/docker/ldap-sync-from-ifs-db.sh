@@ -56,7 +56,7 @@ executeMySQLCommand() {
 }
 
 addUserToShibboleth() {
-  IFS=$'\t' read -r -a array <<< "$1"
+  IFS=${2} read -r -a array <<< "$1"
   uid="${array[0]}"
   email="${array[1]}"
 
@@ -73,43 +73,26 @@ addUserToShibboleth() {
   echo ""
 }
 
-addACCUserToShibboleth() {
-while IFS=" " read -a csv_line;
-do
-  uid="${csv_line[0]}"
-  email="${csv_line[1]}"
-
-  echo "dn: uid=$uid,$LDAP_DOMAIN"
-  echo "uid: $uid"
-  echo "mail: $email"
-  echo "sn:: IA=="
-  echo "cn:: IA=="
-  echo "objectClass: inetOrgPerson"
-  echo "objectClass: person"
-  echo "objectClass: top"
-  echo "employeeType: active"
-  echo "userPassword:: $password"
-  echo ""
- done < emailsAndUUids.csv | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
-}
-
 downloadAccUserCsv() {
 #    Download users from repository
-    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} https://devops.innovateuk.org/code-repository/projects/CRM/repos/salesforce/raw/testdata/test_data_csv/ExternalUI/Contact/FullContact_ExternalUI.csv -o users.csv
+    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} ${ACC_CSV_FILE} -o users.csv
 #    Remove first line of column names
     tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
 #    Create new Csv with emails and new generated UUID
-    awk -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3} {close("uuidgen")}' users.csv > emailsAndUUids.csv
+    cat users.csv | awk -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3} {close("uuidgen")}' | sed 's/\ /,/g' > emailsAndUUids.csv
 }
 # Main
 
 wipeLdapUsers
-
 downloadAccUserCsv
-addACCUserToShibboleth
 
 IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
 do
-  addUserToShibboleth $u
+  addUserToShibboleth $u '\t'
 done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+
+while read -a csv_line;
+do
+  addUserToShibboleth $csv_line ','
+done < emailsAndUUids.csv
