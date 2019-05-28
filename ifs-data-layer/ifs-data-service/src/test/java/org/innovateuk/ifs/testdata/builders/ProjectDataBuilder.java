@@ -24,6 +24,7 @@ import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -258,7 +260,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRoles(Role.PROJECT_FINANCE);
+        List<User> projectFinanceUsers = userRepository.findByRolesAndStatusIn(Role.PROJECT_FINANCE, EnumSet.allOf(UserStatus.class));
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

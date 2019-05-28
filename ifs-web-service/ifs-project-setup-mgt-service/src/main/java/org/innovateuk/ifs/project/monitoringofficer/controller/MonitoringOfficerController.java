@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.*;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
@@ -24,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -197,8 +195,7 @@ public class MonitoringOfficerController {
 
     @GetMapping("/view-all")
     public String viewAll(Model model) {
-        List<MonitoringOfficerAssignmentResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
-        model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate(monitoringOfficers));
+        model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate());
         model.addAttribute(FORM, new MonitoringOfficerViewAllForm());
         return "project/monitoring-officer-view-all";
     }
