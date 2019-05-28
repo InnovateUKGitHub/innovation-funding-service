@@ -64,7 +64,7 @@
                     <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
                     <dt>Duration in months</dt>
                     <dd>
-                        <th:block th:text="${model.duration}"/>
+                        <th:block th:text="${model.durationInMonths}"/>
                         months
                     </dd>
                     <th:block th:if="${model.canSelectInnovationArea}">

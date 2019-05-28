@@ -22,7 +22,7 @@ public class ManagementApplicationViewModel {
     private final String competitionName;
     private final String applicationName;
     private final LocalDate startDate;
-    private final Long duration;
+    private final Long durationInMonths;
     private final Boolean resubmission;
     private final boolean canSelectInnovationArea;
     private final String innovationAreaName;
@@ -30,7 +30,15 @@ public class ManagementApplicationViewModel {
     private final String previousApplicationTitle;
 
 
-    public ManagementApplicationViewModel(ApplicationResource application, CompetitionResource competition, String backUrl, String originQuery, ApplicationOverviewIneligibilityViewModel ineligibility, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, List<AppendixViewModel> appendices, boolean canMarkAsIneligible, boolean canReinstate) {
+    public ManagementApplicationViewModel(ApplicationResource application,
+                                          CompetitionResource competition,
+                                          String backUrl,
+                                          String originQuery,
+                                          ApplicationOverviewIneligibilityViewModel ineligibility,
+                                          ApplicationReadOnlyViewModel applicationReadOnlyViewModel,
+                                          List<AppendixViewModel> appendices,
+                                          boolean canMarkAsIneligible,
+                                          boolean canReinstate) {
         this.application = application;
         this.competition = competition;
         this.backUrl = backUrl;
@@ -44,7 +52,7 @@ public class ManagementApplicationViewModel {
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
         this.startDate = application.getStartDate();
-        this.duration = application.getDurationInMonths();
+        this.durationInMonths = application.getDurationInMonths();
         this.resubmission = application.getResubmission();
         this.canSelectInnovationArea = competition.getInnovationAreas().size() > 1;
         this.innovationAreaName = application.getInnovationArea().getName();
@@ -100,8 +108,8 @@ public class ManagementApplicationViewModel {
         return startDate;
     }
 
-    public Long getDuration() {
-        return duration;
+    public Long getDurationInMonths() {
+        return durationInMonths;
     }
 
     public Boolean getResubmission() {

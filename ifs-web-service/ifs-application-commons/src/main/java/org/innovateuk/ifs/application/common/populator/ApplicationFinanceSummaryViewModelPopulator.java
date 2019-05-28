@@ -55,7 +55,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.competitionRestService = competitionRestService;
     }
 
-    public ApplicationFinanceSummaryViewModel   populate(long applicationId, UserResource user) {
+    public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
