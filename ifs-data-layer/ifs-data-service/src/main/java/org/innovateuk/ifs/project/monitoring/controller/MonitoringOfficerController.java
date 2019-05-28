@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmen
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class MonitoringOfficerController {
     }
 
     @GetMapping("/find-all")
-    public RestResult<List<MonitoringOfficerAssignmentResource>> findAll() {
+    public RestResult<List<UserResource>> findAll() {
         return monitoringOfficerService.findAll().toGetResponse();
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,6 +32,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     List<User> findAll();
 
     List<User> findByRoles(Role role);
+
+    List<User> findByRolesAndStatusIn(Role role, Collection<UserStatus> statuses);
 
     List<User> findByRolesOrderByFirstNameAscLastNameAsc(Role role);
 
