@@ -21,9 +21,9 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class ApplicationTermsPartnerModelPopulator {
 
-    private final SectionService sectionService;
-    private final UserRestService userRestService;
-    private final OrganisationService organisationService;
+    private SectionService sectionService;
+    private UserRestService userRestService;
+    private OrganisationService organisationService;
 
     public ApplicationTermsPartnerModelPopulator(SectionService sectionService,
                                                  UserRestService userRestService,

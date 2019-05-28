@@ -64,7 +64,6 @@ public class ApplicationTermsPartnerModelPopulatorTest extends BaseUnitTest {
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
-
         GrantTermsAndConditionsResource grantTermsAndConditions =
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()

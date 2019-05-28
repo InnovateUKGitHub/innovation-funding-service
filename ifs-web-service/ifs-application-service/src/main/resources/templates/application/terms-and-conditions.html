@@ -46,7 +46,7 @@
 
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-        <th:block th:unless="${model.termsAccepted}">
+        <th:block th:unless="${model.termsAccepted.get()}">
             <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
                   th:action="@{/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
                 <div class="govuk-form-group">
@@ -70,13 +70,13 @@
                  */-->
             </form>
         </th:block>
-        <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
+        <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted.get()}">
             <div class="form-footer__actions">
                 Terms and conditions accepted
                 <th:block th:unless="${model.migratedTerms}">
-                    at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn, 'h:mma'))}"> 6:10pm</span>
-                    on <span th:text="${#temporals.format(model.termsAcceptedOn, 'd MMMM yyyy')}"> 08 May 2019</span>
-                    by <span th:text="${model.termsAcceptedByName}"> Tom Baldwin</span>.
+                    at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
+                    on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
+                    by <span th:text="${model.termsAcceptedByName.get()}"> Tom Baldwin</span>.
                 </th:block>
             </div>
         </div>

@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
- * Model attributes for the application terms view.
+ * Model attributes for the application terms view. Optionally in the context of an organisation.
  */
 public class ApplicationTermsViewModel {
     private final long applicationId;
     private final long questionId;
     private final String competitionTermsTemplate;
     private final boolean collaborativeApplication;
-    private final boolean termsAccepted;
+    private final Boolean termsAccepted;
     private final String termsAcceptedByName;
     private final ZonedDateTime termsAcceptedOn;
     private final boolean termsAcceptedByAllOrganisations;
@@ -33,6 +34,22 @@ public class ApplicationTermsViewModel {
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
     }
 
+    public ApplicationTermsViewModel(long applicationId,
+                                     long questionId,
+                                     String competitionTermsTemplate,
+                                     boolean collaborativeApplication,
+                                     boolean termsAcceptedByAllOrganisation) {
+
+        this.applicationId = applicationId;
+        this.questionId = questionId;
+        this.competitionTermsTemplate = competitionTermsTemplate;
+        this.collaborativeApplication = collaborativeApplication;
+        this.termsAccepted = null;
+        this.termsAcceptedByName = null;
+        this.termsAcceptedOn = null;
+        this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisation;
+    }
+
     public long getApplicationId() {
         return applicationId;
     }
@@ -49,23 +66,23 @@ public class ApplicationTermsViewModel {
         return collaborativeApplication;
     }
 
-    public boolean isTermsAccepted() {
-        return termsAccepted;
+    public Optional<Boolean> getTermsAccepted() {
+        return Optional.ofNullable(termsAccepted);
     }
 
-    public boolean isTermsAcceptedByAllOrganisations() {
+    public Boolean isTermsAcceptedByAllOrganisations() {
         return termsAcceptedByAllOrganisations;
     }
 
-    public String getTermsAcceptedByName() {
-        return termsAcceptedByName;
+    public Optional<String> getTermsAcceptedByName() {
+        return Optional.ofNullable(termsAcceptedByName);
     }
 
-    public ZonedDateTime getTermsAcceptedOn() {
-        return termsAcceptedOn;
+    public Optional<ZonedDateTime> getTermsAcceptedOn() {
+        return Optional.ofNullable(termsAcceptedOn);
     }
 
     public boolean isMigratedTerms() {
-        return termsAccepted && termsAcceptedOn == null;
+        return getTermsAccepted().orElse(false) && !getTermsAcceptedOn().isPresent();
     }
 }

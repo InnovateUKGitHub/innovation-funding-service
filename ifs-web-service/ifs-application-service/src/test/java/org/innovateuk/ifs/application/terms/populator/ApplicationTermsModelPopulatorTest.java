@@ -107,12 +107,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
-        assertFalse(actual.isTermsAccepted());
-        assertNull("you", actual.getTermsAcceptedByName());
-        assertNull(actual.getTermsAcceptedOn());
+        assertFalse(actual.getTermsAccepted().get());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
@@ -169,12 +169,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertFalse(actual.isCollaborativeApplication());
-        assertFalse(actual.isTermsAccepted());
-        assertNull("you", actual.getTermsAcceptedByName());
-        assertNull(actual.getTermsAcceptedOn());
+        assertFalse(actual.getTermsAccepted().get());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
@@ -238,12 +238,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
-        assertTrue(actual.isTermsAccepted());
-        assertEquals("you", actual.getTermsAcceptedByName());
-        assertEquals(acceptedDate, actual.getTermsAcceptedOn());
+        assertTrue(actual.getTermsAccepted().get());
+        assertEquals("you", actual.getTermsAcceptedByName().get());
+        assertEquals(acceptedDate, actual.getTermsAcceptedOn().get());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
@@ -307,12 +307,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
-        assertTrue(actual.isTermsAccepted());
-        assertFalse(actual.getTermsAcceptedByName().isEmpty());
-        assertNull(actual.getTermsAcceptedOn());
+        assertTrue(actual.getTermsAccepted().get());
+        assertFalse(actual.getTermsAcceptedByName().get().isEmpty());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertTrue(actual.isMigratedTerms());
 
@@ -378,12 +378,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
-        assertTrue(actual.isTermsAccepted());
-        assertEquals(acceptedUser.getName(), actual.getTermsAcceptedByName());
-        assertEquals(acceptedDate, actual.getTermsAcceptedOn());
+        assertTrue(actual.getTermsAccepted().get());
+        assertEquals(acceptedUser.getName(), actual.getTermsAcceptedByName().get());
+        assertEquals(acceptedDate, actual.getTermsAcceptedOn().get());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
@@ -447,12 +447,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
 
-        assertEquals((long)application.getId(), actual.getApplicationId());
+        assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
-        assertFalse(actual.isTermsAccepted());
-        assertNull("you", actual.getTermsAcceptedByName());
-        assertNull(actual.getTermsAcceptedOn());
+        assertFalse(actual.getTermsAccepted().get());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertFalse(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
@@ -467,4 +467,70 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void populate_acceptedNoOrganisation() {
+        String termsTemplate = "terms-template";
+        boolean collaborative = true;
+
+        ZonedDateTime acceptedDate = now();
+
+        UserResource currentUser = newUserResource().withFirstName("tom").withLastName("baldwin").build();
+        UserResource otherUser = newUserResource().build();
+
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
+        CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(collaborative)
+                .build();
+
+        long questionId = 3L;
+        SectionResource termsAndConditionsSection = newSectionResource()
+                .withQuestions(singletonList(questionId))
+                .build();
+
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withUser(currentUser)
+                .withApplication(application.getId())
+                .build(1);
+
+        OrganisationResource organisation = newOrganisationResource().build();
+        QuestionStatusResource questionStatus = newQuestionStatusResource()
+                .withMarkedAsComplete(true)
+                .withMarkedAsCompleteOn(acceptedDate)
+                .withMarkedAsCompleteByUserId(currentUser.getId())
+                .withMarkedAsCompleteByUserName(currentUser.getName())
+                .build();
+
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
+        when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
+        when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+
+        ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId);
+
+        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
+        assertTrue(actual.isCollaborativeApplication());
+        assertFalse(actual.getTermsAccepted().isPresent());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
+        assertTrue(actual.isTermsAcceptedByAllOrganisations());
+        assertFalse(actual.isMigratedTerms());
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, userRestServiceMock,
+                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
+        inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
+        inOrder.verify(userRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
+        inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
+        inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
 }
+
