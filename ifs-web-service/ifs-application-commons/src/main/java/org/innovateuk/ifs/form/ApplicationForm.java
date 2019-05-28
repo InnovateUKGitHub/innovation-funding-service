@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.form;
 
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +19,6 @@ public class ApplicationForm extends Form {
     private boolean stateAidAgreed;
 
     private Long impersonateOrganisationId;
-
-    @Length(max = 5000, message = "{validation.field.too.many.characters}")
-    @WordCount(max = 400, message = "{validation.field.max.word.count}")
-    private String ineligibleReason;
 
     private MultipartFile overheadfile;
     private MultipartFile jesFileUpload;
@@ -77,14 +71,6 @@ public class ApplicationForm extends Form {
         FieldError fieldError = getBindingResult().getFieldError("formInput[" + fieldId + "]");
         Object rejectedValue = fieldError != null ? fieldError.getRejectedValue() : null;
         return rejectedValue != null ? rejectedValue.toString() : null;
-    }
-
-    public String getIneligibleReason() {
-        return ineligibleReason;
-    }
-
-    public void setIneligibleReason(String ineligibleReason) {
-        this.ineligibleReason = ineligibleReason;
     }
 
     public MultipartFile getOverheadfile() {
