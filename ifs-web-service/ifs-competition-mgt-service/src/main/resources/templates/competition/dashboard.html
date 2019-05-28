@@ -85,7 +85,7 @@
                         </a>
                     </th:block>
                     <th:block th:unless="${projectSetup}">
-                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${competition.id})}"
+                        <a th:href="@{/competition/setuSearch on Companies Housep/{competitionId}(competitionId=${competition.id})}"
                            th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>

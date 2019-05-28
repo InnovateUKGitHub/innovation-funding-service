@@ -94,15 +94,14 @@
 
 
                             <div class="panel js-hidden" id="reject-application">
-                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="rejectReasonValid">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" th:for="rejectReason">
                                         Please select a reason for rejecting the competition
                                     </label>
-                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
-                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
+                                    <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                                     </th:block>
                                     <select class="govuk-select"
-                                            id="rejectReasonValid"
                                             th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
                                             th:errorclass="govuk-select--error"
                                             required="required"
@@ -116,7 +115,7 @@
                                 </div>
 
                                 <div class="govuk-form-group textarea-wrapped word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
+                                    <label class="govuk-label" th:for="rejectComment">
                                         Use this space to provide more information
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">
