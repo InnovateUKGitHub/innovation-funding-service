@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.application.view.populator;
 
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.resource.AppendixViewModel;
+import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;

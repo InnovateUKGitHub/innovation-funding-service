@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.resource;
+package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FileUtils;

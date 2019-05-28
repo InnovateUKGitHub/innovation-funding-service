@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.resource.AppendixViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
