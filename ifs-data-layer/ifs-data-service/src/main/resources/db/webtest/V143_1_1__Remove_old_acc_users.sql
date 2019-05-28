@@ -1,4 +1,4 @@
--- 1. Create temporary table for the ids of the acc users
+-- IFS-5869 remove old acc users from web test data
 CREATE TEMPORARY TABLE acc_user_ids (
     id bigint(20)
 );
