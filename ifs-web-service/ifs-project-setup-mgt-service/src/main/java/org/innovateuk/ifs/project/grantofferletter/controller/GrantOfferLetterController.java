@@ -15,6 +15,7 @@ import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
@@ -25,8 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,6 +57,9 @@ public class GrantOfferLetterController {
 
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
+
+    @Autowired
+    private GrantOfferLetterTemplatePopulator grantOfferLetterTemplatePopulator;
 
     private static final String FORM_ATTR = "form";
     private static final String APPROVAL_FORM_ATTR = "approvalForm";
@@ -245,6 +249,14 @@ public class GrantOfferLetterController {
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 golState,
                 project.getGrantOfferLetterRejectionReason());
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @GetMapping("/template")
+    public String viewGrantOfferLetterTemplatePage(@PathVariable("projectId") long projectId,
+                                                   Model model) {
+        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(projectId));
+        return "project/gol-template";
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
