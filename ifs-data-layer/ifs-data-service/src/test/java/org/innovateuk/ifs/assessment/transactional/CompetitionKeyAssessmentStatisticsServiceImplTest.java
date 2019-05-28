@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.ApplicationStatistics;
-import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -19,10 +19,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
-import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.CompetitionClosedKeyAssessmentStatisticsResourceBuilder.newCompetitionClosedKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
@@ -51,16 +49,13 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     @Mock
     private AssessmentRepository assessmentRepositoryMock;
 
-    @Mock
-    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
-
     @Override
     protected CompetitionKeyAssessmentStatisticsServiceImpl supplyServiceUnderTest() {
         return new CompetitionKeyAssessmentStatisticsServiceImpl();
     }
 
     @Test
-    public void getReadyToOpenKeyStatisticsByCompetition() throws Exception {
+    public void getReadyToOpenKeyStatisticsByCompetition() {
         Long competitionId = 1L;
         CompetitionReadyToOpenKeyAssessmentStatisticsResource keyStatisticsResource =
                 newCompetitionReadyToOpenKeyAssessmentStatisticsResource()
@@ -79,7 +74,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     }
 
     @Test
-    public void getOpenKeyStatisticsByCompetition() throws Exception {
+    public void getOpenKeyStatisticsByCompetition() {
         Long competitionId = 1L;
         CompetitionOpenKeyAssessmentStatisticsResource keyStatisticsResource =
                 newCompetitionOpenKeyAssessmentStatisticsResource()
@@ -103,7 +98,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     }
 
     @Test
-    public void getClosedKeyStatisticsByCompetition() throws Exception {
+    public void getClosedKeyStatisticsByCompetition() {
         long competitionId = 1L;
 
         CompetitionClosedKeyAssessmentStatisticsResource keyStatisticsResource =
@@ -138,7 +133,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     }
 
     @Test
-    public void getInAssessmentKeyStatisticsByCompetition() throws Exception {
+    public void getInAssessmentKeyStatisticsByCompetition() {
         long competitionId = 1L;
 
         CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatisticsResource =
@@ -150,20 +145,9 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .withAssignmentsWaiting(5)
                 .build();
 
-        List<Assessment> assessments = newAssessment()
-                .withProcessState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
-                .build(3);
 
-        List<Assessment> assessmentList = newAssessment()
-                .withProcessState(AssessmentState.SUBMITTED)
-                .build(1);
-
-        List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
-                .withAssessments(assessments, assessmentList)
-                .build(2);
-
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,
-                SUBMITTED_STATES)).thenReturn(applicationStatistics);
+        when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionId(
+                complementOf(of(REJECTED, WITHDRAWN)), competitionId)).thenReturn(keyStatisticsResource.getAssignmentCount());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionId(PENDING, competitionId)).thenReturn
                 (keyStatisticsResource.getAssignmentsWaiting());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionId(ACCEPTED, competitionId)).thenReturn
