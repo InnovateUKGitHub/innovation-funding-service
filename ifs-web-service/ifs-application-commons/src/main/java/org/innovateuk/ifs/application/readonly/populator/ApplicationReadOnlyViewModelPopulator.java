@@ -95,7 +95,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .filter(section -> !section.isTermsAndConditions()) // TODO IFS-5665 Reinstate as part of IFS-5665
                 .map(section -> async(() -> sectionView(section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));

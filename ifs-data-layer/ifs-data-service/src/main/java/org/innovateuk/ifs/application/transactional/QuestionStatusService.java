@@ -53,7 +53,7 @@ public interface QuestionStatusService {
                                                                                               long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(
             long questionId, long applicationId, long organisationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")

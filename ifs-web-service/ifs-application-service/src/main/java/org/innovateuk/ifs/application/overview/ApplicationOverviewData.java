@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -41,7 +42,7 @@ public class ApplicationOverviewData {
         this.competition = competition;
         this.application = application;
         this.sections = sections.stream()
-            .collect(toMap(SectionResource::getId, identity()));
+            .collect(toMap(SectionResource::getId, v -> v, (v1, v2) -> v1, TreeMap::new)); // retain ordering of sections
         this.questions = questions.stream()
             .collect(toMap(QuestionResource::getId, identity()));
         this.processRoles = processRoles.stream()

@@ -14,8 +14,6 @@ public class YourFundingForm {
 
     private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
 
-    private Boolean termsAgreed;
-
     private long otherFundingQuestionId;
 
     public Boolean getRequestingFunding() {
@@ -50,14 +48,6 @@ public class YourFundingForm {
         this.otherFundingRows = otherFundingRows;
     }
 
-    public Boolean getTermsAgreed() {
-        return termsAgreed;
-    }
-
-    public void setTermsAgreed(Boolean termsAgreed) {
-        this.termsAgreed = termsAgreed;
-    }
-
     public long getOtherFundingQuestionId() {
         return otherFundingQuestionId;
     }
@@ -74,5 +64,4 @@ public class YourFundingForm {
                         .filter(Objects::nonNull)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
 }

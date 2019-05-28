@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
-import org.innovateuk.ifs.application.terms.populator.ApplicationTermsModelPopulator;
-import org.innovateuk.ifs.application.terms.viewmodel.ApplicationTermsViewModel;
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -58,7 +58,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ZonedDateTime termsAcceptedOn = now();
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true);
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId)).thenReturn(viewModel);
 

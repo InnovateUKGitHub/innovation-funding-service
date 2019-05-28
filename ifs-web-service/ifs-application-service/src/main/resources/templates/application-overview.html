@@ -61,9 +61,6 @@
                 <th:block th:if="${procurementCompetition}">
                     <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
                 </th:block>
-                <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link govuk-!-font-size-19">View the award terms and conditions</a>
-                </th:block>
             </div>
         </div>
 
@@ -79,7 +76,6 @@
                                     <a th:href="${row.url}"
                                        th:text="${row.title}"
                                        class="govuk-link" />
-
                                 </h3>
                             </div>
                             <th:block th:unless="${row.complete}">
