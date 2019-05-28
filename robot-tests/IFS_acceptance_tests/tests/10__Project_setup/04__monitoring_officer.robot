@@ -56,19 +56,20 @@ Before Monitoring Officer is assigned
     [Setup]    The user logs-in in new browser          &{lead_applicant_credentials_bd}
     Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element                 jQuery = h2:contains("Monitoring Officer") ~ p:contains("We will assign the project a Monitoring Officer.")
-    And the user should not see the element             css = ul li.complete:nth-child(3)
-    And the user should see the element                 css = ul li.waiting:nth-child(3)
+    And the user should not see the element             css = ul li.complete:nth-child(4)
+    And the user should see the element                 css = ul li.waiting:nth-child(4)
     When the user clicks the button/link                link = Monitoring Officer
     Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
     And the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
+    And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
     And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
@@ -80,7 +81,7 @@ Search for an MO
     [Documentation]  IFS-5428  IFS-5418  IFS-5686
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
+    When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
     Then search for MO    Orvill  Orville Gibbs
     And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
     And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
@@ -90,17 +91,17 @@ MO details can be added
     [Tags]  HappyPath
     Given Log in as a different user                     &{lead_applicant_credentials_bd}
     And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    And the user should see the element                  css = ul li.complete:nth-child(3)
-    And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Orville Gibbs.
+    And the user should see the element                  css = ul li.complete:nth-child(4)
+    And the user should see the text in the element      css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Orville Gibbs.
     And the user clicks the button/link                  link = View the status of partners
-    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
     [Tags]  HappyPath
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
     Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(4) a
+    And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
     When the user clicks the button/link               link = Change Monitoring Officer
     And the user edits the MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
@@ -408,15 +409,15 @@ The user adds MO email address
 
 The user should see assigned MO details
     the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    the user should see the element                css = ul li.complete:nth-child(3)
-    the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Nilesh Patti.
+    the user should see the element                css = ul li.complete:nth-child(4)
+    the user should see the text in the element    css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Nilesh Patti.
     the user clicks the button/link                link = Monitoring Officer
-    the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    the user should see the element                jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
     the user should see the element                jQuery = .govuk-body:contains("Nilesh Patti")
     the user should see the element                jQuery = .govuk-body:contains("nilesh.patti@gmail.com")
     the user should see the element                jQuery = .govuk-body:contains("449890325459")
-    the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
-    the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
+    the user should see the element                css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 Custom suite teardown
     the user closes the browser

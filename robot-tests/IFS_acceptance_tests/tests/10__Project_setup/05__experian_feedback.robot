@@ -180,7 +180,7 @@ The user is able to see company details with scores
 Project finance navigates to bank details requiring action
     the user navigates to the page    ${server}/management/dashboard/project-setup
     the user clicks the button/link   link = ${PS_Competition_Name}
-    the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(5) a  # Complete Bank details
+    the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(6) a  # Complete Bank details
 
 Project finance navigates to review bank details page
     the user navigates to the page                      ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details
