@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.terms.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
@@ -45,7 +44,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationTermsPartnerModelPopulatorTest extends BaseUnitTest {
+public class ApplicationTermsPartnerModelPopulatorTest {
 
     @Mock
     private ApplicationRestService applicationRestServiceMock;

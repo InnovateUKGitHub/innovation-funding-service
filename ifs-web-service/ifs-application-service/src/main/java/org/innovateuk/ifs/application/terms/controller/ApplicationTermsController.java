@@ -93,7 +93,8 @@ public class ApplicationTermsController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (!application.isOpen()) {
             throw new ForbiddenActionException("Cannot view partners on a non-open application");
-        } else if (!application.isCollaborativeProject()) {
+        }
+        if (!application.isCollaborativeProject()) {
             throw new ForbiddenActionException("Cannot view partners on a non-collaborative application");
         }
 
