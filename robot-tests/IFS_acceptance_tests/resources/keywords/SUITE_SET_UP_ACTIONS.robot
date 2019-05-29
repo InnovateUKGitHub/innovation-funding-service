@@ -142,6 +142,10 @@ The user navigates to the summary page of the Robot test application
     ${id} =  get application id by name  Robot test application
     the user navigates to the page       ${server}/application/${id}/summary
 
+The user navigates to the review and submit page of the Robot test application
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}/review-and-submit
+
 The user navigates to the overview page of the Robot test application
     ${id} =  get application id by name  Robot test application
     the user navigates to the page       ${server}/application/${id}

@@ -12,8 +12,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class ProjectResourceTest {
     Long id;
@@ -55,6 +54,6 @@ public class ProjectResourceTest {
     }
 
     public void equalsShouldReturnFalseOnNull() {
-        assertFalse(applicationResource.equals(null));
+        assertNotEquals(null, applicationResource);
     }
 }

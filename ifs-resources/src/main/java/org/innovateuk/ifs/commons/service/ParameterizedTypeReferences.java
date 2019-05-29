@@ -2,7 +2,11 @@ package org.innovateuk.ifs.commons.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -10,6 +14,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.search.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -20,7 +25,15 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
+import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
+import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -31,7 +44,12 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
+import org.innovateuk.ifs.user.resource.AffiliationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -125,6 +143,26 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionSearchResultItem>> competitionSearchResultItemListType() {
         return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<LiveCompetitionSearchResultItem>> liveCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<LiveCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<UpcomingCompetitionSearchResultItem>> upcomingCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<UpcomingCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<NonIfsCompetitionSearchResultItem>> nonIfsCompetitionSearchReultItemListType() {
+        return new ParameterizedTypeReference<List<NonIfsCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProjectSetupCompetitionSearchResultItem>> projectSetupCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<ProjectSetupCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>> previousCompetitionSearchResultItemListType() {
+        return new ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>>() {};
     }
 
     public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {

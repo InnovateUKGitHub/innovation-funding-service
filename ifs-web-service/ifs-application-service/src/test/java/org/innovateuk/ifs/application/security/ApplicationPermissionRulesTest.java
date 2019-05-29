@@ -147,7 +147,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource()
                 .withUserId(leadApplicantUserId)
                 .build();
-        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(processRoleResource);
+        when(userServiceMock.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn(processRoleResource);
 
         UserResource loggedInUser = new UserResource();
         loggedInUser.setId(loggedInUserId);

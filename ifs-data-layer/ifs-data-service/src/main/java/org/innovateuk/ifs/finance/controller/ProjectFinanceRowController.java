@@ -61,21 +61,6 @@ public class ProjectFinanceRowController {
         return projectFinanceRowService.addCost(financeId, newCostItem).toPostCreateResponse();
     }
 
-    /**
-     * Used to add new empty rows on load of project finances page.  This is done to be consistent with how application
-     * finances work.  It may be possible to build resource object without going to data layer.  That will require
-     * further investigation and out of scope form INFUND-4834.
-     * @param projectFinanceId
-     * @param questionId
-     * @return
-     */
-    @PostMapping("/add-without-persisting/{projectFinanceId}/{questionId}")
-    public RestResult<FinanceRowItem> addProjectCostWithoutPersisting(
-            @PathVariable("projectFinanceId") final long projectFinanceId,
-            @PathVariable("questionId") final long questionId) {
-        return projectFinanceRowService.addCostWithoutPersisting(projectFinanceId, questionId).toPostCreateResponse();
-    }
-
     @GetMapping("/{id}")
     public RestResult<FinanceRowItem> get(@PathVariable("id") final long id) {
         return projectFinanceRowService.getCostItem(id).toGetResponse();

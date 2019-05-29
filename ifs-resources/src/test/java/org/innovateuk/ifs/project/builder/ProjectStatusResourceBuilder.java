@@ -51,6 +51,10 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((projectDetailsStatus, psr) -> setField("projectDetailsStatus", projectDetailsStatus, psr), projectDetailsStatuses);
     }
 
+    public ProjectStatusResourceBuilder withProjectTeamStatus(ProjectActivityStates... projectTeamStatuses) {
+        return withArray((projectTeamStatus, psr) -> setField("projectTeamStatus", projectTeamStatus, psr), projectTeamStatuses);
+    }
+
     public ProjectStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses) {
         return withArray((bankDetailsStatus, psr) -> setField("bankDetailsStatus", bankDetailsStatus, psr), bankDetailsStatuses);
     }

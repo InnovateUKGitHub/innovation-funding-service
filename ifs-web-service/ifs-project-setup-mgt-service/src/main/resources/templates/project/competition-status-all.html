@@ -60,6 +60,7 @@
                         <tr class="govuk-table__row">
                           <th class="govuk-table__header" scope="col">Project</th>
                           <th class="govuk-table__header status" scope="col">Project details</th>
+                          <th class="govuk-table__header status" scope="col">Project team</th>
                           <th class="govuk-table__header status" scope="col">Documents</th>
                           <th class="govuk-table__header status" scope="col">MO</th>
                           <th class="govuk-table__header status" scope="col">Bank details</th>
@@ -82,6 +83,8 @@
                               </small>
                             </th>
                             <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+
+                            <th:block th:insert="project/fragments :: project-status-table(${project.projectTeamStatus}, 'project-team')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/team'}" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
                                       th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />

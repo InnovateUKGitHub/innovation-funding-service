@@ -23,8 +23,6 @@ public interface SectionService {
 
     List<Long> getCompleted(Long applicationId, Long organisationId);
 
-    List<Long> getInCompleted(Long applicationId);
-
     Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
 
     Boolean allSectionsMarkedAsComplete(Long applicationId);

@@ -83,7 +83,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     private Integer maxProjectDuration;
     private Integer minProjectDuration;
 
-    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private CompetitionInnovationSectorLink innovationSector;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)

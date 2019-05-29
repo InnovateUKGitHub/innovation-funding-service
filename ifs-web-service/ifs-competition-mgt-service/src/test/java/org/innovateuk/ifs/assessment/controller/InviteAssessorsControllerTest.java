@@ -728,10 +728,10 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(4, bindingResult.getFieldErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
 
         assertEquals(2, bindingResult.getFieldErrorCount("invites[0].name"));
-        assertEquals(2, bindingResult.getFieldErrorCount("invites[0].email"));
+        assertEquals(1, bindingResult.getFieldErrorCount("invites[0].email"));
 
         assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("The name should have at least {2} characters.")));
@@ -739,8 +739,6 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a name.")));
         assertTrue(bindingResult.getFieldErrors("invites[0].email").stream()
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter an email address.")));
-        assertTrue(bindingResult.getFieldErrors("invites[0].email").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a valid email address.")));
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);

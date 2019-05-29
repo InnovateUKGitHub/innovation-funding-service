@@ -400,7 +400,7 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
             return right(null);
         }
         if (String.class.equals(clazz)) {
-            return Either.<Void, T>right((T) json);
+            return Either.right((T) json);
         }
         try {
             return right(new ObjectMapper().readValue(json, clazz));
@@ -412,17 +412,17 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
         return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
-                success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
+                failure -> RestResult.restFailure(GENERAL_REST_RESULT_UNABLE_TO_PROCESS_REST_ERROR_RESPONSE),
+                success -> RestResult.restFailure(success.getErrors(), e.getStatusCode())
         );
     }
 
     public static <T> RestResult<T> fromResponse(final ResponseEntity<T> response, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
-            return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
+            return RestResult.restSuccess(response.getBody(), response.getStatusCode());
         }
-        return RestResult.<T>restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
+        return RestResult.restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
     }
 
     /**

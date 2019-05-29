@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,8 +34,7 @@ public class ApplicationFundingDecisionController {
     @Autowired
     private CompetitionService competitionService;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping(value={"/sendNotifications", "/send-notifications"})
+    @PostMapping(value="/send-notifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
         if (isReleaseFeedbackCompletionStage(fundingNotificationResource.getFundingDecisions())) {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)

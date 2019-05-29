@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 
 
 /**
@@ -40,14 +41,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId) {
+    public ProcessRoleResource getLeadApplicantProcessRole(Long applicationId) {
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
-        for (final ProcessRoleResource processRole : userApplicationRoles) {
-            if (processRole.getRoleName().equals(Role.LEADAPPLICANT.getName())) {
-                return processRole;
-            }
-        }
-        return null;
+        return userApplicationRoles.stream().filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName())).findFirst().orElseThrow(() -> new ObjectNotFoundException("Lead applicant not found for application " + applicationId, emptyList()));
     }
 
     @Override
@@ -60,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
-        ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application.getId());
+        ProcessRoleResource leadProcessRole = getLeadApplicantProcessRole(application.getId());
         if (leadProcessRole == null) {
             return new ArrayList<>();
         }
@@ -130,8 +126,8 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        UserResource execUser = result.getSuccess();
+        UserResource user = result.getSuccess();
 
-        return execUser != null && execUser.hasRole(role);
+        return user != null && user.hasRole(role);
     }
 }

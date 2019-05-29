@@ -345,8 +345,7 @@ public class CompetitionResource {
             return 100;
         }
         double deadlineProgress = 100 - (((double) daysLeft / (double) totalDays) * 100);
-        long startDateToEndDatePercentage = (long) deadlineProgress;
-        return startDateToEndDatePercentage;
+        return (long) deadlineProgress;
     }
 
     public Integer getMaxResearchRatio() {

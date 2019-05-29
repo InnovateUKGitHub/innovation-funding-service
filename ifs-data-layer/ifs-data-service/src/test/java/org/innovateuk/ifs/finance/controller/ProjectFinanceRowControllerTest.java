@@ -50,17 +50,6 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
     }
 
     @Test
-    public void addProjectCostWithoutPersisting() throws Exception{
-
-        when(projectFinanceRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
-
-        mockMvc.perform(post("/cost/project/add-without-persisting/{projectFinanceId}/{questionId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(projectFinanceRowServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
-    }
-
-    @Test
     public void updateShouldReturnBadRequestOnMissingBody() throws Exception {
         mockMvc.perform(put("/cost/project/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON))

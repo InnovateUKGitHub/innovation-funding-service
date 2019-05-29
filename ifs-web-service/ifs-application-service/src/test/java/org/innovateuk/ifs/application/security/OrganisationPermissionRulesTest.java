@@ -168,7 +168,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource()
                 .withUserId(leadApplicantUserId)
                 .build();
-        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+        when(userServiceMock.getLeadApplicantProcessRole(applicationResource.getId())).thenReturn
                 (processRoleResource);
 
         UserResource loggedInUser = new UserResource();
