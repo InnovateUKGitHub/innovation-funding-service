@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
+import org.innovateuk.ifs.threads.resource.NoteResource;
+
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * View model backing the internal users' view of the Grant Offer Letter template page
@@ -14,6 +17,7 @@ public class GrantOfferLetterTemplateViewModel {
     private String competitionName;
     private String projectName;
     private String leadOrgName;
+    private List<NoteResource> notes;
 
     public GrantOfferLetterTemplateViewModel() {
 
@@ -25,7 +29,8 @@ public class GrantOfferLetterTemplateViewModel {
                                              String leadPartnerAddress,
                                              String competitionName,
                                              String projectName,
-                                             String leadOrgName) {
+                                             String leadOrgName,
+                                             List<NoteResource> notes) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -33,6 +38,7 @@ public class GrantOfferLetterTemplateViewModel {
         this.competitionName = competitionName;
         this.projectName = projectName;
         this.leadOrgName = leadOrgName;
+        this.notes = notes;
     }
 
     public long getApplicationId() {
@@ -67,5 +73,8 @@ public class GrantOfferLetterTemplateViewModel {
         return ZonedDateTime.now();
     }
 
+    public List<NoteResource> getNotes() {
+        return notes;
+    }
 
 }
