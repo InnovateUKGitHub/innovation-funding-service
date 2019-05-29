@@ -6,7 +6,7 @@ public class MonitoringOfficerUnassignedProjectResource {
     private final long applicationId;
     private final String projectName;
 
-    public MonitoringOfficerUnassignedProjectResource() {
+    private MonitoringOfficerUnassignedProjectResource() {
         projectId = -1;
         applicationId = -1;
         projectName = null;

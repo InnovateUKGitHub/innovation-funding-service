@@ -189,7 +189,8 @@ Comp admin assign project to new MO
 Link to Application
     [Documentation]  IFS-5031
     Given the user clicks the button/link   link = ${Assign_Project2_ID}
-    Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
+    Then the user should see the element    jQuery = h1:contains("Application overview")
+    And the user should see the element     jQuery = dd:contains("${Assign_Project2}")
     [Teardown]  logout as user
 
 MO create account: validations

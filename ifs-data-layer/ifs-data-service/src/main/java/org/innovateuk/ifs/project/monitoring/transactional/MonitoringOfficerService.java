@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface MonitoringOfficerService {
     @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
             description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
-    ServiceResult<List<MonitoringOfficerAssignmentResource>> findAll();
+    ServiceResult<List<UserResource>> findAll();
 
     @SecuredBySpring(value = "GET_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can get a project monitoring officer")
