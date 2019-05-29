@@ -32,4 +32,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     public boolean isComplete() {
         return applicationTermsViewModel.isTermsAcceptedByAllOrganisations();
     }
+
+    public ApplicationTermsViewModel getApplicationTermsViewModel() {
+        return applicationTermsViewModel;
+    }
 }

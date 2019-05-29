@@ -54,7 +54,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead')")
 public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
