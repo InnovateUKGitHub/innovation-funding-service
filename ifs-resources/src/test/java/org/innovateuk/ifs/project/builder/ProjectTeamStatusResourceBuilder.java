@@ -46,4 +46,8 @@ public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamSta
     public ProjectTeamStatusResourceBuilder withProjectState(ProjectState... projectState) {
         return withArraySetFieldByReflection("projectState", projectState);
     }
+
+    public ProjectTeamStatusResourceBuilder withProjectManagerAssigned(Boolean... projectManagerAssigned) {
+        return withArraySetFieldByReflection("projectManagerAssigned", projectManagerAssigned);
+    }
 }

@@ -134,59 +134,6 @@ Lead partner can change the Start Date
     When the user checks for target start date validation
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     And the user save the target start date
-    Then the matching status checkbox is updated    project-details    1    yes
-
-Option to invite a project manager
-    [Documentation]    INFUND-3483
-    [Tags]  HappyPath
-    Given the user navigates to the page               ${Project_In_Setup_Details_Page}
-    And the user clicks the button/link                link = Project Manager
-    Then the user select exisitng user as project manager
-    [Teardown]    the user selects the radio button    projectManager    new
-
-Inviting project manager and validation checks
-    [Documentation]    INFUND-3483 INFUND-9062  INFUND-6882
-    [Tags]
-    Given the user should see client side validations triggered correctly   name-project-manager  email-project-manager  invite-project-manager
-    And the user should see server side validations triggered correctly     invite-project-manager
-    Then the lead partner cannot invite himself as project manager/finance contact  name-project-manager  email-project-manager  invite-project-manager
-    And the user invites project manager/finance contact   name-project-manager  email-project-manager  ${test_mailbox_one}+invitedprojectmanager@gmail.com  invite-project-manager
-
-Lead Applicant resends the invite to the Project manager
-    [Documentation]  IFS-2642
-    [Tags]  HappyPath
-    Given the user resends and clicks the button   Cancel
-    Then the user resends and clicks the button    Resend
-    [Teardown]  logout as user
-
-Invited project manager registration validation
-    [Documentation]  INFUND-3550 INFUND-3554
-    [Tags]  HappyPath
-    Given the user accepts invitation                   ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project  managing the project
-    When the user clicks the button/link                css = button[type = "submit"][name = "create-account"]
-    Then the user should see validations triggered correctly
-
-Invited project manager registration flow
-    [Documentation]  INFUND-3550 INFUND-3554
-    [Tags]  HappyPath
-    Given the user selects the checkbox                 termsAndConditions
-    And the invited user fills the create account form  Bob  Jones
-    And the user cannot see a validation error in the page
-    Then the invited project manager logs in and check the project on dashboard
-
-Invited project manager shows on the project manager selection screen
-    [Documentation]    INFUND-3554
-    [Tags]
-    Given the user clicks the button/link    link = ${PS_PD_Application_Title}
-    And the user clicks the button/link     link = Project details
-    And the user clicks the button/link     link = Project Manager
-    Then the user should see the element    jQuery = label:contains("Bob Jones")
-
-Lead partner selects a project manager
-    [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
-    [Tags]  HappyPath
-    Given the user selects a project manager
-    Then the user updates a project manager
 
 Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
@@ -194,33 +141,6 @@ Lead partner can change the project address
     Given the user navigates to the page             ${Project_In_Setup_Details_Page}
     And the user clicks the button/link              link = Correspondence address
     Then the user updates the correspondence address
-
-Project details can be submitted with PM, project address and start date
-    [Documentation]    INFUND-4583
-    [Tags]
-    Given the user should see the element    css = #start-date-status.yes
-    And the user should see the element      css = #project-address-status.yes
-    And the user should see the element      css = #project-manager-status.yes
-
-Non lead partner invites finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
-    [Tags]  HappyPath
-    Given Log in as a different user             &{collaborator1_credentials}
-    And the user navigates to the page         ${Project_In_Setup_Page}/team-status
-    And the user should not see the element    css = #table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
-    Then the user invites a finance contact
-
-Invited Fin Contact for non lead partner
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
-    [Tags]  HappyPath
-    [Setup]  Logout as user
-    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PS_PD_Application_Id}  providing finance details  Ludlow's  FinContact
-    When log in as a different user       &{collaborator1_credentials}
-    Then the user navigates to the page   ${Project_In_Setup_Page}/details
-    And the user should see the element   link = Ludlow's FinContact
-    And the user update the peoject location in project setup       Ludlow
-    When the user clicks the button/link  link = View the status of partners
-    Then the user should see the element  css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
@@ -245,75 +165,17 @@ Other partners can see who needs to provide Bank Details
     Then the user should see the element    css = #table-project-status tr:nth-child(3) td.status.na:nth-child(4)
     And the user should see the element     jQuery = #table-project-status tr:nth-child(2) td:nth-child(4):contains("")
 
-Option to invite a finance contact
-    [Documentation]    INFUND-3579
-    [Tags]  HappyPath
-    Given the user navigates to the page             ${Project_In_Setup_Page}
-    And the user clicks the button/link              link = Project details
-    And the user clicks the button/link              jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
-    When the user selects the radio button           financeContact    new
-    Then the user should see the element             id = invite-finance-contact
-    When the user selects the radio button           financeContact    financeContact1
-    Then the user should not see the element         id = invite-finance-contact    # testing that the element disappears when the option is deselected
-    [Teardown]    the user selects the radio button  financeContact    new
-
-Inviting finance contact and validations checks
-    [Documentation]    INFUND-3483, INFUND-9062
-    [Tags]
-    Given the user should see client side validations triggered correctly   name-finance-contact  email-finance-contact  invite-finance-contact
-    And the user should see server side validations triggered correctly    invite-finance-contact
-    Then the lead partner cannot invite himself as project manager/finance contact  name-finance-contact  email-finance-contact  invite-finance-contact
-    And the user invites project manager/finance contact  name-finance-contact  email-finance-contact  ${invitedFinanceContact}  invite-finance-contact
-
-Lead applicant resends the invite to the Finance contact
-    [Documentation]  IFS-2642
-    [Tags]  HappyPath
-    When the user resends and clicks the button    Cancel
-    Then the user resends and clicks the button    Resend
-    [Teardown]  logout as user
-
-Invited finance contact registration flow
-    [Documentation]  INFUND-3524 INFUND-3530
-    [Tags]  HappyPath
-    Given the user accepts invitation                   ${invitedFinanceContact}  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PS_PD_Application_Id}   providing finance details
-    And the invited user fills the create account form  John  Smith
-    When the invited user signs in                      ${invitedFinanceContact}  John  Smith
-    Then the user should see the element                jQuery = .progress-list:contains("${PS_PD_Application_Title}")
-
-Invited finance contact shows on the finance contact selection screen
-    [Documentation]    INFUND-3530
-    [Tags]
-    Given the user navigates to the page  ${server}/project-setup/project/${PS_PD_Project_Id}/details
-    And the user clicks the button/link   jQuery = td:contains("${EMPIRE_LTD_NAME}") ~ td a:contains("Select finance contact")
-    Then the user should see the element  jQuery = #finance-contact-section:contains("John Smith")
-
-Lead partner selects a finance contact
-    [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
-    [Tags]  HappyPath
-    Given the user navigates to the page                 ${Project_In_Setup_Page}
-    And the user clicks the button/link                 link = Project details
-    Then the user selects a finance contact
-
-Non-lead partner cannot change start date, project manager or project address
+Non-lead partner cannot change start date or project address
     [Documentation]    INFUND-3157
-    [Tags]
-    Given log in as a different user            &{collaborator1_credentials}
-    When the user navigates to the page         ${Project_In_Setup_Page}
-    Then the user should not see the element    link = Target start date
-    And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = Correspondence address
-
-Academic Partner nominates Finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
-    [Tags]  HappyPath
-    [Setup]    Log in as a different user       &{collaborator2_credentials}
-    Given the user navigates to the page         ${Project_In_Setup_Page}
-    Then the academic user selects a finance contact and update project location
+    [Setup]  log in as a different user        &{collaborator1_credentials}
+    Given the user navigates to the page       ${Project_In_Setup_Page}
+    Then the user should not see the element   link = Target start date
+    And the user should not see the element    link = Correspondence address
 
 Validation for project location
     [Documentation]   IFS-2920
     [Setup]  the user logs in and navigates to project details     &{lead_applicant_credentials}
-    Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("AB12 3CD")
+    Given the user clicks the button/link               link = Edit
     And the user enters text to a text field            css = #postcode  ${empty}
     And Set Focus To Element                            link = Contact us
     And the user should see a field error               ${empty_field_warning_message}
@@ -324,7 +186,7 @@ Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
     [Setup]  the user logs in and navigates to project details     &{lead_applicant_credentials}
-    Given the user update the peoject location in project setup    Empire
+    Given the user updates the project location in project setup    Empire
     And the user clicks the button/link   link = Project details
     When all the fields are completed
     Then the user navigates to the page    ${Project_In_Setup_Page}
@@ -335,7 +197,6 @@ Lead partner can see the status update when all Project details are submitted
     [Tags]
     Given the user navigates to the page    ${Project_In_Setup_Page}
     And the user should see the element     css = ul li.complete:nth-child(1)
-    And the user should see the element     css = ul li.require-action:nth-child(4)
     When the user clicks the button/link    link = View the status of partners
     Then the user should see the element    id = table-project-status
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
@@ -347,7 +208,6 @@ Project details links are still enabled after submission
     When all the fields are completed
     Then The user should see the element    link = Target start date
     And the user should see the element     link = Correspondence address
-    And the user should see the element     link = Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -357,34 +217,10 @@ All partners can view submitted project details
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
-    [Tags]
     [Setup]    log in as a different user           &{collaborator1_credentials}
     Given the user navigates to the page            ${Project_In_Setup_Page}
     Then the non-lead partner cannot changes any project details
 
-Internal user can see the Project details as submitted
-    [Documentation]    INFUND-5856
-    [Tags]
-    [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page     ${Internal_Competition_Status}
-    When the user clicks the button/link     css = #table-project-status tr:nth-child(2) td.status.ok a
-    Then the user should see the element     css = #project-details
-    And the user can see all project details completed
-    When the user should see the element     css = #project-details-finance
-    And the user can see all finance contacts completed
-
-Invited Finance contact is able to see the Finances
-    [Documentation]  IFS-1209
-    [Tags]
-    [Setup]  log in as a different user   ${invitedFinanceContact}  ${correct_password}
-    Given the user navigates to the page  ${server}/project-setup/project/${PS_PD_Project_Id}/finance-checks
-    When the user clicks the button/link  link = your finances
-    Then the user should see the element  css = .table-overview
-    And the user should not see an error in the page
-    When the user clicks the button/link  link = Finance checks
-    And the user clicks the button/link   link = project finance overview
-    Then the user should see the element  jQuery = h3:contains("Project cost breakdown")
-    And the user should not see an error in the page
 
 User is able to accept new site terms and conditions
     [Documentation]  IFS-3093
@@ -396,16 +232,15 @@ User is able to accept new site terms and conditions
     Then the user should see the element   jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
+All the fields are completed
+    the user should see the element   jQuery = td:contains("Target start date")~ td strong:contains("Complete")
+    the user should see the element   jQuery = td:contains("Correspondence address")~ td strong:contains("Complete")
+
 the user should see a validation error
     [Arguments]    ${ERROR1}
     Set Focus To Element    jQuery = button:contains("Save")
     wait for autosave
     Then the user should see a field error    ${ERROR1}
-
-the matching status checkbox is updated
-    [Arguments]    ${table_id}    ${ROW}    ${STATUS}
-    the user should see the element    ${table_id}
-    the user should see the element    css = #${table_id} tr:nth-of-type(${ROW}) .${STATUS}
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css = .day [readonly]
@@ -419,11 +254,6 @@ the user should see the valid data
 
 the user should see the dummy data
     the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
-
-all the fields are completed
-    the matching status checkbox is updated  project-details  1  yes
-    the matching status checkbox is updated  project-details  2  yes
-    the matching status checkbox is updated  project-details  3  yes
 
 the user should not see duplicated select options
     ${NO_OPTIONs} =     Get Element Count    //*[@class="govuk-radios__item"]
@@ -472,16 +302,15 @@ The user resends and clicks the button
     The user should see the element    jQuery = h2:contains("Resend invite to team member")
     The user clicks the button/link    jQuery = button:contains("${Resend_OR_Cancel}")
 
-the user update the peoject location in project setup
+the user updates the project location in project setup
     [Arguments]  ${org}
     the user navigates to the page        ${Project_In_Setup_Details_Page}
-    the user clicks the button/link       jQuery = #project-details-finance td:contains("${org}") ~ td a:contains("AB12 3CD")
+    the user clicks the button/link       link = Edit
     the user enters text to a text field  css = #postcode  ${Postcode}
     the user clicks the button/link       css = button[type = "submit"]
     the user clicks the button/link       link = Set up your project
 
 the user should see the project setup stages
-    the user should see the element    css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     the user should see the element    link = Project details
     the user should see the element    jQuery = h2:contains("Monitoring Officer")
     the user should see the element    jQuery = h2:contains("Bank details")
@@ -526,7 +355,7 @@ the user checks for project detail status on team status page
     the user clicks the button/link            link = View the status of partners
     the user should be redirected to the correct page    ${Project_In_Setup_Page}/team-status
     the user should see the element            jQuery = h1:contains("Project team status")
-    the user should see the element            jQuery = #table-project-status tr:contains("${partner}") td.status.action:nth-of-type(1)
+    the user should see the element            jQuery = #table-project-status tr:contains("${partner}") td.status.action:nth-of-type(2)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     the user should not see the element    link = Monitoring Officer
@@ -541,11 +370,10 @@ the user can see the application overview
     the user should see the element      jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
 
 the user should see the project details
-    the user should see the element    jQuery = p:contains("Please supply the following details for your project and the team")
+    the user should see the element    jQuery = p:contains("As the lead you must complete these details on behalf of the overall project.")
     the user should see the element    link = Target start date
     the user should see the element    link = Correspondence address
-    the user should see the element    link = Project Manager
-    the user should see the element    jQuery = h2:contains("Partner details")
+    the user should see the element    jQuery = h2:contains("Project location")
 
 the user logs in and navigates to project details
     [Arguments]  &{user_id}
@@ -586,50 +414,11 @@ the user should see server side validations triggered correctly
     the user should see a field error           ${enter_a_valid_name}
     the user should see a field error           Please enter an email address.
 
-the lead partner cannot invite himself as project manager/finance contact
-    [Arguments]    ${name_id}  ${email_id}  ${invite_button}
-    the user enters text to a text field         id = ${name_id}    Steve Smith
-    the user enters text to a text field         id = ${email_id}    ${lead_applicant}
-    the user clicks the button/link              id = ${invite_button}
-    the user should see a field error            You cannot invite yourself to the project.
-
-the user invites project manager/finance contact
-    [Arguments]    ${name_id}  ${email_id}  ${user_email}  ${invite_button}
-    the user enters text to a text field                      id = ${name_id}    John Smith
-    And the user enters text to a text field                  id = ${email_id}    ${user_email}
-    And the user should not see an error in the page
-    When the user clicks the button/link                      id = ${invite_button}
-    Then the user should be redirected to the correct page    ${Project_In_Setup_Page}
-
 the user should see validations triggered correctly
     the user should see a field and summary error   ${enter_a_first_name}
     the user should see a field and summary error   ${enter_a_last_name}
     the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
     the user should see a field and summary error   Please enter your password.
-
-the invited project manager logs in and check the project on dashboard
-    the invited user signs in                    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  Bob  Jones
-    the user should see the element              jQuery = .progress-list:contains("${PS_PD_Application_Title}")
-    the user should not see the element          css = .my-applications .in-progress  #applications in progress section
-
-the user selects a project manager
-    the user navigates to the page            ${Project_In_Setup_Details_Page}
-    the user clicks the button/link           link = Project Manager
-    the user clicks the button/link           jQuery = .govuk-button:contains("Save")
-    the user should see a validation error    You need to select a Project Manager before you can continue.
-    the user selects the radio button         projectManager    projectManager1
-    the user should not see the element       jQuery = .govuk-error-message:contains("You need to select a Project Manager before you can continue.")
-    the user clicks the button/link           jQuery = .govuk-button:contains("Save")
-    the user should see the element           jQuery = td:contains("Project Manager") ~ td:contains("Steve Smith")
-
-the user updates a project manager
-    the user clicks the button/link              link = Project Manager
-    the user should see the element              css = #projectManager1:checked ~ label
-    the user selects the radio button            projectManager    projectManager2
-    the user clicks the button/link              jQuery = .govuk-button:contains("Save")
-    the user should be redirected to the correct page    ${Project_In_Setup_Page}
-    the user should see the element              jQuery = td:contains("Project Manager") ~ td:contains("Elmo Chenault")
-    the matching status checkbox is updated      project-details    3    yes
 
 the user updates the correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
@@ -642,44 +431,6 @@ the user updates the correspondence address
     the user clicks the button/link                     link = Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
     the user should see the element                     jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
-
-the user invites a finance contact
-    the user clicks the button/link         link = Set up your project
-    the user clicks the button/link         link = Project details
-    the user clicks the button/link         link = Select finance contact
-    the user selects the radio button       financeContact  new
-    the user enters text to a text field    css = #name-finance-contact  LudlowFinContact
-    the user enters text to a text field    css = #email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
-    the user clicks the button/link         jQuery = button:contains("Invite to project")
-    the user should see the element         jQuery = label[for = "financeContact3"]:contains("Pending")
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save finance contact")
-
-the user selects a finance contact
-    the user clicks the button/link                      jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
-    the user should not see duplicated select options
-    the user should not see the element                  jQuery = label:contains("Pending")
-    the user selects the radio button                    financeContact    financeContact2
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Save finance contact")
-    the user should be redirected to the correct page    ${Project_In_Setup_Page}
-    the user should see the element                      jQuery = td:contains("Project Manager") ~ td:contains("Elmo Chenault")
-
-the academic user selects a finance contact and update project location
-     the user clicks the button/link         link = View the status of partners
-     the user should not see the element     jQuery = #table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
-     the user clicks the button/link         link = Set up your project
-     the user should not see the element     jQuery = li.require-action:nth-child(3)
-     the user clicks the button/link         link = Project details
-     the user clicks the button/link         jQuery = td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
-     the user selects the radio button       financeContact    financeContact1
-     the user clicks the button/link         jQuery = .govuk-button:contains("Save finance contact")
-     the user should be redirected to the correct page    ${Project_In_Setup_Page}
-     the user should see the element         jQuery = td:contains("${organisationEggsName}")
-     the user update the peoject location in project setup     EGGS
-     the user navigates to the page          ${Project_In_Setup_Page}
-     the user should see the element         jQuery = li.complete:nth-of-type(1)
-     the user should see the element         jQuery = li.require-action:nth-child(4)
-     the user clicks the button/link         link = View the status of partners
-     the user should see the element         jQuery = #table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
 the non-lead partner see the completed project details
     the user logs in and navigates to project details   &{collaborator1_credentials}
@@ -701,8 +452,6 @@ the non-lead partner cannot changes any project details
     the user clicks the button/link             link = Project details
     the user should see the element             jQuery = td:contains("Target start date") ~ td:contains("1 Jan ${nextyear}")
     the user should not see the element         link = Target start date
-    the user should see the element             jQuery = td:contains("Project Manager") ~ td:contains("Elmo Chenault")
-    the user should not see the element         link = Project Manager
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
     the user should not see the element         link = Correspondence address
     the user navigates to the page and gets a custom error message    ${Project_Start_Date_Page}    ${403_error_message}

@@ -28,13 +28,13 @@
         <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
             <th:block th:if="${url}">
                 <a th:href="${url}" class="govuk-link">
-                  <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
+                  <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
                   <th:block th:if="${columnType == 'MO'}">Assign</th:block>
                   <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
                 </a>
             </th:block>
             <th:block th:unless="${url}">
-              <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
+              <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
               <th:block th:if="${columnType == 'MO'}">Assign</th:block>
               <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
             </th:block>
@@ -48,11 +48,11 @@
         <td th:case="'PENDING'" class="govuk-table__cell status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}" class="govuk-link">
-                <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
+                <span th:text="${columnType == 'project-details' or columnType == 'project-team' ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-              <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
+              <span th:text="${columnType == 'project-details' or columnType == 'project-team' ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
         <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
