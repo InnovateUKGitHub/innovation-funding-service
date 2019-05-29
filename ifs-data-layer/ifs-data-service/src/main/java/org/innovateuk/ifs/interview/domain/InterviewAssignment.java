@@ -10,6 +10,7 @@ import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.*;
 import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_LEAD_APPLICANT;
 
 /**
@@ -18,7 +19,7 @@ import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_LEAD_APPLICANT;
 @Entity
 public class InterviewAssignment extends Process<ProcessRole, Application, InterviewAssignmentState> {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {PERSIST, REMOVE})
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
@@ -26,10 +27,10 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "process")
+    @OneToOne(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "process")
     private InterviewAssignmentResponseOutcome response;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "process")
+    @OneToOne(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "process")
     private InterviewAssignmentMessageOutcome message;
 
     @Column(name="activity_state_id")
