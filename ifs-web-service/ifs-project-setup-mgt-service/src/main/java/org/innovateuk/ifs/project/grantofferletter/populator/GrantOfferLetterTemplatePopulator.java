@@ -60,12 +60,10 @@ public class GrantOfferLetterTemplatePopulator {
         String projectManagerLastName = user.getLastName();
         List<ProjectFinanceResource> allProjectFinances = projectFinanceRestService.getProjectFinances(projectResource.getId()).getSuccess();
         List<NoteResource> allProjectNotes = new ArrayList<>();
-        allProjectFinances.forEach(projectFinance -> {
-           List<NoteResource> notesForFinance = projectFinanceNotesRestService.findAll(projectFinance.getId()).getSuccess();
-           allProjectNotes.addAll(notesForFinance);
-        });
-
-
+        allProjectFinances.forEach(projectFinance ->
+                                           projectFinanceNotesRestService.findAll(projectFinance.getId())
+                                                   .ifSuccessful(allProjectNotes::addAll)
+        );
 
         return new GrantOfferLetterTemplateViewModel(applicationId,
                                                      projectManagerFirstName,
