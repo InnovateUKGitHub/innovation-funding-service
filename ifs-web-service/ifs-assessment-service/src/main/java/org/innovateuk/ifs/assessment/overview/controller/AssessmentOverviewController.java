@@ -10,6 +10,8 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -59,19 +61,39 @@ public class AssessmentOverviewController {
     private UserRestService userRestService;
 
 
+    @Autowired
+    private TermsAndConditionsRestService termsAndConditionsRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @GetMapping
     public String getOverview(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
-                              @PathVariable("assessmentId") Long assessmentId) {
+                              @PathVariable("assessmentId") long assessmentId) {
 
         model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
     }
 
     @GetMapping("/finances")
-    public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
+    public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
+    }
+
+    @GetMapping("/terms-and-conditions")
+    public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
+        long competitionId = assessmentService.getById(assessmentId).getCompetition();
+        String template = competitionRestService
+                .getCompetitionById(competitionId)
+                .andOnSuccessReturn(c -> c.getTermsAndConditions().getTemplate())
+                .getSuccess();
+
+        model.addAttribute("assessmentId", assessmentId);
+        model.addAttribute("competitionTermsTemplate", template);
+
+        return "assessment/application-terms-and-conditions";
     }
 
     @GetMapping("/detailed-finances/organisation/{organisationId}")

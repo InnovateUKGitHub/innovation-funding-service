@@ -33,7 +33,8 @@
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list">
-                        <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
+                        <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
+                            th:unless="${section.finance || section.termsAndConditions}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
@@ -55,6 +56,16 @@
                             </div>
                             <div class="task-status"><span>No score required</span></div>
                         </li>
+
+                        <li class="read-only" th:if="${section.termsAndConditions}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="@{/{id}/terms-and-conditions(id=${model.assessmentId})}" class="govuk-link">Terms and conditions</a>
+                                </h3>
+                            </div>
+                            <div class="task-status"><span>No score required</span></div>
+                        </li>
+
                     </ul>
                 </section>
 

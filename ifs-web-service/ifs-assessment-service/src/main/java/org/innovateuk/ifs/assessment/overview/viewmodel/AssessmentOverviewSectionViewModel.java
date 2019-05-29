@@ -10,18 +10,25 @@ import java.util.List;
  */
 public class AssessmentOverviewSectionViewModel {
 
-    private long id;
-    private String name;
-    private String guidance;
-    private List<AssessmentOverviewQuestionViewModel> questions;
-    private boolean finance;
+    private final long id;
+    private final String name;
+    private final String guidance;
+    private final List<AssessmentOverviewQuestionViewModel> questions;
+    private final boolean finance;
+    private final boolean termsAndConditions;
 
-    public AssessmentOverviewSectionViewModel(long id, String name, String guidance, List<AssessmentOverviewQuestionViewModel> questions, boolean finance) {
+    public AssessmentOverviewSectionViewModel(long id,
+                                              String name,
+                                              String guidance,
+                                              List<AssessmentOverviewQuestionViewModel> questions,
+                                              boolean finance,
+                                              boolean termsAndConditions ) {
         this.id = id;
         this.name = name;
         this.guidance = guidance;
         this.questions = questions;
         this.finance = finance;
+        this.termsAndConditions = termsAndConditions;
     }
 
     public long getId() {
@@ -44,35 +51,37 @@ public class AssessmentOverviewSectionViewModel {
         return finance;
     }
 
+    public boolean isTermsAndConditions() {
+        return termsAndConditions;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessmentOverviewSectionViewModel that = (AssessmentOverviewSectionViewModel) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
-                .append(finance, that.finance)
-                .append(name, that.name)
-                .append(guidance, that.guidance)
-                .append(questions, that.questions)
+                .append(getId(), that.getId())
+                .append(isFinance(), that.isFinance())
+                .append(isTermsAndConditions(), that.isTermsAndConditions())
+                .append(getName(), that.getName())
+                .append(getGuidance(), that.getGuidance())
+                .append(getQuestions(), that.getQuestions())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(guidance)
-                .append(questions)
-                .append(finance)
+                .append(getId())
+                .append(getName())
+                .append(getGuidance())
+                .append(getQuestions())
+                .append(isFinance())
+                .append(isTermsAndConditions())
                 .toHashCode();
     }
 }
