@@ -132,7 +132,7 @@ Finance contact receives an email when new query is posted and can see a pending
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css = .status-warning  #Pending query
     And the user clicks the button/link     link = Finance checks
-    Then the user should see the element    jQuery = #title-query-1:contains("Pending query")
+    Then the user should see the element    jQuery = p:contains("You have a pending finance query.")
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
