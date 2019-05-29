@@ -30,8 +30,8 @@
                 th:each="partner : ${model.partners}">
                 <td class="govuk-table__cell" th:text="${partner.name} + (${partner.lead} ? ' (Lead)' : '')">Polymorphism Ltd (Lead)</td>
                 <td class="govuk-table__cell">
-                    <span th:if="${partner.termsAccepted}" style="color: #006435">Accepted</span>
-                    <span th:unless="${partner.termsAccepted}" style="color: #6f777b">Not yet accepted</span>
+                    <span th:if="${partner.termsAccepted}" class="accepted">Accepted</span>
+                    <span th:unless="${partner.termsAccepted}" class="unaccepted">Not yet accepted</span>
                 </td>
             </tr>
             </tbody>
