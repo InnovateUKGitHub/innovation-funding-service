@@ -13,11 +13,12 @@ public class GrantOfferLetterTemplateViewModel {
     private long applicationId;
     private String projectManagerFirstName;
     private String projectManagerLastName;
-    private String leadPartnerAddress;
+    private List<String> projectAddress;
     private String competitionName;
     private String projectName;
     private String leadOrgName;
     private List<NoteResource> notes;
+    private String termsAndConditionsTemplate;
 
     public GrantOfferLetterTemplateViewModel() {
 
@@ -26,19 +27,21 @@ public class GrantOfferLetterTemplateViewModel {
     public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,
                                              String projectManagerLastName,
-                                             String leadPartnerAddress,
+                                             List<String> projectAddress,
                                              String competitionName,
                                              String projectName,
                                              String leadOrgName,
-                                             List<NoteResource> notes) {
+                                             List<NoteResource> notes,
+                                             String termsAndConditionsTemplate) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
-        this.leadPartnerAddress = leadPartnerAddress;
+        this.projectAddress = projectAddress;
         this.competitionName = competitionName;
         this.projectName = projectName;
         this.leadOrgName = leadOrgName;
         this.notes = notes;
+        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
     }
 
     public long getApplicationId() {
@@ -53,8 +56,8 @@ public class GrantOfferLetterTemplateViewModel {
         return projectManagerLastName;
     }
 
-    public String getLeadPartnerAddress() {
-        return leadPartnerAddress;
+    public List<String> getProjectAddress() {
+        return projectAddress;
     }
 
     public String getCompetitionName() {
@@ -75,6 +78,10 @@ public class GrantOfferLetterTemplateViewModel {
 
     public List<NoteResource> getNotes() {
         return notes;
+    }
+
+    public String getTermsAndConditionsTemplate() {
+        return termsAndConditionsTemplate;
     }
 
 }
