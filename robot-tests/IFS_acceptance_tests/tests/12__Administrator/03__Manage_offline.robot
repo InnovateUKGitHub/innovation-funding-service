@@ -15,7 +15,7 @@ Project setup options are disabled
     [Documentation]  IFS-5110
     Given the user clicks the button/link  link = Projects in setup
     Then the user should see the element   jQuery = a:contains("${MARKOFFLINE_APPLICATION_1_NUMBER}") ~ p:contains("Setup is being managed offline")
-    And the user should see the element    jQuery = th:contains("${MARKOFFLINE_APPLICATION_1_TITLE}") ~ td:contains("View") + .na + .na + .na + .na + .na + .na
+    And the user should see the element    jQuery = th:contains("${MARKOFFLINE_APPLICATION_1_TITLE}") ~ td:contains("View") + .ok + .na + .na + .na + .na + .na + .na
 
 Applicant sees the project is being managed offline
     [Documentation]  IFS-5110
