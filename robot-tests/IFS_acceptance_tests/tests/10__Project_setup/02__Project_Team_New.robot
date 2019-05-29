@@ -182,7 +182,7 @@ Lead partner completes the Project team section
     the user clicks the button/link          link = Project team
     the user selects their finance contact   financeContact2
     the user clicks the button/link          link = Project manager
-    the user selects the radio button        projectManager   projectManager1
+    the user selects the radio button        projectManager   projectManager2
     the user clicks the button/link          jQuery = button:contains("Save project manager")
     the user clicks the button/link          link = Set up your project
     the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
