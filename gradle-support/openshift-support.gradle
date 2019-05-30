@@ -151,32 +151,32 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 
 task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task dbBaselineSysint(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 // Perf tasks

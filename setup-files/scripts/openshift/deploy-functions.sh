@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]; then
         exit 1
     else
         exit 0
@@ -31,7 +31,7 @@ function isSysIntEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "ifs-sysint" ]]; then
+    if [[ ${TARGET} != "sysint" ]]; then
         exit 1
     else
         exit 0
