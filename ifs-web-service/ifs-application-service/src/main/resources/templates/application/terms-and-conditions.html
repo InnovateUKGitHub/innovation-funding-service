@@ -27,66 +27,70 @@
 
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
 
-        <!-- /* 1, Where there is only one organisation in the application: */ -->
-        <div th:unless="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
-                of the page.</p>
-        </div>
+        <th:block th:if="${model.showHeaderAndFooter}">
+            <!-- /* 1, Where there is only one organisation in the application: */ -->
+            <div th:unless="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
+                    of the page.</p>
+            </div>
 
-        <!-- /* 2. Where there is more than one organisation in the application: */ -->
-        <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">
-                You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
-                application cannot be submitted until all partners have read and accepted the terms.
-                <a class="govuk-link" th:href="@{terms-and-conditions/partner-status}">View partners' acceptance</a>
-            </p>
-        </div>
+            <!-- /* 2. Where there is more than one organisation in the application: */ -->
+            <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">
+                    You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
+                    application cannot be submitted until all partners have read and accepted the terms.
+                    <a class="govuk-link" th:href="@{terms-and-conditions/partner-status}">View partners' acceptance</a>
+                </p>
+            </div>
+        </th:block>
 
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/[!th:insert] "/>
 
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+        <th:block th:if="${model.showHeaderAndFooter}">
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-        <th:block th:unless="${model.termsAccepted.get()}">
-            <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
-                  th:action="@{/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
-                <div class="govuk-form-group">
+            <th:block th:unless="${model.termsAccepted.isPresent() ? model.termsAccepted.get() : false}">
+                <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
+                      th:action="@{/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
+                    <div class="govuk-form-group">
 
-                    <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input"
-                               type="checkbox" data-switches-button-status="#agree-terms-button"
-                               id="agreed"
-                               th:field="*{agreed}" />
-                        <label class="govuk-label govuk-checkboxes__label">
-                            I agree to the award terms and conditions set out by Innovate UK.
-                        </label>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   type="checkbox" data-switches-button-status="#agree-terms-button"
+                                   id="agreed"
+                                   th:field="*{agreed}" />
+                            <label class="govuk-label govuk-checkboxes__label">
+                                I agree to the award terms and conditions set out by Innovate UK.
+                            </label>
+                        </div>
                     </div>
+                    <button type="submit"
+                            id="agree-terms-button"
+                            class="govuk-button">Agree and continue
+                    </button>
+                    <!--/*
+                            <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
+                     */-->
+                </form>
+            </th:block>
+            <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted.isPresent() ? model.termsAccepted.get() : false}">
+                <div class="form-footer__actions">
+                    Terms and conditions accepted
+                    <th:block th:unless="${model.migratedTerms}">
+                        at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
+                        on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
+                        by <span th:text="${model.termsAcceptedByName.get()}"> Tom Baldwin</span>.
+                    </th:block>
                 </div>
-                <button type="submit"
-                        id="agree-terms-button"
-                        class="govuk-button">Agree and continue
-                </button>
-                <!--/*
-                        <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
-                 */-->
-            </form>
-        </th:block>
-        <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted.get()}">
-            <div class="form-footer__actions">
-                Terms and conditions accepted
-                <th:block th:unless="${model.migratedTerms}">
-                    at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
-                    on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
-                    by <span th:text="${model.termsAcceptedByName.get()}"> Tom Baldwin</span>.
-                </th:block>
             </div>
-        </div>
-        <div>
-            <a class="button-secondary" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}">Return
-                to application overview</a>
-        </div>
-        <!--/*
-        <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
-        */-->
+            <div>
+                <a class="button-secondary" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}">Return
+                    to application overview</a>
+            </div>
+            <!--/*
+            <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
+            */-->
+        </th:block>
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer"/>
