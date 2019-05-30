@@ -73,8 +73,8 @@ items:
     name: ldap
   spec:
     ports:
-    - name: 8389-tcp
-      port: 8389
+    - name: 389-tcp
+      port: 389
       targetPort: 8389
     selector:
       deploymentconfig: ldap
