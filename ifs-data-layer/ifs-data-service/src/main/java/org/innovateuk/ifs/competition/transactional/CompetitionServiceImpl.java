@@ -1,48 +1,40 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -68,13 +60,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private OrganisationTypeMapper organisationTypeMapper;
 
     @Autowired
-    private PublicContentService publicContentService;
-
-    @Autowired
     private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
-
-    @Autowired
-    private MilestoneService milestoneService;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -125,129 +111,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess((List) competitionMapper.mapToResource(
                 competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).collect(Collectors.toList())
         ));
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-        List<Competition> competitions = competitionRepository.findLive();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            List<Competition> competitions;
-            if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-                competitions = competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId());
-            } else {
-                competitions = competitionRepository.findProjectSetup();
-            }
-            return serviceSuccess(simpleMap(
-                    CollectionFunctions.reverse(competitions),
-                    this::searchResultFromCompetition));
-        });
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-        List<Competition> competitions = competitionRepository.findUpcoming();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
-        List<Competition> competitions = competitionRepository.findNonIfs();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
-    }
-
-    @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-        List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
-    }
-
-    @Override
-    public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
-        String searchQueryLike = String.format("%%%s%%", searchQuery);
-        PageRequest pageRequest = new PageRequest(page, size);
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
-            } else if (user.hasRole(SUPPORT)) {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
-            } else {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
-            }
-        });
-    }
-
-    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(PageRequest pageRequest, int size, Page<Competition> pageResult) {
-        CompetitionSearchResult result = new CompetitionSearchResult();
-        List<Competition> competitions = pageResult.getContent();
-        result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
-        result.setNumber(pageRequest.getPageNumber());
-        result.setSize(size);
-        result.setTotalElements(pageResult.getTotalElements());
-        result.setTotalPages(pageResult.getTotalPages());
-
-        return serviceSuccess(result);
-    }
-
-    private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
-        ZonedDateTime openDate;
-        ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, c.getId());
-        if (openDateMilestone.isSuccess()) {
-            openDate = openDateMilestone.getSuccess().getDate();
-        } else {
-            openDate = null;
-        }
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> serviceSuccess(new CompetitionSearchResultItem(c.getId(),
-                c.getName(),
-                ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
-                        .stream()
-                        .map(Category::getName)
-                        .collect(Collectors.toCollection(TreeSet::new)),
-                applicationRepository.countByCompetitionId(c.getId()),
-                c.startDateDisplay(),
-                c.getCompetitionStatus(),
-                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
-                projectRepository.findByApplicationCompetitionId(c.getId()).size(),
-                publicContentService.findByCompetitionId(c.getId()).getSuccess().getPublishDate(),
-                isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId(),
-                openDate
-        ))).getSuccess();
-    }
-
-    @Override
-    public ServiceResult<CompetitionCountResource> countCompetitions() {
-        return serviceSuccess(
-                new CompetitionCountResource(
-                        getLiveCount(),
-                        getPSCount(),
-                        competitionRepository.countUpcoming(),
-                        getFeedbackReleasedCount(),
-                        competitionRepository.countNonIfs()));
-    }
-
-    private Long getLiveCount() {
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
-                        competitionRepository.countLiveForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countLive()
-        ).getSuccess();
-    }
-
-    private Long getPSCount() {
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
-                        competitionRepository.countProjectSetupForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countProjectSetup()
-        ).getSuccess();
-    }
-
-    private Long getFeedbackReleasedCount() {
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
-                        competitionRepository.countFeedbackReleasedForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countFeedbackReleased()
-        ).getSuccess();
     }
 
     @Override

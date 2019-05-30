@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -28,15 +27,13 @@ public class ExternalOrganisationSearchController {
 
     private static final int SEARCH_ITEMS_MAX = 10;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/searchOrganisations/{organisationType}", "/search-organisations/{organisationType}"})
+    @GetMapping("/search-organisations/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final long organisationTypeId,
                                                                           @RequestParam("organisationSearchText") final String organisationSearchText) {
         return searchOrganisations(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchText);
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/searchOrganisations/enum/{organisationType}", "/search-organisations/enum/{organisationType}"})
+    @GetMapping("/search-organisations/enum/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final OrganisationTypeEnum organisationType,
                                                                           @RequestParam("organisationSearchText") final String organisationSearchText) {
         switch (organisationType){
@@ -53,14 +50,12 @@ public class ExternalOrganisationSearchController {
         return RestResult.restFailure(new Error("Search for organisation failed", HttpStatus.NOT_FOUND));
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getOrganisation/{organisationType}/{organisationSearchId}", "/get-organisation/{organisationType}/{organisationSearchId}"})
+    @GetMapping("/get-organisation/{organisationType}/{organisationSearchId}")
     public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final long organisationTypeId, @PathVariable("organisationSearchId") final String organisationSearchId) {
         return searchOrganisation(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchId);
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/getOrganisation/enum/{organisationType}/{organisationSearchId}", "/get-organisation/enum/{organisationType}/{organisationSearchId}"})
+    @GetMapping("/get-organisation/enum/{organisationType}/{organisationSearchId}")
     public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final OrganisationTypeEnum organisationType, @PathVariable("organisationSearchId") final String organisationSearchId) {
         switch (organisationType){
             case BUSINESS:

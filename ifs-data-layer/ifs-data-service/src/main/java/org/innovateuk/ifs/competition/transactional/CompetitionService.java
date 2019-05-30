@@ -2,7 +2,9 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -29,29 +31,6 @@ public interface CompetitionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
-
-    @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")
-    ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
-
-    @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
-    ServiceResult<CompetitionCountResource> countCompetitions();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can change the competition state to Assessment Closed")

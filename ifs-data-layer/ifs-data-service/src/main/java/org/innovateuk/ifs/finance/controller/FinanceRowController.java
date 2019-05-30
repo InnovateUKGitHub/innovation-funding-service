@@ -48,13 +48,6 @@ public class FinanceRowController {
         return financeRowCostsService.addCost(applicationFinanceId, newCostItem).toPostCreateResponse();
     }
     
-    @PostMapping("/add-without-persisting/{applicationFinanceId}/{questionId}")
-    public RestResult<FinanceRowItem> addWithoutPersisting(
-            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            @PathVariable("questionId") final Long questionId) {
-        return financeRowCostsService.addCostWithoutPersisting(applicationFinanceId, questionId).toPostCreateResponse();
-    }
-
     @GetMapping("/{id}")
     public RestResult<FinanceRowItem> get(@PathVariable("id") final Long id) {
         return financeRowCostsService.getCostItem(id).toGetResponse();

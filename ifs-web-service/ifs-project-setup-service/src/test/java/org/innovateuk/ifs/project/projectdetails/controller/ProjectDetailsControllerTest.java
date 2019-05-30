@@ -134,11 +134,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
 
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(setupStatusViewModelPopulatorMock.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired)).thenReturn(true);
+        when(setupStatusViewModelPopulatorMock.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)).thenReturn(true);
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/new-details", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))
@@ -193,7 +193,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/new-readonly", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details"))
                 .andReturn();
@@ -244,7 +244,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/new-details", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))

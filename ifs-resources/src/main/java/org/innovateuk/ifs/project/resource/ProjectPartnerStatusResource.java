@@ -19,6 +19,7 @@ public class ProjectPartnerStatusResource {
     private OrganisationTypeEnum organisationType;
 
     private ProjectActivityStates projectDetailsStatus;
+    private ProjectActivityStates projectTeamStatus;
     private ProjectActivityStates bankDetailsStatus;
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
@@ -39,17 +40,25 @@ public class ProjectPartnerStatusResource {
     //Required for Json Mapping.
     ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType,
-                                        ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus,
-                                        ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus,
-                                        ProjectActivityStates spendProfileStatus, ProjectActivityStates documentsStatus,
-                                        ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus,
+    public ProjectPartnerStatusResource(Long organisationId,
+                                        String name,
+                                        OrganisationTypeEnum organisationType,
+                                        ProjectActivityStates projectDetailsStatus,
+                                        ProjectActivityStates projectTeamStatus,
+                                        ProjectActivityStates monitoringOfficerStatus,
+                                        ProjectActivityStates bankDetailsStatus,
+                                        ProjectActivityStates financeChecksStatus,
+                                        ProjectActivityStates spendProfileStatus,
+                                        ProjectActivityStates documentsStatus,
+                                        ProjectActivityStates grantOfferLetterStatus,
+                                        ProjectActivityStates financeContactStatus,
                                         ProjectActivityStates partnerProjectLocationStatus,
                                         Boolean isGrantOfferLetterSent, Boolean isLead) {
         this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
         this.projectDetailsStatus = projectDetailsStatus;
+        this.projectTeamStatus = projectTeamStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
@@ -80,6 +89,10 @@ public class ProjectPartnerStatusResource {
 
     public ProjectActivityStates getProjectDetailsStatus() {
         return projectDetailsStatus;
+    }
+
+    public ProjectActivityStates getProjectTeamStatus() {
+        return projectTeamStatus;
     }
 
     public ProjectActivityStates getBankDetailsStatus() {
@@ -116,6 +129,10 @@ public class ProjectPartnerStatusResource {
 
     public void setProjectDetailsStatus(ProjectActivityStates projectDetailsStatus) {
         this.projectDetailsStatus = projectDetailsStatus;
+    }
+
+    public void setProjectTeamStatus(ProjectActivityStates projectTeamStatus) {
+        this.projectTeamStatus = projectTeamStatus;
     }
 
     public void setBankDetailsStatus(ProjectActivityStates bankDetailsStatus) {
@@ -190,6 +207,7 @@ public class ProjectPartnerStatusResource {
                 .append(name, that.name)
                 .append(organisationType, that.organisationType)
                 .append(projectDetailsStatus, that.projectDetailsStatus)
+                .append(projectTeamStatus, that.projectTeamStatus)
                 .append(bankDetailsStatus, that.bankDetailsStatus)
                 .append(financeChecksStatus, that.financeChecksStatus)
                 .append(spendProfileStatus, that.spendProfileStatus)
@@ -208,6 +226,7 @@ public class ProjectPartnerStatusResource {
                 .append(name)
                 .append(organisationType)
                 .append(projectDetailsStatus)
+                .append(projectTeamStatus)
                 .append(bankDetailsStatus)
                 .append(financeChecksStatus)
                 .append(spendProfileStatus)
@@ -226,6 +245,7 @@ public class ProjectPartnerStatusResource {
                 .append("name", name)
                 .append("organisationType", organisationType)
                 .append("projectDetailsStatus", projectDetailsStatus)
+                .append("projectTeamStatus", projectTeamStatus)
                 .append("bankDetailsStatus", bankDetailsStatus)
                 .append("financeChecksStatus", financeChecksStatus)
                 .append("spendProfileStatus", spendProfileStatus)

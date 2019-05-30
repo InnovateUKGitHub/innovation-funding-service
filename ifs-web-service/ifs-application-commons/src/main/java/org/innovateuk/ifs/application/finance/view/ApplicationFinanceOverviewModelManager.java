@@ -8,16 +8,12 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -72,21 +68,7 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         if (section == null) {
             return;
         }
-
-        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-
         model.addAttribute("financeSection", section);
-        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
-        model.addAttribute("financeSectionChildren", financeSubSectionChildren);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
-                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
-                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
-
-        model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
-        model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 
     public BaseFinanceOverviewViewModel getFinanceDetailsViewModel(Long competitionId, Long applicationId) {
@@ -115,24 +97,9 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
 
     private void addFinanceSections(Long competitionId, BaseFinanceOverviewViewModel viewModel) {
         SectionResource section = sectionService.getFinanceSection(competitionId);
-
         if (section == null) {
             return;
         }
-
-        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
-
         viewModel.setFinanceSection(section);
-        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
-        viewModel.setFinanceSectionChildren(financeSubSectionChildren);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
-                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
-                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
-
-        viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
-        viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
     }
 }

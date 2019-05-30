@@ -21,7 +21,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -124,25 +122,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FinanceRowItem> addCostWithoutPersisting(final Long projectFinanceId, final Long questionId) {
-        return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) ->
-                getProject(projectFinance.getProject().getId()).andOnSuccess(project -> {
-                    if (questionBelongsToProjectCompetition(question, project)) {
-                        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
-                        ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
-                    } else {
-                        return serviceFailure(notFoundError(Question.class, questionId));
-                    }
-                })
-        );
-    }
-
-    private boolean questionBelongsToProjectCompetition(Question question, Project project) {
-        return question.getCompetition().getId().equals(project.getApplication().getCompetition().getId());
-    }
-
-    @Override
     @Transactional
     public ServiceResult<Void> deleteCost(Long costId) {
         return find(projectFinanceRowRepository.findById(costId), notFoundError(ProjectFinanceRow.class)).
@@ -150,10 +129,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
                     financeRowMetaValueRepository.deleteByFinanceRowId(costId);
                     projectFinanceRowRepository.deleteById(costId);
                 });
-    }
-
-    private boolean costBelongsToProjectFinance(ProjectFinance projectFinance, ProjectFinanceRow projectFinanceRow) {
-        return projectFinance.getId().equals(projectFinanceRow.getTarget().getId());
     }
 
     @Override
@@ -170,8 +145,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId) {
-        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(projectId, organisationId);
-        return getProjectFinanceForOrganisation(projectFinanceResourceId);
+        return getProjectFinanceForOrganisation(new ProjectFinanceResourceId(projectId, organisationId));
     }
 
     @Override
