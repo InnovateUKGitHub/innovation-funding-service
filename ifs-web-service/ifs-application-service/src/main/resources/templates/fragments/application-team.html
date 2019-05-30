@@ -139,7 +139,7 @@
             <div th:unless="${model.closed}"
                  th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.summary) ? 'form-footer govuk-!-margin-top-6' : ''}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
-                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
+                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},pageType='application team')" />
                 <th:block th:if="${model.summary}"
                           th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
             </div>
