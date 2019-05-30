@@ -49,31 +49,44 @@ public class ApplicationTermsModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
-        OrganisationResource organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles).get();
 
-        Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
-                questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(termsQuestionId, applicationId, organisation.getId()).getSuccess();
+        // is the current user a member of this application?
+        Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
+        if (organisation.isPresent()) {
+            Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
+                    questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                            termsQuestionId, applicationId, organisation.get().getId()).getSuccess();
 
-        boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
-                .map(QuestionStatusResource::getMarkedAsComplete)
-                .orElse(false);
+            boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
+                    .map(QuestionStatusResource::getMarkedAsComplete)
+                    .orElse(false);
 
-        String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
-                .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
-                .orElse(null);
-        ZonedDateTime termsAcceptedOn = optionalMarkedAsCompleteQuestionStatus
-                .map(QuestionStatusResource::getMarkedAsCompleteOn)
-                .orElse(null);
+            String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
+                    .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
+                    .orElse(null);
+            ZonedDateTime termsAcceptedOn = optionalMarkedAsCompleteQuestionStatus
+                    .map(QuestionStatusResource::getMarkedAsCompleteOn)
+                    .orElse(null);
 
-        return new ApplicationTermsViewModel(
-                applicationId,
-                termsQuestionId,
-                competition.getTermsAndConditions().getTemplate(),
-                application.isCollaborativeProject(),
-                termsAccepted,
-                termsAcceptedByName,
-                termsAcceptedOn,
-                isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
+            return new ApplicationTermsViewModel(
+                    applicationId,
+                    termsQuestionId,
+                    competition.getTermsAndConditions().getTemplate(),
+                    application.isCollaborativeProject(),
+                    termsAccepted,
+                    termsAcceptedByName,
+                    termsAcceptedOn,
+                    isAllOrganisationsTermsAccepted(applicationId, competition.getId())
+            );
+        }
+        else {
+            return new ApplicationTermsViewModel(
+                    applicationId,
+                    termsQuestionId,
+                    competition.getTermsAndConditions().getTemplate(),
+                    application.isCollaborativeProject(),
+                    isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
+        }
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
