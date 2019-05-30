@@ -25,26 +25,38 @@ import java.util.List;
 @Component
 public class GrantOfferLetterTemplatePopulator {
 
-    @Autowired
-    private ProjectRestService projectRestService;
+    private final ProjectRestService projectRestService;
+
+    private final CompetitionRestService competitionRestService;
+
+    private final ProjectService projectService;
+
+    private final OrganisationRestService organisationRestService;
+
+    private final UserRestService userRestService;
+
+    private final ProjectFinanceRestService projectFinanceRestService;
+
+    private final ProjectFinanceNotesRestService projectFinanceNotesRestService;
 
     @Autowired
-    private CompetitionRestService competitionRestService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
-    private ProjectFinanceRestService projectFinanceRestService;
-
-    @Autowired
-    private ProjectFinanceNotesRestService projectFinanceNotesRestService;
+    public GrantOfferLetterTemplatePopulator(
+            ProjectRestService projectRestService,
+            CompetitionRestService competitionRestService,
+            ProjectService projectService,
+            OrganisationRestService organisationRestService,
+            UserRestService userRestService,
+            ProjectFinanceRestService projectFinanceRestService,
+            ProjectFinanceNotesRestService projectFinanceNotesRestService
+    ) {
+        this.projectRestService = projectRestService;
+        this.competitionRestService = competitionRestService;
+        this.projectService = projectService;
+        this.organisationRestService = organisationRestService;
+        this.userRestService = userRestService;
+        this.projectFinanceRestService = projectFinanceRestService;
+        this.projectFinanceNotesRestService = projectFinanceNotesRestService;
+    }
 
     public GrantOfferLetterTemplateViewModel populate(long projectId) {
 
