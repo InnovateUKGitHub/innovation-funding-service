@@ -47,6 +47,19 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessProjectTeamSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                 "Unable to access Project Team section until Companies House details are complete for Organisation")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
     public SectionAccess canAccessFinanceContactPage(OrganisationResource organisation) {
         if (setupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;
@@ -221,6 +234,10 @@ public class SetupSectionAccessibilityHelper {
         if (!setupProgressChecker.isProjectDetailsSubmitted()) {
 
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
+        }
+
+        if (!setupProgressChecker.isProjectTeamCompleted()) {
+            return fail("Unable to access Spend Profile section until the Project Team section is complete");
         }
 
         if (!setupProgressChecker.isSpendProfileGenerated()) {

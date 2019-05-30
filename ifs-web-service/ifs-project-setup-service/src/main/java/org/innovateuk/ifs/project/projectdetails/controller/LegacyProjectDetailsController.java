@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -13,19 +14,17 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ResendProjectInviteViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectFinanceContactViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectProjectManagerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,6 +54,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 /**
  * This controller will handle all requests that are related to project details.
  */
+@ZeroDowntime(reference = "IFS-5921", description = "Remove this controller entirely as part of next deploy")
 @Controller
 @RequestMapping("/project")
 public class LegacyProjectDetailsController {
@@ -84,76 +84,6 @@ public class LegacyProjectDetailsController {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    @Autowired
-    private PartnerOrganisationRestService partnerOrganisationService;
-
-    @Autowired
-    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId','ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/details")
-    public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
-                                     UserResource loggedInUser) {
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
-
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> organisations
-                = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
-        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
-        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
-
-        boolean allProjectDetailsFinanceContactsAndProjectLocationsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired);
-
-        model.addAttribute("model", new LegacyProjectDetailsViewModel(projectResource, loggedInUser,
-                getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                organisations,
-                partnerProjectLocationRequired ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
-                leadOrganisation, applicationResource, projectUsers, competitionResource,
-                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), allProjectDetailsFinanceContactsAndProjectLocationsAssigned,
-                getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
-
-        return "project/legacy-details";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/readonly")
-    public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
-                                               UserResource loggedInUser) {
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> organisations
-                = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
-        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
-        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
-
-        model.addAttribute("model", new LegacyProjectDetailsViewModel(projectResource, loggedInUser,
-                getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                organisations,
-                competitionResource.isLocationPerPartner() ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
-                leadOrganisation, applicationResource, projectUsers, competitionResource,
-                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, true, true));
-
-        return "project/legacy-details";
-    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @GetMapping("/{projectId}/details/finance-contact")
