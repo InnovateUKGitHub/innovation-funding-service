@@ -83,7 +83,7 @@ Marking a question as complete
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]
-    When the user clicks the button/link    jQuery = button:contains("Mark as complete")
+    When the user clicks the button/link    jQuery = button:contains("Mark")
     Then the text box should turn to green
     And the word count should be correct for the Project summary
     And the user should see the element     jQuery = button:contains("Edit")
@@ -95,7 +95,7 @@ Mark a question as incomplete
     Given the user clicks the button/link    link = Project summary
     When the user clicks the button/link     jQuery = button:contains("Edit")
     Then the text box should be editable
-    And the user should see the element      jQuery = button:contains("Mark as complete")
+    And the user should see the element      jQuery = button:contains("Mark")
     And the question should not be marked as complete on the application overview page
 
 Review and submit button
@@ -112,9 +112,9 @@ Incomplete sections contain mark as complete link
     [Tags]
     Given the user should see the element  jQuery = button:contains("Application details") .section-incomplete
     When the user expands the section      Application details
-    Then the user should see the element   jQuery = .collapsible:contains("Application details") button:contains("Mark as complete")
+    Then the user should see the element   jQuery = .collapsible:contains("Application details") button:contains("Mark")
     And the user should see the element    jQuery = .collapsible:contains("Application details") button:contains("Return and edit")
-    When the user clicks the button/link   jQuery = .collapsible:contains("Application details") button:contains("Mark as complete")
+    When the user clicks the button/link   jQuery = .collapsible:contains("Application details") button:contains("Mark")
     And the user fills in the Application details  ${aeroApplication}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user should no longer see the Mark-as-complete-link  Application details
 
