@@ -10,6 +10,7 @@ public class ProjectPartnerStatusResourceDocs {
             fieldWithPath("name").description("Name of the project partner status"),
             fieldWithPath("organisationType").description("Organisation type of the project partner status"),
             fieldWithPath("projectDetailsStatus").description("Project detail status of the project partner status"),
+            fieldWithPath("projectTeamStatus").description("Project team status of the project partner status"),
             fieldWithPath("bankDetailsStatus").description("Bank detail status of the project partner status"),
             fieldWithPath("financeChecksStatus").description("Finance check status of the project partner status"),
             fieldWithPath("spendProfileStatus").description("Spend profile status of the project partner status"),

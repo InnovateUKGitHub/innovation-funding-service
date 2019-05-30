@@ -62,8 +62,8 @@ The comp admin navigates to project summary page
 
 The user isn't able to see bank details and finance checks
     the user should see the element                                  link = All projects
-    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(4) a
-    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5) a
+    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5) a
+    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(6) a
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/review-all-bank-details    ${403_error_message}
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/finance-check    ${403_error_message}
 
@@ -71,7 +71,7 @@ The user is able to see project status in PS
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok
-    the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action
+    the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.action
 
 the user navigates back successfully
     the user should see the element                     jQuery = h1:contains("Application overview")

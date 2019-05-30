@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface FinanceCheckNotesService extends ThreadService<NoteResource, PostResource> {
     @Override
-    @PostFilter("hasPermission(filterObject, 'PF_READ')")
+    @PostFilter("hasPermission(filterObject, 'NOTES_READ')")
     ServiceResult<List<NoteResource>> findAll(Long contextClassPk);
 
     @Override

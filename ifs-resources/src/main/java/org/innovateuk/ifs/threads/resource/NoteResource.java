@@ -18,6 +18,14 @@ public class NoteResource {
     public final String title;
     public final ZonedDateTime createdOn;
 
+    public NoteResource() {
+        this.id = null;
+        this.contextClassPk = null;
+        this.posts = null;
+        this.title = null;
+        this.createdOn = null;
+    }
+
     @JsonCreator
     public NoteResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
                         @JsonProperty("posts") List<PostResource> posts, @JsonProperty("title") String title,
