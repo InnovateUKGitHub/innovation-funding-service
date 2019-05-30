@@ -71,32 +71,76 @@
             font-size: 10pt;
         }
 
+        ol.list-alpha {
+            counter-reset: item;
+            padding: 15px 0;
+        }
+        ol.list-alpha li {
+            display: block;
+            padding: 10px 0 10px 45px;
+            counter-increment: item;
+        }
+        ol.list-alpha li:before {
+             position: absolute;
+             content: counter(item, upper-alpha);
+             margin-left:-45px; //negative of the ol li padding
+        }
+
+        ol.ifs-list--number {
+            list-style-type: none;
+            counter-reset: item;
+            margin: 0;
+            padding: 0;
+        }
+        ol.ifs-list--number > li {
+            display: table;
+            counter-increment: item;
+            margin-bottom: 0.6em;
+            font-weight: bold;
+        }
+        ol.ifs-list--number > li:before {
+             content: counters(item, ".") ". ";
+             display: table-cell;
+             padding-right: 0.6em;
+         }
+
+        ol.ifs-list--number > li ol.ifs-list--number {
+            list-style-type: none;
+            counter-reset: item;
+            margin: 0;
+            padding: 0;
+        }
+        ol.ifs-list--number > li ol .ifs-list--number > li {
+            margin: 0;
+            font-weight: normal;
+        }
+        ol.ifs-list--number > li ol .ifs-list--number > li:before {
+             content: counters(item, ".") " ";
+        }
+
     </style>
 
     <div class="letter-size">
         <p>
-            [partner_first_name] [partner_last_name]<br>
-            [partner_company_name]<br>
-            [partner_address_1]<br>
-            [partner_address_2]<br>
-            [partner_town_city]<br>
-            [partner_postcode]<br>
+            <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" /><br>
+            <th:block th:text="${model.leadOrgName}" /><br>
+            <th:block th:text="${model.leadPartnerAddress}" />
         </p>
         <p>
             <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> [application_number]<br>
+            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> [day], [dd] [Month] [yyyy]<br>
         </p>
         <p>
-            Dear [partner_first_name],
+            Dear <th:block th:text="${model.projectManagerFirstName}" />,
         </p>
         <p>
             <strong>Grant offer letter</strong>
         </p>
         <p>
-            <strong>Competition:</strong> [competition_name]
+            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" />
             <br>
-            <strong>Project title:</strong> [project_title]
+            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
         <p>
             We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service.
@@ -154,10 +198,10 @@
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
             <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> [application_number]<br>
+            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> [day], [dd] [Month] [yyyy]<br>
-            <strong>Competition:</strong> [competition_name]<br>
-            <strong>Project title:</strong> [project_title]
+            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
+            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
 
         <p>I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. </p>
@@ -496,7 +540,7 @@
     <!-- terms start -->
     <div class="terms-and-conditions letter-size letter-size--terms">
         <h2 style="font-size: 24px">Terms and conditions</h2>
-        <th:block th:replace="competition/info/apc-terms-and-conditions-v2.html :: main/[!th:insert][>0]  "/>
+        <th:block th:replace="competition/info/__${model.termsAndConditionsTemplate}__ :: main/[!th:insert][>0]  "/>
     </div>
     <!-- terms end  -->
 </main>
