@@ -50,7 +50,7 @@ prepareDeployment.mustRunAfter setFinanceDataServiceSyncDefaults
 
 task setDbResetDefaults {
     if (!project.hasProperty('LDAP_PORT')) {
-        project.ext.LDAP_PORT = 389
+        project.ext.LDAP_PORT = 8389
     }
 
     if (!project.hasProperty('ONLY_SYNC_LDAP')) {
