@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class ProjectTeamStatusResource {
     private List<ProjectPartnerStatusResource> partnerStatuses;
     private ProjectState projectState;
+    private boolean projectManagerAssigned;
 
     public List<ProjectPartnerStatusResource> getPartnerStatuses() {
         return partnerStatuses;
@@ -29,6 +30,14 @@ public class ProjectTeamStatusResource {
 
     public void setPartnerStatuses(List<ProjectPartnerStatusResource> partnerStatuses) {
         this.partnerStatuses = partnerStatuses;
+    }
+
+    public void setProjectManagerAssigned(boolean projectManagerAssigned) {
+        this.projectManagerAssigned = projectManagerAssigned;
+    }
+
+    public boolean isProjectManagerAssigned() {
+        return projectManagerAssigned;
     }
 
     public ProjectState getProjectState() {

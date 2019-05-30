@@ -266,6 +266,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectTeamCompleted()).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
         when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
@@ -275,10 +276,33 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
+                mock -> mock.isProjectTeamCompleted(),
                 mock -> mock.isSpendProfileGenerated(),
                 mock -> mock.isOffline()
         );
     }
+
+    @Test
+    public void checkAccessToSpendProfileSectionProjectTeamIncomplete() {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectTeamCompleted()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
+        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isProjectDetailsSubmitted(),
+                mock -> mock.isProjectTeamCompleted(),
+                mock -> mock.isOffline()
+        );
+    }
+
 
     @Test
     public void checkAccessToDocumentsSectionHappyPathForLeadPartner() {

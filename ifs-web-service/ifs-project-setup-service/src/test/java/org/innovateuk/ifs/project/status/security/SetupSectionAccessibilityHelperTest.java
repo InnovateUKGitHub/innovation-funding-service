@@ -399,7 +399,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        setUpMocking(true, true, true, true, false);
+        setUpMocking(true, true, true, true, true, false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
@@ -408,7 +408,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileGeneratedAndNotAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        setUpMocking(true, true, true, true, true);
+        setUpMocking(true, true, true, true,true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
@@ -417,7 +417,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileGeneratedAndAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        setUpMocking(true, true, true, true, true);
+        setUpMocking(true, true, true, true,true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         assertTrue(ACCESSIBLE == access);
@@ -425,11 +425,13 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     }
 
     private void setUpMocking(boolean companiesHouseSectionRequired, boolean companiesHouseDetailsComplete,
-                              boolean projectDetailsSubmitted, boolean bankDetailsApproved, boolean spendProfileGenerated) {
+                              boolean projectDetailsSubmitted, boolean projectTeamSectionComplete,
+                              boolean bankDetailsApproved, boolean spendProfileGenerated) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(projectDetailsSubmitted);
+        when(setupProgressCheckerMock.isProjectTeamCompleted()).thenReturn(projectTeamSectionComplete);
         when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
         when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(spendProfileGenerated);
     }
