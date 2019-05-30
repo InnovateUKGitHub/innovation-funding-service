@@ -124,12 +124,14 @@
         <p>
             <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" /><br>
             <th:block th:text="${model.leadOrgName}" /><br>
-            <th:block th:text="${model.leadPartnerAddress}" />
+            <th:block th:each="addressLine : ${model.projectAddress}">
+                <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
+            </th:block>
         </p>
         <p>
             <strong>File reference:</strong> [file_reference]<br>
             <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> [day], [dd] [Month] [yyyy]<br>
+            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
         </p>
         <p>
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
@@ -146,37 +148,22 @@
             We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service.
         </p>
 
-        <table>
+        <table th:if="${model.notes}">
             <tr>
                 <td style="padding:10px; border: 10px solid #c0c0c0;">
                     <h3>
                         <strong>Notes</strong>
                     </h3>
                     <ul class="letter-list">
-                        <li>
-                            <p style="margin:4px 0;"><strong>Finance check UID</strong></p>
-                            <p style="margin:4px 0;">[pass|fail]</p>
-                        </li>
-                        <li>
-                            <p style="margin:4px 0;"><strong>[Note_title_1]</strong></p>
-                            <p style="margin:4px 0;">Sed finibus efficitur turpis, luctus malesuada dui pretium ut.</p>
-                        </li>
-                        <li>
-                            <p style="margin:4px 0;"><strong>[Note_title_2]</strong></p>
-                            <p style="margin:4px 0;">Nullam rutrum condimentum faucibus. Praesent vitae dapibus massa. Nam eget augue a urna porta iaculis quis et erat. Etiam tellus sapien, posuere eget tincidunt.</p>
-                        </li>
-                        <li>
-                            <p style="margin:4px 0;"><strong>[Note_title_3]</strong></p>
-                            <p style="margin:4px 0;">Donec sed metus ac felis ornare fringilla. Vivamus eu accumsan ex. Quisque scelerisque aliquet accumsan. Interdum et malesuada fames ac ante ipsum primis in faucibus</p>
-                        </li>
-                        <li>
-                            <p style="margin:4px 0;"><strong>[Note_title_4]</strong></p>
-                            <p style="margin:4px 0;">Praesent vitae dapibus massa. Nam eget augue a urna porta iaculis quis et erat. Etiam tellus sapien, posuere eget tincidunt at</p>
+                        <li th:each="note : ${model.notes}">
+                            <p style="margin:4px 0;"><strong th:text="${note.title}"></strong></p>
+                            <th:block th:each="(post : ${note.posts})">
+                                <p style="margin:4px 0;" th:text="${post.body}">Content of the note.</p>
+                            </th:block>
                         </li>
                     </ul>
                 </td>
             </tr>
-
         </table>
 
         <h2 class="heading-medium">Accepting your award </h2>
@@ -199,7 +186,7 @@
         <p>
             <strong>File reference:</strong> [file_reference]<br>
             <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> [day], [dd] [Month] [yyyy]<br>
+            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
             <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
             <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
@@ -241,10 +228,10 @@
 
         <p>
             <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> [application_number]<br>
-            <strong>Date:</strong> [day], [dd] [Month] [yyyy]<br>
-            <strong>Competition:</strong> [competition_name]<br>
-            <strong>Project title:</strong> [project_title]
+            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
+            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
+            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
+            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
 
         <table class="letter-table">
