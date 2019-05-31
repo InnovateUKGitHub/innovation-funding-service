@@ -224,7 +224,7 @@ Non-lead partner cannot change any project details
 
 User is able to accept new site terms and conditions
     [Documentation]  IFS-3093
-    [Tags]  MySQL
+    [Tags]
     [Setup]  Delete user from terms and conditions database   ${pmEmailId}
     Log in as a different user             ${user_email}   ${short_password}
     When the user selects the checkbox     agree

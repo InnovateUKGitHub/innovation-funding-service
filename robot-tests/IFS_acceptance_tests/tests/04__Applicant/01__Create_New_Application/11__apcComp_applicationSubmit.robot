@@ -26,7 +26,7 @@ Comp Admin creates an APC competition
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
-    [Tags]  MySQL
+    [Tags]
     [Setup]   get competition id and set open date to yesterday  ${apcCompetitionTitle}
     Given Log in as a different user                        &{lead_applicant_credentials}
     Then logged in user applies to competition              ${apcCompetitionTitle}  1

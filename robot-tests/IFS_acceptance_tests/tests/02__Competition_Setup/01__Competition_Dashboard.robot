@@ -88,7 +88,7 @@ Upcoming competitions calculations
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]
     Given the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When update milestone to yesterday       ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     When the user navigates to the page      ${CA_Live}
