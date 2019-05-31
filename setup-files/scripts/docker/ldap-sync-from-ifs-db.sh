@@ -75,7 +75,7 @@ addUserToShibboleth() {
 
 downloadAccUserCsv() {
 #    Download users from repository
-    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} ${ACC_CSV_FILE} -o users.csv
+    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} ${ACC_BITBUCKET_URL} -o users.csv
 #    Remove first line of column names
     tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
 #    Create new Csv with emails and new generated UUID

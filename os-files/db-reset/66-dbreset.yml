@@ -25,7 +25,7 @@ items:
   data:
     ACC_USERNAME: "${ACC_USERNAME}"
     ACC_PASSWORD: "${ACC_PASSWORD}"
-    ACC_CSV_FILE: "${ACC_CSV_FILE}"
+    ACC_BITBUCKET_URL: "${ACC_BITBUCKET_URL}"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -84,11 +84,11 @@ items:
           configMapKeyRef:
             name: db-config
             key: DB_PASS
-      - name: ACC_CSV_FILE
+      - name: ACC_BITBUCKET_URL
         valueFrom:
           configMapKeyRef:
             name: bitbucket-config
-            key: ACC_CSV_FILE
+            key: ACC_BITBUCKET_URL
       - name: ACC_USERNAME
         valueFrom:
           configMapKeyRef:
