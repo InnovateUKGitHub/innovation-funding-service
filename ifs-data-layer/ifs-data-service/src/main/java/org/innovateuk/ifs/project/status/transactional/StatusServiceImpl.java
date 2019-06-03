@@ -160,10 +160,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
         boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, process.getProcessState());
+        ProjectActivityStates projectTeamStatus = getProjectTeamStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, process.getProcessState());
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
+        Optional<Organisation> leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId());
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
@@ -175,8 +176,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 project.getApplication().getId(),
                 project.getApplication().getId().toString(),
                 getProjectPartnerCount(project.getId()),
-                null != leadOrganisation ? leadOrganisation.getName() : "",
+                leadOrganisation.map(Organisation::getName).orElse(""),
                 projectDetailsStatus,
+                projectTeamStatus,
                 bankDetailsStatus,
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),
@@ -193,13 +195,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return VIEW;
         }
 
-        for (Organisation organisation : project.getOrganisations()) {
-            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
-            if (financeContact == null || !financeContact.isPresent()) {
-                return PENDING;
-            }
-        }
-
         if (locationPerPartnerRequired && PENDING.equals(getPartnerProjectLocationStatus(project))) {
             return PENDING;
         }
@@ -208,6 +203,18 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates createProjectDetailsCompetitionStatus(Project project) {
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
+    }
+
+    private ProjectActivityStates getProjectTeamStatus(Project project) {
+        return projectManagerAndFinanceContactsAllSelected(project) ?
+                COMPLETE : PENDING;
+    }
+
+    private boolean projectManagerAndFinanceContactsAllSelected(Project project) {
+        return getProjectManager(project).isPresent()
+                && project.getOrganisations()
+                .stream()
+                .allMatch(org -> getFinanceContact(project, org).isPresent());
     }
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
@@ -475,6 +482,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
         projectTeamStatusResource.setProjectState(process.getProcessState());
+        projectTeamStatusResource.setProjectManagerAssigned(getProjectManager(project).isPresent());
 
         return serviceSuccess(projectTeamStatusResource);
     }
@@ -494,7 +502,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
-        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
+        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : partnerProjectLocationStatus;
+        ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project) : financeContactStatus;
         ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
@@ -510,6 +519,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 partnerOrganisation.getName(),
                 organisationType,
                 projectDetailsStatus,
+                projectTeamStatus,
                 monitoringOfficerStatus,
                 bankDetailsStatus,
                 financeChecksStatus,
@@ -573,7 +583,26 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : ACTION_REQUIRED;
+        boolean projectDetailsComplete = project.getAddress() != null
+                && project.getTargetStartDate() != null
+                && projectLocationsCompletedIfNecessary(project);
+        return projectDetailsComplete ? COMPLETE : ACTION_REQUIRED;
+    }
+
+    private boolean projectLocationsCompletedIfNecessary(final Project project) {
+        boolean locationsRequired = project.getApplication().getCompetition().isLocationPerPartner();
+        if(!locationsRequired) {
+            return true;
+        }
+        return project.getPartnerOrganisations()
+                .stream()
+                .noneMatch(org -> org.getPostcode() == null);
+    }
+
+    private ProjectActivityStates createProjectTeamStatus(Project project) {
+
+        boolean complete = projectManagerAndFinanceContactsAllSelected(project);
+        return complete? COMPLETE : ACTION_REQUIRED;
     }
 
     private ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficerResource> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
@@ -599,7 +628,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
         return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
                 .getOptionalSuccessObject()
-                .map(Boolean::booleanValue)
                 .orElse(false);
     }
 

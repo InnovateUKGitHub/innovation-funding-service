@@ -132,9 +132,9 @@ public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStat
         ProjectConsortiumStatusViewModel model = (ProjectConsortiumStatusViewModel) mvcResult.getModelAndView().getModel().get("model");
 
         assertionsViewProjectTeamStatus(model,
-                ACTION_REQUIRED, // leadPartnerProjectDetailsTeamStatus
-                ACTION_REQUIRED, // firstPartnerProjectDetailsTeamStatus
-                ACTION_REQUIRED, // secondPartnerProjectDetailsTeamStatus
+                COMPLETE, // leadPartnerProjectDetailsTeamStatus
+                COMPLETE, // firstPartnerProjectDetailsTeamStatus
+                COMPLETE, // secondPartnerProjectDetailsTeamStatus
                 PENDING // monitoringOfficerStatus
         );
 

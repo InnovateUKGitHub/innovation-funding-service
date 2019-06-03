@@ -172,7 +172,7 @@ partner fills in his bank details
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/
-    ${finance_contact}  ${val} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = .progress-list li:nth-child(1):contains("Completed")
+    ${finance_contact}  ${val} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = .progress-list li:nth-child(2):contains("Completed")
     the user clicks the button/link   link = Project details
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
 

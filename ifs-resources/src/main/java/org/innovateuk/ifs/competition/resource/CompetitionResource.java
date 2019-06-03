@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource {
 
@@ -242,7 +243,7 @@ public class CompetitionResource {
 
     private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
-            return date.format(formatter);
+            return toUkTimeZone(date).format(formatter);
         }
         return "";
     }

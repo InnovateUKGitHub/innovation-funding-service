@@ -43,7 +43,7 @@ public class ApplicationReadOnlyData {
                 .collect(toMap(QuestionResource::getId, Function.identity()));
         this.questionIdToFormInputs = Multimaps.index(formInputs, FormInputResource::getQuestion);
         this.formInputIdToFormInputResponses = formInputResponses.stream()
-                .collect(toMap(FormInputResponseResource::getFormInput, Function.identity()));
+                .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
     }
 
