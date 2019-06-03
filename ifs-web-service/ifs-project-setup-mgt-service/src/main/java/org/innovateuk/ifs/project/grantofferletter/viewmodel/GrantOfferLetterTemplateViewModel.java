@@ -19,6 +19,9 @@ public class GrantOfferLetterTemplateViewModel {
     private String leadOrgName;
     private List<NoteResource> notes;
     private String termsAndConditionsTemplate;
+    private IndustrialFinanceTableModel industrialFinanceTable;
+    private AcademicFinanceTableModel academicFinanceTable;
+    private SummaryFinanceTableModel summaryFinanceTable;
 
     public GrantOfferLetterTemplateViewModel() {
 
@@ -32,7 +35,10 @@ public class GrantOfferLetterTemplateViewModel {
                                              String projectName,
                                              String leadOrgName,
                                              List<NoteResource> notes,
-                                             String termsAndConditionsTemplate) {
+                                             String termsAndConditionsTemplate,
+                                             IndustrialFinanceTableModel industrialFinanceTable,
+                                             AcademicFinanceTableModel academicFinanceTable,
+                                             SummaryFinanceTableModel summaryFinanceTable) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -42,6 +48,9 @@ public class GrantOfferLetterTemplateViewModel {
         this.leadOrgName = leadOrgName;
         this.notes = notes;
         this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+        this.industrialFinanceTable = industrialFinanceTable;
+        this.academicFinanceTable = academicFinanceTable;
+        this.summaryFinanceTable = summaryFinanceTable;
     }
 
     public long getApplicationId() {
@@ -84,4 +93,15 @@ public class GrantOfferLetterTemplateViewModel {
         return termsAndConditionsTemplate;
     }
 
+    public IndustrialFinanceTableModel getIndustrialFinanceTable() {
+        return industrialFinanceTable;
+    }
+
+    public AcademicFinanceTableModel getAcademicFinanceTable() {
+        return academicFinanceTable;
+    }
+
+    public SummaryFinanceTableModel getSummaryFinanceTable() {
+        return summaryFinanceTable;
+    }
 }
