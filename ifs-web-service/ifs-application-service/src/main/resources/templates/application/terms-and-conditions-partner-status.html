@@ -21,15 +21,15 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row" >
-                <th class="govuk-table__header">Name</th>
-                <th class="govuk-table__header">Status</th>
+                <th class="govuk-table__header" scope="col">Partner</th>
+                <th class="govuk-table__header alignright" scope="col">Status</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row"
                 th:each="partner : ${model.partners}">
                 <td class="govuk-table__cell" th:text="${partner.name} + (${partner.lead} ? ' (Lead)' : '')">Polymorphism Ltd (Lead)</td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell alignright">
                     <span th:if="${partner.termsAccepted}" class="accepted">Accepted</span>
                     <span th:unless="${partner.termsAccepted}" class="unaccepted">Not yet accepted</span>
                 </td>

@@ -299,6 +299,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                                         TRUE,
                                         null)
                         ),
+                        false,
                         false
                 ),
                 new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
@@ -324,13 +325,15 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                                         null,
                                         null)
                         ),
+                        false,
                         false
                 ),
                 new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
                         "Finances",
                         "Each partner is required to submit their own finances.",
                         emptyList(),
-                        true
+                        true,
+                        false
                 )
         );
 

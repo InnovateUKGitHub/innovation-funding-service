@@ -42,7 +42,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           '</td>' +
           '<td class="govuk-table__cell"><button id="invite-collaborator-' + rowId + '" class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="govuk-table__cell alignright">' +
-          '<button id="remove-collaborator-' + rowId + '" class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove</button>' +
+          '<button id="remove-collaborator-' + rowId + '" class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove <span class="govuk-visually-hidden">team member</span></button>' +
           '</td>' +
           '</tr>')
       } else {
@@ -62,7 +62,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
           '<td class="govuk-table__cell alignright">' +
-          '<button class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove</button>' +
+          '<button class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove <span class="govuk-visually-hidden">team member</span></button>' +
           '</td>' +
           '</tr>')
       }

@@ -217,7 +217,7 @@ Status in the dashboard remains action required after uploads
     Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element        jQuery = ul li:contains("Document") span:contains("To be completed")
     When the user clicks the button/link        link = View the status of partners
-    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(2)
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
@@ -289,7 +289,7 @@ Non-lead partner can still view both documents after submitting
     And the user closes the last opened tab
     When the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
-    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
+    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
@@ -329,7 +329,7 @@ After rejection, status in the dashboard remains action required after uploads
     [Tags]
     When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     When the user clicks the button/link    link = View the status of partners
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(2)
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342

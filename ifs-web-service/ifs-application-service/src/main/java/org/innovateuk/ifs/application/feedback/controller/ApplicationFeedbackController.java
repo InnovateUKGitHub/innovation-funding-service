@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 @Controller
-@RequestMapping("/application")
+@RequestMapping("/application/{applicationId}/feedback")
 public class ApplicationFeedbackController {
 
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -61,7 +61,7 @@ public class ApplicationFeedbackController {
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
-    @GetMapping("/{applicationId}/feedback")
+    @GetMapping
     public String feedback(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler,
@@ -83,7 +83,7 @@ public class ApplicationFeedbackController {
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(value = "/{applicationId}/feedback", params = "uploadResponse")
+    @PostMapping(params = "uploadResponse")
     public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
@@ -104,7 +104,7 @@ public class ApplicationFeedbackController {
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(value = "/{applicationId}/feedback", params = "removeResponse")
+    @PostMapping(params = "removeResponse")
     public String removeResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
@@ -122,7 +122,7 @@ public class ApplicationFeedbackController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
-    @GetMapping("/{applicationId}/feedback/download-response")
+    @GetMapping("/download-response")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
@@ -132,7 +132,7 @@ public class ApplicationFeedbackController {
                 interviewResponseRestService.findResponse(applicationId).getSuccess());
     }
 
-    @GetMapping("/{applicationId}/feedback/download-feedback")
+    @GetMapping("/download-feedback")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody

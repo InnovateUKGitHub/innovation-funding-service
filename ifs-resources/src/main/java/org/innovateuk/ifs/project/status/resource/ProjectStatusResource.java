@@ -19,6 +19,7 @@ public class ProjectStatusResource {
     private String projectLeadOrganisationName;
 
     private ProjectActivityStates projectDetailsStatus;
+    private ProjectActivityStates projectTeamStatus;
     private ProjectActivityStates bankDetailsStatus;
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
@@ -29,13 +30,22 @@ public class ProjectStatusResource {
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
 
-    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber,
-                                 Long applicationNumber, String formattedApplicationNumber,
-                                 Integer numberOfPartners, String projectLeadOrganisationName,
-                                 ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus,
-                                 ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus,
-                                 ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates documentsStatus,
-                                 ProjectActivityStates grantOfferLetterStatus, Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState,
+    public ProjectStatusResource(String projectTitle,
+                                 Long projectNumber,
+                                 String formattedProjectNumber,
+                                 Long applicationNumber,
+                                 String formattedApplicationNumber,
+                                 Integer numberOfPartners,
+                                 String projectLeadOrganisationName,
+                                 ProjectActivityStates projectDetailsStatus,
+                                 ProjectActivityStates projectTeamStatus,
+                                 ProjectActivityStates bankDetailsStatus,
+                                 ProjectActivityStates financeChecksStatus,
+                                 ProjectActivityStates spendProfileStatus,
+                                 ProjectActivityStates monitoringOfficerStatus,
+                                 ProjectActivityStates documentsStatus,
+                                 ProjectActivityStates grantOfferLetterStatus,
+                                 Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState,
                                  boolean grantOfferLetterSent,
                                  ProjectState projectState) {
         this.projectTitle = projectTitle;
@@ -46,6 +56,7 @@ public class ProjectStatusResource {
         this.numberOfPartners = numberOfPartners;
         this.projectLeadOrganisationName = projectLeadOrganisationName;
         this.projectDetailsStatus = projectDetailsStatus;
+        this.projectTeamStatus = projectTeamStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
@@ -95,6 +106,14 @@ public class ProjectStatusResource {
 
     public void setProjectDetailsStatus(ProjectActivityStates projectDetailsStatus) {
         this.projectDetailsStatus = projectDetailsStatus;
+    }
+
+    public ProjectActivityStates getProjectTeamStatus() {
+        return projectTeamStatus;
+    }
+
+    public void setProjectTeamStatus(ProjectActivityStates projectTeamStatus) {
+        this.projectTeamStatus = projectTeamStatus;
     }
 
     public ProjectActivityStates getBankDetailsStatus() {
@@ -210,6 +229,7 @@ public class ProjectStatusResource {
                 .append(numberOfPartners, that.numberOfPartners)
                 .append(projectLeadOrganisationName, that.projectLeadOrganisationName)
                 .append(projectDetailsStatus, that.projectDetailsStatus)
+                .append(projectTeamStatus, that.projectTeamStatus)
                 .append(bankDetailsStatus, that.bankDetailsStatus)
                 .append(financeChecksStatus, that.financeChecksStatus)
                 .append(spendProfileStatus, that.spendProfileStatus)
@@ -230,6 +250,7 @@ public class ProjectStatusResource {
                 .append(numberOfPartners)
                 .append(projectLeadOrganisationName)
                 .append(projectDetailsStatus)
+                .append(projectTeamStatus)
                 .append(bankDetailsStatus)
                 .append(financeChecksStatus)
                 .append(spendProfileStatus)
@@ -250,6 +271,7 @@ public class ProjectStatusResource {
                 .append("numberOfPartners", numberOfPartners)
                 .append("projectLeadOrganisationName", projectLeadOrganisationName)
                 .append("projectDetailsStatus", projectDetailsStatus)
+                .append("projectTeamStatus", projectTeamStatus)
                 .append("bankDetailsStatus", bankDetailsStatus)
                 .append("financeChecksStatus", financeChecksStatus)
                 .append("spendProfileStatus", spendProfileStatus)

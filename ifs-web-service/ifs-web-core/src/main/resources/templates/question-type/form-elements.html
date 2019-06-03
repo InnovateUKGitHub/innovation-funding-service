@@ -235,7 +235,7 @@
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
                         <th:block
-                            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
+                            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model}, 'question')" />
                     </th:block>
 
                     <!--/* if  readonly we show the edit form button */-->
@@ -443,20 +443,22 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model)">
+<th:block th:fragment="form-mark-as-complete-buttons (model, pageType)">
     <th:block th:unless="${model.closed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${model.questionId}"
-                class="govuk-button button-clear">Edit
+                class="govuk-button button-clear"
+                aria-label="Edit">Edit <span class="govuk-visually-hidden" th:text="${pageType}"></span>
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
             type="submit"
             name="mark_as_complete"
             class="govuk-button button-clear"
-            th:value="${model.questionId}">Mark as complete
+            th:value="${model.questionId}"
+            aria-label="Mark as complete">Mark <span class="govuk-visually-hidden" th:text="${pageType}"></span> as complete
         </button>
     </th:block>
 </th:block>

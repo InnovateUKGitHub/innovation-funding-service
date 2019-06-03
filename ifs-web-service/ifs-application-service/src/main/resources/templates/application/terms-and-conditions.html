@@ -34,13 +34,13 @@
                     of the page.</p>
             </div>
 
-        <!-- /* 2. Where there is more than one organisation in the application: */ -->
-        <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">
-                You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
-                application cannot be submitted until all partners have read and accepted the terms.
-                <a class="govuk-link" th:href="@{terms-and-conditions/partner-status}">View partners' acceptance</a>
-            </p>
+            <!-- /* 2. Where there is more than one organisation in the application: */ -->
+            <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">
+                    You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
+                    application cannot be submitted until all partners have read and accepted the terms.
+                    <a class="govuk-link" th:href="@{terms-and-conditions/partner-status}">View partners' acceptance</a>
+                </p>
             </div>
         </th:block>
 

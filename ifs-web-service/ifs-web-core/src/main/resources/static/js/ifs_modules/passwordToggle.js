@@ -27,7 +27,7 @@ IFS.core.passwordToggle = (function () {
       passwordInput.prop('name', Math.random().toString(36).replace(/[^a-z]+/g, ''))
       passwordInput.focus()
       button.text('Hide')
-      button.attr('aria-checked', true)
+      button.attr('aria-pressed', true)
       submitButton.on('click', function () {
         passwordInput.prop('name', fieldName)
         passwordInput.prop('type', 'password')
@@ -38,7 +38,7 @@ IFS.core.passwordToggle = (function () {
       passwordInput.prop('name', fieldName)
       passwordInput.focus()
       button.text('Show')
-      button.attr('aria-checked', false)
+      button.attr('aria-pressed', false)
     }
   }
 })()
