@@ -44,6 +44,7 @@ public class ProjectDocs {
             fieldWithPath("numberOfPartners").description("Number of partners"),
             fieldWithPath("projectLeadOrganisationName").description("Name of the project lead organisation"),
             fieldWithPath("projectDetailsStatus").description("Status of the project details"),
+            fieldWithPath("projectTeamStatus").description("Status of the project team section"),
             fieldWithPath("bankDetailsStatus").description("Status of the bank details"),
             fieldWithPath("financeChecksStatus").description("Status of the finance checks"),
             fieldWithPath("spendProfileStatus").description("Status of the spend profile"),

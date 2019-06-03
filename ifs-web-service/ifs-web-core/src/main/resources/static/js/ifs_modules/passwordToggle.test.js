@@ -21,7 +21,7 @@ describe('test passwordToggle', () => {
         IFS.core.passwordToggle.showPassword(button, passwordInput, submitButton, form)
 
         // check we're in the show state
-        expect(button.attr('aria-checked')).toBe("true")
+        expect(button.attr('aria-pressed')).toBe("true")
         expect(button.text()).toBe("Hide")
         expect(passwordInput.attr('name')).not.toBe(expectedFieldName)
         expect(passwordInput.attr('type')).toBe("text")
@@ -46,7 +46,7 @@ describe('test passwordToggle', () => {
         IFS.core.passwordToggle.hidePassword(button, shownPasswordInput)
 
         // check we're in the hide state
-        expect(button.attr('aria-checked')).toBe("false")
+        expect(button.attr('aria-pressed')).toBe("false")
         expect(button.text()).toBe("Show")
         expect(shownPasswordInput.attr('name')).toBe(expectedFieldName)
         expect(shownPasswordInput.attr('type')).toBe("password")

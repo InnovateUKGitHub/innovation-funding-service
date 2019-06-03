@@ -45,6 +45,6 @@ public interface MonitoringOfficerInviteService {
     @SecuredBySpring(value = "READ_MONITORING_OFFICER_INVITE_ON_HASH",
             description = "The System Registration user and add the monitoring officer role to a user specific by the invite",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> addMonitoringOfficerRole(String hash);
+    ServiceResult<User> addMonitoringOfficerRole(String hash);
 
 }

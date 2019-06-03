@@ -56,58 +56,58 @@ public class TeamStatusController {
         return "project/consortium-status";
     }
 
-    private void populateProjectTeamStatuses(ProjectTeamStatusResource teamStatus, final Long projectId) {
+    private void populateProjectTeamStatuses(ProjectTeamStatusResource consortiumStatus, final Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
 
-        setLeadPartnerProjectDetailsTeamStatus(teamStatus, partnerProjectLocationRequired);
-        setOtherPartnersProjectDetailsTeamStatus(teamStatus, partnerProjectLocationRequired);
-        setLeadPartnerMonitoringOfficerStatus(teamStatus, partnerProjectLocationRequired);
+        setLeadPartnerProjectDetailsTeamStatus(consortiumStatus, partnerProjectLocationRequired);
+        setOtherPartnersProjectDetailsTeamStatus(consortiumStatus, partnerProjectLocationRequired);
+        setLeadPartnerProjectTeamStatus(consortiumStatus);
+        setLeadPartnerMonitoringOfficerStatus(consortiumStatus, partnerProjectLocationRequired);
     }
 
-    private void setLeadPartnerProjectDetailsTeamStatus(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
+    private void setLeadPartnerProjectTeamStatus(ProjectTeamStatusResource consortiumStatus) {
+        boolean projectManagerSet = consortiumStatus.isProjectManagerAssigned();
+        ProjectPartnerStatusResource leadPartner = consortiumStatus.getLeadPartnerStatus();
+        boolean leadFinanceContactSet = leadPartner.getFinanceContactStatus().equals(COMPLETE);
+        if(projectManagerSet && leadFinanceContactSet) {
+            leadPartner.setProjectTeamStatus(COMPLETE);
+        } else {
+            leadPartner.setProjectTeamStatus(ACTION_REQUIRED);
+        }
+    }
 
-        boolean allFinanceContactSubmitted = teamStatus.getPartnerStatuses()
-                .stream()
-                .allMatch(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getFinanceContactStatus()));
+    private void setLeadPartnerProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus, boolean partnerProjectLocationRequired) {
 
-        boolean allPartnerProjectLocationsSubmitted = teamStatus
+        boolean allPartnerProjectLocationsSubmitted = consortiumStatus
                 .checkForAllPartners(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getPartnerProjectLocationStatus()));
 
-        boolean allRequiredDetailsComplete;
-        if (partnerProjectLocationRequired) {
-            allRequiredDetailsComplete = allFinanceContactSubmitted && allPartnerProjectLocationsSubmitted;
-        } else {
-            allRequiredDetailsComplete = allFinanceContactSubmitted;
-        }
+        boolean requiredDetailsComplete = (!partnerProjectLocationRequired || allPartnerProjectLocationsSubmitted);
 
-        ProjectPartnerStatusResource leadProjectPartnerStatusResource = teamStatus.getLeadPartnerStatus();
-        if (!(COMPLETE.equals(leadProjectPartnerStatusResource.getProjectDetailsStatus()) && allRequiredDetailsComplete)) {
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = consortiumStatus.getLeadPartnerStatus();
+        if (!(COMPLETE.equals(leadProjectPartnerStatusResource.getProjectDetailsStatus()) && requiredDetailsComplete)) {
             leadProjectPartnerStatusResource.setProjectDetailsStatus(ACTION_REQUIRED);
         }
     }
 
-    private void setOtherPartnersProjectDetailsTeamStatus(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
+    private void setOtherPartnersProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus, boolean partnerProjectLocationRequired) {
 
-        CollectionFunctions.simpleMap(teamStatus.getOtherPartnersStatuses(),
+        CollectionFunctions.simpleMap(consortiumStatus.getOtherPartnersStatuses(),
                 projectPartnerStatusResource -> setOtherPartnerProjectDetailsTeamStatus(projectPartnerStatusResource, partnerProjectLocationRequired));
     }
 
     private ProjectPartnerStatusResource setOtherPartnerProjectDetailsTeamStatus(ProjectPartnerStatusResource otherPartnerStatusResource, boolean partnerProjectLocationRequired) {
 
-        ProjectActivityStates financeContactStatus = otherPartnerStatusResource.getFinanceContactStatus();
         ProjectActivityStates partnerProjectLocationStatus = otherPartnerStatusResource.getPartnerProjectLocationStatus();
 
-        if (partnerProjectLocationRequired) {
-            if (COMPLETE.equals(financeContactStatus) && COMPLETE.equals(partnerProjectLocationStatus)) {
-                otherPartnerStatusResource.setProjectDetailsStatus(COMPLETE);
-            } else {
+        if (partnerProjectLocationRequired && !COMPLETE.equals(partnerProjectLocationStatus)) {
                 otherPartnerStatusResource.setProjectDetailsStatus(ACTION_REQUIRED);
+            } else {
+                otherPartnerStatusResource.setProjectDetailsStatus(COMPLETE);
             }
-        }
 
         return otherPartnerStatusResource;
     }

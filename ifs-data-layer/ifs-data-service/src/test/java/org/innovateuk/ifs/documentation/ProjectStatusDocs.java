@@ -15,6 +15,7 @@ public class ProjectStatusDocs {
             fieldWithPath("numberOfPartners").description("Number of partners of the project status"),
             fieldWithPath("projectLeadOrganisationName").description("Project lead organisation name of the project status"),
             fieldWithPath("projectDetailsStatus").description("Project details status of the project status"),
+            fieldWithPath("projectTeamStatus").description("Project team status of the project status"),
             fieldWithPath("bankDetailsStatus").description("Bank details status of the project status"),
             fieldWithPath("financeChecksStatus").description("Finance checks status of the project status"),
             fieldWithPath("spendProfileStatus").description("Spend profile status of the project status"),

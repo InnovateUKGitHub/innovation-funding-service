@@ -86,8 +86,6 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
-*** Variables ***
-
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
@@ -1013,9 +1011,9 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Setup]    log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     css = ul li.complete:nth-child(1)
-    And the user should see the element     css = ul li.complete:nth-child(4)
     And the user should see the element     css = ul li.complete:nth-child(5)
-    And the user should see the element     css = ul li.read-only:nth-child(6)
+    And the user should see the element     css = ul li.complete:nth-child(6)
+    And the user should see the element     css = ul li.read-only:nth-child(7)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
@@ -1042,8 +1040,8 @@ Finance contact can access the external view of the finance checks page
     [Tags]
     [Setup]    Log in as a different user   &{successful_applicant_credentials}
     Given the user clicks the button/link   jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery = ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery = ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery = ul li.complete:nth-of-type(6):contains("We will review your financial information.")
+    And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     Then the user should not see an error in the page
     And the user should see the element     jQuery = .success-alert:contains("The checks have been completed and your finances approved.")
@@ -1076,8 +1074,8 @@ Academic user can view Finance checks page
     [Tags]
     Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery = ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery = ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery = ul li.complete:nth-of-type(6):contains("We will review your financial information.")
+    And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     Then the user should see the element    jQuery = .success-alert:contains("The checks have been completed and your finances approved.")
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
@@ -1088,8 +1086,8 @@ Non Lead Partner can view finance checks page
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery = ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery = ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery = ul li.complete:nth-of-type(6):contains("We will review your financial information.")
+    And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     And the user should see the element     jQuery = .success-alert:contains("The checks have been completed and your finances approved.")
 
@@ -1431,5 +1429,5 @@ check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
     the user clicks the button/link    link = ${FUNDERS_PANEL_APPLICATION_1_TITLE}
     the user should see the element    link = Finance checks
-    the user should see the element     jQuery = ul li.${selector}:nth-of-type(5):contains("We will review your financial information.")
-    the user should see the element     jQuery = ul li.${selector}:nth-of-type(5):contains(${status})
+    the user should see the element     jQuery = ul li.${selector}:nth-of-type(6):contains("We will review your financial information.")
+    the user should see the element     jQuery = ul li.${selector}:nth-of-type(6):contains(${status})
