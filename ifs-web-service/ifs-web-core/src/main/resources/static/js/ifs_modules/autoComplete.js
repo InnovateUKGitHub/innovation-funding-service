@@ -39,7 +39,9 @@ IFS.core.autoComplete = (function () {
           required: required,
           onConfirm: function (confirmed) {
             if (confirmed) {
-              var selectedUserId = element.children('option:contains(' + confirmed + ')').val()
+              var selectedUserId = element.children('option').filter(function () {
+                return jQuery(this).text() === confirmed
+              }).val()
               element.val(selectedUserId)
               autoCompleteSubmitElement.prop('disabled', false)
             } else if (element.parent().find('.autocomplete__input').val() === '') {
