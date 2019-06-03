@@ -174,10 +174,6 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
-    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
 
 // Perf tasks
 
@@ -323,11 +319,6 @@ task createProject(dependsOn: deleteProject) {
             }
         }
     }
-}
-
-task osDeployFractalRemote(type: Exec, dependsOn: prepareDeployment) {
-    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
-    args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {

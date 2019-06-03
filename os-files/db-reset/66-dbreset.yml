@@ -21,6 +21,14 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
+    name: bitbucket-config
+  data:
+    ACC_USERNAME: "${ACC_USERNAME}"
+    ACC_PASSWORD: "${ACC_PASSWORD}"
+    ACC_BITBUCKET_URL: "${ACC_BITBUCKET_URL}"
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
     name: ldap-config
   data:
     LDAP_HOST: "${LDAP_HOST}"
@@ -76,6 +84,21 @@ items:
           configMapKeyRef:
             name: db-config
             key: DB_PASS
+      - name: ACC_BITBUCKET_URL
+        valueFrom:
+          configMapKeyRef:
+            name: bitbucket-config
+            key: ACC_BITBUCKET_URL
+      - name: ACC_USERNAME
+        valueFrom:
+          configMapKeyRef:
+            name: bitbucket-config
+            key: ACC_USERNAME
+      - name: ACC_PASSWORD
+        valueFrom:
+          configMapKeyRef:
+            name: bitbucket-config
+            key: ACC_PASSWORD
       - name: LDAP_HOST
         valueFrom:
           configMapKeyRef:
