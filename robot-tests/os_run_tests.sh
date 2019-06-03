@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "THIS IS THE UMASK:"
+umask
+echo "THIS IS THE UMASK ^^^"
+
+
 # Define some functions for later use
 
 function coloredEcho() {
