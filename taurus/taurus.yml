@@ -95,4 +95,4 @@ scenarios:
 reporting:
 - module: passfail
   criteria:
-  - fail>100% for 10s, stop as failed
+  - succ<100%, stop as failed
