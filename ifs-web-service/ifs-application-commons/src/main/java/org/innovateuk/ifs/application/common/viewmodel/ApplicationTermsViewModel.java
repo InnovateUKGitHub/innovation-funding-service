@@ -33,7 +33,7 @@ public class ApplicationTermsViewModel {
         this.termsAcceptedByName = termsAcceptedByName;
         this.termsAcceptedOn = termsAcceptedOn;
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
-        this.showHeaderAndFooter = false;
+        this.showHeaderAndFooter = true;
     }
 
     public ApplicationTermsViewModel(long applicationId,

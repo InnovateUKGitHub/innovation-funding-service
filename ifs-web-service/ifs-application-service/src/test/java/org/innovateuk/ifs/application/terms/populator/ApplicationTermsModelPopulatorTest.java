@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -38,6 +39,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -77,6 +79,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -110,6 +113,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
+        assertTrue(actual.isShowHeaderAndFooter());
         assertFalse(actual.getTermsAccepted().get());
         assertFalse(actual.getTermsAcceptedByName().isPresent());
         assertFalse(actual.getTermsAcceptedOn().isPresent());
@@ -139,6 +143,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -203,6 +208,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -272,6 +278,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -310,6 +317,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
+
         assertTrue(actual.getTermsAccepted().get());
         assertFalse(actual.getTermsAcceptedByName().get().isEmpty());
         assertFalse(actual.getTermsAcceptedOn().isPresent());
@@ -342,10 +350,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.OPEN)
                 .build();
 
         long questionId = 3L;
@@ -381,6 +391,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
+        assertTrue(actual.isShowHeaderAndFooter());
         assertTrue(actual.getTermsAccepted().get());
         assertEquals(acceptedUser.getName(), actual.getTermsAcceptedByName().get());
         assertEquals(acceptedDate, actual.getTermsAcceptedOn().get());
@@ -410,6 +421,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -450,6 +462,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
+        assertTrue(actual.isShowHeaderAndFooter());
         assertFalse(actual.getTermsAccepted().get());
         assertFalse(actual.getTermsAcceptedByName().isPresent());
         assertFalse(actual.getTermsAcceptedOn().isPresent());
@@ -482,6 +495,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -517,6 +531,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
+        assertFalse(actual.isShowHeaderAndFooter());
         assertFalse(actual.getTermsAccepted().isPresent());
         assertFalse(actual.getTermsAcceptedByName().isPresent());
         assertFalse(actual.getTermsAcceptedOn().isPresent());
@@ -532,5 +547,66 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
-}
 
+    @Test
+    public void populate_applicationSubmitted() {
+        String termsTemplate = "terms-template";
+        boolean collaborative = true;
+
+        UserResource currentUser = newUserResource().withFirstName("tom").withLastName("baldwin").build();
+
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
+        CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .build();
+
+        long questionId = 3L;
+        SectionResource termsAndConditionsSection = newSectionResource()
+                .withQuestions(singletonList(questionId))
+                .build();
+
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withUser(currentUser)
+                .withApplication(application.getId())
+                .build(1);
+
+        OrganisationResource organisation = newOrganisationResource().build();
+        QuestionStatusResource questionStatus = newQuestionStatusResource().build();
+
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
+        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
+        when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
+        when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+
+        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
+        assertTrue(actual.isCollaborativeApplication());
+        assertFalse(actual.isShowHeaderAndFooter());
+        assertFalse(actual.getTermsAccepted().isPresent());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
+        assertTrue(actual.isTermsAcceptedByAllOrganisations());
+        assertFalse(actual.isMigratedTerms());
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, userRestServiceMock,
+                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
+        inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
+        inOrder.verify(userRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
+        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
+        inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
+        inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+}
