@@ -52,7 +52,7 @@ public class ApplicationTermsModelPopulator {
 
         // is the current user a member of this application?
         Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
-        if (organisation.isPresent() && competition.isOpen() && !application.isSubmitted()) {
+        if (organisation.isPresent() && competition.isOpen() && application.isOpen()) {
             Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
                     questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
                             termsQuestionId, applicationId, organisation.get().getId()).getSuccess();

@@ -84,6 +84,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
 
         long questionId = 3L;
@@ -148,6 +149,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
 
         long questionId = 3L;
@@ -213,6 +215,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
 
         long questionId = 3L;
@@ -283,6 +286,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
 
         long questionId = 3L;
@@ -426,6 +430,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
 
         long questionId = 3L;
