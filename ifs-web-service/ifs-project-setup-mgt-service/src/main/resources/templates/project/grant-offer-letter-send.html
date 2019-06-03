@@ -5,7 +5,6 @@
 </head>
 <body class="govuk-template__body competition-management project-management grant-offer-letter">
 <th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:insert="fragments/modals :: modal-accept-send-gol" />
 <th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
 <th:block th:insert="fragments/modals :: modal-reject-signed-gol" />
 
@@ -14,7 +13,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
@@ -24,7 +23,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <p class="govuk-body">
+        <p th:if="${model.h2020}" class="govuk-body">
             <strong class="govuk-!-font-size-24">Project type:</strong>
             <span class="govuk-tag">Horizon 2020</span>
         </p>
@@ -62,7 +61,7 @@
         </p>
 
         <ol class="govuk-list govuk-list--number">
-            <li>Copy the whole grant offer letter and paste it into the <a href="/" class="govuk-link">template document</a></li>
+            <li>Copy the whole grant offer letter and paste it into the <a href="/files/GOL_template.docx" class="govuk-link">template document</a></li>
             <li>Edit it only if your changes have been fully approved</li>
             <li>Use the additional information box to get details for your edits</li>
             <li>Delete the additional information box</li>
@@ -138,15 +137,22 @@
             </form>
         </div>
         <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
-            <form class="govuk-!-margin-top-9">
-                <div class="govuk-form-group">
-                    <!--<span class="govuk-error-message">-->
-                        <!--<span class="govuk-visually-hidden">Error:</span> You must confirm that the grant offer letter has been approved by another member of your team.-->
-                    <!--</span>-->
+            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
+                  th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
+                <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
+                    <th:block th:if="${#fields.hasErrors('confirmation')}">
+                        <span class="govuk-error-message"
+                              th:each="err : ${#fields.errors('confirmation')}"
+                              th:text="${err}"></span>
+                    </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input"
                                    id="confirmation"
+                                   th:field="*{confirmation}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
                                    type="checkbox">
                             <label class="govuk-label govuk-checkboxes__label" for="confirmation">
                                 I confirm the grant offer letter has been thoroughly checked and approved by another
