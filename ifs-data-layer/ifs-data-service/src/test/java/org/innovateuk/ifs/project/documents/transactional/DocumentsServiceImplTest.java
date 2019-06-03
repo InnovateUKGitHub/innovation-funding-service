@@ -39,31 +39,17 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.REJECTED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.*;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsService> {
 
@@ -326,7 +312,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
         verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
-        verify(grantOfferLetterServiceMock, never()).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -338,7 +323,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
         verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
-        verify(grantOfferLetterServiceMock, never()).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -350,7 +334,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
         verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
-        verify(grantOfferLetterServiceMock, never()).generateGrantOfferLetterIfReady(projectId);
     }
 
 
@@ -364,7 +347,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
         verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
-        verify(grantOfferLetterServiceMock, never()).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -377,7 +359,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED));
         verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
-        verify(grantOfferLetterServiceMock, never()).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -387,14 +368,12 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         projectDocument.setStatus(SUBMITTED);
         ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
 
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
         ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
 
         assertTrue(result.isSuccess());
         assertEquals(REJECTED, projectDocument.getStatus());
         assertEquals(rejectionReason, projectDocument.getStatusComments());
         verify(projectDocumentRepositoryMock).save(projectDocument);
-        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -404,7 +383,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         projectDocument.setStatus(SUBMITTED);
         ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
 
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceFailure(GRANT_OFFER_LETTER_GENERATION_FAILURE));
         ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
 
         assertTrue(result.isFailure());
@@ -412,7 +390,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertEquals(REJECTED, projectDocument.getStatus());
         assertEquals(rejectionReason, projectDocument.getStatusComments());
         verify(projectDocumentRepositoryMock).save(projectDocument);
-        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(projectId);
     }
 
     @Test
@@ -422,14 +399,12 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         projectDocument.setStatus(SUBMITTED);
         ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(true, rejectionReason);
 
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
         ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
 
         assertTrue(result.isSuccess());
         assertEquals(APPROVED, projectDocument.getStatus());
         assertNull(projectDocument.getStatusComments());
         verify(projectDocumentRepositoryMock).save(projectDocument);
-        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(projectId);
     }
 
 
