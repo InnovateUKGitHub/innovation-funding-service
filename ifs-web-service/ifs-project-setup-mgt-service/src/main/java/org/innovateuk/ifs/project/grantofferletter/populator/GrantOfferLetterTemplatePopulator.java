@@ -15,7 +15,6 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTable
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.spendprofile.service.SpendProfileRestService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -45,8 +44,6 @@ public class GrantOfferLetterTemplatePopulator {
 
     private final ProjectFinanceNotesRestService projectFinanceNotesRestService;
 
-    private final SpendProfileRestService spendProfileRestService;
-
     private final IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator;
 
     private final AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator;
@@ -62,7 +59,6 @@ public class GrantOfferLetterTemplatePopulator {
             UserRestService userRestService,
             ProjectFinanceRestService projectFinanceRestService,
             ProjectFinanceNotesRestService projectFinanceNotesRestService,
-            SpendProfileRestService spendProfileRestService,
             IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator,
             AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator,
             SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator
@@ -74,7 +70,6 @@ public class GrantOfferLetterTemplatePopulator {
         this.userRestService = userRestService;
         this.projectFinanceRestService = projectFinanceRestService;
         this.projectFinanceNotesRestService = projectFinanceNotesRestService;
-        this.spendProfileRestService = spendProfileRestService;
         this.industrialFinanceTableModelPopulator = industrialFinanceTableModelPopulator;
         this.academicFinanceTableModelPopulator = academicFinanceTableModelPopulator;
         this.summaryFinanceTableModelPopulator = summaryFinanceTableModelPopulator;
