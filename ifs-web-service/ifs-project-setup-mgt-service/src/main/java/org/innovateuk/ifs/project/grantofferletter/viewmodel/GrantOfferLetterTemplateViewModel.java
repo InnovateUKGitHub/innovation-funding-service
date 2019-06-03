@@ -10,19 +10,15 @@ import java.util.List;
  */
 public class GrantOfferLetterTemplateViewModel {
 
-    private long applicationId;
-    private String projectManagerFirstName;
-    private String projectManagerLastName;
-    private List<String> projectAddress;
-    private String competitionName;
-    private String projectName;
-    private String leadOrgName;
-    private List<NoteResource> notes;
-    private String termsAndConditionsTemplate;
-
-    public GrantOfferLetterTemplateViewModel() {
-
-    }
+    private final long applicationId;
+    private final String projectManagerFirstName;
+    private final String projectManagerLastName;
+    private final List<String> projectAddress;
+    private final String competitionName;
+    private final String projectName;
+    private final String leadOrgName;
+    private final List<NoteResource> notes;
+    private final String termsAndConditionsTemplate;
 
     public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,

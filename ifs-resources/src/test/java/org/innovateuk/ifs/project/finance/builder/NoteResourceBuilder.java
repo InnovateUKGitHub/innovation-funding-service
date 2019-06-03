@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class NoteResourceBuilder extends BaseBuilder<NoteResource, NoteResourceBuilder> {
@@ -33,24 +32,24 @@ public class NoteResourceBuilder extends BaseBuilder<NoteResource, NoteResourceB
     }
 
     public final NoteResourceBuilder withId(Long... ids) {
-        return withArray((id, note) -> setField("id", id, note), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public final NoteResourceBuilder withContextClassPk(Long... pks) {
-        return withArray((pk, note) -> setField("contextClassPk", pk, note), pks);
+        return withArraySetFieldByReflection("contextClassPk", pks);
     }
 
     @SafeVarargs
     public final NoteResourceBuilder withPosts(List<PostResource>... posts) {
-        return withArray((post, note) -> setField("posts", post, note), posts);
+        return withArraySetFieldByReflection("posts", posts);
     }
 
     public final NoteResourceBuilder withTitle(String... titles) {
-        return withArray((title, note) -> setField("title", title, note), titles);
+        return withArraySetFieldByReflection("title", titles);
     }
 
     public final NoteResourceBuilder withCreatedOn(ZonedDateTime... dates) {
-        return withArray((date, note) -> setField("createdOn", date, note), dates);
+        return withArraySetFieldByReflection("createdOn", dates);
     }
 
 }
