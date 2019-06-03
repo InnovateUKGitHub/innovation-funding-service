@@ -315,7 +315,7 @@ The user is able to complete Your project location section
      the user clicks the button/link           jQuery = a:contains("Your project location")
      the user should see the element           jQuery = h1:contains("Your project location")
      the user enters text to a text field      id = postcode   SE1 9HB
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your project location") > .task-status-complete
 
 The user is able to complete Your organisation section
@@ -324,7 +324,7 @@ The user is able to complete Your organisation section
      the user selects the radio button         organisationSize   MEDIUM
      the user enters text to a text field      id = turnover   500000
      the user enters text to a text field      id = headCount  100
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your organisation") > .task-status-complete
 
 The user is able to complete your project costs section
@@ -338,7 +338,7 @@ The user is able to complete your project costs section
     the user enters text to a text field      id = subcontracting  15000
     the user enters text to a text field      id = travel  10000
     the user enters text to a text field      id = other  0
-    the user clicks the button/link           jQuery = button:contains("Mark as complete")
+    the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
@@ -377,7 +377,7 @@ Validate errors on Application details page
 
 Validate errors on Public description page
     the user clicks the button/link                      jQuery = a:contains("Public description")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Please enter some text.
     the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
 
@@ -390,11 +390,11 @@ Validate errors on H2020 grant agreement page
 Validate errors on Your Finances section
     the user clicks the button/link                      jQuery = a:contains("Your finances")
     the user clicks the button/link                      jQuery = a:contains("Your project location")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.
     the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter your organisation size.
     the user should see a field and summary error        ${empty_field_warning_message}
     the user should see a field and summary error        ${empty_field_warning_message}

@@ -44,7 +44,7 @@ IFS.application.progressiveSelect = (function () {
         if (inst.is('[disabled]')) {
           html += '<li>' + content + '</li>'
         } else {
-          html += '<li><button id="assign-' + value + '" value="' + value + '" name="' + name + '" class="button-clear">' + content + '</button></li>'
+          html += '<li><button id="assign-' + value + '" value="' + value + '" name="' + name + '" class="button-clear" aria-label="Reassign task to different team member"><span class="govuk-visually-hidden">Reassign this to </span>' + content + '</button></li>'
         }
       })
       html += '</ul>'
