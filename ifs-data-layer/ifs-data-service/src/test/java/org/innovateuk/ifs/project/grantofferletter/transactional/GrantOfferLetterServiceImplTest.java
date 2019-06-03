@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -141,6 +142,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private CostRepository costRepositoryMock;
+
+    @Mock
+    private GrantProcessService grantProcessServiceMock;
 
     @Before
     public void setUp() {

@@ -377,22 +377,6 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     }
 
     @Test
-    public void documentDecisionWhenGOLGenerationFails() {
-
-        String rejectionReason = "Missing details";
-        projectDocument.setStatus(SUBMITTED);
-        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
-
-        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(GRANT_OFFER_LETTER_GENERATION_FAILURE));
-        assertEquals(REJECTED, projectDocument.getStatus());
-        assertEquals(rejectionReason, projectDocument.getStatusComments());
-        verify(projectDocumentRepositoryMock).save(projectDocument);
-    }
-
-    @Test
     public void documentDecisionWhenApproved() {
 
         String rejectionReason = "Reason not used when approved";
