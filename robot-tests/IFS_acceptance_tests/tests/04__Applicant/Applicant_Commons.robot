@@ -341,7 +341,7 @@ logged in user applies to competition
 navigate to next page if not found
     [Arguments]  ${competition}
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
 
 the user select the competition and starts application
     [Arguments]  ${competition}
