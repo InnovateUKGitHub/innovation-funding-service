@@ -2,13 +2,34 @@
 SET @new_stakeholder_user_id =
 (SELECT id FROM user WHERE email = 'rayon.kevin@gmail.com');
 
+SET @sustainable =
+(SELECT id FROM competition WHERE name = 'Sustainable living models for the future');
+
+SET @internet_of_things =
+(SELECT id FROM competition WHERE name = 'Internet of Things');
+
+SET @rolling_stock =
+(SELECT id FROM competition WHERE name = 'Rolling stock future developments');
+
+SET @machine_learning =
+(SELECT id FROM competition WHERE name = 'Machine learning for transport infrastructure');
+
+SET @generic =
+(SELECT id FROM competition WHERE name = 'Generic innovation');
+
+SET @photonics =
+(SELECT id FROM competition WHERE name = 'Photonics for Research');
+
+SET @biosciences =
+(SELECT id FROM competition WHERE name = 'Biosciences round three: plastic recovery in the industrial sector');
+
 insert into competition_user
 (competition_id, competition_role, user_id, participant_status_id)
 values
-(23, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(24, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(11, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(35, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(16, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(10, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(18, 'STAKEHOLDER', @new_stakeholder_user_id, 2);
+(@sustainable, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@internet_of_things, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@rolling_stock, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@machine_learning, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@generic, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@photonics, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
+(@biosciences, 'STAKEHOLDER', @new_stakeholder_user_id, 2);

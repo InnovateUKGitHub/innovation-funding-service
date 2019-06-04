@@ -16,9 +16,9 @@ SET @assigned_application_id =
 (SELECT application_id FROM project WHERE name = 'Super-EFFY - Super Efficient Forecasting of Freight Yields');
 
 INSERT INTO project_user
-(project_id, organisation_id, user_id, project_role, participant_status_id)
+(project_id, organisation_id, user_id, project_role, participant_status_id, type)
 VALUES
-(@assigned_project_id, @mo_organisation_id, @mo_user_id, 'MONITORING_OFFICER', 2);
+(@assigned_project_id, @mo_organisation_id, @mo_user_id, 'MONITORING_OFFICER', 2, 'PROJECT_MONITORING_OFFICER');
 
 
 INSERT INTO process_role
