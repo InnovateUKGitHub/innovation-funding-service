@@ -95,4 +95,4 @@ scenarios:
 reporting:
 - module: passfail
   criteria:
-  - succ<100%, stop as failed
+  - ${fail_criteria}
