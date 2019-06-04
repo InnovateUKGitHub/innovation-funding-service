@@ -303,7 +303,7 @@
                         <td>Other Costs1</td>
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
-                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">£
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">&pound;
                             <th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                                       th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
@@ -312,7 +312,7 @@
                         <td>Other Costs2</td>
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
-                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">£
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">&pound;
                             <th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                                       th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
@@ -344,13 +344,28 @@
                                       th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
+                    <!--<tr>-->
+                        <!--<th>Total eligible costs</th>-->
+                        <!--<td style="text-align:right;"-->
+                            <!--th:each="(organisation : ${model.industrialFinanceTable.organisations})"-->
+                            <!--th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">£-->
+                            <!--<th:block th:text="${#numbers.formatInteger(organisationFinance.getAllTotalEligibleCosts(), 0, 'DEFAULT')}">£0</th:block>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<th>Rate of grant (%)</th>-->
+                        <!--<td style="text-align:right;"-->
+                            <!--th:each="(organisation : ${model.industrialFinanceTable.organisations})"-->
+                            <!--th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">£-->
+                            <!--<th:block th:text="${#numbers.formatInteger(organisationFinance.getAllTotalGrantClaim(), 0, 'DEFAULT')}">£0</th:block>-->
+                        <!--</td>-->
+                    <!--</tr>-->
                     <tr>
-                        <td>Other Costs WBBA</td>
+                        <th>Total grant</th>
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                             th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">£
-                            <th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
-                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                            <th:block th:text="${#numbers.formatInteger(organisationFinance.getTotal(), 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
                 </tbody>
