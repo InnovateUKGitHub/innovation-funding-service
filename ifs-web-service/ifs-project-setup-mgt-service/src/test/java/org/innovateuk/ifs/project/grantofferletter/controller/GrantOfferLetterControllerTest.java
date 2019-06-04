@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.junit.Assert.assertEquals;
@@ -569,7 +570,18 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     public void viewGrantOfferLetterTemplate() throws Exception {
         long projectId = 123L;
 
-        when(populator.populate(projectId)).thenReturn(new GrantOfferLetterTemplateViewModel());
+
+
+        when(populator.populate(projectId))
+                .thenReturn(new GrantOfferLetterTemplateViewModel(123L,
+                                                                  "firstName",
+                                                                  "lastName",
+                                                                  singletonList("address"),
+                                                                  "competitionName",
+                                                                  "projectName",
+                                                                  "leadOrgName",
+                                                                  newNoteResource().build(1),
+                                                                  "templateName"));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
