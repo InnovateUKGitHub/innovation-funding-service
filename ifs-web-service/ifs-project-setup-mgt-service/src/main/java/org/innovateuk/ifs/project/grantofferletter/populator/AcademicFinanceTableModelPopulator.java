@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.AcademicFinanceTableModel;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,17 @@ public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTabl
             return null;
         } else {
             List<String> organisations = new ArrayList<>(academicFinances.keySet());
+            BigDecimal totalEligibleCosts = calculateTotalFromFinances(academicFinances.values());
+            BigDecimal totalGrant = calculateTotalGrantFromFinances(academicFinances.values());
+            BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
+
             return new AcademicFinanceTableModel(
                     academicFinances.size() > 1,
                     academicFinances,
-                    organisations);
+                    organisations,
+                    totalEligibleCosts,
+                    totalGrant,
+                    rateOfGrant);
         }
     }
 

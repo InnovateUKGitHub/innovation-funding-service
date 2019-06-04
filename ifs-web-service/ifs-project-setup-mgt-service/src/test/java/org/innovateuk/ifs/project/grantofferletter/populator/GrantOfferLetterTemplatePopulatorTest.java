@@ -141,10 +141,18 @@ public class GrantOfferLetterTemplatePopulatorTest {
 
         IndustrialFinanceTableModel industrialFinanceTable = new IndustrialFinanceTableModel(true,
                                                                                              finances,
-                                                                                             singletonList(leadOrg.getName()));
+                                                                                             singletonList(leadOrg.getName()),
+                                                                                             BigDecimal.TEN,
+                                                                                             BigDecimal.ONE,
+                                                                                             BigDecimal.ONE);
+
         AcademicFinanceTableModel academicFinanceTable = new AcademicFinanceTableModel(true,
                                                                                        finances,
-                                                                                       singletonList(leadOrg.getName()));
+                                                                                       singletonList(leadOrg.getName()),
+                                                                                       BigDecimal.TEN,
+                                                                                       BigDecimal.ONE,
+                                                                                       BigDecimal.ONE);
+
         SummaryFinanceTableModel summaryFinanceTable = new SummaryFinanceTableModel(BigDecimal.ONE,
                                                                                     BigDecimal.TEN,
                                                                                     BigDecimal.ZERO);
