@@ -299,19 +299,13 @@
                                       th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
-                    <tr th:each="(cost, iteration : ${model.industrialFinanceTable.otherCosts})">
+                    <tr th:each="(otherCost, iteration : ${model.industrialFinanceTable.otherCosts})">
                         <td>Other Costs <th:block th:text="${iteration.index + 1}"></th:block></td>
                         <td style="text-align:right;"
-                            th:each="(value : ${cost.otherCostValues})">
-                            <th:block th:text="${value}"></th:block><br/>
-                            <!--&pound;<th:block th:text="${#numbers.formatInteger(value.cost, 0, 'DEFAULT')}">£0</th:block>-->
+                            th:each="(orgName : ${otherCost.getOrganisations()})"
+                            th:with="value=${otherCost.getCostValuesForOrg(orgName)}">&pound;
+                                <th:block th:text="${#numbers.formatInteger(value, 0, 'DEFAULT')}"></th:block>
                         </td>
-                        <!--<td style="text-align:right;"-->
-                            <!--th:each="(organisation : ${model.industrialFinanceTable.organisations})"-->
-                            <!--th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">&pound;-->
-                            <!--<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"-->
-                                      <!--th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>-->
-                        <!--</td>-->
                     </tr>
                     <tr>
                         <th>Total eligible costs</th>
