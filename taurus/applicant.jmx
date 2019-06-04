@@ -3575,7 +3575,7 @@
         <hashTree/>
       </hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
-        <stringProp name="filename">${user_csv}</stringProp>
+        <stringProp name="filename">${users_csv}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
         <stringProp name="variableNames">username,password,application_name,org_id</stringProp>
         <stringProp name="delimiter">,</stringProp>
