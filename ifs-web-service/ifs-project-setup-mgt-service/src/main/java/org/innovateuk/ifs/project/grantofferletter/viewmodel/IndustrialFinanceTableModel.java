@@ -21,19 +21,22 @@ public class IndustrialFinanceTableModel extends BaseFinanceTableModel {
     private final BigDecimal totalEligibleCosts;
     private final BigDecimal totalGrant;
     private final BigDecimal rateOfGrant;
+    private final List<OtherCostsRowModel> otherCosts;
 
     public IndustrialFinanceTableModel(boolean showTotalsColumn,
                                        Map<String, ProjectFinanceResource> finances,
                                        List<String> organisations,
                                        BigDecimal totalEligibleCosts,
                                        BigDecimal totalGrant,
-                                       BigDecimal rateOfGrant) {
+                                       BigDecimal rateOfGrant,
+                                       List<OtherCostsRowModel> otherCosts) {
         this.showTotalsColumn = showTotalsColumn;
         this.finances = finances;
         this.organisations = organisations;
         this.totalEligibleCosts = totalEligibleCosts;
         this.totalGrant = totalGrant;
         this.rateOfGrant = rateOfGrant;
+        this.otherCosts = otherCosts;
     }
 
     public boolean isShowTotalsColumn() {
@@ -68,5 +71,9 @@ public class IndustrialFinanceTableModel extends BaseFinanceTableModel {
 
     public BigDecimal getRateOfGrant() {
         return rateOfGrant;
+    }
+
+    public List<OtherCostsRowModel> getOtherCosts() {
+        return otherCosts;
     }
 }

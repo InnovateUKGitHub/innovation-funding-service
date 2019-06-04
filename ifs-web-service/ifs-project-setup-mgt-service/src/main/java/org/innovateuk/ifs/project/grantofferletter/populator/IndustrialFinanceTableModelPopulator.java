@@ -4,13 +4,19 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.OtherCostsRowModel;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Populator for the grant offer letter industrial finance table
@@ -37,13 +43,45 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
             BigDecimal totalEligibleCosts = calculateTotalFromFinances(industrialFinances.values());
             BigDecimal totalGrant = calculateTotalGrantFromFinances(industrialFinances.values());
             BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
+            List<OtherCostsRowModel> otherCosts = calculateOtherCosts(industrialFinances);
 
-            return new IndustrialFinanceTableModel(industrialFinances.size() > 1,
-                                                   industrialFinances,
-                                                   organisations,
-                                                   totalEligibleCosts,
-                                                   totalGrant,
-                                                   rateOfGrant);
+            return new IndustrialFinanceTableModel(
+                    industrialFinances.size() > 1,
+                    industrialFinances,
+                    organisations,
+                    totalEligibleCosts,
+                    totalGrant,
+                    rateOfGrant,
+                    otherCosts
+            );
         }
     }
+
+    private List<OtherCostsRowModel> calculateOtherCosts(Map<String, ProjectFinanceResource> finances) {
+        List<OtherCostsRowModel> otherCosts = new ArrayList<>();
+
+        finances.forEach(
+                (orgName, finance) ->
+                        finance.getFinanceOrganisationDetails(OTHER_COSTS)
+                                .getCosts()
+                                .forEach(cost -> {
+                                    Optional<OtherCostsRowModel> existingCost = otherCosts
+                                            .stream()
+                                            .filter(costModel -> costModel.getOtherCostName().equals(cost.getName()))
+                                            .findAny();
+                                    if(existingCost.isPresent()) {
+                                        existingCost.get().addToCostValues(orgName, cost.getTotal());
+                                    } else {
+                                        otherCosts.add(new OtherCostsRowModel(cost.getName(),
+                                                                              asMap(orgName,
+                                                                                    singletonList(cost.getTotal()))
+                                        ));
+                                    }
+                                })
+        );
+
+        return otherCosts;
+    }
+
+
 }
