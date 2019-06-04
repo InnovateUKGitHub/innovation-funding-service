@@ -160,7 +160,7 @@
     <div>
         <th:block th:unless="${model.complete}">
             <div class="warning-alert">
-                <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not yet accepted:</h2>
+                <p class="govuk-body">The following organisations have not yet accepted:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <th:block th:each="nonAcceptedPartner : ${model.applicationTermsPartnerViewModel.nonAcceptedPartners}">
                         <li th:text="${nonAcceptedPartner.name}">Non accepted partner organisation</li>
