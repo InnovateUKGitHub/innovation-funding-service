@@ -15,6 +15,7 @@ public class ApplicationTermsViewModel {
     private final String termsAcceptedByName;
     private final ZonedDateTime termsAcceptedOn;
     private final boolean termsAcceptedByAllOrganisations;
+    private final boolean showHeaderAndFooter;
 
     public ApplicationTermsViewModel(long applicationId,
                                      long questionId,
@@ -32,6 +33,7 @@ public class ApplicationTermsViewModel {
         this.termsAcceptedByName = termsAcceptedByName;
         this.termsAcceptedOn = termsAcceptedOn;
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
+        this.showHeaderAndFooter = true;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -48,6 +50,7 @@ public class ApplicationTermsViewModel {
         this.termsAcceptedByName = null;
         this.termsAcceptedOn = null;
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisation;
+        this.showHeaderAndFooter = false;
     }
 
     public long getApplicationId() {
@@ -84,5 +87,9 @@ public class ApplicationTermsViewModel {
 
     public boolean isMigratedTerms() {
         return getTermsAccepted().orElse(false) && !getTermsAcceptedOn().isPresent();
+    }
+
+    public boolean isShowHeaderAndFooter() {
+        return showHeaderAndFooter;
     }
 }
