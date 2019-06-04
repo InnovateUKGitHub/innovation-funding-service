@@ -48,7 +48,7 @@ public class AcademicFinanceTableModel extends BaseFinanceTableModel {
                 .map(finance -> getCostsFromProjectFinance(finance, costName))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
+
     public List<String> getOrganisations() {
         return organisations;
     }
