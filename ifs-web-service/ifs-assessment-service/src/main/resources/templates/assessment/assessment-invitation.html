@@ -94,14 +94,15 @@
 
 
                             <div class="panel js-hidden" id="reject-application">
-                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" th:for="rejectReason">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" th:for="rejectReasonValid">
                                         Please select a reason for rejecting the competition
                                     </label>
-                                    <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
-                                    <select class="govuk-select"
+                                    <select id="rejectReasonValid"
+                                            class="govuk-select"
                                             th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
                                             th:errorclass="govuk-select--error"
                                             required="required"
