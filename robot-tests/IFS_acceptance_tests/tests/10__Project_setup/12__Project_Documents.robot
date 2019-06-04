@@ -402,7 +402,7 @@ CompAdmin can see Project status updated
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
-    [Tags]  Experian
+    [Tags]
     Given the user should see the element     css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(4) td:nth-of-type(3)
