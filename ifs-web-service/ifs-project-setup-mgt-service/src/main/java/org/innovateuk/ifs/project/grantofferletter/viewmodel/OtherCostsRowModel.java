@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,5 +35,15 @@ public class OtherCostsRowModel {
         } else {
             otherCostValues.put(orgName, singletonList(cost));
         }
+    }
+
+    public Collection<String> getOrganisations() {
+        return otherCostValues.keySet();
+    }
+
+    public BigDecimal getCostValuesForOrg(String organisation) {
+        return otherCostValues.get(organisation)
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
