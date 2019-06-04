@@ -23,7 +23,6 @@
     "sshpk": "^1.15.1"
   },
   "devDependencies": {
-    "@frctl/fractal": "^1.1.7",
     "jest": "^23.6.0"
   },
   "engines": {

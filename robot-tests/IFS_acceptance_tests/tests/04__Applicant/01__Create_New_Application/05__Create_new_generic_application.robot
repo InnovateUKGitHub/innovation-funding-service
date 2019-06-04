@@ -17,7 +17,7 @@ User can edit the assesed question
     [Setup]  logged in user applies to competition    ${openGenericCompetition}  1
     Given the user should not see the element         a:contains("7.")  # This comp has only 1 question
     When the user clicks the button/link              link = 1. Generic question title
-    Then the user should see the element              jQuery = button:contains("Mark as complete")
+    Then the user should see the element              jQuery = button:contains("Mark")
 
 CompAdmin creates a new Generic competition
     [Documentation]  IFS-3261
