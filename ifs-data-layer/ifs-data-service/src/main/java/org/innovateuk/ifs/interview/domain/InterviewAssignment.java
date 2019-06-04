@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_LEAD_APPLICANT;
 @Entity
 public class InterviewAssignment extends Process<ProcessRole, Application, InterviewAssignmentState> {
 
-    @ManyToOne(fetch = LAZY, cascade = {PERSIST, REMOVE})
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
