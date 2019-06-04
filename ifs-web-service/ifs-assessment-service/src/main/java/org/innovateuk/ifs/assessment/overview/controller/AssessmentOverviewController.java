@@ -6,11 +6,11 @@ import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentTermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -52,6 +52,9 @@ public class AssessmentOverviewController {
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
     @Autowired
+    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
+
+    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
@@ -60,18 +63,13 @@ public class AssessmentOverviewController {
     @Autowired
     private UserRestService userRestService;
 
-
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @GetMapping
     public String getOverview(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") long assessmentId) {
-
         model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
     }
@@ -84,15 +82,7 @@ public class AssessmentOverviewController {
 
     @GetMapping("/terms-and-conditions")
     public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
-        long competitionId = assessmentService.getById(assessmentId).getCompetition();
-        String template = competitionRestService
-                .getCompetitionById(competitionId)
-                .andOnSuccessReturn(c -> c.getTermsAndConditions().getTemplate())
-                .getSuccess();
-
-        model.addAttribute("assessmentId", assessmentId);
-        model.addAttribute("competitionTermsTemplate", template);
-
+        model.addAttribute("model", assessmentTermsAndConditionsModelPopulator.populate(assessmentId));
         return "assessment/application-terms-and-conditions";
     }
 
