@@ -17,16 +17,25 @@ import java.util.Objects;
 public class AcademicFinanceTableModel extends BaseFinanceTableModel {
 
 
-    private boolean showTotalsColumn;
-    private Map<String, ProjectFinanceResource> finances;
-    private List<String> organisations;
+    private final boolean showTotalsColumn;
+    private final Map<String, ProjectFinanceResource> finances;
+    private final List<String> organisations;
+    private final BigDecimal totalEligibleCosts;
+    private final BigDecimal totalGrant;
+    private final BigDecimal rateOfGrant;
 
     public AcademicFinanceTableModel(boolean showTotalsColumn,
-                                       Map<String, ProjectFinanceResource> finances,
-                                       List<String> organisations) {
+                                     Map<String, ProjectFinanceResource> finances,
+                                     List<String> organisations,
+                                     BigDecimal totalEligibleCosts,
+                                     BigDecimal totalGrant,
+                                     BigDecimal rateOfGrant) {
         this.showTotalsColumn = showTotalsColumn;
         this.finances = finances;
         this.organisations = organisations;
+        this.totalEligibleCosts = totalEligibleCosts;
+        this.totalGrant = totalGrant;
+        this.rateOfGrant = rateOfGrant;
     }
 
     public boolean isShowTotalsColumn() {
@@ -63,5 +72,17 @@ public class AcademicFinanceTableModel extends BaseFinanceTableModel {
                 .map(FinanceRowItem::getTotal)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalEligibleCosts() {
+        return totalEligibleCosts;
+    }
+
+    public BigDecimal getTotalGrant() {
+        return totalGrant;
+    }
+
+    public BigDecimal getRateOfGrant() {
+        return rateOfGrant;
     }
 }

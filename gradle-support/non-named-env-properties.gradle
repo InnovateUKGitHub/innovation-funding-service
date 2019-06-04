@@ -36,7 +36,6 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 ext.NEW_RELIC_LICENCE_KEY=""
 
-
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
@@ -71,4 +70,9 @@ ext.FINANCE_DB_HOST="ifs-finance-database"
 ext.FINANCE_DB_PORT=3306
 
 ext.DATA_SERVICE_HOST="data-service"
+
+// For webtest data
+ext.ACC_USERNAME=""
+ext.ACC_PASSWORD=""
+ext.ACC_BITBUCKET_URL=""
 

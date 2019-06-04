@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Populator for the grant offer letter summary finance table
@@ -27,25 +25,9 @@ public class SummaryFinanceTableModelPopulator extends BaseGrantOfferLetterTable
             return null;
         }
 
-        BigDecimal totalProjectCosts = finances
-                .values()
-                .stream()
-                .map(BaseFinanceResource::getTotal)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalProjectGrant = finances
-                .values()
-                .stream()
-                .map(BaseFinanceResource::getTotalFundingSought)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal rateOfGrant = totalProjectCosts.equals(BigDecimal.ZERO) ?
-                BigDecimal.ZERO :
-                totalProjectGrant
-                        .divide(totalProjectCosts,2, BigDecimal.ROUND_HALF_UP)
-                        .multiply(BigDecimal.valueOf(100));
+        BigDecimal totalProjectCosts = calculateTotalFromFinances(finances.values());
+        BigDecimal totalProjectGrant = calculateTotalGrantFromFinances(finances.values());
+        BigDecimal rateOfGrant = calculateRateOfGrant(totalProjectCosts, totalProjectGrant);
 
         return new SummaryFinanceTableModel(totalProjectCosts,
                                             totalProjectGrant,
