@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,16 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
             return null;
         } else {
             List<String> organisations = new ArrayList<>(industrialFinances.keySet());
+            BigDecimal totalEligibleCosts = calculateTotalFromFinances(industrialFinances.values());
+            BigDecimal totalGrant = calculateTotalGrantFromFinances(industrialFinances.values());
+            BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
+
             return new IndustrialFinanceTableModel(industrialFinances.size() > 1,
                                                    industrialFinances,
-                                                   organisations);
+                                                   organisations,
+                                                   totalEligibleCosts,
+                                                   totalGrant,
+                                                   rateOfGrant);
         }
     }
 }
