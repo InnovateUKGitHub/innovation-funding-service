@@ -157,19 +157,17 @@
 </th:block>
 
 <th:block th:fragment="terms-and-conditions(model)">
-    <div>
-        <th:block th:unless="${model.complete}">
-            <div class="warning-alert">
-                <p class="govuk-body">The following organisations have not yet accepted:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <th:block th:each="nonAcceptedPartner : ${model.applicationTermsPartnerViewModel.nonAcceptedPartners}">
-                        <li th:text="${nonAcceptedPartner.name}">Non accepted partner organisation</li>
-                    </th:block>
-                </ul>
-                <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
-            </div>
-        </th:block>
-    </div>
+    <th:block th:unless="${model.complete}">
+        <div class="warning-alert">
+            <p class="govuk-body">The following organisations have not yet accepted:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <th:block th:each="nonAcceptedPartner : ${model.applicationTermsPartnerViewModel.nonAcceptedPartners}">
+                    <li th:text="${nonAcceptedPartner.name}">Non accepted partner organisation</li>
+                </th:block>
+            </ul>
+            <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+        </div>
+    </th:block>
 </th:block>
 
 </html>
