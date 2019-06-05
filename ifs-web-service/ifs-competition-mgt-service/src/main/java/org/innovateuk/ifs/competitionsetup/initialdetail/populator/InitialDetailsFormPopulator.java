@@ -37,7 +37,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-		final List<InnovationAreaResource> allInnovationAreasExcludingNone = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
+		final List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
 	    InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
 
 		competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
@@ -45,8 +45,8 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 		competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
 		Set<Long> innovationAreaCategoryIds = competitionResource.getInnovationAreas();
-		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreasExcludingNone));
-		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreasExcludingNone));
+		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreas));
+		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreas));
 		competitionSetupForm.setInnovationLeadUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {
@@ -78,7 +78,8 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 	}
 
     private boolean innovationAreasAreMatching(Set<Long> innovationAreaCategoryIds, List<InnovationAreaResource> allInnovationAreas) {
-        return allInnovationAreas.stream().allMatch(innovationAreaResource -> innovationAreaCategoryIds.contains(innovationAreaResource.getId()))
-                && innovationAreaCategoryIds.size() == allInnovationAreas.size();
+        return allInnovationAreas.stream().allMatch(innovationAreaResource ->
+				innovationAreaResource.isNone() || innovationAreaCategoryIds.contains(innovationAreaResource.getId()))
+                && innovationAreaCategoryIds.size() == (allInnovationAreas.size() - 1); // without None
     }
 }
