@@ -37,7 +37,7 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 COPY ./ ./
-RUN find . -type d -exec chmod 777 {} +
+RUN chown -R gluster:gluster .
 
 USER gluster
 
