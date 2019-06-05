@@ -23,16 +23,14 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
-import org.innovateuk.ifs.assessment.overview.populator.ApplicationYourProjectCostsFormPopulator;
-import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
-import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.*;
 import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.*;
@@ -77,6 +75,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
@@ -89,7 +88,8 @@ import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -98,7 +98,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
+public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
 
     private static final long APPLICATION_ID = 1L;
 
@@ -140,6 +140,10 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
     @Spy
     @InjectMocks
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
 
     @Spy
     private FinanceUtil financeUtil;
@@ -795,6 +799,48 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         verify(userRestService).findProcessRole(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
+    }
+
+    @Test
+    public void getTermsAndConditions() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+
+        GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
+                .withTemplate("terms-and-conditions-template")
+                .build();
+
+        competition.setTermsAndConditions(grantTermsAndConditions);
+
+        ApplicationResource applicationResource = applications.get(0);
+
+        AssessmentResource assessmentResource = newAssessmentResource()
+                .withApplication(applicationResource.getId())
+                .withApplicationName("Application name")
+                .withCompetition(competitionResource.getId())
+                .withCollaborativeProject(true)
+                .build();
+
+        AssessmentTermsAndConditionsViewModel expectedViewModel =
+                new AssessmentTermsAndConditionsViewModel(
+                        assessmentResource.getId(),
+                        grantTermsAndConditions.getTemplate(),
+                        3,
+                        50
+                );
+
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(competitionRestService.getCompetitionById(assessmentResource.getCompetition())).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(get("/{assessmentId}/terms-and-conditions", assessmentResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessment/application-terms-and-conditions"));
+
+        InOrder inOrder = inOrder(assessmentService, competitionRestService);
+        inOrder.verify(assessmentService).getById(assessmentResource.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(assessmentResource.getCompetition());
+        inOrder.verifyNoMoreInteractions();
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
