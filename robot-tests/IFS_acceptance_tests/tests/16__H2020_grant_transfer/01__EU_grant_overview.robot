@@ -6,7 +6,6 @@ Documentation    IFS-4231 EU2020 - Create webservice & Landing page
 ...              IFS-4072 EU2020 - Organisation selection
 ...
 ...              IFS-4077 EU2020 - Grant information form
-Force Tags       EU2020
 Resource         ../../resources/defaultResources.robot
 Resource         ../10__Project_setup/PS_Common.robot
 
