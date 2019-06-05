@@ -63,6 +63,7 @@ IFS.core.modal = (function () {
         if ((formValid) && (button.is('[aria-disabled="true"]') === false) && (button.is('[disabled="disabled"]') === false)) {
           IFS.core.modal.disableTabPage()
           target.add('.modal-overlay').attr('aria-hidden', 'false')
+          target.find('.close').focus()
           // vertical center,old browser support so no fancy css stuff :(
           setTimeout(function () {
             var height = target.outerHeight()
@@ -134,8 +135,10 @@ IFS.core.modal = (function () {
       })
     },
     closeModal: function () {
+      s = this.settings
       IFS.core.modal.enableTabPage()
       jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden', 'true')
+      jQuery(s.element).focus()
     }
   }
 })()
