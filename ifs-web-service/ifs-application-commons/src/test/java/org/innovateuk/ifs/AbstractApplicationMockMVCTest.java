@@ -57,6 +57,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -280,13 +281,17 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         SectionResource sectionResource11 = sectionResourceBuilder.with(id(11L)).with(name("Finances overview")).withPriority(11)
                 .withType(SectionType.OVERVIEW_FINANCES).build();
 
+        QuestionResource termsAndConditionsQuestion = setupQuestionResource(40L, "terms", questionResourceBuilder);
+        SectionResource termsAndConditionsSection = newSectionResource()
+                .withType(TERMS_AND_CONDITIONS).withQuestions(singletonList(termsAndConditionsQuestion.getId())).build();
+
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
                 sectionResource10.getId()));
 
         sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4,
                 sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9,
-                sectionResource10, sectionResource11);
+                sectionResource10, sectionResource11, termsAndConditionsSection);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -363,6 +368,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(new ArrayList<>()));
+
+        when(sectionService.getTermsAndConditionsSection(competitionResource.getId())).thenReturn(termsAndConditionsSection);
     }
 
     public void setupApplicationWithRoles() {

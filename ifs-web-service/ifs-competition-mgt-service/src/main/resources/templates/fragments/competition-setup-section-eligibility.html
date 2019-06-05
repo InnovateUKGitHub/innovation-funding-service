@@ -109,28 +109,26 @@
                         <div id="funding-level" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('fundingLevelPercentage')} ? 'govuk-form-group--error'">
-                                <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels">
-                                        <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
-                                    </legend>
-                                    <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
-                                          th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"/>
-                                    <select class="govuk-select govuk-!-width-one-quarter"
-                                            name="fundingLevelPercentage"
-                                            id="fundingLevelPercentage"
-                                            required="required"
-                                            th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
-                                        <option value=""
-                                                disabled="disabled"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentage == null}">Please select &hellip;</option>
-                                        <option th:each="fundingLevel : ${model.fundingLevels}"
-                                                th:text="${fundingLevel.textValue}"
-                                                th:value="${fundingLevel.percentage}"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentage == fundingLevel.percentage}">
-                                            Funding level
-                                        </option>
-                                    </select>
-                                </fieldset>
+                                <label class="govuk-label govuk-label--s" for="fundingLevelPercentage" id="fundingLevels">
+                                    Set the maximum funding level that applicants can apply for
+                                </label>
+                                <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"/>
+                                <select class="govuk-select govuk-!-width-one-quarter"
+                                        name="fundingLevelPercentage"
+                                        id="fundingLevelPercentage"
+                                        required="required"
+                                        th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
+                                    <option value=""
+                                            disabled="disabled"
+                                            th:selected="${competitionSetupForm.fundingLevelPercentage == null}">Please select &hellip;</option>
+                                    <option th:each="fundingLevel : ${model.fundingLevels}"
+                                            th:text="${fundingLevel.textValue}"
+                                            th:value="${fundingLevel.percentage}"
+                                            th:selected="${competitionSetupForm.fundingLevelPercentage == fundingLevel.percentage}">
+                                        Funding level
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -240,26 +238,24 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'govuk-form-group--error'"
                  th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchParticipationAmountId">
-                        <h2 class="govuk-fieldset__heading">Research participation</h2>
-                    </legend>
-                    <span class="govuk-hint">This indicates the maximum level of research participation allowed.</span>
-                    <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" class="govuk-error-message"
-                          th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"/>
-                    <select class="govuk-select govuk-!-width-one-quarter"
-                            name="researchParticipationAmountId"
-                            id="researchParticipation"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}"
-                                th:text="${researchParticipationAmount.name}"
-                                th:value="${researchParticipationAmount.id}"
-                                th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">
-                            Research participation
-                        </option>
-                    </select>
-                </fieldset>
+                <label class="govuk-label govuk-label--s" for="researchParticipation" id="researchParticipationAmountId">
+                    Research participation
+                </label>
+                <span class="govuk-hint">This indicates the maximum level of research participation allowed.</span>
+                <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" class="govuk-error-message"
+                      th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"/>
+                <select class="govuk-select govuk-!-width-one-quarter"
+                        name="researchParticipationAmountId"
+                        id="researchParticipation"
+                        required="required"
+                        th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
+                    <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}"
+                            th:text="${researchParticipationAmount.name}"
+                            th:value="${researchParticipationAmount.id}"
+                            th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">
+                        Research participation
+                    </option>
+                </select>
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('resubmission')} ? 'govuk-form-group--error'">

@@ -442,13 +442,20 @@ td {
   }
 
   .upload-section {
-    .inputfile{
+    .inputfile {
       width: 0.1px;
       height: 0.1px;
       opacity: 0;
       overflow: hidden;
       position: absolute;
       z-index: -1;
+
+      &:focus {
+
+        + label {
+          outline: 3px solid $govuk-focus-colour;
+        }
+      }
     }
   }
 }
