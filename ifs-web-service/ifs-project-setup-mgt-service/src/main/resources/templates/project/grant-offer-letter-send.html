@@ -137,6 +137,7 @@
                   th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
                 <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
+                    <legend class="govuk-visually-hidden">Confirmation</legend>
                     <th:block th:if="${#fields.hasErrors('confirmation')}">
                         <span class="govuk-error-message"
                               th:each="err : ${#fields.errors('confirmation')}"
