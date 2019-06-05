@@ -1,10 +1,5 @@
 #!/bin/bash
 
-echo "THIS IS THE UMASK:"
-umask
-echo "THIS IS THE UMASK ^^^"
-
-
 # Define some functions for later use
 
 function coloredEcho() {
@@ -143,6 +138,7 @@ function clearOldReports() {
 
 function markAsComplete(){
   touch ${scriptDir}/testsComplete
+  curl -D- -u "${BAMBOO_CREDS}" -X PUT "${BAMBOO_URL}/${BAMBOO_PLAN_PROJ}-${BAMBOO_BUILD_NO}?stage=COLLECT&executeAllStages=true" 
 }
 
 # ====================================
@@ -154,8 +150,6 @@ section "=> GETTING SCRIPT VARIABLES"
 #cd "$(dirname "$0")"
 scriptDir="/robot-tests"
 cd ${scriptDir}
-
-./openshift/fileForEachDBEntry.sh
 
 webBase="<<SHIB-ADDRESS>>"
 
