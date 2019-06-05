@@ -14,7 +14,7 @@ import java.util.Objects;
  * Holder of values for the academic finance table, used by the grant offer letter template page
  */
 
-public class AcademicFinanceTableModel extends BaseFinanceTableModel {
+public class AcademicFinanceTableModel {
 
 
     private final boolean showTotalsColumn;

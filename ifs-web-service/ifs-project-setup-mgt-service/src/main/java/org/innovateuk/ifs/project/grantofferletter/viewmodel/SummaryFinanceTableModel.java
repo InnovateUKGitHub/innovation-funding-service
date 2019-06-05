@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 * Holder of values for the summary finance table, used on the grant offer letter template page
  */
 
-public class SummaryFinanceTableModel extends BaseFinanceTableModel {
+public class SummaryFinanceTableModel {
 
-    private BigDecimal totalProjectCosts;
-    private BigDecimal totalProjectGrant;
-    private BigDecimal rateOfGrant;
+    private final BigDecimal totalProjectCosts;
+    private final BigDecimal totalProjectGrant;
+    private final BigDecimal rateOfGrant;
 
     public SummaryFinanceTableModel(
             BigDecimal totalProjectCosts,
