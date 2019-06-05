@@ -46,4 +46,14 @@ public class OtherCostsRowModel {
                 .stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public BigDecimal getTotal() {
+        return otherCostValues == null ?
+                BigDecimal.ZERO :
+                otherCostValues
+                        .values()
+                        .stream()
+                        .flatMap(List::stream)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
