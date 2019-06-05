@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -46,9 +47,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -125,6 +124,8 @@ public class ApplicationOverviewModelPopulatorTest {
 
         List<ApplicationInviteResource> invites = newApplicationInviteResource().build(2);
 
+        Map<Long, Set<Long>> completedSectionsByOrganisation = emptyMap();
+
         when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(sectionRestService.getByCompetition(application.getCompetition())).thenReturn(restSuccess(sections));
@@ -135,6 +136,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
         when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 

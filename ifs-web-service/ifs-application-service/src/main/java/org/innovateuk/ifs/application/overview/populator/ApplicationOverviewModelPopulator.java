@@ -101,7 +101,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels);
     }
 
-    //
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
         Set<ApplicationOverviewRowViewModel> rows;
         if (!section.getChildSections().isEmpty()) {
