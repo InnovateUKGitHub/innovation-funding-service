@@ -12,6 +12,5 @@ do
   then
     CURRENT_FILE_PATH="${TEST_FILES_DIR}/${i}"
     cp /robot-tests/upload_files/testing.pdf $CURRENT_FILE_PATH
-    chown gluster:gluster $CURRENT_FILE_PATH
   fi
 done
