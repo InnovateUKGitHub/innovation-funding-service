@@ -119,21 +119,23 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
                         <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
                     </legend>
-                    <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                    <p class="govuk-body"><a href="/info/terms-and-conditions" class="govuk-link" target="_blank">Read our terms and conditions</a> (opens in a new window).</p>
                     <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input id="termsAndConditions"
-                                   class="govuk-checkboxes__input"
-                                   value="1"
-                                   type="checkbox"
-                                   th:field="*{termsAndConditions}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
-                            <label for="termsAndConditions"
-                                   class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a> (opens in a new window).</label>
+                        <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input id="termsAndConditions"
+                                       class="govuk-checkboxes__input"
+                                       value="1"
+                                       type="checkbox"
+                                       th:field="*{termsAndConditions}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
+                                <label for="termsAndConditions"
+                                       class="govuk-label govuk-checkboxes__label">I agree to the terms and conditions.</label>
+                            </div>
                         </div>
                     </div>
-
                 </fieldset>
             </div>
 

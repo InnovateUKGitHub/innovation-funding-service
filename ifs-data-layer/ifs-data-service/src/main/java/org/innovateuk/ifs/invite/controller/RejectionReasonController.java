@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
@@ -16,15 +15,13 @@ import java.util.List;
  * Exposes CRUD operations through a REST API to manage {@link RejectionReason} related data.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-@RequestMapping({"/rejectionReason", "/rejection-reason"})
+@RequestMapping("/rejection-reason")
 public class RejectionReasonController {
 
     @Autowired
     private RejectionReasonService rejectionReasonService;
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findAllActive", "/find-all-active"})
+    @GetMapping("/find-all-active")
     public RestResult<List<RejectionReasonResource>> findAllActive() {
         return rejectionReasonService.findAllActive().toGetResponse();
     }

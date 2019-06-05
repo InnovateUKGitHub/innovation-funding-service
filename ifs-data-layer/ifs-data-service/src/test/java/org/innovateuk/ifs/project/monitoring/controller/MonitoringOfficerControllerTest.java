@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.monitoring.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -10,8 +11,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,7 +26,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void findAll() throws Exception {
-        List<MonitoringOfficerAssignmentResource> expected = singletonList(new MonitoringOfficerAssignmentResource());
+        List<UserResource> expected = newUserResource().build(1);
 
         when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
 

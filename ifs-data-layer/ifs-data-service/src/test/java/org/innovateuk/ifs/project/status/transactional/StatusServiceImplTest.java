@@ -76,6 +76,7 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -521,6 +522,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
@@ -602,6 +605,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withPostcode("TW14 9QG")
                 .build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
@@ -641,6 +646,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(Optional.empty());
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
@@ -655,7 +662,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectTeamStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
@@ -1027,6 +1035,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(new BankDetails());
@@ -1064,6 +1074,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o2 = newOrganisation().withId(organisationId2).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
@@ -1101,6 +1113,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
@@ -1202,6 +1216,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
@@ -1265,7 +1281,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void getProjectTeamStatus() {
+    public void getProjectConsortiumStatus() {
         /*
           Create 3 organisations:
           2 Business, 1 Academic
@@ -1288,12 +1304,21 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
          * Create 3 users project partner roles for each of the 3 organisations above
          */
         List<User> users = newUser().build(3);
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProjectUser> pu = newProjectUser()
+                .withRole(PROJECT_PARTNER)
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
+                .build(3);
 
         /*
          * Create a project with 3 Project Users from 3 different organisations with an associated application
          */
-        Project p = newProject().withProjectUsers(pu).withApplication(application).build();
+        Project p = newProject()
+                .withProjectUsers(pu)
+                .withApplication(application)
+                .withAddress(newAddress().build())
+                .withTargetStartDate(LocalDate.now())
+                .build();
 
         /*
          * Create 3 bank detail records, one for each organisation
@@ -1314,61 +1339,61 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withPostcode(null, "TW14 9QG", " ")
                 .build(3);
 
-        Mockito.when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
 
-        Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
 
-        Mockito.when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
 
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
 
-        Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(Optional.empty());
-        Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(1).getId())).thenReturn(Optional.empty());
-        Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(2).getId())).thenReturn(Optional.empty());
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(Optional.empty());
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(1).getId())).thenReturn(Optional.empty());
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), organisations.get(2).getId())).thenReturn(Optional.empty());
 
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(project.getId())).thenReturn(serviceSuccess(monitoringOfficer));
 
-        Mockito.when(organisationRepositoryMock.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));
-        Mockito.when(organisationRepositoryMock.findById(organisations.get(1).getId())).thenReturn(Optional.of(organisations.get(1)));
-        Mockito.when(organisationRepositoryMock.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
+        when(organisationRepositoryMock.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));
+        when(organisationRepositoryMock.findById(organisations.get(1).getId())).thenReturn(Optional.of(organisations.get(1)));
+        when(organisationRepositoryMock.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
 
         List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
-        Mockito.when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
-        Mockito.when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
-        Mockito.when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(p.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
 
         ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(0).getId()).build();
-        Mockito.when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
 
         ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(1).getId()).build();
-        Mockito.when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
 
         ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(2).getId()).build();
-        Mockito.when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
+        when(applicationFinanceMapperMock.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
 
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
 
-        Mockito.when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
-        Mockito.when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
-        Mockito.when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
+        when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
 
-        Mockito.when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(TRUE));
-        Mockito.when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(FALSE));
-        Mockito.when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(TRUE));
 
         partnerOrganisations.forEach(org ->
-                Mockito.when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(org.getProject().getId(),
+                when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(org.getProject().getId(),
                         org.getOrganisation().getId())).thenReturn(org));
 
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(0).getProject().getId(), partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(1).getProject().getId(), partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(2).getProject().getId(), partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(0).getProject().getId(), partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(1).getProject().getId(), partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(2).getProject().getId(), partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(serviceSuccess(TRUE));
 
-        Mockito.when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.PENDING);
+        when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.PENDING);
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatus = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
@@ -1376,6 +1401,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                         OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
                 withOrganisationId(organisations.get(0).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
+                withProjectTeamStatus(ACTION_REQUIRED).
                 withFinanceContactStatus(ACTION_REQUIRED).
                 withPartnerProjectLocationStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_STARTED).
@@ -1393,7 +1419,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                         OrganisationTypeEnum.getFromId(organisations.get(1).getOrganisationType().getId()),
                         OrganisationTypeEnum.getFromId(organisations.get(2).getOrganisationType().getId())).
                 withOrganisationId(organisations.get(1).getId(), organisations.get(2).getId()).
-                withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
+                withProjectDetailsStatus(COMPLETE, ACTION_REQUIRED).
+                withProjectTeamStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withFinanceContactStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withPartnerProjectLocationStatus(COMPLETE, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1420,6 +1447,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                         OrganisationTypeEnum.getFromId(organisations.get(2).getOrganisationType().getId())).
                 withOrganisationId(organisations.get(2).getId()).
                 withProjectDetailsStatus(ACTION_REQUIRED).
+                withProjectTeamStatus(ACTION_REQUIRED).
                 withFinanceContactStatus(ACTION_REQUIRED).
                 withPartnerProjectLocationStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
@@ -1451,8 +1479,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
 
         // test MO status is pending and not action required when project details submitted
-        Mockito.when(projectDetailsWorkflowHandlerMock.isSubmitted(any(Project.class))).thenReturn(true);
-        Mockito.when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
+        p.setTargetStartDate(LocalDate.now());
+        p.setAddress(newAddress().build());
+        competition.setLocationPerPartner(false);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(any(Project.class))).thenReturn(true);
+        when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
 
         ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatusWhenPDSubmitted = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
@@ -1460,6 +1491,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                         OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
                 withOrganisationId(organisations.get(0).getId()).
                 withProjectDetailsStatus(COMPLETE).
+                withProjectTeamStatus(ACTION_REQUIRED).
                 withFinanceContactStatus(ACTION_REQUIRED).
                 withPartnerProjectLocationStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(PENDING).
@@ -1476,9 +1508,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withPartnerStatuses(expectedFullPartnerStatuses).
                 build();
 
-        ServiceResult<ProjectTeamStatusResource> resultForPSSubmmited = service.getProjectTeamStatus(p.getId(), Optional.empty());
-        assertTrue(resultForPSSubmmited.isSuccess());
-        assertEquals(expectedProjectTeamStatusResourceWhenPSSubmitted, resultForPSSubmmited.getSuccess());
+        ServiceResult<ProjectTeamStatusResource> resultForPsSubmitted = service.getProjectTeamStatus(p.getId(), Optional.empty());
+        assertTrue(resultForPsSubmitted.isSuccess());
+        assertEquals(expectedProjectTeamStatusResourceWhenPSSubmitted, resultForPsSubmitted.getSuccess());
     }
 
     @Test

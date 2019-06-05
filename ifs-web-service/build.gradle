@@ -1,5 +1,4 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
-apply from: "fractal.gradle";
 apply from: "front-end.gradle"
 apply plugin: 'idea'
 

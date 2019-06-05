@@ -6,11 +6,13 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,22 +129,22 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByIdAndRolesName() throws Exception {
+    public void findByIdAndRolesName() {
         Optional<User> user = repository.findByIdAndRoles(getPaulPlum().getId(), ASSESSOR);
 
         assertTrue(user.isPresent());
     }
 
     @Test
-    public void findByIdAndRolesName_wrongRole() throws Exception {
+    public void findByIdAndRolesName_wrongRole() {
         Optional<User> user = repository.findByIdAndRoles(getPaulPlum().getId(), COMP_ADMIN);
 
         assertFalse(user.isPresent());
     }
 
     @Test
-    public void findByRolesName() throws Exception {
-        List<User> users = repository.findByRoles(ASSESSOR);
+    public void findByRolesName() {
+        List<User> users = repository.findByRolesAndStatusIn(ASSESSOR, EnumSet.allOf(UserStatus.class));
 
         assertEquals(2, users.size());
         assertEquals(getPaulPlum().getId(), users.get(0).getId());
@@ -150,7 +152,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByRolesNameOrderByFirstNameAscLastNameAsc() throws Exception {
+    public void findByRolesNameOrderByFirstNameAscLastNameAsc() {
         List<User> users = repository.findByRolesOrderByFirstNameAscLastNameAsc(ASSESSOR);
 
         assertEquals(2, users.size());

@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

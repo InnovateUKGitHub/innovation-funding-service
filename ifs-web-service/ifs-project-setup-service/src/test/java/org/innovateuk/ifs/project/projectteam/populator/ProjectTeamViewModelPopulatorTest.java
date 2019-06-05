@@ -66,6 +66,7 @@ public class ProjectTeamViewModelPopulatorTest {
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
                 .withName("Imaginative project name")
+                .withMonitoringOfficerUser(789L)
                 .build();
         OrganisationResource leadOrg = newOrganisationResource()
                 .withName("Imaginative organisation name")
@@ -126,6 +127,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(partnerOneViewModel.isOpenAddTeamMemberForm());
         model.openAddTeamMemberForm(partnerOne.getId());
         assertTrue(partnerOneViewModel.isOpenAddTeamMemberForm());
+        assertFalse(model.isReadOnly());
     }
 
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
@@ -45,6 +45,11 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
     public boolean onlyProjectFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "NOTES_READ", description = "All internal users are able to see notes")
+    public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
+        return isInternal(user);
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {

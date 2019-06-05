@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.ApplicationResearchCategoryService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -21,8 +20,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
  * Controller that exposes functionality for linking an {@link Application} to an {@link ResearchCategory}.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-@RequestMapping({"/applicationResearchCategory", "/application-research-category"})
+@RequestMapping("/application-research-category")
 public class ApplicationResearchCategoryController {
 
     private ApplicationResearchCategoryService applicationResearchCategoryService;
@@ -38,8 +36,7 @@ public class ApplicationResearchCategoryController {
         this.questionStatusService = questionStatusService;
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/researchCategory/{applicationId}", "/research-category/{applicationId}"})
+    @PostMapping("/research-category/{applicationId}")
     public RestResult<ApplicationResource> setResearchCategory(@PathVariable("applicationId") final long applicationId,
                                                                @RequestBody(required = false) Long researchCategoryId) {
         return applicationResearchCategoryService.setResearchCategory(applicationId, researchCategoryId)

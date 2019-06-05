@@ -77,7 +77,7 @@ public class InterviewAllocationRestServiceImplTest extends BaseRestServiceUnitT
 
         List<InterviewResource> expected = newInterviewResource().build(1);
 
-        String expectedUrl = format("%s/%s/%s/%s", restUrl, competitionId, "allocated-applications-assessorId", userId);
+        String expectedUrl = format("%s/%s/%s/%s", restUrl, competitionId, "allocated-applications-assessor-id", userId);
 
         setupGetWithRestResultExpectations(expectedUrl, interviewResourceListType(), expected);
 

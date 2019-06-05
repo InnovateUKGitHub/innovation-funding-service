@@ -145,8 +145,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId) {
-        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(projectId, organisationId);
-        return getProjectFinanceForOrganisation(projectFinanceResourceId);
+        return getProjectFinanceForOrganisation(new ProjectFinanceResourceId(projectId, organisationId));
     }
 
     @Override

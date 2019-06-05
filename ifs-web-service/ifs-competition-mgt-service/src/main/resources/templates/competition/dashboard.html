@@ -62,10 +62,10 @@
     </ul>
 </th:block>
 
-<div th:fragment="dashboard-row">
+<th:block th:fragment="dashboard-row">
     <div class="govuk-grid-column-one-third">
         <h3 class="govuk-heading-s">
-            <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
+            <a th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${competition.id})}"
                th:if="${nonIfs}"
                class="govuk-link">
                 <th:block th:insert="competition/dashboard :: competition-name"/>
@@ -79,24 +79,30 @@
                 </th:block>
                 <th:block th:unless="${customLink}">
                     <th:block th:if="${projectSetup}">
-                        <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
+                        <a th:href="@{~/project-setup-management/competition/{competitionId}/status(competitionId=${competition.id})}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                     </th:block>
                     <th:block th:unless="${projectSetup}">
-                        <a th:href="@{'/competition/setup/'+${competition.id}}"
+                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${competition.id})}"
                            th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
-                        <a th:href="@{'/competition/'+${competition.id}+'/applications/previous'}"
+                        <a th:href="@{/competition/{competitionId}/applications/previous(competitionId=${competition.id})}"
                            th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                         <th:block th:if="${competition.competitionStatus.inFlight}">
-                            <a th:href="@{${competition.topLevelNavigationLink}}"
+                            <a th:if="${model.supportUser}"
+                               th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}"
+                               class="govuk-link">
+                                <th:block th:insert="competition/dashboard :: competition-name"/>
+                            </a>
+                            <a th:unless="${model.supportUser}"
+                               th:href="@{/competition/{competitionId}(competitionId=${competition.id})}"
                                class="govuk-link">
                                 <th:block th:insert="competition/dashboard :: competition-name"/>
                             </a>
@@ -116,12 +122,12 @@
         </div>
         <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${cell4}"></p></div>
     </div>
-</div>
+</th:block>
 
 
-<div th:fragment="competition-name">
+<th:block th:fragment="competition-name">
     <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
     <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
-</div>
+</th:block>
 
 </html>
