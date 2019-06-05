@@ -253,7 +253,7 @@ task deleteProjectLocal(type: Exec) {
     ignoreExitValue true
 
     doLast {
-        sleep 10_000L
+        sleep 20_000L
     }
 }
 
