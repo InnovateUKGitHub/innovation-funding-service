@@ -337,13 +337,11 @@
                             th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
                             &pound;<th:block th:text="${#numbers.formatInteger(value, 0, 'DEFAULT')}"></th:block>
                         </td>
-                        <!--<td style="text-align:right;"-->
-                            <!--th:if="${model.industrialFinanceTable.showTotalsColumn}"-->
-                            <!--th:with="total=${model.industrialFinanceTable.getTotalForType(otherCost)}">-->
-                            <!--&pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>-->
-                        <!--</td>-->
                         <td style="text-align:right;"
-                            th:if="${model.industrialFinanceTable.showTotalsColumn}">--</td>
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${otherCost.getTotal()}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
                     </tr>
                     <tr>
                         <th>Total eligible costs</th>
@@ -395,7 +393,7 @@
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:text="${organisation}">University of Lincoln</th>
                         <th style="text-align:right;"
-                            th:unless="${model.academicFinanceTable.showTotalsColumn}">Totals</th>
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">Totals</th>
                     </tr>
                 </thead>
                 <tbody>
