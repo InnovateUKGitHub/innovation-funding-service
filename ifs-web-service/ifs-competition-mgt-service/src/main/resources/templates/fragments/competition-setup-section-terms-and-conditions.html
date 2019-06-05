@@ -24,6 +24,9 @@
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="govuk-form-group">
+                <label class="govuk-label govuk-visually-hidden" th:for="termsAndConditionsId">
+                    Please select an innovation sector
+                </label>
                 <select
                     th:field="*{termsAndConditionsId}"
                     required="required"

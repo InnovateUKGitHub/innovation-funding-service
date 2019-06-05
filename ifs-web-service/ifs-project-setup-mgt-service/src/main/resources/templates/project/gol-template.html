@@ -146,9 +146,11 @@
         </p>
         <p>
             We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service.
+            This award is given under Article 25/26, De Minimis or a No Aid basis.
+            <br/> By accepting your award you agree to these additional terms and conditions:
         </p>
 
-        <table th:if="${model.notes}">
+        <table th:if="${not #lists.isEmpty(model.notes)}">
             <tr>
                 <td style="padding:10px; border: 10px solid #c0c0c0;">
                     <h3>
@@ -176,12 +178,12 @@
         <p>Yours sincerely</p>
         <p>Ian Meikle<br>
             Interim Director of Operations<br>
-            <strong>Innovate UK<br>
+            <strong>
+                Innovate UK<br>
                 part of UK Research and Innovation
             </strong>
 
         </p>
-        <p style="page-break-before: always; mso-pagination:page-break-before">&nbsp;</p>
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
             <strong>File reference:</strong> [file_reference]<br>
@@ -204,7 +206,7 @@
 
         <p>
             <strong>Signed:</strong> ______________________________________________ <br><br>
-            Director for and on behalf of Super Tech Ltd<br><br>
+            Director for and on behalf of <th:block th:text="${model.leadOrgName}" /><br><br>
         </p>
 
         <br><br>
@@ -221,9 +223,6 @@
 
         </p>
 
-        <!--    PAGE BREAK    -->
-        <p style="page-break-before: always; mso-pagination:page-break-before">&nbsp;</p>
-
         <h2 class="heading-medium">Eligible costs and grant allocations</h2>
 
         <p>
@@ -234,294 +233,415 @@
             <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
 
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th title="Field #1">Industry costs</th>
-                <th title="Field #2" style="text-align:right;">Super Tech Ltd</th>
-                <th title="Field #3" style="text-align:right;">Big Wheels Ltd</th>
-                <th title="Field #4" style="text-align:right;">Delicate Instruments Ltd</th>
-                <th title="Field #5" style="text-align:right;">Human Computer Ltd</th>
-                <th title="Field #6" style="text-align:right;">Skynet Robotics UK Ltd</th>
-                <th title="Field #7" style="text-align:right;">Omnicorp</th>
-                <th title="Field #8" style="text-align:right;">Nefarious Operations Ltd</th>
-                <th title="Field #9" style="text-align:right;">Total (industry)</th>
-            </tr>
-            </thead>
-            <tbody><tr>
-                <td>Labour</td>
-                <td style="text-align:right;">£1,160,876 </td>
-                <td style="text-align:right;">£688,270 </td>
-                <td style="text-align:right;">£242,214 </td>
-                <td style="text-align:right;">£351,877 </td>
-                <td style="text-align:right;">£276,313 </td>
-                <td style="text-align:right;">£186,476 </td>
-                <td style="text-align:right;">£343,930 </td>
-                <td style="text-align:right;">£3,249,956 </td>
-            </tr>
-            <tr>
-                <td>Overheads</td>
-                <td style="text-align:right;">£1,034,341 </td>
-                <td style="text-align:right;">£603,192 </td>
-                <td style="text-align:right;">£92,402 </td>
-                <td style="text-align:right;">£201,106 </td>
-                <td style="text-align:right;">£215,911 </td>
-                <td style="text-align:right;">£37,295 </td>
-                <td style="text-align:right;">£333,612 </td>
-                <td style="text-align:right;">£2,517,859 </td>
-            </tr>
-            <tr>
-                <td>Materials</td>
-                <td style="text-align:right;">£1,310,100 </td>
-                <td style="text-align:right;">£194,400 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£15,000 </td>
-                <td style="text-align:right;">£20,000 </td>
-                <td style="text-align:right;">£45,000 </td>
-                <td style="text-align:right;">£3,000 </td>
-                <td style="text-align:right;">£1,587,500 </td>
-            </tr>
-            <tr>
-                <td>Capital usage</td>
-                <td style="text-align:right;">£85,772 </td>
-                <td style="text-align:right;">£76,682 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£2,999 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£47,999 </td>
-                <td style="text-align:right;">£11,228 </td>
-                <td style="text-align:right;">£224,680 </td>
-            </tr>
-            <tr>
-                <td>Subcontract </td>
-                <td style="text-align:right;">£662,903 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£80,670 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£45,000 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£788,573 </td>
-            </tr>
-            <tr>
-                <td>Travel and subsistence</td>
-                <td style="text-align:right;">£55,000 </td>
-                <td style="text-align:right;">£10,200 </td>
-                <td style="text-align:right;">£16,500 </td>
-                <td style="text-align:right;">£16,100 </td>
-                <td style="text-align:right;">£4,000 </td>
-                <td style="text-align:right;">£15,500 </td>
-                <td style="text-align:right;">£4,404 </td>
-                <td style="text-align:right;">£121,704 </td>
-            </tr>
-            <tr>
-                <td>Other Costs1</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£10,000 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£10,000 </td>
-                <td style="text-align:right;">£55,000 </td>
-                <td style="text-align:right;">£75,000 </td>
-            </tr>
-            <tr>
-                <td>Other Costs2</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-            </tr>
-            <tr>
-                <td>Other Costs3</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-            </tr>
-            <tr>
-                <td>Other Costs4</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-            </tr>
-            <tr>
-                <td>Other Costs5</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-            </tr>
-            <tr>
-                <td>Other Costs WBBA</td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-                <td style="text-align:right;">£0 </td>
-            </tr>
-            <tr>
-                <td><strong>Total eligible costs</strong></td>
-                <td style="text-align:right;">£4,308,992 </td>
-                <td style="text-align:right;">£1,572,744 </td>
-                <td style="text-align:right;">£431,786 </td>
-                <td style="text-align:right;">£597,082 </td>
-                <td style="text-align:right;">£516,224 </td>
-                <td style="text-align:right;">£387,270 </td>
-                <td style="text-align:right;">£751,174 </td>
-                <td style="text-align:right;">£8,565,272 </td>
-            </tr>
-            <tr>
-                <td><strong>Rate of grant (%)</strong></td>
-                <td style="text-align:right;">38.00%</td>
-                <td style="text-align:right;">39.00%</td>
-                <td style="text-align:right;">46.00%</td>
-                <td style="text-align:right;">100.00%</td>
-                <td style="text-align:right;">39.00%</td>
-                <td style="text-align:right;">46.00%</td>
-                <td style="text-align:right;">100.00%</td>
-                <td style="text-align:right;">48.77%</td>
-            </tr>
-            <tr>
-                <td><strong>Total grant</strong></td>
-                <td style="text-align:right;">£1,637,417 </td>
-                <td style="text-align:right;">£613,370 </td>
-                <td style="text-align:right;">£198,621 </td>
-                <td style="text-align:right;">£597,082 </td>
-                <td style="text-align:right;">£201,327 </td>
-                <td style="text-align:right;">£178,144 </td>
-                <td style="text-align:right;">£751,174 </td>
-                <td style="text-align:right;">£4,177,135 </td>
-            </tr>
-            </tbody>
-        </table>
-        <br><br><br>
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th colspan="2">Academic costs</th>
-                <th style="text-align:right;">University of Lincoln</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td rowspan="4">Total project costs</td>
-                <td>Staff</td>
-                <td style="text-align:right;">£154,490</td>
-            </tr>
-            <tr>
-                <td>Travel and subsistence</td>
-                <td style="text-align:right;">£4,800</td>
-            </tr>
-            <tr>
-                <td>Equipment</td>
-                <td style="text-align:right;">£0</td>
-            </tr>
-            <tr>
-                <td>Other costs</td>
-                <td style="text-align:right;">£88,720</td>
-            </tr>
+        <th:block th:if="${model.industrialFinanceTable}">
+            <table class="letter-table">
+                <thead>
+                    <tr>
+                        <th>Industry costs</th>
+                        <th style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:text="${organisation}">Super Tech Ltd</th>
+                        <th style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">Total (Industry)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Labour</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}"
+                               th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Overheads</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
+                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Materials</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)}"
+                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Capital usage</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)}"
+                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Subcontract </td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)}"
+                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Travel and subsistence</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL)}"
+                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr th:each="(otherCost, iteration : ${model.industrialFinanceTable.otherCosts})">
+                        <td>Other Costs <th:block th:text="${iteration.index + 1}"></th:block></td>
+                        <td style="text-align:right;"
+                            th:each="(orgName : ${otherCost.getOrganisations()})"
+                            th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(value, 0, 'DEFAULT')}"></th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                            th:with="total=${otherCost.getTotal()}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Total eligible costs</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotal(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(model.industrialFinanceTable.getTotalEligibleCosts(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Rate of grant (%)</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            <th:block th:text="${#numbers.formatInteger(model.industrialFinanceTable.getRateOfGrant(), 0, 'DEFAULT')}">£0</th:block>&percnt;
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Total grant</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotalFundingSought(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(model.industrialFinanceTable.getTotalGrant(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
 
-            <tr>
-                <td rowspan="3">Directly allocated</td>
-                <td>Investigators</td>
-                <td style="text-align:right;">£27,887</td>
-            </tr>
-            <tr>
-                <td>Estates</td>
-                <td style="text-align:right;">£37,708</td>
-            </tr>
-            <tr>
-                <td>Other DA</td>
-                <td style="text-align:right;">£12,601</td>
-            </tr>
+        <th:block th:if="${model.academicFinanceTable}">
+            <br><br><br>
+            <table class="letter-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Academic costs</th>
+                        <th style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:text="${organisation}">University of Lincoln</th>
+                        <th style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">Totals</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="4">Total project costs</td>
+                        <td>Staff</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred-staff')}"
+                                      th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred-staff')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Travel and subsistence</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_travel_subsistence')}"
+                                       th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred_travel_subsistence')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Equipment</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_equipment')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred_equipment')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_other_costs')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred_other_costs')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td rowspan="">Indirect costs</td>
-                <td>Indirect costs</td>
-                <td style="text-align:right;">£160,838</td>
-            </tr>
+                    <tr>
+                        <td rowspan="3">Directly allocated</td>
+                        <td>Investigators</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'allocated_investigators')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('allocated_investigators')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Estates</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'allocated_estates_costs')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('allocated_estates_costs')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other DA</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'allocated_other_costs')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('allocated_other_costs')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td rowspan="4">Exceptions</td>
-                <td>Staff</td>
-                <td style="text-align:right;">£0</td>
-            </tr>
-            <tr>
-                <td>Travel and subsistence</td>
-                <td style="text-align:right;">£0</td>
-            </tr>
-            <tr>
-                <td>Equipment</td>
-                <td style="text-align:right;">£0</td>
-            </tr>
-            <tr>
-                <td>Other costs</td>
-                <td style="text-align:right;">£0</td>
-            </tr>
+                    <tr>
+                        <td rowspan="">Indirect costs</td>
+                        <td>Indirect costs</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'indirect_costs')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('indirect_costs')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td colspan="2"><strong>Total eligible costs</strong></td>
-                <td style="text-align:right;">£487,044</td>
-            </tr>
+                    <tr>
+                        <td rowspan="4">Exceptions</td>
+                        <td>Staff</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_staff')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_staff')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Travel and subsistence</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_travel_subsistence')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_travel_subsistence')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Equipment</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_equipment')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_equipment')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_travel_subsistence')}"
+                                             th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}"
+                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred_travel_subsistence')}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td colspan="2"><strong>Rate of grant (%)</strong></td>
-                <td style="text-align:right;">100%</td>
-            </tr>
+                    <tr>
+                        <th colspan="2">Total eligible costs</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotal(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(model.academicFinanceTable.getTotalEligibleCosts(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td colspan="2"><strong>Total grant</strong></td>
-                <td style="text-align:right;">£487,044</td>
-            </tr>
+                    <tr>
+                        <th colspan="2">Rate of grant (%)</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">
+                            <th:block th:text="${#numbers.formatInteger(model.academicFinanceTable.getRateOfGrant(), 0, 'DEFAULT')}">£0</th:block>&percnt;
+                        </td>
+                    </tr>
 
-            </tbody>
-        </table>
-        <br><br><br>
+                    <tr>
+                        <th colspan="2">Total grant</th>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotalFundingSought(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(model.academicFinanceTable.getTotalGrant(), 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
 
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th >Summary</th>
-                <th style="text-align:right;">Totals (£)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Total project costs</td>
-                <td style="text-align:right;">200, 900</td>
-            </tr>
-            <tr>
-                <td>Total project grant</td>
-                <td style="text-align:right;">412, 500</td>
-            </tr>
-            <tr>
-                <td>Rate of grant (%)</td>
-                <td style="text-align:right;">65</td>
-            </tr>
+        <th:block th:if="${model.summaryFinanceTable}">
+            <br><br><br>
+            <table class="letter-table">
+                <thead>
+                <tr>
+                    <th>Summary</th>
+                    <th style="text-align:right;">Totals (£)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Total project costs</td>
+                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectCosts, 0, 'DEFAULT')}" /></td>
+                </tr>
+                <tr>
+                    <td>Total project grant</td>
+                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectGrant, 0, 'DEFAULT')}" /></td>
+                </tr>
+                <tr>
+                    <td>Rate of grant (%)</td>
+                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.rateOfGrant, 0, 'DEFAULT')}" /></td>
+                </tr>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </th:block>
+
         <br><br><br>
     </div>
     <!-- terms start -->

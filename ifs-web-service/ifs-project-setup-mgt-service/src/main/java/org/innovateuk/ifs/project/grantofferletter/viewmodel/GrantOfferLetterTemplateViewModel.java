@@ -10,19 +10,18 @@ import java.util.List;
  */
 public class GrantOfferLetterTemplateViewModel {
 
-    private long applicationId;
-    private String projectManagerFirstName;
-    private String projectManagerLastName;
-    private List<String> projectAddress;
-    private String competitionName;
-    private String projectName;
-    private String leadOrgName;
-    private List<NoteResource> notes;
-    private String termsAndConditionsTemplate;
-
-    public GrantOfferLetterTemplateViewModel() {
-
-    }
+    private final long applicationId;
+    private final String projectManagerFirstName;
+    private final String projectManagerLastName;
+    private final List<String> projectAddress;
+    private final String competitionName;
+    private final String projectName;
+    private final String leadOrgName;
+    private final List<NoteResource> notes;
+    private final String termsAndConditionsTemplate;
+    private final IndustrialFinanceTableModel industrialFinanceTable;
+    private final AcademicFinanceTableModel academicFinanceTable;
+    private final SummaryFinanceTableModel summaryFinanceTable;
 
     public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,
@@ -32,7 +31,10 @@ public class GrantOfferLetterTemplateViewModel {
                                              String projectName,
                                              String leadOrgName,
                                              List<NoteResource> notes,
-                                             String termsAndConditionsTemplate) {
+                                             String termsAndConditionsTemplate,
+                                             IndustrialFinanceTableModel industrialFinanceTable,
+                                             AcademicFinanceTableModel academicFinanceTable,
+                                             SummaryFinanceTableModel summaryFinanceTable) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -42,6 +44,9 @@ public class GrantOfferLetterTemplateViewModel {
         this.leadOrgName = leadOrgName;
         this.notes = notes;
         this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+        this.industrialFinanceTable = industrialFinanceTable;
+        this.academicFinanceTable = academicFinanceTable;
+        this.summaryFinanceTable = summaryFinanceTable;
     }
 
     public long getApplicationId() {
@@ -84,4 +89,15 @@ public class GrantOfferLetterTemplateViewModel {
         return termsAndConditionsTemplate;
     }
 
+    public IndustrialFinanceTableModel getIndustrialFinanceTable() {
+        return industrialFinanceTable;
+    }
+
+    public AcademicFinanceTableModel getAcademicFinanceTable() {
+        return academicFinanceTable;
+    }
+
+    public SummaryFinanceTableModel getSummaryFinanceTable() {
+        return summaryFinanceTable;
+    }
 }
