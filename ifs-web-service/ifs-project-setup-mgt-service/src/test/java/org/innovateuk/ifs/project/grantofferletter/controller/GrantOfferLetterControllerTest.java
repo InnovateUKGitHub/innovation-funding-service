@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
@@ -18,8 +19,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterAppr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterTemplateViewModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -29,10 +29,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -44,10 +46,12 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -569,7 +573,23 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void viewGrantOfferLetterTemplate() throws Exception {
         long projectId = 123L;
-
+        ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
+        AcademicFinanceTableModel academicTable = new AcademicFinanceTableModel(false,
+                                                                                asMap("orgName", projectFinance),
+                                                                                singletonList("orgName"),
+                                                                                BigDecimal.TEN,
+                                                                                BigDecimal.ONE,
+                                                                                BigDecimal.ONE);
+        IndustrialFinanceTableModel industrialTable = new IndustrialFinanceTableModel(false,
+                                                                                      asMap("orgName", projectFinance),
+                                                                                      singletonList("orgName"),
+                                                                                      BigDecimal.TEN,
+                                                                                      BigDecimal.ONE,
+                                                                                      BigDecimal.ONE,
+                                                                                      emptyList());
+        SummaryFinanceTableModel summaryTable = new SummaryFinanceTableModel(BigDecimal.TEN,
+                                                                             BigDecimal.ONE,
+                                                                             BigDecimal.ONE);
 
 
         when(populator.populate(projectId))
@@ -581,7 +601,10 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "projectName",
                                                                   "leadOrgName",
                                                                   newNoteResource().build(1),
-                                                                  "templateName"));
+                                                                  "templateName",
+                                                                  industrialTable,
+                                                                  academicTable,
+                                                                  summaryTable));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
