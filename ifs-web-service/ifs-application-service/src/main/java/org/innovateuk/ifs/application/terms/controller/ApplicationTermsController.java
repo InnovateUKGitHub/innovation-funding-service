@@ -68,16 +68,17 @@ public class ApplicationTermsController {
                            @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
 
-        model.addAttribute("backUrl", backUrlFromOrigin(applicationId, origin, queryParams));
-        model.addAttribute("backLabel", backLabelFromOrigin(origin));
+
         model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId, questionId));
 
+        model.addAttribute("backUrl", backUrlFromOrigin(applicationId, origin, queryParams));
+        model.addAttribute("backLabel", backLabelFromOrigin(origin));
         return "application/terms-and-conditions";
     }
 
     private static String backUrlFromOrigin(long applicationId, String origin, MultiValueMap<String, String> queryParams) {
         queryParams.put("applicationId", singletonList(String.valueOf(applicationId)));
-        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId");
+        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId");
     }
 
     private static String backLabelFromOrigin(String origin) {
@@ -90,7 +91,7 @@ public class ApplicationTermsController {
                               UserResource user,
                               Model model,
                               @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form,
-                              @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin, // TODO use enum?
+                              @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                               @RequestParam MultiValueMap<String, String> queryParams,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {

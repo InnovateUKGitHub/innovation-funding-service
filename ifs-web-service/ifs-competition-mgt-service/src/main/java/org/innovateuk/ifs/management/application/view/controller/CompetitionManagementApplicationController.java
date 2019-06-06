@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.application.view.form.IneligibleApplication
 import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
+import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -82,7 +83,9 @@ public class CompetitionManagementApplicationController {
                                         @RequestParam MultiValueMap<String, String> queryParams,
                                         UserResource user,
                                         Model model) {
-        model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user, origin, queryParams));
+        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user, origin, queryParams);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("originQuery", viewModel.getOriginQuery());
         return "competition-mgt-application-overview";
     }
 

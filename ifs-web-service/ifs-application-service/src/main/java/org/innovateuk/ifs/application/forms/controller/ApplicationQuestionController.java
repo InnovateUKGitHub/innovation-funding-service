@@ -30,11 +30,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -112,7 +114,7 @@ public class ApplicationQuestionController {
             UserResource user,
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestParam(value = "origin") Optional<String> origin
+            @RequestParam MultiValueMap<String, String> queryParams
     ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
             if (markAsCompleteSet) {
@@ -129,7 +131,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form, origin);
+        return viewQuestion(user, applicationId, questionId, model, form, queryParams);
     }
 
     @PostMapping(value = {
@@ -145,13 +147,14 @@ public class ApplicationQuestionController {
             @PathVariable(QUESTION_ID) final Long questionId,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @RequestParam MultiValueMap<String, String> queryParams
     ) {
         Map<String, String[]> params = request.getParameterMap();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
-            return handleEditQuestion(form, model, applicationId, questionId, user);
+            return handleEditQuestion(form, model, applicationId, questionId, user, queryParams);
         } else {
             handleAssignedQuestions(applicationId, user, request, response);
 
@@ -164,7 +167,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
+                return viewQuestion(user, applicationId, questionId, model, form, queryParams);
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -216,8 +219,8 @@ public class ApplicationQuestionController {
             Long questionId,
             Model model,
             ApplicationForm form,
-            Optional<String> origin
-    ) {
+            MultiValueMap<String, String> queryParams) {
+
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
 
@@ -228,7 +231,13 @@ public class ApplicationQuestionController {
                 case GRANT_TRANSFER_DETAILS:
                     return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
                 case TERMS_AND_CONDITIONS:
-                    String originQuery = origin.map(o -> format("?origin=%s", o)).orElse("");
+//                    String originQuery = origin.map(o -> format("?origin=%s", o)).orElse("");
+
+                    String originQuery =  UriComponentsBuilder.fromPath("")
+                            .queryParams(queryParams)
+                            .encode()
+                            .toUriString();
+
                     return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
             }
         }
@@ -268,7 +277,8 @@ public class ApplicationQuestionController {
             Model model,
             Long applicationId,
             Long questionId,
-            UserResource user
+            UserResource user,
+            MultiValueMap<String, String> queryParams
     ) {
         ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         if (processRole != null) {
@@ -277,7 +287,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
+        return viewQuestion(user, applicationId, questionId, model, form, queryParams);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
