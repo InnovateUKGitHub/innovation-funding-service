@@ -9,10 +9,18 @@ RUN apt-get update && \
     apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
+ARG BAMBOO_CREDS_ARG
+ARG BAMBOO_URL_ARG
+ARG BAMBOO_PLAN_PROJ_ARG
+ARG BAMBOO_BUILD_NO_ARG
 ARG GID=993
 ARG UID=996
 ARG PW=default
 
+ENV BAMBOO_CREDS=$BAMBOO_CREDS_ARG
+ENV BAMBOO_URL=$BAMBOO_URL_ARG
+ENV BAMBOO_PLAN_PROJ=$BAMBOO_PLAN_PROJ_ARG
+ENV BAMBOO_BUILD_NO=$BAMBOO_BUILD_NO_ARG
 ENV GID=993
 ENV UID=996
 ENV PW=default
@@ -29,7 +37,8 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 COPY ./ ./
-RUN find . -type d -exec chmod 777 {} +
+RUN chown -R gluster:gluster . && \
+  find . \( -type d -o -type f \) -exec chmod 775 {} +
 
 USER gluster
 

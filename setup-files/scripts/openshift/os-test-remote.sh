@@ -43,6 +43,10 @@ function buildAndPushTestImages() {
     docker build --build-arg GID=${System_env_bamboo_gluster_GID} \
                  --build-arg UID=${System_env_bamboo_gluster_UID} \
                  --build-arg PW=${System_env_bamboo_gluster_user_password} \
+                 --build-arg BAMBOO_CREDS_ARG=${bamboo_creds_secret} \
+                 --build-arg BAMBOO_URL_ARG=${bamboo_queue_url} \
+                 --build-arg BAMBOO_PLAN_PROJ_ARG=${bamboo_planKey} \
+                 --build-arg BAMBOO_BUILD_NO_ARG=${bamboo_buildNumber} \
                  -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
 
     docker login -p ${SVC_ACCOUNT_TOKEN} -u unused ${REGISTRY}
