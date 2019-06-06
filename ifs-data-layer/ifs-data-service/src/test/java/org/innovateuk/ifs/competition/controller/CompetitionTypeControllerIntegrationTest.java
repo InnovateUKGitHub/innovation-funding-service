@@ -48,8 +48,8 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Sector",
                         "Generic",
                         "Expression of interest",
-                        "BEIS: Advanced Propulsion Centre (APC) Programme",
-                        "BEIS: Aerospace Technology Institute (ATI) Programme",
+                        "Advanced Propulsion Centre",
+                        "Aerospace Technology Institute",
                         "The Prince's Trust",
                         "Horizon 2020"
                 );
