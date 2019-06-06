@@ -76,7 +76,7 @@ addUserToShibboleth() {
 
 # Main
 
-wipeLdapUsers
+# wipeLdapUsers
 
 IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
