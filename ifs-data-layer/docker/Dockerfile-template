@@ -17,9 +17,8 @@ RUN groupadd -g @glusterGID@ gluster && \
 RUN mkdir /tmp/ifs && \ 
   mkdir /tmp/virus-scan-holding && \ 
   mkdir /tmp/virus-scan-scanned && \ 
-  chown -R gluster:gluster /tmp/ifs && \ 
-  chown -R gluster:gluster /tmp/virus-scan-holding && \ 
-  chown -R gluster:gluster /tmp/virus-scan-scanned
+  chown -R gluster:gluster /tmp/virus-scan* && \
+  find /tmp/virus-scan*  \( -type d -o -type f \) -exec chmod 775 {} +
 
 ADD newrelic.jar /
 ADD newrelic.yml /
