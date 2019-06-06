@@ -7,7 +7,6 @@ Documentation  IFS-5158 - Competition Template
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Force Tags        Pending
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
