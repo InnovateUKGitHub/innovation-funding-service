@@ -36,8 +36,10 @@ public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTabl
         } else {
             List<String> organisations = new ArrayList<>(academicFinances.keySet());
             BigDecimal totalEligibleCosts = calculateTotalFromFinances(academicFinances.values());
-            BigDecimal totalGrant = calculateTotalGrantFromFinances(academicFinances.values());
-            BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
+
+            // Academic organisations always have 100% grant
+            BigDecimal totalGrant = totalEligibleCosts;
+            BigDecimal rateOfGrant = BigDecimal.valueOf(100);
 
             return new AcademicFinanceTableModel(
                     academicFinances.size() > 1,
@@ -48,5 +50,5 @@ public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTabl
                     rateOfGrant);
         }
     }
-
+    
 }
