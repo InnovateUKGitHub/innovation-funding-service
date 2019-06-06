@@ -38,7 +38,6 @@ echo user:$user
 echo port:$port
 
 echo ldap host:$LDAP_HOST
-LDAP_PORT=389
 echo ldap port:$LDAP_PORT
 echo ldap domain:$LDAP_DOMAIN
 echo ldap scheme:$LDAP_SCHEME
