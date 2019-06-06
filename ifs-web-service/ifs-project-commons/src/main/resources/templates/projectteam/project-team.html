@@ -21,9 +21,7 @@
         <th:block th:insert="fragments/layout :: header-sub"
                   th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"/>
     </th:block>
-
-
-
+    
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
