@@ -36,8 +36,13 @@ public class InnovationAreaResource extends CategoryResource {
     }
 
     @JsonIgnore
+    public boolean isNone() {
+        return "None".equals(getName());
+    }
+
+    @JsonIgnore
     public boolean isNotNone() {
-        return !"None".equals(getName());
+        return !isNone();
     }
 
     @Override

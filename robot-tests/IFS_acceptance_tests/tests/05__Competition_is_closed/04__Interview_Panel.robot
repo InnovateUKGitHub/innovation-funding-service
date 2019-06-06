@@ -213,7 +213,7 @@ Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
     [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
     Then the user marks applications as successful and send funding decision email
     And the user clicks the button/link       css = button[type="submit"]  #Release feedback
 
@@ -358,7 +358,7 @@ the comp admin send invites to the assessors
     the user should see the element         jQuery = label:contains("Subject") ~ input[value = "Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     the user enters text to a text field    css = .editor   Additional message
     the user clicks the button/link         css = button[type="submit"]   #Send invite
-    the user navigates to the page          ${server}/management/assessment/interview/competition/18/assessors/pending-and-declined
+    the user navigates to the page          ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
     the user should see the element         jQuery = td:contains("${assessor_ben}") ~ td:contains("Awaiting response")
     the user should see the element         jQuery = td:contains("${assessor_joel}") ~ td:contains("Awaiting response")
 
