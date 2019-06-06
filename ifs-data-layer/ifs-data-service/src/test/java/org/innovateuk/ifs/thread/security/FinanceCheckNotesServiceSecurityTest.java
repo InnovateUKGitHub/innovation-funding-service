@@ -19,7 +19,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckNotesService> {
@@ -40,7 +39,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void test_create() {
         final NoteResource noteResource = new NoteResource(null, null, null, null, null);
 
         assertAccessDenied(
@@ -52,7 +51,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void test_findOne() throws Exception {
+    public void test_findOne() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -66,7 +65,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void test_findAll() throws Exception {
+    public void test_findAll() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -79,12 +78,12 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
 
-        verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).onlyInternalUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verifyNoMoreInteractions(noteRules);
     }
 
     @Test
-    public void test_addPost() throws Exception {
+    public void test_addPost()  {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
