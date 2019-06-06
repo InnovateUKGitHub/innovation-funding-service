@@ -44,6 +44,9 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-2533 Reason for rejecting GOL
 ...
 ...               IFS-4959 Navigating between IFS and ACC
+...
+...               IFS-5865 GOL download/upload page for admins
+...
 Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -94,18 +97,6 @@ Status updates correctly for internal user's table
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8) > a     # Spend profile
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5) > a     # GOL
 
-IFS Admin user selects the grant offer letter
-    [Documentation]  INFUND-6377, INFUND-6048, IFS-603
-    [Tags]  HappyPath
-    [Setup]  log in as a different user          &{ifs_admin_user_credentials}
-    Given the user navigates to the page         ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-    When the user clicks the button/link         jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.action a  # GOL
-    Then the user navigates to the page          ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    And the user should see the element          jQuery = h2:contains("Grant offer letter")
-    And the user opens the link in new window    grant_offer_letter.pdf
-    And the user should see the element          jQuery = button:contains("Remove")
-    And the user closes the last opened tab
-
 Project Finance can download GOL
     [Documentation]  INFUND-6377
     [Tags]    Download  HappyPath
@@ -113,25 +104,6 @@ Project Finance can download GOL
     Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
-
-Lead should not be able to see GOL until it is sent by IUK
-    [Documentation]  INFUND-7027
-    [Tags]  HappyPath
-    [Setup]    log in as a different user            ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    Given the user navigates to the page             ${server}/project-setup/project/${Elbow_Grease_Project_Id}
-    And the user should see the element              css = li.waiting:nth-child(8)
-    When the user clicks the button/link             link = View the status of partners
-    Then the user should see the element             jQuery = h1:contains("Project team status")
-    And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(8)
-    When the user clicks the button/link             link = Set up your project
-    Then the user should not see the element         link = Grant offer letter
-
-Lead cannot change project manager, project address and finance contact after GOL generation
-    [Documentation]  INFUND-1577, IFS-1578, IFS-1579
-    [Tags]
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-manager  ${403_error_message}
-    When the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-address  ${403_error_message}
-    Then the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/finance-contact?organisation = ${Big_Riffs_Id}  ${403_error_message}
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
@@ -146,14 +118,6 @@ Non lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link = Set up your project
     Then the user should not see the element         link = Grant offer letter
 
-Project finance user removes the grant offer letter
-    [Documentation]    INFUND-6377, INFUND-5988
-    [Tags]  HappyPath
-    [Setup]  log in as a different user           &{internal_finance_credentials}
-    Given the user navigates to the page          ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    Then the user can remove the uploaded file    removeGrantOfferLetterClicked  grant_offer_letter.pdf
-    And the user should see the element           css = label[for = "grantOfferLetter"]
-
 Comp Admin cannot upload big or non-pdf grant offer letter
     [Documentation]  INFUND-7049
     [Tags]
@@ -165,10 +129,29 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     And the user uploads a file                      grantOfferLetter  ${text_file}
     Then the user should see a field error           ${wrong_filetype_validation_error}
 
+Comp Admin is able to navigate to the Grant Offer letter page
+    [Documentation]  IFS-5865
+    Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
+    When the user opens the link in new window   View the grant offer letter page
+    Then the user is able to see the Grant Offer letter page
+
+Comp Admin should be able to see GOL template download link
+    Given the user navigates to the page   ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
+    Then the user should see the element   link = grant_offer_letter.pdf
+
+Validating GOL page error message
+    Given the user clicks the button/link                 jQuery = button:contains("Send to project team")
+    When the user clicks the button/link                  jQuery = button:contains("Publish to project team")
+    Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
+
+Comp Admin is able to navigate to the Grant Offer letter page
+    [Documentation]  IFS-5865
+    Given the user opens the link in new window   View the grant offer letter page
+    Then the user is able to see the Grant Offer letter page
+
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
     [Tags]  HappyPath
-    [Setup]  log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page        ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     Then the user uploads a file                grantOfferLetter  ${valid_pdf}
     And the user should see the element         jQuery = button:contains("Remove")
@@ -506,6 +489,10 @@ Verify support users permissions in project setup tab
 the user uploads a file
     [Arguments]  ${name}  ${file}
     choose file    name = ${name}    ${upload_folder}/${file}
+
+the user is able to see the Grant Offer letter page
+    Select Window                          title = Print version with CSS
+    the user closes the last opened tab
 
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css = button[name = "removeSignedGrantOfferLetterClicked"]
