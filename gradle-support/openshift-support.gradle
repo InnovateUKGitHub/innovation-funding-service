@@ -50,7 +50,7 @@ prepareDeployment.mustRunAfter setFinanceDataServiceSyncDefaults
 
 task setDbResetDefaults {
     if (!project.hasProperty('LDAP_PORT')) {
-        project.ext.LDAP_PORT = 389
+        project.ext.LDAP_PORT = 8389
     }
 
     if (!project.hasProperty('ONLY_SYNC_LDAP')) {
@@ -151,29 +151,33 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 
 task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "sysint", project.version]
+    args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
 task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "sysint", project.version]
+    args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
 task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
-    args = [openshiftEnv, "sysint", project.version]
+    args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
 task dbBaselineSysint(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
-    args = [openshiftEnv, "sysint", project.version]
+    args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
 task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
-    args = [openshiftEnv, "sysint", project.version]
+    args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
+task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
+    args = [openshiftEnv, "ifs-sysint", project.version]
+}
 
 // Perf tasks
 

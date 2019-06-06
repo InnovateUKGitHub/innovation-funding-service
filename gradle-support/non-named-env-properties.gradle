@@ -16,7 +16,7 @@ ext.SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
 // For shib and idp
 ext.SHIBBOLETH_MEMCACHE_ENDPOINT=""
 
-ext.LDAP_URL="ldaps://ldap:389"
+ext.LDAP_URL="ldaps://ldap:8389"
 ext.LDAP_PASSWORD="default"
 
 //for idp
@@ -30,7 +30,7 @@ ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
 ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
-ext.SHIBBOLETH_LDAP_PORT="389"
+ext.SHIBBOLETH_LDAP_PORT="8389"
 ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 

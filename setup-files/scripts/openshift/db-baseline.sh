@@ -39,7 +39,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 
     export LDAP_HOST="ldap"
-    export LDAP_PORT=389
+    export LDAP_PORT=8389
     export LDAP_PASS="default"
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"

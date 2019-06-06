@@ -12,8 +12,8 @@ ENV GID=993
 ENV UID=996
 ENV PW=default
 
-RUN groupadd -g ${GID} gluster && \ 
-  useradd -p ${PW} -u ${UID} -g ${GID} gluster && \ 
+RUN groupadd -g ${GID} gluster && \
+  useradd -p ${PW} -u ${UID} -g ${GID} gluster && \
   chown -R gluster:gluster /var/lib/mysql/
 
 USER gluster
