@@ -45,7 +45,9 @@ public class ApplicationTermsModelPopulator {
         this.questionStatusRestService = questionStatusRestService;
     }
 
-    public ApplicationTermsViewModel populate(UserResource currentUser, long applicationId, long termsQuestionId) {
+    public ApplicationTermsViewModel populate(UserResource currentUser,
+                                              long applicationId,
+                                              long termsQuestionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();

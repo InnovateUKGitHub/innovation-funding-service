@@ -11,8 +11,8 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application overview',linkClass='link-back',
-                       linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+              th:with="linkTitle=${backLabel},linkClass='link-back',
+                       linkUrl=@{${backUrl}}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 

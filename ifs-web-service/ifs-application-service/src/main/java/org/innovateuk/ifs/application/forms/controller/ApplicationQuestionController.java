@@ -111,7 +111,8 @@ public class ApplicationQuestionController {
             @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @RequestParam(value = "origin") Optional<String> origin
     ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
             if (markAsCompleteSet) {
@@ -128,7 +129,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, origin);
     }
 
     @PostMapping(value = {
@@ -163,7 +164,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form);
+                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -214,7 +215,8 @@ public class ApplicationQuestionController {
             Long applicationId,
             Long questionId,
             Model model,
-            ApplicationForm form
+            ApplicationForm form,
+            Optional<String> origin
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
@@ -226,7 +228,8 @@ public class ApplicationQuestionController {
                 case GRANT_TRANSFER_DETAILS:
                     return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
                 case TERMS_AND_CONDITIONS:
-                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId);
+                    String originQuery = origin.map(o -> format("?origin=%s", o)).orElse("");
+                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
             }
         }
 
@@ -274,7 +277,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
