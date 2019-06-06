@@ -279,7 +279,7 @@ task deleteProject(type: Exec) {
 
     doLast {
         while ({
-            sleep(15 * 1000)
+            sleep(35 * 1000)
 
             def ocCommand = "oc get project ${openshiftEnv} --token=${token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
             def proc = ocCommand.execute()
@@ -298,6 +298,10 @@ task deleteProject(type: Exec) {
 
 task createProject(dependsOn: deleteProject) {
     def token
+
+    def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+    def openshiftAdminGroup = "CN=ocp_ifs_admins,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+
     doFirst {
         token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         exec {
@@ -305,17 +309,20 @@ task createProject(dependsOn: deleteProject) {
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
         }
 
-        if (openshiftEnv.startsWith("ifs-at-")) {
+        if (openshiftEnv == "production" || openshiftEnv == "uat") {
             exec {
                 executable 'oc'
-                args 'patch', 'namespace', "${openshiftEnv}", "-p", '{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"purpose=perftesting\"}}}', "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+        } else {
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
             }
 
-            for( String user : System.env.bamboo_openshift_at_users.split(',') ) {
-                exec {
-                    executable 'oc'
-                    args 'adm', 'policy', 'add-role-to-user', 'admin', "${user}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
-                }
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin',  "${openshiftDevGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
             }
         }
     }

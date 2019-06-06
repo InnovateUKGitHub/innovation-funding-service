@@ -6,7 +6,7 @@ if(target == 'local') {
 
 } else {
     //remote
-    ext.svcAccountClauseServer = "https://console.prod.ifs-test-clusters.com:443"
-    ext.internalRegistry = "172.30.80.28:5000"
+    ext.svcAccountClauseServer = "https://console.org-env-0.org.innovateuk.ukri.org"
+    ext.internalRegistry = "docker-registry.default.svc:5000"
 }
 
