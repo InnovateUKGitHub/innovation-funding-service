@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId(model.questionId)}" />
+              th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -26,6 +26,8 @@
 
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Add a partner organisation team',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <p class="govuk-body">You must invite one person from the organisation.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
               method="post">
@@ -96,7 +98,7 @@
 
             <p class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button" type="submit">Add organisation and invite applicants</button>
-                <a th:href="@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId(model.questionId)}"
+                <a th:href="@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}"
                    class="button-clear">Cancel</a>
             </p>
 

@@ -4,7 +4,13 @@ import com.google.common.collect.Multimap;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamRowViewModel;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -24,7 +30,9 @@ import java.util.function.Function;
 import static com.google.common.collect.Multimaps.index;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 @Component
 public class ApplicationTeamPopulator {
@@ -41,10 +49,25 @@ public class ApplicationTeamPopulator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
         List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(applicationId).getSuccess();
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccess();
+
+        boolean leadApplicant = processRoles.stream()
+                .filter(pr -> pr.getRole().equals(LEADAPPLICANT))
+                .findAny()
+                .map(pr -> pr.getUser().equals(user.getId()))
+                .orElse(false);
 
         Multimap<Long, ProcessRoleResource> organisationToProcessRole = index(processRoles, ProcessRoleResource::getOrganisationId);
         Map<Long, InviteOrganisationResource> organisationToInvite = inviteOrganisationResources.stream()
@@ -52,39 +75,45 @@ public class ApplicationTeamPopulator {
                 .collect(toMap(InviteOrganisationResource::getOrganisation, Function.identity()));
 
         List<ApplicationTeamOrganisationViewModel> organisationViewModels = organisations.stream()
-                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId())))
+                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), leadApplicant, user))
                 .collect(toList());
 
         organisationViewModels.addAll(inviteOrganisationResources.stream()
             .filter(invite -> invite.getOrganisation() == null)
-            .map(this::toInviteOrganisationTeamViewModel)
+            .map(invite -> toInviteOrganisationTeamViewModel(invite, leadApplicant))
             .collect(toList()));
 
-        return new ApplicationTeamViewModel(applicationId, "blah", questionId, organisationViewModels, user.getId(), false, false);
+        return new ApplicationTeamViewModel(applicationId, application.getName(), questionId, organisationViewModels, user.getId(),
+                leadApplicant,
+                competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
+                application.isOpen() && application.getCompetitionStatus().equals(OPEN),
+                questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete));
     }
 
-    private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite) {
+    private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {
         List<ApplicationTeamRowViewModel> inviteRows = organisationInvite.getInviteResources().stream()
-                .map(invite -> new ApplicationTeamRowViewModel(invite.getId(), invite.getName(), invite.getEmail(), false, true, invite.getId()))
+                .map(ApplicationTeamRowViewModel::fromInvite)
                 .collect(toList());
 
-        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getOrganisationName(), inviteRows, true, false);
+        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getOrganisationName(), inviteRows, leadApplicant, false);
     }
 
-    private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite) {
+    private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
-                .map(pr -> new ApplicationTeamRowViewModel(pr.getUser(), pr.getUserName(), pr.getUserEmail(), pr.getRole().isLeadApplicant(), false, findInviteIdFromProcessRole(pr, organisationInvite)))
+                .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite)))
                 .collect(toList());
 
         if (organisationInvite != null) {
             userRows.addAll(organisationInvite.getInviteResources()
                     .stream()
                     .filter(invite -> invite.getStatus().equals(SENT))
-                    .map(invite -> new ApplicationTeamRowViewModel(invite.getId(), invite.getName(), invite.getEmail(), false, true, invite.getId()))
+                    .map(ApplicationTeamRowViewModel::fromInvite)
                     .collect(toList()));
         }
 
-        return new ApplicationTeamOrganisationViewModel(organisation.getId(), organisation.getName(), userRows, true, true);
+        return new ApplicationTeamOrganisationViewModel(organisation.getId(), organisation.getName(), userRows,
+                leadApplicant || userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId())),
+                true);
     }
 
     private Long findInviteIdFromProcessRole(ProcessRoleResource pr, InviteOrganisationResource organisationInvite) {

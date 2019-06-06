@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'" />
 </head>
-<body class="govuk-template__body">
+<body class="govuk-template__body team">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -26,6 +26,23 @@
 
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Application team',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <th:block th:if="${model.complete}">
+            <div class="success-alert assignee govuk-!-margin-bottom-6">
+                <p class="govuk-body">Application team is marked as complete</p>
+            </div>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <div th:if="${model.anyPendingInvites}" class="message-alert">
+                <p class="govuk-body">There are pending invites. The lead applicant cannot submit the application until these people accept or are removed.</p>
+            </div>
+
+            <p class="govuk-body">These are the organisations that will work together on the project. You can invite people
+            from these organisations to help you with the application. They can invite other people from their own organisation.</p>
+
+            <p class="govuk-body" th:if="${!model.collaborationLevelSingle}">You must read the <a
+                href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
+        </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
               method="post">
@@ -56,14 +73,14 @@
                         <td class="govuk-table__cell"
                             th:classappend="${row.invite ? 'hint' : ''}">
                             <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
-                                <!-- /* TODO Resend invite
+                                <!--/* TODO Resend invite
                                 <th:block th:if="${row.invite}">
                                     <button class="button-clear govuk-!-margin-right-1" type="submit"
                                             name="resend-invite" th:value="${row.id}">Resend invite
                                     </button>
                                     <span>|</span>
                                 </th:block>
-                                */ -->
+                                */-->
 
                                 <th:block th:unless=${organisation.singleUserRemaining}>
                                     <th:block th:if="${!row.invite and model.loggedInUserId != row.id}">
@@ -73,7 +90,8 @@
                                            class="govuk-link">Remove</a>
                                     </th:block>
                                     <th:block th:if="${row.invite}">
-                                        <button class="button-clear govuk-!-margin-left-1" type="submit"
+                                        <!--/* TODO add class with resend story govuk-!-margin-left-1 */-->
+                                        <button class="button-clear" type="submit"
                                                 name="remove-invite" th:value="${row.id}">Remove
                                         </button>
                                     </th:block>
@@ -163,24 +181,30 @@
                                 th:value="${organisation.id}"
                                 class="button-clear"
                                 th:attr="data-show-form=${'invite-user-' + organisation.id},
-                                         aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
-                            Add team member
+                                         aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'"
+                                th:text="${'Add person to ' + organisation.name}">
+                            Add person to blah
                         </button>
                     </p>
                 </th:block>
             </th:block>
 
+            <th:block th:if="${model.leadApplicant}">
+                <a th:unless="${model.readOnly}"
+                   th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                   class="button-secondary">Add a partner organisation</a>
 
-            <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId(model.questionId))}"
-               class="button-secondary">Add a partner organisation</a>
-            <div class="form-footer govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
-                <!--/* 'Mark as complete' / 'Edit' links */-->
-                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model}, pageType='research category')"/>
+                <div th:if="${model.open}" class="form-footer">
+                    <button th:unless="${model.complete}" id="mark-as-complete" type="submit" name="complete" class="button-clear">Mark as complete</button>
+                    <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
+                </div>
+            </th:block>
+
+            <div class="govuk-!-margin-top-6">
+                <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+                   class="govuk-button">Return to application overview
+                </a>
             </div>
-            <input type="hidden" id="cacheTest" value=""/>
-
-            <a href="/"
-               class="button-secondary">Return to application overview</a>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

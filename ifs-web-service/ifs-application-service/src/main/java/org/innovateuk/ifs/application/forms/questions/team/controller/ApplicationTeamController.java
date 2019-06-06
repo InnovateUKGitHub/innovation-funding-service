@@ -4,12 +4,15 @@ package org.innovateuk.ifs.application.forms.questions.team.controller;
 import org.innovateuk.ifs.application.forms.questions.grantagreement.controller.GrantAgreementController;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,7 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -37,15 +40,57 @@ public class ApplicationTeamController {
     @Autowired
     private InviteRestService inviteRestService;
 
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
+    @Autowired
+    private UserRestService userRestService;
+
     @GetMapping
     public String viewTeam(@ModelAttribute(value = "form", binding = false) ApplicationTeamForm form,
                            BindingResult bindingResult,
                            Model model,
                            @PathVariable long applicationId,
                            @PathVariable long questionId,
-                           UserResource userResource) {
-        model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, userResource));
+                           UserResource user) {
+        model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, user));
         return "application/questions/application-team";
+    }
+
+    @GetMapping(params = "mark_as_complete")
+    public String completeFromReviewPage(@ModelAttribute(value = "form") ApplicationTeamForm form,
+                                         BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         Model model,
+                                         @PathVariable long applicationId,
+                                         @PathVariable long questionId,
+                                         UserResource user) {
+        return markAsComplete(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+    }
+
+    @PostMapping(params = "complete")
+    public String markAsComplete(@ModelAttribute(value = "form") ApplicationTeamForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable long applicationId,
+                                 @PathVariable long questionId,
+                                 UserResource user) {
+        List<ValidationMessages> validationMessages = questionStatusRestService.markAsComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
+        validationMessages.forEach(validationHandler::addAnyErrors);
+        return validationHandler.failNowOrSucceedWith(() -> {
+                    questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
+                    return viewTeam(form, bindingResult, model, applicationId, questionId, user);
+                },
+                () -> redirectToApplicationTeam(applicationId, questionId));
+    }
+
+    @PostMapping(params = "edit")
+    public String edit(@PathVariable long applicationId,
+                       @PathVariable long questionId,
+                       UserResource user) {
+        questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
+        return redirectToApplicationTeam(applicationId, questionId);
     }
 
     @PostMapping(params = "remove-team-member")
@@ -141,6 +186,10 @@ public class ApplicationTeamController {
 
     private String redirectToApplicationTeam(long applicationId, long questionId) {
         return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId);
+    }
+
+    private long processRoleId(long userId, long applicationId) {
+        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 
 }

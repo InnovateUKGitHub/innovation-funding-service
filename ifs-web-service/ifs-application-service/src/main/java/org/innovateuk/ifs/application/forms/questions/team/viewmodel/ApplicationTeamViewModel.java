@@ -9,16 +9,20 @@ public class ApplicationTeamViewModel {
     private final long questionId;
     private final List<ApplicationTeamOrganisationViewModel> organisations;
     private final long loggedInUserId;
-    private final boolean closed;
+    private final boolean leadApplicant;
+    private final boolean collaborationLevelSingle;
+    private final boolean open;
     private final boolean complete;
 
-    public ApplicationTeamViewModel(long applicationId, String applicationName, long questionId, List<ApplicationTeamOrganisationViewModel> organisations, long loggedInUserId, boolean closed, boolean complete) {
+    public ApplicationTeamViewModel(long applicationId, String applicationName, long questionId, List<ApplicationTeamOrganisationViewModel> organisations, long loggedInUserId, boolean leadApplicant, boolean collaborationLevelSingle, boolean open, boolean complete) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.questionId = questionId;
         this.organisations = organisations;
         this.loggedInUserId = loggedInUserId;
-        this.closed = closed;
+        this.leadApplicant = leadApplicant;
+        this.collaborationLevelSingle = collaborationLevelSingle;
+        this.open = open;
         this.complete = complete;
     }
 
@@ -42,12 +46,20 @@ public class ApplicationTeamViewModel {
         return loggedInUserId;
     }
 
-    public boolean isClosed() {
-        return closed;
+    public boolean isLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isCollaborationLevelSingle() {
+        return collaborationLevelSingle;
     }
 
     public ApplicationTeamViewModel openAddTeamMemberForm(long organisationId) {
@@ -59,8 +71,14 @@ public class ApplicationTeamViewModel {
     }
 
     public boolean isReadOnly() {
-        return closed || complete;
+        return !open || complete;
     }
 
-    public boolean isCanMarkAsComplete() { return true; }
+    public boolean isCanMarkAsComplete() { return leadApplicant; }
+
+    public boolean isAnyPendingInvites() {
+        return organisations.stream()
+                .flatMap(org -> org.getRows().stream())
+                .anyMatch(ApplicationTeamRowViewModel::isInvite);
+    }
 }
