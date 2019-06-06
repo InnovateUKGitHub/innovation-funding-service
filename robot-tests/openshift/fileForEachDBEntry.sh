@@ -1,4 +1,3 @@
-set -x
 echo "***********Creating file entry for each db entry***********"
 max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
 
