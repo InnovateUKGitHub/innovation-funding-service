@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team/new-organisation")
-public class ApplicationTeamAddOrganisationControllerNew {
+public class ApplicationTeamAddOrganisationController {
 
     @Autowired
     private ApplicationRestService applicationRestService;
