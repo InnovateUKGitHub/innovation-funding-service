@@ -82,7 +82,6 @@ The user enters multiple strings into a text field
     Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
     Mouse Out                                           ${field}
     Set Focus To Element    link=GOV.UK
-    Wait for autosave
 
 The user should see the enabled element
     [Arguments]    ${text_field}
