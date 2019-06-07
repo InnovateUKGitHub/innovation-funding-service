@@ -362,6 +362,9 @@
                             th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
                             <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
                         </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">&ndash;
+                        </td>
                     </tr>
                     <tr>
                         <th>Total grant</th>
@@ -588,6 +591,9 @@
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
                             <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">&ndash;
                         </td>
                     </tr>
 
