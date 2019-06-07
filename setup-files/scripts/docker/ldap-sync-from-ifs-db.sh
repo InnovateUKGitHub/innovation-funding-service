@@ -83,7 +83,7 @@ downloadAccUserCsv() {
 }
 # Main
 
-# wipeLdapUsers
+wipeLdapUsers
 downloadAccUserCsv
 
 IFS=$'\n'
