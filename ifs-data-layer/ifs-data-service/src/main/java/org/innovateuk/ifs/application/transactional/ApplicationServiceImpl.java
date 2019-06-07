@@ -333,10 +333,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
                 break;
 
-            case "WITHDRAWN":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
-                break;
-
             case "SUCCESSFUL":
                 applicationStates = Sets.immutableEnumSet(ApplicationState.APPROVED);
                 break;

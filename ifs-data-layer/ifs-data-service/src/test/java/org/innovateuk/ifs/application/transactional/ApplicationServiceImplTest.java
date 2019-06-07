@@ -657,21 +657,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void findPreviousApplicationsWithWithdrawnFilter() {
-
-        Long competitionId = 1L;
-
-        Page<Application> pagedResult = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
-
-        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
-        assertTrue(result.isSuccess());
-
-        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
-
-    }
-
-    @Test
     public void findPreviousApplicationsWithAllFilter() {
 
         Long competitionId = 1L;
