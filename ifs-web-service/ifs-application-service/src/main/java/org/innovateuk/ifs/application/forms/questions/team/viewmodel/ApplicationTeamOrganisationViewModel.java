@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import java.util.List;
 
-public class ApplicationTeamOrganisationViewModel {
+public class ApplicationTeamOrganisationViewModel implements Comparable<ApplicationTeamOrganisationViewModel> {
 
     private final long id;
     private final String name;
@@ -52,7 +52,18 @@ public class ApplicationTeamOrganisationViewModel {
     public boolean isLead() {
         return rows.stream().anyMatch(ApplicationTeamRowViewModel::isLead);
     }
+
     public boolean isSingleUserRemaining() {
         return rows.size() == 1;
+    }
+
+    @Override
+    public int compareTo(ApplicationTeamOrganisationViewModel that) {
+        if (this.isLead()) {
+            return -1;
+        } else if (that.isLead()) {
+            return 1;
+        }
+        return name.compareTo(that.getName());
     }
 }

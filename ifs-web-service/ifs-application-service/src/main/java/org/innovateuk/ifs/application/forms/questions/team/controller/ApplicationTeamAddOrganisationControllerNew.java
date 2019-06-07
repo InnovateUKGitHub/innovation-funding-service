@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ public class ApplicationTeamAddOrganisationControllerNew {
 
 
     @GetMapping
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
     public String addOrganisationForm(@ModelAttribute(value = "form", binding = false) ApplicationTeamOrganisationForm form,
                            BindingResult bindingResult,
                            Model model,
@@ -42,6 +44,7 @@ public class ApplicationTeamAddOrganisationControllerNew {
     }
 
     @PostMapping
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
     public String addOrganisation(@Valid @ModelAttribute(value = "form") ApplicationTeamOrganisationForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler,
