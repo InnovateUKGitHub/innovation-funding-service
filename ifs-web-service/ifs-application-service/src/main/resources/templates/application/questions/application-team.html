@@ -4,6 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'" />
 </head>
 <body class="govuk-template__body team">
+<th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -55,7 +56,7 @@
                        th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header larger-cols">Name</th>
+                        <th scope="col" class="govuk-table__header larger-cols">Full name</th>
                         <th scope="col" class="govuk-table__header">Email</th>
                         <th scope="col" class="govuk-table__header width-200"><span
                             class="govuk-visually-hidden">Remove</span></th>

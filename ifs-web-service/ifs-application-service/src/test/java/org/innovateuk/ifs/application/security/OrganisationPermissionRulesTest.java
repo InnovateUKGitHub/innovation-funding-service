@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.team.security.OrganisationPermissionRules;
+import org.innovateuk.ifs.application.forms.questions.team.security.OrganisationPermissionRules;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;

@@ -74,8 +74,6 @@ public class ApplicationTeamViewModel {
         return !open || complete;
     }
 
-    public boolean isCanMarkAsComplete() { return leadApplicant; }
-
     public boolean isAnyPendingInvites() {
         return organisations.stream()
                 .flatMap(org -> org.getRows().stream())

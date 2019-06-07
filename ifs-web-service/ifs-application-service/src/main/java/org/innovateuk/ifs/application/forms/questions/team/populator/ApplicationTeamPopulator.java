@@ -28,10 +28,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.google.common.collect.Multimaps.index;
+import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 @Component
@@ -83,10 +82,12 @@ public class ApplicationTeamPopulator {
             .map(invite -> toInviteOrganisationTeamViewModel(invite, leadApplicant))
             .collect(toList()));
 
+        sort(organisationViewModels);
+
         return new ApplicationTeamViewModel(applicationId, application.getName(), questionId, organisationViewModels, user.getId(),
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
-                application.isOpen() && application.getCompetitionStatus().equals(OPEN),
+                application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete));
     }
 
@@ -106,7 +107,7 @@ public class ApplicationTeamPopulator {
         if (organisationInvite != null) {
             userRows.addAll(organisationInvite.getInviteResources()
                     .stream()
-                    .filter(invite -> invite.getStatus().equals(SENT))
+                    .filter(invite -> invite.getUser() == null)
                     .map(ApplicationTeamRowViewModel::fromInvite)
                     .collect(toList()));
         }

@@ -71,7 +71,7 @@ public class ApplicationTeamRowViewModel {
         return inviteId;
     }
 
-    public long getDaysPending() {
+    private long getDaysPending() {
         return ChronoUnit.DAYS.between(pendingSince, ZonedDateTime.now());
     }
 }
