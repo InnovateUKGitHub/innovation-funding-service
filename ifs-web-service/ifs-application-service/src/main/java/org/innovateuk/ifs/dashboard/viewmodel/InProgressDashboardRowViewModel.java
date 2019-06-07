@@ -9,7 +9,8 @@ import java.time.ZonedDateTime;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
@@ -26,6 +27,7 @@ public class InProgressDashboardRowViewModel extends
     private final long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
+    private final LocalDate startDate;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -36,7 +38,8 @@ public class InProgressDashboardRowViewModel extends
                                            ZonedDateTime endDate,
                                            long daysLeft,
                                            int applicationProgress,
-                                           boolean assignedToInterview) {
+                                           boolean assignedToInterview,
+                                           LocalDate startDate) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -45,6 +48,7 @@ public class InProgressDashboardRowViewModel extends
         this.daysLeft = daysLeft;
         this.applicationProgress = applicationProgress;
         this.assignedToInterview = assignedToInterview;
+        this.startDate = startDate;
     }
 
     public boolean isAssignedToMe() {
@@ -69,6 +73,10 @@ public class InProgressDashboardRowViewModel extends
 
     public boolean isAssignedToInterview() {
         return assignedToInterview;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     /* view logic */
@@ -127,11 +135,4 @@ public class InProgressDashboardRowViewModel extends
         return "Untitled application (start here)";
     }
 
-    @Override
-    public int compareTo(InProgressDashboardRowViewModel o) {
-        if (assignedToInterview != o.isAssignedToInterview()) {
-            return assignedToInterview ? -1 : 1;
-        }
-        return Long.compare(getApplicationNumber(), o.getApplicationNumber());
-    }
 }

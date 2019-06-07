@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import java.time.LocalDate;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
@@ -9,15 +11,18 @@ public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowV
 
     private final long projectId;
     private final String projectTitle;
+    private final LocalDate targetStartDate;
 
     public InSetupDashboardRowViewModel(String title,
                                         long applicationId,
                                         String competitionTitle,
                                         long projectId,
-                                        String projectTitle) {
+                                        String projectTitle,
+                                        LocalDate targetStartDate) {
         super(title, applicationId, competitionTitle);
         this.projectId = projectId;
         this.projectTitle = projectTitle;
+        this.targetStartDate = targetStartDate;
     }
 
     public long getProjectId() {
@@ -26,6 +31,10 @@ public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowV
 
     public String getProjectTitle() {
         return projectTitle;
+    }
+
+    public LocalDate getTargetStartDate() {
+        return targetStartDate;
     }
 
     @Override
@@ -38,8 +47,4 @@ public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowV
         return isNullOrEmpty(projectTitle) ? super.getCompetitionTitle() : projectTitle;
     }
 
-    @Override
-    public int compareTo(InSetupDashboardRowViewModel o) {
-        return Long.compare(projectId, o.getProjectId());
-    }
 }
