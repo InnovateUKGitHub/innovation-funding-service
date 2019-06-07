@@ -331,7 +331,7 @@
                         </td>
                     </tr>
                     <tr th:each="(otherCost, iteration : ${model.industrialFinanceTable.otherCosts})">
-                        <td>Other Costs <th:block th:text="${iteration.index + 1}"></th:block></td>
+                        <td>Other Costs <th:block th:text=${otherCost.getOtherCostName()}></th:block></td>
                         <td style="text-align:right;"
                             th:each="(orgName : ${otherCost.getOrganisations()})"
                             th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
