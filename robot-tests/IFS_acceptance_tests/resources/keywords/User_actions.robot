@@ -7,7 +7,6 @@ The user clicks the button/link
     Wait Until Element Is Visible Without Screenshots    ${BUTTON}
     Wait Until Element Is Enabled  ${BUTTON}
     Set Focus To Element    ${BUTTON}
-    wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
 The user clicks the button/link in the paginated list
