@@ -53,7 +53,6 @@ The user enters text to a text field
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
-    Wait for autosave
 
 The user enters text to an autocomplete field
 # different from the keyword above, as we don't want to lose focus from the field

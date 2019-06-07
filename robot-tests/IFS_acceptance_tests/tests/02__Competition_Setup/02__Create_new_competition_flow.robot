@@ -522,7 +522,7 @@ Adding a new Assessed Application Question
 Removing an Assessed Application Question
     [Documentation]  IFS-182
     [Tags]  HappyPath
-    Given the user clicks the button/link     jQuery = a:contains("Costs and value for money")
+    Given the user clicks the button/link     css = #main-content > form > ul:nth-child(7) > li:nth-child(10) > div.task > h4 > a
     When the user clicks the button/link      css = button[name="deleteQuestion"]
     Then the user should not see the element  jQuery = a:contains("Costs and value for money")
     When the user should see the element      jQuery = li:contains("Additionality") .task-status-complete
