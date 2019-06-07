@@ -54,14 +54,14 @@ public class InitialDetailsModelPopulatorTest {
     private CompetitionSetupService competitionSetupService;
 
     @Test
-    public void testSectionToPopulateModel() {
+    public void sectionToPopulateModel() {
         CompetitionSetupSection result = populator.sectionToPopulateModel();
 
         assertEquals(CompetitionSetupSection.INITIAL_DETAILS, result);
     }
 
     @Test
-    public void testPopulateModel() {
+    public void populateModel() {
         long competitionId = 8L;
 
         CompetitionResource competition = newCompetitionResource()
@@ -80,7 +80,7 @@ public class InitialDetailsModelPopulatorTest {
 
         when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(compExecs));
         when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
-        when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreas));
+        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreas));
         when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypes));
         when(userRestService.findByUserRole(INNOVATION_LEAD)).thenReturn(restSuccess(leadTechs));
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
@@ -98,7 +98,7 @@ public class InitialDetailsModelPopulatorTest {
         InOrder inOrder = inOrder(userRestService, categoryRestService, competitionRestService, userRestService, competitionSetupService);
         inOrder.verify(userRestService).findByUserRole(COMP_ADMIN);
         inOrder.verify(categoryRestService).getInnovationSectors();
-        inOrder.verify(categoryRestService).getInnovationAreasExcludingNone();
+        inOrder.verify(categoryRestService).getInnovationAreas();
         inOrder.verify(competitionRestService).getCompetitionTypes();
         inOrder.verify(userRestService).findByUserRole(INNOVATION_LEAD);
         inOrder.verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
