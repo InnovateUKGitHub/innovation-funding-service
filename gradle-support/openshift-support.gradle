@@ -128,22 +128,22 @@ task importAnonDataIntoUat(type: Exec, dependsOn: prepareDeployment) {
 
 task osDeployDemo(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "demo", project.version]
+    args = [openshiftEnv, "ifs-demo", project.version]
 }
 
 task osUpgradeDemo(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "demo", project.version]
+    args = [openshiftEnv, "ifs-demo", project.version]
 }
 
 task dbBaselineDemo(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
-    args = [openshiftEnv, "demo", project.version]
+    args = [openshiftEnv, "ifs-demo", project.version]
 }
 
 task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
-    args = [openshiftEnv, "demo", project.version]
+    args = [openshiftEnv, "ifs-demo", project.version]
 }
 
 // Sysint tasks
