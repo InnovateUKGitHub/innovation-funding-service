@@ -10,16 +10,13 @@ public class SummaryFinanceTableModel extends BaseFinanceTableModel {
 
     private BigDecimal totalProjectCosts;
     private BigDecimal totalProjectGrant;
-    private BigDecimal rateOfGrant;
 
     public SummaryFinanceTableModel(
             BigDecimal totalProjectCosts,
-            BigDecimal totalProjectGrant,
-            BigDecimal rateOfGrant
+            BigDecimal totalProjectGrant
     ) {
         this.totalProjectCosts = totalProjectCosts;
         this.totalProjectGrant = totalProjectGrant;
-        this.rateOfGrant = rateOfGrant;
     }
 
     public BigDecimal getTotalProjectCosts() {
@@ -28,9 +25,5 @@ public class SummaryFinanceTableModel extends BaseFinanceTableModel {
 
     public BigDecimal getTotalProjectGrant() {
         return totalProjectGrant;
-    }
-
-    public BigDecimal getRateOfGrant() {
-        return rateOfGrant;
     }
 }

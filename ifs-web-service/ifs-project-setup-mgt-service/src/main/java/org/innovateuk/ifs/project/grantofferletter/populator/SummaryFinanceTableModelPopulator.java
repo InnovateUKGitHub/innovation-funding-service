@@ -27,11 +27,9 @@ public class SummaryFinanceTableModelPopulator extends BaseGrantOfferLetterTable
 
         BigDecimal totalProjectCosts = calculateTotalFromFinances(finances.values());
         BigDecimal totalProjectGrant = calculateTotalGrantFromFinances(finances.values());
-        BigDecimal rateOfGrant = calculateRateOfGrant(totalProjectCosts, totalProjectGrant);
 
         return new SummaryFinanceTableModel(totalProjectCosts,
-                                            totalProjectGrant,
-                                            rateOfGrant);
+                                            totalProjectGrant);
     }
 
     private boolean noIndustrialPartners(Map<OrganisationResource, ProjectFinanceResource> finances,

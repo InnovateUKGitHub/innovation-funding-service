@@ -39,12 +39,4 @@ public class BaseGrantOfferLetterTablePopulator {
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
-    protected BigDecimal calculateRateOfGrant(BigDecimal totalCosts, BigDecimal totalGrant) {
-        return totalCosts.equals(BigDecimal.ZERO) ?
-                BigDecimal.ZERO :
-                totalGrant
-                        .divide(totalCosts,2, BigDecimal.ROUND_HALF_UP)
-                        .multiply(BigDecimal.valueOf(100));
-    }
 }
