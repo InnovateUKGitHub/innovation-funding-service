@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.security;
+package org.innovateuk.ifs.application.forms.questions.team.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.forms.questions.team.security.OrganisationPermissionRules;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -17,9 +16,7 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
-import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
-import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;

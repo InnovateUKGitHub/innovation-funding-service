@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -83,9 +82,6 @@ public class ApplicationQuestionController {
 
     @Autowired
     private ApplicantRestService applicantRestService;
-
-    @Autowired
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -234,10 +230,7 @@ public class ApplicationQuestionController {
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
 
-        if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            model.addAttribute("applicationTeamModel",
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
-        } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+        if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
                     applicationResource, user.getId(), questionId));

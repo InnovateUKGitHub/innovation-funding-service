@@ -30,7 +30,6 @@ public class ApplicationTeamAddOrganisationController {
     @Autowired
     private InviteRestService inviteRestService;
 
-
     @GetMapping
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
     public String addOrganisationForm(@ModelAttribute(value = "form", binding = false) ApplicationTeamOrganisationForm form,
