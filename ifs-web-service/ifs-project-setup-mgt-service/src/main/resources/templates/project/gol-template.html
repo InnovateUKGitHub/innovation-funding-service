@@ -596,7 +596,7 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotal(), 0, 'DEFAULT')}">£0</th:block>
+                            &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.getTotalFundingSought(), 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.academicFinanceTable.showTotalsColumn}">
