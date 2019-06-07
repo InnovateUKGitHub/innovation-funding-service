@@ -25,10 +25,12 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.collect.Multimaps.index;
 import static java.util.Collections.sort;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -96,7 +98,7 @@ public class ApplicationTeamPopulator {
                 .map(ApplicationTeamRowViewModel::fromInvite)
                 .collect(toList());
 
-        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getOrganisationName(), inviteRows, leadApplicant, false);
+        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getId(), organisationInvite.getOrganisationName(), inviteRows, leadApplicant, false);
     }
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
@@ -104,7 +106,8 @@ public class ApplicationTeamPopulator {
                 .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite)))
                 .collect(toList());
 
-        if (organisationInvite != null) {
+        Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
+        if (maybeOrganisationInvite.isPresent()) {
             userRows.addAll(organisationInvite.getInviteResources()
                     .stream()
                     .filter(invite -> invite.getUser() == null)
@@ -112,7 +115,10 @@ public class ApplicationTeamPopulator {
                     .collect(toList()));
         }
 
-        return new ApplicationTeamOrganisationViewModel(organisation.getId(), organisation.getName(), userRows,
+        return new ApplicationTeamOrganisationViewModel(organisation.getId(),
+                maybeOrganisationInvite.map(InviteOrganisationResource::getId).orElse(null),
+                organisation.getName(),
+                userRows,
                 leadApplicant || userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId())),
                 true);
     }

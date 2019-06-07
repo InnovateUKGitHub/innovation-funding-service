@@ -5,6 +5,7 @@ import java.util.List;
 public class ApplicationTeamOrganisationViewModel implements Comparable<ApplicationTeamOrganisationViewModel> {
 
     private final long id;
+    private final Long inviteId;
     private final String name;
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
@@ -12,8 +13,9 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
 
     private boolean openAddTeamMemberForm;
 
-    public ApplicationTeamOrganisationViewModel(long id, String name, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
+    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
         this.id = id;
+        this.inviteId = inviteId;
         this.name = name;
         this.rows = rows;
         this.editable = editable;
@@ -23,6 +25,10 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
 
     public long getId() {
         return id;
+    }
+
+    public Long getInviteId() {
+        return inviteId;
     }
 
     public String getName() {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -22,11 +23,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team")
@@ -77,12 +80,23 @@ public class ApplicationTeamController {
                                  @PathVariable long questionId,
                                  UserResource user) {
         List<ValidationMessages> validationMessages = questionStatusRestService.markAsComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
-        validationMessages.forEach(validationHandler::addAnyErrors);
+        validationMessages.forEach(messages -> validationHandler.addAnyErrors(messages,
+                mapTeamCompletionError(),
+                defaultConverters()));
         return validationHandler.failNowOrSucceedWith(() -> {
                     questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
                     return viewTeam(form, bindingResult, model, applicationId, questionId, user);
                 },
                 () -> redirectToApplicationTeam(applicationId, questionId));
+    }
+
+    private ErrorToObjectErrorConverter mapTeamCompletionError() {
+        return  e -> {
+            if ("validation.applicationteam.pending.invites".equals(e.getErrorKey())) {
+                return Optional.of(newFieldError(e, "organisation." + e.getArguments().get(1), e.getFieldRejectedValue()));
+            }
+            return Optional.empty();
+        };
     }
 
     @PostMapping(params = "edit")
@@ -179,7 +193,9 @@ public class ApplicationTeamController {
                     applicationId
             );
             invite.setInviteOrganisation(organisationId);
-            validationHandler.addAnyErrors(inviteAction.apply(invite));
+            validationHandler.addAnyErrors(inviteAction.apply(invite),
+                    mappingErrorKeyToField("email.already.in.invite", "email"),
+                    defaultConverters());
             return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToApplicationTeam(applicationId, questionId));
         });
     }
