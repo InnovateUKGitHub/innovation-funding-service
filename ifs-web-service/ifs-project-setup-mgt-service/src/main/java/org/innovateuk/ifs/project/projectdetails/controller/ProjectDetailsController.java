@@ -121,16 +121,7 @@ public class ProjectDetailsController {
                                   @PathVariable("projectId") final long projectId,
                                   HttpServletRequest request) {
 
-        projectRestService.withdrawProject(projectId)
-                .andOnSuccess(
-                        () ->  projectRestService.getProjectById(projectId)
-                                .andOnSuccess(
-                                        project -> applicationRestService.withdrawApplication(project.getApplication())
-                                            .andOnFailure(
-                                                    () -> LOG.error("Application withdrawal failed")
-                                            )
-                                )
-                        );
+        projectRestService.withdrawProject(projectId).getSuccess();
 
         return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
     }

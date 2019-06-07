@@ -308,8 +308,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                                 .build());
 
         when(projectRestService.withdrawProject(project.getId())).thenReturn(restSuccess());
-        when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
-        when(applicationRestService.withdrawApplication(applicationId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
                 .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
@@ -318,8 +316,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andReturn();
 
         verify(projectRestService).withdrawProject(project.getId());
-        verify(projectRestService).getProjectById(project.getId());
-        verify(applicationRestService).withdrawApplication(applicationId);
+        verifyNoMoreInteractions(projectRestService);
     }
 
     @Test
