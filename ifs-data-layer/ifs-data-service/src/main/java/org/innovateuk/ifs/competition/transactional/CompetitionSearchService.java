@@ -14,16 +14,16 @@ public interface CompetitionSearchService {
     ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
+    ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
+    ServiceResult<CompetitionSearchResult> findNonIfsCompetitions(int page, int size);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions();
+    ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size);
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")

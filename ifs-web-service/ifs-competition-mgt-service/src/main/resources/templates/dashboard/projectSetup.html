@@ -72,6 +72,11 @@
                         </li>
                     </ul>
                 </th:block>
+                <form method="get"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                    <th:block
+                        th:insert="fragments/competition-management :: applications-pagination(results=${model.pagination})"/>
+                </form>
             </section>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end" />

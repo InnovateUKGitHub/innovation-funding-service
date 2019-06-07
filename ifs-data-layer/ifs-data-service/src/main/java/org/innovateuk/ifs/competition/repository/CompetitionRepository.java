@@ -230,10 +230,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Long countLive();
 
     @Query(PROJECT_SETUP_QUERY)
-    List<Competition> findProjectSetup();
+    Page<Competition> findProjectSetup(Pageable pageable);
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY)
-    List<Competition> findProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId);
+    Page<Competition> findProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId, Pageable pageable);
 
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();
@@ -248,13 +248,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Long countUpcoming();
 
     @Query(NON_IFS_QUERY)
-    List<Competition> findNonIfs();
+    Page<Competition> findNonIfs(Pageable pageable);
 
     @Query(NON_IFS_COUNT_QUERY)
     Long countNonIfs();
 
     @Query(FEEDBACK_RELEASED_QUERY)
-    List<Competition> findFeedbackReleased();
+    Page<Competition> findFeedbackReleased(Pageable pageable);
 
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();

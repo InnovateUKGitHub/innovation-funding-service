@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CompetitionSearchResult extends PageResource<AbstractCompetitionSearchResultItem> {
 
@@ -13,6 +14,9 @@ public class CompetitionSearchResult extends PageResource<AbstractCompetitionSea
 
     @JsonIgnore
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getMappedCompetitions() {
+        if (mappedCompetitions == null) {
+            mappedCompetitions = getContent().stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
+        }
         return mappedCompetitions;
     }
 

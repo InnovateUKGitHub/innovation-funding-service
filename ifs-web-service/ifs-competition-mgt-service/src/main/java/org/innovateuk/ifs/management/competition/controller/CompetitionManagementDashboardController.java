@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
@@ -79,8 +80,8 @@ public class CompetitionManagementDashboardController {
             " support, innovation lead and stakeholder roles are allowed to view the list of competitions in project setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/project-setup")
-    public String projectSetup(Model model, UserResource user) {
-        final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
+    public String projectSetup(@RequestParam(defaultValue = DEFAULT_PAGE) int page, Model model, UserResource user) {
+        CompetitionSearchResult result = competitionDashboardSearchService.getProjectSetupCompetitions(page);
 
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
@@ -90,7 +91,7 @@ public class CompetitionManagementDashboardController {
 
         model.addAttribute(MODEL_ATTR,
                 new ProjectSetupDashboardViewModel(
-                        projectSetupCompetitions,
+                        result,
                         competitionDashboardSearchService.getCompetitionCounts(),
                         countBankDetails,
                         new DashboardTabsViewModel(user),
@@ -119,9 +120,9 @@ public class CompetitionManagementDashboardController {
             " support, innovation lead and stakeholder roles are allowed to view the list of previous competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/previous")
-    public String previous(Model model, UserResource user) {
+    public String previous(@RequestParam(defaultValue = DEFAULT_PAGE) int page, Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(
-                competitionDashboardSearchService.getPreviousCompetitions(),
+                competitionDashboardSearchService.getPreviousCompetitions(page),
                 competitionDashboardSearchService.getCompetitionCounts(),
                 new DashboardTabsViewModel(user)));
 
@@ -131,8 +132,9 @@ public class CompetitionManagementDashboardController {
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance, and support roles are allowed to view the list of non-IFS competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/non-ifs")
-    public String nonIfs(Model model, UserResource user) {
-        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+    public String nonIfs(@RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            Model model, UserResource user) {
+        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(page), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "non-ifs";
     }
 

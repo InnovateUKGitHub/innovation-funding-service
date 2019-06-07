@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
@@ -26,8 +27,9 @@ public class CompetitionSearchController {
     }
 
     @GetMapping("/project-setup")
-    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
-        return competitionSearchService.findProjectSetupCompetitions().toGetResponse();
+    public RestResult<CompetitionSearchResult> projectSetup(@RequestParam int page,
+                                                            @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findProjectSetupCompetitions(page, size).toGetResponse();
     }
 
     @GetMapping("/upcoming")
@@ -36,17 +38,27 @@ public class CompetitionSearchController {
     }
 
     @GetMapping("/non-ifs")
-    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
-        return competitionSearchService.findNonIfsCompetitions().toGetResponse();
+    public RestResult<CompetitionSearchResult> nonIfs(@RequestParam int page,
+                                                      @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findNonIfsCompetitions(page, size).toGetResponse();
     }
 
     @GetMapping("/post-submission/feedback-released")
-    public RestResult<List<CompetitionSearchResultItem>> previous() {
-        return competitionSearchService.findPreviousCompetitions().toGetResponse();
+    public RestResult<CompetitionSearchResult> previous(@RequestParam int page,
+                                                        @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findPreviousCompetitions(page, size).toGetResponse();
+    }
+
+    @GetMapping("/search")
+    public RestResult<CompetitionSearchResult> search(@RequestParam String searchQuery,
+                                                      @RequestParam int page,
+                                                      @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")
-    public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
+    @ZeroDowntime(description = "remove", reference = "something")
+    public RestResult<CompetitionSearchResult> searchZdd(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
         return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();

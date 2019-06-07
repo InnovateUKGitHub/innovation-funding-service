@@ -34,6 +34,11 @@
                                 customLink='/competition/'+${competition.id}+'/applications/previous'"/>
                     </li>
                 </ul>
+                <form method="get"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                    <th:block
+                        th:insert="fragments/competition-management :: applications-pagination(results=${model.pagination})"/>
+                </form>
             </section>
         </div>
 
