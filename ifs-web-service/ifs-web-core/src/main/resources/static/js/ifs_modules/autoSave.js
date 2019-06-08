@@ -13,7 +13,7 @@ IFS.core.autoSave = (function () {
       select: '[data-autosave] select:not([readonly="readonly"],[data-autosave-disabled])',
       textareas: '[data-autosave] textarea:not([readonly="readonly"],[data-autosave-disabled])',
       typeTimeout: 500,
-      minimumUpdateTime: 800, // the minimum time between the ajax request, and displaying the result of the ajax call.
+      minimumUpdateTime: 100, // the minimum time between the ajax request, and displaying the result of the ajax call.
       ajaxTimeOut: 15000
     },
     init: function () {
