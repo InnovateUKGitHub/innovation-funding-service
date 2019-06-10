@@ -123,7 +123,7 @@ public class ProjectDetailsController {
 
         projectRestService.withdrawProject(projectId).getSuccess();
 
-        return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
+        return String.format("redirect:/competition/%d/status/all", competitionId);
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
