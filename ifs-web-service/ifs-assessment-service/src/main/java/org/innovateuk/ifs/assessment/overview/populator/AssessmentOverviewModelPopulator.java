@@ -100,7 +100,7 @@ public class AssessmentOverviewModelPopulator {
             List<QuestionResource> sectionQuestions = sectionResource.getQuestions()
                     .stream()
                     .map(questionsMap::get)
-                    .filter(this::isAssessmentQuestion)//  add to patch
+                    .filter(this::isAssessmentQuestion)
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
