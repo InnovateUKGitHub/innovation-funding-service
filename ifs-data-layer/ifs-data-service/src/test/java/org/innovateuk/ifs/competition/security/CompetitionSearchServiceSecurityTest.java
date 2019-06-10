@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSearchServiceImpl;
@@ -14,8 +15,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.UpcomingCompetitionSearchResultItemBuilder.newUpcomingCompetitionSearchResultItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.isA;
@@ -69,11 +68,10 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
-        when(classUnderTestMock.findProjectSetupCompetitions())
-                .thenReturn(serviceSuccess(new ArrayList<>(newProjectSetupCompetitionSearchResultItem().build(2))));
+        when(classUnderTestMock.findProjectSetupCompetitions(1, 1))
+                .thenReturn(serviceSuccess(new CompetitionSearchResult()));
 
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
-        assertEquals(0, results.getSuccess().size());
+        classUnderTest.findProjectSetupCompetitions(1, 1);
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
@@ -116,11 +114,10 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
-        when(classUnderTestMock.findPreviousCompetitions())
-                .thenReturn(serviceSuccess(new ArrayList<>(newPreviousCompetitionSearchResultItem().build(2))));
+        when(classUnderTestMock.findPreviousCompetitions(1, 1))
+                .thenReturn(serviceSuccess(new CompetitionSearchResult()));
 
-        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findPreviousCompetitions();
-        assertEquals(0, results.getSuccess().size());
+        classUnderTest.findPreviousCompetitions(1, 1);
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
