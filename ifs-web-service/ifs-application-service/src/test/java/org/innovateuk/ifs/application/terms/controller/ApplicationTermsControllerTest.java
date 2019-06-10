@@ -86,6 +86,35 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     }
 
     @Test
+    public void getTerms_readOnly() throws Exception {
+        long applicationId = 3L;
+        long compeitionId = 5L;
+        long questionId = 7L;
+        String competitionTermsTemplate = "terms-template";
+        boolean collaborativeApplication = false;
+        boolean termsAccepted = false;
+        UserResource loggedInUser = newUserResource()
+                .withFirstName("Tom")
+                .withLastName("Baldwin")
+                .build();
+        ZonedDateTime termsAcceptedOn = now();
+
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, compeitionId, questionId,
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true);
+
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, true)).thenReturn(viewModel);
+
+        setLoggedInUser(loggedInUser);
+
+        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions?readonly=true", applicationId, questionId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name("application/terms-and-conditions"));
+
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, true);
+    }
+
+    @Test
     public void acceptTerms() throws Exception {
         long questionId = 7L;
         CompetitionResource competition = newCompetitionResource()
@@ -123,8 +152,13 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
 
     @Test
     public void acceptTerms_notAgreed() throws Exception {
+        String competitionTermsTemplate = "terms-template";
+        boolean collaborativeApplication = false;
+        boolean termsAccepted = false;
+
         long questionId = 7L;
         CompetitionResource competition = newCompetitionResource()
+                .withId(5L)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -143,6 +177,11 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         when(questionStatusRestServiceMock.markAsComplete(questionId, application.getId(), processRole.getId()))
                 .thenReturn(restFailure(fieldError("agreed", "false", "")));
 
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), competition.getId(), questionId,
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true);
+
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, false)).thenReturn(viewModel);
+
         ApplicationTermsForm form = new ApplicationTermsForm();
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId)
@@ -153,9 +192,10 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attributeHasFieldErrors("form", "agreed"))
                 .andExpect(view().name("application/terms-and-conditions"));
 
-        InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock);
+        InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
         inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
+        inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, false);
         inOrder.verifyNoMoreInteractions();
     }
 
