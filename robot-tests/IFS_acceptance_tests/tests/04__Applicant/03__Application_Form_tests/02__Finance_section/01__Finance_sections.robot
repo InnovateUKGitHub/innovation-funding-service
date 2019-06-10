@@ -148,7 +148,6 @@ the user adds three material rows
     the user clicks the button/link       css = #collapsible-2 > div > div.govuk-form-group.table-overflow > p > button
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
-    Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
@@ -157,6 +156,7 @@ the user removes the materials rows
     Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
+    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link    jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
