@@ -11,14 +11,15 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
-Mark as complete Your funding with only one input should not be possible
-    [Documentation]    INFUND-2214
+Your funding: client and server side validations
+    [Documentation]    INFUND-2214  IFS-5353
     [Tags]
-    When the user clicks the button/link      link = Your funding
-    And the user selects the radio button     requestingFunding   true
-    And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
-    And Set Focus To Element                  css = [data-target="other-funding-table"] label
-    Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
+    Given the user clicks the button/link                link = Your funding
+    And the user selects the radio button                requestingFunding   true
+    When the user enters text to a text field            css = [name^="grantClaimPercentage"]  ${EMPTY}
+    Then the user should see a field error               ${empty_field_warning_message}
+    When the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    Then the user should see a field and summary error   ${empty_field_warning_message}
 
 Other funding client side
     [Documentation]    INFUND-2214
