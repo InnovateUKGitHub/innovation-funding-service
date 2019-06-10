@@ -73,7 +73,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, compeitionId, questionId,
                 competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true);
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, false)).thenReturn(viewModel);
 
         setLoggedInUser(loggedInUser);
 
@@ -82,7 +82,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/terms-and-conditions"));
 
-        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId);
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, false);
     }
 
     @Test

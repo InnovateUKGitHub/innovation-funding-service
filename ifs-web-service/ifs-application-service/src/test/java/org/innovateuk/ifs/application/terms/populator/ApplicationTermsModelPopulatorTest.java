@@ -109,7 +109,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -174,7 +174,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -245,7 +245,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -316,7 +316,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -390,7 +390,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -462,7 +462,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                         .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         );
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -531,7 +531,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -592,7 +592,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
         assertEquals((long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
