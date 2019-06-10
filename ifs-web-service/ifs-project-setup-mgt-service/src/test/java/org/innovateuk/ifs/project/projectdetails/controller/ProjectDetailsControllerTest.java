@@ -304,15 +304,14 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build();
 
         setLoggedInUser(newUserResource()
-                                .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
+                                .withRoleGlobal(IFS_ADMINISTRATOR)
                                 .build());
 
         when(projectRestService.withdrawProject(project.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
-                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:http://localhost:80/management/competition/1/applications/previous"))
+                .andExpect(redirectedUrl("/competition/" + competitionId + "/status/all"))
                 .andReturn();
 
         verify(projectRestService).withdrawProject(project.getId());
