@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/*
-* Holder of values for the industrial finance table, used on the grant offer letter template page
-*/
-
+/**
+ *  Holder of values for the industrial finance table, used on the grant offer letter template page
+ */
 public class IndustrialFinanceTableModel {
 
     private final boolean showTotalsColumn;
@@ -20,7 +19,6 @@ public class IndustrialFinanceTableModel {
     private final List<String> organisations;
     private final BigDecimal totalEligibleCosts;
     private final BigDecimal totalGrant;
-    private final BigDecimal rateOfGrant;
     private final List<OtherCostsRowModel> otherCosts;
 
     public IndustrialFinanceTableModel(boolean showTotalsColumn,
@@ -28,14 +26,12 @@ public class IndustrialFinanceTableModel {
                                        List<String> organisations,
                                        BigDecimal totalEligibleCosts,
                                        BigDecimal totalGrant,
-                                       BigDecimal rateOfGrant,
                                        List<OtherCostsRowModel> otherCosts) {
         this.showTotalsColumn = showTotalsColumn;
         this.finances = finances;
         this.organisations = organisations;
         this.totalEligibleCosts = totalEligibleCosts;
         this.totalGrant = totalGrant;
-        this.rateOfGrant = rateOfGrant;
         this.otherCosts = otherCosts;
     }
 
@@ -67,10 +63,6 @@ public class IndustrialFinanceTableModel {
 
     public BigDecimal getTotalGrant() {
         return totalGrant;
-    }
-
-    public BigDecimal getRateOfGrant() {
-        return rateOfGrant;
     }
 
     public List<OtherCostsRowModel> getOtherCosts() {

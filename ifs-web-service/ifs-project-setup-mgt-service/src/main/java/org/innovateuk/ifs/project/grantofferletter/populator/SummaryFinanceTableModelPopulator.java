@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * Populator for the grant offer letter summary finance table
+ *  Populator for the grant offer letter summary finance table
  */
-
 @Component
 public class SummaryFinanceTableModelPopulator extends BaseGrantOfferLetterTablePopulator {
 
@@ -27,11 +26,9 @@ public class SummaryFinanceTableModelPopulator extends BaseGrantOfferLetterTable
 
         BigDecimal totalProjectCosts = calculateTotalFromFinances(finances.values());
         BigDecimal totalProjectGrant = calculateTotalGrantFromFinances(finances.values());
-        BigDecimal rateOfGrant = calculateRateOfGrant(totalProjectCosts, totalProjectGrant);
 
         return new SummaryFinanceTableModel(totalProjectCosts,
-                                            totalProjectGrant,
-                                            rateOfGrant);
+                                            totalProjectGrant);
     }
 
     private boolean noIndustrialPartners(Map<OrganisationResource, ProjectFinanceResource> finances,

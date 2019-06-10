@@ -50,7 +50,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
         return new InitialDetailsViewModel(generalViewModel,
                 userRestService.findByUserRole(COMP_ADMIN).getSuccess(),
                 categoryRestService.getInnovationSectors().getSuccess(),
-                addAllInnovationAreaOption(categoryRestService.getInnovationAreasExcludingNone().getSuccess()),
+                addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
                 userRestService.findByUserRole(INNOVATION_LEAD).getSuccess(),
                 competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
