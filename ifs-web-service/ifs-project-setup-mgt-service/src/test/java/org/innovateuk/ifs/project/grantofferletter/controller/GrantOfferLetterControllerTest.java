@@ -578,19 +578,15 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                                 asMap("orgName", projectFinance),
                                                                                 singletonList("orgName"),
                                                                                 BigDecimal.TEN,
-                                                                                BigDecimal.ONE,
                                                                                 BigDecimal.ONE);
         IndustrialFinanceTableModel industrialTable = new IndustrialFinanceTableModel(false,
                                                                                       asMap("orgName", projectFinance),
                                                                                       singletonList("orgName"),
                                                                                       BigDecimal.TEN,
                                                                                       BigDecimal.ONE,
-                                                                                      BigDecimal.ONE,
                                                                                       emptyList());
         SummaryFinanceTableModel summaryTable = new SummaryFinanceTableModel(BigDecimal.TEN,
-                                                                             BigDecimal.ONE,
                                                                              BigDecimal.ONE);
-
 
         when(populator.populate(projectId))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(123L,

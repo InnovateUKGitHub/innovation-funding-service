@@ -14,7 +14,6 @@ import java.util.Objects;
 /**
  * Base class for grant offer letter finance table populators
  **/
-
 public class BaseGrantOfferLetterTablePopulator {
 
     @Autowired

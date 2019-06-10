@@ -11,9 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Holder of values for the academic finance table, used by the grant offer letter template page
+ *  Holder of values for the academic finance table, used on the grant offer letter template page
  */
-
 public class AcademicFinanceTableModel extends BaseFinanceTableModel {
 
 

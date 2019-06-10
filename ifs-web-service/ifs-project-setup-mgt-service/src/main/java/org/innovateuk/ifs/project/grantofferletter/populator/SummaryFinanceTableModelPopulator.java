@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * Populator for the grant offer letter summary finance table
+ *  Populator for the grant offer letter summary finance table
  */
-
 @Component
 public class SummaryFinanceTableModelPopulator extends BaseGrantOfferLetterTablePopulator {
 

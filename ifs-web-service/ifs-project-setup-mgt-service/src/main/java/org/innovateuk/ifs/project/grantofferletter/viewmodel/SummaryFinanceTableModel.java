@@ -3,9 +3,8 @@ package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 import java.math.BigDecimal;
 
 /**
-* Holder of values for the summary finance table, used on the grant offer letter template page
+ *  Holder of values for the summary finance table, used on the grant offer letter template page
  */
-
 public class SummaryFinanceTableModel extends BaseFinanceTableModel {
 
     private BigDecimal totalProjectCosts;

@@ -13,9 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Populator for the grant offer letter academic finance table
+ *  Populator for the grant offer letter academic finance table
  */
-
 @Component
 public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTablePopulator {
 

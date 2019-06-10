@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/*
-* Holder of values for the industrial finance table, used on the grant offer letter template page
-*/
-
+/**
+ *  Holder of values for the industrial finance table, used on the grant offer letter template page
+ */
 public class IndustrialFinanceTableModel extends BaseFinanceTableModel {
 
     private final boolean showTotalsColumn;

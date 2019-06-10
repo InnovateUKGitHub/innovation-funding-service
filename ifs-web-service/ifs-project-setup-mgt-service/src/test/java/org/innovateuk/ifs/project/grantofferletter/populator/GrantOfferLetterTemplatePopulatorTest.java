@@ -145,19 +145,16 @@ public class GrantOfferLetterTemplatePopulatorTest {
                                                                                              singletonList(leadOrg.getName()),
                                                                                              BigDecimal.TEN,
                                                                                              BigDecimal.ONE,
-                                                                                             BigDecimal.ONE,
                                                                                              emptyList());
 
         AcademicFinanceTableModel academicFinanceTable = new AcademicFinanceTableModel(true,
                                                                                        finances,
                                                                                        singletonList(leadOrg.getName()),
                                                                                        BigDecimal.TEN,
-                                                                                       BigDecimal.ONE,
                                                                                        BigDecimal.ONE);
 
         SummaryFinanceTableModel summaryFinanceTable = new SummaryFinanceTableModel(BigDecimal.ONE,
-                                                                                    BigDecimal.TEN,
-                                                                                    BigDecimal.ZERO);
+                                                                                    BigDecimal.TEN);
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
