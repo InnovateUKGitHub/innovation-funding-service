@@ -7,9 +7,7 @@ spec:
   - ReadWriteMany
   resources:
      requests:
-       # storage: 20G
-       storage: 500M
+      storage: 20G
   selector:
     matchLabels:
-      # ifssysint: "ifssysint"
-      dev: "dev"
+      ifssysint: "ifssysint"
