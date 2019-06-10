@@ -174,7 +174,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
         );
     }
 
-    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(Page<Competition> pageResult, Function<Competition, AbstractCompetitionSearchResultItem> mapping) {
+    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(Page<Competition> pageResult, Function<Competition, CompetitionSearchResultItem> mapping) {
         CompetitionSearchResult result = new CompetitionSearchResult();
         List<Competition> competitions = pageResult.getContent();
         result.setContent(simpleMap(competitions, mapping));

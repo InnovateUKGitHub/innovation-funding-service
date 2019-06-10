@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CompetitionSearchResult extends PageResource<AbstractCompetitionSearchResultItem> {
+public class CompetitionSearchResult extends PageResource<CompetitionSearchResultItem> {
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mappedCompetitions;
 
