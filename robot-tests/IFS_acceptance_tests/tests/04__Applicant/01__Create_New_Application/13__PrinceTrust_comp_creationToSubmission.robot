@@ -35,6 +35,7 @@ Applicant submits his application
     When the user fills in the Application details      ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the applicant completes application team
     And the lead applicant answers the four sections as complete
+    And the user accept the competition terms and conditions
     And the user should not see the element             jQuery = h2:contains("Finances")
     Then the applicant submits the application
 

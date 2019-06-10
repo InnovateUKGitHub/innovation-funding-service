@@ -265,13 +265,9 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link            link = Your funding
-    the user clicks the button/link            link = competition terms and conditions
-    the user should see the element            jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end of the page.")
-    the user goes back to the previous page
     the user selects the radio button          requestingFunding   true
     the user enters text to a text field       css = [name^="grantClaimPercentage"]  45
     the user selects the radio button          otherFunding   false
-    the user selects the checkbox              agree-terms-page
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
     the user clicks the button/link            link = Your funding
     the user should see the element            jQuery = button:contains("Edit")
@@ -435,3 +431,10 @@ the user marks your funding section as complete
 the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+
+the user accept the competition terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview

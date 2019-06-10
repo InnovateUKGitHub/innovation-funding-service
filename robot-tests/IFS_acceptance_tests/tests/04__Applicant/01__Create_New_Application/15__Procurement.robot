@@ -33,6 +33,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${appl_name}
     And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
+    And the user accept the competition terms and conditions
     And the user selects research category              Feasibility studies
     And the applicant submits the procurement application
     [Teardown]  update milestone to yesterday  ${competitionId}  SUBMISSION_DATE
