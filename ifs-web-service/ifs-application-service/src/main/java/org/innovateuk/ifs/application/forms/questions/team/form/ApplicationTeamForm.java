@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * Form to invite a new project team member.
+ * Form to invite a new application team member.
  */
 public class ApplicationTeamForm {
 

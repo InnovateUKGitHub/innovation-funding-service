@@ -65,10 +65,7 @@ public class ApplicationTeamPopulator {
         List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccess();
 
         boolean leadApplicant = processRoles.stream()
-                .filter(pr -> pr.getRole().equals(LEADAPPLICANT))
-                .findAny()
-                .map(pr -> pr.getUser().equals(user.getId()))
-                .orElse(false);
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole().equals(LEADAPPLICANT));
 
         Multimap<Long, ProcessRoleResource> organisationToProcessRole = index(processRoles, ProcessRoleResource::getOrganisationId);
         Map<Long, InviteOrganisationResource> organisationToInvite = inviteOrganisationResources.stream()
@@ -119,8 +116,12 @@ public class ApplicationTeamPopulator {
                 maybeOrganisationInvite.map(InviteOrganisationResource::getId).orElse(null),
                 organisation.getName(),
                 userRows,
-                leadApplicant || userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId())),
+                applicantCanEditRow(userRows, user, leadApplicant),
                 true);
+    }
+
+    private boolean applicantCanEditRow(List<ApplicationTeamRowViewModel> userRows, UserResource user, boolean leadApplicant) {
+        return leadApplicant || userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId()));
     }
 
     private Long findInviteIdFromProcessRole(ProcessRoleResource pr, InviteOrganisationResource organisationInvite) {

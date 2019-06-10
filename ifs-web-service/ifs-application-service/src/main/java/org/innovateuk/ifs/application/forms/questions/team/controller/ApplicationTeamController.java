@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 
-import org.innovateuk.ifs.application.forms.questions.grantagreement.controller.GrantAgreementController;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -33,7 +32,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team")
-@SecuredBySpring(value = "Controller", description = "Only applicants can edit their application team", securedType = GrantAgreementController.class)
+@SecuredBySpring(value = "Controller", description = "Only applicants can edit their application team", securedType = ApplicationTeamController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamController {
 

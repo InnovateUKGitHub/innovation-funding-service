@@ -52,7 +52,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
                     .findFirst();
             if (maybeInvite.isPresent()) {
                 LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
-                reject(errors, "validation.applicationteam.pending.invites", new Object[] {maybeInvite.get().getName(), organisation.getId()});
+                reject(errors, "validation.applicationteam.pending.invites", maybeInvite.get().getName(), organisation.getId());
             }
         }
     }
