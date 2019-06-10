@@ -116,7 +116,7 @@ the user enters the application id into the search field
 the user enters the competition name into the search field
     the user enters text to a text field              id = searchQuery  ${openCompetitionResearch_name}
     the user clicks the button/link                   id = searchsubmit
-    the user should see the element                   jQuery = a div:contains("${openCompetitionResearch_name}")
+    the user should see the element                   jQuery = a:contains("${openCompetitionResearch_name}")
 
 Custom suite teardown
     Disconnect from database

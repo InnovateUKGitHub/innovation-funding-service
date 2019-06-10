@@ -144,13 +144,13 @@
                 <th:block th:if="${#strings.isEmpty(filename)}">
                     <p class="govuk-body uploaded-file">No file currently uploaded.</p>
                     <th:block th:if="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
+                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled="" aria-label="Upload a file"/>
                     </th:block>
                     <th:block th:unless="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" />
+                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file" />
                     </th:block>
                     <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
+                    <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}" aria-label="Upload document">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
                     <p class="uploaded-file govuk-body">
@@ -160,7 +160,7 @@
                            target="_blank">The-uploaded-file-example.pdf</a>
                         (opens in a new window).
                     </p>
-                    <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
+                    <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit" aria-label="Remove uploaded document">Remove</button>
                 </th:block>
             </div>
         </th:block>

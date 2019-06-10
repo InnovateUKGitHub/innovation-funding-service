@@ -50,7 +50,7 @@ public class InitialDetailsFormPopulatorTest {
 	}
 				
 	@Test
-	public void testGetSectionFormDataInitialDetails() {
+	public void getSectionFormDataInitialDetails() {
 		Set<Long> innovationAreas = Stream.of(6L, 66L).collect(Collectors.toSet());
 
 		CompetitionResource competition = newCompetitionResource()
@@ -68,7 +68,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
-		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
+		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
 		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
 
 		CompetitionSetupForm result = service.populateForm(competition);
@@ -90,7 +90,7 @@ public class InitialDetailsFormPopulatorTest {
 	}
 
 	@Test
-	public void testGetSectionFormDataInitialDetailsWithAllInnovationAreas() {
+	public void getSectionFormDataInitialDetailsWithAllInnovationAreas() {
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
@@ -104,14 +104,13 @@ public class InitialDetailsFormPopulatorTest {
                 .withStateAid(Boolean.TRUE)
 				.withId(8L).build();
 
-		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(6L, 7L).build(2);
-		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
+		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(-1L, 6L, 7L).withName("None", "Innovation area 1", "Innovation area 2").build(3);
+		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
 
 		CompetitionSetupForm result = service.populateForm(competition);
 
 		assertTrue(result instanceof InitialDetailsForm);
 		InitialDetailsForm form = (InitialDetailsForm) result;
-		assertThat(form.getInnovationAreaCategoryIds(), hasItems(-1L));
 		assertThat(form.getInnovationAreaCategoryIds(), hasSize(1));
 		assertEquals("All", form.getInnovationAreaNamesFormatted());
 	}
