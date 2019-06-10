@@ -149,16 +149,17 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
 
+
 the user removes the materials rows
     [Documentation]    INFUND-2965
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
-    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
-    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link    jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = button:contains("Materials")
 
