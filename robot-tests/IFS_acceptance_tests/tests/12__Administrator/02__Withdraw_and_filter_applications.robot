@@ -39,7 +39,7 @@ The IFS Admin withdraws a project from Project Setup
     [Tags]
     Given the user clicks the button/link                  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
     When the user cancels then withdraws the project
-    Then the user can see the previous application         ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
+    Then the user should see the element                   jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
 
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
