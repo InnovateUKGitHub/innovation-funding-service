@@ -25,6 +25,8 @@ import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -104,7 +106,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         when(questionStatusRestServiceMock.markAsComplete(questionId, application.getId(), processRole.getId())).thenReturn(restSuccess(emptyList()));
 
         ApplicationTermsForm form = new ApplicationTermsForm();
-        form.setAgreed(true);
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId)
                 .param("agreed", "true"))
@@ -137,8 +138,11 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplication(application.getId())
                 .build();
 
+        when(userRestServiceMock.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(questionStatusRestServiceMock.markAsComplete(questionId, application.getId(), processRole.getId()))
+                .thenReturn(restFailure(fieldError("agreed", "false", "")));
+
         ApplicationTermsForm form = new ApplicationTermsForm();
-        form.setAgreed(false);
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId)
                 .param("agreed", "false"))
@@ -149,6 +153,8 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(view().name("application/terms-and-conditions"));
 
         InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock);
+        inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
+        inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
