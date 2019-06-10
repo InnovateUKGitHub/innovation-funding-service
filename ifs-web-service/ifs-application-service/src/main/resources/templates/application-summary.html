@@ -22,12 +22,6 @@
 
                 <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-                <div th:if="${!model.competition.isOpen() && !model.application.isSubmitted()}">
-                    <div class="warning-alert">
-                        <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
-                    </div>
-                </div>
-
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
