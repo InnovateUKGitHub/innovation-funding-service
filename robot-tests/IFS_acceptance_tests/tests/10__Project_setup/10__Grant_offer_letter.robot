@@ -129,9 +129,9 @@ Lead should not be able to see GOL until it is sent by IUK
 Lead cannot change project manager, project address and finance contact after GOL generation
     [Documentation]  INFUND-1577, IFS-1578, IFS-1579
     [Tags]
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-manager  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/team/project-manager  ${403_error_message}
     When the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-address  ${403_error_message}
-    Then the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/finance-contact?organisation = ${Big_Riffs_Id}  ${403_error_message}
+    Then the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/team/finance-contact/organisation/${Big_Riffs_Id}  ${403_error_message}
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
