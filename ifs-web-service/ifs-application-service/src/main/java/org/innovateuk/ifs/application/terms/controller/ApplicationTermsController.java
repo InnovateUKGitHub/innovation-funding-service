@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.terms.controller;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -68,16 +69,18 @@ public class ApplicationTermsController {
                            @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
 
+        ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId);
+        model.addAttribute("model", viewModel);
 
-        model.addAttribute("model", applicationTermsModelPopulator.populate(user, applicationId, questionId));
-
-        model.addAttribute("backUrl", backUrlFromOrigin(applicationId, origin, queryParams));
+        model.addAttribute("backUrl", backUrlFromOrigin(applicationId, viewModel.getCompetitionId(), origin, queryParams));
         model.addAttribute("backLabel", backLabelFromOrigin(origin));
+
         return "application/terms-and-conditions";
     }
 
-    private static String backUrlFromOrigin(long applicationId, String origin, MultiValueMap<String, String> queryParams) {
+    private static String backUrlFromOrigin(long applicationId, long competitionId, String origin, MultiValueMap<String, String> queryParams) {
         queryParams.put("applicationId", singletonList(String.valueOf(applicationId)));
+        queryParams.put("competitionId", singletonList(String.valueOf(competitionId)));
         return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId");
     }
 

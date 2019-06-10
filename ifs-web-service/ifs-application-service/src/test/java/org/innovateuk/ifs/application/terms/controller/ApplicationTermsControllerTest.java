@@ -59,6 +59,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     @Test
     public void getTerms() throws Exception {
         long applicationId = 3L;
+        long compeitionId = 5L;
         long questionId = 7L;
         String competitionTermsTemplate = "terms-template";
         boolean collaborativeApplication = false;
@@ -69,7 +70,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .build();
         ZonedDateTime termsAcceptedOn = now();
 
-        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, questionId,
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, compeitionId, questionId,
                 competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true);
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId)).thenReturn(viewModel);

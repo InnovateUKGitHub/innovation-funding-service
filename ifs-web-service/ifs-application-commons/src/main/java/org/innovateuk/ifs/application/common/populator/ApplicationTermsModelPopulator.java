@@ -72,6 +72,7 @@ public class ApplicationTermsModelPopulator {
 
             return new ApplicationTermsViewModel(
                     applicationId,
+                    competition.getId(),
                     termsQuestionId,
                     competition.getTermsAndConditions().getTemplate(),
                     application.isCollaborativeProject(),
@@ -84,6 +85,7 @@ public class ApplicationTermsModelPopulator {
         else {
             return new ApplicationTermsViewModel(
                     applicationId,
+                    competition.getId(),
                     termsQuestionId,
                     competition.getTermsAndConditions().getTemplate(),
                     application.isCollaborativeProject(),

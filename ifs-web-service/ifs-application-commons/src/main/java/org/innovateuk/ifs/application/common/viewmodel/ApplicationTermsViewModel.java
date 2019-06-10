@@ -8,6 +8,7 @@ import java.util.Optional;
  */
 public class ApplicationTermsViewModel {
     private final long applicationId;
+    private final long competitionId;
     private final long questionId;
     private final String competitionTermsTemplate;
     private final boolean collaborativeApplication;
@@ -18,6 +19,7 @@ public class ApplicationTermsViewModel {
     private final boolean showHeaderAndFooter;
 
     public ApplicationTermsViewModel(long applicationId,
+                                     long competitionId,
                                      long questionId,
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
@@ -26,6 +28,7 @@ public class ApplicationTermsViewModel {
                                      ZonedDateTime termsAcceptedOn,
                                      boolean termsAcceptedByAllOrganisations) {
         this.applicationId = applicationId;
+        this.competitionId = competitionId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.collaborativeApplication = collaborativeApplication;
@@ -37,11 +40,13 @@ public class ApplicationTermsViewModel {
     }
 
     public ApplicationTermsViewModel(long applicationId,
+                                     long competitionId,
                                      long questionId,
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
                                      boolean termsAcceptedByAllOrganisation) {
         this.applicationId = applicationId;
+        this.competitionId = competitionId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.collaborativeApplication = collaborativeApplication;
@@ -54,6 +59,10 @@ public class ApplicationTermsViewModel {
 
     public long getApplicationId() {
         return applicationId;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public long getQuestionId() {
