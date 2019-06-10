@@ -47,50 +47,52 @@ public class ApplicationTermsModelPopulator {
 
     public ApplicationTermsViewModel populate(UserResource currentUser,
                                               long applicationId,
-                                              long termsQuestionId) {
+                                              long termsQuestionId,
+                                              boolean readOnly) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
-        // is the current user a member of this application?
-        Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
-        if (organisation.isPresent() && competition.isOpen() && application.isOpen()) {
-            Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
-                    questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
-                            termsQuestionId, applicationId, organisation.get().getId()).getSuccess();
+        if (!readOnly)  {
+            // is the current user a member of this application?
+            Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
+            if (organisation.isPresent() && competition.isOpen() && application.isOpen()) {
+                Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
+                        questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                                termsQuestionId, applicationId, organisation.get().getId()).getSuccess();
 
-            boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
-                    .map(QuestionStatusResource::getMarkedAsComplete)
-                    .orElse(false);
+                boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
+                        .map(QuestionStatusResource::getMarkedAsComplete)
+                        .orElse(false);
 
-            String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
-                    .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
-                    .orElse(null);
-            ZonedDateTime termsAcceptedOn = optionalMarkedAsCompleteQuestionStatus
-                    .map(QuestionStatusResource::getMarkedAsCompleteOn)
-                    .orElse(null);
+                String termsAcceptedByName = optionalMarkedAsCompleteQuestionStatus
+                        .map(t -> t.getMarkedAsCompleteByUserId() == currentUser.getId() ? "you" : t.getMarkedAsCompleteByUserName())
+                        .orElse(null);
+                ZonedDateTime termsAcceptedOn = optionalMarkedAsCompleteQuestionStatus
+                        .map(QuestionStatusResource::getMarkedAsCompleteOn)
+                        .orElse(null);
 
-            return new ApplicationTermsViewModel(
-                    applicationId,
-                    competition.getId(),
-                    termsQuestionId,
-                    competition.getTermsAndConditions().getTemplate(),
-                    application.isCollaborativeProject(),
-                    termsAccepted,
-                    termsAcceptedByName,
-                    termsAcceptedOn,
-                    isAllOrganisationsTermsAccepted(applicationId, competition.getId())
-            );
+                return new ApplicationTermsViewModel(
+                        applicationId,
+                        competition.getId(),
+                        termsQuestionId,
+                        competition.getTermsAndConditions().getTemplate(),
+                        application.isCollaborativeProject(),
+                        termsAccepted,
+                        termsAcceptedByName,
+                        termsAcceptedOn,
+                        isAllOrganisationsTermsAccepted(applicationId, competition.getId())
+                );
+            }
         }
-        else {
-            return new ApplicationTermsViewModel(
-                    applicationId,
-                    competition.getId(),
-                    termsQuestionId,
-                    competition.getTermsAndConditions().getTemplate(),
-                    application.isCollaborativeProject(),
-                    isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
-        }
+
+        return new ApplicationTermsViewModel(
+                applicationId,
+                competition.getId(),
+                termsQuestionId,
+                competition.getTermsAndConditions().getTemplate(),
+                application.isCollaborativeProject(),
+                isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {

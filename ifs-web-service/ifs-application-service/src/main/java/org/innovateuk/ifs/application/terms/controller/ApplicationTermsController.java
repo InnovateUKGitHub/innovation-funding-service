@@ -67,9 +67,10 @@ public class ApplicationTermsController {
                            Model model,
                            @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form,
                            @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
+                           @RequestParam(value = "readonly", defaultValue = "false") Boolean readOnly,
                            @RequestParam MultiValueMap<String, String> queryParams) {
 
-        ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId);
+        ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId, readOnly);
         model.addAttribute("model", viewModel);
 
         model.addAttribute("backUrl", backUrlFromOrigin(applicationId, viewModel.getCompetitionId(), origin, queryParams));
@@ -98,7 +99,7 @@ public class ApplicationTermsController {
                               @RequestParam MultiValueMap<String, String> queryParams,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> getTerms(applicationId, questionId, user, model, form, origin, queryParams);
+        Supplier<String> failureView = () -> getTerms(applicationId, questionId, user, model, form, origin, false, queryParams);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
