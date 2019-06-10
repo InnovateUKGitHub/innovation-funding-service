@@ -64,24 +64,24 @@ public class AssessmentOverviewSectionViewModel {
         AssessmentOverviewSectionViewModel that = (AssessmentOverviewSectionViewModel) o;
 
         return new EqualsBuilder()
-                .append(getId(), that.getId())
-                .append(isFinance(), that.isFinance())
-                .append(isTermsAndConditions(), that.isTermsAndConditions())
-                .append(getName(), that.getName())
-                .append(getGuidance(), that.getGuidance())
-                .append(getQuestions(), that.getQuestions())
+                .append(id, that.id)
+                .append(finance, that.finance)
+                .append(termsAndConditions, that.termsAndConditions)
+                .append(name, that.name)
+                .append(guidance, that.guidance)
+                .append(questions, that.questions)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getId())
-                .append(getName())
-                .append(getGuidance())
-                .append(getQuestions())
-                .append(isFinance())
-                .append(isTermsAndConditions())
+                .append(id)
+                .append(name)
+                .append(guidance)
+                .append(questions)
+                .append(finance)
+                .append(termsAndConditions)
                 .toHashCode();
     }
 }
