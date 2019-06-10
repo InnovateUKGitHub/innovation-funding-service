@@ -201,6 +201,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="govuk-form-group">' +
+                        '<label class="govuk-label govuk-visually-hidden" for="' + idCount + '-funderBudget">Budget</label>' +
                         '<input type="number" min="0" class="govuk-input govuk-input--width-30" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
                         '<button class="button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
                       '</div>' +

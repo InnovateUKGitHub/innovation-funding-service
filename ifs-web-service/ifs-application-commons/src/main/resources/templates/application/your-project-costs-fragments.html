@@ -1391,7 +1391,8 @@
                 <span class="govuk-visually-hidden">Total</span>
             </label>
             <input type="text"
-                   class="govuk-input travel-totals"
+                   th:id="__${path}__.cost"
+                   class="alignright govuk-input travel-totals"
                    readonly="readonly"
                    th:attr="data-calculation-fields=|[id='__${path}__.times'],[id='__${path}__.eachCost']|,
                                                     data-calculation-rawValue=${row.total}"

@@ -44,7 +44,7 @@
 
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <label class="govuk-label"
-                   th:for="*{organisationSearchName}"
+                   th:for="organisationSearchName"
                    th:text="${searchLabel}">
                 Find your ? organisation
             </label>
