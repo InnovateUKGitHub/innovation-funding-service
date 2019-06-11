@@ -134,7 +134,7 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(@RequestParam(defaultValue = DEFAULT_PAGE) int page,
             Model model, UserResource user) {
-        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(page), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new NonIfsDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(page), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "non-ifs";
     }
 
