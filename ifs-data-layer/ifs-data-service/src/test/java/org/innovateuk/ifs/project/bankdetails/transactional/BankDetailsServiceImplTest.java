@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -86,6 +87,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
     @Mock
     private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
     private SilExperianEndpoint silExperianEndpointMock;
@@ -207,7 +211,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     }
 
     @Test
-    public void verificationOccursOnceBankDetailsAreSaved() {
+    public void testVerificationOccursOnceBankDetailsAreSaved() {
         ValidationResult validationResult = new ValidationResult();
         validationResult.setCheckPassed(true);
         VerificationResult verificationResult = new VerificationResult();
