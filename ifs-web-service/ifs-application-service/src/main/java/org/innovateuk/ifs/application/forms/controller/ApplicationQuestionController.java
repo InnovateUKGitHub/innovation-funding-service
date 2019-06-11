@@ -231,8 +231,6 @@ public class ApplicationQuestionController {
                 case GRANT_TRANSFER_DETAILS:
                     return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
                 case TERMS_AND_CONDITIONS:
-//                    String originQuery = origin.map(o -> format("?origin=%s", o)).orElse("");
-
                     String originQuery =  UriComponentsBuilder.fromPath("")
                             .queryParams(queryParams)
                             .encode()
