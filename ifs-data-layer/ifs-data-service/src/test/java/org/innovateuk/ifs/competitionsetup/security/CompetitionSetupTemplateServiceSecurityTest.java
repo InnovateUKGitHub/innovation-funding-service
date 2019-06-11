@@ -4,13 +4,14 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupTemplateService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupTemplateServiceImpl;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupTemplateService> {
@@ -30,19 +31,19 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     }
 
     @Test
-    public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+    public void allServiceFunctionsShouldBeAuthorizedForCompAdmin() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
     }
 
     @Test
-    public void testAllServiceFunctionsShouldBeAuthorizedForProjectFinance() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+    public void allServiceFunctionsShouldBeAuthorizedForProjectFinance() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void testInitializeCompetitionByCompetitionTemplateShouldFailForAnonymousUser() {
+    public void initializeCompetitionByCompetitionTemplateShouldFailForAnonymousUser() {
         setLoggedInUser(null);
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
     }
