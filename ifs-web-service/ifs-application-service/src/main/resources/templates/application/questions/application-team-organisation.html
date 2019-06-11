@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}" />
+              th:with="linkTitle='Back to application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Add a partner organisation team',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Add a partner organisation',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
         <p class="govuk-body">You must invite one person from the organisation.</p>
 
@@ -50,7 +50,7 @@
             <table id="applicant-table" class="govuk-table table-overflow">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header width-30-percent" scope="col">Applicant name</th>
+                    <th class="govuk-table__header width-30-percent" scope="col">Person's full name</th>
                     <th class="govuk-table__header width-55-percent" scope="col">Email</th>
                 </tr>
                 </thead>
@@ -97,7 +97,7 @@
             </table>
 
             <p class="govuk-body govuk-!-margin-top-6">
-                <button class="govuk-button" type="submit">Add organisation and invite applicants</button>
+                <button class="govuk-button" type="submit">Invite partner organisation</button>
                 <a th:href="@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}"
                    class="button-clear">Cancel</a>
             </p>
