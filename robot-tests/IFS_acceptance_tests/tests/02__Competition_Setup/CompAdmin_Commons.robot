@@ -93,8 +93,7 @@ the user fills in the CS Eligibility
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
-    the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
-    the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
+    the user selects the radio button   resubmission  yes
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
