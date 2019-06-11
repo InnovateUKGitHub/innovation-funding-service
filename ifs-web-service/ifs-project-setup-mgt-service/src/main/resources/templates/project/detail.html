@@ -156,6 +156,10 @@
                 <th:block th:insert="fragments/modals :: modal-complete-project-offline" />
             </div>
         </th:block>
+        <p class="govuk-body">
+            <a th:href="@{/competition/{competitionId}/project/{projectId}/manage-status(competitionId=${model.competitionId},projectId=${model.project.id})}"
+               class="govuk-link">Manage project status</a>
+        </p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
