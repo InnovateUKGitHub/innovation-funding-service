@@ -334,7 +334,6 @@ the user is able to configure the new question
     click element                         css = label[for="question.allowedFileTypes1"]
     the user clicks the button/link       css = label[for="question.allowedFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
-
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -346,7 +345,7 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button/link       css = button[type = "submit"]
+    the user clicks the button without autosave     css = button[type = "submit"]
     the user should see the element       jQuery = li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
