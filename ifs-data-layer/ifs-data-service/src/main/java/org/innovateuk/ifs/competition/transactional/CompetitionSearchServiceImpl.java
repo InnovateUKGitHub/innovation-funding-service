@@ -193,7 +193,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
         switch (competition.getCompetitionStatus()) {
             case COMPETITION_SETUP:
             case READY_TO_OPEN:
-                return toPreviousCompetitionSearchResult(competition);
+                return toUpcomingCompetitionResult(competition);
             case OPEN:
             case CLOSED:
             case IN_ASSESSMENT:
