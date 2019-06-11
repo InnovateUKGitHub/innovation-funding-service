@@ -689,7 +689,7 @@ Assessor: Should have a Green Check
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link  link = ${competitionTitle}
+    [Setup]  the user clicks the button without autosave  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
     And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
