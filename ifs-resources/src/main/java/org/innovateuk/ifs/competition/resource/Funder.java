@@ -6,8 +6,8 @@ package org.innovateuk.ifs.competition.resource;
 public enum Funder {
 
     // Order is alphabetical, except for "other" categories which appear at the bottom.
-    ADVANCED_PROPULSION_CENTRE_APC("Advanced Propulsion Centre (APC)"),
-    AEROSPACE_TECHNOLOGY_INSTITUTE_ATI("Aerospace Technology Institute (ATI)"),
+    ADVANCED_PROPULSION_CENTRE_APC("BEIS: Advanced Propulsion Centre (APC) Programme"),
+    AEROSPACE_TECHNOLOGY_INSTITUTE_ATI("BEIS: Aerospace Technology Institute (ATI) Programme"),
     CENTRE_FOR_CONNECTED_AND_AUTONOMOUS_VEHICLES_CCAV("Centre for Connected and Autonomous Vehicles (CCAV)"),
     DEPARTMENT_FOR_BUSINESS_ENERGY_AND_INDUSTRIAL_STRATEGY_BEIS("Department for Business, Energy and Industrial Strategy (BEIS)"),
     DEPARTMENT_FOR_DIGITAL_CULTURE_MEDIA_AND_SPORT_DCMS("Department for Digital, Culture, Media and Sport (DCMS)"),
