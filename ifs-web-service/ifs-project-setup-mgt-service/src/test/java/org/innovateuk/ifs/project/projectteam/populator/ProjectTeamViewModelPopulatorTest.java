@@ -99,6 +99,7 @@ public class ProjectTeamViewModelPopulatorTest {
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
         assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals((long) competition.getId(), model.getCompetitionId());
         assertEquals(project.getName(), model.getProjectName());
         assertEquals((long) project.getId(), model.getProjectId());
         assertEquals(false, model.isUserLeadPartner());
