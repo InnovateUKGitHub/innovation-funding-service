@@ -54,7 +54,6 @@ run_flyway_migrate() {
 do_baseline () {
 
     : ${DATABASE_HOST:=ifs-database}
-    echo "database host is $DATABASE_HOST"
 
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
