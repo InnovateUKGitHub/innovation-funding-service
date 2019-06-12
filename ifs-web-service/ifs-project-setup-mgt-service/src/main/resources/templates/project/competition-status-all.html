@@ -82,40 +82,40 @@
                                 <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                               </small>
                             </th>
-                            <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+                            <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
-                            <th:block th:insert="project/fragments :: project-status-table(${project.projectTeamStatus}, 'project-team')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/team'}" />
+                            <th:block th:insert="project/fragments :: project-status-table(${project.projectTeamStatus}, 'project-team', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/team'}" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" />
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents', ${project.getProjectState().isActive()})" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                                      th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
+                                      th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                                      th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" />
+                                      th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO', ${project.getProjectState().isActive()})" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                                      th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
+                                      th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                                      th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" />
+                                      th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details', ${project.getProjectState().isActive()})" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                                      th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
+                                      th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                                      th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')"/>
+                                      th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks', ${project.getProjectState().isActive()})"/>
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                                      th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
+                                      th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                                      th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" />
+                                      th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile', ${project.getProjectState().isActive()})" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                                      th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')"
+                                      th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL', ${project.getProjectState().isActive()})"
                                       th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                                      th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')" />
+                                      th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL', ${project.getProjectState().isActive()})" />
 
                         </tr>
                       </tbody>
