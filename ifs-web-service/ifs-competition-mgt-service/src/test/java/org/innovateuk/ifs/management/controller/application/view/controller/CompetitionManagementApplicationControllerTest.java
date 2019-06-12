@@ -194,6 +194,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         long applicationId = 1L;
         long competitionId = 2L;
 
+        ManagementApplicationViewModel viewModel = mock(ManagementApplicationViewModel.class);
+        when(managementApplicationPopulator.populate(eq(applicationId), eq(getLoggedInUser()), eq(ManagementApplicationOrigin.ALL_APPLICATIONS.name()), any())).thenReturn(viewModel);
+
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionId, applicationId)
                 .param("markAsIneligible", ""))
                 .andExpect(view().name("competition-mgt-application-overview"))

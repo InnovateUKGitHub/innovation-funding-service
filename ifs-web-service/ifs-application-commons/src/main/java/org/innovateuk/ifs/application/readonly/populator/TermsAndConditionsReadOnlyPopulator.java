@@ -29,7 +29,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
         return new TermsAndConditionsReadOnlyViewModel(
                 data,
                 question,
-                applicationTermsModelPopulator.populate(data.getUser(), data.getApplication().getId(), question.getId()),
+                applicationTermsModelPopulator.populate(data.getUser(), data.getApplication().getId(), question.getId(), true),
                 applicationTermsPartnerModelPopulator.populate(data.getApplication(), question.getId())
         );
     }
