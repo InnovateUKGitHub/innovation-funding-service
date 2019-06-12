@@ -88,9 +88,7 @@
                                class="govuk-input"
                                th:errorclass="govuk-input--error"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                                    data-email-errormessage=#{validation.standard.email.format},
-                                                    data-email-duplication-errormessage=#{email.already.in.invite}" />
+                               th:attr="data-required-errormessage=#{validation.invite.email.format.required}" />
                     </td>
                 </tr>
                 </tbody>

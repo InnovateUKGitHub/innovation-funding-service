@@ -19,6 +19,8 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team/new-organisation")
@@ -53,7 +55,9 @@ public class ApplicationTeamAddOrganisationController {
         Supplier<String> failureView = () -> addOrganisationForm(form, bindingResult, model, applicationId, questionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(inviteRestService.createInvitesByInviteOrganisation(
-                    form.getOrganisationName(), singletonList(new ApplicationInviteResource(form.getName(), form.getEmail(), applicationId))));
+                    form.getOrganisationName(), singletonList(new ApplicationInviteResource(form.getName(), form.getEmail(), applicationId))),
+                    mappingErrorKeyToField("email.already.in.invite", "email"),
+                    defaultConverters());
             return validationHandler.failNowOrSucceedWith(failureView,
                     () -> redirectToApplicationTeam(applicationId, questionId));
 

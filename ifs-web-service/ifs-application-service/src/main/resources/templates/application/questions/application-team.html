@@ -64,6 +64,11 @@
                         <th:block th:if="${organisation.lead}">(Lead)</th:block>
                     </h2>
 
+                    <th:block th:if="${organisation.type != null}">
+                        <h3 class="govuk-heading-s">Organisation type</h3>
+                        <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+                    </th:block>
+
                     <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
                                     <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors(organisationErrorKey)}"
@@ -135,7 +140,7 @@
                            th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header govuk-visually-hidden">Name</th>
+                            <th scope="col" class="govuk-table__header govuk-visually-hidden">Full name</th>
                             <th scope="col" class="govuk-table__header govuk-visually-hidden">Email</th>
                             <th scope="col" class="govuk-table__header govuk-visually-hidden">Invite</th>
                             <th scope="col" class="govuk-table__header smaller-col govuk-visually-hidden">Remove</th>
@@ -147,7 +152,7 @@
                             <td class="govuk-table__cell govuk-form-group"
                                 th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
                                 <label class="govuk-label govuk-label--s" for="name">
-                                    Name
+                                    Full name
                                 </label>
                                 <th:block th:if="${#fields.hasErrors('name')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"

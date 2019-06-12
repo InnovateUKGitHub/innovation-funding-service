@@ -7,16 +7,18 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final long id;
     private final Long inviteId;
     private final String name;
+    private final String type;
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
     private final boolean existing;
 
     private boolean openAddTeamMemberForm;
 
-    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
+    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
         this.id = id;
         this.inviteId = inviteId;
         this.name = name;
+        this.type = type;
         this.rows = rows;
         this.editable = editable;
         this.existing = existing;
@@ -33,6 +35,10 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
 
     public String getName() {
         return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public List<ApplicationTeamRowViewModel> getRows() {

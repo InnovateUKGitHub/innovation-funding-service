@@ -95,7 +95,7 @@ public class ApplicationTeamPopulator {
                 .map(ApplicationTeamRowViewModel::fromInvite)
                 .collect(toList());
 
-        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getId(), organisationInvite.getOrganisationName(), inviteRows, leadApplicant, false);
+        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getId(), organisationInvite.getOrganisationName(), null, inviteRows, leadApplicant, false);
     }
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
@@ -115,6 +115,7 @@ public class ApplicationTeamPopulator {
         return new ApplicationTeamOrganisationViewModel(organisation.getId(),
                 maybeOrganisationInvite.map(InviteOrganisationResource::getId).orElse(null),
                 organisation.getName(),
+                organisation.getOrganisationTypeName(),
                 userRows,
                 applicantCanEditRow(userRows, user, leadApplicant),
                 true);

@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 public class ApplicationTeamOrganisationForm {
 
-    @NotBlank(message = "{validation.standard.name.required}")
+    @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
 
     @NotBlank(message = "{validation.standard.name.required}")
