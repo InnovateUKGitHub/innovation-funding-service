@@ -114,21 +114,21 @@ Invite and accept the invitation
 the user fills in the inviting steps no edit
     [Arguments]  ${email}
     the user clicks the button/link       link=Application team
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link       link=Add a partner organisation
+    the user enters text to a text field  id = organisationName  New Organisation's Name
+    the user enters text to a text field  id = name  Partner's name
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery=button:contains("Invite partner organisation")
 
 the user fills in the inviting steps
     [Arguments]  ${email}
     the user clicks the button/link       link=Application team
     the user clicks the button/link       jQuery=button:contains("Edit")
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link       link=Add a partner organisation
+    the user enters text to a text field  id = organisationName  New Organisation's Name
+    the user enters text to a text field  id = name  Partner's name
+    the user enters text to a text field  id = email   ${email}
+    the user clicks the button/link       jQuery=button:contains("Invite partner organisation")
 
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
@@ -162,7 +162,7 @@ invite a registered user
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link = Application team
-    the user clicks the button/link                            link=Add a collaborator organisation
+    the user clicks the button/link                            link=Add a partner organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
     the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
     the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
