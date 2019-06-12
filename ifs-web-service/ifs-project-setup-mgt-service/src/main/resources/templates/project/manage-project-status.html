@@ -10,25 +10,25 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/competition/14/project/2/details}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId},projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage project status',subTitle=|109: Restoration of Winterfell|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage project status',subTitle=|model.projectId: model.projectName|,size='govuk-heading-xl'" />
 
         <!-- Completed offline -->
-        <div class="success-alert govuk-!-margin-bottom-6">
+        <div th:if="${model.completeOffline}" class="success-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Project setup has been completed offline.</p>
         </div>
         <!-- END -->
 
         <!-- Managed offline -->
-        <div class="message-alert govuk-!-margin-bottom-6">
+        <div th:if="${model.handledOffline}" class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project is being managed offline.</p>
         </div>
         <!-- END -->
 
         <!-- Withdrawn -->
-        <div class="warning-alert govuk-!-margin-bottom-6">
+        <div th:if="${model.withdrawn}" class="warning-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project has been withdrawn.</p>
         </div>
         <p class="govuk-body">

@@ -12,6 +12,7 @@ public class ManageProjectStatusController {
 
     @GetMapping()
     public String manageProjectStatus(@PathVariable Long projectId, Model model) {
+
         return "project/manage-project-status";
     }
 }
