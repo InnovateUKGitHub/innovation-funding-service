@@ -55,11 +55,10 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("name"));
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), pageRequest)
-                    : competitionRepository.findProjectSetup(pageRequest);
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
+                    : competitionRepository.findProjectSetup(PageRequest.of(page, size, Sort.by("name")));
 
             return handleCompetitionSearchResultPage(competitions, this::toProjectSetupCompetitionResult);
         });
@@ -82,9 +81,13 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("name"));
-        Page<Competition> competitions = competitionRepository.findFeedbackReleased(pageRequest);
-        return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
+                    : competitionRepository.findFeedbackReleased(PageRequest.of(page, size, Sort.by("name")));
+
+            return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
+        });
     }
 
     @Override

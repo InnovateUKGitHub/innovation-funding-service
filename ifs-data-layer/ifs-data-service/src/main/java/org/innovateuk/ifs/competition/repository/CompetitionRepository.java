@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -96,6 +95,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
+
+    String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
@@ -224,7 +225,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findLive();
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY)
-    Long countLiveForInnovationLeadOrStakeholder(@Param("userId") Long userId);
+    Long countLiveForInnovationLeadOrStakeholder(Long userId);
 
     @Query(LIVE_COUNT_QUERY)
     Long countLive();
@@ -233,13 +234,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Page<Competition> findProjectSetup(Pageable pageable);
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY)
-    Page<Competition> findProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId, Pageable pageable);
+    Page<Competition> findProjectSetupForInnovationLeadOrStakeholder(Long userId, Pageable pageable);
 
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY)
-    Long countProjectSetupForInnovationLeadOrStakeholder(@Param("userId") Long userId);
+    Long countProjectSetupForInnovationLeadOrStakeholder(Long userId);
 
     @Query(UPCOMING_QUERY)
     List<Competition> findUpcoming();
@@ -256,20 +257,23 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(FEEDBACK_RELEASED_QUERY)
     Page<Competition> findFeedbackReleased(Pageable pageable);
 
+    @Query(INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_QUERY)
+    Page<Competition> findFeedbackReleasedForInnovationLeadOrStakeholder(Long userId,Pageable pageable);
+
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_COUNT_QUERY)
-    Long countFeedbackReleasedForInnovationLeadOrStakeholder(@Param("userId") Long userId);
+    Long countFeedbackReleasedForInnovationLeadOrStakeholder(Long userId);
 
     @Query(SEARCH_QUERY)
-    Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
+    Page<Competition> search(String searchQuery, Pageable pageable);
 
     @Query(SEARCH_QUERY_LEAD_TECHNOLOGIST)
-    Page<Competition> searchForLeadTechnologist(@Param("searchQuery") String searchQuery, @Param("userId") Long userId, Pageable pageable);
+    Page<Competition> searchForLeadTechnologist(String searchQuery, Long userId, Pageable pageable);
 
     @Query(SEARCH_QUERY_SUPPORT_USER)
-    Page<Competition> searchForSupportUser(@Param("searchQuery") String searchQuery, Pageable pageable);
+    Page<Competition> searchForSupportUser(String searchQuery, Pageable pageable);
 
     List<Competition> findByName(String name);
 
@@ -283,15 +287,15 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByInnovationSectorCategoryId(Long id);
 
     @Query(COUNT_OPEN_QUERIES)
-    Long countOpenQueriesByCompetitionAndProjectStateNotIn(@Param("competitionId") Long competitionId, @Param("states") Collection<ProjectState> projectStates);
+    Long countOpenQueriesByCompetitionAndProjectStateNotIn(Long competitionId, Collection<ProjectState> states);
 
     @Query(GET_OPEN_QUERIES)
-    List<CompetitionOpenQueryResource> getOpenQueryByCompetitionAndProjectStateNotIn(@Param("competitionId") long competitionId, @Param("states") Collection<ProjectState> projectStates);
+    List<CompetitionOpenQueryResource> getOpenQueryByCompetitionAndProjectStateNotIn(long competitionId, Collection<ProjectState> states);
 
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
-    List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);
+    List<Object[]> getPendingSpendProfiles(long competitionId);
 
     @Query(value = COUNT_PENDING_SPEND_PROFILES, nativeQuery = true)
-    BigDecimal countPendingSpendProfiles(@Param("competitionId") Long competitionId);
+    BigDecimal countPendingSpendProfiles(Long competitionId);
 
 }
