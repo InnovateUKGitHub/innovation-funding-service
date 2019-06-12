@@ -87,6 +87,7 @@ public class ProjectTeamViewModelPopulator {
 
         return new ProjectTeamViewModel(
                 competitionResource.getName(),
+                competitionResource.getId(),
                 projectResource.getName(),
                 projectResource.getId(),
                 partnerOrgModels,

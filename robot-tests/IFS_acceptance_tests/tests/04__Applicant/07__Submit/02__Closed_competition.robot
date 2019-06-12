@@ -29,7 +29,7 @@ Submit button should be disabled
     [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
     [Tags]  HappyPath
     When the user navigates to the page              ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
-    Then the user should see the element             jQuery = .warning-alert:contains("Registration is now closed, you are no longer able to submit your application.")
+    Then the user should see the element             jQuery = .warning-alert:contains("This application has not been entered into the competition")
     And the user should not see the element          jQuery = .govuk-button:contains("Submit application")
     And the user should not see the element          jQuery = .govuk-button:contains("Review and submit")
 

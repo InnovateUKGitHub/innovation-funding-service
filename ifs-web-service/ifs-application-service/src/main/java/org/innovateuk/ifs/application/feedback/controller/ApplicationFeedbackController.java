@@ -73,12 +73,18 @@ public class ApplicationFeedbackController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-        if (!competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
+        if (!shouldDisplayFeedback(competition, application)) {
             return redirectToSummary(applicationId, queryParams);
         }
         model.addAttribute("model", applicationFeedbackViewModelPopulator.populate(applicationId, user, queryParams, origin));
         return "application-feedback";
+    }
+
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        return application.isSubmitted()
+                && feedbackAvailable;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
