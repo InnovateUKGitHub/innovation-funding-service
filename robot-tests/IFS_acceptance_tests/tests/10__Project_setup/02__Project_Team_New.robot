@@ -86,7 +86,7 @@ The lead partner is able to add a new team member
     Then the user should see the element   jQuery = td:contains("Tester (Pending)")
     [Teardown]   Logout as user
 
-A new team member is able to accept the inviation from lead partner and see projec set up
+A new team member is able to accept the invitation from lead partner and see project set up
     [Documentation]  IFS-5719
     Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
     When the user creates a new account                  Tester   Testington   ${leadNewMemberEmail}
@@ -101,7 +101,7 @@ Non Lead partner is able to add a new team member
     Then the user should see the element   jQuery = td:contains("Testerina (Pending)")
     [Teardown]   the user logs out if they are logged in
 
-A new team member is able to accept the inviation from non lead partner and see projec set up
+A new team member is able to accept the invitation from non lead partner and see projec set up
     [Documentation]  IFS-5719
     Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Ludlow.  1
     When the user creates a new account                     Testerina   Testington   ${nonLeadNewMemberEmail}
