@@ -386,7 +386,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectRepositoryMock.findById(projects.get(1).getId())).thenReturn(Optional.of(projects.get(1)));
         when(projectRepositoryMock.findById(projects.get(2).getId())).thenReturn(Optional.of(projects.get(2)));
 
-        when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN))).thenReturn(projects);
+        when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)).thenReturn(projects);
 
         when(projectUserRepositoryMock.findByProjectId(projects.get(0).getId())).thenReturn(projectUsers);
         when(projectUserRepositoryMock.findByProjectId(projects.get(1).getId())).thenReturn(projectUsers);

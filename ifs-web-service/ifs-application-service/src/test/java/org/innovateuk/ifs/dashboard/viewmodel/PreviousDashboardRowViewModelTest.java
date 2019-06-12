@@ -22,6 +22,5 @@ public class PreviousDashboardRowViewModelTest {
         assertThat(viewModel.isCreatedOrOpen(), equalTo(false));
         assertThat(viewModel.isInformedIneligible(), equalTo(false));
         assertThat(viewModel.isRejected(), equalTo(false));
-        assertThat(viewModel.isWithdrawn(), equalTo(false));
     }
 }

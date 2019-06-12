@@ -28,10 +28,6 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         return ApplicationState.APPROVED.equals(applicationState);
     }
 
-    public boolean isWithdrawn() {
-        return ApplicationState.WITHDRAWN.equals(applicationState);
-    }
-
     public boolean isCreatedOrOpen() {
         return ApplicationState.OPEN.equals(applicationState)
                 ||  ApplicationState.CREATED.equals(applicationState);
