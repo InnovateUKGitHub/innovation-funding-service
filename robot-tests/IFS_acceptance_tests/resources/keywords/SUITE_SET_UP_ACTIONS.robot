@@ -163,10 +163,10 @@ invite a registered user
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link = Application team
     the user clicks the button/link                            link=Add a partner organisation
-    the user enters text to a text field                       css=#organisationName  New Organisation's Name
-    the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
-    the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
+    the user enters text to a text field                       id = organisationName  New Organisation's Name
+    the user enters text to a text field                       id = name  Partner's name
+    the user enters text to a text field                       id = email  ${EMAIL_INVITED}
+    the user clicks the button/link                            jQuery=button:contains("Invite partner organisation")
     the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
     the user should see the element                            jQUery = h1:contains("Application overview")
     the user closes the browser

@@ -121,9 +121,9 @@ invite a new academic
     the user clicks the button/link    link=Application team
     the user clicks the button/link    jQuery=.govuk-button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.govuk-button:contains("Add additional partner organisation")
-    the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
-    the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
-    the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    the user enters text to a text field    id = organisationName    university of liverpool
+    the user enters text to a text field    id = name    Academic User
+    the user enters text to a text field    id = email    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.govuk-button:contains("Save changes")
 
 the user should see that the element is disabled
