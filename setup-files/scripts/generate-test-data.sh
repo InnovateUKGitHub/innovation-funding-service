@@ -53,8 +53,8 @@ run_flyway_migrate() {
 
 do_baseline () {
 
-    : ${DATABASE_NAME:=ifs-database}
-    echo "database is $DATABASE_NAME"
+    : ${DATABASE_HOST:=ifs-database}
+    echo "database host is $DATABASE_HOST"
 
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
@@ -80,7 +80,7 @@ do_baseline () {
     cd ${project_root_dir}/setup-files/scripts
 
     # create baseline dump
-    ./create-baseline-dump.sh ${new_version} $DATABASE_NAME
+    ./create-baseline-dump.sh ${new_version} $DATABASE_HOST
 
     cd ${project_root_dir}
 
