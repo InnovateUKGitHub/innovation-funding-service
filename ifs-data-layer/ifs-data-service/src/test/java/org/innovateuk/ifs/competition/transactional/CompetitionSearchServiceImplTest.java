@@ -333,7 +333,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -355,7 +355,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
 
         if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-            when(competitionRepositoryMock.searchForLeadTechnologist(searchLike, user.getId(), pageRequest)).thenReturn(queryResponse);
+            when(competitionRepositoryMock.searchForInnovationLeadOrStakeholder(searchLike, user.getId(), pageRequest)).thenReturn(queryResponse);
         } else if (user.hasRole(SUPPORT)) {
             when(competitionRepositoryMock.searchForSupportUser(searchLike, pageRequest)).thenReturn(queryResponse);
         }
@@ -401,7 +401,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -426,7 +426,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock, never()).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), any(), any());
         verify(competitionRepositoryMock).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }

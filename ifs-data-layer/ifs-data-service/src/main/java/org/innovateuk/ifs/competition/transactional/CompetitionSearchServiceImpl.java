@@ -83,7 +83,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
+                    ? competitionRepository.findFeedbackReleasedForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
                     : competitionRepository.findFeedbackReleased(PageRequest.of(page, size, Sort.by("name")));
 
             return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
@@ -96,7 +96,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
         PageRequest pageRequest = PageRequest.of(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-                return handleCompetitionSearchResultPage(competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest), this::searchResultFromCompetition);
+                return handleCompetitionSearchResultPage(competitionRepository.searchForInnovationLeadOrStakeholder(searchQueryLike, user.getId(), pageRequest), this::searchResultFromCompetition);
             } else if (user.hasRole(SUPPORT)) {
                 return handleCompetitionSearchResultPage(competitionRepository.searchForSupportUser(searchQueryLike, pageRequest), this::searchResultFromCompetition);
             }

@@ -62,7 +62,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
-    String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT ap.competition FROM AssessmentParticipant ap LEFT JOIN ap.competition.milestones m LEFT JOIN ap.competition.competitionType ct " +
+    String SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER = "SELECT ap.competition FROM AssessmentParticipant ap LEFT JOIN ap.competition.milestones m LEFT JOIN ap.competition.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (ap.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE " +
             "AND (ap.competition.setupComplete IS NOT NULL AND ap.competition.setupComplete != FALSE) " +
             "AND ap.user.id = :userId " +
@@ -88,7 +88,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
@@ -96,7 +96,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
@@ -258,7 +258,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Page<Competition> findFeedbackReleased(Pageable pageable);
 
     @Query(INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_QUERY)
-    Page<Competition> findFeedbackReleasedForInnovationLeadOrStakeholder(Long userId,Pageable pageable);
+    Page<Competition> findFeedbackReleasedForInnovationLeadOrStakeholder(Long userId, Pageable pageable);
 
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
@@ -269,8 +269,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(SEARCH_QUERY)
     Page<Competition> search(String searchQuery, Pageable pageable);
 
-    @Query(SEARCH_QUERY_LEAD_TECHNOLOGIST)
-    Page<Competition> searchForLeadTechnologist(String searchQuery, Long userId, Pageable pageable);
+    @Query(SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER)
+    Page<Competition> searchForInnovationLeadOrStakeholder(String searchQuery, Long userId, Pageable pageable);
 
     @Query(SEARCH_QUERY_SUPPORT_USER)
     Page<Competition> searchForSupportUser(String searchQuery, Pageable pageable);
