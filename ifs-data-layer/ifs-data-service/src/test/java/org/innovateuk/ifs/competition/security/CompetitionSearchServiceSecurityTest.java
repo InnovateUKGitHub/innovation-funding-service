@@ -94,7 +94,7 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void findNonIfsCompetitions() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findNonIfsCompetitions(0, 0),
-                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test

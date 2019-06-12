@@ -21,7 +21,7 @@ public interface CompetitionSearchService {
     ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
     @SecuredBySpring(value = "FIND_NON_IFS", description = "Only internal users can see non-ifs competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> findNonIfsCompetitions(int page, int size);
 
     @SecuredBySpring(value = "FIND_PREVIOUS", description = "Only internal users can see previous competitions")
