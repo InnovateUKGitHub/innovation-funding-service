@@ -51,7 +51,6 @@ Application team page
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
     Then the user should see the element           jQuery = h1:contains("Application team")
-    And the user should see the element            jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the lead applicant should have the correct org status
     And the user should see the element            link = Application overview
 
@@ -61,12 +60,10 @@ Lead Adds/Removes rows
     [Setup]    The user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
-    And The user clicks the button/link       jquery = a:contains("Update and add contributors from ${organisation}")
-    And the user clicks the button/link       jQuery = button:contains("Add another contributor")
+    And The user clicks the button/link       jquery = button:contains("Add person to ${organisation}")
     And The user should not see the element   jQuery = .modal-delete-organisation button:contains('Delete organisation')
-    Then The user should see the element      css = .table-overflow tr:nth-of-type(2) td:nth-of-type(1)
-    And The user clicks the button/link       id = remove-collaborator-1
-    Then The user should not see the element  css = .table-overflow tr:nth-of-type(2) td:nth-of-type(1)
+    Then The user should see the element      jQuery = table:contains(empire) + table td:contains(Remove)
+    And The user clicks the button/link       jQuery = table:contains(empire) + table button:contains(Remove)
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
@@ -76,25 +73,25 @@ Lead cannot be removed
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]
-    When The user clicks the button/link      jQuery = button:contains("Add another contributor")
-    And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
-    And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
-    And the user clicks the button/link       css = [id^="invite-collaborator"]
-    Then The user should see a field and summary error  ${enter_a_valid_email}
+    When The user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
+      the user enters text to a text field   id = name   ${EMPTY}
+      the user enters text to a text field   id = email  @test.co.uk
+      the user clicks the button/link        jQuery = button:contains("Invite to application")
+    Then The user should see a field and summary error  Enter an email address in the correct format, like name@example.com
     And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]
-    When The user enters text to a text field      css = tr:nth-of-type(2) td:nth-of-type(1) input    Florian
-    And The user enters text to a text field       css = tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
-    And Set Focus To Element                       css = button[name="executeStagedInvite"]
+    When The user enters text to a text field      id = name    Florian
+    And The user enters text to a text field       id = email   florian21@florian.com
+    And Set Focus To Element                       jQuery = button:contains("Invite to application")
     Then the user cannot see a validation error in the page
 
 Lead organisation already used email
     [Documentation]  IFS-3361
-    Given the user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
-    And the user clicks the button/link         css = button[name="executeStagedInvite"]
+    Given the user enters text to a text field  id = email  steve.smith@empire.com
+    And the user clicks the button/link         jQuery = button:contains("Invite to application")
     Then The user should see a field and summary error  This email is already in use.
 
 Lead Adds/Removes partner organisation
@@ -106,54 +103,51 @@ Lead Adds/Removes partner organisation
     ...
     ...    INFUND-8590
     [Tags]  HappyPath
-    Given The user clicks the button/link              link = Application team
-    When The user clicks the button/link               jQuery = a:contains('Add a collaborator organisation')
-    And The user enters text to a text field           name = organisationName    Fannie May
-    And The user enters text to a text field           name = applicants[0].name    Collaborator 2
-    And The user enters text to a text field           name = applicants[0].email    ewan+10@hiveit.co.uk
-    And The user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
-    And the user clicks the button/link                jQuery = a:contains("Update and add contributors from Fannie May")
-    Then The user clicks the button/link               jQuery = a:contains('Delete organisation')
-    And The user clicks the button/link                jQuery = .modal-delete-organisation button:contains('Delete organisation')
+    When The user clicks the button/link               link = Add a partner organisation
+    And The user enters text to a text field           id = organisationName    Fannie May
+    And The user enters text to a text field           id = name   Collaborator 2
+    And The user enters text to a text field           id = email    ewan+10@hiveit.co.uk
+    And The user clicks the button/link                jQuery = button:contains("Invite partner organisation")
+    And the user clicks the button/link                jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
+    Then The user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
     Then The user should not see the element           jQuery = td:contains("Fannie May")
     And the user should see the element                jQuery = h1:contains("Application team")
-    [Teardown]  the user clicks the button/link        jQuery = a:contains('Add a collaborator organisation')
+    [Teardown]  the user clicks the button/link        link = Add a partner organisation
 
 Partner organisation Server-side validations
     [Documentation]    INFUND-896
     ...
     ...    INFUND-7979
     [Tags]
-    When The user enters text to a text field             name = organisationName    ${EMPTY}
-    And The user enters text to a text field              name = applicants[0].name    ${EMPTY}
-    And The user enters text to a text field              name = applicants[0].email    ${EMPTY}
+    When The user enters text to a text field             id = organisationName    ${EMPTY}
+    And The user enters text to a text field              id = name    ${EMPTY}
+    And The user enters text to a text field              id = email    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link                   jQuery = .govuk-button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                   jQuery = button:contains("Invite partner organisation")
     Then the user should see a field and summary error    An organisation name is required.
     And the user should see a field and summary error     Please enter a name.
-    And the user should see a field and summary error     Please enter an email address.
-    [Teardown]  the user goes back to the previous page
+    And the user should see a field and summary error     Enter an email address in the correct format, like name@example.com
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979
     [Tags]  HappyPath
-    When The user enters text to a text field  name = organisationName    Fannie May
-    And The user enters text to a text field   name = applicants[0].name    Adrian Booth
-    And The user enters text to a text field   name = applicants[0].email    ${invite_email}
+    When The user enters text to a text field  id = organisationName    Fannie May
+    And The user enters text to a text field   id = name    Adrian Booth
+    And The user enters text to a text field   id = email    ${invite_email}
     Then the user cannot see a validation error in the page
 
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]  HappyPath
-    When The user clicks the button/link  jQuery = button:contains("Add organisation and invite applicants")
-    Then the user should see the element  jQuery = .table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
-    And the user should see the element   jQuery = .table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
+    When The user clicks the button/link  jQuery = button:contains("Invite partner organisation")
+    Then the user should see the element  jQuery = td:contains("Steve") ~ td:contains("Lead")
+    And the user should see the element   jQuery = td:contains("Adrian Booth (Pending for")
 
 Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
     [Tags]  HappyPath
     Given the user clicks the button/link                 id = application-question-complete
-    Then The user should see a field and summary error    Contributors must accept their invites or be removed by the lead applicant.
+    Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -208,25 +202,22 @@ Partner should be able to log-in and see the new company name
     And the user reads his email and clicks the link        ${invite_email}    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
 
-Parner can see the Application team
+Partner can see the Application team
     [Documentation]    INFUND-7976
     Given the user clicks the button/link    link = Invite robot test application
     And the user clicks the button/link      link = Application team
-    Then the user should see the element     jQuery = .table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    And the user should see the element      jQuery = .table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
-    And the user should see the element      jQuery = .table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+    Then the user should see the element     jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
     And The user should see the element      link = Application overview
     And The user should not see the element  link = Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
     [Tags]
-    When the user clicks the button/link      jQuery = a:contains("Update and add contributors from NOMENSA LTD")
-    And the user clicks the button/link       jQuery = button:contains("Add another contributor")
-    And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(1) input    Mark
-    And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
-    And the user clicks the button/link       id = invite-collaborator-1
-    Then The user should see the element      jQuery = td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
+    When the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
+    And The user enters text to a text field  id = name    Mark
+    And The user enters text to a text field  id = email   mark21@innovateuk.com
+    And the user clicks the button/link       jQuery = button:contains("Invite to application")
+    Then The user should see the element      jQuery = td:contains("Mark (Pending for")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -244,13 +235,11 @@ Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Invite robot test application
     When the user clicks the button/link           link = Application team
-    When the user clicks the button/link           jQuery = a:contains("Update and add contributors from ${organisation}")
-    Then the user should see the element           jQuery = h1:contains("Update ${organisation}")
-    And the user clicks the button/link            jQuery = button:contains("Add another contributor")
-    When The user enters text to a text field      name = stagedInvite.name    Roger Axe
-    And The user enters text to a text field       name = stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
-    And the user clicks the button/link            css = [id^="invite-collaborator"]
-    Then the user should see the element           jQuery = .table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
+    When the user clicks the button/link           jQuery = button:contains("Add person to ${organisation}")
+    When The user enters text to a text field      id = name    Roger Axe
+    And The user enters text to a text field       id = email    ${test_mailbox_one}+inviteorg2@gmail.com
+    And the user clicks the button/link            jQuery = button:contains("Invite to application")
+    Then the user should see the element           jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
@@ -273,8 +262,8 @@ Lead should not see pending status for accepted invite
     And Logging in and Error Checking           &{lead_applicant_credentials}
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
-    And the user clicks the button/link         link = Update and add contributors from ${organisation}
-    Then the user should see the element        jQuery = .table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And the user clicks the button/link         jQuery = button:contains("Add person to ${organisation}")
+    Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
@@ -303,9 +292,7 @@ The lead applicant should have the correct status
 
 The lead applicant should have the correct org status
     the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+    the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
 the applicant cannot assign to pending invitees
     the user clicks the button/link      jQuery = button:contains("Assign this question to someone else")

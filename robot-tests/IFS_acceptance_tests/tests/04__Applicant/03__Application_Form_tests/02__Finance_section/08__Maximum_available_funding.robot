@@ -51,7 +51,7 @@ Invite existing academic collaborator
     [Setup]  log in as a different user                       ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                      link = ${Application_name_business}
     And the user clicks the button/link                       link = Application team
-    And the user clicks the button/link                       link = Add a collaborator organisation
+    And the user clicks the button/link                       link = Add a partner organisation
     Then the user enters text to a text field                 css = #organisationName  eggs
     And the user enters text to a text field                  css = input[id = "applicants[0].name"]  Pete
     And the user enters text to a text field                  css = input[id = "applicants[0].email"]  ${collaborator2_credentials["email"]}
@@ -103,7 +103,7 @@ Invite existing academic collaborator for RTO lead
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
+    And the user clicks the button/link                link = Add a partner organisation
     Then the user enters text to a text field          css = #organisationName  eggs
     And the user enters text to a text field           css = input[id="applicants[0].name"]  Pete
     And the user enters text to a text field           css = input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
@@ -119,7 +119,7 @@ Invite existing business user into RTO lead application
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
+    And the user clicks the button/link                link =Add a partner organisation
     And the user enters text to a text field           css = #organisationName  innovate bus
     And the user enters text to a text field           css = input[id="applicants[0].name"]  oscar
     And the user enters text to a text field           css = input[id="applicants[0].email"]  ${lead_business_email}
