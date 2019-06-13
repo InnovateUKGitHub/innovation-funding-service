@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
+
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
 @PreAuthorize("hasAuthority('ifs_administrator')")
@@ -75,17 +77,17 @@ public class ManageProjectStateController {
             return;
         }
 
-        if (form.isHandledOffline() && !form.getConfirmationOffline()) {
+        if (form.isHandledOffline() && !TRUE.equals(form.getConfirmationOffline())) {
             result.rejectValue("confirmationOffline", "validation.field.must.not.be.blank");
             return;
         }
 
-        if (form.isWithdrawn() && !form.getConfirmationWithdrawn()) {
+        if (form.isWithdrawn() && !TRUE.equals(form.getConfirmationWithdrawn())) {
             result.rejectValue("confirmationWithdrawn", "validation.field.must.not.be.blank");
             return;
         }
 
-        if (form.isCompleteOffline() && !form.getConfirmationCompleteOffline()) {
+        if (form.isCompleteOffline() && !TRUE.equals(form.getConfirmationCompleteOffline())) {
             result.rejectValue("confirmationCompleteOffline", "validation.field.must.not.be.blank");
             return;
         }
