@@ -44,7 +44,7 @@
                 from these organisations to help you with the application. They can invite other people from their own
                 organisation.</p>
 
-            <p class="govuk-body" th:if="${!model.collaborationLevelSingle}">You must read the <a
+            <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
                 class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
         </th:block>
@@ -219,7 +219,7 @@
             </th:block>
 
             <th:block th:if="${model.leadApplicant}">
-                <a th:unless="${model.readOnly}"
+                <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
                    th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
                    class="govuk-!-margin-top-5 button-clear">Add a partner organisation</a>
 

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -107,7 +108,7 @@ public class ApplicationTeamPopulator {
         if (maybeOrganisationInvite.isPresent()) {
             userRows.addAll(organisationInvite.getInviteResources()
                     .stream()
-                    .filter(invite -> invite.getUser() == null)
+                    .filter(invite -> invite.getStatus() == InviteStatus.SENT)
                     .map(ApplicationTeamRowViewModel::fromInvite)
                     .collect(toList()));
         }
