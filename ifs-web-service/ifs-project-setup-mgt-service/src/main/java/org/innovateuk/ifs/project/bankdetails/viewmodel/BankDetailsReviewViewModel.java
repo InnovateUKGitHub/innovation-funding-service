@@ -26,6 +26,7 @@ public class BankDetailsReviewViewModel {
     private Short addressScore;
     private Boolean approved;
     private Boolean approvedManually;
+    private boolean projectActive;
 
     public BankDetailsReviewViewModel(Long projectId,
                                       Long applicationId,
@@ -44,7 +45,8 @@ public class BankDetailsReviewViewModel {
                                       Boolean registrationNumberMatched,
                                       Short addressScore,
                                       Boolean approved,
-                                      Boolean approvedManually) {
+                                      Boolean approvedManually,
+                                      boolean projectActive) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -63,6 +65,7 @@ public class BankDetailsReviewViewModel {
         this.addressScore = addressScore;
         this.approved = approved;
         this.approvedManually = approvedManually;
+        this.projectActive = projectActive;
     }
 
     public String getProjectName() {
@@ -217,6 +220,10 @@ public class BankDetailsReviewViewModel {
         this.applicationId = applicationId;
     }
 
+    public boolean isEditable() {
+        return projectActive && !approved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -244,6 +251,7 @@ public class BankDetailsReviewViewModel {
                 .append(addressScore, that.addressScore)
                 .append(approved, that.approved)
                 .append(approvedManually, that.approvedManually)
+                .append(projectActive, that.projectActive)
                 .isEquals();
     }
 
@@ -268,6 +276,7 @@ public class BankDetailsReviewViewModel {
                 .append(addressScore)
                 .append(approved)
                 .append(approvedManually)
+                .append(projectActive)
                 .toHashCode();
     }
 
@@ -292,6 +301,7 @@ public class BankDetailsReviewViewModel {
                 .append("addressScore", addressScore)
                 .append("approved", approved)
                 .append("approvedManually", approvedManually)
+                .append("projectActive", projectActive)
                 .toString();
     }
 }
