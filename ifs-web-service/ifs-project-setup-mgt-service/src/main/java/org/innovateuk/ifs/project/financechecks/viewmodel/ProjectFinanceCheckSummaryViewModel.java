@@ -9,9 +9,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
 public class ProjectFinanceCheckSummaryViewModel {
 
     private FinanceCheckSummaryResource financeCheckSummaryResource;
+    private boolean projectIsActive;
 
-    public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource) {
+    public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
+                                               boolean projectIsActive) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
+        this.projectIsActive = projectIsActive;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -40,5 +43,9 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public void setFinanceCheckSummaryResource(FinanceCheckSummaryResource financeCheckSummaryResource) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
+    }
+
+    public boolean isProjectIsActive() {
+        return projectIsActive;
     }
 }
