@@ -26,6 +26,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
+#${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.
@@ -371,6 +372,26 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
+The lead applicant checks for terms and conditions partners status
+    [Documentation]  IFS-5920
+    [Tags]
+    [Setup]  the user navigate to competition
+    And the user accept the competition terms and conditions
+    And the user clicks the button/link             link = Award terms and conditions
+    When the user clicks the button/link            link = View partners' acceptance
+    Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Not yet accepted")
+    And the user should see the element             jQuery = td:contains("Empire Ltd (Lead)") ~ td:contains("Accepted")
+
+The lead applicant checks for terms and conditions validations
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       link = Terms and conditions of an Innovate UK grant award
+    And the user clicks the button/link         link = Application overview
+    When the user clicks the button/link        link = Review and submit
+    And the user clicks the button/link         jQuery = button:contains("Award terms and conditions")
+    Then the user should see the element        jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
+    [Teardown]  the user clicks the button/link    link = Application overview
+
 *** Keywords ***
 
 the user should see the dates in full format
@@ -495,6 +516,10 @@ the logged in user should not be able to apply in a competition he has not right
 Custom suite setup
     Set predefined date variables
     Connect to database  @{database}
+
+the user navigate to competition
+    log in as a different user             &{lead_applicant_credentials}
+    the user clicks the button/link        link = All-Innov-Areas Application With GrowthTable
 
 Custom suite teardown
     Close browser and delete emails

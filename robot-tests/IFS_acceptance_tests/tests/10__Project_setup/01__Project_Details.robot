@@ -50,6 +50,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               IFS-2642 Resend invites in Project Setup
 ...
 ...               IFS-2920 Project details: Project location per partner
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
@@ -63,18 +65,28 @@ ${pmEmailId}  ${user_ids['${user_email}']}
 # This suite uses the Magic material project
 
 *** Test Cases ***
+Internal finance can see competition terms and conditions
+    [Documentation]  IFS-5920
+    [Tags]
+    Given the internal user should see read only view of terms and conditions
+    Then the user navigates to the page           ${Internal_Competition_Status}
+
 Internal finance can see Project details not yet completed
+    [Documentation]  INFUND-5856
     [Tags]  HappyPath
-    Given the user logs-in in new browser           &{internal_finance_credentials}
-    And the user navigates to the page             ${Internal_Competition_Status}
-    When the user clicks the button/link            css = #table-project-status tr:nth-child(2) td:nth-child(2) a
+    Given the user clicks the button/link          css = #table-project-status tr:nth-child(2) td:nth-child(2) a
     Then the user should see the element           jQuery = #no-project-manager:contains("Not yet completed")
     And the user should see the element            jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+
+Competition admin can see competition terms and conditions
+    [Documentation]  IFS-5920
+    [Tags]
+    Given Log in as a different user            &{Comp_admin1_credentials}
+    Then the internal user should see read only view of terms and conditions
 
 Competition admin can see Project details not yet completed
     [Documentation]    INFUND-5856
     [Tags]  HappyPath
-    [Setup]  Log in as a different user            &{Comp_admin1_credentials}
     Given the user navigates to the page           ${Internal_Competition_Status}
     And the user should not see the element        css = #table-project-status tr:nth-child(2) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           css = #table-project-status tr:nth-child(2) td:nth-child(2) a
@@ -273,6 +285,7 @@ Custom suite setup
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     Connect to database  @{database}
+    the user logs-in in new browser          &{internal_finance_credentials}
 
 the invitee is able to assign himself as Finance Contact
     [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
@@ -460,3 +473,12 @@ the non-lead partner cannot changes any project details
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the internal user should see read only view of terms and conditions
+    the user navigates to the page             ${Internal_Competition_Status}
+    the user clicks the button/link            link = ${PS_PD_Application_Id}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    the user clicks the button/link            link = View terms and conditions
+    the user should see the element            jQUery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should not see the element        jQuery = button:contains("Agree and continue")

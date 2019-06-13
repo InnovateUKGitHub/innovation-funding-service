@@ -34,7 +34,7 @@ Applicant applies to newly created ATI competition
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -50,7 +50,7 @@ Single applicant cannot submit his application to a collaborative comp
     And the application cannot be submited
 
 Invite a collaborator and check the application can the be submitted
-    [Documentation]  IFS-3421
+    [Documentation]  IFS-3421  IFS-5920
     [Tags]
     Given the lead invites already registered user
     Then the applicant submits the application

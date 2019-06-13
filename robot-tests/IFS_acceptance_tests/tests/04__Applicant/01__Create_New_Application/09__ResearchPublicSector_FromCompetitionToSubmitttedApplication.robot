@@ -45,7 +45,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     And the user should not see the element              jQuery = li:contains("Project summary")
 
 Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012  IFS-2879  IFS-4046
+    [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920
     [Tags]  Applicant
     When the user clicks the button/link                  link = Application details
     Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}

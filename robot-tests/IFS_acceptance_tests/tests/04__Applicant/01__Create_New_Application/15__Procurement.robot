@@ -25,7 +25,7 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}

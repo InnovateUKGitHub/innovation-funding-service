@@ -35,7 +35,7 @@ Applicant applies to newly created APC competition
     And the applicant sees state aid information
 
 Applicant submits his application
-    [Documentation]  IFS-2286
+    [Documentation]  IFS-2286  IFS-5920
     [Tags]
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -44,6 +44,12 @@ Applicant submits his application
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
     And the user accept the competition terms and conditions
     Then the applicant submits the application
+
+The internal user checks for accepted terms and conditions
+    [Documentation]
+    [Tags]
+    Given log in as a different user     &{Comp_admin1_credentials}
+
 
 *** Keywords ***
 Custom Suite Setup

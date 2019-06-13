@@ -4,6 +4,8 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 ...
 ...               IFS-4569: As an applicant I am able to input a non-UK postcode for Project location
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -12,7 +14,7 @@ Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
 Your funding: client and server side validations
-    [Documentation]    INFUND-2214  IFS-5353
+    [Documentation]    INFUND-2214  IFS-5920
     [Tags]
     Given the user clicks the button/link                link = Your funding
     And the user selects the radio button                requestingFunding   true
