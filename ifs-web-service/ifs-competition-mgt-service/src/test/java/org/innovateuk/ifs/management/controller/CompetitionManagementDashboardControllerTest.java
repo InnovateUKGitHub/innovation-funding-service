@@ -157,9 +157,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertNotNull(viewModel.getCompetitions().get(OPEN));
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(viewModel.getNonPrioritisedCompetitions().size(), 1);
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertFalse(viewModel.isProjectFinanceUser());
 
@@ -191,7 +190,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertNotNull(viewModel.getCompetitions().get(PROJECT_SETUP));
+
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertTrue(viewModel.isProjectFinanceUser());
@@ -242,7 +242,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(NonIfsDashboardViewModel.class));
 
         NonIfsDashboardViewModel viewModel = (NonIfsDashboardViewModel) model;
-        assertNotNull(viewModel.getCompetitions().get(COMPETITION_SETUP));
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
     }
 
@@ -273,8 +273,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(PreviousDashboardViewModel.class));
 
         PreviousDashboardViewModel viewModel = (PreviousDashboardViewModel) model;
-        assertEquals(competitions.get(1), viewModel.getCompetitions().get(PREVIOUS).get(1));
-        assertEquals(competitions.get(0), viewModel.getCompetitions().get(PREVIOUS).get(0));
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
     }
 

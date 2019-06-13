@@ -81,7 +81,7 @@ public class CompetitionManagementDashboardController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(@RequestParam(defaultValue = DEFAULT_PAGE) int page, Model model, UserResource user) {
-        CompetitionSearchResult result = competitionDashboardSearchService.getProjectSetupCompetitions(page);
+        CompetitionSearchResult searchResult = competitionDashboardSearchService.getProjectSetupCompetitions(page);
 
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
@@ -91,7 +91,7 @@ public class CompetitionManagementDashboardController {
 
         model.addAttribute(MODEL_ATTR,
                 new ProjectSetupDashboardViewModel(
-                        result,
+                        searchResult,
                         competitionDashboardSearchService.getCompetitionCounts(),
                         countBankDetails,
                         new DashboardTabsViewModel(user),
