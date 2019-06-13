@@ -100,7 +100,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                null, DocumentStatus.UNSET, "", true);
+                null, DocumentStatus.UNSET, "", true, true);
 
         when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
 
@@ -201,7 +201,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.SUBMITTED, "",true);
+                fileDetailsViewModel, DocumentStatus.SUBMITTED, "",true, true);
 
         when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
 
@@ -251,7 +251,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.UNSET, "",true);
+                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true);
 
         when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
 
