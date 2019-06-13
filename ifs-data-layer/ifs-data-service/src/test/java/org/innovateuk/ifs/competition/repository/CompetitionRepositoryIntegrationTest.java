@@ -379,7 +379,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals("openComp", filteredSearchResults.get(5).getName());
         assertEquals("compReadyToOpen", filteredSearchResults.get(6).getName());
 
-        Page<Competition> leadTechnologistSearchResults = repository.searchForLeadTechnologist("%o%",
+        Page<Competition> leadTechnologistSearchResults = repository.searchForInnovationLeadOrStakeholder("%o%",
                 leadTechnologist.getId(), pageable);
         List<Competition> filteredLeadTechnologistSearchResults = leadTechnologistSearchResults.getContent().stream()
                 .filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L)

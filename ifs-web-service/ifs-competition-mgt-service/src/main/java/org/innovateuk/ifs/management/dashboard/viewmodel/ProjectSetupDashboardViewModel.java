@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
  */
 public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
-    private CompetitionSearchResult pagination;
+    private CompetitionSearchResult result;
     private Long countBankDetails;
     private boolean projectFinanceUser;
 
@@ -25,12 +25,11 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
                                           Long countBankDetails,
                                           DashboardTabsViewModel tabs,
                                           boolean projectFinanceUser) {
-        this.competitions = searchResult.getMappedCompetitions();
         this.counts = counts;
         this.tabs = tabs;
         this.countBankDetails = countBankDetails;
         this.projectFinanceUser = projectFinanceUser;
-        this.pagination = searchResult;
+        this.result = searchResult;
 
     }
 
@@ -42,8 +41,8 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
         return projectFinanceUser;
     }
 
-    public CompetitionSearchResult getPagination() {
-        return pagination;
+    public CompetitionSearchResult getResult() {
+        return result;
     }
 
     public List<CompetitionSearchResultItem> getNonPrioritisedCompetitions() {

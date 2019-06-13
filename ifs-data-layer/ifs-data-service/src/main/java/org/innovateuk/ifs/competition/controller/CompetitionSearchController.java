@@ -26,7 +26,8 @@ public class CompetitionSearchController {
         return competitionSearchService.findLiveCompetitions().toGetResponse();
     }
 
-    @GetMapping("/project-setup")
+    @GetMapping(value = "/project-setup", params = "page")
+    @ZeroDowntime(description = "Remove params above", reference = "IFS-5990")
     public RestResult<CompetitionSearchResult> projectSetup(@RequestParam int page,
                                                             @RequestParam(required = false, defaultValue = "20") int size) {
         return competitionSearchService.findProjectSetupCompetitions(page, size).toGetResponse();
@@ -37,13 +38,15 @@ public class CompetitionSearchController {
         return competitionSearchService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @GetMapping("/non-ifs")
+    @GetMapping(value = "/non-ifs", params = "page")
+    @ZeroDowntime(description = "Remove params above", reference = "IFS-5990")
     public RestResult<CompetitionSearchResult> nonIfs(@RequestParam int page,
                                                       @RequestParam(required = false, defaultValue = "20") int size) {
         return competitionSearchService.findNonIfsCompetitions(page, size).toGetResponse();
     }
 
-    @GetMapping("/post-submission/feedback-released")
+    @GetMapping(value = "/post-submission/feedback-released", params = "page")
+    @ZeroDowntime(description = "Remove params above", reference = "IFS-5990")
     public RestResult<CompetitionSearchResult> previous(@RequestParam int page,
                                                         @RequestParam(required = false, defaultValue = "20") int size) {
         return competitionSearchService.findPreviousCompetitions(page, size).toGetResponse();
@@ -56,17 +59,34 @@ public class CompetitionSearchController {
         return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
 
+    @GetMapping("/count")
+    public RestResult<CompetitionCountResource> count() {
+        return competitionSearchService.countCompetitions().toGetResponse();
+    }
+
     @GetMapping("/search/{page}/{size}")
-    @ZeroDowntime(description = "remove", reference = "something")
+    @ZeroDowntime(description = "Remove this", reference = "IFS-5990")
     public RestResult<CompetitionSearchResult> searchZdd(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
         return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
 
+    @GetMapping("/non-ifs")
+    @ZeroDowntime(description = "Remove this", reference = "IFS-5990")
+    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
+        return competitionSearchService.findNonIfsCompetitions(0, 1000).andOnSuccessReturn(CompetitionSearchResult::getContent).toGetResponse();
+    }
 
-    @GetMapping("/count")
-    public RestResult<CompetitionCountResource> count() {
-        return competitionSearchService.countCompetitions().toGetResponse();
+    @GetMapping("/post-submission/feedback-released")
+    @ZeroDowntime(description = "Remove this", reference = "IFS-5990")
+    public RestResult<List<CompetitionSearchResultItem>> previous() {
+        return competitionSearchService.findPreviousCompetitions(0, 1000).andOnSuccessReturn(CompetitionSearchResult::getContent).toGetResponse();
+    }
+
+    @GetMapping("/project-setup")
+    @ZeroDowntime(description = "Remove this", reference = "IFS-5990")
+    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
+        return competitionSearchService.findProjectSetupCompetitions(0, 1000).andOnSuccessReturn(CompetitionSearchResult::getContent).toGetResponse();
     }
 }

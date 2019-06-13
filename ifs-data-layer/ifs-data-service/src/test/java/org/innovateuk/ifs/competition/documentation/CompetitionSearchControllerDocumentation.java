@@ -56,6 +56,8 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
         when(competitionSearchService.findProjectSetupCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/project-setup")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
@@ -91,6 +93,8 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
         when(competitionSearchService.findNonIfsCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/non-ifs")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
@@ -125,7 +129,10 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
         int size = 20;
         when(competitionSearchService.searchCompetitions(searchQuery, page, size)).thenReturn(serviceSuccess(results));
 
-        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size)
+        mockMvc.perform(get("/competition/search")
+                .param("searchQuery", searchQuery)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
@@ -146,6 +153,8 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
         when(competitionSearchService.findPreviousCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/post-submission/feedback-released")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
