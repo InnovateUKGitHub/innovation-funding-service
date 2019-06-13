@@ -82,7 +82,7 @@ scenarios:
   invite_users:
     script: taurus/invite.jmx
   applicant_users:
-    script: taurus/applicant.jmx
+    script: taurus/application.jmx
   registration_users:
     script: taurus/registration.jmx
   front_door_users:
