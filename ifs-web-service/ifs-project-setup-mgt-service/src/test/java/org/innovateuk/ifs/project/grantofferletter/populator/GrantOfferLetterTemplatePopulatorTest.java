@@ -181,5 +181,8 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(notes, model.getNotes());
         assertEquals(project.getName(), model.getProjectName());
         assertEquals(tsAndCs.getTemplate(), model.getTermsAndConditionsTemplate());
+        assertEquals(industrialFinanceTable, model.getIndustrialFinanceTable());
+        assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
+        assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
     }
 }
