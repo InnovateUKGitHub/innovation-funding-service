@@ -9,20 +9,22 @@ import java.util.List;
  */
 public class ProjectTeamViewModel {
 
-    private String competitionName;
-    private String projectName;
-    private long projectId;
-    private List<ProjectOrganisationViewModel> partnerOrgs;
-    private ProjectOrganisationViewModel loggedInUserOrg;
-    private ProjectUserResource projectManager;
-    private boolean userLeadPartner;
-    private long loggedInUserId;
+    private final String competitionName;
+    private final long competitionId;
+    private final String projectName;
+    private final long projectId;
+    private final List<ProjectOrganisationViewModel> partnerOrgs;
+    private final ProjectOrganisationViewModel loggedInUserOrg;
+    private final ProjectUserResource projectManager;
+    private final boolean userLeadPartner;
+    private final long loggedInUserId;
 
-    private boolean grantOfferLetterGenerated;
-    private boolean internalUserView;
-    private boolean readOnly;
+    private final boolean grantOfferLetterGenerated;
+    private final boolean internalUserView;
+    private final boolean readOnly;
 
     public ProjectTeamViewModel(String competitionName,
+                                long competitionId,
                                 String projectName,
                                 long projectId,
                                 List<ProjectOrganisationViewModel> partnerOrgs,
@@ -35,6 +37,7 @@ public class ProjectTeamViewModel {
                                 boolean readOnly) {
 
         this.competitionName = competitionName;
+        this.competitionId = competitionId;
         this.projectName = projectName;
         this.projectId = projectId;
         this.partnerOrgs = partnerOrgs;
@@ -49,6 +52,10 @@ public class ProjectTeamViewModel {
 
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public String getProjectName() {

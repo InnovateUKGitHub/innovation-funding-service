@@ -22,12 +22,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -40,9 +37,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests for ProjectFinanceHandler methods (duh!)
- */
 public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private ProjectFinanceHandler handler = new ProjectFinanceHandlerImpl();
@@ -92,20 +86,20 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testGetResearchParticipationPercentageFromProject(){
+    public void getResearchParticipationPercentageFromProject() {
         BigDecimal result = handler.getResearchParticipationPercentageFromProject(projectId);
         assertTrue(result != null);
     }
 
     @Test
-    public void testGetProjectOrganisationFinances(){
+    public void getProjectOrganisationFinances() {
         ServiceResult<ProjectFinanceResource> result = handler.getProjectOrganisationFinances(projectFinanceResourceId);
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), projectFinanceResource);
     }
 
     @Test
-    public void testGetFinanceChecksTotals(){
+    public void getFinanceChecksTotals() {
         List<ProjectFinanceResource> result = handler.getFinanceChecksTotals(projectId);
         assertTrue(result.size() > 0);
     }
