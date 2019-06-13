@@ -76,8 +76,9 @@ public class LegacyMonitoringOfficerController {
         if (!existingMonitoringOfficer.isPresent()) {
             return "redirect:/monitoring-officer/view-all";
         }
+        boolean projectIsActive = projectService.getById(projectId).getProjectState().isActive();
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
-        return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
+        return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser) && projectIsActive);
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
