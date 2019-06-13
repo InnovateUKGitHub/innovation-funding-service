@@ -1,26 +1,17 @@
 package org.innovateuk.ifs.project.grantofferletter.transactional;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfWriter;
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -28,56 +19,34 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.domain.Cost;
-import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
-import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Document;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xhtmlrenderer.resource.XMLResource;
-import org.xml.sax.InputSource;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-import static java.io.File.separator;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
@@ -85,31 +54,15 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
 
-    private static final String GOL_CONTENT_TYPE = "application/pdf";
-
-    private static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
-
-    private static final Long DEFAULT_GOL_SIZE = 1L;
-
-    private static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
 
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
-
-    private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
     @Autowired
     private FileService fileService;
 
     @Autowired
-    private SpendProfileService spendProfileService;
-
-    @Autowired
     private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private FileTemplateRenderer fileTemplateRenderer;
 
     @Autowired
     private GrantProcessService grantProcessService;
@@ -125,24 +78,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private CostRepository costRepository;
-
-    @Autowired
-    private SpendProfileRepository spendProfileRepository;
-
-    @Autowired
-    private GrantOfferLetterIndustrialFinanceTablePopulator grantOfferLetterIndustrialFinanceTablePopulator;
-
-    @Autowired
-    private GrantOfferLetterAcademicFinanceTablePopulator grantOfferLetterAcademicFinanceTablePopulator;
-
-    @Autowired
-    private GrantOfferLetterFinanceTotalsTablePopulator grantOfferLetterFinanceTotalsTablePopulator;
-
-    @Autowired
-    private PartnerOrganisationService partnerOrganisationService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -244,156 +179,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
-
-        return getProject(projectId).
-                andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
-                        andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
-                                fileEntryResource).
-                                andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
-    }
-
-    private String getTemplatePath() {
-        return GOL_TEMPLATES_PATH;
-    }
-
-    private Map<String, Object> getTemplateData(Project project) {
-        ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
-
-        Map<Organisation, List<Cost>> financesForOrgs = getFinances(project);
-        GrantOfferLetterIndustrialFinanceTable industrialFinanceTable = grantOfferLetterIndustrialFinanceTablePopulator.createTable(financesForOrgs);
-        GrantOfferLetterAcademicFinanceTable academicFinanceTable = grantOfferLetterAcademicFinanceTablePopulator.createTable(financesForOrgs);
-        GrantOfferLetterFinanceTotalsTable totalsFinanceTable = grantOfferLetterFinanceTotalsTablePopulator.createTable(financesForOrgs, project.getId());
-
-        final Map<String, Object> templateReplacements = new HashMap<>();
-        final List<String> addresses = getAddresses(project);
-        templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
-        templateReplacements.put("LeadOrgName", leadOrganisation.getName());
-        templateReplacements.put("Address1", addresses.isEmpty() ? "" : addresses.get(0));
-        templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
-        templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
-        templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
-        templateReplacements.put("PostCode", addresses.size() < 5 ? "" : addresses.get(4));
-        templateReplacements.put("Date", ZonedDateTime.now().toString());
-        templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
-        templateReplacements.put("ProjectTitle", project.getName());
-        templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
-                project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
-        templateReplacements.put("ProjectLength", project.getDurationInMonths());
-        templateReplacements.put("ApplicationNumber", project.getApplication().getId());
-
-        // add finances tables
-        templateReplacements.put("industrialFinanceTable", industrialFinanceTable);
-        templateReplacements.put("academicFinanceTable", academicFinanceTable);
-        templateReplacements.put("financeTotalsTable", totalsFinanceTable);
-
-        return templateReplacements;
-    }
-
-    private Map<Organisation, List<Cost>> getFinances(Project project) {
-        Map<Organisation, List<Cost>> orgFinances = new HashMap<>();
-
-        project.getOrganisations()
-                .forEach(org -> {
-                    SpendProfile orgSpendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), org.getId()).get();
-                    CostGroup orgCostGroup = orgSpendProfile.getSpendProfileFigures();
-                    List<Cost> costs = costRepository.findByCostGroupId(orgCostGroup.getId());
-
-                    orgFinances.put(org, costs);
-                });
-
-        return orgFinances;
-    }
-
-    private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
-        try {
-            return createPDF("", inputStreamSupplier, fileEntryResource);
-        } catch (IOException e) {
-            LOG.error("An IO Exception occurred" + e);
-            return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-        } catch (DocumentException e) {
-            LOG.error("A Document Exception occured" + e);
-            return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-        }
-    }
-
-    private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource)
-            throws IOException, DocumentException {
-
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-
-            ITextRenderer renderer = new ITextRenderer();
-            Document doc = XMLResource.load(new InputSource(inputStreamSupplier.get())).getDocument();
-
-            PdfWriter writer = renderer.getWriter();
-            if (writer != null) {
-                writer.setPDFXConformance(PdfWriter.PDFA1A);
-            }
-
-            renderer.setDocument(doc, url);
-            renderer.layout();
-            renderer.createPDF(os);
-            fileEntryResource.setFilesizeBytes(os.toByteArray().length);
-            return ServiceResult.serviceSuccess(() -> new ByteArrayInputStream(os.toByteArray()));
-        }
-    }
-
-    private List<String> getAddresses(Project project) {
-        List<String> addressLines = new ArrayList<>();
-        if (project.getAddress() != null) {
-            Address address = project.getAddress();
-            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "");
-            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "");
-            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : ""));
-            addressLines.add(address.getTown() != null ? address.getTown() : "");
-            addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
-        }
-        return addressLines;
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        if (isProjectReadyForGrantOffer(projectId)) {
-            FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
-            return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
-                    .andOnSuccess(() -> serviceSuccess()).
-                            andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-        } else {
-            return serviceSuccess();
-        }
-    }
-
-    private boolean isProjectReadyForGrantOffer(Long projectId) {
-        Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccess();
-
-        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && allProjectDocumentsApproved(project1) && project1.getGrantOfferLetter() == null).orElse(false);
-    }
-
-    private boolean allProjectDocumentsApproved(Project project) {
-        Competition competition = project.getApplication().getCompetition();
-        List<CompetitionDocument> expectedDocuments = competition.getCompetitionDocuments();
-        int actualNumberOfDocuments = project.getProjectDocuments().size();
-
-        List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
-
-        int expectedNumberOfDocuments = expectedDocuments.size();
-        if (partnerOrganisations.size() == 1) {
-            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
-            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
-                expectedNumberOfDocuments = expectedDocuments.size() - 1;
-            }
-        }
-
-        return actualNumberOfDocuments == expectedNumberOfDocuments && project.getProjectDocuments().stream()
-                .allMatch(projectDocumentResource -> APPROVED.equals(projectDocumentResource.getStatus()));
     }
 
     private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails, boolean signed) {
