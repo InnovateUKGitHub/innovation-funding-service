@@ -747,7 +747,7 @@
               </elementProp>
               <elementProp name="stagedInvite.email" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">nonsense@nonsence.co,uk</stringProp>
+                <stringProp name="Argument.value">nonsense@nonsence.co.uk</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">stagedInvite.email</stringProp>
