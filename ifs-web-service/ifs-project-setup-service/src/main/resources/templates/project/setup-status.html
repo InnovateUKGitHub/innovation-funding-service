@@ -98,9 +98,9 @@
                                class="govuk-link">Project team</a>
                             <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}"
                                class="govuk-link">Project
-                                details</a>
+                                team</a>
                             <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
-                                details
+                                team
                             </th:block>
                         </h2>
                         <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Add people to your project.</p>
