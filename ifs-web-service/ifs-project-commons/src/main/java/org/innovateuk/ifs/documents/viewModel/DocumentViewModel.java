@@ -120,6 +120,7 @@ public class DocumentViewModel {
                 .append(status, that.status)
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
+                .append(projectIsActive, that.projectIsActive)
                 .isEquals();
     }
 
@@ -134,6 +135,7 @@ public class DocumentViewModel {
                 .append(status)
                 .append(guidance)
                 .append(projectManager)
+                .append(projectIsActive)
                 .toHashCode();
     }
 }
