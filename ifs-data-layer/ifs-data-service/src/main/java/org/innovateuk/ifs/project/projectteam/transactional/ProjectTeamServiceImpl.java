@@ -51,7 +51,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -268,7 +267,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
-        if (project.getGrantOfferLetter() != null){
+        if (project.getGrantOfferLetter() != null) {
             return serviceFailure(failKey);
         }
         return serviceSuccess(project);

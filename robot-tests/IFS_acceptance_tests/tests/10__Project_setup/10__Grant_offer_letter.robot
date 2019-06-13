@@ -129,9 +129,9 @@ Lead should not be able to see GOL until it is sent by IUK
 Lead cannot change project manager, project address and finance contact after GOL generation
     [Documentation]  INFUND-1577, IFS-1578, IFS-1579
     [Tags]
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-manager  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/team/project-manager  ${403_error_message}
     When the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/project-address  ${403_error_message}
-    Then the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details/finance-contact?organisation = ${Big_Riffs_Id}  ${403_error_message}
+    Then the user navigates to the page and gets a custom error message     ${server}/project-setup/project/${Elbow_Grease_Project_Id}/team/finance-contact/organisation/${Big_Riffs_Id}  ${403_error_message}
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
@@ -173,6 +173,7 @@ Comp Admin user uploads new grant offer letter
     Then the user uploads a file                grantOfferLetter  ${valid_pdf}
     And the user should see the element         jQuery = button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
+    And the user selects the checkbox           confirmation
     And the user clicks the button/link         id = send-gol
     And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
     Then the user should not see the element    css = [name = "removeGrantOfferLetterClicked"]

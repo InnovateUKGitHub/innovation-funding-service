@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
