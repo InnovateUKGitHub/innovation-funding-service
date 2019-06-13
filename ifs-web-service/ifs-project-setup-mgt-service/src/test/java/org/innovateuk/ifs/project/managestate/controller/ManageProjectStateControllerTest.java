@@ -11,8 +11,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -81,6 +80,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
 
         verify(projectStateRestService).handleProjectOffline(projectId);
     }
+
     @Test
     public void setProjectState_handleOffline_noConfirmation() throws Exception {
         long competitionId = 1L;
@@ -93,12 +93,85 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .withProjectState(SETUP).build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(projectStateRestService.handleProjectOffline(projectId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", HANDLED_OFFLINE.name()))
                 .andExpect(view().name("project/manage-project-state"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "confirmationOffline", "validation.field.must.not.be.blank"));
+
+        verifyZeroInteractions(projectStateRestService);
+    }
+
+    @Test
+    public void setProjectState_withdrawProject_success() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        when(projectStateRestService.withdrawProject(projectId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", WITHDRAWN.name())
+                .param("confirmWithdrawn", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
+
+        verify(projectStateRestService).withdrawProject(projectId);
+    }
+
+    @Test
+    public void setProjectState_withdrawProject_noConfirmation() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withName("Name")
+                .withCompetition(competitionId)
+                .withProjectState(SETUP).build();
+
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", WITHDRAWN.name()))
+                .andExpect(view().name("project/manage-project-state"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "confirmWithdrawn", "validation.field.must.not.be.blank"));
+
+        verifyZeroInteractions(projectStateRestService);
+    }
+
+    @Test
+    public void setProjectState_completeProjectOffline_success() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        when(projectStateRestService.completeProjectOffline(projectId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", COMPLETED_OFFLINE.name())
+                .param("confirmationCompleteOffline", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
+
+        verify(projectStateRestService).handleProjectOffline(projectId);
+    }
+
+    @Test
+    public void setProjectState_completeProjectOffline_noConfirmation() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withName("Name")
+                .withCompetition(competitionId)
+                .withProjectState(SETUP).build();
+
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", COMPLETED_OFFLINE.name()))
+                .andExpect(view().name("project/manage-project-state"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "confirmationCompleteOffline", "validation.field.must.not.be.blank"));
 
         verifyZeroInteractions(projectStateRestService);
     }

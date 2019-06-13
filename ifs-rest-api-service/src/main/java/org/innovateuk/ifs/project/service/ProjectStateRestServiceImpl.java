@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProjectStateServiceImpl extends BaseRestService implements ProjectStateRestService {
+public class ProjectStateRestServiceImpl extends BaseRestService implements ProjectStateRestService {
 
     private String projectRestURL = "/project";
 
