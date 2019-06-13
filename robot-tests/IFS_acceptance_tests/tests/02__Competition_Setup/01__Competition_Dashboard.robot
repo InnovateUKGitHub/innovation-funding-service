@@ -18,6 +18,8 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
 Resource          CompAdmin_Commons.robot
+*** Variables ***
+${NON_IFS_COMPETITION_NAME_TEXT}   Non IFS Comp 1
 
 *** Test Cases ***
 Sections of Live Competitions
@@ -48,11 +50,6 @@ Project setup Competitions
     And the user should see the element        jQuery =.govuk-body:contains("3 projects")
     And the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
     # this step verifies that the ready to open competitions are not visible in other tabs
-
-Project setup competition calculations
-    [Documentation]    INFUND-3831
-    Then the total calculation in dashboard should be correct    Project setup    //section[1]/ul/li
-    And the total calculation in dashboard should be correct     Project setup    //section/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
