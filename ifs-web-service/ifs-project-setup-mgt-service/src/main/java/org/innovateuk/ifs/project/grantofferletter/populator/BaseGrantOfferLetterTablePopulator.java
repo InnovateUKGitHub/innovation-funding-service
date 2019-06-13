@@ -14,7 +14,6 @@ import java.util.Objects;
 /**
  * Base class for grant offer letter finance table populators
  **/
-
 public class BaseGrantOfferLetterTablePopulator {
 
     @Autowired
@@ -38,13 +37,5 @@ public class BaseGrantOfferLetterTablePopulator {
                 .map(BaseFinanceResource::getTotalFundingSought)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    protected BigDecimal calculateRateOfGrant(BigDecimal totalCosts, BigDecimal totalGrant) {
-        return totalCosts.equals(BigDecimal.ZERO) ?
-                BigDecimal.ZERO :
-                totalGrant
-                        .divide(totalCosts,2, BigDecimal.ROUND_HALF_UP)
-                        .multiply(BigDecimal.valueOf(100));
     }
 }
