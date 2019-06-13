@@ -36,6 +36,8 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 ext.NEW_RELIC_LICENCE_KEY=""
 
+ext.IFS_LIVE_PROJECTS_LANDING_PAGE_URL="ifs-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']+"/live-projects-landing-page"
+
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
