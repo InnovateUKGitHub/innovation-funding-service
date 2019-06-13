@@ -167,7 +167,7 @@ invite a registered user
     the user enters text to a text field                       id = name  Partner's name
     the user enters text to a text field                       id = email  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Invite partner organisation")
-    the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
+    the user clicks the button/link                            link = Return to application overview
     the user should see the element                            jQUery = h1:contains("Application overview")
     the user closes the browser
     the guest user opens the browser
