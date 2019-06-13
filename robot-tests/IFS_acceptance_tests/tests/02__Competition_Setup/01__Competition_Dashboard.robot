@@ -114,13 +114,13 @@ Non IFS competitions
     [Documentation]    INFUND-7963
     When the user clicks the button/link    jQuery = a:contains(Non-IFS)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the element    jQuery = h2:contains("Non-IFS competitions ")
-    And the user should see the element     link = ${NON_IFS_COMPETITION_NAME_TEXT}
+    And the user should see the element     link = ${NON_IFS_COMPETITION_NAME}
 
 Non IFS competitions do not appear in search results
     [Documentation]    INFUND-7963
-    When The user enters text to a text field    id = searchQuery    ${NON_IFS_COMPETITION_NAME_TEXT}
+    When The user enters text to a text field    id = searchQuery    ${NON_IFS_COMPETITION_NAME}
     And The user clicks the button/link          css = #searchsubmit
-    Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME_TEXT}
+    Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME}
 
 *** Keywords ***
 Custom suite setup
