@@ -38,5 +38,5 @@ IFS.assessment.loadOrder = {
     init: function () {
       IFS.assessment.scopePage.init()
     }
-  },
+  }
 }
