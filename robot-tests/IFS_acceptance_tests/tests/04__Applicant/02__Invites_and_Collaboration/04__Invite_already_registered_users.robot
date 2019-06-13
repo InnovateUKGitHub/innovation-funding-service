@@ -72,8 +72,7 @@ Existing user creates a new application and invites a user from the same organis
     The user enters text to a text field  id = email   ${test_mailbox_one}+invite2@gmail.com
     the user clicks the button/link       jQuery = button:contains("Invite to application")
     the user should see the element       jQuery = td:contains("${test_mailbox_one}+invite2@gmail.com")
-    the user clicks the button/link       link = Return to application team page
-    the user clicks the button/link       jQuery = .govuk-button:contains("Return to application team")
+    the user clicks the button/link       link = Application overview
     the user clicks the button/link       link = Application details
     the user enters text to a text field  css = [id="application.name"]    Invite a user with the same org
     the user clicks the button/link       jQuery = .govuk-button:contains("Save and return")
