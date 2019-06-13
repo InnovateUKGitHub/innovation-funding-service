@@ -18,6 +18,8 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
 Resource          CompAdmin_Commons.robot
+*** Variables ***
+${NON_IFS_COMPETITION_NAME_TEXT}   Non IFS Comp 1
 
 *** Test Cases ***
 Sections of Live Competitions
@@ -48,11 +50,6 @@ Project setup Competitions
     And the user should see the element        jQuery =.govuk-body:contains("3 projects")
     And the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
     # this step verifies that the ready to open competitions are not visible in other tabs
-
-Project setup competition calculations
-    [Documentation]    INFUND-3831
-    Then the total calculation in dashboard should be correct    Project setup    //section[1]/ul/li
-    And the total calculation in dashboard should be correct     Project setup    //section/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
@@ -117,13 +114,13 @@ Non IFS competitions
     [Documentation]    INFUND-7963
     When the user clicks the button/link    jQuery = a:contains(Non-IFS)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the element    jQuery = h2:contains("Non-IFS competitions ")
-    And the user should see the element     link = ${NON_IFS_COMPETITION_NAME}
+    And the user should see the element     link = ${NON_IFS_COMPETITION_NAME_TEXT}
 
 Non IFS competitions do not appear in search results
     [Documentation]    INFUND-7963
-    When The user enters text to a text field    id = searchQuery    ${NON_IFS_COMPETITION_NAME}
+    When The user enters text to a text field    id = searchQuery    ${NON_IFS_COMPETITION_NAME_TEXT}
     And The user clicks the button/link          css = #searchsubmit
-    Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME}
+    Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME_TEXT}
 
 *** Keywords ***
 Custom suite setup
