@@ -62,18 +62,6 @@ public class ProjectDetailsViewModel {
         return COMPLETED_OFFLINE.equals(project.getProjectState());
     }
 
-    public boolean isShowWithdrawLink() {
-        return ifsAdministrator && isSetup();
-    }
-
-    public boolean isShowHandleOfflineLink() {
-        return ifsAdministrator && isSetup();
-    }
-
-    public boolean isShowCompleteOfflineLink() {
-        return ifsAdministrator && isHandleOffline();
-    }
-
     public Long getCompetitionId() {
         return competitionId;
     }
