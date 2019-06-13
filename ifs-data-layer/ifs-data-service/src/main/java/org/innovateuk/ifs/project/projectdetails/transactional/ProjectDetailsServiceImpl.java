@@ -143,7 +143,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
-    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey) {
         if (project.getGrantOfferLetter() != null){
             return serviceFailure(failKey);
         }
