@@ -173,6 +173,7 @@ Comp Admin user uploads new grant offer letter
     Then the user uploads a file                grantOfferLetter  ${valid_pdf}
     And the user should see the element         jQuery = button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
+    And the user selects the checkbox           confirmation
     And the user clicks the button/link         id = send-gol
     And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
     Then the user should not see the element    css = [name = "removeGrantOfferLetterClicked"]
