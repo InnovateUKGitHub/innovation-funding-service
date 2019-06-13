@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage project status'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -55,7 +55,8 @@
               method="POST"
               novalidate="novalidate"
               enctype="multipart/form-data">
-            <div id="state" class="govuk-form-group">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">
                         <h2 class="govuk-fieldset__heading">
@@ -70,14 +71,14 @@
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
                         <th:block th:if="${model.canHandleOffline()}">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="status-offline"
+                                <input class="govuk-radios__input" id="state"
                                        type="radio"
                                        th:field="*{state}"
                                        th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).HANDLED_OFFLINE.name()}"
                                        aria-describedby="status-offline-hint"
                                        data-aria-controls="project-status-conditional-offline">
                                 <label class="govuk-label govuk-radios__label govuk-label--s"
-                                       for="status-offline">
+                                       for="state">
                                     Manage offline
                                 </label>
                                 <span id="status-offline-hint" class="govuk-hint govuk-radios__hint">
@@ -86,7 +87,8 @@
                             </div>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
                                  id="project-status-conditional-offline">
-                                <div class="govuk-form-group">
+                                <div class="govuk-form-group"
+                                     th:classappend="${#fields.hasErrors('confirmationOffline')} ? 'govuk-form-group--error'">
                                     <fieldset class="govuk-fieldset" aria-describedby="manage-offline-hint">
                                         <legend class="govuk-visually-hidden">
                                             <h1 class="govuk-fieldset__heading">
@@ -135,7 +137,8 @@
                             </div>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
                                  id="project-status-conditional-withdrawn">
-                                <div class="govuk-form-group">
+                                <div class="govuk-form-group"
+                                     th:classappend="${#fields.hasErrors('confirmationWithdrawn')} ? 'govuk-form-group--error'">
                                     <fieldset class="govuk-fieldset" aria-describedby="withdraw-project-hint">
                                         <legend class="govuk-visually-hidden">
                                             <h1 class="govuk-fieldset__heading">
@@ -185,7 +188,8 @@
                             </div>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
                                  id="project-status-conditional-complete-offline">
-                                <div class="govuk-form-group">
+                                <div class="govuk-form-group"
+                                     th:classappend="${#fields.hasErrors('confirmationCompleteOffline')} ? 'govuk-form-group--error'">
                                     <fieldset class="govuk-fieldset" aria-describedby="complete-offline-hint">
                                         <legend class="govuk-visually-hidden">
                                             <h1 class="govuk-fieldset__heading">
