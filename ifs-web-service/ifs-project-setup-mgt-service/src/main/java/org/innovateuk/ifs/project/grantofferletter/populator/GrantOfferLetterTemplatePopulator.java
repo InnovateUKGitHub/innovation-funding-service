@@ -8,7 +8,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.AcademicFinanceTableModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterTemplateViewModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -20,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class GrantOfferLetterTemplatePopulator {
@@ -39,6 +44,12 @@ public class GrantOfferLetterTemplatePopulator {
 
     private final ProjectFinanceNotesRestService projectFinanceNotesRestService;
 
+    private final IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator;
+
+    private final AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator;
+
+    private final SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator;
+
     @Autowired
     public GrantOfferLetterTemplatePopulator(
             ProjectRestService projectRestService,
@@ -47,7 +58,10 @@ public class GrantOfferLetterTemplatePopulator {
             OrganisationRestService organisationRestService,
             UserRestService userRestService,
             ProjectFinanceRestService projectFinanceRestService,
-            ProjectFinanceNotesRestService projectFinanceNotesRestService
+            ProjectFinanceNotesRestService projectFinanceNotesRestService,
+            IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator,
+            AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator,
+            SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator
     ) {
         this.projectRestService = projectRestService;
         this.competitionRestService = competitionRestService;
@@ -56,6 +70,9 @@ public class GrantOfferLetterTemplatePopulator {
         this.userRestService = userRestService;
         this.projectFinanceRestService = projectFinanceRestService;
         this.projectFinanceNotesRestService = projectFinanceNotesRestService;
+        this.industrialFinanceTableModelPopulator = industrialFinanceTableModelPopulator;
+        this.academicFinanceTableModelPopulator = academicFinanceTableModelPopulator;
+        this.summaryFinanceTableModelPopulator = summaryFinanceTableModelPopulator;
     }
 
     public GrantOfferLetterTemplateViewModel populate(long projectId) {
@@ -78,6 +95,11 @@ public class GrantOfferLetterTemplatePopulator {
                                                    .ifSuccessful(allProjectNotes::addAll)
         );
 
+        Map<OrganisationResource, ProjectFinanceResource> financesForOrgs = getFinancesForOrgs(projectResource, allProjectFinances);
+        IndustrialFinanceTableModel industrialFinanceTableModel = industrialFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
+        AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
+        SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
+
         return new GrantOfferLetterTemplateViewModel(applicationId,
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
@@ -86,7 +108,10 @@ public class GrantOfferLetterTemplatePopulator {
                                                      projectName,
                                                      leadOrgName,
                                                      allProjectNotes,
-                                                     competitionResource.getTermsAndConditions().getTemplate());
+                                                     competitionResource.getTermsAndConditions().getTemplate(),
+                                                     industrialFinanceTableModel,
+                                                     academicFinanceTableModel,
+                                                     summaryFinanceTableModel);
     }
 
     private List<String> getAddressLines(ProjectResource project) {
@@ -100,6 +125,24 @@ public class GrantOfferLetterTemplatePopulator {
             addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
         }
         return addressLines;
+    }
+
+    private Map<OrganisationResource, ProjectFinanceResource> getFinancesForOrgs(ProjectResource projectResource, List<ProjectFinanceResource> projectFinances) {
+        Map<OrganisationResource, ProjectFinanceResource> orgFinances = new HashMap<>();
+
+        List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectResource.getId());
+        projectOrganisations.forEach(org -> {
+            ProjectFinanceResource financesForOrg =
+                    projectFinances
+                            .stream()
+                            .filter(finances -> finances.getOrganisation().equals(org.getId()))
+                            .findAny()
+                            .get();
+
+            orgFinances.put(org, financesForOrg);
+        });
+
+        return orgFinances;
     }
 
 }

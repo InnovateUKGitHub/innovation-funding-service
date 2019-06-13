@@ -80,7 +80,10 @@
                             class="govuk-table__row">
                             <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
                             <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td class="govuk-table__cell" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                            <td class="govuk-table__cell">
+                                <th:block th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</th:block>
+                                <span th:unless="${applicant.lead OR applicant.pending}" class="govuk-visually-hidden">Not applicable</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -128,7 +131,10 @@
                             class="govuk-table__row">
                             <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
                             <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td class="govuk-table__cell" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                            <td class="govuk-table__cell">
+                                <th:block th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</th:block>
+                                <span th:unless="${applicant.lead OR applicant.pending}" class="govuk-visually-hidden">Not applicable</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
