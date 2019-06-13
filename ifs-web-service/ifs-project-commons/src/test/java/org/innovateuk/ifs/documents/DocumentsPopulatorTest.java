@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuil
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
@@ -107,6 +108,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .newProjectResource()
                 .withId(projectId)
                 .withName(projectName)
+                .withProjectState(SETUP)
                 .withCompetition(competitionId)
                 .withApplication(application)
                 .withProjectDocuments(singletonList(projectDocumentResource))
