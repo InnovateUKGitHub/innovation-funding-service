@@ -13,8 +13,7 @@ import java.util.Objects;
 /**
  *  Holder of values for the academic finance table, used on the grant offer letter template page
  */
-public class AcademicFinanceTableModel extends BaseFinanceTableModel {
-
+public class AcademicFinanceTableModel {
 
     private final boolean showTotalsColumn;
     private final Map<String, ProjectFinanceResource> finances;
