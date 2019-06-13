@@ -182,6 +182,7 @@ Lead partner completes the Project team section
     the user clicks the button/link          link = Project team
     the user selects their finance contact   financeContact2
     the user clicks the button/link          link = Project manager
+    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager2
     the user clicks the button/link          jQuery = button:contains("Save project manager")
     the user clicks the button/link          link = Set up your project
@@ -192,13 +193,17 @@ The Project team status appears as complete for the internal user
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
 
+the user should see project manager/finance contact validations
+    [Arguments]   ${save_CTA}  ${errormessage}
+    the user clicks the button/link                  jQuery = button:contains("${save_CTA}")
+    the user should see a field and summary error    ${errormessage}
 
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
+    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
     the user clicks the button/link     jQuery = button:contains("Save finance contact")
-
 
 The user navigates to the Project team page from the dashboard
     the user clicks the button/link   link = ${PS_PD_Application_Title}
