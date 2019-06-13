@@ -111,7 +111,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", WITHDRAWN.name())
-                .param("confirmWithdrawn", "true"))
+                .param("confirmationWithdrawn", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
 
@@ -134,7 +134,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", WITHDRAWN.name()))
                 .andExpect(view().name("project/manage-project-state"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "confirmWithdrawn", "validation.field.must.not.be.blank"));
+                .andExpect(model().attributeHasFieldErrorCode("form", "confirmationWithdrawn", "validation.field.must.not.be.blank"));
 
         verifyZeroInteractions(projectStateRestService);
     }
@@ -152,7 +152,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
 
-        verify(projectStateRestService).handleProjectOffline(projectId);
+        verify(projectStateRestService).completeProjectOffline(projectId);
     }
 
     @Test
