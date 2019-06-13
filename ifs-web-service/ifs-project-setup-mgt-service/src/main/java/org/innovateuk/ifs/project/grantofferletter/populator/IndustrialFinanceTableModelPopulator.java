@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.OtherCost;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.OtherCostsRowModel;
@@ -19,9 +20,8 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COST
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * Populator for the grant offer letter industrial finance table
+ *  Populator for the grant offer letter industrial finance table
  */
-
 @Component
 public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTablePopulator {
 
@@ -42,7 +42,6 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
             List<String> organisations = new ArrayList<>(industrialFinances.keySet());
             BigDecimal totalEligibleCosts = calculateTotalFromFinances(industrialFinances.values());
             BigDecimal totalGrant = calculateTotalGrantFromFinances(industrialFinances.values());
-            BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
             List<OtherCostsRowModel> otherCosts = calculateOtherCosts(industrialFinances);
 
             return new IndustrialFinanceTableModel(
@@ -51,7 +50,6 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
                     organisations,
                     totalEligibleCosts,
                     totalGrant,
-                    rateOfGrant,
                     otherCosts
             );
         }
@@ -64,15 +62,17 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
                 (orgName, finance) ->
                         finance.getFinanceOrganisationDetails(OTHER_COSTS)
                                 .getCosts()
+                                .stream()
+                                .map(cost -> (OtherCost)cost)
                                 .forEach(cost -> {
                                     Optional<OtherCostsRowModel> existingCost = otherCosts
                                             .stream()
-                                            .filter(costModel -> costModel.getOtherCostName().equals(cost.getName()))
+                                            .filter(costModel -> costModel.getDescription().equals(cost.getDescription()))
                                             .findAny();
                                     if(existingCost.isPresent()) {
                                         existingCost.get().addToCostValues(orgName, cost.getTotal());
                                     } else {
-                                        otherCosts.add(new OtherCostsRowModel(cost.getName(),
+                                        otherCosts.add(new OtherCostsRowModel(cost.getDescription(),
                                                                               asMap(orgName,
                                                                                     singletonList(cost.getTotal()))
                                         ));

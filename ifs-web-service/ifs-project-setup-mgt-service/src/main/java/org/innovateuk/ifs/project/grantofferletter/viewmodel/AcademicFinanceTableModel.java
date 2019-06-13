@@ -11,31 +11,26 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Holder of values for the academic finance table, used by the grant offer letter template page
+ *  Holder of values for the academic finance table, used on the grant offer letter template page
  */
-
-public class AcademicFinanceTableModel extends BaseFinanceTableModel {
-
+public class AcademicFinanceTableModel {
 
     private final boolean showTotalsColumn;
     private final Map<String, ProjectFinanceResource> finances;
     private final List<String> organisations;
     private final BigDecimal totalEligibleCosts;
     private final BigDecimal totalGrant;
-    private final BigDecimal rateOfGrant;
 
     public AcademicFinanceTableModel(boolean showTotalsColumn,
                                      Map<String, ProjectFinanceResource> finances,
                                      List<String> organisations,
                                      BigDecimal totalEligibleCosts,
-                                     BigDecimal totalGrant,
-                                     BigDecimal rateOfGrant) {
+                                     BigDecimal totalGrant) {
         this.showTotalsColumn = showTotalsColumn;
         this.finances = finances;
         this.organisations = organisations;
         this.totalEligibleCosts = totalEligibleCosts;
         this.totalGrant = totalGrant;
-        this.rateOfGrant = rateOfGrant;
     }
 
     public boolean isShowTotalsColumn() {
@@ -80,9 +75,5 @@ public class AcademicFinanceTableModel extends BaseFinanceTableModel {
 
     public BigDecimal getTotalGrant() {
         return totalGrant;
-    }
-
-    public BigDecimal getRateOfGrant() {
-        return rateOfGrant;
     }
 }

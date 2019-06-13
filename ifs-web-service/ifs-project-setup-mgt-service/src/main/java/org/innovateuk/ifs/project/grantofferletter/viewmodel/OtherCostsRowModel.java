@@ -12,17 +12,17 @@ import static java.util.Collections.singletonList;
  */
 public class OtherCostsRowModel {
 
-    private final String otherCostName;
+    private final String description;
     private Map<String, List<BigDecimal>> otherCostValues;
 
-    public OtherCostsRowModel(String otherCostName,
+    public OtherCostsRowModel(String description,
                               Map<String, List<BigDecimal>> otherCostValues) {
-        this.otherCostName = otherCostName;
+        this.description = description;
         this.otherCostValues = otherCostValues;
     }
 
-    public String getOtherCostName() {
-        return otherCostName;
+    public String getDescription() {
+        return description;
     }
 
     public Map<String, List<BigDecimal>> getOtherCostValues() {

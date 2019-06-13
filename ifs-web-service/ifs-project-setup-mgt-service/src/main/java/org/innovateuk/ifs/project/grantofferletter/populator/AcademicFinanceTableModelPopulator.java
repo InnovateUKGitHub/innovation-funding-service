@@ -13,9 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Populator for the grant offer letter academic finance table
+ *  Populator for the grant offer letter academic finance table
  */
-
 @Component
 public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTablePopulator {
 
@@ -37,16 +36,14 @@ public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTabl
             List<String> organisations = new ArrayList<>(academicFinances.keySet());
             BigDecimal totalEligibleCosts = calculateTotalFromFinances(academicFinances.values());
             BigDecimal totalGrant = calculateTotalGrantFromFinances(academicFinances.values());
-            BigDecimal rateOfGrant = calculateRateOfGrant(totalEligibleCosts, totalGrant);
 
             return new AcademicFinanceTableModel(
                     academicFinances.size() > 1,
                     academicFinances,
                     organisations,
                     totalEligibleCosts,
-                    totalGrant,
-                    rateOfGrant);
+                    totalGrant);
         }
     }
-
+    
 }

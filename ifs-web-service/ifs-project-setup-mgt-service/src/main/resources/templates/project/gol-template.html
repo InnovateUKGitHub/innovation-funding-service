@@ -110,11 +110,11 @@
             margin: 0;
             padding: 0;
         }
-        ol.ifs-list--number > li ol .ifs-list--number > li {
+        ol.ifs-list--number > li ol.ifs-list--number > li {
             margin: 0;
             font-weight: normal;
         }
-        ol.ifs-list--number > li ol .ifs-list--number > li:before {
+        ol.ifs-list--number > li ol.ifs-list--number > li:before {
              content: counters(item, ".") " ";
         }
 
@@ -331,7 +331,9 @@
                         </td>
                     </tr>
                     <tr th:each="(otherCost, iteration : ${model.industrialFinanceTable.otherCosts})">
-                        <td>Other Costs <th:block th:text="${iteration.index + 1}"></th:block></td>
+                        <td>
+                            <th:block th:text=${otherCost.getDescription()}></th:block>
+                        </td>
                         <td style="text-align:right;"
                             th:each="(orgName : ${otherCost.getOrganisations()})"
                             th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
@@ -363,8 +365,7 @@
                             <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
                         </td>
                         <td style="text-align:right;"
-                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
-                            <th:block th:text="${#numbers.formatInteger(model.industrialFinanceTable.getRateOfGrant(), 0, 'DEFAULT')}">£0</th:block>&percnt;
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">&ndash;
                         </td>
                     </tr>
                     <tr>
@@ -403,7 +404,7 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred-staff')}"
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_staff')}"
                                       th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
@@ -563,12 +564,12 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_travel_subsistence')}"
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_other_costs')}"
                                              th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.academicFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.academicFinanceTable.getTotalByName('incurred_travel_subsistence')}">
+                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_other_costs')}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
@@ -594,8 +595,7 @@
                             <th:block th:text="${#numbers.formatInteger(organisationFinance.getGrantClaimPercentage(), 0, 'DEFAULT')}">0%</th:block>&percnt;
                         </td>
                         <td style="text-align:right;"
-                            th:if="${model.academicFinanceTable.showTotalsColumn}">
-                            <th:block th:text="${#numbers.formatInteger(model.academicFinanceTable.getRateOfGrant(), 0, 'DEFAULT')}">£0</th:block>&percnt;
+                            th:if="${model.academicFinanceTable.showTotalsColumn}">&ndash;
                         </td>
                     </tr>
 
@@ -633,10 +633,6 @@
                     <td>Total project grant</td>
                     <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectGrant, 0, 'DEFAULT')}" /></td>
                 </tr>
-                <tr>
-                    <td>Rate of grant (%)</td>
-                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.rateOfGrant, 0, 'DEFAULT')}" /></td>
-                </tr>
 
                 </tbody>
             </table>
@@ -647,7 +643,7 @@
     <!-- terms start -->
     <div class="terms-and-conditions letter-size letter-size--terms">
         <h2 style="font-size: 24px">Terms and conditions</h2>
-        <th:block th:replace="competition/info/__${model.termsAndConditionsTemplate}__ :: main/[!th:insert][>0]  "/>
+        <th:block th:insert="competition/info/__${model.termsAndConditionsTemplate}__ :: terms-and-conditions-content" />
     </div>
     <!-- terms end  -->
 </main>

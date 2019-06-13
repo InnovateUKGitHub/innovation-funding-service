@@ -3,23 +3,19 @@ package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 import java.math.BigDecimal;
 
 /**
-* Holder of values for the summary finance table, used on the grant offer letter template page
+ *  Holder of values for the summary finance table, used on the grant offer letter template page
  */
+public class SummaryFinanceTableModel {
 
-public class SummaryFinanceTableModel extends BaseFinanceTableModel {
-
-    private BigDecimal totalProjectCosts;
-    private BigDecimal totalProjectGrant;
-    private BigDecimal rateOfGrant;
+    private final BigDecimal totalProjectCosts;
+    private final BigDecimal totalProjectGrant;
 
     public SummaryFinanceTableModel(
             BigDecimal totalProjectCosts,
-            BigDecimal totalProjectGrant,
-            BigDecimal rateOfGrant
+            BigDecimal totalProjectGrant
     ) {
         this.totalProjectCosts = totalProjectCosts;
         this.totalProjectGrant = totalProjectGrant;
-        this.rateOfGrant = rateOfGrant;
     }
 
     public BigDecimal getTotalProjectCosts() {
@@ -28,9 +24,5 @@ public class SummaryFinanceTableModel extends BaseFinanceTableModel {
 
     public BigDecimal getTotalProjectGrant() {
         return totalProjectGrant;
-    }
-
-    public BigDecimal getRateOfGrant() {
-        return rateOfGrant;
     }
 }
