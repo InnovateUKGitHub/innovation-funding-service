@@ -438,3 +438,13 @@ the user accept the competition terms and conditions
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
     the user clicks the button/link    link = Return to application overview
+
+the internal user should see read only view of terms and conditions
+    [Arguments]  ${url}  ${applicationid}  ${heading}
+    the user navigates to the page             ${url}
+    the user clicks the button/link            link = ${applicationid}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    the user clicks the button/link            link = View terms and conditions
+    the user should see the element            jQuery = h1:contains("${heading}")
+    the user should not see the element        jQuery = button:contains("Agree and continue")

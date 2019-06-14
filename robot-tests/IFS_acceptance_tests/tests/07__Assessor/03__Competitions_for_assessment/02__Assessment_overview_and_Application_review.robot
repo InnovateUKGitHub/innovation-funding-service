@@ -270,9 +270,9 @@ the user fills in rejection details
 the uesr should see assessment overview details
     the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
     the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    The user should see the element      jQuery = h2:contains("Project details")
-    The user should see the element      jQuery = h2:contains("Application questions")
-    The user should see the element      jQuery = h2:contains("Finances")
+    the user should see the element      jQuery = h2:contains("Project details")
+    the user should see the element      jQuery = h2:contains("Application questions")
+    the user should see the element      jQuery = h2:contains("Finances")
     the user should see the element      jQuery = h2:contains("Terms and conditions")
 
 the user navigate to previous pages

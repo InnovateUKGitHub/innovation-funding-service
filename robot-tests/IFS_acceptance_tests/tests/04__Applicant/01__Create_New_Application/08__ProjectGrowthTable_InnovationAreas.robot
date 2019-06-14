@@ -376,24 +376,23 @@ The lead applicant checks for terms and conditions partners status
     [Documentation]  IFS-5920
     [Tags]
     [Setup]  the user navigate to competition
-    And the user accept the competition terms and conditions
+    Given the user accept the competition terms and conditions
     And the user clicks the button/link             link = Award terms and conditions
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Not yet accepted")
     And the user should see the element             jQuery = td:contains("Empire Ltd (Lead)") ~ td:contains("Accepted")
+    [Teardown]  the user clicks the button/link     link = Terms and conditions of an Innovate UK grant award
 
 The lead applicant checks for terms and conditions validations
     [Documentation]
     [Tags]
-    Given the user clicks the button/link       link = Terms and conditions of an Innovate UK grant award
-    And the user clicks the button/link         link = Application overview
-    When the user clicks the button/link        link = Review and submit
-    And the user clicks the button/link         jQuery = button:contains("Award terms and conditions")
-    Then the user should see the element        jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
-    [Teardown]  the user clicks the button/link    link = Application overview
+    Given the user clicks the button/link         link = Application overview
+    When the user clicks the button/link          link = Review and submit
+    And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")
+    Then the user should see the element          jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
+    [Teardown]  the user clicks the button/link   link = Application overview
 
 *** Keywords ***
-
 the user should see the dates in full format
     ${today} =    Get time
     ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true

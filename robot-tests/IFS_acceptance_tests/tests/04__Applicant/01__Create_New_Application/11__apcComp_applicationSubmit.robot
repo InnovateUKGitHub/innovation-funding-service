@@ -7,6 +7,7 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...
 ...               IFS-4221  As an applicant I am only able to invite contributors to a single project type competition application
 ...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -16,6 +17,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${apcCompetitionTitle}  Advanced Propulsion Centre Competition
 ${apcApplicationTitle}  Advanced Propulsion Centre Application
+${submittedapplication}  ${server}/management/competition/${competitionId}/applications/submitted
 
 *** Test Cases ***
 Comp Admin creates an APC competition
@@ -23,6 +25,7 @@ Comp Admin creates an APC competition
     [Tags]
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
+    [Teardown]  Get competitions id and set it as suite variable  ${apcCompetitionTitle}
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
@@ -45,11 +48,12 @@ Applicant submits his application
     And the user accept the competition terms and conditions
     Then the applicant submits the application
 
-The internal user checks for accepted terms and conditions
-    [Documentation]
+The internal user checks accepted terms and conditions for submitted application
+    [Documentation]  IFS-5920
     [Tags]
-    Given log in as a different user     &{Comp_admin1_credentials}
-
+    ${acpapplicationId} =  get application id by name  ${apcApplicationTitle}
+    Given log in as a different user                   &{Comp_admin1_credentials}
+    Then the internal user should see read only view of terms and conditions   ${submittedapplication}   ${acpapplicationId}   Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition
 
 *** Keywords ***
 Custom Suite Setup

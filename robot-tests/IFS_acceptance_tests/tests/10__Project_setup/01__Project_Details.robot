@@ -56,6 +56,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
@@ -68,7 +69,7 @@ ${pmEmailId}  ${user_ids['${user_email}']}
 Internal finance can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
-    Given the internal user should see read only view of terms and conditions
+    Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
     Then the user navigates to the page           ${Internal_Competition_Status}
 
 Internal finance can see Project details not yet completed
@@ -82,7 +83,7 @@ Competition admin can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
     Given Log in as a different user            &{Comp_admin1_credentials}
-    Then the internal user should see read only view of terms and conditions
+    Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
 
 Competition admin can see Project details not yet completed
     [Documentation]    INFUND-5856
@@ -473,12 +474,3 @@ the non-lead partner cannot changes any project details
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
-
-the internal user should see read only view of terms and conditions
-    the user navigates to the page             ${Internal_Competition_Status}
-    the user clicks the button/link            link = ${PS_PD_Application_Id}
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
-    the user clicks the button/link            link = View terms and conditions
-    the user should see the element            jQUery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    the user should not see the element        jQuery = button:contains("Agree and continue")

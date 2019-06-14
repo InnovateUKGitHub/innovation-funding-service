@@ -19,9 +19,7 @@ Your funding: client and server side validations
     Given the user clicks the button/link                link = Your funding
     And the user selects the radio button                requestingFunding   true
     When the user enters text to a text field            css = [name^="grantClaimPercentage"]  ${EMPTY}
-    Then the user should see a field error               ${empty_field_warning_message}
-    When the user clicks the button/link                 jQuery = button:contains("Mark as complete")
-    Then the user should see a field and summary error   ${empty_field_warning_message}
+    Then the user should see validations on your funding page
 
 Other funding client side
     [Documentation]    INFUND-2214
@@ -280,6 +278,11 @@ Remove row
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
+
+the user should see validations on your funding page
+    the user should see a field error               ${empty_field_warning_message}
+    the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error   ${empty_field_warning_message}
 
 Custom suite teardown
     Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
