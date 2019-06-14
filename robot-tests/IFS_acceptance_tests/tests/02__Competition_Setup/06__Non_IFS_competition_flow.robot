@@ -76,6 +76,11 @@ Internal user can see the Non-IFS comp and its brief information
     Given the user navigates to the Non IFS competitions tab
     Then the user should see the element    jQuery = div:contains("Test non-IFS competition") ~ *:contains("Assembly / disassembly / joining")
     And the user should see the element     jQuery = div:contains("Test non-IFS competition") ~ *:contains("Last published")
+
+Internal user is able to delete a Non-IFS comp
+    Given the internal user deletes a Non-IFS competition
+    When the user navigates to the Non IFS competitions tab
+    Then the user should not see the element   link = Webtest Non IFS Comp 12
     [Teardown]  Logout as user
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
@@ -98,6 +103,11 @@ Guest can see the Dates tab
     And the user should see the element   jQuery = #dates dd:contains("Applicants notified")
 
 *** Keywords ***
+the internal user deletes a Non-IFS competition
+    the user clicks the button/link     link = Webtest Non IFS Comp 12
+    the user clicks the button/link     link = Delete competition
+    the user clicks the button/link     jQuery = button:contains("Delete")
+
 the user fills out the competition title and url
     When the user enters text to a text field   id = title    Test non-IFS competition
     And the user enters text to a text field    id = url    http://www.google.co.uk
