@@ -1,5 +1,3 @@
-
-
 // THESE PROPERTIES ARE SPECIFIC TO NON NAMED ENVS
 // for shib
 ext.SHIBBOLETH_SP_MPM_STARTSERVERS="2"
@@ -24,7 +22,6 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
 ext.GA_TRACKING_ID=""
 
-
 ext.LDAP_USESSL="true"
 ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
@@ -33,12 +30,11 @@ ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 ext.SHIBBOLETH_LDAP_PORT="389"
 ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
-
 ext.NEW_RELIC_LICENCE_KEY=""
 
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
-ext.IFS_LIVE_PROJECTS_LANDING_PAGE_URL=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']+"/live-projects-landing-page"
+ext.IFS_LIVE_PROJECTS_LANDING_PAGE_URL="https://" + project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']+"/live-projects-landing-page"
 
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
