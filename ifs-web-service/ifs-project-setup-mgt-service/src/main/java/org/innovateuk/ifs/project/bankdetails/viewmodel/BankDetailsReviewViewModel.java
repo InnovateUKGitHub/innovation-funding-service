@@ -220,6 +220,10 @@ public class BankDetailsReviewViewModel {
         this.applicationId = applicationId;
     }
 
+    public boolean isProjectActive() {
+        return projectActive;
+    }
+
     public boolean isEditable() {
         return projectActive && !approved;
     }
