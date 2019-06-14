@@ -514,10 +514,10 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                css = p button[type="submit"]  #Add question link
-    When the user is able to configure the new question  ${customQuestion}
-    And the user clicks the button/link                  jQuery = li:contains("${customQuestion}")
-    Then the user should be able to see the read only view of question correctly  ${customQuestion}
+    Given the user clicks the button without autosave                                   css = p button[type="submit"]  #Add question link
+    When the user is able to configure the new question                                 ${customQuestion}
+    And the user clicks the button without autosave                                     jQuery = li:contains("${customQuestion}")
+    Then the user should be able to see the read only view of question correctly        ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
