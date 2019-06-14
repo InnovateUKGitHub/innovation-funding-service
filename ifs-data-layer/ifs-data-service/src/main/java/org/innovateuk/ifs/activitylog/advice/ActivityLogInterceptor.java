@@ -40,7 +40,7 @@ public class ActivityLogInterceptor implements MethodInterceptor {
         if (isSuccessfulServiceResult(returned, invocation)) {
             if (!StringUtils.isBlank(activity.applicationId())) {
                 Optional<Long> applicationId = findId(activity.applicationId(), invocation);
-                applicationId.ifPresent(id -> activityLogService.recordActivity(id, activity.type()));
+                applicationId.ifPresent(id -> activityLogService.recordActivityByApplicationId(id, activity.type()));
             } else if (!StringUtils.isBlank(activity.projectId())) {
                 Optional<Long> projectId = findId(activity.projectId(), invocation);
                 projectId.ifPresent(id -> activityLogService.recordActivityByProjectId(id, activity.type()));

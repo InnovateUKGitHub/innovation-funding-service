@@ -374,9 +374,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus, long projectId) {
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->

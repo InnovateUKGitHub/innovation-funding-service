@@ -4,8 +4,13 @@ import org.innovateuk.ifs.activitylog.domain.ActivityType;
 
 public interface ActivityLogService {
 
-    void recordActivity(long applicationId, ActivityType activityType);
+    void recordActivityByApplicationId(long applicationId, ActivityType activityType);
 
-    void recordActivityByProjectId(long id, ActivityType type);
+    void recordActivityByProjectId(long applicationId, ActivityType activityType);
+
+    void recordDocumentActivityByProjectId(long projectId, ActivityType type, long documentConfigId);
+
+    void recordQueryActivityByProjectFinanceId(long projectFinanceId, ActivityType type, long threadId);
+
 
 }

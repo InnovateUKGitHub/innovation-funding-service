@@ -471,14 +471,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
+    public ServiceResult<Void> saveSpendProfile(long projectId, ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
         return validateSpendProfileCosts(table)
                 .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)); // We have to save the data even if the totals don't match
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+    public ServiceResult<Void> markSpendProfileComplete(long projectId, ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccess();
         if (table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);

@@ -19,6 +19,6 @@ public class ActivityLogAdvice extends AbstractIfsMethodsAdvice {
 
     @Autowired
     public ActivityLogAdvice(ActivityLogInterceptor interceptor) {
-        super(Ordered.LOWEST_PRECEDENCE - 5, interceptor, FILTER);
+        super(Ordered.LOWEST_PRECEDENCE, interceptor, FILTER);
     }
 }

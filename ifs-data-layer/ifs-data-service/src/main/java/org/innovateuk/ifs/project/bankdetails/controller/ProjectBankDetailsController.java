@@ -16,8 +16,8 @@ public class ProjectBankDetailsController {
     private BankDetailsService bankDetailsService;
 
     @PutMapping
-    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
-        return bankDetailsService.submitBankDetails(bankDetailsResource).toPutResponse();
+    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.submitBankDetails(projectId, bankDetailsResource).toPutResponse();
     }
 
     @PostMapping

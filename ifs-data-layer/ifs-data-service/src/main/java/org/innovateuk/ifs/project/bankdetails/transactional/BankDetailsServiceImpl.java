@@ -107,7 +107,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> submitBankDetails(BankDetailsResource bankDetailsResource) {
+    public ServiceResult<Void> submitBankDetails(long projectId, BankDetailsResource bankDetailsResource) {
         return bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
                 andOnSuccess(() -> validateBankDetails(bankDetailsResource).
                 andOnSuccess(accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).

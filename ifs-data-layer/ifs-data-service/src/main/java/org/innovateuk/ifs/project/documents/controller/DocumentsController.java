@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.documents.controller;
 
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -10,16 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -34,6 +27,9 @@ public class DocumentsController {
 
     @Autowired
     private DocumentsService documentsService;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     public DocumentsController() {
     }
@@ -58,9 +54,9 @@ public class DocumentsController {
         List<String> validMediaTypesForDocument = documentsService.getValidMediaTypesForDocument(documentConfigId).getSuccess();
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
-                                                    fileValidator, validMediaTypesForDocument, maxFileSizeBytesForProjectSetupDocuments, request,
-                                                    (fileAttributes, inputStreamSupplier) ->
-                   documentsService.createDocumentFileEntry(projectId, documentConfigId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                fileValidator, validMediaTypesForDocument, maxFileSizeBytesForProjectSetupDocuments, request,
+                (fileAttributes, inputStreamSupplier) ->
+                        documentsService.createDocumentFileEntry(projectId, documentConfigId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @GetMapping("/config/{documentConfigId}/file-contents")
@@ -89,7 +85,10 @@ public class DocumentsController {
     public RestResult<Void> submitDocument(@PathVariable("projectId") long projectId,
                                            @PathVariable("documentConfigId") long documentConfigId) {
 
-        return documentsService.submitDocument(projectId, documentConfigId).toPostResponse();
+        return documentsService.submitDocument(projectId, documentConfigId)
+                .andOnSuccessReturnVoid(() ->
+                    activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId)
+                ).toPostResponse();
     }
 
     @PostMapping("/config/{documentConfigId}/decision")
@@ -97,6 +96,11 @@ public class DocumentsController {
                                              @PathVariable("documentConfigId") long documentConfigId,
                                              @RequestBody final ProjectDocumentDecision decision) {
 
-        return documentsService.documentDecision(projectId, documentConfigId, decision).toPostResponse();
+        return documentsService.documentDecision(projectId, documentConfigId, decision)
+                .andOnSuccessReturnVoid(() -> {
+                    if (decision.getApproved()) {
+                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
+                    }
+                }).toPostResponse();
     }
 }

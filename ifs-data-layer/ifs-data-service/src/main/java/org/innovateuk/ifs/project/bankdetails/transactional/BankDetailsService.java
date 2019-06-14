@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
@@ -19,7 +21,8 @@ public interface BankDetailsService {
     ServiceResult<BankDetailsResource> getByProjectAndOrganisation(final Long projectId, final Long organisationId);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'SUBMIT')")
-    ServiceResult<Void> submitBankDetails(@P("bankDetailsResource") final BankDetailsResource bankDetailsResource);
+    @Activity(type = ActivityType.BANK_DETAILS_SUBMITTED, projectId = "projectId")
+    ServiceResult<Void> submitBankDetails(long projectId, @P("bankDetailsResource") final BankDetailsResource bankDetailsResource);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
     ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource);
