@@ -73,19 +73,15 @@ Lead cannot be removed
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]
-    When The user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
-      the user enters text to a text field   id = name   ${EMPTY}
-      the user enters text to a text field   id = email  @test.co.uk
-      the user clicks the button/link        jQuery = button:contains("Invite to application")
+    Given the user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
+    the user invites a person to the same organisation  ${EMPTY}  @test.co.uk
     Then The user should see a field and summary error  Enter an email address in the correct format, like name@example.com
     And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]
-    When The user enters text to a text field      id = name    Florian
-    And The user enters text to a text field       id = email   florian21@florian.com
-    And Set Focus To Element                       jQuery = button:contains("Invite to application")
+    Given the user invites a person to the same organisation  Florian  florian21@florian.com
     Then the user cannot see a validation error in the page
 
 Lead organisation already used email
@@ -213,10 +209,8 @@ Partner can see the Application team
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
     [Tags]
-    When the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
-    And The user enters text to a text field  id = name    Mark
-    And The user enters text to a text field  id = email   mark21@innovateuk.com
-    And the user clicks the button/link       jQuery = button:contains("Invite to application")
+    Given the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
+    When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
     Then The user should see the element      jQuery = td:contains("Mark (Pending for")
 
 Lead should see the accepted partner in the assign list
@@ -234,11 +228,9 @@ Lead applicant invites a non registered user in the same organisation
     [Tags]
     Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Invite robot test application
-    When the user clicks the button/link           link = Application team
-    When the user clicks the button/link           jQuery = button:contains("Add person to ${organisation}")
-    When The user enters text to a text field      id = name    Roger Axe
-    And The user enters text to a text field       id = email    ${test_mailbox_one}+inviteorg2@gmail.com
-    And the user clicks the button/link            jQuery = button:contains("Invite to application")
+    And the user clicks the button/link           link = Application team
+    And the user clicks the button/link           jQuery = button:contains("Add person to ${organisation}")
+    When the user invites a person to the same organisation  Roger Axe  ${test_mailbox_one}+inviteorg2@gmail.com
     Then the user should see the element           jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
@@ -317,17 +309,6 @@ the user can see the updated company name throughout the application
 the lead applicant cannot be removed
     the user should see the text in the element  css = tr:nth-of-type(1) td:nth-of-type(3)    Lead
     the user should not see the element          jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
-
-the applicant's inputs should be visible
-    Textfield Value Should Be      name = organisations[1].organisationName    Fannie May
-    ${input_value}  =   Get Value  name = organisationName
-    Should Be Equal As Strings     ${input_value}    Fannie May
-    Textfield Value Should Be      name = applicants[0].name    Collaborator 2
-    ${input_value}  =   Get Value  name = applicants[0].name
-    Should Be Equal As Strings     ${input_value}    Collaborator 2
-    Textfield Value Should Be      name = applicants[1].name    Collaborator 3
-    ${input_value}  =   Get Value  name = applicants[1].name
-    Should Be Equal As Strings     ${input_value}    Collaborator 3
 
 the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
