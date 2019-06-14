@@ -104,6 +104,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -484,8 +485,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProject() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      true,
+                                                      SETUP);
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
@@ -517,8 +524,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -558,8 +571,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      true,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -597,8 +616,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      true,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
                 .withOrganisation(o)
@@ -641,8 +666,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -682,8 +713,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProjectSpendProfileRejected() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.REJECTED,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -713,8 +750,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolRejected() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      false,
+                                                      SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
@@ -750,8 +793,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long orgId = 564321L;
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(orgId).build();
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
 
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
@@ -789,8 +838,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolSent() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
@@ -825,8 +880,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndSignedGolSubmitted() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
@@ -861,8 +922,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolReadyToSend() {
         long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
@@ -899,8 +966,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.SUBMITTED, DocumentStatus.APPROVED)
                 .build(2);
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
@@ -920,8 +993,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(1);
 
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
@@ -942,8 +1021,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(1);
 
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
@@ -964,8 +1049,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(1);
 
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
@@ -986,7 +1077,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(2);
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
@@ -1010,7 +1108,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.APPROVED,
+                                                      Boolean.FALSE,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
@@ -1030,8 +1135,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -1068,8 +1179,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long organisationId = 123L;
         long organisationId2 = 234L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         Organisation o2 = newOrganisation().withId(organisationId2).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
@@ -1108,8 +1225,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -1140,10 +1263,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
     }
 
-    private Project createProjectStatusResource(long projectId, ApprovalType spendProfileStatus,
-                                                Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
+    private Project createProjectStatusResource(long projectId,
+                                                ApprovalType spendProfileStatus,
+                                                Boolean golReadyToApprove,
+                                                Boolean golIsSent,
+                                                Boolean golIsApproved,
                                                 Boolean golRejected,
-                                                boolean locationPerPartnerRequired) {
+                                                boolean locationPerPartnerRequired,
+                                                ProjectState projectState) {
 
         long competitionId = 112L;
 
@@ -1174,19 +1301,21 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
-        Project project = newProject().
-                withId(projectId).
-                withApplication(application).
-                withPartnerOrganisations(asList(partnerOrganisation)).
-                withProjectDocuments(projectDocuments).
-                build();
+        Project project = newProject()
+                .withId(projectId)
+                .withApplication(application)
+                .withPartnerOrganisations(singletonList(partnerOrganisation))
+                .withProjectDocuments(projectDocuments)
+                .build();
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+        ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(projectState).build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
+        when(projectProcessRepositoryMock.findOneByTargetId(projectId)).thenReturn(projectProcess);
+        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(singletonList(organisation));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(project.getId())).thenReturn(serviceSuccess(monitoringOfficer));
@@ -1211,8 +1340,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long projectId = 2345L;
         long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId,
+                                                      ApprovalType.EMPTY,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      Boolean.FALSE,
+                                                      false,
+                                                      SETUP);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
