@@ -59,7 +59,7 @@ Guest user can filter competitions by Innovation area
     [Setup]    the user navigates to the page                       ${frontDoor}
     When the user selects the option from the drop-down menu        Space technology    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
-    Then the user should see the element                            jQuery = a:contains("Webtest Non IFS Comp 8")
+    Then The user should see the element in the paginated list      jQuery = a:contains("Webtest Non IFS Comp 8")
     And the user should not see the element in the paginated list   jQuery = a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu        Any    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
