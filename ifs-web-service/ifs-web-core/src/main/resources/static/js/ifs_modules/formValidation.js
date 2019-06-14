@@ -814,7 +814,6 @@ IFS.core.formValidation = (function () {
       return display
     },
     setInvalid: function (field, message, displayValidationMessages) {
-      console.log(field)
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
@@ -873,7 +872,9 @@ IFS.core.formValidation = (function () {
 
       jQuery('.govuk-error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
       jQuery(window).trigger('updateWysiwygPosition')
-      IFS.core.sortingErrors.sortList()
+      setTimeout(function () {
+        IFS.core.sortingErrors.sortList()
+      }, 200)
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
