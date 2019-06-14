@@ -20,10 +20,6 @@ apply plugin: 'idea'
 
 def String idpCertsVolume = 'src/main/docker/certs'
 
-def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
-def String idpProxyCertificateFile = "${idpCertsVolume}/idp_proxy_certificate.pem"
-def String idpProxyCacertificateFile = "${idpCertsVolume}/idp_proxy_cacertificate.pem"
-
 def String spProxyCertificateFile = "${idpCertsVolume}/sp_proxy_certificate.pem"
 
 def String idpSigningKeyFile = "${idpCertsVolume}/idp-signing.key"
@@ -47,11 +43,6 @@ task prepareDockerFile {
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
-
-        def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
-        def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
-        def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
         def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
 
         def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
@@ -70,10 +61,7 @@ task prepareDockerFile {
             into inputDir
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_idp_proxy_key              : idpProxyKey,
-                                           auth_idp_proxy_certificate      : idpProxyCertificate,
-                                           auth_idp_proxy_cacertificate    : idpProxyCacertificate,
-                                           auth_sp_proxy_certificate       : spProxyCertificate,
+            filter(ReplaceTokens, tokens: [auth_sp_proxy_certificate       : spProxyCertificate,
                                            auth_idp_signing_key            : idpSigningKey,
                                            auth_idp_signing_certificate    : idpSigningCertificate,
                                            auth_idp_encryption_key         : idpEncryptionKey,

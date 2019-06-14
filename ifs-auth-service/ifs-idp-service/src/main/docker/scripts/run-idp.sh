@@ -3,9 +3,9 @@
 # update configuration at runtime for configuration files without native environment variable support
 
 # apache/tomcat "front" certificates
-echo "$IDP_PROXY_KEY" | tee /etc/apache2/certs/idp_proxy_key.pem > /etc/tomcat8/certs/server.key && \
-echo "$IDP_PROXY_CERTIFICATE" | tee /etc/apache2/certs/idp_proxy_certificate.pem > /etc/tomcat8/certs/server.crt && \
-echo "$IDP_PROXY_CACERTIFICATE" > /etc/apache2/certs/idp_proxy_cacertificate.pem && \
+cat /opt/shibboleth-idp/credentials/idp_proxy_key.pem | tee /etc/apache2/certs/idp_proxy_key.pem > /etc/tomcat8/certs/server.key && \
+cat /opt/shibboleth-idp/credentials/idp_proxy_certificate.pem | tee /etc/apache2/certs/idp_proxy_certificate.pem > /etc/tomcat8/certs/server.crt && \
+cat /opt/shibboleth-idp/credentials/idp_proxy_cacertificate.pem > /etc/apache2/certs/idp_proxy_cacertificate.pem && \
 cat /etc/tomcat8/certs/server.crt >> /etc/apache2/certs/proxy.pem && printf '\n' >> /etc/apache2/certs/proxy.pem && \
 cat /etc/tomcat8/certs/server.key >> /etc/apache2/certs/proxy.pem
 
