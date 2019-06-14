@@ -12,5 +12,4 @@ public interface ActivityLogService {
 
     void recordQueryActivityByProjectFinanceId(long projectFinanceId, ActivityType type, long threadId);
 
-
 }
