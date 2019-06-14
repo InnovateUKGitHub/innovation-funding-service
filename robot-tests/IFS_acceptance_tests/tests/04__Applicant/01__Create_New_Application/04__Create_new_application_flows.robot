@@ -81,7 +81,7 @@ the progress indicator should show 0
     Element Should Contain  css = .progress-indicator    0
 
 The project start date is blank
-    the user should see the element  xpath = //*[@id="application_details-startdate_day" and @placeholder="DD"]
+    the user should see the element  xpath = //*[@id="application.startDate" and @placeholder="DD"]
     the user should see the element  xpath = //*[@id="application_details-startdate_month" and @placeholder="MM"]
     the user should see the element  xpath = //*[@id="application_details-startdate_year" and @placeholder="YYYY"]
 

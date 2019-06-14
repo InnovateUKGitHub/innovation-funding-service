@@ -129,7 +129,7 @@ Collaborators should not be able to edit application details
     And the user clicks the button/link       link = Assign test
     And the user clicks the button/link       link = Application details
     Then the user should not see the element  css = [id="application.name"]
-    And the user should not see the element   css = input#application_details-startdate_day
+    And the user should not see the element   id = application.startDate
     And the user should not see the element   jQuery = button:contains("Mark as complete")
 
 The question should be reassigned to the lead applicant
