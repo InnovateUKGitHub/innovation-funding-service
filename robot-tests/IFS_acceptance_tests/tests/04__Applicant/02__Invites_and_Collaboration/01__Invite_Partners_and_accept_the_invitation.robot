@@ -86,8 +86,8 @@ Lead organisation client-side validations
 
 Lead organisation already used email
     [Documentation]  IFS-3361
-    Given the user enters text to a text field  id = email  steve.smith@empire.com
-    And the user clicks the button/link         jQuery = button:contains("Invite to application")
+    Given the user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
+    When the user invites a person to the same organisation  Steve  steve.smith@empire.com
     Then The user should see a field and summary error  This email is already in use.
 
 Lead Adds/Removes partner organisation
