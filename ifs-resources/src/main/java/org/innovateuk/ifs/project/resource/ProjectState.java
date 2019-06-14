@@ -58,4 +58,16 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     public boolean isActive() {
         return this == SETUP;
     }
+
+    public boolean isWithdrawn() {
+        return this == WITHDRAWN;
+    }
+
+    public boolean isHandledOffline() {
+        return this == HANDLED_OFFLINE;
+    }
+
+    public boolean isCompletedOffline() {
+        return this == COMPLETED_OFFLINE;
+    }
 }
