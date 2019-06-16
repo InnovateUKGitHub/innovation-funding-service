@@ -7,7 +7,9 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...
 ...               INFUND-8554 As a member of the Competition team I want to be able to publish a "Registration Closes" date in non-IFS public content...
 ...
-...               IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
+...               IFS-1117: As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
+...
+...               IFS-5945: Pagination in Project Setup
 Suite Setup       Connect to Database  @{database}
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -78,6 +80,7 @@ Internal user can see the Non-IFS comp and its brief information
     And the user should see the element     jQuery = div:contains("Test non-IFS competition") ~ *:contains("Last published")
 
 Internal user is able to delete a Non-IFS comp
+    [Documentation]  IFS-5945
     Given the internal user deletes a Non-IFS competition
     When the user navigates to the Non IFS competitions tab
     Then the user should not see the element   link = Webtest Non IFS Comp 12
