@@ -121,7 +121,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityConfirmed;
+        return viabilityConfirmed || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
@@ -138,11 +138,11 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved();
+        return !isApproved() && projectIsActive;
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved();
+        return isApproved() || !projectIsActive;
     }
 
     private boolean isApproved() {

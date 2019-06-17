@@ -75,11 +75,11 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved();
+        return !isApproved() && projectIsActive;
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved();
+        return isApproved() || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
