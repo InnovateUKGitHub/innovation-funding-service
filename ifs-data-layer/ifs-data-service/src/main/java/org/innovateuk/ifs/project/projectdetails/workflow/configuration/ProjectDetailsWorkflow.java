@@ -27,10 +27,14 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     @Autowired
     private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
 
+    @Autowired
+    private ProjectDetailsStateMachineListener projectDetailsStateMachineListener;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsEvent> config) throws Exception {
-        config.withConfiguration().listener(new WorkflowStateMachineListener<>());
-
+        config.withConfiguration()
+                .listener(new WorkflowStateMachineListener<>())
+                .listener(projectDetailsStateMachineListener);
     }
 
     @Override

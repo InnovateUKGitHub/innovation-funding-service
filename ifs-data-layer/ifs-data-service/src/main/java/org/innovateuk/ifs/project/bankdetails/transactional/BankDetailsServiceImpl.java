@@ -119,7 +119,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
+    public ServiceResult<Void> updateBankDetails(long projectId, BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getAddress());
         AccountDetails accountDetails = new AccountDetails(
                 bankDetailsResource.getSortCode(),

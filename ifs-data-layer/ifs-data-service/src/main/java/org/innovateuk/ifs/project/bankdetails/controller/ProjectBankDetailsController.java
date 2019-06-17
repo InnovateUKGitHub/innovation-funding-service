@@ -22,7 +22,7 @@ public class ProjectBankDetailsController {
 
     @PostMapping
     public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
-        return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
+        return bankDetailsService.updateBankDetails(projectId, bankDetailsResource).toPostResponse();
     }
 
     @GetMapping(params = "bankDetailsId")
