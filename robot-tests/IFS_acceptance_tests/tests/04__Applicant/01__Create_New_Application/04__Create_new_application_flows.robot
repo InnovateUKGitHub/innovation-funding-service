@@ -55,7 +55,6 @@ Verify the name of the new application
     And the progress indicator should show 0
     And the user clicks the button/link                           link = Application team
     And the user should see the element                           jQuery = h1:contains("Application team")
-    And the user should see the element                           jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the user can see this new application on their dashboard  ${test_title}
 
 Marketing emails information should have updated on the profile

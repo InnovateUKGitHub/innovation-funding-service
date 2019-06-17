@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -96,6 +97,10 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
 
     public ApplicationInviteResourceBuilder withInviteOrganisationName(String... inviteOrganisationNames) {
         return withArraySetFieldByReflection("inviteOrganisationName", inviteOrganisationNames);
+    }
+
+    public ApplicationInviteResourceBuilder withSentOn(ZonedDateTime... sentOn) {
+        return withArraySetFieldByReflection("sentOn", sentOn);
     }
 
     @Override
