@@ -3,20 +3,21 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.LiveCompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.liveCompetitionSearchResultItemListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.upcomingCompetitionSearchResultItemListType;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.NonIfsCompetitionSearchResultItemBuilder.newNonIfsCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.UpcomingCompetitionSearchResultItemBuilder.newUpcomingCompetitionSearchResultItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 public class CompetitionSearchRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSearchRestServiceImpl> {
 
@@ -40,11 +41,12 @@ public class CompetitionSearchRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void findProjectSetupCompetitions() {
-        List<ProjectSetupCompetitionSearchResultItem> expected = newProjectSetupCompetitionSearchResultItem().build(1);
+        int page = 0;
+        CompetitionSearchResult expected = mock(CompetitionSearchResult.class);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/project-setup", projectSetupCompetitionSearchResultItemListType(), expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/project-setup?page=" + page, CompetitionSearchResult.class, expected);
 
-        List<ProjectSetupCompetitionSearchResultItem> actual = service.findProjectSetupCompetitions().getSuccess();
+        CompetitionSearchResult actual = service.findProjectSetupCompetitions(page).getSuccess();
         assertNotNull(actual);
         assertEquals(expected, actual);
     }
@@ -62,22 +64,24 @@ public class CompetitionSearchRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void findNonIfsCompetitions() {
-        List<NonIfsCompetitionSearchResultItem> expected = newNonIfsCompetitionSearchResultItem().build(1);
+        int page = 0;
+        CompetitionSearchResult expected = mock(CompetitionSearchResult.class);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/non-ifs", nonIfsCompetitionSearchReultItemListType(), expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/non-ifs?page=" + page, CompetitionSearchResult.class, expected);
 
-        List<NonIfsCompetitionSearchResultItem> actual = service.findNonIfsCompetitions().getSuccess();
+        CompetitionSearchResult actual = service.findNonIfsCompetitions(page).getSuccess();
         assertNotNull(actual);
         assertEquals(expected, actual);
     }
 
     @Test
     public void findFeedbackReleasedCompetitions() {
-        List<PreviousCompetitionSearchResultItem> expected = newPreviousCompetitionSearchResultItem().build(1);
+        int page = 0;
+        CompetitionSearchResult expected = mock(CompetitionSearchResult.class);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/post-submission/feedback-released", previousCompetitionSearchResultItemListType(), expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/post-submission/feedback-released?page=" + page, CompetitionSearchResult.class, expected);
 
-        List<PreviousCompetitionSearchResultItem> actual = service.findFeedbackReleasedCompetitions().getSuccess();
+        CompetitionSearchResult actual = service.findFeedbackReleasedCompetitions(page).getSuccess();
         assertNotNull(actual);
         assertEquals(expected, actual);
     }
@@ -98,11 +102,10 @@ public class CompetitionSearchRestServiceMocksTest extends BaseRestServiceUnitTe
         CompetitionSearchResult expected = new CompetitionSearchResult();
         String searchQuery = "SearchQuery";
         int page = 1;
-        int size = 20;
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class, expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/search?page=" + page + "&searchQuery=" + searchQuery, CompetitionSearchResult.class, expected);
 
-        CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page, size).getSuccess();
+        CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page).getSuccess();
         assertNotNull(actual);
         Assert.assertEquals(expected, actual);
     }

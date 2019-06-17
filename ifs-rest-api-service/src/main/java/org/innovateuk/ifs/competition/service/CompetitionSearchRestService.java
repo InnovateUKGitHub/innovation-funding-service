@@ -10,15 +10,15 @@ public interface CompetitionSearchRestService {
 
     RestResult<List<LiveCompetitionSearchResultItem>> findLiveCompetitions();
 
-    RestResult<List<ProjectSetupCompetitionSearchResultItem>> findProjectSetupCompetitions();
+    RestResult<CompetitionSearchResult> findProjectSetupCompetitions(int page);
 
     RestResult<List<UpcomingCompetitionSearchResultItem>> findUpcomingCompetitions();
 
-    RestResult<List<NonIfsCompetitionSearchResultItem>> findNonIfsCompetitions();
+    RestResult<CompetitionSearchResult> findNonIfsCompetitions(int page);
 
-    RestResult<List<PreviousCompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
+    RestResult<CompetitionSearchResult> findFeedbackReleasedCompetitions(int page);
 
-    RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
+    RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page);
 
     RestResult<CompetitionCountResource> countCompetitions();
 }

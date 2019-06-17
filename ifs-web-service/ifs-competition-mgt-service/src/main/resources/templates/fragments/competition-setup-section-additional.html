@@ -143,7 +143,8 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
-                           data-autosave-disabled="data-autosave-disabled"/>
+                           data-autosave-disabled="data-autosave-disabled"
+                           aria-live="assertive" />
                     <button class="button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
