@@ -8,15 +8,15 @@ import javax.validation.constraints.Size;
 
 public class ApplicationTeamOrganisationForm {
 
-    @NotBlank(message = "{validation.standard.organisationname.required}")
+    @NotBlank(message = "{validation.applicationteam.organisation.name.required}")
     private String organisationName;
 
     @NotBlank(message = "{validation.standard.name.required}")
     private String name;
 
-    @NotBlank(message = "{validation.invite.email.format.required}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.invite.email.format.required}")
-    @Size(max = 254, message = "{validation.invite.email.format.required}")
+    @NotBlank(message = "{validation.applicationteam.email.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.applicationteam.email.format}")
+    @Size(max = 254, message = "{validation.applicationteam.email.required}")
     private String email;
 
     public String getOrganisationName() {

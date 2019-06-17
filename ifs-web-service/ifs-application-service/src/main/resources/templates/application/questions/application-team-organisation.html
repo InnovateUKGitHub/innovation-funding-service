@@ -44,7 +44,7 @@
                        th:field="*{organisationName}"
                        required="required"
                        th:errorclass="govuk-input--error"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
+                       th:attr="data-required-errormessage=#{validation.applicationteam.organisation.name.required}" />
             </div>
 
             <table id="applicant-table" class="govuk-table table-overflow">
@@ -88,7 +88,9 @@
                                class="govuk-input"
                                th:errorclass="govuk-input--error"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.invite.email.format.required}" />
+                               th:attr="data-required-errormessage=#{validation.applicationteam.email.required},
+                                                    data-email-invalid-errormessage=#{validation.applicationteam.email.format},
+                                                    data-email-duplication-errormessage=#{email.already.in.invite}" />
                     </td>
                 </tr>
                 </tbody>
