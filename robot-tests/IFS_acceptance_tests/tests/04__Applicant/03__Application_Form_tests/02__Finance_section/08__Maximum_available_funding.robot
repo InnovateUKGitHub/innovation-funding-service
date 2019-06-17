@@ -167,7 +167,7 @@ the applicant completes the application details for RTO lead appln
 
 the user fills the other application details questions
     the user clicks the button twice      css = label[for="application.resubmission-no"]
-    The user enters text to a text field  id = application_details-startdate_day  18
+    The user enters text to a text field  id = application.startDate  18
     The user enters text to a text field  id = application_details-startdate_year  2018
     The user enters text to a text field  id = application_details-startdate_month  11
     The user enters text to a text field  css = [id="application.durationInMonths"]  20

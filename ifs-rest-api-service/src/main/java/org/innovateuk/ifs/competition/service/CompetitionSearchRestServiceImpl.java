@@ -3,13 +3,15 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.LiveCompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.previousCompetitionSearchResultItemListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.liveCompetitionSearchResultItemListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.upcomingCompetitionSearchResultItemListType;
 
 @Service
 public class CompetitionSearchRestServiceImpl extends BaseRestService implements CompetitionSearchRestService {
@@ -22,8 +24,8 @@ public class CompetitionSearchRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<ProjectSetupCompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/project-setup", projectSetupCompetitionSearchResultItemListType());
+    public RestResult<CompetitionSearchResult> findProjectSetupCompetitions(int page) {
+        return getWithRestResult(competitionsRestURL + "/project-setup?page="+ page, CompetitionSearchResult.class);
     }
 
     @Override
@@ -32,19 +34,19 @@ public class CompetitionSearchRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<NonIfsCompetitionSearchResultItem>> findNonIfsCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/non-ifs", nonIfsCompetitionSearchReultItemListType());
+    public RestResult<CompetitionSearchResult> findNonIfsCompetitions(int page) {
+        return getWithRestResult(competitionsRestURL + "/non-ifs?page="+ page, CompetitionSearchResult.class);
     }
 
     @Override
-    public RestResult<List<PreviousCompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-        return getWithRestResult(competitionsRestURL +  "/post-submission/feedback-released", previousCompetitionSearchResultItemListType());
+    public RestResult<CompetitionSearchResult> findFeedbackReleasedCompetitions(int page) {
+        return getWithRestResult(competitionsRestURL +  "/post-submission/feedback-released?page="+ page, CompetitionSearchResult.class);
     }
 
 
     @Override
-    public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
-        return getWithRestResult(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class);
+    public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page) {
+        return getWithRestResult(competitionsRestURL + "/search?page=" + page + "&searchQuery=" + searchQuery, CompetitionSearchResult.class);
     }
 
     @Override

@@ -53,6 +53,8 @@ run_flyway_migrate() {
 
 do_baseline () {
 
+    : ${DATABASE_HOST:=ifs-database}
+
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # clean database
@@ -77,7 +79,7 @@ do_baseline () {
     cd ${project_root_dir}/setup-files/scripts
 
     # create baseline dump
-    ./create-baseline-dump.sh ${new_version}
+    ./create-baseline-dump.sh ${new_version} $DATABASE_HOST
 
     cd ${project_root_dir}
 
