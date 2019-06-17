@@ -21,19 +21,22 @@ public class FinanceChecksNotesViewModel {
     private int maxNoteCharacters;
     private Long noteId;
     private Long applicationId;
+    private final boolean projectIsActive;
 
     public FinanceChecksNotesViewModel(String organisationName,
-                                         boolean leadPartnerOrganisation,
-                                         Long projectId,
-                                         String projectName,
-                                         List<ThreadViewModel> notes,
-                                         Long organisationId,
-                                         String baseUrl,
-                                         Map<Long, String> newAttachmentLinks,
-                                         int maxNoteWords,
-                                         int maxNoteCharacters,
-                                         Long noteId,
-                                         Long applicationId) {
+                                       boolean leadPartnerOrganisation,
+                                       Long projectId,
+                                       String projectName,
+                                       List<ThreadViewModel> notes,
+                                       Long organisationId,
+                                       String baseUrl,
+                                       Map<Long, String> newAttachmentLinks,
+                                       int maxNoteWords,
+                                       int maxNoteCharacters,
+                                       Long noteId,
+                                       Long applicationId,
+                                       boolean projectIsActive
+                                       ) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
@@ -46,6 +49,7 @@ public class FinanceChecksNotesViewModel {
         this.maxNoteCharacters = maxNoteCharacters;
         this.noteId = noteId;
         this.applicationId = applicationId;
+        this.projectIsActive = projectIsActive;
     }
 
     public String getOrganisationName() {
@@ -143,6 +147,10 @@ public class FinanceChecksNotesViewModel {
 
     public void setNewAttachmentLinks(Map<Long, String> newAttachmentLinks) {
         this.newAttachmentLinks = newAttachmentLinks;
+    }
+
+    public boolean isProjectIsActive() {
+        return projectIsActive;
     }
 
 }
