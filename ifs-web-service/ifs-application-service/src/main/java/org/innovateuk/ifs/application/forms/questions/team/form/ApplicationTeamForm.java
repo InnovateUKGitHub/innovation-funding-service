@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.projectteam.form;
+package org.innovateuk.ifs.application.forms.questions.team.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
@@ -7,16 +7,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * Form to invite a new project team member.
+ * Form to invite a new application team member.
  */
-public class ProjectTeamForm {
+public class ApplicationTeamForm {
 
     @NotBlank(message = "{validation.standard.name.required}")
     private String name;
 
-    @NotBlank(message = "{validation.projectteam.email.required}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.projectteam.email.format}")
-    @Size(max = 254, message = "{validation.projectteam.email.required}")
+    @NotBlank(message = "{validation.applicationteam.email.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.applicationteam.email.format}")
+    @Size(max = 254, message = "{validation.applicationteam.email.required}")
     private String email;
 
     public String getName() {

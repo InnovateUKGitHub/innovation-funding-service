@@ -45,11 +45,10 @@ the user invites collaborator by email address
     [Arguments]    ${COLLAB_USER_EMAIL}
     the user clicks the button/link       link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link       link = Application team
-    the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
-    the user clicks the button/link       jQuery=button:contains("Add another contributor")
-    The user enters text to a text field  name=stagedInvite.name  research collab
-    The user enters text to a text field  name=stagedInvite.email  ${COLLAB_USER_EMAIL}
-    the user clicks the button/link       css=[id^="invite-collaborator"]
+    the user clicks the button/link       jQuery=button:contains("Add person to INNOVATE LTD")
+    The user enters text to a text field  id = name  research collab
+    The user enters text to a text field  id = email  ${COLLAB_USER_EMAIL}
+    the user clicks the button/link       jQuery = button:contains("Invite to application")
 
 the user changes the application name
     [Arguments]    ${application_name}
@@ -82,11 +81,10 @@ the user navigates to the Application Team Page
 
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
-    the user clicks the button/link       link=Update and add contributors from University of Warwick
-    the user clicks the button/link       jQuery=.button-clear:contains("Add another contributor")
-    the user enters text to a text field  stagedInvite.name  ${name}
-    the user enters text to a text field  stagedInvite.email  ${email}
-    the user clicks the button/link       css=button[name="executeStagedInvite"]
+    the user clicks the button/link       jQuery = button:contains("Add person to University of Warwick")
+    the user enters text to a text field  id = name  ${name}
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery = button:contains("Invite to application")
 
 # I am on purpose not making the following lines one keyword.
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
