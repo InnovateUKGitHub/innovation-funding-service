@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.threads.controller.CommonThreadController;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class ProjectFinanceQueriesController extends CommonThreadController<Quer
     }
 
     @Override
-    public RestResult<Long> create(QueryResource thread) {
+    public RestResult<Long> create(@RequestBody QueryResource thread) {
         return super.create(thread)
                 .andOnSuccessReturn(threadId ->  {
                     activityLogService.recordQueryActivityByProjectFinanceId(thread.contextClassPk,
