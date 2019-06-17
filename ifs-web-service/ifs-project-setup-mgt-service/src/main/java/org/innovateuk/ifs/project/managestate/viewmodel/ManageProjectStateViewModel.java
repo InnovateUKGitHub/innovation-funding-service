@@ -33,7 +33,7 @@ public class ManageProjectStateViewModel {
 
 
     /* view logic */
-    public boolean isCompleteOffline() {
+    public boolean isCompletedOffline() {
         return COMPLETED_OFFLINE.equals(state);
     }
 
@@ -49,6 +49,10 @@ public class ManageProjectStateViewModel {
         return SETUP.equals(state);
     }
 
+    public boolean isLive() {
+        return LIVE.equals(state);
+    }
+
     public boolean canCompleteOffline() {
         return isHandledOffline();
     }
@@ -60,4 +64,6 @@ public class ManageProjectStateViewModel {
     public boolean canWithdraw() {
         return isInSetup() || isHandledOffline();
     }
+
+    public boolean isEndState() { return isCompletedOffline() || isLive() || isWithdrawn(); }
 }

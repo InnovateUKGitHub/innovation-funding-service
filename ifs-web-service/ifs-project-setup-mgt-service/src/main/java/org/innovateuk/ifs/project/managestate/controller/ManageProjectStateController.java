@@ -87,7 +87,7 @@ public class ManageProjectStateController {
             return;
         }
 
-        if (form.isCompleteOffline() && !TRUE.equals(form.getConfirmationCompleteOffline())) {
+        if (form.isCompletedOffline() && !TRUE.equals(form.getConfirmationCompleteOffline())) {
             result.rejectValue("confirmationCompleteOffline", "validation.field.must.not.be.blank");
             return;
         }

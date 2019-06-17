@@ -29,7 +29,7 @@
                   th:with="pageTitle='Manage project status',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
         <!-- Completed offline -->
-        <div th:if="${model.completeOffline}" class="success-alert govuk-!-margin-bottom-6">
+        <div th:if="${model.completedOffline}" class="success-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Project setup has been completed offline.</p>
         </div>
         <!-- END -->
@@ -44,17 +44,25 @@
         <div th:if="${model.withdrawn}" class="warning-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project has been withdrawn.</p>
         </div>
-        <p class="govuk-body">
+        <!-- END -->
+
+        <!-- Live -->
+        <div th:if="${model.live}" class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is now live.</p>
+        </div>
+        <!-- END -->
+
+        <p th:if="${model.endState}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
         </p>
-        <!-- END -->
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${form}"
               method="POST"
               novalidate="novalidate"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              th:unless="${model.endState}">
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">

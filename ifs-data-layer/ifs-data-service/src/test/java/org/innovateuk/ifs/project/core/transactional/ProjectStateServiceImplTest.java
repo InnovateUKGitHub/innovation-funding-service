@@ -7,18 +7,17 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -40,7 +39,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .withId(userId)
                 .build();
         User user = newUser()
@@ -65,7 +64,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Long userId = 987L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .withId(userId)
                 .build();
         User user = newUser()
@@ -89,7 +88,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Long projectId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource user = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .build();
         setLoggedInUser(user);
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
@@ -107,7 +106,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .withId(userId)
                 .build();
         User user = newUser()
@@ -132,7 +131,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .withId(userId)
                 .build();
         User user = newUser()

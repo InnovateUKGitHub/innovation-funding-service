@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * ProjectController exposes Project data and operations through a REST API.
+ * ProjectStateController exposes Project state data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/project")

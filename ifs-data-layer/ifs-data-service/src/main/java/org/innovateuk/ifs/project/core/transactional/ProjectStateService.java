@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Transactional and secure service for Project processing work
+ * Transactional and secure service for Project state processing work
  */
 public interface ProjectStateService {
 
@@ -15,7 +15,7 @@ public interface ProjectStateService {
     ServiceResult<Void> withdrawProject(long projectId);
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to handle projects offline")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to mark projects as handled offline")
     ServiceResult<Void> handleProjectOffline(long projectId);
 
     @PreAuthorize("hasAuthority('ifs_administrator')")

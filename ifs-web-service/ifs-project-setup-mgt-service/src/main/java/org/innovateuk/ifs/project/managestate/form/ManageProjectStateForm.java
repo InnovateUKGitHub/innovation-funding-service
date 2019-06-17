@@ -47,7 +47,7 @@ public class ManageProjectStateForm {
     }
 
 
-    public boolean isCompleteOffline() {
+    public boolean isCompletedOffline() {
         return COMPLETED_OFFLINE.equals(state);
     }
 

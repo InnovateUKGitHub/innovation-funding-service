@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
 /**
- * Testing how the secured methods in ProjectService interact with Spring Security
+ * Testing how the secured methods in ProjectStateService interact with Spring Security
  */
 public class ProjectStateServiceSecurityTest extends BaseServiceSecurityTest<ProjectStateService> {
 

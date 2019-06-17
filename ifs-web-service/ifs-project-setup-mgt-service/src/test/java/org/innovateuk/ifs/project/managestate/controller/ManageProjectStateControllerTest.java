@@ -62,7 +62,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         assertTrue(viewModel.isInSetup());
         assertFalse(viewModel.isHandledOffline());
         assertFalse(viewModel.isWithdrawn());
-        assertFalse(viewModel.isCompleteOffline());
+        assertFalse(viewModel.isCompletedOffline());
     }
 
     @Test
