@@ -36,8 +36,6 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 ext.NEW_RELIC_LICENCE_KEY=""
 
-ext.CLUSTER_ADDRESS="org-env-0.org.innovateuk.ukri.org"
-
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 

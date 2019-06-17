@@ -21,8 +21,6 @@ ext.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
 
 ext.LDAP_USESSL="false"
 
-ext.CLUSTER_ADDRESS="org-env-0.org.innovateuk.ukri.org"
-
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 

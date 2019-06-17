@@ -6,7 +6,7 @@ if(target == 'local') {
 
 } else {
     //remote
-    ext.svcAccountClauseServer = "https://console.org-env-0.org.innovateuk.ukri.org"
+    ext.svcAccountClauseServer = System.env.bamboo_openshift_console_url
     ext.internalRegistry = "docker-registry.default.svc:5000"
 }
 

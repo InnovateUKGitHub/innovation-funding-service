@@ -364,7 +364,7 @@ function createProject() {
 }
 
 function getClusterAddress() {
-     echo "org-env-0.org.innovateuk.ukri.org"
+  echo "$bamboo_openshift_cluster_address"
 }
 
 function getRemoteRegistryUrl() {
