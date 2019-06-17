@@ -75,7 +75,7 @@ Lead organisation server-side validations
     [Tags]
     Given the user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
     the user invites a person to the same organisation  ${EMPTY}  @test.co.uk
-    Then The user should see a field and summary error  Enter an email address in the correct format, like name@example.com
+    Then The user should see a field and summary error  Enter an email address in the right format.
     And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
@@ -115,9 +115,9 @@ Partner organisation Server-side validations
     [Tags]
     Given the user adds a partner organisation            ${EMPTY}  ${EMPTY}  ${EMPTY}
     And the user clicks the button/link                   jQuery = button:contains("Invite partner organisation")
-    Then the user should see a field and summary error    An organisation name is required.
+    Then the user should see a field and summary error    Enter an organisation name.
     And the user should see a field and summary error     Please enter a name.
-    And the user should see a field and summary error     Enter an email address in the correct format, like name@example.com
+    And the user should see a field and summary error     Enter an email address.
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979

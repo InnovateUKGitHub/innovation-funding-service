@@ -183,7 +183,9 @@
                                        type="email"
                                        required="required"
                                        th:disabled="${!organisation.openAddTeamMemberForm}"
-                                       th:attr="data-required-errormessage=#{validation.invite.email.format.required}"/>
+                                       th:attr="data-required-errormessage=#{validation.applicationteam.email.required},
+                                                    data-email-invalid-errormessage=#{validation.applicationteam.email.format},
+                                                    data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td class="govuk-table__cell">
                                 <button

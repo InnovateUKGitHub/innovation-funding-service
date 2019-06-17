@@ -438,4 +438,3 @@ the user adds a partner organisation
     the user enters text to a text field          id = organisationName    ${orgName}
     the user enters text to a text field          id = name   ${name}
     the user enters text to a text field          id = email  ${email}
-    the user clicks the button/link               jQuery = button:contains("Invite partner organisation")
