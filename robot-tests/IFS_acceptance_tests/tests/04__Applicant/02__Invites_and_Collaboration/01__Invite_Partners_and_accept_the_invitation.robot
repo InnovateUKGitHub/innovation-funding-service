@@ -99,14 +99,12 @@ Lead Adds/Removes partner organisation
     ...
     ...    INFUND-8590
     [Tags]  HappyPath
-    When The user clicks the button/link               link = Add a partner organisation
-    And The user enters text to a text field           id = organisationName    Fannie May
-    And The user enters text to a text field           id = name   Collaborator 2
-    And The user enters text to a text field           id = email    ewan+10@hiveit.co.uk
-    And The user clicks the button/link                jQuery = button:contains("Invite partner organisation")
-    And the user clicks the button/link                jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
-    Then The user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
-    Then The user should not see the element           jQuery = td:contains("Fannie May")
+    Given the user clicks the button/link              link = Add a partner organisation
+    And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
+    And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
+    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
+    Then the user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
+    And the user should not see the element            jQuery = td:contains("Fannie May")
     And the user should see the element                jQuery = h1:contains("Application team")
     [Teardown]  the user clicks the button/link        link = Add a partner organisation
 
@@ -115,10 +113,7 @@ Partner organisation Server-side validations
     ...
     ...    INFUND-7979
     [Tags]
-    When The user enters text to a text field             id = organisationName    ${EMPTY}
-    And The user enters text to a text field              id = name    ${EMPTY}
-    And The user enters text to a text field              id = email    ${EMPTY}
-    And browser validations have been disabled
+    Given the user adds a partner organisation            ${EMPTY}  ${EMPTY}  ${EMPTY}
     And the user clicks the button/link                   jQuery = button:contains("Invite partner organisation")
     Then the user should see a field and summary error    An organisation name is required.
     And the user should see a field and summary error     Please enter a name.
@@ -127,17 +122,15 @@ Partner organisation Server-side validations
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979
     [Tags]  HappyPath
-    When The user enters text to a text field  id = organisationName    Fannie May
-    And The user enters text to a text field   id = name    Adrian Booth
-    And The user enters text to a text field   id = email    ${invite_email}
+    Given the user adds a partner organisation  Fannie May  Adrian Booth  ${invite_email}
     Then the user cannot see a validation error in the page
 
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]  HappyPath
-    When The user clicks the button/link  jQuery = button:contains("Invite partner organisation")
-    Then the user should see the element  jQuery = td:contains("Steve") ~ td:contains("Lead")
-    And the user should see the element   jQuery = td:contains("Adrian Booth (Pending for")
+    Given the user clicks the button/link  jQuery = button:contains("Invite partner organisation")
+    Then the user should see the element   jQuery = td:contains("Steve") ~ td:contains("Lead")
+    And the user should see the element    jQuery = td:contains("Adrian Booth (Pending for")
 
 Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
