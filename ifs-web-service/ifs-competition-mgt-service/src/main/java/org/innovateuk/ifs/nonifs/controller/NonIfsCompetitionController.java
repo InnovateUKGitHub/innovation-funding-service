@@ -81,7 +81,7 @@ public class NonIfsCompetitionController {
         } else {
             model.addAttribute(FORM_ATTR, nonIfsDetailsFormPopulator.populate(competition));
         }
-        model.addAttribute("model", nonIfsDetailsViewModelPopulator.populate());
+        model.addAttribute("model", nonIfsDetailsViewModelPopulator.populate(competition));
         return "competition/non-ifs-details";
     }
 

@@ -5,7 +5,8 @@
               th:with="pageTitle='Non IFS Details',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management competition-setup">
-
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-delete-modal (${model.competition}, ${form})" />
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -369,6 +370,8 @@
             <div class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button govuk-!-margin-right-6">Save and continue</button>
                 <a th:href="@{/dashboard}" class="button-clear">Cancel</a>
+                <a th:unless="${model.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}"
+                   data-js-modal="delete-modal" class="button-clear">Delete competition</a>
             </div>
         </form>
 
