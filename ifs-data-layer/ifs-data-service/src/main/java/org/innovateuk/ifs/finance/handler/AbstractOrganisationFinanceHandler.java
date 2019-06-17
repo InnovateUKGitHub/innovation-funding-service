@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
@@ -79,40 +77,25 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
+    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs));
+        return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs));
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
+    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        List<ApplicationFinanceRow> asApplicationCosts = toApplicationFinanceRows(costs);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(asApplicationCosts));
+        return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs));
     }
 
-    private List<ApplicationFinanceRow> toApplicationFinanceRows(List<ProjectFinanceRow> costs) {
-        return simpleMap(costs, cost -> {
-            long applicationId = cost.getTarget().getProject().getApplication().getId();
-            long organisationId = cost.getTarget().getOrganisation().getId();
-            ApplicationFinance applicationFinance =
-                    applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
-                    cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
-
-            applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
-            return applicationFinanceRow;
-        });
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<ApplicationFinanceRow> costs) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> updateCostCategoryValuesForTotals(Competition competition, Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
+    private Map<FinanceRowType, FinanceRowCostCategory> updateCostCategoryValuesForTotals(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         costCategories = calculateTotals(costCategories);
         return costCategories;
     }
@@ -123,12 +106,12 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
         return afterTotalCalculation(costCategories);
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<ApplicationFinanceRow> costs) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<? extends FinanceRow> costs) {
         costs.stream().forEach(c -> addCostToCategory(costCategories, c));
         return costCategories;
     }
 
-    private void addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, ApplicationFinanceRow cost) {
+    private void addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
         FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
@@ -154,13 +137,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     @Override
-    public FinanceRowItem costToCostItem(ApplicationFinanceRow cost) {
-        FinanceRowHandler financeRowHandler = getRowHandler(cost);
-        return financeRowHandler.toCostItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem costToCostItem(FinanceRow cost) {
         FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
     }
@@ -172,13 +149,8 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     @Override
-    public List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs) {
+    public List<FinanceRowItem> costsToCostItem(List<? extends FinanceRow> costs) {
         return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
-        return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
     }
 
     @Override
