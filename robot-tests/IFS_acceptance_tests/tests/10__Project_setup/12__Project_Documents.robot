@@ -296,6 +296,7 @@ CompAdmin can see uploaded files
     [Tags]  HappyPath
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link     jQuery = button:contains("Next")
     And the user clicks the button/link     link = ${PS_Competition_Name}
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
@@ -395,15 +396,14 @@ CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
     [Tags]  HappyPath
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link     link = ${PS_Competition_Name}
+    Given the user navigates to the competition
     Then the user should see the element    jQuery = tr:nth-child(4):contains("${Grade_Crossing_Application_Title}")
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3) > a
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
     [Tags]  Experian
-    Given the user should see the element     css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok
+    Given the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(4) td:nth-of-type(3)
     And the user should see the element      css = #table-project-status tr:nth-of-type(4) td:nth-of-type(4)
@@ -449,6 +449,11 @@ Sole applicant can see documents approval
 the user uploads to the collaboration agreement/exploitation plan
     [Arguments]  ${file_name}
     choose file  name = document  ${upload_folder}/${file_name}
+
+the user navigates to the competition
+    the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
+    the user clicks the button/link     jQuery = button:contains("Next")
+    the user clicks the button/link     link = ${PS_Competition_Name}
 
 the user should see the file without error
     the user should not see an error in the page
