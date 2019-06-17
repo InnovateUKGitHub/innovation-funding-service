@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interview.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
@@ -39,8 +38,8 @@ public class InterviewAllocationController {
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "target.id", direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAllocationService.getAllocatedApplications(competitionId, assessorId, pageable).toGetResponse();
     }
-    @ZeroDowntime(reference = "IFS-5917", description = "remove camelCase mapping in h2020 sprint 8")
-    @GetMapping({"/{competitionId}/allocated-applications-assessorId/{assessorId}", "/{competitionId}/allocated-applications-assessor-id/{assessorId}"})
+    
+    @GetMapping("/{competitionId}/allocated-applications-assessor-id/{assessorId}")
     public RestResult<List<InterviewResource>> getAllocatedApplicationsByAssessorId(
             @PathVariable long competitionId,
             @PathVariable long assessorId
