@@ -88,7 +88,7 @@
         </div>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'govuk-form-group--error'">
           <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="publishSetting">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 <h2 class="govuk-fieldset__heading">Publish setting</h2>
             </legend>
             <span class="govuk-hint">Is this competition:</span>
@@ -97,7 +97,7 @@
             </th:block>
             <div class="govuk-radios">
                 <div class="govuk-radios__item">
-                    <input id="publishSetting-0"
+                    <input id="publishSetting"
                            class="govuk-radios__input"
                            type="radio"
                            th:field="${form.publishSetting}"
@@ -105,7 +105,7 @@
                            th:errorclass="field-error"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
-                    <label for="publishSetting-0"
+                    <label for="publishSetting"
                            class="govuk-label govuk-radios__label">
                         Public
                     </label>

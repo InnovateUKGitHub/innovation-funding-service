@@ -122,13 +122,13 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         // as the Competition is deemed closed when it is in Project Setup, it will appear in the Project Setup
         // Competition list
         assertEquals(1L, repository.countProjectSetup().longValue());
-        assertEquals(1, repository.findProjectSetup().size());
+        assertEquals(1, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
         // and will also appear in the Previous competitions list
         assertEquals(1L, repository.countFeedbackReleased().longValue());
-        assertEquals(1, repository.findFeedbackReleased().size());
+        assertEquals(1, repository.findFeedbackReleased(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup().get(0).getId()
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
     }
 
@@ -176,7 +176,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         repository.save(compNonIfs);
 
         assertEquals(2L, repository.countProjectSetup().longValue());
-        List<Competition> competitions = repository.findProjectSetup();
+        List<Competition> competitions = repository.findProjectSetup(PageRequest.of(0, 10)).getContent();
         assertEquals(2, competitions.size());
         assertTrue(competitions.get(0).getName().equals("Comp2") && competitions.get(1).getName().equals("Comp1") ||
                 competitions.get(1).getName().equals("Comp2") && competitions.get(0).getName().equals("Comp1"));
@@ -209,12 +209,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         // when a Competition is considered closed at the Release Feedback stage, the Competition does not show
         // in Project Setup state but just Previous state
         assertEquals(0L, repository.countProjectSetup().longValue());
-        assertEquals(0, repository.findProjectSetup().size());
+        assertEquals(0, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
         assertEquals(1L, repository.countFeedbackReleased().longValue());
-        assertEquals(1, repository.findFeedbackReleased().size());
+        assertEquals(1, repository.findFeedbackReleased(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(compFundedAndInformed.getId().longValue(), repository.findFeedbackReleased().get(0).getId()
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findFeedbackReleased(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
     }
 
@@ -237,7 +237,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(0L, repository.countProjectSetup().longValue());
-        assertEquals(0, repository.findProjectSetup().size());
+        assertEquals(0, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
     }
 
     @Test
@@ -259,7 +259,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(0L, repository.countProjectSetup().longValue());
-        assertEquals(0, repository.findProjectSetup().size());
+        assertEquals(0, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
     }
 
     private List<Milestone> replaceOpenDateMilestoneDate(List<Milestone> milestones, ZonedDateTime time) {
@@ -379,7 +379,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals("openComp", filteredSearchResults.get(5).getName());
         assertEquals("compReadyToOpen", filteredSearchResults.get(6).getName());
 
-        Page<Competition> leadTechnologistSearchResults = repository.searchForLeadTechnologist("%o%",
+        Page<Competition> leadTechnologistSearchResults = repository.searchForInnovationLeadOrStakeholder("%o%",
                 leadTechnologist.getId(), pageable);
         List<Competition> filteredLeadTechnologistSearchResults = leadTechnologistSearchResults.getContent().stream()
                 .filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L)

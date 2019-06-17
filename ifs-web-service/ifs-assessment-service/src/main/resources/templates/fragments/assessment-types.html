@@ -3,7 +3,7 @@
 
 
 <!-- ======== Assessment - research category ======= -->
-<div th:fragment="assessor_research_category (field)">
+<th:block th:fragment="assessor_research_category (field)">
     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label" th:for="formInput[__${field.id}__]">
             Please select the research category for this project
@@ -22,11 +22,11 @@
                     value="1">Not available</option>
         </select>
     </div>
-</div>
+</th:block>
 
 
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
-<div th:fragment="textarea (field)">
+<th:block th:fragment="textarea (field)">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label govuk-label--s" th:for="formInput[__${field.id}__]" th:id="'form-label-'+${field.id}">Feedback</label>
         <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
@@ -61,11 +61,11 @@
             </div>
         </div>
     </div>
-</div>
+</th:block>
 
 
 <!-- =================== Assessment feedback score ============================== -->
-<div th:fragment="assessor_score (field)">
+<th:block th:fragment="assessor_score (field)">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label govuk-label--s" th:for="formInput[__${field.id}__]">Question score</label>
         <span id="question-score-hint" class="govuk-visually-hidden govuk-hint">Mark the question out of <th:block th:text="${model.maximumScore}"></th:block></span>
@@ -84,11 +84,11 @@
             <th:block th:text="${model.maximumScore}">10</th:block>
         </span>
     </div>
-</div>
+</th:block>
 
 
 <!-- =================== Assessment feedback scope ============================== -->
-<div th:fragment="assessor_application_in_scope (field)">
+<th:block th:fragment="assessor_application_in_scope (field)">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="formInput[__${field.id}__]">
@@ -97,14 +97,13 @@
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
             <div class="govuk-radios govuk-radios--inline">
                 <div class="govuk-radios__item"
-                     th:each="option : ${ { true, false } }"
-                     th:attr="data-required-errormessage=#{validation.assessor.scope.invalidScope}"
-                     required="required">
+                     th:each="option : ${ { true, false } }">
                     <input th:id="'in-scope-'+${option}"
                            th:field="*{formInput[__${field.id}__]}"
                            th:value="${option}"
                            type="radio"
-                           class="govuk-radios__input">
+                           class="govuk-radios__input"
+                           data-replace-name>
                     <label th:for="'in-scope-'+${option}"
                            th:text="${option ? 'Yes' : 'No'}"
                            class="govuk-label govuk-radios__label">Yes/No</label>
@@ -113,7 +112,7 @@
             </div>
         </fieldset>
     </div>
-</div>
+</th:block>
 
 
 </html>
