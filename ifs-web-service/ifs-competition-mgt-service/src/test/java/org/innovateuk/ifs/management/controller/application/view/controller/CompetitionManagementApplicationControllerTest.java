@@ -270,7 +270,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
                 when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/download/file1.csv"))
+                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/download"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(("text/csv")))
                         .andExpect(header().string("Content-Type", "text/csv"))

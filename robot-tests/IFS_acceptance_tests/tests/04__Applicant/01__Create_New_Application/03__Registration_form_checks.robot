@@ -76,11 +76,6 @@ Your details: client-side validation
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray   O'Brian Elliot-Murray  ${valid_email}  Inn0vat3
     Then the user should not see an error in the page
 
-User can not login with the invalid email
-    [Tags]  HappyPath
-    [Setup]    the user navigates to the page          ${SERVER}
-    Then the user cannot login with the invalid email  ${invalid_email_no_at}
-
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]  HappyPath
@@ -95,18 +90,6 @@ User can not verify email with invalid hash
     Then the user should see the element       jQuery = h1:contains("Invalid URL")
 
 *** Keywords ***
-the user cannot login with the invalid email
-    [Arguments]    ${invalid_email_addy}
-    go to                                     ${LOGIN_URL}
-    Input Text                                id = username    ${invalid_email_addy}
-    Input Password                            id = password  ${correct_password}
-    Click Button                              css = button[name="_eventId_proceed"]
-
-    the user should see a field error         ${enter_a_valid_email}
-    Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
-    Click Button                              css = button[name="_eventId_proceed"]
-    the user should see the element           jQuery = .govuk-error-summary li:contains("Your email/password combination doesn't seem to work.")
-
 Applicant goes to the registration form
     the user navigates to the page                            ${frontDoor}
     the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}

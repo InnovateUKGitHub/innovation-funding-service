@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
@@ -91,6 +92,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
                 .values()
                 .stream()
+                .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));

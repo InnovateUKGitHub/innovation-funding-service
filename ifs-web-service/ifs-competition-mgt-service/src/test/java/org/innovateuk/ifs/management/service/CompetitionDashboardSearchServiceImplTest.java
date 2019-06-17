@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.LiveCompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSearchRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchServiceImpl;
 import org.junit.Test;
@@ -22,11 +25,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.NonIfsCompetitionSearchResultItemBuilder.newNonIfsCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.UpcomingCompetitionSearchResultItemBuilder.newUpcomingCompetitionSearchResultItem;
-import static org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchServiceImpl.COMPETITION_PAGE_SIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -42,7 +41,7 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     private ApplicationRestService applicationRestService;
 
     @Test
-    public void getLiveCompetitions() throws Exception {
+    public void getLiveCompetitions() {
         LiveCompetitionSearchResultItem resource1 = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).build();
         LiveCompetitionSearchResultItem resource2 = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).build();
         LiveCompetitionSearchResultItem resource3 = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
@@ -58,22 +57,20 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     }
 
     @Test
-    public void getProjectSetupCompetitions() throws Exception {
-        ProjectSetupCompetitionSearchResultItem resource1 = newProjectSetupCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).build();
-        ProjectSetupCompetitionSearchResultItem resource2 = newProjectSetupCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).build();
+    public void getProjectSetupCompetitions() {
+        CompetitionSearchResult expected = new CompetitionSearchResult();
 
-        when(competitionRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+        when(competitionRestService.findProjectSetupCompetitions(1)).thenReturn(restSuccess(expected));
         when(applicationRestService.getLatestEmailFundingDate(1L)).thenReturn(restSuccess(ZonedDateTime.now()));
         when(applicationRestService.getLatestEmailFundingDate(2L)).thenReturn(restSuccess(ZonedDateTime.now()));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
+        CompetitionSearchResult actual = service.getProjectSetupCompetitions(1);
 
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource2));
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void getUpcomingCompetitions() throws Exception {
+    public void getUpcomingCompetitions() {
         UpcomingCompetitionSearchResultItem resource1 = newUpcomingCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         UpcomingCompetitionSearchResultItem resource2 = newUpcomingCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         when(competitionRestService.findUpcomingCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
@@ -86,35 +83,27 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     }
 
     @Test
-    public void getNonIfsCompetitions() throws Exception {
-        NonIfsCompetitionSearchResultItem resource1 = newNonIfsCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-        NonIfsCompetitionSearchResultItem resource2 = newNonIfsCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).build();
-        when(competitionRestService.findNonIfsCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+    public void getNonIfsCompetitions() {
+        CompetitionSearchResult expected = new CompetitionSearchResult();
+        when(competitionRestService.findNonIfsCompetitions(1)).thenReturn(restSuccess(expected));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getNonIfsCompetitions();
+        CompetitionSearchResult actual = service.getNonIfsCompetitions(1);
 
-        assertTrue(result.get(CompetitionStatus.COMPETITION_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionStatus.OPEN).contains(resource2));
-        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void getPreviousCompetitions() throws Exception {
-        PreviousCompetitionSearchResultItem resource1 = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).build();
-        PreviousCompetitionSearchResultItem resource2 = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.CLOSED).build();
-        PreviousCompetitionSearchResultItem resource3 = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.PREVIOUS).build();
-        when(competitionRestService.findFeedbackReleasedCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2, resource3)));
+    public void getPreviousCompetitions() {
+        CompetitionSearchResult expected = new CompetitionSearchResult();
+        when(competitionRestService.findFeedbackReleasedCompetitions(1)).thenReturn(restSuccess(expected));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getPreviousCompetitions();
+        CompetitionSearchResult actual = service.getPreviousCompetitions(1);
 
-        assertTrue(result.get(CompetitionStatus.PREVIOUS).contains(resource1));
-        assertTrue(result.get(CompetitionStatus.PREVIOUS).contains(resource2));
-        assertTrue(result.get(CompetitionStatus.PREVIOUS).contains(resource3));
-        assertEquals(result.get(CompetitionStatus.OPEN), null);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void getCompetitionCounts() throws Exception {
+    public void getCompetitionCounts() {
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionRestService.countCompetitions()).thenReturn(restSuccess(resource));
 
@@ -124,12 +113,12 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     }
 
     @Test
-    public void searchCompetitions() throws Exception {
+    public void searchCompetitions() {
         CompetitionSearchResult results = new CompetitionSearchResult();
         results.setContent(new ArrayList<>());
         String searchQuery = "SearchQuery";
         int page = 1;
-        when(competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE)).thenReturn(restSuccess(results));
+        when(competitionRestService.searchCompetitions(searchQuery, page)).thenReturn(restSuccess(results));
 
         CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page);
 
@@ -137,7 +126,7 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
     }
 
     @Test
-    public void wildcardSearchByApplicationId() throws Exception {
+    public void wildcardSearchByApplicationId() {
 
         String searchString = "12";
         int pageNumber = 0;

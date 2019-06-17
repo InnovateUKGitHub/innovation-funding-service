@@ -150,8 +150,9 @@ The admin user is able to see bank details
     the user should see the element                      jQuery = .govuk-button:contains("Approve bank account details")
 
 The admin user navigates to All projects
-    the user clicks the button/link                link = ${PS_Competition_Name}
-    Then the user should see the element           link = All projects
+    the user clicks the button/link      jQuery = button:contains("Next")
+    the user clicks the button/link      link = ${PS_Competition_Name}
+    the user should see the element      link = All projects
 
 Project finance is able to view progress of partners bank details
     the user clicks the button/link                      css = #table-project-status tr:nth-child(4) td:nth-child(6) a

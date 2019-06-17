@@ -319,7 +319,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             if (approvalType.equals(APPROVED)) {
                 if (spendProfileWorkflowHandler.spendProfileApproved(project, user))
-                    return grantOfferLetterService.generateGrantOfferLetterIfReady(project.getId());
+                    return serviceSuccess();
                 else
                     return serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
             }

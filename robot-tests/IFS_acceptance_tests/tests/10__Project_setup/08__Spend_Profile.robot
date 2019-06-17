@@ -503,14 +503,6 @@ Project finance user cannot access external users' spend profile page
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile    ${403_error_message}
 
-Target start date cannot be changed after SP approval
-    [Documentation]    IFS-1576
-    [Tags]
-    Given Log in as a different user     &{lead_applicant_credentials_sp}
-    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_Project_Id}/details
-    Then the user should not see the element  jQuery = a:contains("Target start date")
-    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_Project_Id}/details/project-address  ${403_error_message}
-
 *** Keywords ***
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
