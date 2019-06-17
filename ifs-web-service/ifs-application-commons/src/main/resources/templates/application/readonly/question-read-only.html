@@ -20,7 +20,7 @@
         <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
             <p class="uploaded-file govuk-body">
                 <a class="govuk-link"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download/{filename}(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId}, filename=${model.appendixFilename})}"
+                   th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})}"
                    th:text="${model.appendixFilename}"
                    target="_blank">file</a> (opens in a new window).
             </p>

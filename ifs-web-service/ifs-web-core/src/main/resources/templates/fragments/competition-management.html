@@ -20,7 +20,7 @@
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">
     <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
-        <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">
+        <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number - 1}">
             Previous
         </button>
         <div class="status">
