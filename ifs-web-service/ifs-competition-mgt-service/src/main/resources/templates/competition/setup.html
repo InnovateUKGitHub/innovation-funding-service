@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:with="pageTitle='Competition Management Dashboard'">
-  <th:block th:if="${competitionSetupForm != null}">
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
-  </th:block>
-  <th:block th:if="${competitionSetupForm == null}">
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
-  </th:block>
+<head th:with="pageTitle=${model.general.currentSectionIsHome() ? 'Competition setup' : #messages.msg('ifs.competition.setup.' + model.general.currentSectionFragment)}">
+    <th:block th:if="${competitionSetupForm != null}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+    </th:block>
+    <th:block th:if="${competitionSetupForm == null}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
+    </th:block>
 </head>
 <body class="govuk-template__body competition-management competition-setup" th:with="currentSectionIsHome=${model.general.currentSectionIsHome()}">
 <th:block th:insert="fragments/modals :: modal-overlay" />

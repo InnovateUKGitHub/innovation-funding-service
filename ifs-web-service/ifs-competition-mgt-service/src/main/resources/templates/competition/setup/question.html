@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body class="govuk-template__body competition-management competition-setup">
 
@@ -19,7 +20,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
 
         <p class="govuk-body govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
             You can edit this question for the applicant as well as the guidance for assessors. </p>
