@@ -50,16 +50,23 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
     @Test
     public void projectSetup() throws Exception {
-        when(competitionSearchService.findProjectSetupCompetitions()).thenReturn(serviceSuccess(new ArrayList<>(newUpcomingCompetitionSearchResultItem().build(2))));
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        int page = 1;
+        int size = 20;
+        when(competitionSearchService.findProjectSetupCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/project-setup")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of competitions in project set up the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
+                        requestParameters(
+                                parameterWithName("page").description("The page number to be requested"),
+                                parameterWithName("size").description("The number of competitions per page")
+                        ),
+                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
                 ));
     }
 
@@ -80,16 +87,23 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
     @Test
     public void nonIfs() throws Exception {
-        when(competitionSearchService.findNonIfsCompetitions()).thenReturn(serviceSuccess(new ArrayList<>(newUpcomingCompetitionSearchResultItem().build(2))));
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        int page = 1;
+        int size = 20;
+        when(competitionSearchService.findNonIfsCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/non-ifs")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
+                        requestParameters(
+                                parameterWithName("page").description("The page number to be requested"),
+                                parameterWithName("size").description("The number of competitions per page")
+                        ),
+                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
                 ));
     }
 
@@ -115,13 +129,15 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
         int size = 20;
         when(competitionSearchService.searchCompetitions(searchQuery, page, size)).thenReturn(serviceSuccess(results));
 
-        mockMvc.perform(get("/competition/search/{page}/{size}/?searchQuery=" + searchQuery, page, size)
+        mockMvc.perform(get("/competition/search")
+                .param("searchQuery", searchQuery)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
-                        requestParameters(parameterWithName("searchQuery").description("The search query to lookup")),
-                        pathParameters(
+                        requestParameters(parameterWithName("searchQuery").description("The search query to lookup"),
                                 parameterWithName("page").description("The page number to be requested"),
                                 parameterWithName("size").description("The number of competitions per page")
                         ),
@@ -131,16 +147,23 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
     @Test
     public void feedbackReleased() throws Exception {
-        when(competitionSearchService.findPreviousCompetitions()).thenReturn(serviceSuccess(new ArrayList<>(newUpcomingCompetitionSearchResultItem().build(2))));
+        CompetitionSearchResult results = new CompetitionSearchResult();
+        int page = 1;
+        int size = 20;
+        when(competitionSearchService.findPreviousCompetitions(page, size)).thenReturn(serviceSuccess(results));
 
         mockMvc.perform(get("/competition/post-submission/feedback-released")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
+                        requestParameters(
+                                parameterWithName("page").description("The page number to be requested"),
+                                parameterWithName("size").description("The number of competitions per page")
+                        ),
+                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
                 ));
     }
 }

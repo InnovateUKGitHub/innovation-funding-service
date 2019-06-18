@@ -656,7 +656,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
 
         Long userId = 1234L;
         User user = newUser().withId(userId).build();
@@ -670,7 +669,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertTrue(result.isSuccess());
 ;
         verify(spendProfileRepositoryMock).saveAll(spendProfileList);
-        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(projectId);
         verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project, user);
     }
 
@@ -682,7 +680,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
 
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         Long userId = 1234L;
@@ -708,7 +705,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
         Long userId = 1234L;
         User user = newUser().withId(userId).build();
         UserResource loggedInUser = newUserResource().withId(user.getId()).build();
@@ -771,7 +767,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
 
-        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         Long userId = 1234L;

@@ -221,7 +221,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                         andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
-                                .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))
                         ));
     }
 
@@ -246,11 +245,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
         }
-    }
-
-    private ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId)
-                .andOnFailure(() -> serviceFailure(GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 
     private void setOtherDocsApproved(Project project) {

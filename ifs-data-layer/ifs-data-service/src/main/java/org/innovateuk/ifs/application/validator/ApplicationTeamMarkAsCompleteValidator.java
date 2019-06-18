@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -44,11 +46,13 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
         ServiceResult<List<InviteOrganisationResource>> invitesResult = applicationInviteService.getInvitesByApplication(application.getId());
         List<InviteOrganisationResource> invites = invitesResult.getSuccess();
         for (InviteOrganisationResource organisation : invites) {
-            if (organisation.getInviteResources()
+            Optional<ApplicationInviteResource> maybeInvite = organisation.getInviteResources()
                     .stream()
-                    .anyMatch(invite -> invite.getStatus() != OPENED)) {
+                    .filter(invite -> invite.getStatus() != OPENED)
+                    .findFirst();
+            if (maybeInvite.isPresent()) {
                 LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
-                reject(errors, "validation.applicationteam.pending.invites", new Object[] {organisation.getId()});
+                reject(errors, "validation.applicationteam.pending.invites", maybeInvite.get().getName(), organisation.getId());
             }
         }
     }

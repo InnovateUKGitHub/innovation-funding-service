@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.competition.controller.CompetitionManagementDashboardController;
@@ -33,8 +34,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
+import static org.innovateuk.ifs.competition.builder.UpcomingCompetitionSearchResultItemBuilder.newUpcomingCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -135,13 +136,19 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void projectSetupDashboardWithNonProjectFinanceUser() throws Exception {
-
+        int page = 1;
         Long countBankDetails = 0L;
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
-        when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
+        List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
+                .withCompetitionStatus(OPEN)
+                .build(1);
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        searchResult.setContent(new ArrayList<>(competitions));
+        when(competitionDashboardSearchService.getProjectSetupCompetitions(page)).thenReturn(searchResult);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup")
+                .param("page", String.valueOf(page)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/projectSetup"))
                 .andReturn();
@@ -150,9 +157,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(viewModel.getNonPrioritisedCompetitions().size(), 1);
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertFalse(viewModel.isProjectFinanceUser());
 
@@ -161,14 +167,21 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void projectSetupDashboardWithProjectFinanceUser() throws Exception {
-
+        int page = 1;
         Long countBankDetails = 8L;
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
-        when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
+        List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
+                .withCompetitionStatus(PROJECT_SETUP)
+                .build(1);
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        searchResult.setContent(new ArrayList<>(competitions));
+
+        when(competitionDashboardSearchService.getProjectSetupCompetitions(page)).thenReturn(searchResult);
         when(bankDetailsRestService.countPendingBankDetailsApprovals()).thenReturn(restSuccess(countBankDetails));
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup")
+                .param("page", String.valueOf(page)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/projectSetup"))
                 .andReturn();
@@ -177,7 +190,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
+
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertTrue(viewModel.isProjectFinanceUser());
@@ -205,44 +219,52 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void nonIfsDashboard() throws Exception {
+        int page = 1;
 
-        List<CompetitionSearchResultItem> competitions = new ArrayList<>();
+        List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
+                .withCompetitionStatus(COMPETITION_SETUP)
+                .build(1);
         CompetitionCountResource counts = new CompetitionCountResource();
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        searchResult.setContent(new ArrayList<>(competitions));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionMap = new HashMap<>();
-        competitionMap.put(COMPETITION_SETUP, competitions);
 
-        when(competitionDashboardSearchService.getNonIfsCompetitions()).thenReturn(competitionMap);
+        when(competitionDashboardSearchService.getNonIfsCompetitions(page)).thenReturn(searchResult);
         when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs")
+                .param("page", String.valueOf(page)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/non-ifs"))
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(NonIFSDashboardViewModel.class));
+        assertTrue(model.getClass().equals(NonIfsDashboardViewModel.class));
 
-        NonIFSDashboardViewModel viewModel = (NonIFSDashboardViewModel) model;
-        assertEquals(competitionMap, viewModel.getCompetitions());
+        NonIfsDashboardViewModel viewModel = (NonIfsDashboardViewModel) model;
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
     }
 
     @Test
     public void previousDashboard() throws Exception {
+        int page = 1;
 
         List<CompetitionSearchResultItem> competitions = new ArrayList<>();
-        competitions.add(newPreviousCompetitionSearchResultItem().withId(111L).build());
-        competitions.add(newPreviousCompetitionSearchResultItem().withId(222L).build());
+        competitions.add(newPreviousCompetitionSearchResultItem().withCompetitionStatus(PROJECT_SETUP).withId(111L).build());
+        competitions.add(newPreviousCompetitionSearchResultItem().withCompetitionStatus(PROJECT_SETUP).withId(222L).build());
         CompetitionCountResource counts = new CompetitionCountResource();
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        searchResult.setContent(competitions);
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionMap = new HashMap<>();
         competitionMap.put(PROJECT_SETUP, competitions);
 
-        when(competitionDashboardSearchService.getPreviousCompetitions()).thenReturn(competitionMap);
+        when(competitionDashboardSearchService.getPreviousCompetitions(page)).thenReturn(searchResult);
         when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/previous"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/previous")
+                .param("page", String.valueOf(page)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/previous"))
                 .andReturn();
@@ -251,8 +273,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(PreviousDashboardViewModel.class));
 
         PreviousDashboardViewModel viewModel = (PreviousDashboardViewModel) model;
-        assertEquals(competitions.get(1), viewModel.getCompetitions().get(PROJECT_SETUP).get(1));
-        assertEquals(competitions.get(0), viewModel.getCompetitions().get(PROJECT_SETUP).get(0));
+        assertEquals(searchResult, viewModel.getResult());
         assertEquals(counts, viewModel.getCounts());
     }
 
@@ -353,7 +374,11 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void internalAlphabeticalInputSearchReturnsCompetition() throws Exception {
+        List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
+                .withCompetitionStatus(PROJECT_SETUP)
+                .build(1);
         CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        searchResult.setContent(new ArrayList<>(competitions));
         String searchQuery = "search";
         int defaultPage = 0;
 
