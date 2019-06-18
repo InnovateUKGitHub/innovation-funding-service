@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.state.transactional;
 
 
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -17,9 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
+
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 @Service
 public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsService {
@@ -35,7 +38,23 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
     @Override
     public ServiceResult<Long> create(long projectId, ProjectState state) {
         UserResource user = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return service.create(new ProjectStateHistoryResource(null, projectId, Collections.singletonList(new PostResource(null, user, "", Collections.emptyList(), ZonedDateTime.now())), state, "Project " + state.name().toLowerCase(), ZonedDateTime.now(), null, null));
+        String text = textForState(state);
+        PostResource post = new PostResource(null, user, text, emptyList(), now());
+        return service.create(new ProjectStateHistoryResource(null, projectId, singletonList(post), state,
+                text, now(), null, null));
+    }
+
+    private String textForState(ProjectState state) {
+        switch (state) {
+            case COMPLETED_OFFLINE:
+                return "Project has been completed offline.";
+            case HANDLED_OFFLINE:
+                return "Project has been handled offline.";
+            case WITHDRAWN:
+                return "Project has been withdrawn.";
+            default:
+                throw new IFSRuntimeException(String.format("Unsupported state change to %s", state.name()));
+        }
     }
 
     @Override

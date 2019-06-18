@@ -19,7 +19,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private ProjectStateCommentsService projectStateHistoryService;
+    private ProjectStateCommentsService projectStateCommentsService;
 
     @Override
     @Transactional
@@ -28,7 +28,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
-        ).andOnSuccessReturnVoid(() -> projectStateHistoryService.create(projectId, ProjectState.WITHDRAWN));
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.WITHDRAWN));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.handleProjectOffline(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_HANDLED_OFFLINE))
-        ).andOnSuccessReturnVoid(() -> projectStateHistoryService.create(projectId, ProjectState.HANDLED_OFFLINE));
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.HANDLED_OFFLINE));
     }
 
     @Override
@@ -48,6 +48,6 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.completeProjectOffline(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_COMPLETED_OFFLINE))
-        ).andOnSuccessReturnVoid(() -> projectStateHistoryService.create(projectId, ProjectState.COMPLETED_OFFLINE));
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.COMPLETED_OFFLINE));
     }
 }
