@@ -13,8 +13,7 @@
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})"/>
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Award terms and conditions'" />
-
+                <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/[th:insert][0] "/>
                 <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
