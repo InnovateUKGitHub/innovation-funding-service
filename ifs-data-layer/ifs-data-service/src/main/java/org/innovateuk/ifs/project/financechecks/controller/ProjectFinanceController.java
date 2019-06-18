@@ -42,7 +42,7 @@ public class ProjectFinanceController {
                                           @PathVariable("viability") final Viability viability,
                                           @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus, projectId).toPostResponse();
+        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/eligibility")

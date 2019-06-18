@@ -50,10 +50,10 @@ public interface FinanceCheckService {
     ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
-    @Activity(projectId = "projectId", type = ActivityType.VIABILITY_APPROVED, condition = "isViabilityApproved")
-    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus, long projectId);
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.VIABILITY_APPROVED, condition = "isViabilityApproved")
+    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus);
 
-    default boolean isViabilityApproved(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus, long projectId) {
+    default boolean isViabilityApproved(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
         return viability == Viability.APPROVED;
     }
 
@@ -61,7 +61,12 @@ public interface FinanceCheckService {
     ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.ELIGIBILITY_APPROVED, condition = "isEligibilityApproved")
     ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
+
+    default boolean isEligibilityApproved(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+        return eligibility == EligibilityState.APPROVED;
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SAVE_CREDIT_REPORT')")
     ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent);

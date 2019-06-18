@@ -11,6 +11,7 @@ CREATE TABLE activity_log (
             'BANK_DETAILS_SUBMITTED',
             'BANK_DETAILS_APPROVED',
             'VIABILITY_APPROVED',
+            'ELIGIBILITY_APPROVED',
             'FINANCE_QUERY',
             'SPEND_PROFILE_GENERATED',
             'SPEND_PROFILE_EDIT',
@@ -25,10 +26,12 @@ CREATE TABLE activity_log (
             'GRANT_OFFER_LETTER_APPROVED') NOT NULL,
   created_on DATETIME NOT NULL,
   created_by bigint(20) NOT NULL,
+  organisation_id bigint(20),
   thread_id bigint(20),
   document_config_id bigint(20),
   CONSTRAINT fk_activity_log_application_id FOREIGN KEY (application_id) REFERENCES application(id),
   CONSTRAINT fk_activity_log_user_id FOREIGN KEY (created_by) REFERENCES user(id),
+  CONSTRAINT fk_activity_log_organisation_id FOREIGN KEY (organisation_id) REFERENCES organisation(id),
   CONSTRAINT fk_activity_log_thread_id FOREIGN KEY (thread_id) REFERENCES thread(id),
   CONSTRAINT fk_activity_log_document_config_id FOREIGN KEY (document_config_id) REFERENCES document_config(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

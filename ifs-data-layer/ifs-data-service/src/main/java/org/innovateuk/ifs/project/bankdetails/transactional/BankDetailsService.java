@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -20,14 +21,14 @@ public interface BankDetailsService {
     ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'SUBMIT')")
-    @Activity(type = ActivityType.BANK_DETAILS_SUBMITTED, projectId = "projectId")
-    ServiceResult<Void> submitBankDetails(long projectId, BankDetailsResource bankDetailsResource);
+    @Activity(type = ActivityType.BANK_DETAILS_SUBMITTED, projectOrganisationCompositeId = "projectOrganisationCompositeId")
+    ServiceResult<Void> submitBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
-    @Activity(type = ActivityType.BANK_DETAILS_APPROVED, projectId = "projectId", condition = "isManualApproval")
-    ServiceResult<Void> updateBankDetails(long projectId, BankDetailsResource bankDetailsResource);
+    @Activity(type = ActivityType.BANK_DETAILS_APPROVED, projectOrganisationCompositeId = "projectOrganisationCompositeId", condition = "isManualApproval")
+    ServiceResult<Void> updateBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
-    default boolean isManualApproval(long projectId, BankDetailsResource bankDetailsResource) {
+    default boolean isManualApproval(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
         return bankDetailsResource.isManualApproval();
     }
 

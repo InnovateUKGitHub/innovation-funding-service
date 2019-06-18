@@ -6,6 +6,7 @@ import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
     @Override
     public void recordActivityByApplicationId(long applicationId, ActivityType activityType) {
         applicationRepository.findById(applicationId)
@@ -53,6 +57,17 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     }
 
     @Override
+    public void recordActivityByProjectIdAndOrganisationId(long projectId, long organisationId, ActivityType activityType) {
+        projectRepository.findById(projectId)
+                .ifPresent(project -> {
+                    organisationRepository.findById(organisationId).ifPresent(organisation -> {
+                        ActivityLog log = new ActivityLog(project.getApplication(), activityType, organisation);
+                        activityLogRepository.save(log);
+                    });
+                });
+    }
+
+    @Override
     public void recordDocumentActivityByProjectId(long projectId, ActivityType activityType, long documentConfigId) {
         projectRepository.findById(projectId)
                 .ifPresent(project -> {
@@ -68,7 +83,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
         projectFinanceRepository.findById(projectFinanceId)
                 .ifPresent(projectFinance -> {
                     queryRepository.findById(threadId).ifPresent(query -> {
-                        ActivityLog log = new ActivityLog(projectFinance.getProject().getApplication(), activityType, query);
+                        ActivityLog log = new ActivityLog(projectFinance.getProject().getApplication(), activityType, query, projectFinance.getOrganisation());
                         activityLogRepository.save(log);
                     });
                 });

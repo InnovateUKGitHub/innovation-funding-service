@@ -55,12 +55,12 @@ public interface SpendProfileService {
     ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'EDIT_SPEND_PROFILE')")
-    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_EDIT)
-    ServiceResult<Void> saveSpendProfile(long projectId, ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.SPEND_PROFILE_EDIT)
+    ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
-    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_COMPLETE)
-    ServiceResult<Void> markSpendProfileComplete(long projectId, ProjectOrganisationCompositeId projectOrganisationCompositeId);
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.SPEND_PROFILE_COMPLETE)
+    ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
     ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);

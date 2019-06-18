@@ -74,14 +74,14 @@ public class SpendProfileController {
                                              @RequestBody SpendProfileTableResource table) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.saveSpendProfile(projectId, projectOrganisationCompositeId, table).toPostResponse();
+        return spendProfileService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
 
     @PostMapping("/partner-organisation/{organisationId}/spend-profile/complete")
     public RestResult<Void> markSpendProfileComplete(@PathVariable("projectId") final long projectId,
                                                      @PathVariable("organisationId") final long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.markSpendProfileComplete(projectId, projectOrganisationCompositeId).toPostResponse();
+        return spendProfileService.markSpendProfileComplete(projectOrganisationCompositeId).toPostResponse();
     }
 
     @PostMapping("/partner-organisation/{organisationId}/spend-profile/incomplete")

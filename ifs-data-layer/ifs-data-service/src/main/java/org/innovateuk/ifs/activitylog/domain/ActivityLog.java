@@ -3,6 +3,7 @@ package org.innovateuk.ifs.activitylog.domain;
 import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedBy;
@@ -40,6 +41,10 @@ public class ActivityLog {
     private ZonedDateTime createdOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
+    private Organisation organisation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "documentConfigId", referencedColumnName = "id")
     private CompetitionDocument competitionDocument;
 
@@ -56,15 +61,22 @@ public class ActivityLog {
         this.competitionDocument = competitionDocument;
     }
 
-    public ActivityLog(Application application, ActivityType type, Query query) {
+    public ActivityLog(Application application, ActivityType type, Query query, Organisation organisation) {
         this.application = application;
         this.type = type;
         this.query = query;
+        this.organisation = organisation;
     }
 
     public ActivityLog(Application application, ActivityType type) {
         this.application = application;
         this.type = type;
+    }
+
+    public ActivityLog(Application application, ActivityType type, Organisation organisation) {
+        this.application = application;
+        this.type = type;
+        this.organisation = organisation;
     }
 
     public Long getId() {
@@ -73,6 +85,10 @@ public class ActivityLog {
 
     public Application getApplication() {
         return application;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
     public ActivityType getType() {
@@ -87,4 +103,11 @@ public class ActivityLog {
         return createdOn;
     }
 
+    public CompetitionDocument getCompetitionDocument() {
+        return competitionDocument;
+    }
+
+    public Query getQuery() {
+        return query;
+    }
 }

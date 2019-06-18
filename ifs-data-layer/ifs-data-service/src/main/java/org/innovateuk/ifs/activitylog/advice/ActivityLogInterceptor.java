@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,22 +39,29 @@ public class ActivityLogInterceptor implements MethodInterceptor {
         Object returned = invocation.proceed();
 
         if (isSuccessfulServiceResult(returned, invocation)) {
-            if (!StringUtils.isBlank(activity.applicationId())) {
-                Optional<Long> applicationId = findId(activity.applicationId(), invocation);
-                applicationId.ifPresent(id -> activityLogService.recordActivityByApplicationId(id, activity.type()));
-            } else if (!StringUtils.isBlank(activity.projectId())) {
-                Optional<Long> projectId = findId(activity.projectId(), invocation);
-                projectId.ifPresent(id -> activityLogService.recordActivityByProjectId(id, activity.type()));
-            } else {
-                LOG.error(String.format("@Activity annotated method must provide an applicationId or projectId: %s on %s",
-                        invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
-            }
+            callAppropriateActivityLogMethod(activity, invocation);
         }
 
         return returned;
     }
 
-    private Optional<Long> findId(String name, MethodInvocation invocation) {
+    private void callAppropriateActivityLogMethod(Activity activity, MethodInvocation invocation) {
+        if (!StringUtils.isBlank(activity.applicationId())) {
+            Optional<Long> applicationId = findId(activity.applicationId(), invocation, Long.class);
+            applicationId.ifPresent(id -> activityLogService.recordActivityByApplicationId(id, activity.type()));
+        } else if (!StringUtils.isBlank(activity.projectId())) {
+            Optional<Long> projectId = findId(activity.projectId(), invocation, Long.class);
+            projectId.ifPresent(id -> activityLogService.recordActivityByProjectId(id, activity.type()));
+        } else if (!StringUtils.isBlank(activity.projectOrganisationCompositeId())) {
+            Optional<ProjectOrganisationCompositeId> projectOrganisationCompositeId = findId(activity.projectOrganisationCompositeId(), invocation, ProjectOrganisationCompositeId.class);
+            projectOrganisationCompositeId.ifPresent(id -> activityLogService.recordActivityByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId(), activity.type()));
+        } else {
+            LOG.error(String.format("@Activity annotated method must provide an applicationId or projectId: %s on %s",
+                    invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
+        }
+    }
+
+    private <C> Optional<C> findId(String name, MethodInvocation invocation, Class<C> idClass) {
         Optional<Object> parameter = findParameterByName(invocation, name);
 
         if (!parameter.isPresent()) {
@@ -64,13 +72,13 @@ public class ActivityLogInterceptor implements MethodInterceptor {
 
         Object identifier = parameter.get();
 
-        if (!(identifier instanceof Long)) {
+        if (!(idClass.isAssignableFrom(identifier.getClass()))) {
             LOG.error(String.format("@Activity annotated methods identifier parameter must be a long: %s on %s",
                     name, invocation.getMethod().getName()));
             return Optional.empty();
         }
 
-        return Optional.of((Long) identifier);
+        return Optional.of(idClass.cast(identifier));
 
     }
 

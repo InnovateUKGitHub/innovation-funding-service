@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.Address;
 import org.innovateuk.ifs.sil.experian.resource.Condition;
@@ -107,7 +108,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> submitBankDetails(long projectId, BankDetailsResource bankDetailsResource) {
+    public ServiceResult<Void> submitBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
         return bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
                 andOnSuccess(() -> validateBankDetails(bankDetailsResource).
                 andOnSuccess(accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
@@ -119,7 +120,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateBankDetails(long projectId, BankDetailsResource bankDetailsResource) {
+    public ServiceResult<Void> updateBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getAddress());
         AccountDetails accountDetails = new AccountDetails(
                 bankDetailsResource.getSortCode(),

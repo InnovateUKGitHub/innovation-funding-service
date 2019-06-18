@@ -18,4 +18,6 @@ public @interface Activity {
 
     String projectId() default "";
 
+    String projectOrganisationCompositeId() default "";
+
 }

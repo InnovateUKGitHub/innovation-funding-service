@@ -6,7 +6,9 @@ public interface ActivityLogService {
 
     void recordActivityByApplicationId(long applicationId, ActivityType activityType);
 
-    void recordActivityByProjectId(long applicationId, ActivityType activityType);
+    void recordActivityByProjectId(long projectId, ActivityType activityType);
+
+    void recordActivityByProjectIdAndOrganisationId(long projectId, long organisationId, ActivityType activityType);
 
     void recordDocumentActivityByProjectId(long projectId, ActivityType type, long documentConfigId);
 
