@@ -3,10 +3,9 @@ ext.target = 'remote' // TODO pull in from gradle profile.
 if(target == 'local') {
     ext.svcAccountClauseServer = "https://localhost:8443"
     //TODO local Internal Registry required
-
 } else {
-    //remote
-    ext.svcAccountClauseServer = System.env.bamboo_openshift_console_url
+    ext.svcAccountClauseServer = "https://console." + ext.openshiftDomain
+    ext.dockerRegistry = "docker-registry-default.apps." + ext.openshiftDomain
     ext.internalRegistry = "docker-registry.default.svc:5000"
 }
 

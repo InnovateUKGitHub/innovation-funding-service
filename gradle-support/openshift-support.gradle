@@ -174,10 +174,6 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
-task osDeployFractalSysint(type: Exec, dependsOn: prepareDeployment) {
-    executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version]
-}
 
 // Perf tasks
 

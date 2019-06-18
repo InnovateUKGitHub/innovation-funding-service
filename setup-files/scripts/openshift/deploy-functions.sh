@@ -364,9 +364,9 @@ function createProject() {
 }
 
 function getClusterAddress() {
-  echo "$bamboo_openshift_cluster_address"
+  echo $(cat gradle.properties | grep openshiftDomain | cut -d'=' -f2)
 }
 
 function getRemoteRegistryUrl() {
-        echo "docker-registry.default.svc:5000"
+  echo "docker-registry.default.svc:5000"
 }

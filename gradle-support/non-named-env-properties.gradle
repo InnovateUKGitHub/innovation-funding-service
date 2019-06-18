@@ -36,13 +36,13 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 ext.NEW_RELIC_LICENCE_KEY=""
 
-ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
 
 
-ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-ext.ZIPKIN_ADDRESS="zipkin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+ext.ZIPKIN_ADDRESS="zipkin-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
 
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
@@ -77,3 +77,4 @@ ext.ACC_BITBUCKET_URL=""
 ext.GLUSTER_IP_1="10.150.10.10"
 ext.GLUSTER_IP_2="10.150.11.11"
 ext.GLUSTER_IP_3="10.150.12.12"
+
