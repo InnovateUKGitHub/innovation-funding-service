@@ -11,14 +11,16 @@ public enum ApplicationSummaryOrigin implements BackLinkOrigin {
     ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}", "Application overview"),
     COMP_EXEC_INTERVIEW("/management/assessment/interview/competition/{competitionId}/applications/view-status", "Applications"),
     PREVIOUS_APPLICATIONS("/competition/{competitionId}/applications/previous", "Back"),
-    ALL_APPLICATIONS("/competition/{competitionId}/applications/all", "All Applications"),
+    ALL_APPLICATIONS("/management/competition/{competitionId}/applications/all", "All Applications"),
     APPLICATION_SUMMARY("/application/{applicationId}/summary", "Application Overview"),
     SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted", "Application overview"),
     PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status", "Back"),
     INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible", "Application overview"),
     APPLICATION("/application/{applicationId}", "Application overview"),
     MANAGEMENT_DASHBOARD("/management/dashboard", "Dashboard"),
-    MONITORING_OFFICER_DASHBOARD("/project-setup/mointoring-officer/dashboard", "Dashboard");
+    MONITORING_OFFICER_DASHBOARD("/project-setup/monitoring-officer/dashboard", "Dashboard"),
+    REVIEW_AND_SUBMIT("/application/{applicationId}/review-and-submit", "Application summary"),
+    MANAGEMENT_APPLICATION("/management/competition/{competitionId}/application/{applicationId}", "Application overview");
 
     private String originUrl;
     private String title;

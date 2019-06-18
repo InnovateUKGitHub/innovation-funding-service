@@ -30,14 +30,21 @@ public class ApplicationTermsForm extends BaseBindingResultTarget {
         ApplicationTermsForm that = (ApplicationTermsForm) o;
 
         return new EqualsBuilder()
-                .append(getAgreed(), that.getAgreed())
+                .append(agreed, that.agreed)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getAgreed())
+                .append(agreed)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationTermsForm{" +
+                "agreed=" + agreed +
+                '}';
     }
 }
