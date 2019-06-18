@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
+
 import java.time.LocalDate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -23,6 +25,13 @@ public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowV
         this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.targetStartDate = targetStartDate;
+    }
+
+    public InSetupDashboardRowViewModel(DashboardApplicationInSetupResource resource) {
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.projectId = resource.getProjectId();
+        this.projectTitle = resource.getProjectTitle();
+        this.targetStartDate = resource.getTargetStartDate();
     }
 
     public long getProjectId() {

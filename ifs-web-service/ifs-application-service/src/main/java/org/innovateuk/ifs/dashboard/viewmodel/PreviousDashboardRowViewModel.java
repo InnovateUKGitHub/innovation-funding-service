@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
 import java.time.LocalDate;
@@ -22,6 +23,12 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.startDate = startDate;
+    }
+
+    public PreviousDashboardRowViewModel(DashboardPreviousApplicationResource resource){
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.applicationState = resource.getApplicationState();
+        this.startDate = resource.getStartDate();
     }
 
     public ApplicationState getApplicationState() {

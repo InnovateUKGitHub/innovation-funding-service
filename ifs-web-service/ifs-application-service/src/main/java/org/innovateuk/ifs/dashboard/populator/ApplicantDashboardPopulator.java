@@ -20,10 +20,6 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.dashboard.populator.ApplicationDashboardUtils.toEuGrantTransferViewModel;
-import static org.innovateuk.ifs.dashboard.populator.ApplicationDashboardUtils.toInProgressViewModel;
-import static org.innovateuk.ifs.dashboard.populator.ApplicationDashboardUtils.toInSetupViewModel;
-import static org.innovateuk.ifs.dashboard.populator.ApplicationDashboardUtils.toPreviousViewModel;
 
 /**
  * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
@@ -54,7 +50,7 @@ public class ApplicantDashboardPopulator {
     private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardApplicationInSetupResource> inSetupResources){
         return inSetupResources
                 .stream()
-                .map(toInSetupViewModel())
+                .map(InSetupDashboardRowViewModel::new)
                 .sorted(comparing(InSetupDashboardRowViewModel::getTargetStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }
@@ -62,7 +58,7 @@ public class ApplicantDashboardPopulator {
     private List<EuGrantTransferDashboardRowViewModel> getViewModelForEuGrantTransfers(List<DashboardApplicationForEuGrantTransferResource> euGrantTransferResources){
         return euGrantTransferResources
                 .stream()
-                .map(toEuGrantTransferViewModel())
+                .map(EuGrantTransferDashboardRowViewModel::new)
                 .sorted()
                 .collect(toList());
     }
@@ -70,7 +66,7 @@ public class ApplicantDashboardPopulator {
     private List<InProgressDashboardRowViewModel> getViewModelForInProgress(List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources){
         return dashboardApplicationInProgressResources
                 .stream()
-                .map(toInProgressViewModel())
+                .map(InProgressDashboardRowViewModel::new)
                 .sorted(comparing(InProgressDashboardRowViewModel::getEndDate, nullsLast(naturalOrder())).thenComparing(InProgressDashboardRowViewModel::getStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }
@@ -78,7 +74,7 @@ public class ApplicantDashboardPopulator {
     private List<PreviousDashboardRowViewModel> getViewModelForPrevious(List<DashboardPreviousApplicationResource> applicantDashboardResource){
         return applicantDashboardResource
                 .stream()
-                .map(toPreviousViewModel())
+                .map(PreviousDashboardRowViewModel::new)
                 .sorted(comparing(PreviousDashboardRowViewModel::getStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }

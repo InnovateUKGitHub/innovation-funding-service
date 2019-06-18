@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -49,6 +50,18 @@ public class InProgressDashboardRowViewModel extends
         this.applicationProgress = applicationProgress;
         this.assignedToInterview = assignedToInterview;
         this.startDate = startDate;
+    }
+
+    public InProgressDashboardRowViewModel (DashboardApplicationInProgressResource resource){
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.assignedToMe = resource.isAssignedToMe();
+        this.applicationState = resource.getApplicationState();
+        this.leadApplicant = resource.isLeadApplicant();
+        this.endDate = resource.getEndDate();
+        this.daysLeft = resource.getDaysLeft();
+        this.applicationProgress = resource.getApplicationProgress();
+        this.assignedToInterview = resource.isAssignedToInterview();
+        this.startDate = resource.getStartDate();
     }
 
     public boolean isAssignedToMe() {

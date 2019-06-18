@@ -12,7 +12,7 @@ public class EuGrantTransferDashboardRowViewModelTest {
     private static final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
     @Test
-    public void testConstruct() {
+    public void construct() {
         EuGrantTransferDashboardRowViewModel viewModel = new EuGrantTransferDashboardRowViewModel("title",
                 1L,
                 "Competition",

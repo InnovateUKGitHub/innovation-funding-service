@@ -54,7 +54,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         assertEquals(0, dashboard.getInSetup().size());
         assertEquals(0, dashboard.getEuGrantTransfer().size());
         assertEquals(4, dashboard.getInProgress().size());
-        assertEquals(1, dashboard.getPrevious().size());
+        assertEquals(2, dashboard.getPrevious().size());
 
         assertTrue(dashboard.getPrevious().contains(EXAMPLE_EXPECTED_DASHBOARD_RESOURCE));
     }
