@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.function.Function.identity;
@@ -42,7 +41,6 @@ import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.E
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_PROGRESS;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_SETUP;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
-import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.finishedStates;
 import static org.innovateuk.ifs.application.resource.ApplicationState.inProgressStates;
 import static org.innovateuk.ifs.application.resource.ApplicationState.submittedStates;
@@ -52,7 +50,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.fundingC
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.fundingNotCompleteStatuses;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * Transactional and secured service that generates a dashboard of applications for a user.
@@ -83,7 +80,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         List<DashboardApplicationInSetupResource> inSetup = getUserApplicationsInSetup(projects, competitionsById);
         List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(projects, processRoles, applications, competitionsById);
         List<DashboardApplicationInProgressResource> inProgress = getUserApplicationsInProgress(processRoles, competitionsById, applications);
-        List<DashboardPreviousApplicationResource> previous = getUserPreviousApplications(projects, processRoles, competitionsById, userId);
+        List<DashboardPreviousApplicationResource> previous = getUserPreviousApplications(applications, processRoles, competitionsById);
 
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResourceBuilder()
                 .withInSetup(inSetup)
@@ -204,13 +201,22 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardPreviousApplicationResource> getUserPreviousApplications(List<ProjectResource> projects, List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById, long userId) {
-        List<ApplicationResource> nonH2020ApplicationsForUser = filterApplicationsForUserForNonH2020Competitions(userId, processRoles, projects, competitionsById);
+    private List<DashboardPreviousApplicationResource> getUserPreviousApplications(List<ApplicationResource> applications, List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById) {
+        List<Long> usersProcessRolesApplicationIds = processRoles
+                .stream()
+                .filter(this::hasAnApplicantRole)
+                .map(ProcessRoleResource::getApplicationId)
+                .collect(toList());
+
+        List<ApplicationResource> nonH2020ApplicationsForUser = applications
+                .stream()
+                .filter(application -> usersProcessRolesApplicationIds.contains(application.getId()))
+                .filter(application -> !competitionsById.get(application.getCompetition()).isH2020())
+                .collect(toList());
 
         return nonH2020ApplicationsForUser
                 .stream()
                 .filter(this::applicationFinished)
-                .filter(resource -> !resource.getApplicationState().equals(APPROVED))
                 .map(application -> new DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder()
                         .withTitle(application.getName())
                         .withApplicationId(application.getId())
@@ -220,36 +226,6 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                         .withStartDate(application.getStartDate())
                         .build())
                 .sorted()
-                .collect(toList());
-    }
-
-    private List<ApplicationResource> filterApplicationsForUserForNonH2020Competitions(Long userId, List<ProcessRoleResource> processRoles, List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
-        List<Long> usersProcessRolesApplicationIds = processRoles
-                .stream()
-                .filter(this::hasAnApplicantRole)
-                .map(ProcessRoleResource::getApplicationId)
-                .collect(toList());
-
-        List<ApplicationResource> applicationResources = findByUserId(userId).getSuccess();
-
-        return applicationResources
-                .stream()
-                .filter(application -> {
-                    List<Long> competitionIdsForUser = concat(
-                            applicationResources.stream().map(ApplicationResource::getCompetition),
-                            projects.stream().map(ProjectResource::getCompetition)
-                    )
-                            .distinct()
-                            .collect(toList());
-
-                    List<CompetitionResource> competitions =  competitionIdsForUser
-                            .stream()
-                            .map(competitionsById::get)
-                            .collect(toList());
-
-                    return usersProcessRolesApplicationIds.contains(application.getId())
-                            && !simpleToMap(competitions, CompetitionResource::getId, Function.identity()).get(application.getCompetition()).isH2020();
-                })
                 .collect(toList());
     }
 
