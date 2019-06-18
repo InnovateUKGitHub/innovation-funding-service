@@ -14,7 +14,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/[th:insert][0] "/>
-                <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/[!th:insert] "/>
+                <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

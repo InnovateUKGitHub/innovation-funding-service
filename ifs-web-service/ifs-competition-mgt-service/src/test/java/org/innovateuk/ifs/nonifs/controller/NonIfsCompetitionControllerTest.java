@@ -66,7 +66,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormPopulator.populate(competitionResource)).thenReturn(nonIfsDetailsForm);
-        when(nonIfsDetailsViewModelPopulator.populate()).thenReturn(nonIfsDetailsViewModel);
+        when(nonIfsDetailsViewModelPopulator.populate(competitionResource)).thenReturn(nonIfsDetailsViewModel);
 
         mockMvc.perform(get("/non-ifs-competition/setup/"+competitionId))
                 .andExpect(status().is2xxSuccessful())

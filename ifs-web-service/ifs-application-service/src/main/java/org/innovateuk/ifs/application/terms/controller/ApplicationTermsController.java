@@ -82,7 +82,7 @@ public class ApplicationTermsController {
     private static String backUrlFromOrigin(long applicationId, long competitionId, String origin, MultiValueMap<String, String> queryParams) {
         queryParams.put("applicationId", singletonList(String.valueOf(applicationId)));
         queryParams.put("competitionId", singletonList(String.valueOf(competitionId)));
-        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId");
+        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId", "projectId");
     }
 
     private static String backLabelFromOrigin(String origin) {

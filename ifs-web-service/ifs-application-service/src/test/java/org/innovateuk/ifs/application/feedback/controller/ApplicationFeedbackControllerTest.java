@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -123,6 +124,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetition(competition.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
@@ -151,6 +153,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetition(competition.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 

@@ -14,6 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of an Innovate UK grant award',size='govuk-heading-l'" />
 
+        <th:block th:fragment="terms-and-conditions-content">
         <ol class="govuk-list list-alpha">
             <li>These terms and conditions apply to organisations who are applying for grant funding either individually or in collaboration with other applicants. Each organisation must accept the terms and conditions before submitting its application.</li>
             <li>If you are successful, you will receive an award letter confirming any project specific conditions of the award. This letter must be countersigned and uploaded by the organisation in the correct manner before the project can start.</li>
@@ -123,6 +124,7 @@
         <p class="govuk-body">Where an event of force majeure, or a change to the Laws of England and Wales, UK government or devolved administration policy and/or the Legal Acts of the European Union occurs which affects Innovate UK’s ability to continue funding your project, we may terminate the award by giving you as much notice as possible in writing. In such circumstances, Innovate UK will meet any eligible costs you have reasonably incurred and paid prior to the date of termination.</p>
         <h2 class="govuk-heading-m">16. Entire agreement</h2>
         <p class="govuk-body">By submitting an application you are accepting these terms and conditions.</p>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

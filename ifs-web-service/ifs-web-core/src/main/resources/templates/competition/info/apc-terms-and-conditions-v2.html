@@ -15,6 +15,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition',size='govuk-heading-l'" />
 
+        <th:block th:fragment="terms-and-conditions-content">
         <ol class="govuk-list list-alpha">
             <li>These terms and conditions, together with Innovate UK’s policies and guidance notes apply to all organisations applying for grant funding. This is either individually or in collaboration. Each organisation must accept these terms and conditions before submitting an application.</li>
             <li>Whilst this is an Advanced Propulsion Centre (APC) UK competition, Innovate UK is the funding body and any grant which is awarded will be payable by Innovate UK subject to these terms and conditions. The role of APC, the services it provides and the related responsibilities of project participants are described in Schedule 1 at the end of these terms and conditions.</li>
@@ -166,6 +167,7 @@
         <p class="govuk-body">APC will agree the date, content and structure of the review with the lead organisation in advance.</p>
         <p class="govuk-body">The outcome of the annual review may result in further items for attention or issues that require resolution. Following the annual review and where appropriate, the Innovate UK Monitoring Officer will follow the monitoring officer guidelines and take appropriate action.</p>
 
+        </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

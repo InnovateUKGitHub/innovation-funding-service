@@ -14,6 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of a Young Innovator’s UK grant award',size='govuk-heading-l'" />
 
+        <th:block th:fragment="terms-and-conditions-content">
         <p class="govuk-body">These terms and conditions apply to individuals who have applied for grant funding. You must accept these terms and conditions before you can begin to claim any of your grant.</p>
         <h2 class="govuk-heading-s">Transfer to UK Research and Innovation</h2>
         <p class="govuk-body">In April 2018 changes will be made to the structure of the UK's research and innovation bodies (including Innovate UK).  A new body corporate will be established under the Higher Education and Research Act 2017 that brings together the UK's 7 Research Councils, Innovate UK and a new organisation, Research England.  This new body will be known as UK Research and Innovation (UKRI).</p>
@@ -104,6 +105,7 @@
         <p class="govuk-body">Where an event of force majeure (an unforeseen event that would prevent you from fulfilling your contract), or a change to the Laws of England and Wales, UK government or devolved administration policy and/or the Legal Acts of the European Union occurs which affects Innovate UK’s ability to continue funding your project, we can end the award by giving you as much notice as possible in writing. In such circumstances, Innovate UK will meet any eligible costs you have reasonably taken on, up to the new end date we have given you.</p>
         <h2 class="govuk-heading-m">15. Entire agreement</h2>
         <p class="govuk-body">By submitting an application you are accepting these terms and conditions in full.</p>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

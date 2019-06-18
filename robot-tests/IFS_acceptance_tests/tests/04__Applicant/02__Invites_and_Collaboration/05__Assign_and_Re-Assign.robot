@@ -130,7 +130,7 @@ Collaborators should not be able to edit application details
     And the user clicks the button/link       link = Assign test
     And the user clicks the button/link       link = Application details
     Then the user should not see the element  css = [id="application.name"]
-    And the user should not see the element   css = input#application_details-startdate_day
+    And the user should not see the element   id = application.startDate
     And the user should not see the element   jQuery = button:contains("Mark as complete")
 
 The question should be reassigned to the lead applicant
@@ -239,9 +239,8 @@ Lead applicant should be able to remove the partner organisation
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link  link = Assign test
     And the user clicks the button/link    link = Application team
-    And the user clicks the button/link    jQuery = .table-overflow:contains("Dennis") ~ p a
-    When the user clicks the button/link   jQuery = a:contains("Delete organisation"):first
-    And the user clicks the button/link    jQuery = .modal-delete-organisation button:contains("Delete organisation")
+    And the user clicks the button/link                jQuery = td:contains("Dennis") ~ td a:contains("Remove organisation")
+    Then The user clicks the button/link               jQuery = tr:contains("Dennis") .warning-modal button:contains("Remove organisation")
     Then the user should see the element   jQuery = h1:contains("Application team")
     And the user should not see the element  jQuery = td:contains("Dennis Bergkamp")
     #The following steps check if the collaborator should not see the application in the dashboard page

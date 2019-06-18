@@ -14,6 +14,8 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Terms and Conditions of an Innovate UK / Affinity Partner award ',size='govuk-heading-l'" />
+
+        <th:block th:fragment="terms-and-conditions-content">
         <ol class="list-alpha" type="A">
             <li>
                 These terms and conditions, together with the <a href="http://www.ati.org.uk/funding/framework-agreement/" class="govuk-link">Affinity Partner Framework Agreement</a>, and Innovate UK’s
@@ -274,6 +276,7 @@
         <h2 class="govuk-heading-m">16. Entire agreement</h2>
         <p class="govuk-body">By submitting an application you are accepting all terms and conditions set out here and in the linked
             documents.</p>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

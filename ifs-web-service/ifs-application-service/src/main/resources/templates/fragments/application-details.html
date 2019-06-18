@@ -28,7 +28,7 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0" id="application.startDate">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                             <span>Estimated timescales</span>
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
