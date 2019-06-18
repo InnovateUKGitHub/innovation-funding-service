@@ -44,19 +44,6 @@ public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater im
         });
     }
 
-    @Override
-    protected ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value) {
-        if (fieldName.endsWith("scoreFrom")) {
-            guidanceRow.setSubject(modifySubject(guidanceRow.getSubject(), value, null));
-            return serviceSuccess();
-        } else if (fieldName.endsWith("scoreTo")) {
-            guidanceRow.setSubject(modifySubject(guidanceRow.getSubject(), null, value));
-            return serviceSuccess();
-        } else {
-            return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
-        }
-    }
-
     private String modifySubject(String subject, String value1, String value2) {
         // Initialise subject for newly created guidance rows as will be null
         if (subject == null) {

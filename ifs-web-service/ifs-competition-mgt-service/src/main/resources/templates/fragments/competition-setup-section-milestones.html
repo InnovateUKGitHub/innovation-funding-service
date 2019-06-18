@@ -15,7 +15,6 @@
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-4-edit">

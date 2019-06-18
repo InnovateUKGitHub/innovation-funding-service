@@ -30,12 +30,6 @@ public interface CompetitionSetupService {
                                                CompetitionSetupSubsection subsection,
                                                Optional<Long> objectId);
 
-    ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
-                                                        String fieldName, String value, Optional<Long> objectId);
-
-    ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
-                                                           CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId);
-
     ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
                                                     CompetitionResource competitionResource, CompetitionSetupSection section);
 

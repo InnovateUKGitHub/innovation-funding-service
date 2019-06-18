@@ -86,11 +86,6 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-        if(!competitionSetupForm.isAutoSaveAction()) {
-            handleResearchCategoryApplicableChanges(competition, eligibilityForm);
-            handleGrantClaimMaximumChanges(competition, eligibilityForm);
-        }
-
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
         CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
@@ -158,25 +153,6 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         newGcm.setResearchCategory(oldGCM.getResearchCategory());
         newGcm.setMaximum(newValue);
         return newGcm;
-    }
-
-    @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              String fieldName,
-                                                              String value,
-                                                              Optional<Long> questionId) {
-        if (RESEARCH_CATEGORY_ID.equals(fieldName)) {
-            removeIfPresentAddIfNot(value, competitionResource.getResearchCategories());
-            return competitionSetupRestService.update(competitionResource).toServiceResult();
-        }
-        if (LEAD_APPLICANT_TYPES.equals(fieldName)) {
-            removeIfPresentAddIfNot(value, competitionResource.getLeadApplicantTypes());
-            return competitionSetupRestService.update(competitionResource).toServiceResult();
-        }
-        return super.handleIrregularAutosaveCase(competitionResource,
-                fieldName,
-                value,
-                questionId);
     }
 
     private void removeIfPresentAddIfNot(String inputValue, Collection<Long> collection) {

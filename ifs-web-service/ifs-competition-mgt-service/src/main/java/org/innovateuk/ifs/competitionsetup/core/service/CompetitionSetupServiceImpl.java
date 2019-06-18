@@ -151,48 +151,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         return populator.populateForm(competitionResource, objectId);
     }
 
-
-    @Override
-    public ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource,
-                                                               CompetitionSetupSection section,
-                                                               String fieldName,
-                                                               String value,
-                                                               Optional<Long> objectId) {
-        checkCompetitionInitialDetailsComplete(competitionResource, section);
-        checkIfInitialDetailsFieldIsRestricted(competitionResource, section, fieldName);
-
-        CompetitionSetupSectionUpdater saver = sectionSavers.get(section);
-        CompetitionSetupFormPopulator populator = formPopulators.get(section);
-        if (saver == null || populator == null) {
-            LOG.error("unable to save section " + section);
-            throw new IllegalArgumentException();
-        }
-
-        CompetitionSetupForm setupForm = populator.populateForm(competitionResource);
-        setupForm.setAutoSaveAction(true);
-        return saver.autoSaveSectionField(competitionResource, setupForm, fieldName, value, objectId);
-    }
-
-    @Override
-    public ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource,
-                                                                  CompetitionSetupSection section,
-                                                                  CompetitionSetupSubsection subsection,
-                                                                  String fieldName,
-                                                                  String value,
-                                                                  Optional<Long> objectId) {
-        checkCompetitionInitialDetailsComplete(competitionResource, section);
-        checkIfSubsectionIsInSection(section, subsection);
-
-        CompetitionSetupSubsectionUpdater saver = subsectionSavers.get(subsection);
-        CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
-        if (saver == null || populator == null) {
-            LOG.error("unable to save subsection " + subsection);
-            throw new IllegalArgumentException();
-        }
-
-        return saver.autoSaveSectionField(competitionResource, populator.populateForm(competitionResource, objectId), fieldName, value, objectId);
-    }
-
     @Override
     public ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
                                                            CompetitionResource competitionResource,
