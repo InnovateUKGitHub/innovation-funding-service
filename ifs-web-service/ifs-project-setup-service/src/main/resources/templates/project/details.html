@@ -16,7 +16,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.project.id})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle='Magic material',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
         <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
