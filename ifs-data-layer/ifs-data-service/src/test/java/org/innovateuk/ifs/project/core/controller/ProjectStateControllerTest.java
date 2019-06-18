@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.controller.ProjectStateController;
 import org.junit.Test;
 import org.mockito.Mock;
 

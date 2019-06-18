@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project.core.controller;
+package org.innovateuk.ifs.project.state.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

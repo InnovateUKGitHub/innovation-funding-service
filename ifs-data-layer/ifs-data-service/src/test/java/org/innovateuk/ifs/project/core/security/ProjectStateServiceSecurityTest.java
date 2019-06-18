@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateServiceImpl;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
