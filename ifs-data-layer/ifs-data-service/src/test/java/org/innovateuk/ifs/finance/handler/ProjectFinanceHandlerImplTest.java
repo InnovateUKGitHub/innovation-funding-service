@@ -81,8 +81,8 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong(), anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(projectFinanceRepositoryMock.findByProjectId(projectId)).thenReturn(singletonList(projectFinance));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong(), any(Long.class))).thenReturn(organisationFinanceDefaultHandlerMock);
-        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId(), competition)).thenReturn(costs);
-        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId(), competition)).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId())).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId())).thenReturn(costs);
     }
 
     @Test
