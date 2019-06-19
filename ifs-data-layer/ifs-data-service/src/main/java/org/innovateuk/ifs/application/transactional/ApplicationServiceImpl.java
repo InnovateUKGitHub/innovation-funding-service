@@ -170,7 +170,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
+    public ServiceResult<ApplicationResource> updateApplicationState(final long id,
                                                                      final ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
             return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);

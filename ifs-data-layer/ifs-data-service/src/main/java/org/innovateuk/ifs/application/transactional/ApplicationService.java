@@ -40,7 +40,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, ZonedDateTime fundingEmailDate);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
-    ServiceResult<ApplicationResource> updateApplicationState(@P("applicationId") final Long id, final ApplicationState state);
+    ServiceResult<ApplicationResource> updateApplicationState(@P("applicationId") final long id, final ApplicationState state);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.workflow.configuration;
 
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
 import org.innovateuk.ifs.application.workflow.actions.SendFinanceTotalsAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
@@ -31,6 +32,9 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
     @Autowired
     private SendFinanceTotalsAction sendFinanceTotalsAction;
 
+    @Autowired
+    private AutoCompleteSectionsAction autoCompleteSectionsAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -49,6 +53,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .withExternal()
                     .source(ApplicationState.CREATED)
                     .event(ApplicationEvent.OPENED)
+                    .action(autoCompleteSectionsAction)
                     .target(ApplicationState.OPEN)
                 .and()
                 .withExternal()

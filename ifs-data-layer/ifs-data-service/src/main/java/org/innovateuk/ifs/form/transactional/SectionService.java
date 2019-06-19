@@ -22,7 +22,7 @@ public interface SectionService {
     ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);
 
     @PostAuthorize("hasPermission(filterObject, 'READ')")
-	ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
+	ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(long competitionId, SectionType type);
 
     @PreAuthorize("hasPermission(#sectionId, 'org.innovateuk.ifs.form.resource.SectionResource', 'READ')")
     ServiceResult<SectionResource> getNextSection(final Long sectionId);
