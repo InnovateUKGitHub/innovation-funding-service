@@ -74,19 +74,19 @@ The user navigates to the Manage Project status page
 
 The user should be able to see all validations working correctly
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
     the user should see Manage offline validations
     the user should see Withdraw validations
 
 The user should see Manage offline validations
     the user selects the radio button   state  HANDLED_OFFLINE
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
 
 The user should see Withdraw validations
     the user selects the radio button   state  WITHDRAWN
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
 
 The user cancels then withdraws the project
     the user clicks the button/link            link = Withdraw project
