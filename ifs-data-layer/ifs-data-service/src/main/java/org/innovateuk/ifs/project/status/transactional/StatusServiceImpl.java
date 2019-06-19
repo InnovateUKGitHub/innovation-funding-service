@@ -271,10 +271,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus, ProjectState processState) {
 
         ApprovalType approvalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccess();
-        if (processState.isOffline()) {
-            return ApprovalType.APPROVED.equals(approvalType) ?
-                    COMPLETE : PENDING;
-        }
 
         switch (approvalType) {
             case APPROVED:
@@ -283,7 +279,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 return REJECTED;
             default:
                 if (project.getSpendProfileSubmittedDate() != null) {
-                    return ACTION_REQUIRED;
+                    return actionRequiredIfProjectActive(processState);
                 }
 
                 if (financeCheckStatus.equals(COMPLETE)) {
