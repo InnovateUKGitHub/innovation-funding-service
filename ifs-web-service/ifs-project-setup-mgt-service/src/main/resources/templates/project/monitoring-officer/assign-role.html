@@ -39,10 +39,19 @@
                     <dd id="firstName" th:text="${model.firstName}"></dd>
                     <dt>Last name</dt>
                     <dd id="lastName" th:text="${model.lastName}"></dd>
+                    <dt th:if="${model.phoneNumber}">Phone Number</dt>
+                    <dd th:if="${model.phoneNumber}" id="phoneNumberReadOnly" th:text="${model.phoneNumber}"></dd>
                 </dl>
 
-                <form th:object="${form}" method="post" th:action="@{/monitoring-officer/{userId}/assign-role(userId=${model.userId})}" novalidate="novalidate">
-
+                <form th:if="${model.phoneNumber}" th:object="${form}" method="post" th:action="@{/monitoring-officer/{userId}/assign-role(userId=${model.userId})}" novalidate="novalidate">
+                    <input th:if="${model.phoneNumber}" type="hidden" th:field="${model.phoneNumber}"/>
+                    <div class="govuk-form-group">
+                        <button type="submit" class="govuk-button govuk-!-margin-top-6">
+                            Add monitoring officer
+                        </button>
+                    </div>
+                </form>
+                <form th:unless="${model.phoneNumber}" th:object="${form}" method="post" th:action="@{/monitoring-officer/{userId}/assign-role(userId=${model.userId})}" novalidate="novalidate">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                         <label class="govuk-label govuk-label--s" for="phoneNumber">
                             Phone number
@@ -54,17 +63,15 @@
                                id="phoneNumber"
                                th:errorclass="govuk-input--error"
                                type="tel"
-                               th:field="*{phoneNumber}"
+                               th:field="${model.phoneNumber}"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                     </div>
-
                     <div class="govuk-form-group">
                         <button type="submit" class="govuk-button govuk-!-margin-top-6">
                             Add monitoring officer
                         </button>
                     </div>
-
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
