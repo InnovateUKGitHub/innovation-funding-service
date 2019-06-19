@@ -34,7 +34,6 @@ import org.springframework.validation.Validator;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -47,7 +46,6 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -55,7 +53,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.*;
-import static org.innovateuk.ifs.competitionsetup.initialdetail.sectionupdater.InitialDetailsSectionUpdater.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -228,75 +225,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
-    }
-
-    @Test
-    public void submitAutoSave() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-
-        String fieldName = "title";
-        String value = "New Title";
-        Long objectId = 2L;
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.autoSaveCompetitionSetupSection(
-                isA(CompetitionResource.class),
-                eq(CompetitionSetupSection.INITIAL_DETAILS),
-                eq(fieldName),
-                eq(value),
-                eq(Optional.of(objectId)))
-        )
-                .thenReturn(serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
-                .param("fieldName", fieldName)
-                .param("value", value)
-                .param("objectId", String.valueOf(objectId)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")));
-
-        verify(competitionSetupService).autoSaveCompetitionSetupSection(
-                isA(CompetitionResource.class),
-                eq(CompetitionSetupSection.INITIAL_DETAILS),
-                eq(fieldName),
-                eq(value),
-                eq(Optional.of(objectId))
-        );
-    }
-
-    @Test
-    public void submitAutoSaveValidationErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-
-        String fieldName = "openingDate";
-        String value = "20-02-2002";
-        String errorKey = "competition.setup.opening.date.not.in.future";
-        Long objectId = 2L;
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.autoSaveCompetitionSetupSection(
-                isA(CompetitionResource.class),
-                eq(CompetitionSetupSection.INITIAL_DETAILS),
-                eq(fieldName),
-                eq(value),
-                eq(Optional.of(objectId)))
-        )
-                .thenReturn(serviceFailure(fieldError(OPENINGDATE_FIELDNAME, value, errorKey)));
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
-                .param("fieldName", fieldName)
-                .param("value", value)
-                .param("objectId", String.valueOf(objectId)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("success", is("true")));
-
-        verify(competitionSetupService).autoSaveCompetitionSetupSection(
-                isA(CompetitionResource.class),
-                eq(CompetitionSetupSection.INITIAL_DETAILS),
-                eq(fieldName),
-                eq(value),
-                eq(Optional.of(objectId))
-        );
     }
 
     @Test

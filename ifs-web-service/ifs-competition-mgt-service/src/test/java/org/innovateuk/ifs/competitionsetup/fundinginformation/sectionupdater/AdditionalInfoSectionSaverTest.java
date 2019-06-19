@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.sectionupdater;
 
-import com.google.common.collect.Lists;
-import org.hamcrest.CoreMatchers;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -22,7 +19,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -47,6 +43,8 @@ public class AdditionalInfoSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
+		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
+
 		service.saveSection(competition, competitionSetupForm);
 
 		assertEquals("Activity", competition.getActivityCode());
@@ -54,61 +52,6 @@ public class AdditionalInfoSectionSaverTest {
 		assertEquals("PAF", competition.getPafCode());
 
 		verify(competitionSetupRestService).update(competition);
-	}
-
-	@Test
-	public void autoSaveFunders() {
-		CompetitionResource competition = newCompetitionResource().build();
-		int expectedFunders = competition.getFunders().size() + 3;
-		int lastIndex = expectedFunders - 1;
-		String validBudget = "199122";
-		AdditionalInfoForm form = new AdditionalInfoForm();
-        when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
-
-		//Test that auto save will fill in the blank funders.
-		ServiceResult<Void> result = service.autoSaveSectionField(competition, form,
-				"funder["+ lastIndex +"].funderBudget", validBudget, Optional.empty());
-
-		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(expectedFunders));
-		assertThat(competition.getFunders().get(lastIndex).getFunderBudget(), CoreMatchers.equalTo(new BigInteger(validBudget)));
-		assertTrue(result.isSuccess());
-
-	}
-
-
-	@Test
-	public void autoSaveRemoveFunders() {
-		CompetitionResource competition = newCompetitionResource().withFunders(Lists.newArrayList(
-				new CompetitionFunderResource(),
-				new CompetitionFunderResource(),
-				new CompetitionFunderResource()
-		)).build();
-		AdditionalInfoForm form = new AdditionalInfoForm();
-
-		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
-
-		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
-
-		//Test that out of range request to remove funders will leave the competition unchanged.
-		ServiceResult<Void> result = service.autoSaveSectionField(competition, form,
-				"removeFunder", "4", Optional.empty());
-
-		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
-		assertTrue(result.isSuccess());
-
-		//Test that a valid index can be removed.
-		result = service.autoSaveSectionField(competition, form,
-				"removeFunder", "2", Optional.empty());
-
-		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(2));
-		assertTrue(result.isSuccess());
-
-		//Test trying to remove 0th funder will fail with error.
-		result = service.autoSaveSectionField(competition, form,
-				"removeFunder", "0", Optional.empty());
-
-		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(2));
-		assertFalse(result.isSuccess());
 	}
 
 	@Test
@@ -154,6 +97,8 @@ public class AdditionalInfoSectionSaverTest {
 				.withStartDate(yesterday)
 				.withFundersPanelDate(tomorrow)
 				.build();
+
+		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
 		service.saveSection(competition, competitionSetupForm);
 
