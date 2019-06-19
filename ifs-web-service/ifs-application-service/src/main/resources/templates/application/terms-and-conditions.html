@@ -25,7 +25,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Award terms and conditions'" />
+        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
 
         <th:block th:if="${model.showHeaderAndFooter}">
             <!-- /* 1, Where there is only one organisation in the application: */ -->
