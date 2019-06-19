@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.core.documentation;
+package org.innovateuk.ifs.project.state.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.state.controller.ProjectStateController;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.core.transactional;
+package org.innovateuk.ifs.project.state.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
