@@ -53,20 +53,22 @@
                     <button disabled="disabled" class="govuk-button">Post a new query</button>
                 </th:block>
             </div>
-            <div class="govuk-grid-column-one-half">
-                <fieldset class="govuk-fieldset">
-                    <div class="alignright">
-                        <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
-                        <select id="querySection"
-                                onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
-                                class="govuk-select govuk-!-width-one-half">
-                            <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
-                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
-                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
-                        </select>
-                    </div>
-                </fieldset>
-            </div>
+            <th:block th:if="${model.projectIsActive}">
+                <div class="govuk-grid-column-one-half">
+                    <fieldset class="govuk-fieldset">
+                        <div class="alignright">
+                            <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
+                            <select id="querySection"
+                                    onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
+                                    class="govuk-select govuk-!-width-one-half">
+                                <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
+                                <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
+                                <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                </div>
+            </th:block>
         </div>
 
         <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
