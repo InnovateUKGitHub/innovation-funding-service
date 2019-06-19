@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -57,7 +58,10 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
-        return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE)));
+        return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))
+                .stream()
+                .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList()));
     }
 
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {

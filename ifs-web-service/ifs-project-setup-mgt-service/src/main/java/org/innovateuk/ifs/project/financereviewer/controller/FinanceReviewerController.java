@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financereviewer.controller;
 
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.financereviewer.form.FinanceReviewerForm;
 import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
 import org.innovateuk.ifs.project.financereviewer.viewmodel.FinanceReviewerViewModel;
@@ -8,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.function.Supplier;
 
 
 @Controller
@@ -26,11 +28,26 @@ public class FinanceReviewerController {
     @GetMapping
     public String financeReviewer(@ModelAttribute(value = "form", binding = false) FinanceReviewerForm form,
                                   BindingResult bindingResult,
-                                  long projectId,
+                                  @PathVariable long projectId,
                                   Model model) {
         model.addAttribute("model", new FinanceReviewerViewModel(projectRestService.getProjectById(projectId).getSuccess(),
                 financeReviewerRestService.findFinanceUsers().getSuccess()));
         return "project/finance-reviewer";
+    }
+
+    @PostMapping
+    public String assignFinanceReviewer(@Valid @ModelAttribute(value = "form") FinanceReviewerForm form,
+                                        BindingResult bindingResult,
+                                        ValidationHandler validationHandler,
+                                        @PathVariable long projectId,
+                                        @PathVariable long competitionId,
+                                        Model model) {
+        Supplier<String> failureView = () -> financeReviewer(form, bindingResult, projectId, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            validationHandler.addAnyErrors(financeReviewerRestService.assignFinanceReviewerToProject(form.getUserId(), projectId));
+            return validationHandler.failNowOrSucceedWith(failureView, () -> String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId));
+        });
     }
 
 }

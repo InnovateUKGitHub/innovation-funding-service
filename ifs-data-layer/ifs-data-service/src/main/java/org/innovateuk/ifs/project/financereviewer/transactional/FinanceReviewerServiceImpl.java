@@ -7,9 +7,12 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -17,22 +20,34 @@ import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Service
 public class FinanceReviewerServiceImpl extends BaseTransactionalService implements FinanceReviewerService {
 
     @Autowired
     private FinanceReviewerRepository financeReviewerRepository;
 
     @Override
-    public ServiceResult<Long> assignFinanceReviewer(long projectId, long financeReviewerUserId) {
+    @Transactional
+    public ServiceResult<Long> assignFinanceReviewer(long financeReviewerUserId, long projectId) {
         return getProjectFinanceUser(financeReviewerUserId)
                 .andOnSuccess(user -> getProject(projectId)
-                        .andOnSuccessReturn((project) -> financeReviewerRepository.save(new FinanceReviewer(user, project)).getId())
-                );
+                        .andOnSuccessReturn((project) -> {
+                            if (project.getFinanceReviewer() != null) {
+                                project.getFinanceReviewer().setUser(user);
+                                return project.getFinanceReviewer().getId();
+                            } else {
+                                FinanceReviewer reviewer = financeReviewerRepository.save(new FinanceReviewer(user, project));
+                                return reviewer.getId();
+                            }
+                        }));
     }
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findFinanceUsers() {
-        return serviceSuccess(userRepository.findByRolesAndStatusIn(PROJECT_FINANCE, EnumSet.of(ACTIVE)));
+        return serviceSuccess(userRepository.findByRolesAndStatusIn(PROJECT_FINANCE, EnumSet.of(ACTIVE))
+                .stream()
+                .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList()));
     }
 
     @Override

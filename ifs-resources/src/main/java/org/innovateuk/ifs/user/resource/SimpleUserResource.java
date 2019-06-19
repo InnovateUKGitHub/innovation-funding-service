@@ -8,6 +8,8 @@ public class SimpleUserResource {
     private String lastName;
     private String email;
 
+    public SimpleUserResource() {}
+
     public SimpleUserResource(long id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;

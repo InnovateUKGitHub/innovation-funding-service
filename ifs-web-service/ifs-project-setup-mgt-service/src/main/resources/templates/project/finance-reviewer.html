@@ -45,7 +45,7 @@
                         th:field="*{userId}"
                         data-auto-complete="">
                     <option value="">Select finance reviewer</option>
-                    <option th:each="user : ${model.user}"
+                    <option th:each="user : ${model.users}"
                             th:value="${user.id}"
                             th:text="|${user.name}|"></option>
                 </select>

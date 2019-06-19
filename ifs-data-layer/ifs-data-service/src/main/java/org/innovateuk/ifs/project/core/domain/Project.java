@@ -65,7 +65,8 @@ public class Project implements ProcessActivity {
     @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project", fetch = FetchType.LAZY)
     private MonitoringOfficer projectMonitoringOfficer = null;
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class, mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
+            mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
     private FinanceReviewer financeReviewer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)

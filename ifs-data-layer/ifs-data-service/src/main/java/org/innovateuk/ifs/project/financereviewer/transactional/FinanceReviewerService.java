@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FinanceReviewerService {
 
-    ServiceResult<Long> assignFinanceReviewer(long projectId, long financeReviewerUserId);
+    ServiceResult<Long> assignFinanceReviewer(long financeReviewerUserId, long projectId);
 
     ServiceResult<List<SimpleUserResource>> findFinanceUsers();
 
