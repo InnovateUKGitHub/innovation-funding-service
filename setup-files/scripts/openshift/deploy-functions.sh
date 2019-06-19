@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -42,7 +42,7 @@ function isPerfEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
