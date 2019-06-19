@@ -2,11 +2,13 @@ package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +30,17 @@ public class ProjectDetailsViewModel {
     private Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap;
     private boolean locationPerPartnerRequired;
     private List<PartnerOrganisationResource> partnerOrganisations;
+    private String financeReviewerName;
+    private String financeReviewerEmail;
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
                                    String competitionName, boolean ifsAdministrator,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
-                                   List<PartnerOrganisationResource> partnerOrganisations) {
+                                   List<PartnerOrganisationResource> partnerOrganisations,
+                                   String financeReviewerName,
+                                   String financeReviewerEmail) {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -44,6 +50,22 @@ public class ProjectDetailsViewModel {
         this.organisationFinanceContactMap = organisationFinanceContactMap;
         this.locationPerPartnerRequired = locationPerPartnerRequired;
         this.partnerOrganisations = partnerOrganisations;
+        this.financeReviewerName = financeReviewerName;
+        this.financeReviewerEmail = financeReviewerEmail;
+    }
+
+    public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project, CompetitionResource competition) {
+        return new ProjectDetailsViewModel(project,
+                competition.getId(),
+                competition.getName(),
+                false,
+                null,
+                null,
+                null,
+                false,
+                Collections.emptyList(),
+                null,
+                null);
     }
 
     public ProjectResource getProject() {
@@ -98,16 +120,29 @@ public class ProjectDetailsViewModel {
         return organisationFinanceContactMap;
     }
 
+
+    public String getFinanceReviewerName() {
+        return financeReviewerName;
+    }
+
+    public String getFinanceReviewerEmail() {
+        return financeReviewerEmail;
+    }
+
     public boolean isLocationPerPartnerRequired() {
         return locationPerPartnerRequired;
     }
 
     public String getPostcodeForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
-                .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
+                .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
                 .map(PartnerOrganisationResource::getPostcode)
                 .orElse(null);
+    }
+
+    public boolean isFinanceReviewerAssigned() {
+        return financeReviewerEmail != null;
     }
 
     @Override

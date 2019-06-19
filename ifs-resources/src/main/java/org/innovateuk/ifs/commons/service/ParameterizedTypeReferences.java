@@ -44,12 +44,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.AffiliationListResource;
-import org.innovateuk.ifs.user.resource.AffiliationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -131,6 +126,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {
         return new ParameterizedTypeReference<List<UserResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<SimpleUserResource>> simpleUserListType() {
+        return new ParameterizedTypeReference<List<SimpleUserResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {

@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,11 +56,8 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findAll() {
-        return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))
-                .stream()
-                .map(userMapper::mapToResource)
-                .collect(toList()));
+    public ServiceResult<List<SimpleUserResource>> findAll() {
+        return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE)));
     }
 
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {

@@ -2,9 +2,11 @@ package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -33,7 +35,16 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     List<User> findByRoles(Role role);
 
-    List<User> findByRolesAndStatusIn(Role role, Collection<UserStatus> statuses);
+    @Query("SELECT new org.innovateuk.ifs.user.resource.SimpleUserResource( " +
+                "user.id, " +
+                "user.firstName, " +
+                "user.lastName, " +
+                "user.email " +
+            ") " +
+            "FROM User user ")
+//            "WHERE user.role = :role " +
+//            "AND user.status IN :statuses")
+    List<SimpleUserResource> findByRolesAndStatusIn(Role role, Collection<UserStatus> statuses);
 
     List<User> findByRolesOrderByFirstNameAscLastNameAsc(Role role);
 

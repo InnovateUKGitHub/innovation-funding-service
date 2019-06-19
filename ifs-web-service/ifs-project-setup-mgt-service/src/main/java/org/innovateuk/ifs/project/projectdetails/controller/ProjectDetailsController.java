@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
@@ -79,6 +81,9 @@ public class ProjectDetailsController {
     @Autowired
     private NavigationUtils navigationUtils;
 
+    @Autowired
+    private FinanceReviewerRestService financeReviewerRestService;
+
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
@@ -99,6 +104,9 @@ public class ProjectDetailsController {
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
         boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
+        Optional<SimpleUserResource> financeReviewer = Optional.ofNullable(projectResource.getFinanceReviewer())
+                .map(id -> financeReviewerRestService.findFinanceReviewerForProject(projectId).getSuccess());
+
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
@@ -109,7 +117,9 @@ public class ProjectDetailsController {
                 locationPerPartnerRequired,
                 locationPerPartnerRequired?
                         partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList()));
+                        : Collections.emptyList(),
+                financeReviewer.map(SimpleUserResource::getName).orElse(null),
+                financeReviewer.map(SimpleUserResource::getEmail).orElse(null)));
 
         return "project/detail";
     }
@@ -204,15 +214,7 @@ public class ProjectDetailsController {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        model.addAttribute("model", new ProjectDetailsViewModel(project,
-                competitionId,
-                competition.getName(),
-                false,
-                null,
-                null,
-                null,
-                false,
-                Collections.emptyList()));
+        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project, competition));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
