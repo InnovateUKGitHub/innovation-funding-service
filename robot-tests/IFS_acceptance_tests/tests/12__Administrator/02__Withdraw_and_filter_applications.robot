@@ -9,6 +9,10 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...
 ...             IFS-5966 Migrate withdrawn projects back to project setup dashboard
 ...
+...             IFS-5958 Read Only view of withdrawn and offline projects in project setup dashboards
+...
+...             IFS-5939 New manage project status page
+...
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -19,44 +23,74 @@ ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
 ${successfulState}                    Successful
 ${ineligibleState}                    Ineligible
+${successfulState}                    Successful
 
 *** Test Cases ***
-The IFS Admin searches for a project
+The IFS Admin searches for a project and clears all filters after searching for a project
     [Documentation]  IFS-3565
-    [Tags]
-    Given The user logs-in in new browser              &{ifs_admin_user_credentials}
-    And the user navigates to the page                 ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
+    [Setup]  The user logs-in in new browser              &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                         ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     When the user enters a project to search for and clicks the filter button    74  # This is a partial search, which will show the Low-friction wheel coatings project
     Then the user should see the Low-friction wheel coatings project
+    [Teardown]  the user clicks the button/link                                  css = button[class="govuk-button"]  # Filter
 
-The IFS Admin clears all filters after searching for a project
-    [Documentation]  IFS-3565
-    [Tags]
-    When the user clicks the button/link    css = button[class="govuk-button"]  # Filter
+Manage project status Validations
+    [Documentation]  IFS-5939
+    Given the user navigates to the Manage Project status page
+    Then the user should be able to see all validations working correctly
 
-The IFS Admin withdraws a project from Project Setup
-    [Documentation]  IFS-2945
-    [Tags]
-    Given the user clicks the button/link                  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
-    When the user cancels then withdraws the project
-    Then the user should see the element                   jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+IFS Admin is able to Withdraw a project
+    [Documentation]  IFS-2945 IFS-3654 IFS-5939
+    Given the user selects the checkbox     confirmationWithdrawn
+    When the user clicks the button/link   jQuery = button:contains("Change project status")
+    Then the project should be withdrawn
 
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
-    [Tags]
     [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
-    Given the user selects a filter for the applications     ${unsuccessfulState}  filter
-    When the user can see the previous application          ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}  ${unsuccessfulState}
-    Then the user selects a filter for the applications     ${ineligibleState}  filter
-    And the user can see the previous application          ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}  ${ineligibleState}
+    Given the user selects a filter for the applications    ${successfulState}  filter
+    Then the user should be able to see previous applications by status
 
 The IFS Admin clears any filters applied and can see all of the applications
     [Documentation]  IFS-3473
-    [Tags]
-    When the user clicks the button/link                         link = Clear all filters
+    Given the user clicks the button/link                         link = Clear all filters
     Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***
+The user should be able to see previous applications by status
+    the user can see the previous application          ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
+    the user selects a filter for the applications     ${unsuccessfulState}  filter
+    the user can see the previous application          ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}  ${unsuccessfulState}
+    the user selects a filter for the applications     ${ineligibleState}  filter
+    the user can see the previous application          ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}  ${ineligibleState}
+
+The project should be withdrawn
+     the user should see the element      jQuery = p:contains("This project has been withdrawn.")
+     the user clicks the button/link      link = Return to project details
+     the user should see the element      jQuery = h1:contains("Project details")
+     the user clicks the button/link      link = Projects in setup
+     the user should not see the element  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+
+The user navigates to the Manage Project status page
+    the user clicks the button/link   jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+    the user clicks the button/link   link = Manage project status
+
+The user should be able to see all validations working correctly
+    the user clicks the button/link    jQuery = button:contains("Change project status")
+    the user should see a field and summary error     ${empty_field_warning_message}
+    the user should see Manage offline validations
+    the user should see Withdraw validations
+
+The user should see Manage offline validations
+    the user selects the radio button   state  HANDLED_OFFLINE
+    the user clicks the button/link    jQuery = button:contains("Change project status")
+    the user should see a field and summary error     ${empty_field_warning_message}
+
+The user should see Withdraw validations
+    the user selects the radio button   state  WITHDRAWN
+    the user clicks the button/link    jQuery = button:contains("Change project status")
+    the user should see a field and summary error     ${empty_field_warning_message}
+
 The user cancels then withdraws the project
     the user clicks the button/link            link = Withdraw project
     the user clicks the button/link            jQuery = button:contains("Withdraw project") ~ button:contains("Cancel")  #Cancel the modal
@@ -82,6 +116,6 @@ The user enters a project to search for and clicks the Filter button
     the user enters text to a text field    id = applicationSearchString  ${projectID}
     the user clicks the button/link         css = button[class="govuk-button"]  # Filter
 
-the user should see the Low-friction wheel coatings project
+The user should see the Low-friction wheel coatings project
     the user should see the element        jQuery = th:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}")
 

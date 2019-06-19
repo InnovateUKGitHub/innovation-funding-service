@@ -32,7 +32,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.function.Supplier;
@@ -112,40 +111,6 @@ public class ProjectDetailsController {
                         : Collections.emptyList()));
 
         return "project/detail";
-    }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
-    @PostMapping("/{projectId}/withdraw")
-    public String withdrawProject(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId,
-                                  HttpServletRequest request) {
-
-        projectRestService.withdrawProject(projectId).getSuccess();
-
-        return String.format("redirect:/competition/%d/status/all", competitionId);
-    }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "HANDLE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to handle projects offline")
-    @PostMapping("/{projectId}/handle-offline")
-    public String handleProjectOffline(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId,
-                                  HttpServletRequest request) {
-
-        projectRestService.handleProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
-    }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "COMPLETE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to complete projects offline")
-    @PostMapping("/{projectId}/complete-offline")
-    public String completeProjectOffline(@PathVariable("competitionId") final long competitionId,
-                                       @PathVariable("projectId") final long projectId,
-                                       HttpServletRequest request) {
-
-        projectRestService.completeProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
