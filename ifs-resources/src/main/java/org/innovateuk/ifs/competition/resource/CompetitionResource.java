@@ -28,6 +28,7 @@ public class CompetitionResource {
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     public static final String H2020_TYPE_NAME = "Horizon 2020";
+    public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
 
     private Long id;
@@ -142,6 +143,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isH2020() {
         return H2020_TYPE_NAME.equals(competitionTypeName);
+    }
+
+    @JsonIgnore
+    public boolean isExpressionOfInterest() {
+        return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
     }
 
     @JsonIgnore
