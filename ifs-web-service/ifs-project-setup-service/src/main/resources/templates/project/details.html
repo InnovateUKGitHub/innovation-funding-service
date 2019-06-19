@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.project.getName() + ' - Project details'}" />
 </head>
 <body class="govuk-template__body project-detail">
 
@@ -16,7 +16,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.project.id})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle='Magic material',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.getName()},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
         <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
