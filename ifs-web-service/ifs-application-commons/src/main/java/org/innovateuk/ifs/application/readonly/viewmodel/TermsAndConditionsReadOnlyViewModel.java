@@ -39,6 +39,10 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         return applicationTermsViewModel.isTermsAcceptedByAllOrganisations();
     }
 
+    public ApplicationTermsViewModel getApplicationTermsViewModel() {
+        return applicationTermsViewModel;
+    }
+
     public ApplicationTermsPartnerViewModel getApplicationTermsPartnerViewModel() {
         return applicationTermsPartnerViewModel;
     }
