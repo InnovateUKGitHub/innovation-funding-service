@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.financereviewer.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.financereviewer.form.FinanceReviewerForm;
 import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
 import org.innovateuk.ifs.project.financereviewer.viewmodel.FinanceReviewerViewModel;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,9 @@ import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/finance-reviewer")
+@SecuredBySpring(value = "FINANCE_REVIEWER",
+        description = "Only project finance view and change projects finance reviewer")
+@PreAuthorize("hasAuthority('project_finance')")
 public class FinanceReviewerController {
 
     @Autowired

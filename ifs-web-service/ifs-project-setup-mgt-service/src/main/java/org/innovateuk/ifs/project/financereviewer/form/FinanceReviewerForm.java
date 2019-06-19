@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class FinanceReviewerForm {
 
-    @NotNull
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Long userId;
 
     public Long getUserId() {
