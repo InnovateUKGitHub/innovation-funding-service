@@ -8,5 +8,7 @@ public interface ApplicationQuestionReadOnlyViewModel {
     boolean shouldDisplayActions();
     boolean shouldDisplayMarkAsComplete();
     boolean isLead();
-
+    default boolean isDisplayCompleteStatus() {
+        return true;
+    }
 }
