@@ -315,6 +315,7 @@ ul {
     background-color: $govuk-error-colour;
   }
 }
+
 .ifs-completed-offline {
   @extend %badge;
 
@@ -322,6 +323,7 @@ ul {
     background-color: govuk-colour("green");
   }
 }
+
 .ifs-managed-offline {
   @extend %badge;
 

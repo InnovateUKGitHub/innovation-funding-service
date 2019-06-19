@@ -43,32 +43,29 @@
         <p class="govuk-body">
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
-        <div class="govuk-grid-row govuk-!-margin-bottom-6">
-            <div class="govuk-grid-column-one-half">
-                <th:block th:if="${model.financeContact.isPresent() and model.projectIsActive}">
-                    <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
-                </th:block>
 
-                <th:block th:unless="${model.financeContact.isPresent() or model.projectIsActive}">
-                    <button disabled="disabled" class="govuk-button">Post a new query</button>
-                </th:block>
-            </div>
-            <th:block th:if="${model.projectIsActive}">
-                <div class="govuk-grid-column-one-half">
-                    <fieldset class="govuk-fieldset">
-                        <div class="alignright">
-                            <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
-                            <select id="querySection"
-                                    onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
-                                    class="govuk-select govuk-!-width-one-half">
-                                <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
-                                <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
-                                <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
-                            </select>
-                        </div>
-                    </fieldset>
-                </div>
+        <div class="govuk-form-group"
+             th:if="model.projectIsActive">
+            <th:block th:if="${model.financeContact.isPresent()}">
+                <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
             </th:block>
+
+            <th:block th:unless="${model.financeContact.isPresent()}">
+                <button disabled="disabled" class="govuk-button">Post a new query</button>
+            </th:block>
+        </div>
+
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
+                <select id="querySection"
+                        onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
+                        class="govuk-select govuk-!-width-one-half">
+                    <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
+                    <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
+                    <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
+                </select>
+            </fieldset>
         </div>
 
         <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
