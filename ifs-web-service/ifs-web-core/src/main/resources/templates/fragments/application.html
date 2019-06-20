@@ -179,7 +179,7 @@
         <div class="collapsible">
             <p class="govuk-body">
                 <a class="govuk-link"
-                   th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.applicationTermsQuestionId})}">
+                   th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.applicationTermsQuestionId})} + ${model.originQuery}">
                     View award terms and conditions</a>
             </p>
         </div>
