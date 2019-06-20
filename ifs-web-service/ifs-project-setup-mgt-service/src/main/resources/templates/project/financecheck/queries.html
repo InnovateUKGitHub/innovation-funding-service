@@ -45,7 +45,7 @@
         </p>
 
         <div class="govuk-form-group"
-             th:if="model.projectIsActive">
+             th:if="${model.projectIsActive}">
             <th:block th:if="${model.financeContact.isPresent()}">
                 <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
             </th:block>
