@@ -1,7 +1,7 @@
 -- IFS-5820
 
 CREATE TABLE activity_log (
-  id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+  id bigint(20) PRIMARY KEY AUTO_INCREMENT,
   application_id bigint(20) NOT NULL,
   type enum('APPLICATION_SUBMITTED',
             'PROJECT_DETAILS_COMPLETE',
@@ -26,7 +26,7 @@ CREATE TABLE activity_log (
             'GRANT_OFFER_LETTER_PUBLISHED',
             'GRANT_OFFER_LETTER_SIGNED',
             'GRANT_OFFER_LETTER_APPROVED') NOT NULL,
-  created_on DATETIME NOT NULL,
+  created_on datetime NOT NULL,
   created_by bigint(20) NOT NULL,
   organisation_id bigint(20),
   thread_id bigint(20),
