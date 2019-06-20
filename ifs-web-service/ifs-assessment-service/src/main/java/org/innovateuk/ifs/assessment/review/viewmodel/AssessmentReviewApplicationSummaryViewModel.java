@@ -13,11 +13,20 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     private final boolean collaborativeProject;
 
-    public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel, CompetitionResource currentCompetition, AssessmentReviewFeedbackViewModel feedbackViewModel) {
+    private final long applicationId;
+
+    private final long applicationTermsQuestionId;
+
+    public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel,
+                                                       CompetitionResource currentCompetition,
+                                                       AssessmentReviewFeedbackViewModel feedbackViewModel,
+                                                       long termsAndConditionsId) {
         this.summaryViewModel = summaryViewModel;
         this.currentCompetition = currentCompetition;
         this.feedbackViewModel = feedbackViewModel;
         this.collaborativeProject = summaryViewModel.getCurrentApplication().isCollaborativeProject();
+        this.applicationId = summaryViewModel.getCurrentApplication().getId();
+        this.applicationTermsQuestionId = termsAndConditionsId;
     }
 
     public SummaryViewModel getSummaryViewModel() {
@@ -34,5 +43,13 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public long getApplicationTermsQuestionId() {
+        return applicationTermsQuestionId;
     }
 }
