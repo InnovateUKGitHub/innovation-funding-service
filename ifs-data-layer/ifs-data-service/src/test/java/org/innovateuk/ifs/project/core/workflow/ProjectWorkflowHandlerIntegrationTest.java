@@ -99,6 +99,27 @@ public class ProjectWorkflowHandlerIntegrationTest extends
                 ProjectState.HANDLED_OFFLINE, ProjectState.COMPLETED_OFFLINE, ProjectEvent.COMPLETE_OFFLINE);
     }
 
+
+    @Test
+    public void putProjectOnHold() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
+                ((project, internalUser) -> projectWorkflowHandler.putProjectOnHold(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ProjectState.SETUP, ProjectState.ON_HOLD, ProjectEvent.PUT_ON_HOLD);
+    }
+
+    @Test
+    public void resumeProject() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
+                ((project, internalUser) -> projectWorkflowHandler.resumeProject(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ProjectState.ON_HOLD, ProjectState.SETUP, ProjectEvent.RESUME_PROJECT);
+    }
+
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 
         Project project = newProject().build();

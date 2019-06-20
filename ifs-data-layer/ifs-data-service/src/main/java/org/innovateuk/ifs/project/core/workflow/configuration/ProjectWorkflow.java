@@ -105,8 +105,9 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
 
     private void configureCreated(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
         transitions
-                .withInternal()
+                .withExternal()
                     .source(SETUP)
-                    .event(PROJECT_CREATED);
+                    .event(PROJECT_CREATED)
+                    .target(SETUP);
     }
 }
