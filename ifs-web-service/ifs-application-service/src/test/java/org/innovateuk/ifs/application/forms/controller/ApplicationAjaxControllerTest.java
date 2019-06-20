@@ -31,11 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTest<ApplicationAjaxController> {
 
-    @Mock
-    private DefaultFinanceFormHandler defaultFinanceFormHandler;
-
-    @Mock
-    private DefaultFinanceRowRestService financeRowRestService;
 
     private ApplicationResource application;
     private Long questionId;
