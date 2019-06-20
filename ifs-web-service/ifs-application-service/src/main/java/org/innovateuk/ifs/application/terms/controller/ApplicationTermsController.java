@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'interview_assessor', 'panel_assessor', 'assessor')")
 @SecuredBySpring(value = "Controller",
         description = "Only applicants are allowed to view the application terms",
         securedType = ApplicationTermsController.class)
