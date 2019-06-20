@@ -5,6 +5,8 @@ CREATE TABLE activity_log (
   application_id bigint(20) NOT NULL,
   type enum('APPLICATION_SUBMITTED',
             'PROJECT_DETAILS_COMPLETE',
+            'PROJECT_MANAGER_NOMINATED',
+            'FINANCE_CONTACT_NOMINATED',
             'DOCUMENT_UPLOADED',
             'DOCUMENT_APPROVED',
             'MONITORING_OFFICER_ASSIGNED',

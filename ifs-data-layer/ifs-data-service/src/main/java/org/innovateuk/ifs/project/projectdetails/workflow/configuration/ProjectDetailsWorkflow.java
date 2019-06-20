@@ -66,7 +66,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .and()
             .withExternal()
                 .source(PENDING)
-                .event(PROJECT_MANAGER_ADDED)
+                .event(PROJECT_LOCATION_ADDED)
                 .target(DECIDE_IF_READY_TO_SUBMIT)
                 .and()
             .withChoice()
