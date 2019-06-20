@@ -79,7 +79,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
@@ -153,7 +153,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Comp 1", model.getCompetitionName());
-        assertTrue(model.isIfsAdministrator());
+        assertTrue(model.isProjectFinanceUser());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
