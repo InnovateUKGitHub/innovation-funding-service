@@ -500,7 +500,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         String reason = "reason";
 
         Application application = newApplication()
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .withId(applicationId)
                 .build();
 

@@ -23,7 +23,7 @@ import java.time.ZonedDateTime;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -209,7 +209,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withId(3L)
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(true)
-                .withApplicationState(OPEN)
+                .withApplicationState(OPENED)
                 .build();
 
 
@@ -238,7 +238,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withId(3L)
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(false)
-                .withApplicationState(OPEN)
+                .withApplicationState(OPENED)
                 .build();
 
         ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), questionId, emptyList());

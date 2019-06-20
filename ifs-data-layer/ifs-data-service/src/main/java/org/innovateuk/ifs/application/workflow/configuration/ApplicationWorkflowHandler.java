@@ -73,11 +73,11 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
     }
 
     public boolean open(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.OPENED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.OPEN), application);
     }
 
     public boolean submit(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.SUBMITTED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.SUBMIT), application);
     }
 
     public boolean markIneligible(Application application, IneligibleOutcome ineligibleOutcome) {
@@ -93,11 +93,11 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
     }
 
     public boolean approve(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.APPROVED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.APPROVE), application);
     }
 
     public boolean reject(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.REJECTED), application);
+        return fireEvent(applicationMessage(application, ApplicationEvent.REJECT), application);
     }
 
     public boolean notifyFromApplicationState(Application application, ApplicationState applicationState) {
@@ -114,7 +114,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
                 return approve(application);
             case REJECTED:
                 return reject(application);
-            case OPEN:
+            case OPENED:
                 return open(application);
             default:
                 throw new IllegalArgumentException("unknown applicationState: " + applicationState);

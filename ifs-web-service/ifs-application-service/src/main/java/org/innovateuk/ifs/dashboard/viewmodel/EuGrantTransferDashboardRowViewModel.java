@@ -43,7 +43,7 @@ public class EuGrantTransferDashboardRowViewModel extends
 
     public boolean isInProgress() {
         return CREATED.equals(applicationState) ||
-                OPEN.equals(applicationState);
+                OPENED.equals(applicationState);
     }
 
     public boolean isIneligible() {

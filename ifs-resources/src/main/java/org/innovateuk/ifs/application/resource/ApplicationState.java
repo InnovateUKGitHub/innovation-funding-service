@@ -18,7 +18,7 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum {
     INELIGIBLE_INFORMED(31, State.NOT_APPLICABLE_INFORMED, "Ineligible"),
     APPROVED(32, State.ACCEPTED, "Successful"),
     REJECTED(33, State.REJECTED, "Unsuccessful"),
-    OPEN(28, State.OPEN, "In progress"),
+    OPENED(28, State.OPEN, "In progress"),
     WITHDRAWN(49, State.WITHDRAWN, "Withdrawn");
 
     final long id;
@@ -35,7 +35,7 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum {
 
     public static final ImmutableSet<ApplicationState> inProgressStates = Sets.immutableEnumSet(
             CREATED,
-            OPEN);
+            OPENED);
 
     public static final ImmutableSet<ApplicationState> finishedStates = Sets.immutableEnumSet(
             APPROVED,

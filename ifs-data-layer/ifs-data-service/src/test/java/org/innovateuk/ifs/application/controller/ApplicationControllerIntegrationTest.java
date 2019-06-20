@@ -111,7 +111,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void testUpdateApplicationStateApproved() {
-        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
         assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess().getApplicationState());
@@ -120,15 +120,15 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     @Rollback
     public void testUpdateApplicationStateSubmittedNotPossible() {
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
-        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
+        assertEquals(ApplicationState.OPENED, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
     }
 
     @Rollback
     @Test
     public void testUpdateApplicationStateRejected() {
-        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.REJECTED);
         assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess().getApplicationState());
@@ -136,8 +136,8 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Test
     public void testUpdateApplicationStateOpened() {
-        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPENED);
+        assertEquals(ApplicationState.OPENED, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
     }
 
     @Rollback
@@ -168,7 +168,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void markAsIneligible() {
-        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
 
@@ -185,7 +185,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void informIneligible() {
-        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
         controller.markAsIneligible(APPLICATION_SUBMITTABLE_ID, newIneligibleOutcomeResource().build());
@@ -202,7 +202,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Rollback
     @Test
     public void withdrawApplication() {
-        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPENED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
 

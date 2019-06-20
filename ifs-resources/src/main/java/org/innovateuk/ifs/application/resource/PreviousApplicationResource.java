@@ -68,7 +68,7 @@ public class PreviousApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED;
     }
 
     @JsonIgnore

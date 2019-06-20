@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicati
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
@@ -157,7 +157,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withTitle("Title")
                 .withApplicationId(7L)
                 .withApplicationProgress(50)
-                .withApplicationState(OPEN)
+                .withApplicationState(OPENED)
                 .withAssignedToInterview(TRUE)
                 .withAssignedToMe(TRUE)
                 .withDaysLeft(0)

@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.P
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -160,7 +160,7 @@ public class ApplicationDashboardServiceImplTest {
 
         DashboardApplicationInProgressResource projectFive = dashboard.getInProgress().get(0);
         assertEquals(FALSE, projectFive.isAssignedToMe());
-        assertEquals(OPEN, projectFive.getApplicationState());
+        assertEquals(OPENED, projectFive.getApplicationState());
         assertEquals(TRUE, projectFive.isLeadApplicant());
         assertEquals(TOMORROW, projectFive.getEndDate());
         assertEquals(0, projectFive.getDaysLeft());
@@ -263,7 +263,7 @@ public class ApplicationDashboardServiceImplTest {
         Application application_Two = newApplication().withId(applicationTwoId).build();
         Application application_Three = newApplication().withId(applicationThreeId).build();
         Application application_Four = newApplication().withId(applicationFourId).build();
-        Application application_Five = newApplication().withApplicationState(OPEN, SUBMITTED).withId(applicationFiveId).build();
+        Application application_Five = newApplication().withApplicationState(OPENED, SUBMITTED).withId(applicationFiveId).build();
         Application application_Six = newApplication().withApplicationState(APPROVED).withId(applicationSixId).build();
 
         ProcessRoleResource processRoleResource_One = newProcessRoleResource().withApplication(applicationOneId).build();
@@ -288,7 +288,7 @@ public class ApplicationDashboardServiceImplTest {
         ApplicationResource applicationResource_Two = newApplicationResource().withCompetition(projectResource_Two.getCompetition()).withId(applicationTwoId).withCompletion(applicationTwoCompletion).withName(projectTwoName).build();
         ApplicationResource applicationResource_Three = newApplicationResource().withCompetition(projectResource_Three.getCompetition()).withId(applicationThreeId).withCompletion(applicationThreeCompletion).withName(projectThreeName).build();
         ApplicationResource applicationResource_Four = newApplicationResource().withCompetition(projectResource_Four.getCompetition()).withId(applicationFourId).withCompletion(applicationFourCompletion).withName(projectFourName).build();
-        ApplicationResource applicationResource_Five = newApplicationResource().withCompetition(projectResource_Five.getCompetition()).withId(applicationFiveId).withCompletion(applicationFiveCompletion).withName(projectFiveName).withApplicationState(OPEN).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        ApplicationResource applicationResource_Five = newApplicationResource().withCompetition(projectResource_Five.getCompetition()).withId(applicationFiveId).withCompletion(applicationFiveCompletion).withName(projectFiveName).withApplicationState(OPENED).withCompetitionStatus(CompetitionStatus.OPEN).build();
         ApplicationResource applicationResource_Six = newApplicationResource().withCompetition(projectResource_Six.getCompetition()).withId(applicationSixId).withCompletion(applicationSixCompletion).withName(projectSixName).withApplicationState(APPROVED).withCompetitionStatus(CompetitionStatus.CLOSED).build();
 
         when(projectMapperMock.mapToResource(project_One)).thenReturn(projectResource_One);

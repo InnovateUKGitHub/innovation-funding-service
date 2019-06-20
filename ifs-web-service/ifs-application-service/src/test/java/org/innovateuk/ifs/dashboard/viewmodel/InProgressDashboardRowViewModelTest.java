@@ -17,7 +17,7 @@ public class InProgressDashboardRowViewModelTest {
     public void constructOpen() {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
-                "Competition", true, ApplicationState.OPEN, true,
+                "Competition", true, ApplicationState.OPENED, true,
                 end, 0, 50 , false);
 
         assertEquals(viewModel.getLinkUrl(), "/application/1");
