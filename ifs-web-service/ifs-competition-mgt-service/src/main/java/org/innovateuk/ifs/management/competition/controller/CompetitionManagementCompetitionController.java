@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.lang.String.format;
+
 /**
  * This controller will handle all Competition Management requests that are related to a Competition.
  */
@@ -57,7 +59,7 @@ public class CompetitionManagementCompetitionController {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition, user));
             return "competition/competition-in-flight";
         } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
-            String url = String.format("project-setup-management/competition/%s/status/all", competition.getId());
+            String url = format("project-setup-management/competition/%s/status/all", competition.getId());
             return navigationUtils.getRedirectToSameDomainUrl(request, url);
         } else {
             throw new IncorrectStateForPageException("Unexpected competition state for competition: " + competitionId);
