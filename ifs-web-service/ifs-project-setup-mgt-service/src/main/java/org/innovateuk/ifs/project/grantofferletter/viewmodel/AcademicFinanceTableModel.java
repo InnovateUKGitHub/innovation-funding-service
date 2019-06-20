@@ -77,3 +77,4 @@ public class AcademicFinanceTableModel {
         return totalGrant;
     }
 }
+
