@@ -23,7 +23,7 @@ public interface OrganisationFinanceHandler {
     ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem);
     FinanceRowItem costToCostItem(FinanceRow cost);
     FinanceRowHandler getCostHandler(FinanceRowType costType);
-    List<FinanceRowItem> costsToCostItem(List<? extends FinanceRow> costs);
+    List<FinanceRowItem> costsToCostItems(List<? extends FinanceRow> costs);
     ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);
     ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow financeRow);
     Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId);

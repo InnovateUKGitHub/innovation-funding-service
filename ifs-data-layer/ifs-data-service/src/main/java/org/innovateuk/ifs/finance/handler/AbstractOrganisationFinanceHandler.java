@@ -149,7 +149,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     @Override
-    public List<FinanceRowItem> costsToCostItem(List<? extends FinanceRow> costs) {
+    public List<FinanceRowItem> costsToCostItems(List<? extends FinanceRow> costs) {
         return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
     }
 

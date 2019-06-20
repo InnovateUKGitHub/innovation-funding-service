@@ -152,7 +152,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinanceId, costTypeName, questionId);
-            return organisationFinanceHandler.costsToCostItem(costs);
+            return organisationFinanceHandler.costsToCostItems(costs);
         });
     }
 
@@ -161,7 +161,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndQuestionId(applicationFinanceId, questionId);
-            return organisationFinanceHandler.costsToCostItem(costs);
+            return organisationFinanceHandler.costsToCostItems(costs);
         });
     }
 
