@@ -35,6 +35,7 @@ public interface ApplicationInviteService {
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<Void> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
 
+    @SecuredBySpring(value = "SAVE", description = "The applicant should be able to resend an invite")
     ServiceResult<Void> resendInvite(@P("inviteResource") ApplicationInviteResource inviteResource);
 
     @PreAuthorize("hasAuthority('system_registrar')")
