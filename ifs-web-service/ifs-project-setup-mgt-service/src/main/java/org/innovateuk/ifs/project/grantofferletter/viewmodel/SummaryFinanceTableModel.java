@@ -26,3 +26,4 @@ public class SummaryFinanceTableModel {
         return totalProjectGrant;
     }
 }
+
