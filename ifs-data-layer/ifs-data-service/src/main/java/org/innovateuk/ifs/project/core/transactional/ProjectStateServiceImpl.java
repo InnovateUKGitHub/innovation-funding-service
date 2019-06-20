@@ -24,8 +24,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
         return getProject(projectId).andOnSuccess(
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
-        );
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN)));
     }
 
     @Override
@@ -46,5 +45,21 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.completeProjectOffline(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_COMPLETED_OFFLINE)));
+    }
+
+    @Override
+    public ServiceResult<Void> putProjectOnHold(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.putProjectOnHold(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_PUT_ON_HOLD)));
+    }
+
+    @Override
+    public ServiceResult<Void> resumeProject(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.resumeProject(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_RESUMED)));
     }
 }

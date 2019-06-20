@@ -21,4 +21,12 @@ public interface ProjectStateService {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to complete projects offline")
     ServiceResult<Void> completeProjectOffline(long projectId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to put projects on hold")
+    ServiceResult<Void> putProjectOnHold(long projectId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to resume projects")
+    ServiceResult<Void> resumeProject(long projectId);
 }

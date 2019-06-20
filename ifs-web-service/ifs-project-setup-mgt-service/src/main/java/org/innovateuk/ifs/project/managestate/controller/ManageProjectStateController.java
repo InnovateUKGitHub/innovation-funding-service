@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,9 @@ import static java.lang.Boolean.TRUE;
 @SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only IFS Admin can manage project state")
 public class ManageProjectStateController {
 
+    @Value("${ifs.project.management.on.hold}")
+    private boolean onHoldFeatureToggle;
+
     @Autowired
     private ProjectRestService projectRestService;
 
@@ -38,7 +42,7 @@ public class ManageProjectStateController {
                                       BindingResult result,
                                       @PathVariable long projectId,
                                       Model model) {
-        model.addAttribute("model", new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess()));
+        model.addAttribute("model", new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(), onHoldFeatureToggle));
         return "project/manage-project-state";
     }
 
@@ -67,9 +71,12 @@ public class ManageProjectStateController {
                 return projectStateRestService.handleProjectOffline(projectId);
             case COMPLETED_OFFLINE:
                 return projectStateRestService.completeProjectOffline(projectId);
-            default:
-                throw new IFSRuntimeException("Unknown project state");
+            case ON_HOLD:
+                if (onHoldFeatureToggle) {
+                    return projectStateRestService.putProjectOnHold(projectId);
+                }
         }
+        throw new IFSRuntimeException("Unknown project state");
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {

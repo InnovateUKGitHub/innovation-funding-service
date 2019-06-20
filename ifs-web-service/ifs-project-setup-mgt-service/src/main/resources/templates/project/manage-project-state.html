@@ -52,6 +52,17 @@
         </div>
         <!-- END -->
 
+        <!-- On Hold -->
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert">
+                <p class="govuk-body">This project is on hold.</p>
+            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a href="#">View details, reply or remove on hold status </a>
+            </p>
+        </th:block>
+        <!-- END -->
+
         <p th:if="${model.endState}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
@@ -77,6 +88,7 @@
                               th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                        <!-- Handle offline -->
                         <th:block th:if="${model.canHandleOffline()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="state"
@@ -128,6 +140,29 @@
                                 </div>
                             </div>
                         </th:block>
+                        <!-- Complete offline -->
+                        <th:block th:if="${model.canPutOnHold()}">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="status-on-hold"
+                                       type="radio"
+                                       th:field="*{state}"
+                                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"
+                                       aria-describedby="status-on-hold-hint"
+                                       data-aria-controls="project-status-conditional-on-hold">
+                                <label class="govuk-label govuk-radios__label govuk-label--s"
+                                       for="status-on-hold">
+                                    Mark project as on hold
+                                </label>
+                                <span id="status-on-hold-hint" class="govuk-hint govuk-radios__hint">
+                                    Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.
+                                </span>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                 id="project-status-conditional-on-hold">
+                                <!-- on Hold here -->
+                            </div>
+                        </th:block>
+                        <!-- Withdraw -->
                         <th:block th:if="${model.canWithdraw()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="status-withdrawn"
@@ -178,6 +213,7 @@
                                 </div>
                             </div>
                         </th:block>
+                        <!-- Complete offline -->
                         <th:block th:if="${model.canCompleteOffline()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="status-complete-offline"
