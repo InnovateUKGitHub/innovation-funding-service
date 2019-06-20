@@ -281,8 +281,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void validProjectManagerProvided() {
 
-        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
-
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
                 .build()));
@@ -317,8 +315,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withOrganisation(differentOrganisation).
                 withUser(differentUser).
                 build();
-
-        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
@@ -704,7 +700,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationSuccess() {
-
+//TODO WORKFLOW
         long projectId = 1L;
         long organisationId = 2L;
         String postcode = "UB7 8QF";

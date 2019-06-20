@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.documents.controller;
 
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
-import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -27,9 +25,6 @@ public class DocumentsController {
 
     @Autowired
     private DocumentsService documentsService;
-
-    @Autowired
-    private ActivityLogService activityLogService;
 
     public DocumentsController() {
     }
@@ -85,10 +80,7 @@ public class DocumentsController {
     public RestResult<Void> submitDocument(@PathVariable("projectId") long projectId,
                                            @PathVariable("documentConfigId") long documentConfigId) {
 
-        return documentsService.submitDocument(projectId, documentConfigId)
-                .andOnSuccessReturnVoid(() ->
-                    activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId)
-                ).toPostResponse();
+        return documentsService.submitDocument(projectId, documentConfigId).toPostResponse();
     }
 
     @PostMapping("/config/{documentConfigId}/decision")
@@ -96,11 +88,6 @@ public class DocumentsController {
                                              @PathVariable("documentConfigId") long documentConfigId,
                                              @RequestBody final ProjectDocumentDecision decision) {
 
-        return documentsService.documentDecision(projectId, documentConfigId, decision)
-                .andOnSuccessReturnVoid(() -> {
-                    if (decision.getApproved()) {
-                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
-                    }
-                }).toPostResponse();
+        return documentsService.documentDecision(projectId, documentConfigId, decision).toPostResponse();
     }
 }

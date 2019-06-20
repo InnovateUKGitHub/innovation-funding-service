@@ -21,13 +21,13 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -64,39 +64,39 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectStartDate() {
+    public void projectStartDateAdded() {
         assertAddMandatoryValue((project, projectUser) ->
                         projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_START_DATE_ADDED);
     }
 
     @Test
-    public void testAddProjectStartDateAndSubmitted() {
+    public void projectStartDateAddedAndSubmitted() {
         assertAddMandatoryValueAndNowSubmittedFromPending((project, projectUser) ->
                 projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_START_DATE_ADDED);
     }
 
     @Test
-    public void testAddProjectAddress() {
+    public void projectAddressAdded() {
         assertAddMandatoryValue((project, projectUser) ->
                         projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser), PROJECT_ADDRESS_ADDED);
     }
 
     @Test
-    public void testAddProjectAddressAndSubmitted() {
+    public void projectAddressAddedAndSubmitted() {
         assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser), PROJECT_ADDRESS_ADDED);
     }
 
     @Test
-    public void testAddProjectManager() {
+    public void projectLocationAdded() {
         assertAddMandatoryValue((project, projectUser)
-                        -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
+                        -> projectDetailsWorkflowHandler.projectLocationAdded(project, projectUser), PROJECT_LOCATION_ADDED);
     }
 
     @Test
-    public void testAddProjectManagerAndSubmitted() {
+    public void projectLocationAddedAndSubmitted() {
         assertAddMandatoryValueAndNowSubmittedFromPending(
-                (project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
+                (project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_LOCATION_ADDED);
     }
 
     /**
@@ -133,19 +133,10 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     private void assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
         List<Organisation> partnerOrgs = newOrganisation().build(2);
 
-        List<ProjectUser> financeContacts = newProjectUser().
-                withOrganisation(partnerOrgs.get(0), partnerOrgs.get(1)).
-                withRole(PROJECT_FINANCE_CONTACT).
-                build(2);
-
-        ProjectUser projectManager = newProjectUser().
-                withOrganisation(partnerOrgs.get(0)).
-                withRole(PROJECT_MANAGER).
-                build();
-
         Project project = newProject().
+                withApplication(newApplication().withCompetition(newCompetition().withLocationPerPartner(true).build()).build()).
                 withTargetStartDate(LocalDate.of(2016, 11, 01)).
-                withProjectUsers(combineLists(projectManager, financeContacts)).
+                withPartnerOrganisations(newPartnerOrganisation().withPostcode("POSTCODE").build(1)).
                 withAddress(newAddress().build()).
                 build();
 

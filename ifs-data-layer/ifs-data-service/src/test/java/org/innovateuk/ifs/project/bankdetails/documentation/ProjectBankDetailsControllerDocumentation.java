@@ -5,12 +5,12 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.documentation.BankDetailsStatusResourceDocs;
-import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -23,7 +23,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
-import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -64,7 +63,8 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                 .withCompanyName("Company name")
                 .build();
 
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 put("/project/{projectId}/bank-details", projectId)
@@ -101,7 +101,8 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
 
         RestErrorResponse expectedErrors = new RestErrorResponse(asList(invalidSortCodeError, invalidAccountNumberError));
 
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
         mockMvc.perform(
                 post("/project/{projectId}/bank-details", projectId)
                         .header("IFS_AUTH_TOKEN", "123abc")
