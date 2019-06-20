@@ -64,4 +64,32 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
                         )
                 ));
     }
+
+    @Test
+    public void putProjectOnHold() throws Exception {
+        Long projectId = 456L;
+        when(projectStateService.putProjectOnHold(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/on-hold", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to put on hold")
+                        )
+                ));
+    }
+
+    @Test
+    public void resumeProject() throws Exception {
+        Long projectId = 456L;
+        when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/resume", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to resume from on hold")
+                        )
+                ));
+    }
 }
