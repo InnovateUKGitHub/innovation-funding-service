@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -21,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -120,6 +122,27 @@ public class ApplicationTeamController {
                                @RequestParam("remove-invite") final long inviteId) {
         inviteRestService.removeApplicationInvite(inviteId).getSuccess();
         return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    @PostMapping(params = "resend-invite")
+    public String resendInvite(@PathVariable long applicationId,
+                               @PathVariable long questionId,
+                               @RequestParam("resend-invite") final long inviteId) {
+        resendApplicationInvite(inviteId, applicationId);
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    private void resendApplicationInvite(long inviteId, long applicationId){
+        List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(applicationId).getSuccess();
+        Optional<ApplicationInviteResource> invite = inviteOrganisationResources.stream()
+                .map(inviteOrganisationResource -> inviteOrganisationResource.getInviteResources())
+                .flatMap(Collection::stream)
+                .filter(applicationInvite -> applicationInvite.getId().equals(inviteId))
+                .findFirst();
+
+        if (invite.isPresent()) {
+            inviteRestService.resendInvite(invite.get());
+        }
     }
 
     @PostMapping(params = "add-team-member")

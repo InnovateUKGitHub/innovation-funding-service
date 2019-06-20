@@ -35,6 +35,8 @@ public interface ApplicationInviteService {
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<Void> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
 
+    ServiceResult<Void> resendInvite(@P("inviteResource") ApplicationInviteResource inviteResource);
+
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
