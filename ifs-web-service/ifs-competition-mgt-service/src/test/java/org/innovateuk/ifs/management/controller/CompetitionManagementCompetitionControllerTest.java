@@ -8,7 +8,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.management.competition.controller.CompetitionManagemen
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightViewModel;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -74,6 +74,9 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Mock
     private AssessorRestService assessorRestService;
+
+    @Spy
+    private NavigationUtils navigationUtilsMock;
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {
@@ -151,7 +154,6 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Test
     public void competitionInProjectSetup() throws Exception {
-        long competitionId = 1L;
         String competitionName = "Test Competition";
         CompetitionStatus competitionStatus = CompetitionStatus.PROJECT_SETUP;
 
@@ -160,14 +162,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(model().attribute("exception", new IsInstanceOf(ObjectNotFoundException.class)));
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionResource.getId()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
         InOrder inOrder = inOrder(competitionRestService);
-        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

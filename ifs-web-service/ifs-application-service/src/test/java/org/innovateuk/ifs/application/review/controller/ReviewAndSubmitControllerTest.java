@@ -142,33 +142,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void applicationSummaryH2020SubmitAgreeToTerms() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(FundingType.GRANT)
-                .withCompetitionTypeName("Horizon 2020")
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-
-        MvcResult result = mockMvc.perform(post("/application/" + application.getId() + "/review-and-submit")
-                                                   .param("agreeTerms", "false")
-                                                   .param("submit-application", ""))
-                .andExpect(redirectedUrl("/application/" + application.getId() + "/summary"))
-                .andReturn();
-
-        BindingResult bindingResult = (BindingResult) result.getFlashMap().get(BindingResult.class.getCanonicalName() + "." + ReviewAndSubmitController.FORM_ATTR_NAME);
-        ApplicationSubmitForm submitForm = (ApplicationSubmitForm) result.getFlashMap().get(ReviewAndSubmitController.FORM_ATTR_NAME);
-
-        assertFalse(submitForm.isAgreeTerms());
-        assertEquals("validation.application.h2020.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
-    }
-
-    @Test
     public void applicationTrack() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .build();
