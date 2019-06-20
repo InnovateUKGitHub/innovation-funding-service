@@ -432,9 +432,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
         Map<Role, ProjectActivityStates> roleSpecificGolStates = new HashMap<Role, ProjectActivityStates>();
-        if (processState.isOffline()) {
-            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
-        } else {
             ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
             ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
 
@@ -461,8 +458,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             } else {
                 roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
             }
-        }
-        return roleSpecificGolStates;
+
+            return roleSpecificGolStates;
     }
 
     private boolean documentsApproved(Project project, ProjectState state) {
