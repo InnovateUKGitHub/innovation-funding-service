@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
@@ -28,6 +29,7 @@ public interface BankDetailsService {
     @Activity(type = ActivityType.BANK_DETAILS_APPROVED, projectOrganisationCompositeId = "projectOrganisationCompositeId", condition = "isManualApproval")
     ServiceResult<Void> updateBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default boolean isManualApproval(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
         return bankDetailsResource.isManualApproval();
     }

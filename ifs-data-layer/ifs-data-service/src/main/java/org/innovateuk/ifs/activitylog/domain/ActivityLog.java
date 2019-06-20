@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.activitylog.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -109,5 +111,39 @@ public class ActivityLog {
 
     public Query getQuery() {
         return query;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActivityLog that = (ActivityLog) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(application, that.application)
+                .append(type, that.type)
+                .append(createdBy, that.createdBy)
+                .append(createdOn, that.createdOn)
+                .append(organisation, that.organisation)
+                .append(competitionDocument, that.competitionDocument)
+                .append(query, that.query)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(application)
+                .append(type)
+                .append(createdBy)
+                .append(createdOn)
+                .append(organisation)
+                .append(competitionDocument)
+                .append(query)
+                .toHashCode();
     }
 }

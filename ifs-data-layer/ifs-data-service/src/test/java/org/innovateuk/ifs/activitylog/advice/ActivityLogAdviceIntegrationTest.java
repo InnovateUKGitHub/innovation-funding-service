@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -44,45 +46,46 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    private Application application;
+    private Project project;
+    private Organisation organisation;
+
     @Before
     public void login() {
         loginSteveSmith();
+
+        application = applicationRepository.save(new Application());
+        project = projectRepository.save(newProject().withName("Project name").withApplication(application).build());
+        organisation = organisationRepository.save(newOrganisation().build());
     }
 
     @Test
     public void withApplicationId() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withApplicationId(application.getId());
 
-        assertOneActivityLogsExistForApplication(application);
+        assertOneActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withProjectId() {
-        Project project = projectRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withProjectId(project.getId());
 
-        assertOneActivityLogsExistForApplication(project.getApplication());
+        assertOneActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withProjectOrganisationCompositeId() {
-        Project project = projectRepository.findAll().get(0);
-        Organisation organisation = organisationRepository.findAll().iterator().next();
-
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withProjectOrganisationCompositeId(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()));
 
-        ActivityLog activityLog = assertOneActivityLogsExistForApplication(project.getApplication());
+        ActivityLog activityLog = assertOneActivityLogsExistForApplication();
         assertEquals(organisation.getId(), activityLog.getOrganisation().getId());
         assertTrue(result.isSuccess());
     }
@@ -90,104 +93,87 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
 
     @Test
     public void withNotMatchingApplicationId() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withNotMatchingApplicationId(application.getId());
 
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withNotMatchingProjectId() {
-        Project project = projectRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withNotMatchingProjectId(project.getId());
 
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withNotMatchingProjectOrganisationCompositeId() {
-        Project project = projectRepository.findAll().get(0);
-        Organisation organisation = organisationRepository.findAll().iterator().next();
-
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
 
         testActivityLogService.withNotMatchingProjectOrganisationCompositeId(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()));
 
-        assertZeroActivityLogsExistForApplication(project.getApplication());
+        assertZeroActivityLogsExistForApplication();
     }
 
     @Test
     public void withApplicationIdConditional_match() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withApplicationIdConditional(application.getId(), true);
 
-        assertOneActivityLogsExistForApplication(application);
+        assertOneActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withApplicationIdConditional_mismatch() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withApplicationIdConditional(application.getId(), false);
 
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withApplicationIdNotMatchingConditional() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withApplicationIdNotMatchingConditional(application.getId(), true);
 
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void withApplicationIdServiceFailure() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         ServiceResult<Void> result = testActivityLogService.withApplicationIdServiceFailure(application.getId());
 
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
         assertTrue(result.isFailure());
     }
 
     @Test
     public void withApplicationIdNotServiceResult() {
-        Application application = applicationRepository.findAll().get(0);
-
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
 
         testActivityLogService.withApplicationIdNotServiceResult(application.getId());
 
-        assertZeroActivityLogsExistForApplication(application);
+        assertZeroActivityLogsExistForApplication();
     }
 
-    private void assertZeroActivityLogsExistForApplication(Application application) {
+    private void assertZeroActivityLogsExistForApplication() {
         assertTrue(activityLogRepository.findByApplicationId(application.getId()).isEmpty());
     }
 
-    private ActivityLog assertOneActivityLogsExistForApplication(Application application) {
+    private ActivityLog assertOneActivityLogsExistForApplication() {
         List<ActivityLog> activityLogs = activityLogRepository.findByApplicationId(application.getId());
         assertEquals(activityLogs.size(), 1);
         return activityLogs.get(0);

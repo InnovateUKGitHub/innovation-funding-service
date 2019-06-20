@@ -5,6 +5,7 @@ import org.innovateuk.ifs.activitylog.domain.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -42,6 +43,7 @@ public interface ApplicationService {
     @Activity(type = ActivityType.APPLICATION_SUBMITTED, condition = "isSubmitted", applicationId = "applicationId")
     ServiceResult<ApplicationResource> updateApplicationState(Long applicationId, ApplicationState state);
 
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default boolean isSubmitted(Long applicationId, ApplicationState state) {
         return SUBMITTED == state;
     }

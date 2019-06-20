@@ -96,7 +96,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     @Test
     public void projectLocationAddedAndSubmitted() {
         assertAddMandatoryValueAndNowSubmittedFromPending(
-                (project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_LOCATION_ADDED);
+                (project, projectUser) -> projectDetailsWorkflowHandler.projectLocationAdded(project, projectUser), PROJECT_LOCATION_ADDED);
     }
 
     /**

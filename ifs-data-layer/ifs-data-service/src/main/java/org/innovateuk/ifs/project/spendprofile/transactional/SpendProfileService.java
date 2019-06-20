@@ -35,6 +35,7 @@ public interface SpendProfileService {
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_APPROVED, condition = "isSpendProfileApproved")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default boolean isSpendProfileApproved(Long projectId, ApprovalType approvalType) {
         return APPROVED == approvalType;
     }

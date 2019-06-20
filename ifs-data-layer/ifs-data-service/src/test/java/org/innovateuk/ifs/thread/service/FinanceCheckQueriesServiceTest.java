@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -95,6 +97,9 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private AuthenticationHelper authenticationHelperMock;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     @Before
     public void before() {
@@ -217,6 +222,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertEquals(result, Long.valueOf(1L));
 
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        verify(activityLogService).recordQueryActivityByProjectFinanceId(queryToCreateAsDomain.contextClassPk(), ActivityType.FINANCE_QUERY, result);
     }
 
     @Test

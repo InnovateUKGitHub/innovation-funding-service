@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -73,6 +74,7 @@ public interface GrantOfferLetterService {
     @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_APPROVED, condition = "isApproved")
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource);
 
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default boolean isApproved(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
         return grantOfferLetterApprovalResource.getApprovalType() == ApprovalType.APPROVED;
     }
