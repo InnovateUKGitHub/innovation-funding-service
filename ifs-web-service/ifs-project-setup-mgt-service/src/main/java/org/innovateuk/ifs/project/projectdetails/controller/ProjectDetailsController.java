@@ -23,7 +23,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,8 +39,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -96,12 +94,11 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
-        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                isIfsAdministrator,
+                loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),

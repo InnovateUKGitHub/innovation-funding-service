@@ -12,13 +12,15 @@ public class ManageProjectStateViewModel {
     private final String projectName;
     private final ProjectState state;
     private final boolean onHoldFeatureToggle;
+    private final boolean ifsAdmin;
 
-    public ManageProjectStateViewModel(ProjectResource project, boolean onHoldFeatureToggle) {
+    public ManageProjectStateViewModel(ProjectResource project, boolean onHoldFeatureToggle, boolean ifsAdmin) {
         this.competitionId = project.getCompetition();
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.state = project.getProjectState();
         this.onHoldFeatureToggle = onHoldFeatureToggle;
+        this.ifsAdmin = ifsAdmin;
     }
 
 
@@ -32,6 +34,10 @@ public class ManageProjectStateViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
     }
 
     /* view logic */
@@ -76,4 +82,8 @@ public class ManageProjectStateViewModel {
     }
 
     public boolean isEndState() { return isCompletedOffline() || isLive() || isWithdrawn(); }
+
+    public boolean cantChangeState() {
+        return isEndState() || (!ifsAdmin && isOnHold());
+    }
 }

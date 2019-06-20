@@ -9,6 +9,8 @@ import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewMo
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +26,8 @@ import static java.lang.Boolean.TRUE;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
-@PreAuthorize("hasAuthority('ifs_administrator')")
-@SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only IFS Admin can manage project state")
+@PreAuthorize("hasAuthority('project_finance')")
+@SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only project finance users can manage project state")
 public class ManageProjectStateController {
 
     @Value("${ifs.project.management.on.hold}")
@@ -39,22 +41,27 @@ public class ManageProjectStateController {
 
     @GetMapping
     public String manageProjectState(@ModelAttribute(value = "form", binding = false) ManageProjectStateForm form,
-                                      BindingResult result,
-                                      @PathVariable long projectId,
-                                      Model model) {
-        model.addAttribute("model", new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(), onHoldFeatureToggle));
+                                     BindingResult result,
+                                     @PathVariable long projectId,
+                                     Model model,
+                                     UserResource user) {
+        model.addAttribute("model",
+                new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
+                        onHoldFeatureToggle,
+                        user.hasRole(Role.IFS_ADMINISTRATOR)));
         return "project/manage-project-state";
     }
 
     @PostMapping
     public String setProjectState(@Valid @ModelAttribute(value = "form") ManageProjectStateForm form,
-                                   BindingResult result,
-                                   ValidationHandler validationHandler,
-                                   @PathVariable long projectId,
-                                   @PathVariable long competitionId,
-                                   Model model) {
+                                  BindingResult result,
+                                  ValidationHandler validationHandler,
+                                  @PathVariable long projectId,
+                                  @PathVariable long competitionId,
+                                  Model model,
+                                  UserResource user) {
         validate(form, result);
-        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model);
+        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model, user);
         Supplier<String> successView = () -> String.format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {

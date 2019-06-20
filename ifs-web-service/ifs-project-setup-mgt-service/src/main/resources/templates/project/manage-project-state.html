@@ -73,8 +73,10 @@
               method="POST"
               novalidate="novalidate"
               enctype="multipart/form-data"
-              th:unless="${model.endState}">
-            <div class="govuk-form-group"
+              th:unless="${model.cantChangeState()}">
+
+            <div th:if="${model.ifsAdmin}"
+                 class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">
@@ -268,6 +270,13 @@
                     </div>
                 </fieldset>
             </div>
+            <div th:unless="${model.ifsAdmin}">
+                <h1>Mark project status as on hold</h1>
+                <!-- Fields go here -->
+                <input type="hidden" name="state" th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}">
+            </div>
+
+
             <div class="govuk-form-group">
                 <button class="govuk-button">Change project status</button>
             </div>
