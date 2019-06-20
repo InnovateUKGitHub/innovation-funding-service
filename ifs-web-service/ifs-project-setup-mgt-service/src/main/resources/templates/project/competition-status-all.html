@@ -76,11 +76,6 @@
                                         <div class="govuk-grid-column-one-half">
                                             <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
                                             <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
-                                            <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
-                                            <small>
-                                                <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
-                                                <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
-                                            </small>
                                         </div>
                                         <div class="govuk-grid-column-one-half alignright">
                                             <th:block th:if="${project.projectState.isWithdrawn()}">
@@ -94,6 +89,11 @@
                                             </th:block>
                                         </div>
                                     </div>
+                                    <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
+                                    <small>
+                                        <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
+                                        <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
+                                    </small>
                                 </th>
                                 <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
