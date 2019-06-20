@@ -58,7 +58,7 @@ the lead applicant fills all the questions and marks as complete(APC)
 
 the applicant cannot add a collaborator to a single comp
     the user clicks the button/link      link = Application team
-    the user should not see the element  link = Add a collaborator organisation
+    the user should not see the element  link = Add a partner organisation
     the user clicks the button/link      link = Application overview
 
 the applicant sees single comp finance summary

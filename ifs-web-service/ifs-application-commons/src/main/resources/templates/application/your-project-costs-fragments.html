@@ -1438,11 +1438,11 @@
             </tbody>
             <tfoot>
             <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row" colspan="3">Total travel and subsistence</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:id="section-total-travel"
                     th:attr="data-calculation-rawvalue=${form.totalTravelCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalTravelCosts, 0, 'DEFAULT')}"/>
                 </td>
-                <th class="govuk-table__header" scope="row" colspan="3">Total travel and subsistence</th>
             </tr>
             </tfoot>
         </table>

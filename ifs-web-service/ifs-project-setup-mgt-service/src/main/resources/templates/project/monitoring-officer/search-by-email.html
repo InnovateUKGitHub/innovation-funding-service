@@ -46,7 +46,7 @@
                                th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                        data-email-errormessage=#{validation.standard.email.format}"
+                                        data-email-invalid-errormessage=#{validation.standard.email.format}"
                                class="govuk-input"
                                th:readonly="false"
                                th:field="*{emailAddress}"
