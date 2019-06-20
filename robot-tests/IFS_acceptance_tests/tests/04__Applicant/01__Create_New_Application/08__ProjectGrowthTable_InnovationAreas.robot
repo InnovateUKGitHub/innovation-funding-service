@@ -144,7 +144,7 @@ As next step the Applicant cannot see the turnover field
     And logged in user applies to competition                    ${compWithGrowth}  1
     When the user clicks the button/link                         link = Your finances
     And the user clicks the button/link                          link = Your organisation
-    Then the user should not see the element                     jQuery = div label:contains("Turnover (£)")
+    Then the user should not see the element                     css = #turnover
     And the user should see the element                          jQuery = div label:contains("Full time employees")
     And the user should see the element                          jQuery = span:contains("Number of full time employees at your organisation.")
 

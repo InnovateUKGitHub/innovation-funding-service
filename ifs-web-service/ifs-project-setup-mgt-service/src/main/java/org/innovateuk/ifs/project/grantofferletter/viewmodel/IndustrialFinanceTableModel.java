@@ -69,3 +69,4 @@ public class IndustrialFinanceTableModel {
         return otherCosts;
     }
 }
+
