@@ -72,7 +72,7 @@ items:
           - name: LDAP_URL
             value: "${LDAP_URL}"
           - name: LDAP_PORT
-            value: "389"
+            value: "8389"
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL

@@ -13,5 +13,6 @@ public class ProcessRoleDocs {
             fieldWithPath("role").description("Role of the process role"),
             fieldWithPath("roleName").description("Role name of the process role"),
             fieldWithPath("organisationId").description("Organisation id of the process role"),
+            fieldWithPath("userEmail").description("Email address of the process role"),
     };
 }

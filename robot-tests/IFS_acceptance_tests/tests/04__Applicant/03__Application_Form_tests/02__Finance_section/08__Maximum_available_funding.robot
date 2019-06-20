@@ -51,11 +51,9 @@ Invite existing academic collaborator
     [Setup]  log in as a different user                       ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                      link = ${Application_name_business}
     And the user clicks the button/link                       link = Application team
-    And the user clicks the button/link                       link = Add a collaborator organisation
-    Then the user enters text to a text field                 css = #organisationName  eggs
-    And the user enters text to a text field                  css = input[id = "applicants[0].name"]  Pete
-    And the user enters text to a text field                  css = input[id = "applicants[0].email"]  ${collaborator2_credentials["email"]}
-    And the user clicks the button/link                       jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                       link = Add a partner organisation
+    And the user adds a partner organisation                  eggs  Pete  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                       jQuery = button:contains("Invite partner organisation")
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
@@ -103,11 +101,9 @@ Invite existing academic collaborator for RTO lead
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
-    Then the user enters text to a text field          css = #organisationName  eggs
-    And the user enters text to a text field           css = input[id="applicants[0].name"]  Pete
-    And the user enters text to a text field           css = input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
-    And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                link = Add a partner organisation
+    And the user adds a partner organisation           eggs  Pete  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     And the correct funding is displayed to academic user
@@ -119,11 +115,9 @@ Invite existing business user into RTO lead application
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
-    And the user enters text to a text field           css = #organisationName  innovate bus
-    And the user enters text to a text field           css = input[id="applicants[0].name"]  oscar
-    And the user enters text to a text field           css = input[id="applicants[0].email"]  ${lead_business_email}
-    And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                link = Add a partner organisation
+    And the user adds a partner organisation           innovate bus  oscar  ${lead_business_email}
+    And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
     And logout as user
     Then the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${lead_business_email}  ${correct_password}
 
@@ -167,7 +161,7 @@ the applicant completes the application details for RTO lead appln
 
 the user fills the other application details questions
     the user clicks the button twice      css = label[for="application.resubmission-no"]
-    The user enters text to a text field  id = application_details-startdate_day  18
+    The user enters text to a text field  id = application.startDate  18
     The user enters text to a text field  id = application_details-startdate_year  2018
     The user enters text to a text field  id = application_details-startdate_month  11
     The user enters text to a text field  css = [id="application.durationInMonths"]  20

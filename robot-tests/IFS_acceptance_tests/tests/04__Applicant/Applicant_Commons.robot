@@ -61,7 +61,7 @@ the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
     the user enters text to a text field  css = [id="application.name"]  ${appTitle}
-    the user enters text to a text field  css = #application_details-startdate_day  ${tomorrowday}
+    the user enters text to a text field  id = application.startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css = [id="application.durationInMonths"]  24
@@ -155,7 +155,7 @@ the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
-    the user clicks the button/link       jQuery = button:contains("Capital usage")
+    the user clicks the button/link       css = #main-content > form > section:nth-child(9) > h3 > button
     the user enters text to a text field  css = textarea.govuk-textarea[name^=capitalUsageRows]  some description
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
@@ -163,7 +163,7 @@ the user fills in Capital usage
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
     textfield should contain              css = #capital-usage .form-row:nth-of-type(1) [readonly="readonly"]  £4,975
-    the user clicks the button/link       jQuery = button:contains("Capital usage")
+    the user clicks the button/link       css = #main-content > form > section:nth-child(9) > h3 > button
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
@@ -344,6 +344,10 @@ navigate to next page if not found
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
 
 the user select the competition and starts application
     [Arguments]  ${competition}
@@ -432,3 +436,9 @@ the user marks your funding section as complete
 the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+
+the user adds a partner organisation
+    [Arguments]  ${orgName}  ${name}  ${email}
+    the user enters text to a text field          id = organisationName    ${orgName}
+    the user enters text to a text field          id = name   ${name}
+    the user enters text to a text field          id = email  ${email}
