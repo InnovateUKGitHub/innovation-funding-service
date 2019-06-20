@@ -6,18 +6,15 @@ public class MonitoringOfficerAssignRoleViewModel {
     private String firstName;
     private String lastName;
     private String emailAddress;
-    private String phoneNumber;
 
     public MonitoringOfficerAssignRoleViewModel(long userId,
                                                 String firstName,
                                                 String lastName,
-                                                String emailAddress,
-                                                String phoneNumber) {
+                                                String emailAddress) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
-        this.phoneNumber = phoneNumber;
     }
 
     public long getUserId() {
@@ -36,10 +33,6 @@ public class MonitoringOfficerAssignRoleViewModel {
         return emailAddress;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     private void setUserId(long userId) {
         this.userId = userId;
     }
@@ -54,9 +47,5 @@ public class MonitoringOfficerAssignRoleViewModel {
 
     private void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-    }
-
-    private void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 }

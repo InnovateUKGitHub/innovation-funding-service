@@ -24,7 +24,6 @@ public class MonitoringOfficerAssignRoleViewModelPopulator {
                 userId,
                 userResource.getFirstName(),
                 userResource.getLastName(),
-                userResource.getEmail(),
-                userResource.getPhoneNumber());
+                userResource.getEmail());
     }
 }
