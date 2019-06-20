@@ -42,9 +42,6 @@ RUN chown -R gluster:gluster . && \
   chown -R gluster:gluster /tmp && \
   find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
 
-RUN chown -R gluster:gluster /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
-
 USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
