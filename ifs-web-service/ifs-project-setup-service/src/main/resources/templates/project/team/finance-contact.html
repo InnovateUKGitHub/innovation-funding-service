@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Contact'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Finance Contact'}" />
 </head>
 <body class="govuk-template__body">
 
