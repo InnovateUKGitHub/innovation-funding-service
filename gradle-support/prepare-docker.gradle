@@ -71,7 +71,7 @@ task prepareDockerInput {
             from file("$currentFilePath/coscale-monitoring.sh")
             from file("$currentFilePath/newrelic.jar")
             from file("$currentFilePath/newrelic.yml")
-            from file("$currentFilePath/set-umask0002-and-run-jar.sh")
+            from file("$currentFilePath/set-umask0002.sh")
             into file(inputDir)
         }
     }
