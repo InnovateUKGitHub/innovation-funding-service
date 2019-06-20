@@ -95,11 +95,11 @@
                                     </th:block>
                                 </th:block>
 
-                                <div class="task-status-incomplete">
+                                <div th:if="${row.showStatus}" class="task-status-incomplete">
                                     <span>Incomplete</span>
                                 </div>
                             </th:block>
-                            <div th:if="${row.complete and not model.competition.expressionOfInterest}" class="task-status-complete">
+                            <div th:if="${row.complete and row.showStatus}" class="task-status-complete">
                                 <span>Complete</span>
                             </div>
                         </li>

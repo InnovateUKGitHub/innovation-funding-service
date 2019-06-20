@@ -32,7 +32,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
-import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
 
@@ -110,10 +109,13 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
-                    .map(childSection -> new ApplicationOverviewRowViewModel(childSection.getName(),
-                            format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
-                            data.getCompletedSectionIds().contains(childSection.getId()),
-                            Optional.empty())
+                    .map(childSection ->
+                            new ApplicationOverviewRowViewModel(
+                                    childSection.getName(),
+                                    format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
+                                    data.getCompletedSectionIds().contains(childSection.getId()),
+                                    true
+                            )
                     )
                     .collect(toCollection(LinkedHashSet::new));
         } else {
@@ -129,18 +131,29 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
-        boolean complete = section.getType() == TERMS_AND_CONDITIONS ?
+        boolean complete = section.isTermsAndConditions() ?
                 isTermsAndConditionsComplete(data, question, section) :
                 data.getStatuses().get(question.getId())
                         .stream()
                         .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
 
-        return new ApplicationOverviewRowViewModel(
-                getQuestionTitle(question),
-                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
-                complete,
-                getAssignableViewModel(question, data)
-        );
+        boolean showStatus = !(section.isTermsAndConditions() && data.getCompetition().isExpressionOfInterest());
+
+        return getAssignableViewModel(question, data)
+                .map(avm ->
+                        new ApplicationOverviewRowViewModel(
+                                getQuestionTitle(question),
+                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                complete,
+                                avm,
+                                showStatus)
+                ).orElse(
+                        new ApplicationOverviewRowViewModel(
+                                getQuestionTitle(question),
+                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                complete,
+                                showStatus)
+                );
     }
 
     private static boolean isTermsAndConditionsComplete(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
