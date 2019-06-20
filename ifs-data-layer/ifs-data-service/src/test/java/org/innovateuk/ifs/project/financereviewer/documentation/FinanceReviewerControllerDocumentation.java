@@ -54,7 +54,7 @@ public class FinanceReviewerControllerDocumentation extends BaseControllerMockMV
                 .andExpect(status().isOk())
                 .andDo(document("finance-reviewer/{method-name}",
                         requestParameters(
-                                parameterWithName("project").description("id of the project")
+                                parameterWithName("projectId").description("id of the project")
                         ),
                         responseFields(simpleUserResourceFields)
                 ));
