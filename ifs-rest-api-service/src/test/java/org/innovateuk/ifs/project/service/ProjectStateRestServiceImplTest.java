@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -48,9 +49,10 @@ public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<Pro
     @Test
     public void putProjectOnHold() {
         long projectId = 123L;
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/on-hold", null, OK );
-        RestResult<Void> result = service.putProjectOnHold(projectId);
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/on-hold", Void.class);
+        OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource();
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/on-hold", onHoldReasonResource, OK );
+        RestResult<Void> result = service.putProjectOnHold(projectId, onHoldReasonResource);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/on-hold", Void.class, onHoldReasonResource);
         assertTrue(result.isSuccess());
     }
 
