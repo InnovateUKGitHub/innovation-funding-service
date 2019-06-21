@@ -76,7 +76,7 @@ Verify add new team member field validation
     Given the user clicks the button/link               jQuery = button:contains("Add team member")
     When the user clicks the button/link                jQuery = button:contains("Invite to project")
     Then the user should see a field and summary error  Please enter a name.
-    And the user should see a field and summary error   Enter an email address in the correct format, like name@example.com
+    And the user should see a field and summary error   Enter an email address.
     [Teardown]  the user clicks the button/link         jQuery = td:contains("Name")~ td button:contains("Remove")
 
 The lead partner is able to add a new team member
