@@ -53,7 +53,7 @@ Working days per year should be 232
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
-    [Tags]  HappyPathh
+    [Tags]  HappyPath
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
@@ -85,7 +85,7 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]  happyPath
+    [Tags]  HappyPath
     Given the user navigates to Your-finances page  ${applicationName}
     And the user clicks the button/link             link = Your project costs
     # Note the Jes form is already uploaded
