@@ -36,12 +36,7 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
