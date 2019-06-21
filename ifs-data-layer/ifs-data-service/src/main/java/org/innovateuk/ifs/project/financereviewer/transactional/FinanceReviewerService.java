@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.financereviewer.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -12,6 +14,7 @@ public interface FinanceReviewerService {
     @SecuredBySpring(value = "ASSIGN_FINANCE_REVIEWER",
             description = "Only project finance can assign finance reviewers")
     @PreAuthorize("hasAuthority('project_finance')")
+    @Activity(type = ActivityType.FINANCE_REVIEWER_ADDED, projectId = "projectId")
     ServiceResult<Long> assignFinanceReviewer(long financeReviewerUserId, long projectId);
 
     @SecuredBySpring(value = "FIND_FINANCE_USERS",
