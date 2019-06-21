@@ -32,4 +32,14 @@ public class ProjectStateController {
     public RestResult<Void> completeProjectOffline(@PathVariable("projectId") final long projectId) {
         return projectStateService.completeProjectOffline(projectId).toPostWithBodyResponse();
     }
+
+    @PostMapping("/{projectId}/on-hold")
+    public RestResult<Void> putProjectOnHold(@PathVariable("projectId") final long projectId) {
+        return projectStateService.putProjectOnHold(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/resume")
+    public RestResult<Void> resumeProject(@PathVariable("projectId") final long projectId) {
+        return projectStateService.resumeProject(projectId).toPostWithBodyResponse();
+    }
 }

@@ -25,8 +25,8 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> withdrawProject(long projectId) {
         return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.projectWithdrawn(project, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
         ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.WITHDRAWN));
     }
@@ -35,8 +35,8 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> handleProjectOffline(long projectId) {
         return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.handleProjectOffline(existingProject, user) ?
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.handleProjectOffline(project, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_HANDLED_OFFLINE))
         ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.HANDLED_OFFLINE));
     }
@@ -45,9 +45,27 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> completeProjectOffline(long projectId) {
         return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.completeProjectOffline(existingProject, user) ?
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.completeProjectOffline(project, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_COMPLETED_OFFLINE))
         ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.COMPLETED_OFFLINE));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> putProjectOnHold(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.putProjectOnHold(project, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_PUT_ON_HOLD)));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resumeProject(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.resumeProject(project, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_RESUMED)));
     }
 }

@@ -11,7 +11,10 @@ public enum ProjectEvent implements ProcessEvent {
     GOL_APPROVED("signed-gol-approved"),
     PROJECT_WITHDRAWN("withdraw-project"),
     HANDLE_OFFLINE("handled-offline"),
-    COMPLETE_OFFLINE("completed-offline");
+    COMPLETE_OFFLINE("completed-offline"),
+    PUT_ON_HOLD("put-on-hold"),
+    RESUME_PROJECT("resume-project");
+
 
     String event;
 

@@ -23,4 +23,14 @@ public class ProjectStateRestServiceImpl extends BaseRestService implements Proj
     public RestResult<Void> completeProjectOffline(long projectId) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/complete-offline");
     }
+
+    @Override
+    public RestResult<Void> putProjectOnHold(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/on-hold");
+    }
+
+    @Override
+    public RestResult<Void> resumeProject(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/resume");
+    }
 }

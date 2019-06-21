@@ -79,5 +79,27 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
 
         verify(projectStateService).completeProjectOffline(projectId);
     }
+
+    @Test
+    public void putProjectOnHold() throws Exception {
+        Long projectId = 456L;
+        when(projectStateService.putProjectOnHold(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/on-hold", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).putProjectOnHold(projectId);
+    }
+
+    @Test
+    public void resumeProject() throws Exception {
+        Long projectId = 456L;
+        when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).resumeProject(projectId);
+    }
 }
 

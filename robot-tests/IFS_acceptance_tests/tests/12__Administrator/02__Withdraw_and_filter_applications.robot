@@ -20,6 +20,7 @@ ${externalProjectWithdrawnMessage}    This project has been withdrawn
 ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
 ${ineligibleState}                    Ineligible
+${successfulState}                    Successful
 
 *** Test Cases ***
 The IFS Admin searches for a project and clears all filters after searching for a project
@@ -36,63 +37,56 @@ Manage project status Validations
     Then the user should be able to see all validations working correctly
 
 IFS Admin is able to Withdraw a project
-    [Documentation]  IFS-5939
+    [Documentation]  IFS-2945 IFS-3654 IFS-5939
     Given the user selects the checkbox     confirmationWithdrawn
     When the user clicks the button/link   jQuery = button:contains("Change project status")
-    Then the user should see the element   p:contains("This project has been withdrawn.")
-    [Teardown]  
+    Then the project should be withdrawn
 
+The IFS Admin filters the applications
+    [Documentation]  IFS-3473
+    [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
+    Given the user selects a filter for the applications    ${successfulState}  filter
+    Then the user should be able to see previous applications by status
 
-#The IFS Admin withdraws a project from Project Setup
-#    [Documentation]  IFS-2945
-#    [Tags]
-#    Given the user clicks the button/link                  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
-#    When the user cancels then withdraws the project
-#    Then the user can see the previous application         ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
-
-#The IFS Admin can no longer see the withdrawn project in the project setup table
-#    [Documentation]  IFS-3654
-#    [Tags]
-#    When the user navigates to the page         ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
-#    Then the user should not see the element    jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
-
-#The IFS Admin filters the applications
-#    [Documentation]  IFS-3473
-#    [Tags]
-#    [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
-#    Given the user selects a filter for the applications    ${withdrawnState}  filter
-#    Then the user can see the previous application          ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
-#    When the user selects a filter for the applications     ${unsuccessfulState}  filter
-#    Then the user can see the previous application          ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}  ${unsuccessfulState}
-#    When the user selects a filter for the applications     ${ineligibleState}  filter
-#    Then the user can see the previous application          ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}  ${ineligibleState}
-
-#The IFS Admin clears any filters applied and can see all of the applications
-#    [Documentation]  IFS-3473
-#    [Tags]
-#    When the user clicks the button/link                         link = Clear all filters
-#    Then the user can see all of the previous applications when the All filter is applied
+The IFS Admin clears any filters applied and can see all of the applications
+    [Documentation]  IFS-3473
+    Given the user clicks the button/link                         link = Clear all filters
+    Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***
+The user should be able to see previous applications by status
+    the user can see the previous application          ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
+    the user selects a filter for the applications     ${unsuccessfulState}  filter
+    the user can see the previous application          ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}  ${unsuccessfulState}
+    the user selects a filter for the applications     ${ineligibleState}  filter
+    the user can see the previous application          ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}  ${ineligibleState}
+
+The project should be withdrawn
+     the user should see the element      jQuery = p:contains("This project has been withdrawn.")
+     the user clicks the button/link      link = Return to project details
+     the user should see the element      jQuery = h1:contains("Project details")
+     the user clicks the button/link      link = Projects in setup
+     the user should not see the element  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+
 The user navigates to the Manage Project status page
     the user clicks the button/link   jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
     the user clicks the button/link   link = Manage project status
 
 The user should be able to see all validations working correctly
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
     the user should see Manage offline validations
     the user should see Withdraw validations
 
 The user should see Manage offline validations
     the user selects the radio button   state  HANDLED_OFFLINE
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
 
 The user should see Withdraw validations
     the user selects the radio button   state  WITHDRAWN
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     This field cannot be left blank.
+    the user should see a field and summary error     ${empty_field_warning_message}
 
 The user cancels then withdraws the project
     the user clicks the button/link            link = Withdraw project
@@ -110,7 +104,7 @@ The user selects a filter for the applications
     When the user clicks the button/link                         css = button[class = "govuk-button"]  # Filter
 
 The user can see all of the previous applications when the All filter is applied
-    the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${withdrawnState}
+    the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
     the user can see the previous application                ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}      ${unsuccessfulState}
     the user can see the previous application                ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}        ${ineligibleState}
 
@@ -119,6 +113,6 @@ The user enters a project to search for and clicks the Filter button
     the user enters text to a text field    id = applicationSearchString  ${projectID}
     the user clicks the button/link         css = button[class="govuk-button"]  # Filter
 
-the user should see the Low-friction wheel coatings project
+The user should see the Low-friction wheel coatings project
     the user should see the element        jQuery = th:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}")
 
