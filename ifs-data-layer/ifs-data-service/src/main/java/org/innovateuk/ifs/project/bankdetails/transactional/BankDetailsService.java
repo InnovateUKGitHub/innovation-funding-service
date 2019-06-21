@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import org.springframework.security.core.parameters.P;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -13,20 +16,27 @@ import java.util.List;
 
 public interface BankDetailsService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<BankDetailsResource> getById(final Long bankDetailsId);
+    ServiceResult<BankDetailsResource> getById(Long bankDetailsId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<BankDetailsResource> getByProjectAndOrganisation(final Long projectId, final Long organisationId);
+    ServiceResult<BankDetailsResource> getByProjectAndOrganisation(Long projectId, Long organisationId);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'SUBMIT')")
-    ServiceResult<Void> submitBankDetails(@P("bankDetailsResource") final BankDetailsResource bankDetailsResource);
+    @Activity(type = ActivityType.BANK_DETAILS_SUBMITTED, projectOrganisationCompositeId = "projectOrganisationCompositeId")
+    ServiceResult<Void> submitBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
-    ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource);
+    @Activity(type = ActivityType.BANK_DETAILS_APPROVED, projectOrganisationCompositeId = "projectOrganisationCompositeId", condition = "isManualApproval")
+    ServiceResult<Void> updateBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    default boolean isManualApproval(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
+        return bankDetailsResource.isManualApproval();
+    }
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", description = "Project Finance users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
-    ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(final Long projectId);
+    ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "GET_PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can get organisations for which Bank Details approval is pending")
