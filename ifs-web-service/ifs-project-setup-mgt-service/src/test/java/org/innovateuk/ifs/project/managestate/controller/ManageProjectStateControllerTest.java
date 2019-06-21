@@ -13,9 +13,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -184,6 +183,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 1L;
         long projectId = 123L;
 
+        setField(controller, "onHoldFeatureToggle", true);
         when(projectStateRestService.putProjectOnHold(projectId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
@@ -201,7 +201,14 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 1L;
         long projectId = 123L;
 
-        when(projectStateRestService.putProjectOnHold(projectId)).thenReturn(restSuccess());
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withName("Name")
+                .withCompetition(competitionId)
+                .withProjectState(SETUP).build();
+
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        setField(controller, "onHoldFeatureToggle", true);
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", ON_HOLD.name()))
@@ -209,6 +216,6 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attributeHasFieldErrorCode("form", "onHoldReason", "validation.manage.project.on.hold.reason.required"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "onHoldDetails", "validation.manage.project.on.hold.details.required"));
 
-        verify(projectStateRestService).putProjectOnHold(projectId);
+        verifyZeroInteractions(projectStateRestService);
     }
 }
