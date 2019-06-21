@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 /**
- * The interface for saving and autosaving competition forms.
+ * The interface for saving competition forms.
  */
 public interface CompetitionSetupUpdater {
 
