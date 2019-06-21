@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+<<<<<<< HEAD
+  name: ifs-sysint-file-upload-claim
+=======
+<<<<<<< HEAD:os-files/gluster/named-envs/12-ifs-perf-file-upload-claim.yml
+  name: ifs-perf-file-upload-claim
+=======
+  name: ifs-sysint-file-upload-claim
+>>>>>>> e3f893e136dd3e792169f3380a767a6351f4eb5d:os-files/gluster/named-envs/12-ifs-sysint-file-upload-claim.yml
+>>>>>>> e3f893e136dd3e792169f3380a767a6351f4eb5d
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+     requests:
+      storage: 20G
+  selector:
+    matchLabels:
+<<<<<<< HEAD
+      ifssysint: ifssysint
+=======
+<<<<<<< HEAD:os-files/gluster/named-envs/12-ifs-perf-file-upload-claim.yml
+      dev: dev
+=======
+      ifssysint: ifssysint
+>>>>>>> e3f893e136dd3e792169f3380a767a6351f4eb5d:os-files/gluster/named-envs/12-ifs-sysint-file-upload-claim.yml
+>>>>>>> e3f893e136dd3e792169f3380a767a6351f4eb5d

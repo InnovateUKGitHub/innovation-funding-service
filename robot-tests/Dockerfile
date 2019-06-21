@@ -46,3 +46,4 @@ USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
+

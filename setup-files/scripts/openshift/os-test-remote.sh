@@ -91,3 +91,4 @@ cleanUp
 echo ""
 echo "Tests are running now. You can follow the progress with the following command:"
 echo "oc logs -f $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep robot-framework-1- | grep -v deploy | awk '{ print $1 }')"
+

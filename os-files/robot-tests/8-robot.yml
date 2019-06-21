@@ -31,12 +31,12 @@ items:
           restartPolicy:
             never: {}
           volumeMounts:
-            - mountPath: /mnt/ifs_storage
-              name: dir-1
+          - mountPath: /mnt/ifs_storage
+            name: dir-1
         volumes:
           - name: dir-1
             persistentVolumeClaim:
-              claimName: file-upload-claim
+              claimName: "file-upload-claim"
     test: false
     triggers:
     - type: ConfigChange

@@ -9,8 +9,6 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 
 VOLUME /mnt/ifs_storage
 
-RUN apt-get update && apt-get install rsync mysql-client -y
-
 RUN groupadd -g @glusterGID@ gluster && \
   useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
 
@@ -34,3 +32,4 @@ HEALTHCHECK --interval=15s --timeout=8s \
 USER gluster
 ENTRYPOINT ["./set-umask0002.sh"] 
 CMD ["sh", "-c", "java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar"]
+

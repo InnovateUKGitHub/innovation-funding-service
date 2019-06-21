@@ -13,3 +13,4 @@ do
     cp /robot-tests/upload_files/testing.pdf $CURRENT_FILE_PATH
   fi
 done
+
