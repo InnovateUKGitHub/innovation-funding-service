@@ -12,7 +12,6 @@ import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewMod
 import org.innovateuk.ifs.dashboard.viewmodel.InProgressDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.InSetupDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.PreviousDashboardRowViewModel;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,10 +19,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
@@ -38,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing populator {@link ApplicantDashboardPopulator}
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Mock
@@ -47,24 +49,27 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     @InjectMocks
     private ApplicantDashboardPopulator populator;
 
-    private static final ZonedDateTime TOMORROW = ZonedDateTime.now().plusDays(1);
-    private static final ZonedDateTime YESTERDAY = ZonedDateTime.now().minusDays(1);
-
-    private long userId = 1L;
-
-    @Before
-    public void setup() {
-        setupDashboard();
-    }
+    private static final ZonedDateTime TODAY = ZonedDateTime.now();
+    private static final ZonedDateTime ONE_MONTH_AGO = TODAY.minusMonths(1L);
+    private static final ZonedDateTime ONE_WEEK_AGO = TODAY.minusWeeks(1L);
+    private static final ZonedDateTime YESTERDAY = TODAY.minusDays(1L);
+    private static final ZonedDateTime TOMORROW = TODAY.plusDays(1L);
+    private static final long USER_ID = 1L;
 
     @Test
-    public void populateProjects() {
-        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+    public void testPopulateInSetupProjects() {
+        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder()
+                .withCompetitionTitle("Competition Title")
+                .withProjectId(3L)
+                .withProjectTitle("Project Title")
+                .build();
+        List<DashboardApplicationInSetupResource> inSetUp = singletonList(inSetup);
+        setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
+
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
 
         assertEquals(1, viewModel.getProjects().size());
-
         InSetupDashboardRowViewModel inSetupViewModel = viewModel.getProjects().get(0);
-
         assertEquals("Project Title", inSetupViewModel.getTitle());
         assertEquals(3L, inSetupViewModel.getProjectId());
         assertEquals(format("/project-setup/project/%d", 3L), inSetupViewModel.getLinkUrl());
@@ -72,13 +77,46 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     }
 
     @Test
+    public void testSortForInSetupProjects() {
+        DashboardApplicationInSetupResource startsYesterday = new DashboardApplicationInSetupResourceBuilder()
+                .withTargetStartDate(YESTERDAY.toLocalDate())
+                .withProjectTitle("starts in past")
+                .build();
+        DashboardApplicationInSetupResource startsToday = new DashboardApplicationInSetupResourceBuilder()
+                .withTargetStartDate(TODAY.toLocalDate())
+                .withProjectTitle("starts today")
+                .build();
+        DashboardApplicationInSetupResource startsTomorrow = new DashboardApplicationInSetupResourceBuilder()
+                .withTargetStartDate(TOMORROW.toLocalDate())
+                .withProjectTitle("starts in future")
+                .build();
+        List<DashboardApplicationInSetupResource> inSetUp = asList(startsYesterday, startsToday, startsTomorrow);
+        setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
+
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+
+        List<InSetupDashboardRowViewModel> result = viewModel.getProjects();
+        assertEquals(3, result.size());
+        assertEquals("starts in future", result.get(0).getTitle());
+        assertEquals("starts today", result.get(1).getTitle());
+        assertEquals("starts in past", result.get(2).getTitle());
+    }
+
+    @Test
     public void populateEuGrantTransfers() {
-        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withTitle("Title")
+                .withApplicationProgress(1)
+                .withApplicationState(APPROVED)
+                .withCompetitionTitle("Competition Title")
+                .withProjectId(5L)
+                .build();
+        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfers = singletonList(euGrantTransfer);
+        setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
 
         assertFalse(viewModel.getEuGrantTransfers().isEmpty());
-
         EuGrantTransferDashboardRowViewModel euGrantViewModel = viewModel.getEuGrantTransfers().get(0);
-
         assertEquals(format("/project-setup/project/%d", 5L), euGrantViewModel.getLinkUrl());
         assertEquals("Title", euGrantViewModel.getTitle());
         assertEquals(1, euGrantViewModel.getApplicationProgress());
@@ -89,13 +127,58 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     }
 
     @Test
+    public void testSortForEuGrantTransfers() {
+        DashboardApplicationForEuGrantTransferResource approvedOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withApplicationId(1L)
+                .withApplicationState(APPROVED)
+                .withTitle("approved application 1")
+                .build();
+        DashboardApplicationForEuGrantTransferResource openOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withApplicationId(2L)
+                .withApplicationState(OPEN)
+                .withTitle("open application 1")
+                .build();
+        DashboardApplicationForEuGrantTransferResource openTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withApplicationId(3L)
+                .withApplicationState(OPEN)
+                .withTitle("open application 2")
+                .build();
+        DashboardApplicationForEuGrantTransferResource approvedTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
+                .withApplicationId(4L)
+                .withApplicationState(APPROVED)
+                .withTitle("approved application 2")
+                .build();
+        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfers = asList(approvedOne, openOne, openTwo, approvedTwo);
+        setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
+
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+
+        List<EuGrantTransferDashboardRowViewModel> result = viewModel.getEuGrantTransfers();
+        assertEquals(4, result.size());
+        assertEquals("approved application 1", result.get(0).getTitle());
+        assertEquals("approved application 2", result.get(1).getTitle());
+        assertEquals("open application 1", result.get(2).getTitle());
+        assertEquals("open application 2", result.get(3).getTitle());
+    }
+
+    @Test
     public void populateInProgress() {
-        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder()
+                .withTitle("Title")
+                .withEndDate(TOMORROW)
+                .withDaysLeft(1)
+                .withApplicationProgress(99)
+                .withAssignedToInterview(FALSE)
+                .withApplicationId(6L)
+                .withLeadApplicant(TRUE)
+                .withApplicationState(APPROVED)
+                .build();
+        List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources = singletonList(inProgress);
+        setupDashboard(emptyList(), emptyList(), dashboardApplicationInProgressResources, emptyList());
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
 
         assertEquals(1, viewModel.getInProgress().size());
-
         InProgressDashboardRowViewModel inProgressViewModel = viewModel.getInProgress().get(0);
-
         assertEquals(format("/application/%d", 6L), inProgressViewModel.getLinkUrl());
         assertEquals(format("%d%% complete", 99), inProgressViewModel.getProgressMessage());
         assertEquals("Title", inProgressViewModel.getTitle());
@@ -111,47 +194,47 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void populatePrevious() {
-        ApplicantDashboardViewModel viewModel = populator.populate(userId, "originQuery");
+    public void testSortForInProgress() {
+        DashboardApplicationInProgressResource endsYesterday = new DashboardApplicationInProgressResourceBuilder()
+                .withEndDate(YESTERDAY)
+                .withTitle("ends in past")
+                .build();
+        DashboardApplicationInProgressResource startedOneMonthAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+                .withStartDate(ONE_MONTH_AGO.toLocalDate())
+                .withEndDate(TODAY)
+                .withTitle("ends today + started 1 year ago")
+                .build();
+        DashboardApplicationInProgressResource startedOneWeekAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+                .withStartDate(ONE_WEEK_AGO.toLocalDate())
+                .withEndDate(TODAY)
+                .withTitle("ends today + started 1 week ago")
+                .build();
+        DashboardApplicationInProgressResource startedTodayAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+                .withStartDate(TODAY.toLocalDate())
+                .withEndDate(TODAY)
+                .withTitle("ends today + started today")
+                .build();
+        DashboardApplicationInProgressResource endsTomorrow = new DashboardApplicationInProgressResourceBuilder()
+                .withEndDate(TOMORROW)
+                .withTitle("ends in future")
+                .build();
+        List<DashboardApplicationInProgressResource> inProgress = asList(endsYesterday, startedOneMonthAgoAndEndsToday,
+                startedOneWeekAgoAndEndsToday, startedTodayAndEndsToday, endsTomorrow);
+        setupDashboard(emptyList(), emptyList(), inProgress, emptyList());
 
-        assertEquals(1, viewModel.getPrevious().size());
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
 
-        PreviousDashboardRowViewModel previousViewModel = viewModel.getPrevious().get(0);
-
-        assertEquals(format("/application/%d/summary", 7L), previousViewModel.getLinkUrl());
-        assertEquals("Title", previousViewModel.getTitle());
-        assertEquals(FALSE, previousViewModel.isApproved());
-        assertEquals(TRUE, previousViewModel.isCreatedOrOpen());
-        assertEquals(FALSE, previousViewModel.isInformedIneligible());
-        assertEquals(FALSE, previousViewModel.isRejected());
+        List<InProgressDashboardRowViewModel> result = viewModel.getInProgress();
+        assertEquals(5, result.size());
+        assertEquals("ends in past", result.get(0).getTitle());
+        assertEquals("ends today + started today", result.get(1).getTitle());
+        assertEquals("ends today + started 1 week ago", result.get(2).getTitle());
+        assertEquals("ends today + started 1 year ago", result.get(3).getTitle());
+        assertEquals("ends in future", result.get(4).getTitle());
     }
 
-    private void setupDashboard() {
-        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder()
-                .withCompetitionTitle("Competition Title")
-                .withProjectId(3L)
-                .withProjectTitle("Project Title")
-                .build();
-
-        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder()
-                .withTitle("Title")
-                .withApplicationProgress(1)
-                .withApplicationState(APPROVED)
-                .withCompetitionTitle("Competition Title")
-                .withProjectId(5L)
-                .build();
-
-        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder()
-                .withTitle("Title")
-                .withEndDate(TOMORROW)
-                .withDaysLeft(1)
-                .withApplicationProgress(99)
-                .withAssignedToInterview(FALSE)
-                .withApplicationId(6L)
-                .withLeadApplicant(TRUE)
-                .withApplicationState(APPROVED)
-                .build();
-
+    @Test
+    public void populatePrevious() {
         DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder()
                 .withTitle("Title")
                 .withApplicationId(7L)
@@ -163,14 +246,54 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withEndDate(YESTERDAY)
                 .withLeadApplicant(FALSE)
                 .build();
+        List<DashboardPreviousApplicationResource> dashboardPreviousApplicationResources = singletonList(previous);
+        setupDashboard(emptyList(), emptyList(), emptyList(), dashboardPreviousApplicationResources);
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
 
+        assertEquals(1, viewModel.getPrevious().size());
+        PreviousDashboardRowViewModel previousViewModel = viewModel.getPrevious().get(0);
+        assertEquals(format("/application/%d/summary", 7L), previousViewModel.getLinkUrl());
+        assertEquals("Title", previousViewModel.getTitle());
+        assertEquals(FALSE, previousViewModel.isApproved());
+        assertEquals(TRUE, previousViewModel.isCreatedOrOpen());
+        assertEquals(FALSE, previousViewModel.isInformedIneligible());
+        assertEquals(FALSE, previousViewModel.isRejected());
+    }
+
+    @Test
+    public void testSortForPrevious() {
+        DashboardPreviousApplicationResource startsYesterday = new DashboardPreviousApplicationResourceBuilder()
+                .withStartDate(YESTERDAY.toLocalDate())
+                .withTitle("starts in past")
+                .build();
+        DashboardPreviousApplicationResource startsToday = new DashboardPreviousApplicationResourceBuilder()
+                .withStartDate(TODAY.toLocalDate())
+                .withTitle("starts today")
+                .build();
+        DashboardPreviousApplicationResource startsTomorrow = new DashboardPreviousApplicationResourceBuilder()
+                .withStartDate(TOMORROW.toLocalDate())
+                .withTitle("starts in future")
+                .build();
+        List<DashboardPreviousApplicationResource> previous = asList(startsYesterday, startsToday, startsTomorrow);
+        setupDashboard(emptyList(), emptyList(), emptyList(), previous);
+
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+
+        List<PreviousDashboardRowViewModel> result = viewModel.getPrevious();
+        assertEquals(3, result.size());
+        assertEquals("starts in future", result.get(0).getTitle());
+        assertEquals("starts today", result.get(1).getTitle());
+        assertEquals("starts in past", result.get(2).getTitle());
+    }
+
+    private void setupDashboard(List<DashboardApplicationInSetupResource> inSetup, List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer, List<DashboardApplicationInProgressResource> inProgress, List<DashboardPreviousApplicationResource> previous) {
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResource.ApplicantDashboardResourceBuilder()
-                .withInSetup(singletonList(inSetup))
-                .withEuGrantTransfer(singletonList(euGrantTransfer))
-                .withInProgress(singletonList(inProgress))
-                .withPrevious(singletonList(previous))
+                .withInSetup(inSetup)
+                .withEuGrantTransfer(euGrantTransfer)
+                .withInProgress(inProgress)
+                .withPrevious(previous)
                 .build();
 
-        when(applicantRestService.getApplicantDashboard(userId)).thenReturn(applicantDashboardResource);
+        when(applicantRestService.getApplicantDashboard(USER_ID)).thenReturn(applicantDashboardResource);
     }
 }

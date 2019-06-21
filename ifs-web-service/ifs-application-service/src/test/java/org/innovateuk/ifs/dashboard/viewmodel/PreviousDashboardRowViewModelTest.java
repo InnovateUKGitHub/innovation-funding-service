@@ -1,26 +1,28 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import java.time.LocalDate;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+import static junit.framework.TestCase.assertTrue;
+import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class PreviousDashboardRowViewModelTest {
+
+    private static final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
     @Test
     public void testConstruct() {
         PreviousDashboardRowViewModel viewModel = new PreviousDashboardRowViewModel(null, 1L,
-                "Competition", ApplicationState.APPROVED);
+                "Competition", APPROVED, YESTERDAY);
 
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/summary"));
-        assertThat(viewModel.getTitle(), equalTo("Untitled application"));
-        assertThat(viewModel.isApproved(), equalTo(true));
-        assertThat(viewModel.isCreatedOrOpen(), equalTo(false));
-        assertThat(viewModel.isInformedIneligible(), equalTo(false));
-        assertThat(viewModel.isRejected(), equalTo(false));
+        assertEquals("/application/1/summary", viewModel.getLinkUrl());
+        assertEquals("Untitled application", viewModel.getTitle());
+        assertTrue(viewModel.isApproved());
+        assertFalse(viewModel.isCreatedOrOpen());
+        assertFalse(viewModel.isInformedIneligible());
+        assertFalse(viewModel.isRejected());
     }
 }

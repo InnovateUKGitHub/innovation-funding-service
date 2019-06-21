@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
 
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -53,6 +55,9 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
+    @Autowired
+    private ActivityLogService activityLogService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -82,7 +87,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         return findOne(threadId).andOnSuccess(query -> {
             ProjectFinance projectFinance = projectFinanceRepository.findById(query.contextClassPk).get();
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
-            if(financeContact.isPresent()) {
+            if (financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
                 if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
                     Project project = projectFinance.getProject();
@@ -120,6 +125,10 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                     } else {
                         return serviceFailure(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED));
                     }
+                }).andOnSuccessReturn(threadId -> {
+                    activityLogService.recordQueryActivityByProjectFinanceId(query.contextClassPk,
+                            ActivityType.FINANCE_QUERY, threadId);
+                    return threadId;
                 });
     }
 

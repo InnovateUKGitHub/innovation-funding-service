@@ -109,7 +109,7 @@ MO details can be edited and viewed in the Set up your project page
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
-    [Tags]  HappyPathSuper-EFFY - Super Efficient Forecasting of Freight Yields
+    [Tags]  HappyPath
     Given Log in as a different user                   &{collaborator1_credentials_bd}
     When the user should see assigned MO details
     Then Log in as a different user                    &{collaborator2_credentials_bd}
