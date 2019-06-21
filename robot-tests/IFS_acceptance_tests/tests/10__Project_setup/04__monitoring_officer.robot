@@ -379,16 +379,8 @@ The user should see exisitng IFS user details and add phone number
     the user should see the element          jQuery = dt:contains("Email address") ~ dd:contains("${assessor2_credentials["email"]}")
     the user should see the element          jQuery = dt:contains("First name") ~ dd:contains("Felix")
     the user should see the element          jQuery = dt:contains("Last name") ~ dd:contains("Wilson")
-    phone number: validations checks
-    the user enters text to a text field     id = phoneNumber   1234567890
+    the user should see the element          jQuery = dt:contains("Phone number") ~ dd:contains("094073497201")
     the user clicks the button/link          jQuery = button:contains("Add monitoring officer")
-
-Phone number: validations checks
-    the user enters text to a text field             id = phoneNumber    ${empty}
-    the user should see a field error                Please enter a phone number.
-    the user clicks the button/link                  jQuery = button:contains("Add monitoring officer")
-    the user should see a field and summary error    Please enter a phone number.
-    the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 
 The user logs in and checks for assigned projects
     the user reads his email and clicks the link    ${assessor2_credentials["email"]}   ${PROJECT_SETUP_COMPETITION_NAME}   The project Elbow grease has been assigned to you as the Monitoring Officer  1
