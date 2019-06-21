@@ -3,7 +3,7 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 /**
  * Applicant dashboard row view model
  */
-public abstract class AbstractApplicantDashboardRowViewModel<T extends AbstractApplicantDashboardRowViewModel> implements Comparable<T> {
+public abstract class AbstractApplicantDashboardRowViewModel<T extends AbstractApplicantDashboardRowViewModel> {
 
     protected final String title;
     private final long applicationNumber;
@@ -14,7 +14,6 @@ public abstract class AbstractApplicantDashboardRowViewModel<T extends AbstractA
         this.applicationNumber = applicationNumber;
         this.competitionTitle = competitionTitle;
     }
-
 
     public long getApplicationNumber() {
         return applicationNumber;
