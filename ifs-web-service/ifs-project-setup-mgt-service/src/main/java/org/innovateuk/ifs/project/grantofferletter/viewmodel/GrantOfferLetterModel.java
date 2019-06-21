@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
+
+import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 
 /**
  * View model backing the internal members view of the Grant Offer Letter send page
@@ -22,6 +25,7 @@ public class GrantOfferLetterModel {
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private GrantOfferLetterStateResource grantOfferState;
     private String grantOfferLetterRejectionReason;
+    private ProjectState projectState;
 
     public GrantOfferLetterModel(long competitionId,
                                  boolean h2020,
@@ -29,7 +33,8 @@ public class GrantOfferLetterModel {
                                  FileDetailsViewModel additionalContractFile,
                                  Long projectId, String projectName, Long applicationId, Boolean grantOfferLetterFileContentAvailable, Boolean additionalContractFileContentAvailable,
                                  FileDetailsViewModel signedGrantOfferLetterFile,
-                                 GrantOfferLetterStateResource grantOfferState, String grantOfferLetterRejectionReason) {
+                                 GrantOfferLetterStateResource grantOfferState, String grantOfferLetterRejectionReason,
+                                 ProjectState projectState) {
         this.competitionId = competitionId;
         this.h2020 = h2020;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -42,6 +47,7 @@ public class GrantOfferLetterModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
+        this.projectState = projectState;
     }
 
     public long getCompetitionId() {
@@ -100,6 +106,10 @@ public class GrantOfferLetterModel {
 
     public boolean isShowRemoveOfferLetterButton() {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
+    }
+
+    public boolean isOnHold() {
+        return ON_HOLD.equals(projectState);
     }
 
     @Override

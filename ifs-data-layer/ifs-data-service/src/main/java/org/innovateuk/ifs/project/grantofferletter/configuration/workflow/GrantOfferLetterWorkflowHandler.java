@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterPr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -105,8 +107,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     public boolean isReadyToApprove(Project project) {
+        ProjectProcess projectProcess = project.getProjectProcess();
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState());
+        return process != null
+                && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState())
+                && ProjectState.SETUP.equals(projectProcess.getProcessState());
     }
 
     public boolean isSent(Project project) {
