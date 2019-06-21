@@ -8,7 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class ProjectStateHistoryResource {
+public class ProjectStateCommentsResource {
     public final Long id;
     public final Long contextClassPk;
     public final List<PostResource> posts;
@@ -19,12 +19,12 @@ public class ProjectStateHistoryResource {
     public final ZonedDateTime closedDate;
 
     @JsonCreator
-    public ProjectStateHistoryResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
-                                       @JsonProperty("posts") List<PostResource> posts, @JsonProperty("state") ProjectState state,
-                                       @JsonProperty("title") String title,
-                                       @JsonProperty("createdOn") ZonedDateTime createdOn,
-                                       @JsonProperty("closedBy") UserResource closedBy,
-                                       @JsonProperty("closedDate") ZonedDateTime closedDate) {
+    public ProjectStateCommentsResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
+                                        @JsonProperty("posts") List<PostResource> posts, @JsonProperty("state") ProjectState state,
+                                        @JsonProperty("title") String title,
+                                        @JsonProperty("createdOn") ZonedDateTime createdOn,
+                                        @JsonProperty("closedBy") UserResource closedBy,
+                                        @JsonProperty("closedDate") ZonedDateTime closedDate) {
         this.id = id;
         this.contextClassPk = contextClassPk;
         this.posts = posts;

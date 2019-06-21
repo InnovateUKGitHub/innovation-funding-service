@@ -5,12 +5,13 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.threads.domain.ProjectStateComments;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.ProjectStateCommentsMapper;
 import org.innovateuk.ifs.threads.repository.ProjectStateCommentsRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.resource.ProjectStateHistoryResource;
+import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.innovateuk.ifs.threads.service.MappingThreadService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
@@ -27,7 +28,7 @@ import static java.util.Collections.singletonList;
 @Service
 public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsService {
 
-    private MappingThreadService<ProjectStateComments, ProjectStateHistoryResource, ProjectStateCommentsMapper, Project> service;
+    private MappingThreadService<ProjectStateComments, ProjectStateCommentsResource, ProjectStateCommentsMapper, Project> service;
     private AuthenticationHelper authenticationHelper;
 
     @Autowired
@@ -40,8 +41,17 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
         UserResource user = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
         String text = textForState(state);
         PostResource post = new PostResource(null, user, text, emptyList(), now());
-        return service.create(new ProjectStateHistoryResource(null, projectId, singletonList(post), state,
+        return service.create(new ProjectStateCommentsResource(null, projectId, singletonList(post), state,
                 text, now(), null, null));
+    }
+
+    @Override
+    public ServiceResult<Long> create(long projectId, ProjectState state, OnHoldReasonResource reason) {
+        UserResource user = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        String text = textForState(state);
+        PostResource post = new PostResource(null, user, reason.getBody(), emptyList(), now());
+        return service.create(new ProjectStateCommentsResource(null, projectId, singletonList(post), state,
+                text + " - " + reason.getTitle(), now(), null, null));
     }
 
     private String textForState(ProjectState state) {
@@ -52,23 +62,27 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
                 return "Project has been handled offline.";
             case WITHDRAWN:
                 return "Project has been withdrawn.";
+            case ON_HOLD:
+                return "Project has been put on hold.";
+            case SETUP:
+                return "Project has been resumed from on hold.";
             default:
                 throw new IFSRuntimeException(String.format("Unsupported state change to %s", state.name()));
         }
     }
 
     @Override
-    public ServiceResult<List<ProjectStateHistoryResource>> findAll(Long contextClassPk) {
+    public ServiceResult<List<ProjectStateCommentsResource>> findAll(Long contextClassPk) {
         return service.findAll(contextClassPk);
     }
 
     @Override
-    public ServiceResult<ProjectStateHistoryResource> findOne(Long threadId) {
+    public ServiceResult<ProjectStateCommentsResource> findOne(Long threadId) {
         return service.findOne(threadId);
     }
 
     @Override
-    public ServiceResult<Long> create(ProjectStateHistoryResource projectStateHistoryResource) {
+    public ServiceResult<Long> create(ProjectStateCommentsResource projectStateHistoryResource) {
         throw new UnsupportedOperationException("Create by resource not valid for project state comments.");
     }
 

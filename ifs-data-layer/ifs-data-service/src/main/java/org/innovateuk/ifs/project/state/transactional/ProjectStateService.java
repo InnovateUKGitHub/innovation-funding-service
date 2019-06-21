@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.state.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -24,7 +25,7 @@ public interface ProjectStateService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to put projects on hold")
-    ServiceResult<Void> putProjectOnHold(long projectId);
+    ServiceResult<Void> putProjectOnHold(long projectId, OnHoldReasonResource reason);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to resume projects")

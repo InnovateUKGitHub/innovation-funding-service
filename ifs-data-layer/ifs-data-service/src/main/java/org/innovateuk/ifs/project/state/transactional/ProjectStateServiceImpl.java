@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.state.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
+import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,11 +55,12 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> putProjectOnHold(long projectId) {
+    public ServiceResult<Void> putProjectOnHold(long projectId, OnHoldReasonResource reason) {
         return getProject(projectId).andOnSuccess(
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.putProjectOnHold(project, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_PUT_ON_HOLD)));
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_PUT_ON_HOLD))
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.ON_HOLD, reason));
     }
 
     @Override
@@ -66,6 +69,8 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
         return getProject(projectId).andOnSuccess(
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.resumeProject(project, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_RESUMED)));
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_RESUMED))
+                ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.SETUP));
+
     }
 }
