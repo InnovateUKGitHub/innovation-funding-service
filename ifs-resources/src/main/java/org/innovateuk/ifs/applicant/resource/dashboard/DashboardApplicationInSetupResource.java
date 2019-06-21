@@ -3,6 +3,8 @@ package org.innovateuk.ifs.applicant.resource.dashboard;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
+
 /**
  * Resource representing an application for use in the applicant dashboard.
  */
@@ -10,6 +12,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
 
     private long projectId;
     private String projectTitle;
+    private LocalDate targetStartDate;
 
     // Private constructor to enforce immutability
     private DashboardApplicationInSetupResource() {
@@ -21,6 +24,10 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
 
     public String getProjectTitle() {
         return projectTitle;
+    }
+
+    public LocalDate getTargetStartDate() {
+        return targetStartDate;
     }
 
     @Override
@@ -35,6 +42,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
                 .append(applicationId, that.applicationId)
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
+                .append(targetStartDate, that.targetStartDate)
                 .isEquals();
     }
 
@@ -47,6 +55,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
                 .append(applicationId)
                 .append(competitionTitle)
                 .append(dashboardSection)
+                .append(targetStartDate)
                 .toHashCode();
     }
 
@@ -58,6 +67,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
         private long projectId;
         private String projectTitle;
         private DashboardSection dashboardSection;
+        private LocalDate targetStartDate;
 
         public DashboardApplicationInSetupResourceBuilder withTitle(String title) {
             this.title = title;
@@ -89,6 +99,11 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
             return this;
         }
 
+        public DashboardApplicationInSetupResourceBuilder withTargetStartDate(LocalDate targetStartDate) {
+            this.targetStartDate = targetStartDate;
+            return this;
+        }
+
         public DashboardApplicationInSetupResource build(){
             DashboardApplicationInSetupResource result = new DashboardApplicationInSetupResource();
             result.applicationId = this.applicationId;
@@ -97,6 +112,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
             result.projectTitle = this.projectTitle;
             result.title = this.title;
             result.dashboardSection = this.dashboardSection;
+            result.targetStartDate = this.targetStartDate;
 
             return result;
         }
