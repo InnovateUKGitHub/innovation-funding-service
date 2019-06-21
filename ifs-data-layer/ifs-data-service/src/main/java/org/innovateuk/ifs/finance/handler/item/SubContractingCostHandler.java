@@ -30,12 +30,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost, cost.getFinanceRowMetadata());
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
 

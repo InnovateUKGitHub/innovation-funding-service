@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.commons.error.ValidationUtil;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.validation.BindingResult;
 
@@ -24,9 +21,7 @@ public abstract class FinanceRowHandler<T> {
 
     public abstract ProjectFinanceRow toProjectCost(T costItem);
 
-    public abstract FinanceRowItem toCostItem(ApplicationFinanceRow cost);
-
-    public abstract FinanceRowItem toCostItem(ProjectFinanceRow cost);
+    public abstract FinanceRowItem toCostItem(FinanceRow cost);
 
     public void validate(@NotNull T costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);
