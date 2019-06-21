@@ -89,7 +89,7 @@ public class Project implements ProcessActivity {
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SpendProfile> spendProfiles;
+    private List<SpendProfile> spendProfiles = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
     private List<ProjectDocument> projectDocuments = new ArrayList<>();

@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "perf" ]]; then
         exit 1
     else
         exit 0
@@ -31,7 +31,7 @@ function isSysIntEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "sysint" ]]; then
+    if [[ ${TARGET} != "ifs-sysint" ]]; then
         exit 1
     else
         exit 0
@@ -364,11 +364,9 @@ function createProject() {
 }
 
 function getClusterAddress() {
-    echo "prod.ifs-test-clusters.com"
-#     echo "dev-nige-1.dev.ifs-test-clusters.com"
+  echo $(cat gradle.properties | grep openshiftDomain | cut -d'=' -f2)
 }
 
 function getRemoteRegistryUrl() {
-        echo "172.30.80.28:5000"
-#        echo "172.30.114.178:5000"
+  echo "docker-registry.default.svc:5000"
 }

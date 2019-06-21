@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+
+import java.time.LocalDate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -10,13 +13,30 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<PreviousDashboardRowViewModel> {
 
     private final ApplicationState applicationState;
+    private final LocalDate startDate;
 
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
                                          String competitionTitle,
-                                         ApplicationState applicationState) {
+                                         ApplicationState applicationState,
+                                         LocalDate startDate) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
+        this.startDate = startDate;
+    }
+
+    public PreviousDashboardRowViewModel(DashboardPreviousApplicationResource resource){
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.applicationState = resource.getApplicationState();
+        this.startDate = resource.getStartDate();
+    }
+
+    public ApplicationState getApplicationState() {
+        return applicationState;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     /* View logic */
@@ -37,8 +57,6 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                 ||  ApplicationState.CREATED.equals(applicationState);
     }
 
-
-
     public boolean isInformedIneligible() {
         return ApplicationState.INELIGIBLE_INFORMED.equals(applicationState);
     }
@@ -53,8 +71,4 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         return !isNullOrEmpty(title) ? title : "Untitled application";
     }
 
-    @Override
-    public int compareTo(PreviousDashboardRowViewModel o) {
-        return Long.compare(getApplicationNumber(), o.getApplicationNumber());
-    }
 }

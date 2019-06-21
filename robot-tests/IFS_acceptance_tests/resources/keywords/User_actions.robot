@@ -10,6 +10,23 @@ The user clicks the button/link
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
+The user clicks the button without autosave
+    [Arguments]    ${BUTTON}
+    ${Start_Url} =   Get Location
+    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
+    Wait Until Element Is Enabled  ${BUTTON}
+    Set Focus To Element    ${BUTTON}
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
+    ${End_Url} =   Get Location
+    Run Keyword If   '${Start_Url}' == '${End_Url}'     The user retries submission    ${BUTTON}
+
+The user retries submission
+    [Arguments]    ${BUTTON}
+    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
+    Wait Until Element Is Enabled  ${BUTTON}
+    Set Focus To Element    ${BUTTON}
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
+
 The user clicks the button/link in the paginated list
     [Arguments]    ${BUTTON}
     Do Keyword With Pagination     The user clicks the button/link     ${BUTTON}
@@ -121,9 +138,9 @@ invite a new academic
     the user clicks the button/link    link=Application team
     the user clicks the button/link    jQuery=.govuk-button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.govuk-button:contains("Add additional partner organisation")
-    the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
-    the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
-    the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    the user enters text to a text field    id = organisationName    university of liverpool
+    the user enters text to a text field    id = name    Academic User
+    the user enters text to a text field    id = email    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.govuk-button:contains("Save changes")
 
 the user should see that the element is disabled

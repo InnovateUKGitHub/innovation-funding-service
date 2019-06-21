@@ -143,7 +143,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
-    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey) {
         if (project.getGrantOfferLetter() != null){
             return serviceFailure(failKey);
         }
@@ -177,7 +177,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
-        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
+        return existingProjectManager.map(pm -> {
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -186,11 +186,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
                     PROJECT_MANAGER, leadPartnerUser.getOrganisation());
             project.addProjectUser(projectUser);
-            return serviceSuccess();
-        });
-
-        return setProjectManagerResult.andOnSuccess(result -> {
-            projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser);
             return serviceSuccess();
         });
     }
@@ -336,7 +331,15 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return validatePostcode(postcode).
                 andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
                 andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
-                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostcode(postcode.toUpperCase()));
+                andOnSuccessReturn(partnerOrganisation -> {
+                    partnerOrganisation.setPostcode(postcode.toUpperCase());
+                    return partnerOrganisation;
+                })
+                .andOnSuccessReturnVoid(partnerOrganisation ->
+                        getCurrentlyLoggedInProjectUser(partnerOrganisation.getProject(), PROJECT_PARTNER)
+                                .andOnSuccessReturnVoid((projectUser) ->
+                                        projectDetailsWorkflowHandler.projectLocationAdded(partnerOrganisation.getProject(), projectUser)));
+
     }
 
     private ServiceResult<Void> validatePostcode(String postcode) {

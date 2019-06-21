@@ -80,11 +80,12 @@ the user is searching for external users
 
 a collaborator has been invited but he has not yet approved the invitation
     log in as a different user            &{lead_applicant_credentials}
-    the user navigates to the page        ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team/update/existing/${EMPIRE_LTD_ID}
-    the user clicks the button/link       jQuery = .button-clear:contains("Add another contributor")
-    the user enters text to a text field  name = stagedInvite.name  Stuart
-    the user enters text to a text field  name = stagedInvite.email  ${invitedCollaborator}
-    the user clicks the button/link       jQuery = button:contains("Invite")
+    the user navigates to the page        ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    the user clicks the button/link       link = Application team
+    the user clicks the button/link       jQuery = button:contains("Add person to Empire Ltd")
+    the user enters text to a text field  id = name  Stuart
+    the user enters text to a text field  id = email  ${invitedCollaborator}
+    the user clicks the button/link       jQuery = button:contains("Invite to application")
     logout as user
 
 the support user should be able to see him as

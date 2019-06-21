@@ -77,9 +77,8 @@ public class ApplicationSummaryController {
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         boolean isSupport = isSupport(user);
-        if ((competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) && !isSupport) {
+        if (shouldDisplayFeedback(competition, application, isSupport)) {
             return redirectToFeedback(applicationId, queryParams);
         }
         UserResource userForModel;
@@ -93,6 +92,14 @@ public class ApplicationSummaryController {
         model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, isSupport));
         return "application-summary";
+    }
+
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application, boolean isSupport) {
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        return application.isSubmitted()
+                && feedbackAvailable
+                && !isSupport;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")

@@ -178,7 +178,7 @@
 </div>
 
 <!-- ======== Comp admin - delete modal ======= -->
-<div th:fragment="comp-setup-delete-modal">
+<div th:fragment="comp-setup-delete-modal (competition, form)">
     <div class="delete-modal warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
@@ -187,8 +187,8 @@
                 accessible again.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
-              th:action="@{/competition/setup/{competitionId}/delete(competitionId=${model.general.competition.id})}">
+        <form class="js-modal-url-target" method="post" th:object="${form}"
+              th:action="@{/competition/setup/{competitionId}/delete(competitionId=${competition.id})}">
             <div>
                 <button type="submit" class="govuk-button">Delete</button>
                 <button type="button" class="js-close button-clear">Cancel</button>

@@ -6,7 +6,10 @@ import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,9 +28,10 @@ public class CompetitionSearchController {
         return competitionSearchService.findLiveCompetitions().toGetResponse();
     }
 
-    @GetMapping("/project-setup")
-    public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
-        return competitionSearchService.findProjectSetupCompetitions().toGetResponse();
+    @GetMapping(value = "/project-setup")
+    public RestResult<CompetitionSearchResult> projectSetup(@RequestParam int page,
+                                                            @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findProjectSetupCompetitions(page, size).toGetResponse();
     }
 
     @GetMapping("/upcoming")
@@ -35,23 +39,24 @@ public class CompetitionSearchController {
         return competitionSearchService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @GetMapping("/non-ifs")
-    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
-        return competitionSearchService.findNonIfsCompetitions().toGetResponse();
+    @GetMapping(value = "/non-ifs")
+    public RestResult<CompetitionSearchResult> nonIfs(@RequestParam int page,
+                                                      @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findNonIfsCompetitions(page, size).toGetResponse();
     }
 
-    @GetMapping("/post-submission/feedback-released")
-    public RestResult<List<CompetitionSearchResultItem>> previous() {
-        return competitionSearchService.findPreviousCompetitions().toGetResponse();
+    @GetMapping(value = "/post-submission/feedback-released")
+    public RestResult<CompetitionSearchResult> previous(@RequestParam int page,
+                                                        @RequestParam(required = false, defaultValue = "20") int size) {
+        return competitionSearchService.findPreviousCompetitions(page, size).toGetResponse();
     }
 
-    @GetMapping("/search/{page}/{size}")
-    public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
-                                                      @PathVariable("page") int page,
-                                                      @PathVariable("size") int size) {
+    @GetMapping("/search")
+    public RestResult<CompetitionSearchResult> search(@RequestParam String searchQuery,
+                                                      @RequestParam int page,
+                                                      @RequestParam(required = false, defaultValue = "20") int size) {
         return competitionSearchService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
-
 
     @GetMapping("/count")
     public RestResult<CompetitionCountResource> count() {

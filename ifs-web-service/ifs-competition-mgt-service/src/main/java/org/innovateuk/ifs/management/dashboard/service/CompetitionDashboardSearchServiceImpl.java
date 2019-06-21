@@ -15,15 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PREVIOUS;
-
 /**
  * Implementation of the competition dashboard searches.
  */
 @Service
 public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboardSearchService {
-
-    public static final int COMPETITION_PAGE_SIZE = 20;
 
     @Autowired
     private CompetitionSearchRestService competitionSearchRestService;
@@ -37,29 +33,28 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     }
 
     @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionSearchRestService.findProjectSetupCompetitions().getSuccess());
+    public CompetitionSearchResult getProjectSetupCompetitions(int page) {
+        return competitionSearchRestService.findProjectSetupCompetitions(page).getSuccess();
     }
+
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
         return mapToStatus(competitionSearchRestService.findUpcomingCompetitions().getSuccess());
     }
 
     @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions() {
-        return mapToStatus(competitionSearchRestService.findNonIfsCompetitions().getSuccess());
+    public CompetitionSearchResult getNonIfsCompetitions(int page) {
+        return competitionSearchRestService.findNonIfsCompetitions(page).getSuccess();
     }
 
     @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions() {
-        return mapToPrevious(competitionSearchRestService.findFeedbackReleasedCompetitions().getSuccess());
+    public CompetitionSearchResult getPreviousCompetitions(int page) {
+        return competitionSearchRestService.findFeedbackReleasedCompetitions(page).getSuccess();
     }
 
     @Override
     public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        CompetitionSearchResult searchResult = competitionSearchRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccess();
-        searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
-        return searchResult;
+        return competitionSearchRestService.searchCompetitions(searchQuery, page).getSuccess();
     }
 
     @Override
@@ -74,9 +69,5 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     private <T extends CompetitionSearchResultItem> Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<T> resources) {
         return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
-    }
-
-    private <T extends CompetitionSearchResultItem> Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToPrevious(List<T> resources) {
-        return resources.stream().collect(Collectors.groupingBy(CompetitionStatus -> PREVIOUS));
     }
 }

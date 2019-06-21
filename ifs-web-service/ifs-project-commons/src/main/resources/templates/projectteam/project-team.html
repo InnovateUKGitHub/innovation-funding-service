@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project team'"/>
 </head>
-<body class="govuk-template__body project-detail project-team"
+<body class="govuk-template__body project-detail team"
       th:classappend="${model.isInternalUserView() ? 'competition-management' : ''}">
 
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -15,6 +15,11 @@
     <th:block th:unless="${model.isInternalUserView()}">
         <th:block th:insert="fragments/layout :: header-sub"
                   th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
+    </th:block>
+
+    <th:block th:if="${model.isInternalUserView()}">
+        <th:block th:insert="fragments/layout :: header-sub"
+                  th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"/>
     </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -179,7 +184,8 @@
                                    type="email"
                                    required="required"
                                    th:disabled="${!organisation.openAddTeamMemberForm}"
-                                   th:attr="data-required-errormessage=#{validation.invite.email.format.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.projectteam.email.required},
+                                                    data-email-invalid-errormessage=#{validation.projectteam.email.format}" />
                         </td>
                         <td class="govuk-table__cell">
                             <button name="invite-to-project"
