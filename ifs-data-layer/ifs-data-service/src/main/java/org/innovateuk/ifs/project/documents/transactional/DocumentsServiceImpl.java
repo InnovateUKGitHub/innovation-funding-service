@@ -23,7 +23,6 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,13 +103,13 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
                         .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
     }
 
-    private ServiceResult<Void> validateProjectIsInSetup(Project project) {
-        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+    private ServiceResult<Void> validateProjectActive(Project project) {
+        if (!projectWorkflowHandler.getState(project).isActive()) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 
@@ -156,7 +155,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
                         .andOnSuccess(() -> deleteFile(project, documentConfigId))
                 );
@@ -181,7 +180,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> submitDocument(project, documentConfigId))
                 );
     }
@@ -219,7 +218,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
         return validateProjectDocumentDecision(decision)
                 .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                        andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                        andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
                         ));
     }
