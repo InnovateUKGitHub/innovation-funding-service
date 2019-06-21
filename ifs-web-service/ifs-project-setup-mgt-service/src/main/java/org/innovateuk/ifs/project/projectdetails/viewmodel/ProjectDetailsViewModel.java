@@ -12,7 +12,6 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 
 /**
  * View model backing the Project Details page for Project Setup
@@ -22,7 +21,7 @@ public class ProjectDetailsViewModel {
     private ProjectResource project;
     private Long competitionId;
     private String competitionName;
-    private boolean projectFinanceUser;
+    private boolean ableToManageProjectState;
     private String leadOrganisation;
     private ProjectUserResource projectManager;
     private Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap;
@@ -30,7 +29,7 @@ public class ProjectDetailsViewModel {
     private List<PartnerOrganisationResource> partnerOrganisations;
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
-                                   String competitionName, boolean projectFinanceUser,
+                                   String competitionName, boolean ableToManageProjectState,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
@@ -38,7 +37,7 @@ public class ProjectDetailsViewModel {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.projectFinanceUser = projectFinanceUser;
+        this.ableToManageProjectState = ableToManageProjectState;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;
         this.organisationFinanceContactMap = organisationFinanceContactMap;
@@ -48,10 +47,6 @@ public class ProjectDetailsViewModel {
 
     public ProjectResource getProject() {
         return project;
-    }
-
-    public boolean isSetup() {
-        return SETUP.equals(project.getProjectState());
     }
 
     public boolean isHandleOffline() {
@@ -70,8 +65,8 @@ public class ProjectDetailsViewModel {
         return competitionName;
     }
 
-    public boolean isProjectFinanceUser() {
-        return projectFinanceUser;
+    public boolean isAbleToManageProjectState() {
+        return ableToManageProjectState;
     }
 
     public String getLeadOrganisation() {

@@ -292,14 +292,34 @@
                 </fieldset>
             </div>
             <th:block th:unless="${model.ifsAdmin}">
-                <h2 class="govuk-heading-m">Reason</h2>
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                <h3 class="govuk-heading-m">Marked as on hold - THIS IS A PLACEHOLDER</h3>
-                <p class="govuk-body">
-                    <strong>Lee Bowman - Innovate UK (Finance team)</strong> <span class="govuk-hint">13 May 2019 9:04am</span><br/>
-                    This project is currently on hold blah blah
-                </p>
-                <p class="govuk-body"><a href="#" class="govuk-link">Add a comment</a></p>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Mark project as on hold</h3>
+                <p class="govuk-body">Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.</p>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="on-hold-reason">
+                                Reason
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <input class="govuk-input" id="on-hold-reason" th:field="*{onHoldReason}" type="text" />
+                        </div>
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="on-hold-details">
+                                Details
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <textarea class="govuk-textarea" id="on-hold-details" th:field="*{onHoldDetails}" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
                 <input type="hidden" name="state" th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
             </th:block>
             <div class="govuk-form-group">

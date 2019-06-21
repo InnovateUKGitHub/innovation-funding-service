@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class ProjectDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
+
+    @Value("${ifs.project.management.on.hold}")
+    private boolean onHoldFeatureToggle;
 
     @Autowired
     private ProjectService projectService;
@@ -98,7 +102,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                loggedInUser.hasRole(PROJECT_FINANCE),
+                onHoldFeatureToggle ? loggedInUser.hasRole(PROJECT_FINANCE) : loggedInUser.hasRole(IFS_ADMINISTRATOR),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),

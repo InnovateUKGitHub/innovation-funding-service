@@ -30,7 +30,13 @@
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">These documents have been approved.</h2>
+                <p class="govuk-body govuk-!-margin-top-0">These documents have been approved.</p>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">This project is on hold. You can change this from the <a href="#">Project status</a> page.</h2>
             </div>
         </th:block>
 
@@ -241,7 +247,8 @@
                         </div>
                     </fieldset>
                 </div>
-                <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+                <button th:disabled="${model.onHold}" class="govuk-button" type="submit" id="submit-button" data-js-modal=""
+                        th:attr="data-enable-button-when=${model.onHold ? null : 'one-checked'}">Submit</button>
             </form>
 
         </th:block>
