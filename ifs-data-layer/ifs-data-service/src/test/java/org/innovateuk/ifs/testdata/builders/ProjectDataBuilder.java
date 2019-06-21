@@ -244,7 +244,8 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetails.setRegistrationNumber(organisationResource.getCompaniesHouseNumber());
                 bankDetails.setManualApproval(bankDetailsApproved);
 
-                bankDetailsService.submitBankDetails(bankDetails).getSuccess();
+                bankDetailsService.submitBankDetails(new ProjectOrganisationCompositeId(data.getProject().getId(), organisationResource.getId()),
+                        bankDetails).getSuccess();
             });
         });
     }

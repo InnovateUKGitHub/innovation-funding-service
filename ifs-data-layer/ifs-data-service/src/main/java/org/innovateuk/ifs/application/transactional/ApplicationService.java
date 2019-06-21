@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.PreviousApplicationPageResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -15,11 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 
 /**
  * Security annotated interface for {@ApplicationServiceImpl}.
@@ -30,17 +30,23 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, final long competitionId, final long userId, long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<ApplicationResource> saveApplicationDetails(@P("applicationId") final Long id, ApplicationResource application);
+    ServiceResult<ApplicationResource> saveApplicationDetails(Long applicationId, ApplicationResource application);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") final Long id, ZonedDateTime date);
+    ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(Long applicationId, ZonedDateTime date);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "SET_FUNDING_DECISION_EMAIL_DATE", securedType = ApplicationResource.class, description = "Comp Admins should be able to set the funding decision email date")
-    ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, ZonedDateTime fundingEmailDate);
+    ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(Long applicationId, ZonedDateTime fundingEmailDate);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
-    ServiceResult<ApplicationResource> updateApplicationState(@P("applicationId") final Long id, final ApplicationState state);
+    @Activity(type = ActivityType.APPLICATION_SUBMITTED, condition = "isSubmitted", applicationId = "applicationId")
+    ServiceResult<ApplicationResource> updateApplicationState(Long applicationId, ApplicationState state);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    default boolean isSubmitted(Long applicationId, ApplicationState state) {
+        return SUBMITTED == state;
+    }
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
@@ -49,10 +55,10 @@ public interface ApplicationService {
     ServiceResult<Boolean> showApplicationTeam(final Long applicationId, final Long userId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<ApplicationResource> getApplicationById(@P("applicationId") final Long applicationId);
+    ServiceResult<ApplicationResource> getApplicationById(Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);
+    ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId( final Long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,

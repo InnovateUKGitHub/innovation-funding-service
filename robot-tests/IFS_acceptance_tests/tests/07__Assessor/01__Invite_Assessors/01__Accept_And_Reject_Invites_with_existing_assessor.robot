@@ -83,7 +83,7 @@ Existing assessor: Reject invitation from Dashboard
 
 Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
-    [Tags]  MySQL
+    [Tags]
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
     And the user should not see the element        link = ${IN_ASSESSMENT_COMPETITION_NAME}
@@ -113,7 +113,7 @@ Upcoming competition should be visible
 
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
-    [Tags]    MySQL
+    [Tags]
     Given the assessment start period changes in the db in the past       ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     And the user should not see the element                               jQuery = h2:contains("Upcoming competitions to assess")
@@ -121,7 +121,7 @@ The assessment period starts the comp moves to the comp for assessment
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720  INFUND-3716
-    [Tags]    MySQL  Failing
+    [Tags]  Failing
     # TODO IFS-3176
     Given the assessor should see the number of days remaining     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the calculation of the remaining days should be correct   ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}

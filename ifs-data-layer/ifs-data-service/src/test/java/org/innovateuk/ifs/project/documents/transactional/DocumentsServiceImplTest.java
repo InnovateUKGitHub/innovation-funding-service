@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -84,6 +86,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
     @Mock
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     @Before
     public void setUp() {
@@ -301,6 +306,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isSuccess());
         assertEquals(SUBMITTED, projectDocument.getStatus());
         verify(projectDocumentRepositoryMock).save(projectDocument);
+        verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId);
     }
 
     @Test
@@ -389,6 +395,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertEquals(APPROVED, projectDocument.getStatus());
         assertNull(projectDocument.getStatusComments());
         verify(projectDocumentRepositoryMock).save(projectDocument);
+        verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
     }
 
 
