@@ -76,11 +76,11 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     public void resendInvites() {
         final ApplicationInviteResource invite = newApplicationInviteResource().build();
 
-        setupPostWithRestResultExpectations(inviteRestURL +  "/resend-invites", invite, OK);
+        setupPostWithRestResultExpectations(inviteRestURL +  "/resend-invite", invite, OK);
         RestResult<Void> response = service.resendInvite(invite);
         assertTrue(response.isSuccess());
 
-        setupPostWithRestResultVerifications(inviteRestURL +  "/resend-invites", Void.class, invite);
+        setupPostWithRestResultVerifications(inviteRestURL +  "/resend-invite", Void.class, invite);
     }
 
     @Test
