@@ -13,6 +13,8 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...
 ...             IFS-5939 New manage project status page
 ...
+...             IFS-5958 Read Only view of withdrawn and offline projects in project setup dashboards
+...
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -45,6 +47,11 @@ IFS Admin is able to Withdraw a project
     When the user clicks the button/link   jQuery = button:contains("Change project status")
     Then the project should be withdrawn
 
+Withdrawn project should contain RO links only
+    [Documentation]  IFS-5958
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
+    Then all project sections should be read only
+
 The IFS Admin filters the applications
     [Documentation]  IFS-3473
     [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
@@ -57,6 +64,35 @@ The IFS Admin clears any filters applied and can see all of the applications
     Then the user can see all of the previous applications when the All filter is applied
 
 *** Keywords ***
+All project sections should be read only
+    the user clicks the button/link      css = #table-project-status td:nth-child(3).status.ok a
+    the user should not see the element  link = Add team member
+    the user clicks the button/link      link = Projects in setup
+    the user clicks the button/link      css = #table-project-status td:nth-child(5).status.ok a
+    the user should not see the element  link = Change Monitoring Officer
+    the user clicks the button/link      link = Projects in setup
+    finance checks are RO
+
+finance checks are RO
+    #Viability page is RO
+    the user clicks the button/link      css = #table-project-status td:nth-child(7).status.waiting a
+    the user clicks the button/link      css = tr:contains(Tanzone) a.govuk-link.viability-0
+    the user should not see the element  css = input[id="costs-reviewed"]
+    the user should not see the element  css = input[id="project-viable"]
+    the user clicks the button/link      link = Finance Checks
+    #Eligibility page is RO
+    the user clicks the button/link      css = tr:contains(Tanzone) a.govuk-link.eligibility-0
+    the user should not see the element  css = input[id="project-eligible"]
+    the user clicks the button/link      link = Finance Checks
+    #Queries page is RO
+    the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
+    the user should not see the element  jQuery = button:contains("Post a new query")
+    the user clicks the button/link      link = Finance Checks
+    #Notes page is RO
+    the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(7) a:contains("View")
+    the user should not see the element  jQuery = button:contains("Create a new note")
+
+
 The user should be able to see previous applications by status
     the user can see the previous application          ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
     the user selects a filter for the applications     ${unsuccessfulState}  filter
@@ -69,7 +105,7 @@ The project should be withdrawn
      the user clicks the button/link      link = Return to project details
      the user should see the element      jQuery = h1:contains("Project details")
      the user clicks the button/link      link = Projects in setup
-     the user should not see the element  jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
+     the user should see the element      jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") strong:contains("Withdrawn")
 
 The user navigates to the Manage Project status page
     the user clicks the button/link   jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("Incomplete")
