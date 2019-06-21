@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.forms.questions.team.viewmodel.Application
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -13,11 +14,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -198,6 +202,31 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         verify(inviteRestService).removeApplicationInvite(inviteId);
     }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+        long inviteId = 3L;
+
+        ApplicationInviteResource applicationInviteResource = newApplicationInviteResource()
+                .withId(inviteId)
+                .build();
+
+        List<InviteOrganisationResource> inviteOrganisationResource = newInviteOrganisationResource()
+                .withInviteResources(singletonList(applicationInviteResource))
+                .build(1);
+
+        when(inviteRestService.resendInvite(applicationInviteResource)).thenReturn(restSuccess());
+        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResource));
+
+        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
+                .param("resend-invite", String.valueOf(inviteId)))
+                .andExpect(status().is3xxRedirection());
+
+        verify(inviteRestService).resendInvite(applicationInviteResource);
+    }
+
 
     @Test
     public void inviteToExistingOrganisation() throws Exception {

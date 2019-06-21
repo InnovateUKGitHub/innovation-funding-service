@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -121,6 +122,23 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void resendInvite() throws Exception {
+
+        long applicationId = 1L;
+        ApplicationInviteResource inviteResource = newApplicationInviteResource()
+                .withApplication(applicationId)
+                .withName("testname")
+                .withEmail("testemail")
+                .build();
+
+        when(applicationInviteService.resendInvite(inviteResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/invite/resend-invite")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(inviteResource)))
+                .andExpect(status().isCreated());
+    }
 
     @Test
     public void acceptInvite() throws Exception {
