@@ -178,4 +178,37 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
 
         verifyZeroInteractions(projectStateRestService);
     }
+
+    @Test
+    public void setProjectState_putProjectOnHold_success() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        when(projectStateRestService.putProjectOnHold(projectId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", ON_HOLD.name())
+                .param("onHoldReason", "Reason")
+                .param("onHoldDetails", "Details"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
+
+        verify(projectStateRestService).putProjectOnHold(projectId);
+    }
+
+    @Test
+    public void setProjectState_putProjectOnHold_validation() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        when(projectStateRestService.putProjectOnHold(projectId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
+                .param("state", ON_HOLD.name()))
+                .andExpect(view().name("project/manage-project-state"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "onHoldReason", "validation.manage.project.on.hold.reason.required"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "onHoldDetails", "validation.manage.project.on.hold.details.required"));
+
+        verify(projectStateRestService).putProjectOnHold(projectId);
+    }
 }

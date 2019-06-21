@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang.StringUtils.isBlank;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
@@ -104,6 +105,15 @@ public class ManageProjectStateController {
         if (form.isCompletedOffline() && !TRUE.equals(form.getConfirmationCompleteOffline())) {
             result.rejectValue("confirmationCompleteOffline", "validation.field.must.not.be.blank");
             return;
+        }
+
+        if (form.isOnHold()) {
+            if (isBlank(form.getOnHoldDetails())) {
+                result.rejectValue("onHoldDetails", "validation.manage.project.on.hold.details.required");
+            }
+            if (isBlank(form.getOnHoldReason())) {
+                result.rejectValue("onHoldReason", "validation.manage.project.on.hold.reason.required");
+            }
         }
     }
 }
