@@ -62,8 +62,6 @@ The user enters text to an autocomplete field
     Clear Element Text    ${TEXT_FIELD}
     the user clicks the button/link    ${text_field}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    Wait for autosave
-
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
@@ -81,7 +79,6 @@ The user enters multiple strings into a text field
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible Without Screenshots   ${field}
     Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
-    Mouse Out                                           ${field}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
 

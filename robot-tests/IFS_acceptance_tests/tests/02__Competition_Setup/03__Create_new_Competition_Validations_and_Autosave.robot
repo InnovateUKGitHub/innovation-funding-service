@@ -73,21 +73,12 @@ Initial details: client-side validations
     Then the user should not see the error any more             Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id = executiveUserId
     Then The user should not see the element                    jQuery = .govuk-error-message:contains("Please select a Portfolio manager.")
-    [Teardown]  wait for autosave
-
-Initial details: Autosave
-    [Documentation]    INFUND-3001
-    [Tags]
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Initial details
-    Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
     [Documentation]    INFUND-4682
     Given the user enters text to a text field    id = openingDateDay    01
     And the user enters text to a text field      id = openingDateMonth    12
     And the user enters text to a text field      id = openingDateYear    2015
-    And the user moves focus and waits for autosave
     When the user clicks the button/link          jQuery = button:contains("Done")
     Then The user should not see the element      jQuery = .govuk-button:contains("Edit")
 
@@ -124,13 +115,6 @@ Funding information client-side validations
     And the user enters text to a text field           id = budgetCode    2004
     And the user enters text to a text field           id = activityCode    4242
     Then The user should not see the error text in the page   Please enter a budget.
-
-Funding information Autosave
-    [Documentation]    INFUND-4581
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Funding information
-    Then the user should see the correct details in the funding information form
 
 Eligibility server-side validations
     [Documentation]    INFUND-2986
@@ -173,13 +157,6 @@ Eligibility client-side validations
     And the user moves focus and waits for autosave
     And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page
-
-Eligibility Autosave
-    [Documentation]  INFUND-4582
-    [Tags]
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Eligibility
-    Then the user should see the correct details in the eligibility form
 
 Milestones: Server side validations, submission time is default
     [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
