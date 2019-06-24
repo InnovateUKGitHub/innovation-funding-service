@@ -91,11 +91,9 @@ public class ReviewAndSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.isFullyFunded()) {
+        if (competition.isProcurement()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                String errorCode = competition.isH2020() ?
-                        "validation.application.h2020.terms.required" :
-                        "validation.application.procurement.terms.required";
+                String errorCode = "validation.application.procurement.terms.required";
                 bindingResult.rejectValue("agreeTerms", errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
