@@ -254,7 +254,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
         return asIfsAdmin(data -> {
             if (ProjectState.WITHDRAWN.equals(state)) {
-                projectService.withdrawProject(data.getProject().getId()).getSuccess();
+                projectStateService.withdrawProject(data.getProject().getId()).getSuccess();
             }
         });
     }
