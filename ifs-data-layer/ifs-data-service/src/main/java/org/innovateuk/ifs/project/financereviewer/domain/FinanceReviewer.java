@@ -11,7 +11,7 @@ import javax.persistence.*;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.FINANCE_REVIEWER;
 
 /**
- * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
+ * A project finance user assigned to a project as a finance reviewer.
  */
 @Entity
 @DiscriminatorValue("FINANCE_REVIEWER")

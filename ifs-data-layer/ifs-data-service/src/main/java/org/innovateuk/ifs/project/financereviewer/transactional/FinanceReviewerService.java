@@ -9,6 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Service for managing finance reviewers.
+ */
 public interface FinanceReviewerService {
 
     @SecuredBySpring(value = "ASSIGN_FINANCE_REVIEWER",

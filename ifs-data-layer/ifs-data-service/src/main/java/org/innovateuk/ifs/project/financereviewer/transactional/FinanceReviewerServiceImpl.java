@@ -20,6 +20,9 @@ import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+/**
+ * Service implementation for managing finance reviewers.
+ */
 @Service
 public class FinanceReviewerServiceImpl extends BaseTransactionalService implements FinanceReviewerService {
 
