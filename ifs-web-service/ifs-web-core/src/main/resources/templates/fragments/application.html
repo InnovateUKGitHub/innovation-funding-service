@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application-summary">
     <section th:each="section : ${sections.values()}"
-             th:unless="${section.name.equals('Finances')}"
+             th:unless="${section.name.equals('Finances') or section.isTermsAndConditions()}"
              th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
         <h2 th:text="${section.name}"
@@ -171,6 +171,17 @@
                               th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
+        <div class="collapsible">
+            <p class="govuk-body">
+                <a class="govuk-link"
+                   th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.applicationTermsQuestionId})} + ${model.originQuery}">
+                    View award terms and conditions</a>
+            </p>
         </div>
     </section>
 
