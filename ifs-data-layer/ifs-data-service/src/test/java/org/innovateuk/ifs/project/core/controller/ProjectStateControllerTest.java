@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateServiceImpl;
+import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectStateControllerTest extends BaseControllerMockMVCTest<ProjectStateController> {
 
     @Mock
-    private ProjectStateServiceImpl projectStateService;
+    private ProjectStateService projectStateService;
 
     @Override
     protected ProjectStateController supplyControllerUnderTest() {
