@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewMo
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -184,7 +185,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         long projectId = 123L;
 
         setField(controller, "onHoldFeatureToggle", true);
-        when(projectStateRestService.putProjectOnHold(projectId)).thenReturn(restSuccess());
+        when(projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource("Reason", "Details"))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", ON_HOLD.name())
@@ -193,7 +194,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
 
-        verify(projectStateRestService).putProjectOnHold(projectId);
+        verify(projectStateRestService).putProjectOnHold(projectId, new OnHoldReasonResource("Reason", "Details"));
     }
 
     @Test

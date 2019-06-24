@@ -82,16 +82,6 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
     }
 
     @Override
-    public ServiceResult<Long> create(ProjectStateCommentsResource projectStateHistoryResource) {
-        throw new UnsupportedOperationException("Create by resource not valid for project state comments.");
-    }
-
-    @Override
-    public ServiceResult<Void> close(Long threadId) {
-        return service.close(threadId);
-    }
-
-    @Override
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(post, threadId);
     }

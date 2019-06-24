@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.state.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
-import org.innovateuk.ifs.project.state.controller.ProjectStateController;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -12,6 +12,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,12 +84,15 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
     @Test
     public void putProjectOnHold() throws Exception {
         Long projectId = 456L;
-        when(projectStateService.putProjectOnHold(projectId)).thenReturn(serviceSuccess());
+        OnHoldReasonResource reason =  new OnHoldReasonResource("Title", "Body");
+        when(projectStateService.putProjectOnHold(projectId, reason)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/on-hold", projectId))
+        mockMvc.perform(post("/project/{projectId}/on-hold", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reason)))
                 .andExpect(status().isOk());
 
-        verify(projectStateService).putProjectOnHold(projectId);
+        verify(projectStateService).putProjectOnHold(projectId, reason);
     }
 
     @Test
