@@ -5,9 +5,13 @@ public interface ApplicationQuestionReadOnlyViewModel {
     String getName();
     String getFragment();
     boolean isComplete();
-    boolean shouldDisplayActions();
-    boolean shouldDisplayMarkAsComplete();
     boolean isLead();
+    default boolean shouldDisplayActions()  {
+        return true;
+    }
+    default boolean shouldDisplayMarkAsComplete()  {
+        return true;
+    }
     default boolean isDisplayCompleteStatus() {
         return true;
     }
