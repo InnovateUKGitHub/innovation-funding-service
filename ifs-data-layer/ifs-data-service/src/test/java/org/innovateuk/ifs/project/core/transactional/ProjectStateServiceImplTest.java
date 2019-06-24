@@ -153,6 +153,6 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Override
     protected ProjectStateService supplyServiceUnderTest() {
-        return new ProjectStateServiceImpl();
+        return new ProjectStateServiceImpl(projectWorkflowHandlerMock);
     }
 }

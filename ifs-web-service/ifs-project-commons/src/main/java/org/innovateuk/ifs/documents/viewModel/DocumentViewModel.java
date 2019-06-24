@@ -90,7 +90,6 @@ public class DocumentViewModel {
         return projectIsActive;
     }
 
-    /* view model logic. */
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }

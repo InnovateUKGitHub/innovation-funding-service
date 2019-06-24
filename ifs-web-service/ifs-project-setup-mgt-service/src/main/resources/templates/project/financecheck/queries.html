@@ -44,8 +44,7 @@
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
 
-        <div class="govuk-form-group"
-             th:if="${model.projectIsActive}">
+        <div class="govuk-form-group" th:if="${model.projectIsActive}">
             <th:block th:if="${model.financeContact.isPresent()}">
                 <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
             </th:block>

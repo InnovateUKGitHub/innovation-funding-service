@@ -54,7 +54,7 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return this == COMPLETED_OFFLINE || this == HANDLED_OFFLINE;
     }
 
-    // include on hold in this list once the state exists
+    // TODO IFS-5940 include on hold in this list once the state exists
     public boolean isActive() {
         return this == SETUP;
     }

@@ -14,8 +14,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class ProjectStateServiceImpl extends BaseTransactionalService implements ProjectStateService {
 
-    @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
+
+    @Autowired
+    public ProjectStateServiceImpl(ProjectWorkflowHandler projectWorkflowHandler) {
+        this.projectWorkflowHandler = projectWorkflowHandler;
+    }
 
     @Override
     @Transactional

@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
@@ -51,7 +52,7 @@ public class ManageProjectStateController {
                                    Model model) {
         validate(form, result);
         Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model);
-        Supplier<String> successView = () -> String.format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+        Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(updateProjectState(form.getState(), projectId));
