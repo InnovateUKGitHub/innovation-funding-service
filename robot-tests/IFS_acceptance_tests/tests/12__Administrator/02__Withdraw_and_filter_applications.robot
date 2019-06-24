@@ -75,19 +75,19 @@ All project sections should be read only
 
 finance checks are RO
     #Viability page is RO
-    the user clicks the button/link      css = #table-project-status td:nth-child(7).status.waiting a
-    the user clicks the button/link      css = tr:contains(Tanzone) a.govuk-link.viability-0
-    the user should not see the element  css = input[id="costs-reviewed"]
-    the user should not see the element  css = input[id="project-viable"]
-    the user clicks the button/link      link = Finance Checks
+    the user clicks the button/link      jQuery = #table-project-status td:nth-child(7).status.waiting a
+    the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.viability-0
+    the user should not see the element  jQuery = input[id="costs-reviewed"]
+    the user should not see the element  jQuery = input[id="project-viable"]
+    the user clicks the button/link      link = Finance checks
     #Eligibility page is RO
-    the user clicks the button/link      css = tr:contains(Tanzone) a.govuk-link.eligibility-0
-    the user should not see the element  css = input[id="project-eligible"]
-    the user clicks the button/link      link = Finance Checks
+    the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.eligibility-0
+    the user should not see the element  jQuery = input[id="project-eligible"]
+    the user clicks the button/link      link = Finance checks
     #Queries page is RO
     the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
     the user should not see the element  jQuery = button:contains("Post a new query")
-    the user clicks the button/link      link = Finance Checks
+    the user clicks the button/link      link = Finance checks
     #Notes page is RO
     the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(7) a:contains("View")
     the user should not see the element  jQuery = button:contains("Create a new note")
