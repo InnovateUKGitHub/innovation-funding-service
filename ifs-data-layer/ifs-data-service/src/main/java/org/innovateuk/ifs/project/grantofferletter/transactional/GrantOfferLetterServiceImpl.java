@@ -347,8 +347,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         return validateApprovalOrRejection(grantOfferLetterApprovalResource).andOnSuccess(() ->
             getProject(projectId).andOnSuccess(project -> {
-                if (golWorkflowHandler.isReadyToApprove(project) && !isOnHold(project)) {
-                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+                if (golWorkflowHandler.isReadyToApprove(project)) {
+                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType()) && !isOnHold(project)) {
                         return approveGOL(project)
                                 .andOnSuccess(() -> moveProjectToLiveState(project))
                                 .andOnSuccess(() -> createGrantProcess(project));
