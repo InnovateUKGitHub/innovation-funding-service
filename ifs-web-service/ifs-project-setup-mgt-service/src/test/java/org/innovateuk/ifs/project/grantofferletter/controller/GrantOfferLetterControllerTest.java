@@ -619,7 +619,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                                       BigDecimal.ONE,
                                                                                       emptyList());
         SummaryFinanceTableModel summaryTable = new SummaryFinanceTableModel(BigDecimal.TEN,
-                                                                             BigDecimal.ONE);
+                                                                             BigDecimal.ONE,
+                                                                             BigDecimal.ONE,
+                                                                             BigDecimal.ZERO);
 
         when(populator.populate(projectId))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(123L,
