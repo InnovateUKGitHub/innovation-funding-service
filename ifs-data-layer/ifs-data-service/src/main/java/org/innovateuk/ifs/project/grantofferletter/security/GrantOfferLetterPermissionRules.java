@@ -135,7 +135,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
             description = "Internal users can approve the signed Grant Offer Letter")
-    public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
+    public boolean internalUsersCanApproveOrRejectSignedGrantOfferLetter(ProjectResource project, UserResource user) {
         return isInternal(user) && isProjectActive(project.getId());
     }
 
