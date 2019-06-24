@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * Base class for grant offer letter finance table populators
  **/
-public class BaseGrantOfferLetterTablePopulator {
+public abstract class BaseGrantOfferLetterTablePopulator {
 
     @Autowired
     private FinanceUtil financeUtil;
@@ -23,7 +23,7 @@ public class BaseGrantOfferLetterTablePopulator {
         return financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
     }
 
-    protected BigDecimal calculateTotalFromFinances(Collection<ProjectFinanceResource> finances) {
+    protected BigDecimal calculateEligibleTotalFromFinances(Collection<ProjectFinanceResource> finances) {
         return finances
                 .stream()
                 .map(BaseFinanceResource::getTotal)
