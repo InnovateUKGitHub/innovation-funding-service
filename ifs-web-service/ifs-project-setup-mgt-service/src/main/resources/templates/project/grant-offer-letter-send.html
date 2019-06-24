@@ -30,13 +30,13 @@
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body govuk-!-margin-top-0">These documents have been approved.</p>
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">These documents have been approved.</h2>
             </div>
         </th:block>
 
         <th:block th:if="${model.onHold}">
             <div class="message-alert govuk-!-margin-bottom-6">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">This project is on hold. You can change this from the <a href="#">Project status</a> page.</h2>
+                <p class="govuk-body govuk-!-margin-top-0">This project is on hold. You can change this from the <a href="#">Project status</a> page.</p>
             </div>
         </th:block>
 
