@@ -75,6 +75,7 @@ public class FinanceReviewerControllerTest extends BaseControllerMockMVCTest<Fin
                 .param("userId", String.valueOf(userId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, projectId)))
+                .andExpect(flash().attribute("displayFinanceReviewerSuccess", true))
                 .andReturn();
 
     }
