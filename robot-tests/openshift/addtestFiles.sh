@@ -95,7 +95,7 @@ webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/../upload_files"
 baseFileStorage="/mnt/ifs_storage"
-storedFileFolder="${baseFileStorage}/at_files/"
+storedFileFolder="${baseFileStorage}/ifs/"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
 virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
