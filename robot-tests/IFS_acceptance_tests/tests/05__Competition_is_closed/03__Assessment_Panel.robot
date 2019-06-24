@@ -42,6 +42,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-2549 Assign assessment panel applications to assessors upon Invite acceptance
 ...
 ...               INF-2637 Manage interview panel link on competition dashboard - Internal
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Tear Down
 Force Tags        CompAdmin  Assessor
@@ -240,6 +242,7 @@ Assessor can attend Panel and see applications that he has assessed
     And the user clicks the button/link         jQuery = button:contains("Business opportunity")
     Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery = div:contains("Score") span:contains(8)
+    And assessor should see the competition terms and conditions     Application summary
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
