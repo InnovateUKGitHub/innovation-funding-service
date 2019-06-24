@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -121,18 +122,9 @@ public class ProjectDetailsController {
                                   @PathVariable("projectId") final long projectId,
                                   HttpServletRequest request) {
 
-        projectRestService.withdrawProject(projectId)
-                .andOnSuccess(
-                        () ->  projectRestService.getProjectById(projectId)
-                                .andOnSuccess(
-                                        project -> applicationRestService.withdrawApplication(project.getApplication())
-                                            .andOnFailure(
-                                                    () -> LOG.error("Application withdrawal failed")
-                                            )
-                                )
-                        );
+        projectRestService.withdrawProject(projectId).getSuccess();
 
-        return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
+        return format("redirect:/competition/%d/status/all", competitionId);
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
@@ -143,7 +135,7 @@ public class ProjectDetailsController {
                                   HttpServletRequest request) {
 
         projectRestService.handleProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
+        return format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
@@ -154,7 +146,7 @@ public class ProjectDetailsController {
                                        HttpServletRequest request) {
 
         projectRestService.completeProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
+        return format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
@@ -179,7 +171,7 @@ public class ProjectDetailsController {
 
         Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap = new LinkedHashMap<>();
 
-        partnerOrganisations.stream().forEach(organisation ->
+        partnerOrganisations.forEach(organisation ->
                 organisationFinanceContactMap.put(organisation,
                         simpleFindFirst(financeRoles, financeUserResource -> financeUserResource.getOrganisation().equals(organisation.getId())).orElse(null))
         );
