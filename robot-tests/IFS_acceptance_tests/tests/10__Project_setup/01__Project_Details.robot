@@ -50,6 +50,9 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               IFS-2642 Resend invites in Project Setup
 ...
 ...               IFS-2920 Project details: Project location per partner
+...
+...               IFS-5758 Adding finance reviewer to project
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
@@ -221,7 +224,6 @@ Non-lead partner cannot change any project details
     Given the user navigates to the page            ${Project_In_Setup_Page}
     Then the non-lead partner cannot changes any project details
 
-
 User is able to accept new site terms and conditions
     [Documentation]  IFS-3093
     [Tags]  MySQL
@@ -231,7 +233,34 @@ User is able to accept new site terms and conditions
     And the user clicks the button/link    css = button[type = "submit"]
     Then the user should see the element   jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
+Add Finance reviewer validations
+    [Documentation]  IFS-5758
+    [Setup]  log in as a different user                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/1/details
+    When the user clicks the button/link                jQuery = a:contains("Edit")
+    And the user clicks the button/link                 jQuery = button:contains("Update finance reviewer")
+    Then the user should see a field and summary error  Enter the name of the finance reviewer.
+
+IFS Admin is able to add a Finance reviewer
+    [Documentation]  IFS-5758
+    Given the user selects finance reviewer   Arden Pimenta
+    When the user clicks the button/link      jQuery = button:contains("Update finance reviewer")
+    Then the user should see the element      jQuery = p:contains("Innovate UK project finance reviewer has been updated.")
+    And the user should see the element       jQuery = tr:contains("Arden Pimenta")
+
+IFS Admin is able to edit Finance reviewer
+    [Documentation]  IFS-5758
+    Given the user clicks the button/link          jQuery = a:contains("Edit")
+    When the user selects finance reviewer         Rianne Almeida
+    And the user clicks the button/link            jQuery = button:contains("Update finance reviewer")
+    Then the user should see the element           jQuery = tr:contains("Rianne Almeida")
+
 *** Keywords ***
+The user selects finance reviewer
+    [Arguments]   ${FlName}
+    input text                          id = userId    ${FlName}
+    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+
 All the fields are completed
     the user should see the element   jQuery = td:contains("Target start date")~ td strong:contains("Complete")
     the user should see the element   jQuery = td:contains("Correspondence address")~ td strong:contains("Complete")
