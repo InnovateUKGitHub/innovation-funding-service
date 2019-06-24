@@ -25,6 +25,7 @@ public class FinanceChecksQueriesViewModel {
     private int maxQueryCharacters;
     private Long queryId;
     private Long applicationId;
+    private final boolean projectIsActive;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -39,7 +40,8 @@ public class FinanceChecksQueriesViewModel {
                                          int maxQueryWords,
                                          int maxQueryCharacters,
                                          Long queryId,
-                                         Long applicationId) {
+                                         Long applicationId,
+                                         boolean projectIsActive) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContact= financeContact;
@@ -54,6 +56,7 @@ public class FinanceChecksQueriesViewModel {
         this.maxQueryCharacters = maxQueryCharacters;
         this.queryId = queryId;
         this.applicationId = applicationId;
+        this.projectIsActive = projectIsActive;
 
     }
 
@@ -171,5 +174,9 @@ public class FinanceChecksQueriesViewModel {
 
     public boolean isSingleQuery() {
         return queries.size() == 1;
+    }
+
+    public boolean isProjectIsActive() {
+        return projectIsActive;
     }
 }

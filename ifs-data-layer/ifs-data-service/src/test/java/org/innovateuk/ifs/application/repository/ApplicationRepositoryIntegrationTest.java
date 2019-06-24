@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -73,9 +72,6 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private InnovationLeadRepository innovationLeadRepository;
 
     @Autowired
-    private AssessmentParticipantRepository assessmentParticipantRepository;
-
-    @Autowired
     @Override
     protected void setRepository(ApplicationRepository repository) {
         this.repository = repository;
@@ -91,7 +87,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
-        assertEquals(initial + 6, applications.count());
+        assertEquals(initial + 5, applications.count());
     }
 
     @Test

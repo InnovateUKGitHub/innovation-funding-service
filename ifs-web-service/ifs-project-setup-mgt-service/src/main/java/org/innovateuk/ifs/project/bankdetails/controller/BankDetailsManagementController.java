@@ -125,7 +125,7 @@ public class BankDetailsManagementController {
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
-        bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
+        bankDetailsReviewModelPopulator.populateExistingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
 
@@ -216,7 +216,27 @@ public class BankDetailsManagementController {
                                            boolean updated,
                                            Model model) {
         BankDetailsReviewViewModel bankDetailsReviewViewModel = bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
-        ChangeBankDetailsViewModel changeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getApplicationId(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), updated);
+        ChangeBankDetailsViewModel changeBankDetailsViewModel =
+                new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(),
+                                               bankDetailsReviewViewModel.getApplicationId(),
+                                               bankDetailsReviewViewModel.getProjectName(),
+                                               bankDetailsReviewViewModel.getFinanceContactName(),
+                                               bankDetailsReviewViewModel.getFinanceContactEmail(),
+                                               bankDetailsReviewViewModel.getFinanceContactPhoneNumber(),
+                                               bankDetailsReviewViewModel.getOrganisationId(),
+                                               bankDetailsReviewViewModel.getOrganisationName(),
+                                               bankDetailsReviewViewModel.getRegistrationNumber(),
+                                               bankDetailsReviewViewModel.getBankAccountNumber(),
+                                               bankDetailsReviewViewModel.getSortCode(),
+                                               bankDetailsReviewViewModel.getOrganisationAddress(),
+                                               bankDetailsReviewViewModel.getVerified(),
+                                               bankDetailsReviewViewModel.getCompanyNameScore(),
+                                               bankDetailsReviewViewModel.getRegistrationNumberMatched(),
+                                               bankDetailsReviewViewModel.getAddressScore(),
+                                               bankDetailsReviewViewModel.getApproved(),
+                                               bankDetailsReviewViewModel.getApprovedManually(),
+                                               bankDetailsReviewViewModel.isProjectActive(),
+                                               updated);
         model.addAttribute("model", changeBankDetailsViewModel);
         return "project/change-bank-details";
     }

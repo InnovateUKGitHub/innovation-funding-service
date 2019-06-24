@@ -80,8 +80,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -230,6 +230,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
     }
 
     @Test
@@ -281,13 +283,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void validProjectManagerProvided() {
 
-        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
-
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
                 .build()));
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isSuccess());
@@ -318,13 +316,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withUser(differentUser).
                 build();
 
-        when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
-
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
                 .build()));
-
-        setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isSuccess());
@@ -704,20 +698,21 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationSuccess() {
-
         long projectId = 1L;
         long organisationId = 2L;
         String postcode = "UB7 8QF";
 
-        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation(project, null, true);
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isSuccess());
 
         assertEquals(postcode, partnerOrganisationInDb.getPostcode());
+        verify(projectDetailsWorkflowHandlerMock).projectLocationAdded(eq(project), eq(leadPartnerProjectUser));
     }
 
     @Test
