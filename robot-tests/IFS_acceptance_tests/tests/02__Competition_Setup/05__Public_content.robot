@@ -22,7 +22,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               IFS-5370 Public content review button is always redirecting to Dates page
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin  MySQL
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 

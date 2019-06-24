@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,13 @@ public class ProjectBankDetailsController {
     private BankDetailsService bankDetailsService;
 
     @PutMapping
-    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
-        return bankDetailsService.submitBankDetails(bankDetailsResource).toPutResponse();
+    public RestResult<Void> submitBanksDetail(@PathVariable("projectId") final long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
+        return bankDetailsService.submitBankDetails(new ProjectOrganisationCompositeId(projectId, bankDetailsResource.getOrganisation()), bankDetailsResource).toPutResponse();
     }
 
     @PostMapping
     public RestResult<Void> updateBanksDetail(@PathVariable("projectId") final Long projectId, @RequestBody @Valid final BankDetailsResource bankDetailsResource) {
-        return bankDetailsService.updateBankDetails(bankDetailsResource).toPostResponse();
+        return bankDetailsService.updateBankDetails(new ProjectOrganisationCompositeId(projectId, bankDetailsResource.getOrganisation()), bankDetailsResource).toPostResponse();
     }
 
     @GetMapping(params = "bankDetailsId")

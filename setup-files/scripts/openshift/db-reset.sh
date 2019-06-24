@@ -33,7 +33,7 @@ function dbReset() {
     done
 
     # Note: We remove just contents of virus-scan-holding and not the directory itself as its monitored by clamAV for scanning, but we delete other directories completely.
-    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && rm -rf virus-scan-holding/* && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -v deploy | grep -m 1 ^data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && rm -rf virus-scan-holding/* && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
 }
 
 # Entry point
@@ -47,7 +47,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 
     export LDAP_HOST="ldap"
-    export LDAP_PORT=389
+    export LDAP_PORT=8389
     export LDAP_PASS="default"
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"
