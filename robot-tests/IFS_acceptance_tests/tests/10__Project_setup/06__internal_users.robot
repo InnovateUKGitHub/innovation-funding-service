@@ -25,6 +25,7 @@ Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
     [Tags]  HappyPath
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link     jQuery = button:contains("Next")
     When the user clicks the button/link    link = ${PS_Competition_Name}
     Then the user is able to see projects in PS
     And navigate to an application in PS
@@ -43,9 +44,10 @@ Project Finance can see the status of projects in PS
 
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720, IFS-1881
-    [Tags]    Experian  HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link           jQuery = button:contains("Next")
     When the user clicks the button/link          link = ${PS_Competition_Name}
     Then the user isn't able to see bank details and finance checks
 

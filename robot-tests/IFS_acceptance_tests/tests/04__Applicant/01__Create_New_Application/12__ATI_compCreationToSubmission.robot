@@ -28,7 +28,7 @@ Comp Admin creates an ATI competition
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
-    [Tags]  MySQL
+    [Tags]
     Given get competition id and set open date to yesterday  ${ATIcompetitionTitle}
     When log in as a different user                          &{lead_applicant_credentials}
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
@@ -124,7 +124,6 @@ the application cannot be submited
 
 the lead invites already registered user
     the user fills in the inviting steps           ${collaborator1_credentials["email"]}
-    the user clicks the button/link                jQuery=button:contains("Save and return to application overview")
     Logout as user
     the user reads his email and clicks the link   ${collaborator1_credentials["email"]}   Invitation to collaborate in ${ATIcompetitionTitle}    You will be joining as part of the organisation    2
     the user clicks the button/link                link = Continue

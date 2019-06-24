@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Finance Contact'}" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${model.projectName} - Finance Contact|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project team',linkUrl=@{/project/{id}/team(id=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Project team',linkUrl=@{/project/{id}/team(id=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your finance contact</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}">
+                        <a href="#finance-contact-section" th:text="${err}">The error message</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-        <p class="govuk-body">Select your finance contact. You can change your finance contact up until your grant offer letter is generated.
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'"/>
+
+        <p class="govuk-body">Select your finance contact. You can change your finance contact up until your grant
+            offer letter is generated.
             <br/>They will:</p>
 
         <ul class="govuk-list govuk-list--bullet">
@@ -24,20 +40,23 @@
             <li>review the spend profile of your project costs</li>
         </ul>
 
-        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
+        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+              th:object="${form}">
             <fieldset class="govuk-fieldset">
-                <div class="govuk-form-group" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
+                <div class="govuk-form-group" id="finance-contact-section"
+                     th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
                     <th:block th:if="${#fields.hasErrors('*')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}"
+                                  th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="user : ${model.orgUsers}" >
+                        <div class="govuk-radios__item" th:each="user : ${model.orgUsers}">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    th:field="*{financeContact}"
                                    th:value="${user.user}"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" />
+                                   th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}"/>
                             <label th:for="${#ids.prev('financeContact')}"
                                    th:text="${user.userName}"
                                    data-set-section-valid="#finance-contact-section"
@@ -54,13 +73,13 @@
 
         </form>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 
 </body>
 </html>

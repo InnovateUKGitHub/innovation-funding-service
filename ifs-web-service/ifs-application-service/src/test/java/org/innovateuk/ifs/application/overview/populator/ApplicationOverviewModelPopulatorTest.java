@@ -115,8 +115,10 @@ public class ApplicationOverviewModelPopulatorTest {
 
         SectionResource childSection = newSectionResource()
                 .withName("Child finance")
+                .withPriority(3)
                 .build();
         List<SectionResource> sections = newSectionResource()
+                .withPriority(1, 2)
                 .withName("Section with questions", "Finances")
                 .withDescription("Section with questions description", "")
                 .withChildSections(Collections.emptyList(), Collections.singletonList(childSection.getId()))

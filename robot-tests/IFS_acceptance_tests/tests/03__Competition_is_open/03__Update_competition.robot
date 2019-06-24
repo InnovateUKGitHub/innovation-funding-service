@@ -22,7 +22,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin    MySQL
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -116,7 +116,7 @@ Funding Information is editable (Open)
     And the user should see the element         id = pafNumber
     And the user should see the element         id = budgetCode
     And the user should see the element         id = activityCode
-    And The user clicks the button/link         jQuery = button:contains("Done")
+    And The user clicks the button/link         jquery = button:contains("Done")
     Then The user should see the element        jQuery = .govuk-button:contains("Edit")
     And The user should see the element         jQuery = td:contains("Aerospace Technology Institute (ATI)")
     [Teardown]    the user clicks the button/link  link = Competition setup
@@ -211,7 +211,7 @@ Initial details editable before notify date (Open)
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
     And the user should see the element                     jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
     And the user should see the element                     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("6 June 2017")
+    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("19 June 2017")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
@@ -224,7 +224,7 @@ Initial details editable before notify date (Open)
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
-    [Tags]    MySQL
+    [Tags]
     Given the user clicks the button/link     link = Assessors
     Then the user should see the element      jQuery = .govuk-button:contains("Edit")
     And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")

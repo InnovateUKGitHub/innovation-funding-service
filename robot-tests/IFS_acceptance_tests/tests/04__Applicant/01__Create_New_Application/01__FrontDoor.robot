@@ -42,7 +42,7 @@ Guest user can see Competitions and their information
 
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
-    [Tags]    MySQL  HappyPath
+    [Tags]  HappyPath
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
     Given update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
@@ -59,7 +59,7 @@ Guest user can filter competitions by Innovation area
     [Setup]    the user navigates to the page                       ${frontDoor}
     When the user selects the option from the drop-down menu        Space technology    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
-    Then the user should see the element                            jQuery = a:contains("Transforming big data")
+    Then The user should see the element in the paginated list      jQuery = a:contains("Webtest Non IFS Comp 8")
     And the user should not see the element in the paginated list   jQuery = a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu        Any    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
@@ -78,7 +78,7 @@ Guest user can see the public information of an unopened competition
 
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
-    [Tags]    MySQL
+    [Tags]
     Given Change the milestone in the database to tomorrow  ${NON_IFS_COMPETITION}  SUBMISSION_DATE
     And update milestone to yesterday    ${NON_IFS_COMPETITION}  REGISTRATION_DATE
     When the user navigates to the page     ${server}/competition/${NON_IFS_COMPETITION}/overview

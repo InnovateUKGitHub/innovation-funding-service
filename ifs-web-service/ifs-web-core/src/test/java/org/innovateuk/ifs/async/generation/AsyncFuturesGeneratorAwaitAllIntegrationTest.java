@@ -284,7 +284,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
 
         // assert that the correct Futures have completed before awaitingFuture was executed.
         List<String> completedFuturesWhenAwaitingFuturesRan = awaitingFuture.get();
-        assertThat(completedFuturesWhenAwaitingFuturesRan, contains("future2ChildChild","future1ChildChild", "future1ChildChildAwaiting"));
+        assertThat(completedFuturesWhenAwaitingFuturesRan, containsInAnyOrder("future2ChildChild","future1ChildChild", "future1ChildChildAwaiting"));
     }
 
     /**

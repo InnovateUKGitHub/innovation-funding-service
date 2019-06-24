@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project team'"/>
 </head>
-<body class="govuk-template__body project-detail project-team"
+<body class="govuk-template__body project-detail team"
       th:classappend="${model.isInternalUserView() ? 'competition-management' : ''}">
 
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -21,7 +21,7 @@
         <th:block th:insert="fragments/layout :: header-sub"
                   th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"/>
     </th:block>
-    
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
@@ -95,8 +95,8 @@
                        th:classappend="${organisation.editable and !model.isReadOnly() ? 'govuk-!-margin-bottom-2' : ''}">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header larger-cols">Name</th>
-                        <th scope="col" class="govuk-table__header">Role</th>
+                        <th scope="col" class="govuk-table__header larger-cols">Full name</th>
+                        <th scope="col" class="govuk-table__header smaller-col">Email</th>
                         <th scope="col" class="govuk-table__header width-200"><span
                             class="govuk-visually-hidden">Remove</span></th>
                     </tr>
@@ -108,7 +108,7 @@
                             th:text="${user.displayName}"
                             th:classappend="${user.invite ? 'hint' : ''}"></td>
                         <td class="govuk-table__cell"
-                            th:text="${user.getRolesNames()}"
+                            th:text="${user.getEmail()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-
                         </td>
                         <td class="govuk-table__cell"
@@ -130,6 +130,10 @@
                                             name="remove-invite" th:value="${user.id}"
                                             th:unless="${model.isInternalUserView()}">Remove
                                     </button>
+                                </th:block>
+                                <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
+                                    <span th:text="${user.getRolesNames()}"
+                                          th:classappend="${user.invite ? 'hint' : ''}">Roles</span>
                                 </th:block>
                             </th:block>
                         </td>
@@ -184,7 +188,8 @@
                                    type="email"
                                    required="required"
                                    th:disabled="${!organisation.openAddTeamMemberForm}"
-                                   th:attr="data-required-errormessage=#{validation.invite.email.format.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.projectteam.email.required},
+                                                    data-email-invalid-errormessage=#{validation.projectteam.email.format}" />
                         </td>
                         <td class="govuk-table__cell">
                             <button name="invite-to-project"

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.dashboard.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -16,20 +16,21 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
  */
 public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
-
+    private CompetitionSearchResult result;
     private Long countBankDetails;
     private boolean projectFinanceUser;
 
-    public ProjectSetupDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
+    public ProjectSetupDashboardViewModel(CompetitionSearchResult searchResult,
                                           CompetitionCountResource counts,
                                           Long countBankDetails,
                                           DashboardTabsViewModel tabs,
                                           boolean projectFinanceUser) {
-        this.competitions = competitions;
         this.counts = counts;
         this.tabs = tabs;
         this.countBankDetails = countBankDetails;
         this.projectFinanceUser = projectFinanceUser;
+        this.result = searchResult;
+
     }
 
     public Long getCountBankDetails() {
@@ -38,6 +39,10 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
     public boolean isProjectFinanceUser() {
         return projectFinanceUser;
+    }
+
+    public CompetitionSearchResult getResult() {
+        return result;
     }
 
     public List<CompetitionSearchResultItem> getNonPrioritisedCompetitions() {

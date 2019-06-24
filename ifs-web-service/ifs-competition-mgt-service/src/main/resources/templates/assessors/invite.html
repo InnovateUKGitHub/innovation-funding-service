@@ -163,7 +163,7 @@
                                                            class="govuk-input"
                                                            required="required"
                                                            th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                                            data-email-errormessage=#{validation.standard.email.format},
+                                                            data-email-invalid-errormessage=#{validation.standard.email.format},
                                                             data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
                                                            th:errorclass="govuk-input--error"
                                                            th:name="invites[__${iterStat.index}__].email"

@@ -47,20 +47,20 @@ Project Finance should not be able to access bank details page
 
 Applicant user is unable to submit blank and invaild bank details
     [Documentation]   INFUND-3010, INFUND-6018, INFUND-7173, IFS-2731, INFUND-6887, INFUND-6482, INFUND-3282
-    [Tags]  Experian HappyPath
+    [Tags]  HappyPath
     [Setup]  log in as a different user   &{lead_applicant_credentials_bd}
     Given an applicant navigates to the Bank details page
     Then verify Bank details page validation
 
 Applicant user is able to submit bank details
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688, INFUND-3282
-    [Tags]   Experian  HappyPath
+    [Tags]   HappyPath
     Given the user should see the element     jQuery = h1:contains("Bank details")
     Then the applicant user is able to submit bank details
 
 Academic user is able to submit bank details
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
-    [Tags]   Experian  HappyPath
+    [Tags]   HappyPath
     [Setup]  log in as a different user      &{collaborator2_credentials_bd}
     Given the academic user navigates to the bank details page
     When the academic user is able to enter bank details
@@ -88,7 +88,7 @@ Non lead partner is able to submit bank details
 
 Bank details verified by Experian require no action by the Project Finance
     [Documentation]  IFS-2495
-    [Tags]  MySQL  HappyPath
+    [Tags]  HappyPath
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
     Then the project finance verifies that no further action is required
@@ -117,7 +117,7 @@ Other internal users do not have access to bank details export
 
 Project Finance user can export bank details
     [Documentation]  INFUND-5852
-    [Tags]  Download
+    [Tags]
     Given the project finance user downloads the bank details
     Then the user opens the excel and checks the content
     [Teardown]  remove the file from the operating system  bank_details.csv
@@ -150,8 +150,9 @@ The admin user is able to see bank details
     the user should see the element                      jQuery = .govuk-button:contains("Approve bank account details")
 
 The admin user navigates to All projects
-    the user clicks the button/link                link = ${PS_Competition_Name}
-    Then the user should see the element           link = All projects
+    the user clicks the button/link      jQuery = button:contains("Next")
+    the user clicks the button/link      link = ${PS_Competition_Name}
+    the user should see the element      link = All projects
 
 Project finance is able to view progress of partners bank details
     the user clicks the button/link                      css = #table-project-status tr:nth-child(4) td:nth-child(6) a

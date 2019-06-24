@@ -8,7 +8,7 @@ Documentation     INFUND-832 Acceptance test: Verify that only users with the ri
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
-Force Tags        Upload    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically

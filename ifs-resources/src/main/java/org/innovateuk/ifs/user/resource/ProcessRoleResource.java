@@ -8,6 +8,7 @@ public class ProcessRoleResource {
     private Role role;
     private String roleName;
     private Long organisationId;
+    private String userEmail;
 
     public ProcessRoleResource(){
     	// no-arg constructor
@@ -75,5 +76,14 @@ public class ProcessRoleResource {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public ProcessRoleResource setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+        return this;
     }
 }
