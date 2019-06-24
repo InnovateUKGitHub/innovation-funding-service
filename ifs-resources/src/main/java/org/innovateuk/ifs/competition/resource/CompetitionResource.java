@@ -178,6 +178,11 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
+    public boolean isProcurement() {
+        return FundingType.PROCUREMENT.equals(fundingType);
+    }
+
+    @JsonIgnore
 
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
