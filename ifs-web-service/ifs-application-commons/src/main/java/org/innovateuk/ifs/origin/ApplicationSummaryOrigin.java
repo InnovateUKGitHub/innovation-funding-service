@@ -5,6 +5,7 @@ public enum ApplicationSummaryOrigin implements BackLinkOrigin {
     SET_UP_YOUR_PROJECT("/project-setup/project/{projectId}", "Set up your project"),
     APPLICANT_DASHBOARD("/applicant/dashboard", "Dashboard"),
     ASSESSOR_INTERVIEW("/assessment/assessor/dashboard/competition/{competitionId}/interview", "Interview"),
+    PANEL_ASSESSOR_REVIEW("/assessment/review/{reviewId}/application/{applicationId}", "Application summary"),
     MANAGE_APPLICATIONS("/assessment/competition/{competitionId}/applications", "Back"),
     APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors", "Back"),
     FUNDING_APPLICATIONS("/competition/{competitionId}/funding", "Back"),

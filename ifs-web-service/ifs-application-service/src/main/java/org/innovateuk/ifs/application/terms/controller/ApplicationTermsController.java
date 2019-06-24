@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor')")
 @SecuredBySpring(value = "Controller",
         description = "Only applicants are allowed to view the application terms",
         securedType = ApplicationTermsController.class)
@@ -82,7 +82,7 @@ public class ApplicationTermsController {
     private static String backUrlFromOrigin(long applicationId, long competitionId, String origin, MultiValueMap<String, String> queryParams) {
         queryParams.put("applicationId", singletonList(String.valueOf(applicationId)));
         queryParams.put("competitionId", singletonList(String.valueOf(competitionId)));
-        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId", "projectId");
+        return buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "applicationId", "competitionId", "projectId", "reviewId");
     }
 
     private static String backLabelFromOrigin(String origin) {
