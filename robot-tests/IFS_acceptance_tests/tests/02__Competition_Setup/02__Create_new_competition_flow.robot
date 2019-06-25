@@ -802,7 +802,6 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
     Set Focus To Element    jQuery = button:contains(Done)
-    wait for autosave
 
 the weekdays should be correct
     element should contain    css = tr:nth-child(1) td:nth-child(3)     Wed

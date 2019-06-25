@@ -75,7 +75,6 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link     jQuery = .govuk-button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link     jQuery = button:contains("Done")
-    And wait for autosave
     When the user clicks the button/link    jQuery = a:contains("Business opportunity")
     Then the user sees the correct read only view of the question
     And the user clicks the button/link     link = Return to application questions

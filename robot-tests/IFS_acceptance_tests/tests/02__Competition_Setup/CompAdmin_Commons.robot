@@ -407,4 +407,3 @@ The project finance user is able to download the Overheads file
 
 the user moves focus and waits for autosave
     Set Focus To Element    link=GOV.UK
-    Wait For Autosave

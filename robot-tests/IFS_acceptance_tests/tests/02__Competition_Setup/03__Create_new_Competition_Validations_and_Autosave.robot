@@ -168,7 +168,6 @@ Milestones: Server side validations, submission time is default
     And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
-    And the users waits until the page is autosaved
     And the user clicks the button/link               jQuery = button:contains(Done)
     Then Validation summary should be visible
     Then the user should see the text in the element  jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
@@ -381,10 +380,6 @@ The user should not see the error text in the page
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
-the users waits until the page is autosaved
-    Set Focus To Element    jQuery=button:contains(Done)
-    Wait For Autosave
-
 the user should see the correct inputs in the Milestones form
     the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
@@ -421,9 +416,8 @@ The user navigates to the Validation competition
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
+    Mouse out    css = input
     Set Focus To Element    jQuery = button:contains("Done")
-    Wait for autosave
     Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
 
 the user should see the group of errors
