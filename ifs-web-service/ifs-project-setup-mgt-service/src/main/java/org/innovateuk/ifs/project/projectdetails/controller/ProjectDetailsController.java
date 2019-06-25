@@ -37,6 +37,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -113,7 +114,7 @@ public class ProjectDetailsController {
 
         return "project/detail";
     }
-
+    
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
                 .filter(uar -> uar.getRole() == PARTNER.getId())
@@ -136,7 +137,7 @@ public class ProjectDetailsController {
 
         Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap = new LinkedHashMap<>();
 
-        partnerOrganisations.stream().forEach(organisation ->
+        partnerOrganisations.forEach(organisation ->
                 organisationFinanceContactMap.put(organisation,
                         simpleFindFirst(financeRoles, financeUserResource -> financeUserResource.getOrganisation().equals(organisation.getId())).orElse(null))
         );

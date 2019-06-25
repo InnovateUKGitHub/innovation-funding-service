@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -69,6 +71,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     private static final String PDF_FILE_TYPE = "PDF";
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
@@ -182,7 +187,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> submitDocument(project, documentConfigId))
-                );
+                ).andOnSuccessReturnVoid(() -> activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId));
+
     }
 
     private ServiceResult<Void> submitDocument(Project project, long documentConfigId) {
@@ -220,7 +226,11 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                         andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
-                        ));
+                        )).andOnSuccessReturnVoid(() -> {
+                    if (decision.getApproved()) {
+                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
+                    }
+                });
     }
 
     private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {

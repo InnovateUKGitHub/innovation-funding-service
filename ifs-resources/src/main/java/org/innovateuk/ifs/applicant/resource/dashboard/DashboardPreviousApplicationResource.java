@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 /**
@@ -18,6 +19,7 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
     private long daysLeft;
     private int applicationProgress;
     private boolean assignedToInterview;
+    private LocalDate startDate;
 
     // Private constructor to enforce immutability
     private DashboardPreviousApplicationResource() {
@@ -51,6 +53,10 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         return assignedToInterview;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,6 +74,7 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
                 .append(applicationId, that.applicationId)
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
+                .append(startDate, that.startDate)
                 .isEquals();
     }
 
@@ -85,6 +92,7 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
                 .append(applicationId)
                 .append(competitionTitle)
                 .append(dashboardSection)
+                .append(startDate)
                 .toHashCode();
     }
 
@@ -101,6 +109,7 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         private long daysLeft;
         private int applicationProgress;
         private boolean assignedToInterview;
+        private LocalDate startDate;
 
         public DashboardPreviousApplicationResourceBuilder withTitle(String title) {
             this.title = title;
@@ -157,6 +166,11 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
             return this;
         }
 
+        public DashboardPreviousApplicationResourceBuilder withStartDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
         public DashboardPreviousApplicationResource build(){
             DashboardPreviousApplicationResource result = new DashboardPreviousApplicationResource();
             result.title = this.title;
@@ -170,6 +184,7 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
             result.daysLeft = this.daysLeft;
             result.applicationProgress = this.applicationProgress;
             result.assignedToInterview = this.assignedToInterview;
+            result.startDate = startDate;
 
             return result;
         }

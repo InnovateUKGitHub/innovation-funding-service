@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
-import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

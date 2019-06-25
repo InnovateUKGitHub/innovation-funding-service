@@ -202,8 +202,10 @@ hr,
   }
 }
 
-.govuk-link:focus {
-  color: $govuk-text-colour;
+.govuk-link {
+  &:focus {
+    color: $govuk-text-colour;
+  }
 }
 
 .govuk-body {

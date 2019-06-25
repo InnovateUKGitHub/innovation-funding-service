@@ -396,7 +396,7 @@ Comp Admin can download the Spend Profile csv
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
-    [Tags]    Experian
+    [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the comp admin should see the SP status uodated correctly

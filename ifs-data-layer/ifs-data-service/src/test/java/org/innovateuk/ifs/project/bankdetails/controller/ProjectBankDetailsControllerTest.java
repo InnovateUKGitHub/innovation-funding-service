@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -48,7 +49,8 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withCompanyName("Company name")
                 .build();
 
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
     }
@@ -66,7 +68,8 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withAddress(addressResource)
                 .build();
 
-        when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.submitBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
 
         Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
         Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
@@ -118,7 +121,8 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withAddress(addressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.updateBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/bank-details", projectId).contentType(APPLICATION_JSON).content(toJson(bankDetailsResource))).andExpect(status().isOk()).andReturn();
     }
@@ -136,7 +140,8 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withAddress(addressResource)
                 .build();
 
-        when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsServiceMock.updateBankDetails(new ProjectOrganisationCompositeId(projectId, organisationId),
+                bankDetailsResource)).thenReturn(serviceSuccess());
 
         Error invalidSortCodeError = fieldError("sortCode", "123", "validation.standard.sortcode.format", "", "", "\\d{6}");
         Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");

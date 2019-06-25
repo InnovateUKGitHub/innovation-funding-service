@@ -128,9 +128,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id,
+    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long applicationId,
                                                                      ApplicationResource application) {
-        return find(() -> getApplication(id)).andOnSuccess(
+        return find(() -> getApplication(applicationId)).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
                         openApplication -> {
                             openApplication.setName(application.getName());
@@ -148,9 +148,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id,
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long applicationId,
                                                                             ZonedDateTime date) {
-        return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
+        return getOpenApplication(applicationId).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
@@ -170,13 +170,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
-                                                                     final ApplicationState state) {
-        if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
+    public ServiceResult<ApplicationResource> updateApplicationState(Long applicationId,
+                                                                     ApplicationState state) {
+        if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(applicationId)) {
             return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
         }
 
-        return find(application(id)).andOnSuccess((application) -> {
+        return find(application(applicationId)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
@@ -205,17 +205,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 applicationWorkflowHandler.markIneligible(application, reason) ?
                         serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED)
         );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> withdrawApplication(long applicationId) {
-        return find(application(applicationId))
-                .andOnSuccess(application -> getCurrentlyLoggedInUser()
-                        .andOnSuccess(user -> applicationWorkflowHandler.withdraw(application, user) ?
-                                serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_APPROVED)
-                        )
-                );
     }
 
     @Override
@@ -299,8 +288,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
-        return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
+    public ServiceResult<ApplicationResource> getApplicationById(Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(applicationMapper::mapToResource);
     }
 
     @Override
@@ -342,10 +331,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             case "REJECTED":
                 applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
-                break;
-
-            case "WITHDRAWN":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
                 break;
 
             case "SUCCESSFUL":

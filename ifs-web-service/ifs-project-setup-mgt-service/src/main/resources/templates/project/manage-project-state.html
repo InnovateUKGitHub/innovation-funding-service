@@ -28,29 +28,29 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Manage project status',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
-        <!-- Completed offline -->
+        <!--/* Completed offline */-->
         <div th:if="${model.completedOffline}" class="success-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Project setup has been completed offline.</p>
         </div>
-        <!-- END -->
+        <!--/* END */-->
 
-        <!-- Managed offline -->
+        <!--/* Managed offline */-->
         <div th:if="${model.handledOffline}" class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project is being managed offline.</p>
         </div>
-        <!-- END -->
+        <!--/* END */-->
 
-        <!-- Withdrawn -->
+        <!--/* Withdrawn */-->
         <div th:if="${model.withdrawn}" class="warning-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project has been withdrawn.</p>
         </div>
-        <!-- END -->
+        <!--/* END */-->
 
-        <!-- Live -->
+        <!--/* Live */-->
         <div th:if="${model.live}" class="success-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project is now live.</p>
         </div>
-        <!-- END -->
+        <!--/* END */-->
 
         <!-- On Hold -->
         <th:block th:if="${model.onHold}">

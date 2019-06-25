@@ -151,6 +151,8 @@ section "=> GETTING SCRIPT VARIABLES"
 scriptDir="/robot-tests"
 cd ${scriptDir}
 
+./openshift/fileForEachDBEntry.sh
+
 webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/upload_files"
@@ -252,3 +254,4 @@ fi
 
 echo "DONE"
 sleep 1000000000000
+
