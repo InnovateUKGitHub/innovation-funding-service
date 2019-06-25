@@ -51,7 +51,7 @@
                 <h2 class="govuk-heading-m">No file uploaded</h2>
             </th:block>
 
-            <th:block th:if="${model.status.name() == 'SUBMITTED'}">
+            <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
                  <div class="govuk-form-group">

@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
+import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
+import org.innovateuk.ifs.project.financereviewer.repository.FinanceReviewerRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -35,6 +37,9 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
 
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
+
+    @Autowired
+    private FinanceReviewerRepository financeReviewerRepository;
 
     @Mappings({
             @Mapping(target = "projectState", ignore = true),
@@ -75,6 +80,14 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
 
     public MonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
         return id == null ? null : projectMonitoringOfficerRepository.findById(id).get();
+    }
+
+    public FinanceReviewer mapFinanceReviewerIdUserToDomain(Long id) {
+        return id == null ? null : financeReviewerRepository.findById(id).get();
+    }
+
+    public Long mapFinanceReviewerUserToId(FinanceReviewer financeReviewer) {
+        return financeReviewer == null ? null : financeReviewer.getId();
     }
 
 }

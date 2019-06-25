@@ -368,6 +368,22 @@
                             th:if="${model.industrialFinanceTable.showTotalsColumn}">&ndash;
                         </td>
                     </tr>
+                    <th:block th:if="${model.industrialFinanceTable.showOtherFundingRow()}">
+                        <tr>
+                            <th>Other public sector funding</th>
+                            <td style="text-align:right;"
+                                th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                                th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                                &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_FUNDING)}"
+                                                 th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                            <td style="text-align:right;"
+                                th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                                th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_FUNDING)}">
+                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                        </tr>
+                    </th:block>
                     <tr>
                         <th>Total grant</th>
                         <td style="text-align:right;"
@@ -598,6 +614,22 @@
                             th:if="${model.academicFinanceTable.showTotalsColumn}">&ndash;
                         </td>
                     </tr>
+                    <th:block th:if="${model.academicFinanceTable.showOtherFundingRow()}">
+                        <tr>
+                            <th colspan="2">Other public sector funding</th>
+                            <td style="text-align:right;"
+                                th:each="(organisation : ${model.academicFinanceTable.organisations})"
+                                th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
+                                &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'other_funding')}"
+                                                 th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                            <td style="text-align:right;"
+                                th:if="${model.academicFinanceTable.showTotalsColumn}"
+                                th:with="total=${model.academicFinanceTable.getTotalByName('other_funding')}">
+                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                        </tr>
+                    </th:block>
 
                     <tr>
                         <th colspan="2">Total grant</th>
@@ -621,17 +653,31 @@
                 <thead>
                 <tr>
                     <th>Summary</th>
-                    <th style="text-align:right;">Totals (£)</th>
+                    <th style="text-align:right;">Totals </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Total project costs</td>
-                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectCosts, 0, 'DEFAULT')}" /></td>
+                    <td>Total eligible costs</td>
+                    <td style="text-align:right;">
+                        &pound;<th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalEligibleCosts, 0, 'DEFAULT')}" /></td>
                 </tr>
                 <tr>
+                    <td>Rate of grant (%)</td>
+                    <td style="text-align:right;">
+                        <th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalGrantPercentage, 0, 'DEFAULT')}" />&percnt;</td>
+                </tr>
+                <th:block th:if="${model.summaryFinanceTable.showOtherFundingRow()}">
+                    <tr>
+                        <td>Total other public sector funding</td>
+                        <td style="text-align:right;">
+                            &pound;<th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalOtherFunding, 0, 'DEFAULT')}" /></td>
+                    </tr>
+                </th:block>
+                <tr>
                     <td>Total project grant</td>
-                    <td style="text-align:right;"><th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectGrant, 0, 'DEFAULT')}" /></td>
+                    <td style="text-align:right;">
+                        &pound;<th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalProjectGrant, 0, 'DEFAULT')}" /></td>
                 </tr>
 
                 </tbody>

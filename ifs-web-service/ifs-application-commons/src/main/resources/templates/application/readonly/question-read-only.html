@@ -5,7 +5,7 @@
     Empty
 </th:block>
 
-<th:block th:fragment="generic (model)">
+<th:block th:fragment="generic (model)" th:with="isApplicant = ${isApplicant == null || isApplicant}">
     <div class="govuk-form-group">
         <label th:if="${model.question != null}" class="govuk-label">
             <span th:text="${model.question}" class="govuk-heading-s"></span>
@@ -18,9 +18,11 @@
             </textarea>
         </div>
         <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
-            <p class="uploaded-file govuk-body">
+            <p class="uploaded-file govuk-body"
+                th:with="applicantUrl=@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})},
+                         internalUrl=@{/competition/{competitionId}/application/{applicationId}/forminput/{formInputId}/download(competitionId=${model.competitionId}, applicationId=${model.applicationId}, formInputId=${model.appendixId})}">
                 <a class="govuk-link"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})}"
+                   th:href="${isApplicant ? applicantUrl : internalUrl}"
                    th:text="${model.appendixFilename}"
                    target="_blank"
                    aria-describedby="file-hint">file</a> <span id="file-hint">(opens in a new window)</span>.

@@ -13,25 +13,28 @@ import java.util.List;
  */
 public class ProjectSpendProfileApprovalViewModel {
 
-    private CompetitionSummaryResource competitionSummary;
-    private String leadTechnologist;
-    private ApprovalType approvalType;
-    private List<OrganisationResource> organisations;
-    private Long applicationId;
-    private String projectName;
+    private final CompetitionSummaryResource competitionSummary;
+    private final String leadTechnologist;
+    private final ApprovalType approvalType;
+    private final List<OrganisationResource> organisations;
+    private final Long applicationId;
+    private final String projectName;
+    private final boolean projectIsActive;
 
     public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary,
                                                 String leadTechnologist,
                                                 ApprovalType approvalType,
                                                 List<OrganisationResource> organisations,
                                                 Long applicationId,
-                                                String projectName) {
+                                                String projectName,
+                                                boolean projectIsActive) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
         this.approvalType = approvalType;
         this.organisations = organisations;
         this.applicationId = applicationId;
         this.projectName = projectName;
+        this.projectIsActive = projectIsActive;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -70,6 +73,10 @@ public class ProjectSpendProfileApprovalViewModel {
         return projectName;
     }
 
+    public boolean isProjectIsActive() {
+        return projectIsActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +90,7 @@ public class ProjectSpendProfileApprovalViewModel {
                 .append(leadTechnologist, that.leadTechnologist)
                 .append(approvalType, that.approvalType)
                 .append(organisations, that.organisations)
+                .append(projectIsActive, that.projectIsActive)
                 .isEquals();
     }
 
@@ -93,6 +101,7 @@ public class ProjectSpendProfileApprovalViewModel {
                 .append(leadTechnologist)
                 .append(approvalType)
                 .append(organisations)
+                .append(projectIsActive)
                 .toHashCode();
     }
 }

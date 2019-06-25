@@ -29,11 +29,13 @@
                 <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
-                <div class="govuk-grid-row govuk-!-margin-top-6">
-                    <div class="govuk-grid-column-one-half">
-                        <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
+                <th:block th:if="${model.projectIsActive}">
+                    <div class="govuk-grid-row govuk-!-margin-top-6">
+                        <div class="govuk-grid-column-one-half">
+                            <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
+                        </div>
                     </div>
-                </div>
+                </th:block>
                 <ul>
                     <li th:each="note : ${model.getNotes()}">
                         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
@@ -60,72 +62,74 @@
                                 </th:block>
                             </div>
                         </th:block>
-                        <th:block th:if="${model.noteId == null}">
-                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 button-secondary">Comment</a>
-                        </th:block>
-                        <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
-                            <h2 class="govuk-heading-m">Add your comment</h2>
-                            <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
-                                  method="post" enctype="multipart/form-data" novalidate="novalidate">
-                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="comment">
-                                        Comment
-                                    </label>
-                                    <th:block th:if="${#fields.hasErrors('comment')}">
-                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
-                                    </th:block>
-                                    <div class="textarea-wrapped word-count">
-                                        <textarea data-editor="md"
-                                          required = "required"
-                                          th:field="*{comment}"
-                                          id="comment"
-                                          name="comment"
-                                          class="govuk-textarea"
-                                          th:attr="maxlength=${model.maxNoteCharacters},
-                                                   data-max_words=${model.maxNoteWords},
-                                                   data-maxwordslength=${model.maxNoteWords},
-                                                   data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
-                                                   data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
-                                                   data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                          th:errorclass="govuk-textarea--error"></textarea>
-                                        <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
-                                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
+                        <th:block th:if="${model.projectIsActive}">
+                            <th:block th:if="${model.noteId == null}">
+                                <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 button-secondary">Comment</a>
+                            </th:block>
+                            <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
+                                <h2 class="govuk-heading-m">Add your comment</h2>
+                                <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
+                                      method="post" enctype="multipart/form-data" novalidate="novalidate">
+                                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
+                                        <label class="govuk-label" for="comment">
+                                            Comment
+                                        </label>
+                                        <th:block th:if="${#fields.hasErrors('comment')}">
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                        </th:block>
+                                        <div class="textarea-wrapped word-count">
+                                            <textarea data-editor="md"
+                                              required = "required"
+                                              th:field="*{comment}"
+                                              id="comment"
+                                              name="comment"
+                                              class="govuk-textarea"
+                                              th:attr="maxlength=${model.maxNoteCharacters},
+                                                       data-max_words=${model.maxNoteWords},
+                                                       data-maxwordslength=${model.maxNoteWords},
+                                                       data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
+                                                       data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
+                                                       data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                              th:errorclass="govuk-textarea--error"></textarea>
+                                            <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
+                                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="upload-section">
-                                    <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="govuk-heading-s">Supporting documentation</h3>
-                                        <ul class="govuk-list">
-                                            <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a target="_blank"
-                                                   th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
-                                                   th:text="${model.newAttachmentLinks.get(attachmentId)}"
-                                                   class="govuk-link"
-                                                   aria-describedby="supporting-documentation-hint">filename</a>
-                                                <span id="supporting-documentation-hint">(opens in a new window)</span>
-                                                <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button><br />
-                                            </li>
-                                        </ul>
-                                    </th:block>
-                                    <h3 class="govuk-heading-s govuk-!-margin-0">Upload supporting documentation in pdf format</h3>
-                                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
-                                        <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                    <div class="upload-section">
+                                        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
+                                            <h3 class="govuk-heading-s">Supporting documentation</h3>
+                                            <ul class="govuk-list">
+                                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                                                    <a target="_blank"
+                                                       th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
+                                                       th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                                       class="govuk-link"
+                                                       aria-describedby="supporting-documentation-hint">filename</a>
+                                                    <span id="supporting-documentation-hint">(opens in a new window)</span>
+                                                    <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button><br />
+                                                </li>
+                                            </ul>
                                         </th:block>
-                                        <input type="file" id="attachment" class="inputfile" name="attachment">
-                                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                                        <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                        <h3 class="govuk-heading-s govuk-!-margin-0">Upload supporting documentation in pdf format</h3>
+                                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                            <th:block th:if="${#fields.hasErrors('attachment')}">
+                                                <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                            </th:block>
+                                            <input type="file" id="attachment" class="inputfile" name="attachment">
+                                            <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                                            <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <input type="hidden" id="action" value="postComment">
-                                <div class="govuk-grid-row govuk-!-margin-top-6">
-                                    <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button govuk-!-margin-0">Save comment</button>
-                                        <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
+                                    <input type="hidden" id="action" value="postComment">
+                                    <div class="govuk-grid-row govuk-!-margin-top-6">
+                                        <div class="govuk-grid-column-one-half">
+                                            <button class="govuk-button govuk-!-margin-0">Save comment</button>
+                                            <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </th:block>
                         </th:block>
                     </li>
                 </ul>

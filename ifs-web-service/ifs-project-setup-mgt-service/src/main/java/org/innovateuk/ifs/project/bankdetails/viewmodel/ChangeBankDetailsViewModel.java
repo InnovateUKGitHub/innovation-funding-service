@@ -6,8 +6,46 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ChangeBankDetailsViewModel extends BankDetailsReviewViewModel{
     private boolean updated;
 
-    public ChangeBankDetailsViewModel(Long projectId, Long applicationId, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually, boolean updated) {
-        super(projectId, applicationId, projectName, financeContactName, financeContactEmail, financeContactPhoneNumber, organisationId, organisationName, registrationNumber, bankAccountNumber, sortCode, organisationAddress, verified, companyNameScore, registrationNumberMatched, addressScore, approved, approvedManually);
+    public ChangeBankDetailsViewModel(Long projectId,
+                                      Long applicationId,
+                                      String projectName,
+                                      String financeContactName,
+                                      String financeContactEmail,
+                                      String financeContactPhoneNumber,
+                                      Long organisationId, String organisationName,
+                                      String registrationNumber,
+                                      String bankAccountNumber,
+                                      String sortCode,
+                                      String organisationAddress,
+                                      Boolean verified,
+                                      Short companyNameScore,
+                                      Boolean registrationNumberMatched,
+                                      Short addressScore,
+                                      Boolean approved,
+                                      Boolean approvedManually,
+                                      boolean projectActive,
+                                      boolean updated
+) {
+        super(projectId,
+              applicationId,
+              projectName,
+              financeContactName,
+              financeContactEmail,
+              financeContactPhoneNumber,
+              organisationId,
+              organisationName,
+              registrationNumber,
+              bankAccountNumber,
+              sortCode,
+              organisationAddress,
+              verified,
+              companyNameScore,
+              registrationNumberMatched,
+              addressScore,
+              approved,
+              approvedManually,
+              projectActive);
+
         this.updated = updated;
     }
 

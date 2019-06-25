@@ -72,7 +72,7 @@
                   th:object="${form}" method="post" enctype="multipart/form-data">
 
                 <p class="govuk-body">Upload the finalised grant offer letter</p>
-                <details th:unless="${model.isSentToProjectTeam()}"
+                <details th:unless="${model.isSentToProjectTeam() or !model.projectIsActive}"
                          class="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">What are the requirements for upload?</span>
@@ -85,7 +85,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode='edit',
+                <th:block th:with="uploadViewmode=${model.projectIsActive} ? 'edit' : 'readonly',
                                downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
                                filename=${model.grantOfferLetterFile?.filename},
                                inputField='grantOfferLetter',
@@ -121,7 +121,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam()} ? 'readonly' : 'edit',
+                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive} ? 'readonly' : 'edit',
                                downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
                                filename=${model.additionalContractFile?.filename},
                                inputField='annex',
@@ -133,7 +133,7 @@
                 </th:block>
             </form>
         </div>
-        <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
+        <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null and model.projectIsActive}">
             <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
                   th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
                 <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
@@ -183,7 +183,7 @@
                 </th:block>
             </div>
         </th:block>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
             <h2 class="govuk-heading-m">Confirm signed grant offer letter</h2>
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="govuk-form-group">

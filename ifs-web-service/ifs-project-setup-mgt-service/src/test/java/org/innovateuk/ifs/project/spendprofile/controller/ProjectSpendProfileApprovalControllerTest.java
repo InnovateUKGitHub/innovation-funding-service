@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceB
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +61,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().withId(competitionId).build();
         CompetitionResource competition = newCompetitionResource().withId(competitionId).withLeadTechnologist(userId).build();
         ApplicationResource application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
-        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withProjectState(SETUP).build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -71,7 +72,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
 
         ProjectSpendProfileApprovalViewModel expectedProjectSpendProfileApprovalViewModel =
-                new ProjectSpendProfileApprovalViewModel(competitionSummary, user.getName(), ApprovalType.APPROVED, Collections.emptyList(), applicationId, "name");
+                new ProjectSpendProfileApprovalViewModel(competitionSummary, user.getName(), ApprovalType.APPROVED, Collections.emptyList(), applicationId, "name", true);
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", project.getId()))
                 .andExpect(status().isOk())

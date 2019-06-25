@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
@@ -77,7 +78,12 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private Long queryId = 1L;
 
     private ApplicationResource applicationResource = newApplicationResource().build();
-    private ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
+    private ProjectResource projectResource = newProjectResource()
+            .withId(projectId)
+            .withName("Project1")
+            .withApplication(applicationResource)
+            .withProjectState(SETUP)
+            .build();
 
     private OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
 
@@ -184,6 +190,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("Project1", queryViewModel.getProjectName());
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
         assertEquals(projectId, queryViewModel.getProjectId());
+        assertTrue(queryViewModel.isProjectIsActive());
 
         assertEquals(3, queryViewModel.getQueries().size());
         assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());

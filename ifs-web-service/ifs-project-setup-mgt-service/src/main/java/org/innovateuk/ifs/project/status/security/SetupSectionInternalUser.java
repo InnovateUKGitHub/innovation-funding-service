@@ -60,10 +60,8 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        if (projectSetupProgressChecker.isOffline()) {
-            return NOT_ACCESSIBLE;
-        }
-        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ?
+                ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
@@ -85,9 +83,6 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessDocumentsSection(UserResource userResource) {
-        if (projectSetupProgressChecker.isOffline()) {
-            return NOT_ACCESSIBLE;
-        }
 
         if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
@@ -127,17 +122,13 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
-        if (projectSetupProgressChecker.isOffline()) {
-            return NOT_ACCESSIBLE;
-        }
-        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ?
+                ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
-        if (projectSetupProgressChecker.isOffline()) {
-            return NOT_ACCESSIBLE;
-        }
-        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ?
+                ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     private SectionAccess fail(String message) {
