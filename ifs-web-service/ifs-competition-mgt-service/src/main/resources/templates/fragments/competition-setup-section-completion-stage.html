@@ -1,39 +1,26 @@
 
 <!-- ================= Section: Completion stage (11) =========================== -->
-<th:block th:fragment="section-content">
+<th:block th:fragment="section-content"  xmlns:th="http://www.w3.org/1999/html">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
-
-    <div th:if="${model.general.editable}" class="govuk-body panel govuk-!-margin-bottom-6">
-        <p class="govuk-body govuk-!-margin-bottom-0">Select the stage at which the competition is complete for Innovate UK.</p>
-    </div>
-
-    <div th:if="${model.general.editable}" id="section-4-edit">
-
-        <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">
-
-            <li th:each="milestone : ${model.nonSelectableMilestones}" class="govuk-radios__item">
-                <span class="govuk-label govuk-radios__label"
-                      th:text="${milestone.milestoneDescription}">
-                    1. Milestone name
-                </span>
-            </li>
-        </ul>
-
+    <th:block th:if="${model.general.editable}">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post"
               th:object="${competitionSetupForm}"
               novalidate="novalidate">
-
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedCompletionStage')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend id="selectedCompletionStage">
-                        <h2 class="govuk-visually-hidden">Select a completion stage</h2>
+                <fieldset class="govuk-fieldset" aria-describedby="completion-stage-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            Completion stage
+                        </h1>
                     </legend>
+                    <span id="completion-stage-hint" class="govuk-hint">
+                        Select the stage at which the competition is complete for Innovate UK.
+                    </span>
                     <span th:if="${#fields.hasErrors('selectedCompletionStage')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('selectedCompletionStage')}" th:text="${err}"/>
                     <div class="govuk-radios">
@@ -44,7 +31,7 @@
                                    name="selectedCompletionStage"
                                    th:checked="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}" />
                             <label class="govuk-label govuk-radios__label" for="release-feedback-completion-stage">
-                                13. Release feedback
+                                Release feedback
                             </label>
                         </div>
                         <div class="govuk-radios__item">
@@ -54,23 +41,35 @@
                                    name="selectedCompletionStage"
                                    th:checked="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}" />
                             <label class="govuk-label govuk-radios__label" for="project-setup-completion-stage">
-                                14. Project setup
+                                Project setup
                             </label>
                         </div>
                     </div>
 
                 </fieldset>
             </div>
-
-            <button type="submit" class="govuk-button">
-                Done
-            </button>
-
+            <div class="govuk-form-group">
+                <button type="submit" class="govuk-button">
+                    Done
+                </button>
+            </div>
         </form>
+    </th:block>
 
-    </div>
+
+        <!--<ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">-->
+
+            <!--<li th:each="milestone : ${model.nonSelectableMilestones}" class="govuk-radios__item">-->
+                <!--<span class="govuk-label govuk-radios__label"-->
+                      <!--th:text="${milestone.milestoneDescription}">-->
+                    <!--1. Milestone name-->
+                <!--</span>-->
+            <!--</li>-->
+        <!--</ul>-->
 
     <th:block th:unless="${model.general.editable}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
+
         <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-6">
             <li th:each="milestone : ${model.nonSelectableMilestones}"
                 th:text="${milestone.milestoneDescription}"

@@ -46,7 +46,8 @@
 
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
-                class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
+                class="govuk-link" target="_blank"
+                aria-describedby="guidance-hint">general guidance</a> <span id="guidance-hint">(opens in a new window)</span> before you start.</p>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"

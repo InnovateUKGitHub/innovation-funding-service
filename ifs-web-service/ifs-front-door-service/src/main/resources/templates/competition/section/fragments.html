@@ -14,7 +14,8 @@
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
                        th:text="${section.fileName(contentGroup.id)}"
                        class="govuk-link"
-                       target="_blank"></a> (opens in a new window)
+                       target="_blank"
+                       aria-describedby="attachment-hint"></a> <span id="attachment-hint">(opens in a new window)</span>
                 </div>
             </th:block>
         </div>

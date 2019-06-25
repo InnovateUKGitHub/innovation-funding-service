@@ -22,7 +22,8 @@
                 <a class="govuk-link"
                    th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})}"
                    th:text="${model.appendixFilename}"
-                   target="_blank">file</a> (opens in a new window).
+                   target="_blank"
+                   aria-describedby="file-hint">file</a> <span id="file-hint">(opens in a new window)</span>.
             </p>
         </div>
 

@@ -63,8 +63,11 @@
                     <ul th:each="appendix : ${model.appendices}" class="govuk-body govuk-list">
                         <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
-                            <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size}|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
-                            (opens in a new window)
+                            <a target="_blank"
+                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}"
+                               th:text="|${appendix.name}, ${appendix.size}|"
+                               aria-describedby="appendix-hint">Project-plan.pdf, 161.96 KB</a>
+                            <span id="appendix-hint">(opens in a new window)</span>
                         </li>
                     </ul>
                 </th:block>
