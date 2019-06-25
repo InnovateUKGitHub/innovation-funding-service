@@ -18,7 +18,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.LegacyMonitoringOfficerResourceBuilder.newLegacyMonitoringOfficerResource;
@@ -39,7 +38,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.junit.Assert.assertEquals;
@@ -76,13 +74,12 @@ public class MonitoringOfficerServiceImplTest {
     @Test
     public void findAll() {
         User user = newUser().build();
-        UserResource userResource = newUserResource().build();
         when(userRepositoryMock.findByRolesAndStatusIn(Role.MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))).thenReturn(singletonList(user));
-        when(userMapper.mapToResource(user)).thenReturn(userResource);
-        List<UserResource> result = service.findAll().getSuccess();
 
-        assertThat(result.size() == 1);
-        assertEquals(result.get(0), userResource);
+        List<SimpleUserResource> result = service.findAll().getSuccess();
+
+        assertEquals(result.size(), 1);
+        assertEquals(result.get(0).getId(), (long) user.getId());
     }
 
     @Test
