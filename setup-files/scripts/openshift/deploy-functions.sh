@@ -193,7 +193,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
