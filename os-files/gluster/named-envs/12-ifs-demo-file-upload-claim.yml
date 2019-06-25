@@ -10,4 +10,4 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      ifsdemo: "ifsdemo"
+      ifsdemo: ifsdemo
