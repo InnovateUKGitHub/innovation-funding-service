@@ -50,6 +50,6 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     @Override
     protected void postProcess(int index, InternalUserData instance) {
         super.postProcess(index, instance);
-        LOG.info("Created Internal User '{}'", instance.getEmailAddress());
+        LOG.info("Created Internal User '{}'", instance.getUser().getEmail());
     }
 }
