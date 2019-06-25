@@ -42,9 +42,6 @@ public class EligibilitySectionSaverTest {
     @InjectMocks
     private EligibilitySectionUpdater service;
 
-//    @Mock
-//    private MilestoneRestService milestoneRestService;
-
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;
 
@@ -123,10 +120,14 @@ public class EligibilitySectionSaverTest {
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
+        when(questionSetupCompetitionRestService.deleteById(anyLong())).thenReturn(restSuccess());
 
         service.saveSection(competition, competitionSetupForm).getSuccess();
 
         verify(competitionSetupRestService, only()).update(competition);
+        verify(questionSetupCompetitionRestService).deleteById(isA(Long.class));
+        verify(questionSetupCompetitionRestService, never()).addResearchCategoryQuestionToCompetition(isA(Long.class));
+
     }
 
     @Test
@@ -328,6 +329,10 @@ public class EligibilitySectionSaverTest {
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
+                QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
+        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+                .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
 
         service.saveSection(competition, competitionSetupForm).getSuccess();
 
