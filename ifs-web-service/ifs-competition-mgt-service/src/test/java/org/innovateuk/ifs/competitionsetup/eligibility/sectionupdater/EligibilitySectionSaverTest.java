@@ -332,7 +332,7 @@ public class EligibilitySectionSaverTest {
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
         when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
-                .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
+                .thenReturn(restSuccess(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId())));
 
         service.saveSection(competition, competitionSetupForm).getSuccess();
 
