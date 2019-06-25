@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,12 +17,10 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewMod
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,29 +54,25 @@ public class ProjectDetailsController {
     private ProjectService projectService;
     private CompetitionRestService competitionRestService;
     private ProjectDetailsService projectDetailsService;
-    private ProjectRestService projectRestService;
     private PartnerOrganisationRestService partnerOrganisationService;
-    private ApplicationRestService applicationRestService;
-    private NavigationUtils navigationUtils;
     private FinanceReviewerRestService financeReviewerRestService;
+    private OrganisationRestService organisationRestService;
 
     public ProjectDetailsController() {
     }
 
     @Autowired
     public ProjectDetailsController(ProjectService projectService, CompetitionRestService competitionRestService,
-                                    ProjectDetailsService projectDetailsService, ProjectRestService projectRestService,
+                                    ProjectDetailsService projectDetailsService,
                                     PartnerOrganisationRestService partnerOrganisationService,
-                                    ApplicationRestService applicationRestService, NavigationUtils navigationUtils,
-                                    FinanceReviewerRestService financeReviewerRestService) {
+                                    FinanceReviewerRestService financeReviewerRestService,
+                                    OrganisationRestService organisationRestService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
-        this.projectRestService = projectRestService;
         this.partnerOrganisationService = partnerOrganisationService;
-        this.applicationRestService = applicationRestService;
-        this.navigationUtils = navigationUtils;
         this.financeReviewerRestService = financeReviewerRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
