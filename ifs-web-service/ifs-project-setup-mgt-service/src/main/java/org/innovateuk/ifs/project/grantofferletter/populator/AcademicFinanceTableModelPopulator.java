@@ -34,7 +34,7 @@ public class AcademicFinanceTableModelPopulator extends BaseGrantOfferLetterTabl
             return null;
         } else {
             List<String> organisations = new ArrayList<>(academicFinances.keySet());
-            BigDecimal totalEligibleCosts = calculateTotalFromFinances(academicFinances.values());
+            BigDecimal totalEligibleCosts = calculateEligibleTotalFromFinances(academicFinances.values());
             BigDecimal totalGrant = calculateTotalGrantFromFinances(academicFinances.values());
 
             return new AcademicFinanceTableModel(
