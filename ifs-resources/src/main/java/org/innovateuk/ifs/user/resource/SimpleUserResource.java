@@ -2,6 +2,9 @@ package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * A simple resource to return users in a search result without bringing the full detail of {@link UserResource}
+ */
 public class SimpleUserResource {
     private long id;
     private String firstName;

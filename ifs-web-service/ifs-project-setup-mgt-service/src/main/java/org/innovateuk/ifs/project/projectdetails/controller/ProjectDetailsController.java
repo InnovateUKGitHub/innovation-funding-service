@@ -25,7 +25,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,12 +38,10 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -57,32 +54,33 @@ public class ProjectDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
     private ProjectService projectService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private ProjectDetailsService projectDetailsService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
     private ProjectRestService projectRestService;
-
-    @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
-
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private NavigationUtils navigationUtils;
+    private FinanceReviewerRestService financeReviewerRestService;
+
+    public ProjectDetailsController() {
+    }
 
     @Autowired
-    private FinanceReviewerRestService financeReviewerRestService;
+    public ProjectDetailsController(ProjectService projectService, CompetitionRestService competitionRestService,
+                                    ProjectDetailsService projectDetailsService, ProjectRestService projectRestService,
+                                    PartnerOrganisationRestService partnerOrganisationService,
+                                    ApplicationRestService applicationRestService, NavigationUtils navigationUtils,
+                                    FinanceReviewerRestService financeReviewerRestService) {
+        this.projectService = projectService;
+        this.competitionRestService = competitionRestService;
+        this.projectDetailsService = projectDetailsService;
+        this.projectRestService = projectRestService;
+        this.partnerOrganisationService = partnerOrganisationService;
+        this.applicationRestService = applicationRestService;
+        this.navigationUtils = navigationUtils;
+        this.financeReviewerRestService = financeReviewerRestService;
+    }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
@@ -102,7 +100,6 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
-        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
         Optional<SimpleUserResource> financeReviewer = Optional.ofNullable(projectResource.getFinanceReviewer())
                 .map(id -> financeReviewerRestService.findFinanceReviewerForProject(projectId).getSuccess());
@@ -110,7 +107,8 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                isIfsAdministrator,
+                loggedInUser.hasRole(IFS_ADMINISTRATOR),
+                loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),

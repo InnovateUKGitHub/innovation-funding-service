@@ -12,9 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 
 /**
  * View model backing the Project Details page for Project Setup
@@ -25,6 +23,7 @@ public class ProjectDetailsViewModel {
     private Long competitionId;
     private String competitionName;
     private boolean ifsAdministrator;
+    private boolean projectFinance;
     private String leadOrganisation;
     private ProjectUserResource projectManager;
     private Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap;
@@ -35,6 +34,7 @@ public class ProjectDetailsViewModel {
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
                                    String competitionName, boolean ifsAdministrator,
+                                   boolean projectFinance,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
@@ -45,6 +45,7 @@ public class ProjectDetailsViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.ifsAdministrator = ifsAdministrator;
+        this.projectFinance = projectFinance;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;
         this.organisationFinanceContactMap = organisationFinanceContactMap;
@@ -58,6 +59,7 @@ public class ProjectDetailsViewModel {
         return new ProjectDetailsViewModel(project,
                 competition.getId(),
                 competition.getName(),
+                false,
                 false,
                 null,
                 null,
@@ -94,6 +96,10 @@ public class ProjectDetailsViewModel {
 
     public boolean isIfsAdministrator() {
         return ifsAdministrator;
+    }
+
+    public boolean isProjectFinance() {
+        return projectFinance;
     }
 
     public String getLeadOrganisation() {
@@ -142,6 +148,8 @@ public class ProjectDetailsViewModel {
         ProjectDetailsViewModel that = (ProjectDetailsViewModel) o;
 
         return new EqualsBuilder()
+                .append(ifsAdministrator, that.ifsAdministrator)
+                .append(projectFinance, that.projectFinance)
                 .append(locationPerPartnerRequired, that.locationPerPartnerRequired)
                 .append(project, that.project)
                 .append(competitionId, that.competitionId)
@@ -150,6 +158,8 @@ public class ProjectDetailsViewModel {
                 .append(projectManager, that.projectManager)
                 .append(organisationFinanceContactMap, that.organisationFinanceContactMap)
                 .append(partnerOrganisations, that.partnerOrganisations)
+                .append(financeReviewerName, that.financeReviewerName)
+                .append(financeReviewerEmail, that.financeReviewerEmail)
                 .isEquals();
     }
 
@@ -159,11 +169,15 @@ public class ProjectDetailsViewModel {
                 .append(project)
                 .append(competitionId)
                 .append(competitionName)
+                .append(ifsAdministrator)
+                .append(projectFinance)
                 .append(leadOrganisation)
                 .append(projectManager)
                 .append(organisationFinanceContactMap)
                 .append(locationPerPartnerRequired)
                 .append(partnerOrganisations)
+                .append(financeReviewerName)
+                .append(financeReviewerEmail)
                 .toHashCode();
     }
 }
