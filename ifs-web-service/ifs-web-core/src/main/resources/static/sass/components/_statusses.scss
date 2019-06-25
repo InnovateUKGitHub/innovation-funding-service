@@ -331,3 +331,11 @@ ul {
     background-color: govuk-colour("blue");
   }
 }
+
+.ifs-on-hold {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("yellow");
+  }
+}
