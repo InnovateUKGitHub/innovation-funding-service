@@ -77,7 +77,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             }
         }
 
-        boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
+        boolean multiStream = "yes" .equals(eligibilityForm.getMultipleStream());
         competition.setMultiStream(multiStream);
 
         if (multiStream) {
@@ -86,11 +86,15 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
+        handleResearchCategoryApplicableChanges(competition, eligibilityForm);
+        handleGrantClaimMaximumChanges(competition, eligibilityForm);
+
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
         CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
         competition.setCollaborationLevel(level);
         competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
+
 
         return competitionSetupRestService.update(competition).toServiceResult();
     }
