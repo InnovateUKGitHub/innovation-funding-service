@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("PROJECT_STATE_COMMENTS")
-public class ProjectStateComments extends Thread {
+public class ProjectStateComments extends MessageThread {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "section")

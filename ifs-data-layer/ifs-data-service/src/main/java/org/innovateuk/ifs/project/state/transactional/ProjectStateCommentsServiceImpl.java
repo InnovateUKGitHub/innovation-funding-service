@@ -12,7 +12,7 @@ import org.innovateuk.ifs.threads.mapper.ProjectStateCommentsMapper;
 import org.innovateuk.ifs.threads.repository.ProjectStateCommentsRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
-import org.innovateuk.ifs.threads.service.MappingThreadService;
+import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,12 @@ import static java.util.Collections.singletonList;
 @Service
 public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsService {
 
-    private MappingThreadService<ProjectStateComments, ProjectStateCommentsResource, ProjectStateCommentsMapper, Project> service;
+    private MappingMessageThreadService<ProjectStateComments, ProjectStateCommentsResource, ProjectStateCommentsMapper, Project> service;
     private AuthenticationHelper authenticationHelper;
 
     @Autowired
     public ProjectStateCommentsServiceImpl(ProjectStateCommentsRepository threadRepository, AuthenticationHelper authenticationHelper, ProjectStateCommentsMapper threadMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(threadRepository, authenticationHelper, threadMapper, postMapper, Project.class);
+        service = new MappingMessageThreadService<>(threadRepository, authenticationHelper, threadMapper, postMapper, Project.class);
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.threads.repository.ThreadRepository;
+import org.innovateuk.ifs.threads.repository.MessageThreadRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class AttachmentPermissionsRules {
     private QueryMapper queryMapper;
 
     @Autowired
-    private ThreadRepository threadRepository;
+    private MessageThreadRepository threadRepository;
 
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;

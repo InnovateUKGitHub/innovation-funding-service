@@ -2,7 +2,7 @@ package org.innovateuk.ifs.threads.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public class CommonThreadController<R> {
-    private final ThreadService<R, PostResource> service;
+public class CommonMessageThreadController<R> {
+    private final MessageThreadService<R, PostResource> service;
 
-    public CommonThreadController(ThreadService<R, PostResource> service) {
+    public CommonMessageThreadController(MessageThreadService<R, PostResource> service) {
         this.service = service;
     }
 
