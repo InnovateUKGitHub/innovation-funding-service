@@ -174,11 +174,26 @@ public class FinanceChecksViabilityController {
         LocalDate approvalDate = viability.getViabilityApprovalDate();
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
-        return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
-                totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
-                viabilityConfirmed, approver, approvalDate, organisationId,
-                organisationSizeDescription, applicationId, project.getName());
+        return new FinanceChecksViabilityViewModel(organisationName,
+                                                   leadPartnerOrganisation,
+                                                   totalCosts,
+                                                   percentageGrant,
+                                                   fundingSought,
+                                                   otherPublicSectorFunding,
+                                                   contributionToProject,
+                                                   companyRegistrationNumber,
+                                                   turnover,
+                                                   headCount,
+                                                   projectId,
+                                                   viabilityConfirmed,
+                                                   viabilityConfirmed,
+                                                   approver,
+                                                   approvalDate,
+                                                   organisationId,
+                                                   organisationSizeDescription,
+                                                   applicationId,
+                                                   project.getName(),
+                                                   project.getProjectState().isActive());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

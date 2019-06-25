@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -64,6 +65,10 @@ public class Project implements ProcessActivity {
     @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project", fetch = FetchType.LAZY)
     private MonitoringOfficer projectMonitoringOfficer = null;
 
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
+            mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+    private FinanceReviewer financeReviewer = null;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
 
@@ -113,6 +118,14 @@ public class Project implements ProcessActivity {
 
     public void setProjectMonitoringOfficer(MonitoringOfficer projectMonitoringOfficer) {
         this.projectMonitoringOfficer = projectMonitoringOfficer;
+    }
+
+    public FinanceReviewer getFinanceReviewer() {
+        return financeReviewer;
+    }
+
+    public void setFinanceReviewer(FinanceReviewer financeReviewer) {
+        this.financeReviewer = financeReviewer;
     }
 
     public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {

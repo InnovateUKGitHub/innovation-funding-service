@@ -323,7 +323,8 @@ public class FinanceChecksNotesController {
                 FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS,
                 FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS,
                 noteId,
-                project.getApplication()
+                project.getApplication(),
+                project.getProjectState().isActive()
         );
     }
 

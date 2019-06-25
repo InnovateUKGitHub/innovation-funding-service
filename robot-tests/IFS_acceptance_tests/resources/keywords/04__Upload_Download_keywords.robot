@@ -20,18 +20,21 @@ The user downloads the file
     [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads
     ...     the file all in one package
     [Arguments]    ${user}    ${url}    ${filename}
-    Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
+    ${script return status}=    Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
+    should be equal as integers    ${script return status}    0    The download script failed, probably this means the regex for the login page will need updating
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
 Guest user downloads the file
     [Arguments]    ${url}    ${filename}
-    Run and Return RC    ./download.py ${url} ${filename}
+    ${script return status}=    Run and Return RC    ./download.py ${url} ${filename}
+    should be equal as integers    ${script return status}    0    The download script failed, probably this means the regex for the login page will need updating
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
 Download should be done
     [Documentation]    Verifies that the directory has only one file
     ...    Returns path to the file
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
+    # Note that there is a gitignore file as well that we have to account for here
     Length Should Be    ${files}    2    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
     Log    File was successfully downloaded to ${file}

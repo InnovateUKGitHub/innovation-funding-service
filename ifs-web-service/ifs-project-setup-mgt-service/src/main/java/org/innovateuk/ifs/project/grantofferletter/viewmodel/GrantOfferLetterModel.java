@@ -10,26 +10,33 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
  */
 public class GrantOfferLetterModel {
 
-    private long competitionId;
-    private boolean h2020;
-    private FileDetailsViewModel grantOfferLetterFile;
-    private FileDetailsViewModel additionalContractFile;
-    private Long projectId;
-    private String projectName;
-    private Long applicationId;
-    private Boolean grantOfferLetterFileContentAvailable;
-    private Boolean additionalContractFileContentAvailable;
-    private FileDetailsViewModel signedGrantOfferLetterFile;
-    private GrantOfferLetterStateResource grantOfferState;
-    private String grantOfferLetterRejectionReason;
+    private final long competitionId;
+    private final boolean h2020;
+    private final FileDetailsViewModel grantOfferLetterFile;
+    private final FileDetailsViewModel additionalContractFile;
+    private final long projectId;
+    private final String projectName;
+    private final long applicationId;
+    private final boolean grantOfferLetterFileContentAvailable;
+    private final boolean additionalContractFileContentAvailable;
+    private final FileDetailsViewModel signedGrantOfferLetterFile;
+    private final GrantOfferLetterStateResource grantOfferState;
+    private final String grantOfferLetterRejectionReason;
+    private final boolean projectIsActive;
 
     public GrantOfferLetterModel(long competitionId,
                                  boolean h2020,
                                  FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel additionalContractFile,
-                                 Long projectId, String projectName, Long applicationId, Boolean grantOfferLetterFileContentAvailable, Boolean additionalContractFileContentAvailable,
+                                 Long projectId,
+                                 String projectName,
+                                 Long applicationId,
+                                 boolean grantOfferLetterFileContentAvailable,
+                                 boolean additionalContractFileContentAvailable,
                                  FileDetailsViewModel signedGrantOfferLetterFile,
-                                 GrantOfferLetterStateResource grantOfferState, String grantOfferLetterRejectionReason) {
+                                 GrantOfferLetterStateResource grantOfferState,
+                                 String grantOfferLetterRejectionReason,
+                                 boolean projectIsActive) {
         this.competitionId = competitionId;
         this.h2020 = h2020;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -42,6 +49,7 @@ public class GrantOfferLetterModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
+        this.projectIsActive = projectIsActive;
     }
 
     public long getCompetitionId() {
@@ -60,13 +68,9 @@ public class GrantOfferLetterModel {
 
     public FileDetailsViewModel getGrantOfferLetterFile() { return grantOfferLetterFile; }
 
-    public void setGrantOfferLetterFile(FileDetailsViewModel grantOfferLetterFile) { this.grantOfferLetterFile = grantOfferLetterFile; }
-
     public FileDetailsViewModel getAdditionalContractFile() {
         return additionalContractFile;
     }
-
-    public void setAdditionalContractFile(FileDetailsViewModel additionalContractFile) { this.additionalContractFile = additionalContractFile; }
 
     public Long getProjectId() {
         return projectId;
@@ -102,6 +106,10 @@ public class GrantOfferLetterModel {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
+    public boolean isProjectIsActive() {
+        return projectIsActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,6 +131,7 @@ public class GrantOfferLetterModel {
                 .append(signedGrantOfferLetterFile, that.signedGrantOfferLetterFile)
                 .append(grantOfferState, that.grantOfferState)
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
+                .append(projectIsActive, that.projectIsActive)
                 .isEquals();
     }
 
@@ -141,6 +150,7 @@ public class GrantOfferLetterModel {
                 .append(signedGrantOfferLetterFile)
                 .append(grantOfferState)
                 .append(grantOfferLetterRejectionReason)
+                .append(projectIsActive)
                 .toHashCode();
     }
 }

@@ -16,7 +16,7 @@ if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabl
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
 
 def isNamedEnv() {
-    return ["ifs-sysint", "uat", "ifs-demo", "ifs-perf", "production"].contains(openshiftEnv)
+    return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "production"].contains(openshiftEnv)
 }
 
 def isNotProductionEnv() {

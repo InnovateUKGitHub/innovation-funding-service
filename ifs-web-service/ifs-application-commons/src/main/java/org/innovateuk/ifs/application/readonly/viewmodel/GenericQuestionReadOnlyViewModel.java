@@ -10,6 +10,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String answer;
     private final String appendixFilename;
     private final Long appendixId;
+    private final long competitionId;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId) {
         super(data, questionResource);
@@ -18,6 +19,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.answer = answer;
         this.appendixFilename = appendixFilename;
         this.appendixId = appendixId;
+        this.competitionId = data.getCompetition().getId();
     }
 
     public String getQuestion() {
@@ -34,6 +36,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public Long getAppendixId() {
         return appendixId;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     @Override

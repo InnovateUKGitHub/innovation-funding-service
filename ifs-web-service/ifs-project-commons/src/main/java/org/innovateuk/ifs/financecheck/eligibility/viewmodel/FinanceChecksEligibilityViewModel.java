@@ -29,12 +29,26 @@ public class FinanceChecksEligibilityViewModel {
     private boolean externalView;
     private boolean isUsingJesFinances;
     private FileDetailsViewModel jesFileDetails;
-    private boolean h2020;
+    private final boolean h2020;
+    private final boolean projectIsActive;
 
-    public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
-                                             Long applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
-                                             boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
-                                             String approverLastName, LocalDate approvalDate, boolean externalView, boolean isUsingJesFinances, FileDetailsViewModel jesFileDetailsViewModel, boolean h2020) {
+    public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview,
+                                             String organisationName,
+                                             String projectName,
+                                             Long applicationId,
+                                             boolean leadPartnerOrganisation,
+                                             Long projectId,
+                                             Long organisationId,
+                                             boolean eligibilityApproved,
+                                             EligibilityRagStatus eligibilityRagStatus,
+                                             String approverFirstName,
+                                             String approverLastName,
+                                             LocalDate approvalDate,
+                                             boolean externalView,
+                                             boolean isUsingJesFinances,
+                                             FileDetailsViewModel jesFileDetailsViewModel,
+                                             boolean h2020,
+                                             boolean projectIsActive) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -53,6 +67,7 @@ public class FinanceChecksEligibilityViewModel {
         this.isUsingJesFinances = isUsingJesFinances;
         this.jesFileDetails = jesFileDetailsViewModel;
         this.h2020 = h2020;
+        this.projectIsActive = projectIsActive;
     }
 
     public boolean isApproved() {
@@ -60,11 +75,11 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved();
+        return !isApproved() && projectIsActive;
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved();
+        return isApproved() || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
@@ -200,4 +215,7 @@ public class FinanceChecksEligibilityViewModel {
         return h2020;
     }
 
+    public boolean isProjectIsActive() {
+        return projectIsActive;
+    }
 }

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -93,13 +91,6 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
     @Test
     public void approveFromApplicationState_rejectedToApproved() {
         assertStateChangeOnWorkflowHandlerCall(ApplicationState.REJECTED, ApplicationState.APPROVED, applicationWorkflowHandler::approve);
-    }
-
-    @Test
-    public void withdraw() {
-        User internalUser = newUser().build();
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.APPROVED, ApplicationState.WITHDRAWN,
-                                               application -> applicationWorkflowHandler.withdraw(application, internalUser));
     }
 
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {

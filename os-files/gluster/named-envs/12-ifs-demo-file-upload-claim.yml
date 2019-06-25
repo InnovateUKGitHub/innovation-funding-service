@@ -4,10 +4,10 @@ metadata:
   name: ifs-demo-file-upload-claim
 spec:
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
-    requests:
-      storage: 20G
+     requests:
+       storage: 20G
   selector:
     matchLabels:
-      ifsdemo: "ifsdemo"
+      ifsdemo: ifsdemo

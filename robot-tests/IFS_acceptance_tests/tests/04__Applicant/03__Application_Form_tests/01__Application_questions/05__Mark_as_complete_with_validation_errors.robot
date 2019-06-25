@@ -18,7 +18,7 @@ Mark as complete is impossible for empty questions
     And the user should see the element     css = .govuk-error-summary li
 
 Error should not be visible when the text area is not empty
-    [Documentation]    -INFUND-406
+    [Documentation]    INFUND-406
     [Tags]
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question

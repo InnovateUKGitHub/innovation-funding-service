@@ -103,7 +103,8 @@ public abstract class BaseDataBuilderService {
 
     List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
         return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccess());
+                doAs(compAdmin(), () ->
+                        questionService.findByCompetition(competitionId).getSuccess()));
     }
 
     private <K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {

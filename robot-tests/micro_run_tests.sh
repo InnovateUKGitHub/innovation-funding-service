@@ -126,12 +126,6 @@ function startPybot() {
       else
         local excludeBespokeTags=''
     fi
-    if [[ ${emails} -eq 1 ]]
-      then
-        local emailsString='--exclude Email'
-      else
-        local emailsString=''
-    fi
     if [[ ${rerunFailed} -eq 1 ]]; then
       local rerunString='--rerunfailed target/${targetDir}/output.xml --output rerun.xml'
     else
@@ -167,7 +161,7 @@ function startPybot() {
     $includeBespokeTags \
     $excludeBespokeTags \
     $includeEuTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
+    --exclude Failing --exclude Pending --name ${targetDir} ${1} &
 }
 
 function runTests() {
@@ -307,7 +301,6 @@ unset useBespokeIncludeTag
 unset useBespokeExcludeTag
 
 quickTest=0
-emails=0
 rerunFailed=0
 stopGrid=0
 showZapReport=0
@@ -327,9 +320,6 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :o" opt ; do
         ;;
         t)
             testScrub=1
-        ;;
-        e)
-            emails=1
         ;;
         r)
 		    rerunFailed=1
