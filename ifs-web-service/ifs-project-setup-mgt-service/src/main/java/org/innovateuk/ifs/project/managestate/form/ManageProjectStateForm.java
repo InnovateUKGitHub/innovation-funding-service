@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.managestate.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,8 @@ public class ManageProjectStateForm {
     private Boolean confirmationWithdrawn;
     private Boolean confirmationCompleteOffline;
     private String onHoldReason;
+
+    @WordCount(max = 400, message = "{validation.field.max.word.count}")
     private String onHoldDetails;
 
     public ProjectState getState() {
