@@ -182,7 +182,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 Supplier<InputStream> inputStreamSupplier = () -> inputStream;
                 grantOfferLetterService.createGrantOfferLetterFileEntry(data.getProject().getId(), new FileEntryResource(null, "GOL.pdf", "application/pdf", file.length()), inputStreamSupplier);
             } catch (Exception e) {
-                LOG.error("Unable to upload signed grant offer letter", e);
+                LOG.error("Unable to upload grant offer letter", e);
                 throw new RuntimeException(e);
             }
             grantOfferLetterService.sendGrantOfferLetter(data.getProject().getId());
