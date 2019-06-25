@@ -40,5 +40,12 @@ public class UserDocs {
             fieldWithPath("roles").description("roles that the user is associated with"),
     };
 
+    public static final FieldDescriptor[] simpleUserResourceFields = {
+            fieldWithPath("id").description("id of the user"),
+            fieldWithPath("firstName").type("String").description("first name of the user"),
+            fieldWithPath("lastName").type("String").description("last name of the user"),
+            fieldWithPath("email").type("String").description("e-mail address of the user"),
+    };
+
     public static final FieldDescriptor[] userPageResourceFields = pageResourceFields;
 }

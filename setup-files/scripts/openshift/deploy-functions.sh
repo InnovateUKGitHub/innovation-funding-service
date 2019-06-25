@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -42,7 +42,7 @@ function isPerfEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -193,7 +193,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml

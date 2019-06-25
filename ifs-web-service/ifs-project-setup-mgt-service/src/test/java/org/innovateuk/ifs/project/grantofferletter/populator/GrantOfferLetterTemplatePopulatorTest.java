@@ -154,7 +154,9 @@ public class GrantOfferLetterTemplatePopulatorTest {
                                                                                        BigDecimal.ONE);
 
         SummaryFinanceTableModel summaryFinanceTable = new SummaryFinanceTableModel(BigDecimal.ONE,
-                                                                                    BigDecimal.TEN);
+                                                                                    BigDecimal.TEN,
+                                                                                    BigDecimal.ONE,
+                                                                                    BigDecimal.ZERO);
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
