@@ -58,7 +58,7 @@
                 <p class="govuk-body">This project is on hold.</p>
             </div>
             <p class="govuk-body govuk-!-margin-bottom-6">
-                <a href="#" class="govuk-link">View details, reply or remove on hold status </a>
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/on-hold-status(competitionId=${model.competitionId},projectId=${model.projectId})}" class="govuk-link">View details, reply or remove on hold status </a>
             </p>
         </th:block>
         <!-- END -->
