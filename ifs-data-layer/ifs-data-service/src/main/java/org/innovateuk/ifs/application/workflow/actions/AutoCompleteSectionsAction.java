@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.transactional.SectionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +18,13 @@ import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 @Component
 public class AutoCompleteSectionsAction extends BaseApplicationAction {
 
-    @Autowired
-    private SectionService sectionService;
+    private final SectionService sectionService;
+    private final SectionStatusService sectionStatusService;
 
-    @Autowired
-    private SectionStatusService sectionStatusService;
+    public AutoCompleteSectionsAction(SectionService sectionService, SectionStatusService sectionStatusService) {
+        this.sectionService = sectionService;
+        this.sectionStatusService = sectionStatusService;
+    }
 
     @Override
     protected void doExecute(final Application application,
@@ -39,7 +40,6 @@ public class AutoCompleteSectionsAction extends BaseApplicationAction {
             completeTermsAndConditions(application, termsSectionId);
         }
     }
-
 
     private void completeTermsAndConditions(Application application, long termsSectionId) {
         sectionStatusService.markSectionAsComplete(termsSectionId, application.getId(), application.getLeadApplicantProcessRole().getId());
