@@ -26,6 +26,7 @@ public class ProjectResource {
     private List<Long> projectUsers;
     private Long projectMonitoringOfficer;
     private Long monitoringOfficerUser;
+    private Long financeReviewer;
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
@@ -206,6 +207,14 @@ public class ProjectResource {
         this.monitoringOfficerUser = monitoringOfficerUser;
     }
 
+    public Long getFinanceReviewer() {
+        return financeReviewer;
+    }
+
+    public void setFinanceReviewer(Long financeReviewer) {
+        this.financeReviewer = financeReviewer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -226,6 +235,7 @@ public class ProjectResource {
                 .append(projectUsers, that.projectUsers)
                 .append(projectMonitoringOfficer, that.projectMonitoringOfficer)
                 .append(monitoringOfficerUser, that.monitoringOfficerUser)
+                .append(financeReviewer, that.financeReviewer)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
                 .append(grantOfferLetter, that.grantOfferLetter)
                 .append(additionalContractFile, that.additionalContractFile)
@@ -252,6 +262,7 @@ public class ProjectResource {
                 .append(projectUsers)
                 .append(projectMonitoringOfficer)
                 .append(monitoringOfficerUser)
+                .append(financeReviewer)
                 .append(signedGrantOfferLetter)
                 .append(grantOfferLetter)
                 .append(additionalContractFile)

@@ -24,7 +24,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Override
     protected ProjectStateController supplyControllerUnderTest() {
-        return new ProjectStateController();
+        return new ProjectStateController(projectStateService);
     }
 
     @Test

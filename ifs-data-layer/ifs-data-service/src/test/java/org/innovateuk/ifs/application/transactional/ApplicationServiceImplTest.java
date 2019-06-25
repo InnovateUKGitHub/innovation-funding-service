@@ -9,11 +9,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.resource.PreviousApplicationPageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -56,9 +52,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -67,7 +61,6 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -83,9 +76,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -521,69 +512,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void withdraw() {
-        long applicationId = 1L;
-        long userId = 2L;
-
-        Application application = newApplication()
-                .withApplicationState(ApplicationState.APPROVED)
-                .withId(applicationId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        setLoggedInUser(loggedInUser);
-
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(true);
-
-        ServiceResult<Void> result = service.withdrawApplication(applicationId);
-
-        assertTrue(result.isSuccess());
-
-        verify(applicationRepositoryMock).findById(applicationId);
-        verify(userRepositoryMock).findById(userId);
-        verify(applicationWorkflowHandlerMock).withdraw(application, user);
-    }
-
-    @Test
-    public void withdraw_applicationNotApproved() {
-        long applicationId = 1L;
-        long userId = 2L;
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        setLoggedInUser(loggedInUser);
-
-        Application application = newApplication()
-                .withApplicationState(ApplicationState.REJECTED)
-                .withId(applicationId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(false);
-
-        ServiceResult<Void> result = service.withdrawApplication(applicationId);
-
-        assertTrue(result.isFailure());
-        assertEquals(APPLICATION_MUST_BE_APPROVED.getErrorKey(), result.getErrors().get(0).getErrorKey());
-
-        verify(applicationRepositoryMock).findById(applicationId);
-        verify(userRepositoryMock).findById(userId);
-        verify(applicationWorkflowHandlerMock).withdraw(application, user);
-    }
-
-    @Test
     public void showApplicationTeam() {
         User user = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
         when(userRepositoryMock.findById(234L)).thenReturn(Optional.of(user));
@@ -725,21 +653,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.REJECTED)), any());
-
-    }
-
-    @Test
-    public void findPreviousApplicationsWithWithdrawnFilter() {
-
-        Long competitionId = 1L;
-
-        Page<Application> pagedResult = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any())).thenReturn(pagedResult);
-
-        ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "WITHDRAWN");
-        assertTrue(result.isSuccess());
-
-        verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), eq(Sets.immutableEnumSet(ApplicationState.WITHDRAWN)), any());
 
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/project/finance/queries")
 public class ProjectFinanceQueriesController extends CommonThreadController<QueryResource> {
+
     @Autowired
     public ProjectFinanceQueriesController(FinanceCheckQueriesService service) {
         super(service);

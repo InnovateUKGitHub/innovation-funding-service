@@ -22,7 +22,7 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Force Tags        Applicant  MySQL
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot

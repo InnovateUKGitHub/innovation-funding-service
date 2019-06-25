@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
@@ -18,19 +18,14 @@ import java.util.Map;
  */
 public interface OrganisationFinanceHandler {
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
-    Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition);
-
+    Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId);
     ApplicationFinanceRow costItemToCost(FinanceRowItem costItem);
     ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem);
-    FinanceRowItem costToCostItem(ApplicationFinanceRow cost);
-    FinanceRowItem costToCostItem(ProjectFinanceRow cost);
+    FinanceRowItem costToCostItem(FinanceRow cost);
     FinanceRowHandler getCostHandler(FinanceRowType costType);
-    List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs);
+    List<FinanceRowItem> costsToCostItems(List<? extends FinanceRow> costs);
     ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);
     ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow financeRow);
-
-    List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems);
-
-    Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition);
+    Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId);
     Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId);
 }

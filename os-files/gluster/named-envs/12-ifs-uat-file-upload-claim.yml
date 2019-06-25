@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: uat-file-upload-claim
+  name: ifs-uat-file-upload-claim
 spec:
   accessModes:
   - ReadWriteMany
@@ -10,4 +10,4 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      uat: "uat"
+      ifsuat: ifsuat

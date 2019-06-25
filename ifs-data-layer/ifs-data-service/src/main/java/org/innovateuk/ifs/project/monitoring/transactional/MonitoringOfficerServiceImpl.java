@@ -17,12 +17,13 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -56,11 +57,11 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findAll() {
+    public ServiceResult<List<SimpleUserResource>> findAll() {
         return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))
                 .stream()
-                .map(userMapper::mapToResource)
-                .collect(toList()));
+                .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList()));
     }
 
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {
