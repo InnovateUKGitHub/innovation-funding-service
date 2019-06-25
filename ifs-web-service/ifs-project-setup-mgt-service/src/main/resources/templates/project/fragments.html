@@ -8,7 +8,7 @@
   </th:block>
 </th:block>
 
-<th:block th:fragment="project-status-table(status, columnType)">
+<th:block th:fragment="project-status-table(status, columnType, isActive)">
     <th:block th:switch="${status.name()}">
         <td th:case="'VIEW'" class="govuk-table__cell status">
             <th:block th:if="${url}">
@@ -48,11 +48,11 @@
         <td th:case="'PENDING'" class="govuk-table__cell status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}" class="govuk-link">
-                <span th:text="${columnType == 'project-details' or columnType == 'project-team' ? 'Incomplete' : 'Pending'}">Incomplete</span>
+                <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-              <span th:text="${columnType == 'project-details' or columnType == 'project-team' ? 'Incomplete' : 'Pending'}">Incomplete</span>
+              <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
         <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
