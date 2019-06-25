@@ -191,7 +191,7 @@ then
     forceReload
 fi
 
-if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "perf" ]]
+if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" ]]
 then
     # We only scale up data-serviced once started up and performed the Flyway migrations on one thread
     scaleDataService
