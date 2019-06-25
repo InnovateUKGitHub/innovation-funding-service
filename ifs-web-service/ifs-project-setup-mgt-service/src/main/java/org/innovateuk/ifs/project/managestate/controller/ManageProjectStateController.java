@@ -89,7 +89,7 @@ public class ManageProjectStateController {
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasFieldErrors("state")) {
             return;
         }
 
