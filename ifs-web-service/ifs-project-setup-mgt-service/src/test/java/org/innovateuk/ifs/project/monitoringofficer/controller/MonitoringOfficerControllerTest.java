@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
-import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignRoleViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -31,7 +28,10 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -93,7 +93,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userId,
                 "firstName",
                 "lastName",
-                emailAddress);
+                emailAddress,
+                null);
         when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/search-by-email")
                 .param("emailAddress", emailAddress))
@@ -126,7 +127,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),
                 "firstName",
                 "lastName",
-                userResource.getEmail());
+                userResource.getEmail(),
+                "");
         when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/" + userResource.getId() + "/assign-role"))
                 .andReturn();
@@ -134,6 +136,26 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertThat(mvcResult.getModelAndView().getModel().get("form"), instanceOf(MonitoringOfficerAssignRoleForm.class));
         assertThat(mvcResult.getModelAndView().getModel().get("model"), instanceOf(MonitoringOfficerAssignRoleViewModel.class));
         assertEquals("project/monitoring-officer/assign-role", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void assignRoleGetWhereUserHasPhoneNumber() throws Exception {
+        UserResource userResource = new UserResource();
+        userResource.setId(999L);
+        userResource.setEmail("test@test.test");
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
+        MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),
+                "firstName",
+                "lastName",
+                userResource.getEmail(),
+                "0123456789");
+        when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
+        MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/" + userResource.getId() + "/assign-role"))
+                .andReturn();
+
+        assertThat(mvcResult.getModelAndView().getModel().get("form"), instanceOf(MonitoringOfficerAssignRoleForm.class));
+        assertThat(mvcResult.getModelAndView().getModel().get("model"), instanceOf(MonitoringOfficerAssignRoleViewModel.class));
+        assertEquals("project/monitoring-officer/assign-role-without-edit", mvcResult.getModelAndView().getViewName());
     }
 
     @Test
@@ -147,7 +169,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),
                 "firstName",
                 "lastName",
-                userResource.getEmail());
+                userResource.getEmail(),
+                null);
         when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/" + userResource.getId() + "/assign-role"))
                 .andReturn();
@@ -176,6 +199,21 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role")
                 .param("phoneNumber", userResource.getPhoneNumber()))
+                .andReturn();
+
+        assertEquals("redirect:/monitoring-officer/999/projects", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void assignRoleWithoutEditPost() throws Exception {
+        UserResource userResource = newUserResource()
+                .withId(999L)
+                .build();
+        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
+        when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
+
+        MvcResult mvcResult = mockMvc
+                .perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role-without-edit"))
                 .andReturn();
 
         assertEquals("redirect:/monitoring-officer/999/projects", mvcResult.getModelAndView().getViewName());

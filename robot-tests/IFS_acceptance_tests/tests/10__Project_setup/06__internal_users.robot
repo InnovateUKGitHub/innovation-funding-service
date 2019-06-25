@@ -44,7 +44,7 @@ Project Finance can see the status of projects in PS
 
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720, IFS-1881
-    [Tags]    Experian  HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           jQuery = button:contains("Next")

@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
+import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -35,68 +39,43 @@ public class ApplicantDashboardPopulator {
     }
 
     private ApplicantDashboardViewModel getApplicantDashboardViewModel(String originQuery, ApplicantDashboardResource applicantDashboardResource) {
-        List<InSetupDashboardRowViewModel> applicationsInSetUp = toViewModelForInSetup(applicantDashboardResource.getInSetup());
-        List<EuGrantTransferDashboardRowViewModel> applicationsForEuGrantTransfers = toViewModelForEuGrantTransfers(applicantDashboardResource.getEuGrantTransfer());
-        List<InProgressDashboardRowViewModel> applicationsInProgress = toViewModelForInProgress(applicantDashboardResource.getInProgress());
-        List<PreviousDashboardRowViewModel> applicationsPreviouslySubmitted = toViewModelForPrevious(applicantDashboardResource.getPrevious());
+        List<InSetupDashboardRowViewModel> applicationsInSetUp = getViewModelForInSetup(applicantDashboardResource.getInSetup());
+        List<EuGrantTransferDashboardRowViewModel> applicationsForEuGrantTransfers = getViewModelForEuGrantTransfers(applicantDashboardResource.getEuGrantTransfer());
+        List<InProgressDashboardRowViewModel> applicationsInProgress = getViewModelForInProgress(applicantDashboardResource.getInProgress());
+        List<PreviousDashboardRowViewModel> applicationsPreviouslySubmitted = getViewModelForPrevious(applicantDashboardResource.getPrevious());
 
         return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted, originQuery);
     }
 
-    private List<InSetupDashboardRowViewModel> toViewModelForInSetup(List<DashboardApplicationInSetupResource> inSetupResources){
+    private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardApplicationInSetupResource> inSetupResources){
         return inSetupResources
                 .stream()
-                .map(application -> new InSetupDashboardRowViewModel(
-                        application.getTitle(),
-                        application.getApplicationId(),
-                        application.getCompetitionTitle(),
-                        application.getProjectId(),
-                        application.getProjectTitle()))
-                .sorted()
+                .map(InSetupDashboardRowViewModel::new)
+                .sorted(comparing(InSetupDashboardRowViewModel::getTargetStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }
 
-    private List<EuGrantTransferDashboardRowViewModel> toViewModelForEuGrantTransfers(List<DashboardApplicationForEuGrantTransferResource> euGrantTransferResources){
+    private List<EuGrantTransferDashboardRowViewModel> getViewModelForEuGrantTransfers(List<DashboardApplicationForEuGrantTransferResource> euGrantTransferResources){
         return euGrantTransferResources
                 .stream()
-                .map(application -> new EuGrantTransferDashboardRowViewModel(
-                        application.getTitle(),
-                        application.getApplicationId(),
-                        application.getCompetitionTitle(),
-                        application.getApplicationState(),
-                        application.getApplicationProgress(),
-                        application.getProjectId()))
+                .map(EuGrantTransferDashboardRowViewModel::new)
                 .sorted()
                 .collect(toList());
     }
 
-    private List<InProgressDashboardRowViewModel> toViewModelForInProgress(List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources){
+    private List<InProgressDashboardRowViewModel> getViewModelForInProgress(List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources){
         return dashboardApplicationInProgressResources
                 .stream()
-                .map(dashboardApplicationInProgressResource -> new InProgressDashboardRowViewModel(
-                        dashboardApplicationInProgressResource.getTitle(),
-                        dashboardApplicationInProgressResource.getApplicationId(),
-                        dashboardApplicationInProgressResource.getCompetitionTitle(),
-                        dashboardApplicationInProgressResource.isAssignedToMe(),
-                        dashboardApplicationInProgressResource.getApplicationState(),
-                        dashboardApplicationInProgressResource.isLeadApplicant(),
-                        dashboardApplicationInProgressResource.getEndDate(),
-                        dashboardApplicationInProgressResource.getDaysLeft(),
-                        dashboardApplicationInProgressResource.getApplicationProgress(),
-                        dashboardApplicationInProgressResource.isAssignedToInterview()))
-                .sorted()
+                .map(InProgressDashboardRowViewModel::new)
+                .sorted(comparing(InProgressDashboardRowViewModel::getEndDate, nullsLast(naturalOrder())).thenComparing(InProgressDashboardRowViewModel::getStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }
 
-    private List<PreviousDashboardRowViewModel> toViewModelForPrevious(List<DashboardPreviousApplicationResource> applicantDashboardResource){
+    private List<PreviousDashboardRowViewModel> getViewModelForPrevious(List<DashboardPreviousApplicationResource> applicantDashboardResource){
         return applicantDashboardResource
                 .stream()
-                .map(dashboardPreviousApplicationResource -> new PreviousDashboardRowViewModel(
-                        dashboardPreviousApplicationResource.getTitle(),
-                        dashboardPreviousApplicationResource.getApplicationId(),
-                        dashboardPreviousApplicationResource.getCompetitionTitle(),
-                        dashboardPreviousApplicationResource.getApplicationState()))
-                .sorted()
+                .map(PreviousDashboardRowViewModel::new)
+                .sorted(comparing(PreviousDashboardRowViewModel::getStartDate, nullsLast(reverseOrder())))
                 .collect(toList());
     }
 
