@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
+import java.time.LocalDate;
+
 /**
  * Resource representing an application for use in the applicant dashboard.
  */
@@ -12,6 +14,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
     private int applicationProgress;
     private ApplicationState applicationState;
     private Long projectId;
+    private LocalDate startDate;
 
     private DashboardApplicationForEuGrantTransferResource() {
     }
@@ -28,6 +31,10 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
         return projectId;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,6 +48,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
                 .append(applicationId, that.applicationId)
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
+                .append(startDate, that.startDate)
                 .isEquals();
     }
 
@@ -54,6 +62,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
                 .append(applicationId)
                 .append(competitionTitle)
                 .append(dashboardSection)
+                .append(startDate)
                 .toHashCode();
     }
 
@@ -66,6 +75,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
         private int applicationProgress;
         private ApplicationState applicationState;
         private Long projectId;
+        private LocalDate startDate;
 
         public DashboardApplicationForEuGrantTransferResourceBuilder withTitle(String title) {
             this.title = title;
@@ -102,6 +112,11 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
             return this;
         }
 
+        public DashboardApplicationForEuGrantTransferResourceBuilder withStartDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
         public DashboardApplicationForEuGrantTransferResource build(){
             DashboardApplicationForEuGrantTransferResource result = new DashboardApplicationForEuGrantTransferResource();
             result.title = this.title;
@@ -111,6 +126,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
             result.applicationProgress = this.applicationProgress;
             result.applicationState = this.applicationState;
             result.projectId = this.projectId;
+            result.startDate = this.startDate;
 
             return result;
         }
