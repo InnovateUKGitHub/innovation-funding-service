@@ -83,7 +83,7 @@ The lead partner is able to add a new team member
     [Documentation]  IFS-5719
     Given the user clicks the button/link  jQuery = button:contains("Add team member")
     When the user adds a new team member   Tester   ${leadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Tester (Pending)")
+    Then the user should see the element   jQuery = td:contains("Tester (Pending)") ~ td:contains("${leadNewMemberEmail}")
     [Teardown]   Logout as user
 
 A new team member is able to accept the invitation from lead partner and see project set up
@@ -98,7 +98,7 @@ Non Lead partner is able to add a new team member
     Given the user navigates to the page   ${newProjecTeamPage}
     And the user clicks the button/link    jQuery = button:contains("Add team member")
     When the user adds a new team member   Testerina   ${nonLeadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Testerina (Pending)")
+    Then the user should see the element   jQuery = td:contains("Testerina (Pending)") ~ td:contains("${nonLeadNewMemberEmail}")
     [Teardown]   the user logs out if they are logged in
 
 A new team member is able to accept the invitation from non lead partner and see projec set up

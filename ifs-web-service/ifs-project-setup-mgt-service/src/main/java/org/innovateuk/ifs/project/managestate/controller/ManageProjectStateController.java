@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
@@ -63,7 +64,7 @@ public class ManageProjectStateController {
                                   UserResource user) {
         validate(form, result);
         Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model, user);
-        Supplier<String> successView = () -> String.format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+        Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(updateProjectState(form.getState(), projectId));

@@ -40,7 +40,7 @@ public class IndustrialFinanceTableModelPopulator extends BaseGrantOfferLetterTa
             return null;
         } else {
             List<String> organisations = new ArrayList<>(industrialFinances.keySet());
-            BigDecimal totalEligibleCosts = calculateTotalFromFinances(industrialFinances.values());
+            BigDecimal totalEligibleCosts = calculateEligibleTotalFromFinances(industrialFinances.values());
             BigDecimal totalGrant = calculateTotalGrantFromFinances(industrialFinances.values());
             List<OtherCostsRowModel> otherCosts = calculateOtherCosts(industrialFinances);
 

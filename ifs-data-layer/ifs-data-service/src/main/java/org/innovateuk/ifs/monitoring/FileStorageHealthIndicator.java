@@ -55,6 +55,8 @@ public class FileStorageHealthIndicator implements HealthIndicator {
         boolean isWritable = fileOperationsWrapper.isWritable(storagePath);
 
         if (isWritable) {
+            LOG.debug("storage path [" + fileStoragePath + "] is writable");
+
             return builder.up();
         }
 

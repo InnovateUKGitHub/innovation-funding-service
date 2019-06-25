@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/project")
 public class ProjectStateController {
 
-    @Autowired
     private ProjectStateService projectStateService;
+
+    @Autowired
+    public ProjectStateController(ProjectStateService projectStateService) {
+        this.projectStateService = projectStateService;
+    }
 
     @PostMapping("/{projectId}/withdraw")
     public RestResult<Void> withdrawProject(@PathVariable("projectId") final long projectId) {

@@ -68,7 +68,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         for (ApplicationFinance applicationFinance : applicationFinances) {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-            Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinance.getId(), applicationFinance.getApplication().getCompetition());
+            Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinance.getId());
 
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
@@ -105,7 +105,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource, Competition competition) {
         Organisation organisation = organisationRepository.findById(applicationFinanceResource.getOrganisation()).get();
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(competition.getId(), organisation.getOrganisationType().getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId(), competition);
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

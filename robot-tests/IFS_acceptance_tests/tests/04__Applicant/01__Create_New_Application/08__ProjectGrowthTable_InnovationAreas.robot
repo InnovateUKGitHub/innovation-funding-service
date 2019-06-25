@@ -140,11 +140,10 @@ As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]  HappyPath
     [Setup]  get competition id and set open date to yesterday   ${compWithGrowth}
-    Given Log in as a different user                             &{lead_applicant_credentials}
-    And logged in user applies to competition                    ${compWithGrowth}  1
+    Given the user logs in and apply to a competition
     When the user clicks the button/link                         link = Your finances
     And the user clicks the button/link                          link = Your organisation
-    Then the user should not see the element                     jQuery = div label:contains("Turnover (£)")
+    Then the user should not see the element                     css = #turnover
     And the user should see the element                          jQuery = div label:contains("Full time employees")
     And the user should see the element                          jQuery = span:contains("Number of full time employees at your organisation.")
 
@@ -274,7 +273,7 @@ Lead applicant can see all innovation areas
     [Documentation]  IFS-40
     [Tags]
     Given the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link          jQuery = a:contains('Untitled application'):last
+    And the user clicks the button/link          jQuery = a:contains("Application With GrowthTable")
     And the user clicks the button/link          link = Application details
     #The fact that the link is present means that the innovation area is not pre-defined
     When the user clicks the button/link         css = #researchArea
@@ -448,7 +447,7 @@ the lead applicant invites an existing user
 
 the user navigates to the growth table finances
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = .in-progress a:contains("Untitled application"):last
+    the user clicks the button/link  jQuery = .in-progress a:contains("Application With GrowthTable")
     the user clicks the button/link  link = Your finances
 
 Invite a non-existing collaborator in Application with Growth table
@@ -491,6 +490,13 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+the user logs in and apply to a competition
+    Log in as a different user                        &{lead_applicant_credentials}
+    logged in user applies to competition             ${compWithGrowth}  1
+    the user clicks the button/link                   link = Application details
+    the user enters text to a text field              css = [id="application.name"]  Application With GrowthTable
+    the user clicks the button/link                   link = Application overview
 
 Custom suite setup
     Set predefined date variables

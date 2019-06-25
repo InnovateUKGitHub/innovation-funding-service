@@ -184,7 +184,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-//    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }

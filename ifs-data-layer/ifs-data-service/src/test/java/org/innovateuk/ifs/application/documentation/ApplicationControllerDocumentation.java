@@ -306,23 +306,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void withdraw() throws Exception {
-        long applicationId = 1L;
-
-        when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc")
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("application/{method-name}",
-                                pathParameters(
-                                        parameterWithName("applicationId").description("Id of the application to withdraw")
-                                )
-                ));
-    }
-
-    @Test
     public void showApplicationTeam() throws Exception {
         Long applicationId = 1L;
         Long userId = 2L;

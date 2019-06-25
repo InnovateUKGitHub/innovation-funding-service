@@ -1,29 +1,29 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import java.time.LocalDate;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+import static org.junit.Assert.assertEquals;
+
 public class InSetupDashboardRowViewModelTest {
+
+    private static final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
     @Test
     public void testConstruct() {
         InSetupDashboardRowViewModel viewModel = new InSetupDashboardRowViewModel("Application", 1L,
-                "Competition", 2L, "Project");
+                "Competition", 2L, "Project", YESTERDAY);
 
-        assertThat(viewModel.getLinkUrl(), equalTo("/project-setup/project/2"));
-        assertThat(viewModel.getTitle(), equalTo("Project"));
+        assertEquals("/project-setup/project/2", viewModel.getLinkUrl());
+        assertEquals("Project", viewModel.getTitle());
     }
 
     @Test
     public void testNullTitle() {
         InSetupDashboardRowViewModel viewModel = new InSetupDashboardRowViewModel("Application", 1L,
-                "Competition", 2L, "");
+                "Competition", 2L, "", YESTERDAY);
 
-        assertThat(viewModel.getTitle(), equalTo("Competition"));
+        assertEquals("Competition", viewModel.getTitle());
     }
 }

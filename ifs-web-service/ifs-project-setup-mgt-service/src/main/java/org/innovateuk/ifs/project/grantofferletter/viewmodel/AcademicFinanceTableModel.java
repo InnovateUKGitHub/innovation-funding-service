@@ -76,4 +76,9 @@ public class AcademicFinanceTableModel {
     public BigDecimal getTotalGrant() {
         return totalGrant;
     }
+
+    public boolean showOtherFundingRow() {
+        return getTotalByName("other_funding").compareTo(BigDecimal.ZERO) > 0;
+    }
 }
+
