@@ -90,7 +90,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="govuk-grid-row govuk-!-margin-top-6" th:unless="${model.approved}">
+            <div class="govuk-grid-row govuk-!-margin-top-6" th:if="${model.isEditable()}">
                 <div class="govuk-grid-column-one-half">
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-body govuk-link">Change bank account details</a>
                 </div>

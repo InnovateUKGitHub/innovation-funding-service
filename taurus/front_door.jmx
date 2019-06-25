@@ -103,7 +103,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -159,7 +159,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -216,7 +216,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -258,7 +258,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -300,7 +300,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>

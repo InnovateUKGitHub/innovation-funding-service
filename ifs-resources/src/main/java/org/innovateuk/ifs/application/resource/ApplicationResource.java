@@ -187,9 +187,6 @@ public class ApplicationResource {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
 
-    @JsonIgnore
-    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
-
     private boolean isInSubmittableCompetitionState() {
         return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);
     }
