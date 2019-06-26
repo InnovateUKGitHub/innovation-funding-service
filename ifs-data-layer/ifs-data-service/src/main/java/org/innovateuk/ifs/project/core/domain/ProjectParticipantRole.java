@@ -16,7 +16,8 @@ public enum ProjectParticipantRole implements ParticipantRole {
     PROJECT_PARTNER(10, "partner"),
     PROJECT_MANAGER(11, "project_manager"),
     PROJECT_FINANCE_CONTACT(9, "finance_contact"),
-    MONITORING_OFFICER(19, "monitoring_officer");
+    MONITORING_OFFICER(19, "monitoring_officer"),
+    FINANCE_REVIEWER(20, "finance_reviewer");
 
     public static final EnumSet<ProjectParticipantRole> PROJECT_USER_ROLES =
             EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT);

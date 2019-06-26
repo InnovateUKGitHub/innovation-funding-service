@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
@@ -108,6 +109,10 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withProjectMonitoringOfficer(MonitoringOfficer... projectMonitoringOfficers) {
         return withArray((projectMonitoringOfficer, project) -> project.setProjectMonitoringOfficer(projectMonitoringOfficer), projectMonitoringOfficers);
+    }
+
+    public ProjectBuilder withFinanceReviewer(FinanceReviewer... financeReviewers) {
+        return withArray((financeReviewer, project) -> project.setFinanceReviewer(financeReviewer), financeReviewers);
     }
 
     public ProjectBuilder withProjectProcess(ProjectProcess... projectProcesses) {
