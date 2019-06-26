@@ -45,7 +45,7 @@ Academic finance calculations
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]    Upload
+    [Tags]
     Given the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
     Then the user clicks the button/link          css = button[name="remove_jes"]
     When the academic partner uploads a file      ${too_large_pdf}
@@ -54,7 +54,7 @@ Large pdf upload not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
-    [Tags]    Upload
+    [Tags]
     When the academic partner uploads a file               ${text_file}
     Then the user should see a field and summary error     ${wrong_filetype_validation_error}
 

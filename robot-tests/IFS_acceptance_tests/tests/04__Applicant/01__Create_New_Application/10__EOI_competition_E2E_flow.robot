@@ -32,7 +32,7 @@ Comp Admin Creates EOI type competition
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
-    [Tags]  MySQL
+    [Tags]
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{assessor_bob_credentials}
     Then logged in user applies to competition  ${comp_name}  1

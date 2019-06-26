@@ -138,7 +138,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
 
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId(), competition)).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
 
         when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
 
@@ -161,4 +161,3 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
         assertEquals(existingFinances, result.getSuccess());
     }
 }
-

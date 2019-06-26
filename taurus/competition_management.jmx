@@ -319,7 +319,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -335,7 +335,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>

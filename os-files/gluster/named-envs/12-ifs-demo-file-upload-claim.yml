@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sysint-file-upload-claim
+  name: ifs-demo-file-upload-claim
 spec:
   accessModes:
   - ReadWriteMany
@@ -10,4 +10,4 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      sysint: "sysint"
+      ifsdemo: ifsdemo

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+
 /**
  *  Holder of values for the industrial finance table, used on the grant offer letter template page
  */
@@ -68,4 +70,9 @@ public class IndustrialFinanceTableModel {
     public List<OtherCostsRowModel> getOtherCosts() {
         return otherCosts;
     }
+
+    public boolean showOtherFundingRow() {
+        return getTotalForType(OTHER_FUNDING).compareTo(BigDecimal.ZERO) > 0;
+    }
 }
+

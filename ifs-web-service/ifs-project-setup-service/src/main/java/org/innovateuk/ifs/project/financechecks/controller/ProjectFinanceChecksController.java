@@ -474,11 +474,23 @@ public class ProjectFinanceChecksController {
         model.addAttribute("model", new FinanceChecksProjectCostsViewModel());
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
-                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(),
-                true, false, null, competition.isH2020()));
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview,
+                                                                                 organisation.getName(),
+                                                                                 project.getName(),
+                                                                                 application.getId(),
+                                                                                 isLeadPartnerOrganisation,
+                                                                                 project.getId(),
+                                                                                 organisation.getId(),
+                                                                                 eligibilityApproved,
+                                                                                 eligibility.getEligibilityRagStatus(),
+                                                                                 eligibility.getEligibilityApprovalUserFirstName(),
+                                                                                 eligibility.getEligibilityApprovalUserLastName(),
+                                                                                 eligibility.getEligibilityApprovalDate(),
+                                                                                 true,
+                                                                                 false,
+                                                                                 null,
+                                                                                 competition.isH2020(),
+                                                                                 project.getProjectState().isActive()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

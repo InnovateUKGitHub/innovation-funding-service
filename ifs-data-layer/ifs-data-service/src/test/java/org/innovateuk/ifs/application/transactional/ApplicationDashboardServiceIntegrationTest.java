@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
@@ -34,6 +36,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withDaysLeft(0)
             .withApplicationProgress(0)
             .withAssignedToInterview(false)
+            .withStartDate(LocalDate.of(2015, 11, 1))
             .withTitle("Using natural gas to heat homes")
             .withApplicationId(4)
             .withCompetitionTitle("Connected digital additive manufacturing")
