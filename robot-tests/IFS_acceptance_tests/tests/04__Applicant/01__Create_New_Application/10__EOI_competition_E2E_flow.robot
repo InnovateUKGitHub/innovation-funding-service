@@ -43,6 +43,7 @@ Applicant submits his application
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
+    And the applicant checks for competition terms and conditions
     Then the user should not see the element            jQuery = h2:contains("Finances")
     And the applicant submits the application
 
@@ -147,6 +148,13 @@ logged in user applies to competition
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
+
+the applicant checks for competition terms and conditions
+    the user should see the element       jQuery = h2:contains("Terms and conditions") ~ p:contains("You are agreeing to these by submitting your application.")
+    the user clicks the button/link       link = Award terms and conditions
+    the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should not see the element   jQuery = button:contains("Agree and continue")
+    the user clicks the button/link       link = Application overview
 
 Custom suite teardown
     Close browser and delete emails
