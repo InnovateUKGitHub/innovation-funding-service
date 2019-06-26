@@ -58,7 +58,7 @@ Check the initial key statistics
 
 Filtering in the Invite Pending and declined page
     [Documentation]    INFUND-6453
-    [Tags]  pending
+    [Tags]
     Given the user filter assessors by innovation area, status, contract and DOI
     Then the user should not see the element   jQuery = td:contains("No")
     When the user clicks the button/link       jQuery = a:contains("Clear filters")

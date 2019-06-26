@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -12,18 +11,17 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
-import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.function.Supplier;
@@ -41,8 +38,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -55,29 +51,29 @@ public class ProjectDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
     private ProjectService projectService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private ProjectDetailsService projectDetailsService;
-
-    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationService;
+    private FinanceReviewerRestService financeReviewerRestService;
     private OrganisationRestService organisationRestService;
 
-    @Autowired
-    private ProjectRestService projectRestService;
+    public ProjectDetailsController() {
+    }
 
     @Autowired
-    private PartnerOrganisationRestService partnerOrganisationService;
-
-    @Autowired
-    private ApplicationRestService applicationRestService;
-
-    @Autowired
-    private NavigationUtils navigationUtils;
+    public ProjectDetailsController(ProjectService projectService, CompetitionRestService competitionRestService,
+                                    ProjectDetailsService projectDetailsService,
+                                    PartnerOrganisationRestService partnerOrganisationService,
+                                    FinanceReviewerRestService financeReviewerRestService,
+                                    OrganisationRestService organisationRestService) {
+        this.projectService = projectService;
+        this.competitionRestService = competitionRestService;
+        this.projectDetailsService = projectDetailsService;
+        this.partnerOrganisationService = partnerOrganisationService;
+        this.financeReviewerRestService = financeReviewerRestService;
+        this.organisationRestService = organisationRestService;
+    }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
@@ -97,66 +93,28 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
-        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
+
+        Optional<SimpleUserResource> financeReviewer = Optional.ofNullable(projectResource.getFinanceReviewer())
+                .map(id -> financeReviewerRestService.findFinanceReviewerForProject(projectId).getSuccess());
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                isIfsAdministrator,
+                loggedInUser.hasRole(IFS_ADMINISTRATOR),
+                loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
                 locationPerPartnerRequired,
                 locationPerPartnerRequired?
                         partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList()));
+                        : Collections.emptyList(),
+                financeReviewer.map(SimpleUserResource::getName).orElse(null),
+                financeReviewer.map(SimpleUserResource::getEmail).orElse(null)));
 
         return "project/detail";
     }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
-    @PostMapping("/{projectId}/withdraw")
-    public String withdrawProject(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId,
-                                  HttpServletRequest request) {
-
-        projectRestService.withdrawProject(projectId)
-                .andOnSuccess(
-                        () ->  projectRestService.getProjectById(projectId)
-                                .andOnSuccess(
-                                        project -> applicationRestService.withdrawApplication(project.getApplication())
-                                            .andOnFailure(
-                                                    () -> LOG.error("Application withdrawal failed")
-                                            )
-                                )
-                        );
-
-        return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
-    }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "HANDLE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to handle projects offline")
-    @PostMapping("/{projectId}/handle-offline")
-    public String handleProjectOffline(@PathVariable("competitionId") final long competitionId,
-                                  @PathVariable("projectId") final long projectId,
-                                  HttpServletRequest request) {
-
-        projectRestService.handleProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
-    }
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "COMPLETE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to complete projects offline")
-    @PostMapping("/{projectId}/complete-offline")
-    public String completeProjectOffline(@PathVariable("competitionId") final long competitionId,
-                                       @PathVariable("projectId") final long projectId,
-                                       HttpServletRequest request) {
-
-        projectRestService.completeProjectOffline(projectId).getSuccess();
-        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
-    }
-
+    
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
                 .filter(uar -> uar.getRole() == PARTNER.getId())
@@ -179,7 +137,7 @@ public class ProjectDetailsController {
 
         Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap = new LinkedHashMap<>();
 
-        partnerOrganisations.stream().forEach(organisation ->
+        partnerOrganisations.forEach(organisation ->
                 organisationFinanceContactMap.put(organisation,
                         simpleFindFirst(financeRoles, financeUserResource -> financeUserResource.getOrganisation().equals(organisation.getId())).orElse(null))
         );
@@ -204,15 +162,7 @@ public class ProjectDetailsController {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        model.addAttribute("model", new ProjectDetailsViewModel(project,
-                competitionId,
-                competition.getName(),
-                false,
-                null,
-                null,
-                null,
-                false,
-                Collections.emptyList()));
+        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project, competition));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";

@@ -4,15 +4,15 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.simpleUserListType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.SimpleUserResourceBuilder.newSimpleUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -21,10 +21,10 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void findAll() {
-        List<UserResource> expected = singletonList(new UserResource());
-        setupGetWithRestResultExpectations("/monitoring-officer/find-all", userListType(), expected, OK);
+        List<SimpleUserResource> expected = newSimpleUserResource().build(1);
+        setupGetWithRestResultExpectations("/monitoring-officer/find-all", simpleUserListType(), expected, OK);
 
-        RestResult<List<UserResource>> result = service.findAll();
+        RestResult<List<SimpleUserResource>> result = service.findAll();
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), expected);

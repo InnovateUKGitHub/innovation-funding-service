@@ -163,7 +163,7 @@ Comp Admin can see the rejected and accepted invitation
 
 Assessor tries to accept expired invitation
     [Documentation]  IFS-2114
-    [Tags]  MySQL
+    [Tags]
     [Setup]  get the initial milestone value
     Given we are moving the milestone to yesterday         ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
     When the user reads his email and clicks the link      ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
@@ -246,7 +246,7 @@ Assessor can attend Panel and see applications that he has assessed
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
-    [Tags]  MySQL
+    [Tags]
     ${fundersPanel} =  Get the proper milestone value from the db    FUNDERS_PANEL
     Given we are moving the milestone to yesterday                   FUNDERS_PANEL  ${CLOSED_COMPETITION}
     When the user clicks the button/link                             link = Dashboard

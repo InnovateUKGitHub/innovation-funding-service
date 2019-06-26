@@ -48,12 +48,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toCostItem(FinanceRow cost) {
         return buildRowItem(cost);
     }
 

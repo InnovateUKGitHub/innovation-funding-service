@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.*;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -97,12 +99,12 @@ public class ReviewAndSubmitController {
                 bindingResult.rejectValue("agreeTerms", errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
-                return String.format("redirect:/application/%d/summary", applicationId);
+                return format("redirect:/application/%d/summary", applicationId);
             }
 
         }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
-        return String.format("redirect:/application/%d/confirm-submit", applicationId);
+        return format("redirect:/application/%d/confirm-submit", applicationId);
     }
 
     @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_RETURN_AND_EDIT",
@@ -156,11 +158,11 @@ public class ReviewAndSubmitController {
     }
 
     private String redirectToQuestion(long applicationId, long questionId) {
-        return String.format("redirect:/application/%d/form/question/%d", applicationId, questionId);
+        return format("redirect:/application/%d/form/question/%d", applicationId, questionId);
     }
 
     private String redirectToReview(long applicationId) {
-        return String.format("redirect:/application/%d/review-and-submit", applicationId);
+        return format("redirect:/application/%d/review-and-submit", applicationId);
     }
 
 
@@ -171,8 +173,8 @@ public class ReviewAndSubmitController {
                                            @ModelAttribute("termsAgreed") Boolean termsAgreed,
                                            @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                            Model model) {
-        if (!Boolean.TRUE.equals(termsAgreed)) {
-            return String.format("redirect:/application/%d/summary", applicationId);
+        if (!TRUE.equals(termsAgreed)) {
+            return format("redirect:/application/%d/summary", applicationId);
         }
         model.addAttribute("applicationId", applicationId);
         return "application-confirm-submit";
@@ -201,7 +203,7 @@ public class ReviewAndSubmitController {
         Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, form, model);
 
         return validationHandler.addAnyErrors(updateResult)
-                .failNowOrSucceedWith(failureView, () -> String.format("redirect:/application/%d/track", applicationId));
+                .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
     }
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")

@@ -53,7 +53,7 @@ public class ApplicationTermsModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
-        if (!readOnly)  {
+        if (!readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
             Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
             if (organisation.isPresent() && competition.isOpen() && application.isOpen()) {

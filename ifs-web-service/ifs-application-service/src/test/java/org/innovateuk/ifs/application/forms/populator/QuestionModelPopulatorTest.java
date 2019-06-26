@@ -48,7 +48,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTest {
     public void testPopulate() {
         ApplicantQuestionResource question =  newApplicantQuestionResource()
                 .withQuestion(newQuestionResource().build())
-                .withApplication(newApplicationResource().withApplicationState(ApplicationState.OPEN).build())
+                .withApplication(newApplicationResource().withApplicationState(ApplicationState.OPENED).build())
                 .withCurrentApplicant(newApplicantResource()
                         .withOrganisation(newOrganisationResource().build())
                         .withProcessRole(newProcessRoleResource().withRole(LEADAPPLICANT).build())

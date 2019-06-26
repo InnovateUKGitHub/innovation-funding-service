@@ -1,0 +1,33 @@
+=== Find finance users
+==== Request
+include::{snippets}/finance-reviewer/find-finance-users/http-request.adoc[]
+
+==== Response
+include::{snippets}/finance-reviewer/find-finance-users/http-response.adoc[]
+include::{snippets}/finance-reviewer/find-finance-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/finance-reviewer/find-finance-users/curl-request.adoc[]
+
+=== Assign project monitoring officer
+==== Request
+include::{snippets}/finance-reviewer/assign-finance-reviewer/http-request.adoc[]
+include::{snippets}/finance-reviewer/assign-finance-reviewer/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/finance-reviewer/assign-finance-reviewer/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/finance-reviewer/assign-finance-reviewer/curl-request.adoc[]
+
+=== Find project finance reviewer
+==== Request
+include::{snippets}/finance-reviewer/get-finance-reviewer-for-project/http-request.adoc[]
+include::{snippets}/finance-reviewer/get-finance-reviewer-for-project/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/finance-reviewer/get-finance-reviewer-for-project/http-response.adoc[]
+include::{snippets}/finance-reviewer/get-finance-reviewer-for-project/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/finance-reviewer/get-finance-reviewer-for-project/curl-request.adoc[]

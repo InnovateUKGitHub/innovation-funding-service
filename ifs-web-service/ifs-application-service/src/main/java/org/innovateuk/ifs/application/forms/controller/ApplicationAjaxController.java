@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -16,11 +15,8 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -49,7 +45,7 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationAjaxController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationAjaxController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationAjaxController {
 
@@ -59,25 +55,14 @@ public class ApplicationAjaxController {
     private MessageSource messageSource;
 
     @Autowired
-    private OrganisationService organisationService;
-
-    @Autowired
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private ApplicationService applicationService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
-    @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -249,7 +234,7 @@ public class ApplicationAjaxController {
     }
 
     @GetMapping(value = "/update_time_details")
-    public String updateTimeDetails( Model model ) {
+    public String updateTimeDetails(Model model) {
         model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
         model.addAttribute("lastUpdatedText", "by you");
         return "question-type/form-elements :: updateTimeDetails";

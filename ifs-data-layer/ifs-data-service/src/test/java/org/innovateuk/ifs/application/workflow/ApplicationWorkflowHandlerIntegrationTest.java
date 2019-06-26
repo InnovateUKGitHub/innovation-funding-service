@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;
@@ -18,7 +17,8 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -37,12 +37,12 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
 
     @Test
     public void open() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.CREATED, ApplicationState.OPEN, applicationWorkflowHandler::open);
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.CREATED, ApplicationState.OPENED, applicationWorkflowHandler::open);
     }
 
     @Test
     public void submit() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.OPEN, ApplicationState.SUBMITTED, applicationWorkflowHandler::submit);
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.OPENED, ApplicationState.SUBMITTED, applicationWorkflowHandler::submit);
     }
 
     @Test
@@ -95,19 +95,14 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
         assertStateChangeOnWorkflowHandlerCall(ApplicationState.REJECTED, ApplicationState.APPROVED, applicationWorkflowHandler::approve);
     }
 
-    @Test
-    public void withdraw() {
-        User internalUser = newUser().build();
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.APPROVED, ApplicationState.WITHDRAWN,
-                                               application -> applicationWorkflowHandler.withdraw(application, internalUser));
-    }
-
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
         assertStateChangeOnWorkflowHandlerCall(initialApplicationState, expectedApplicationState, workflowHandlerMethod, null);
     }
 
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod, Consumer<ApplicationProcess> additionalVerifications) {
-        Application application = newApplication().withApplicationState(initialApplicationState).build();
+        Application application = newApplication()
+                .withCompetition(newCompetition().withCompetitionType(newCompetitionType().build()).build())
+                .withApplicationState(initialApplicationState).build();
         ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);
 

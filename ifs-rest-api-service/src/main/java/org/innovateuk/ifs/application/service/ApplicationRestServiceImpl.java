@@ -59,7 +59,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
+    public RestResult<Void> updateApplicationState(long applicationId, ApplicationState state) {
         return putWithRestResult(applicationRestURL + "/update-application-state?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
@@ -107,11 +107,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return postWithRestResult(applicationRestURL + "/inform-ineligible/" + applicationId, applicationIneligibleSendResource, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> withdrawApplication(long applicationId) {
-        return postWithRestResult(applicationRestURL + "/" + applicationId + "/withdraw", Void.class);
     }
 
     @Override

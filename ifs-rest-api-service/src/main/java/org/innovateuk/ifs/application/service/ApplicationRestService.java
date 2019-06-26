@@ -19,13 +19,12 @@ public interface ApplicationRestService {
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName);
-    RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);
+    RestResult<Void> updateApplicationState(long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
-    RestResult<Void> withdrawApplication(long applicationId);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);

@@ -359,7 +359,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withCollaborativeProject(collaborative)
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
 
         long questionId = 3L;

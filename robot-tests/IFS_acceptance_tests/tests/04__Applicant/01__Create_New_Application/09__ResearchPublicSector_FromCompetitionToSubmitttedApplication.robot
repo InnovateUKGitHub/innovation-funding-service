@@ -35,7 +35,7 @@ Comp Admin Creates Competitions where Research can lead
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
-    [Tags]  MySQL  HappyPath
+    [Tags]  HappyPath
     [Setup]   get competition id and set open date to yesterday  ${compResearch}
     Given log in as a different user                     &{collaborator2_credentials}
     When logged in user applies to competition research  ${compResearch}  2

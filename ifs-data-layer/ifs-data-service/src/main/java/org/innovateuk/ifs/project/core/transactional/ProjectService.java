@@ -49,15 +49,4 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ADD_PARTNER')")
     ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
 
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
-    ServiceResult<Void> withdrawProject(long projectId);
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to handle projects offline")
-    ServiceResult<Void> handleProjectOffline(long projectId);
-
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to complete projects offline")
-    ServiceResult<Void> completeProjectOffline(long projectId);
 }
