@@ -114,32 +114,4 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
         setupPostWithRestResultVerifications(projectRestURL + "/create-project/application/123", ProjectResource.class);
     }
-
-    @Test
-    public void withdrawProject() {
-        long projectId = 123L;
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/withdraw", null, OK );
-        RestResult<Void> result = service.withdrawProject(projectId);
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/withdraw", Void.class);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void handleProjectOffline() {
-        long projectId = 123L;
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/handle-offline", null, OK );
-        RestResult<Void> result = service.handleProjectOffline(projectId);
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/handle-offline", Void.class);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void completeProjectOffline() {
-        long projectId = 123L;
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/complete-offline", null, OK );
-        RestResult<Void> result = service.completeProjectOffline(projectId);
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/complete-offline", Void.class);
-        assertTrue(result.isSuccess());
-    }
-
 }

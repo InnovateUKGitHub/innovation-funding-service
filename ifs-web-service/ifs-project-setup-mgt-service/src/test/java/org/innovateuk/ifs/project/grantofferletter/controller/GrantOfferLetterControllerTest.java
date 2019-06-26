@@ -50,8 +50,10 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -82,11 +84,18 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long applicationId = 789L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationResource)
+                .withProjectState(SETUP)
+                .build();
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
-        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
+                                                                           .withId(applicationId)
+                                                                           .withCompetition(competitionId)
+                                                                           .build());
 
         CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
@@ -109,6 +118,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
+        assertTrue(golViewModel.isProjectIsActive());
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
@@ -135,7 +145,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long applicationId = 789L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationResource)
+                .withProjectState(SETUP)
+                .build();
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
@@ -170,7 +184,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long applicationId = 789L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationResource)
+                .withProjectState(SETUP)
+                .build();
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
@@ -280,7 +298,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long applicationId = 789L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationResource)
+                .withProjectState(SETUP)
+                .build();
 
         // when the model is re-loaded after uploading
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -424,7 +446,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long applicationId = 789L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationResource)
+                .withProjectState(SETUP)
+                .build();
 
         // when the model is re-loaded after uploading
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -619,7 +645,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                                       BigDecimal.ONE,
                                                                                       emptyList());
         SummaryFinanceTableModel summaryTable = new SummaryFinanceTableModel(BigDecimal.TEN,
-                                                                             BigDecimal.ONE);
+                                                                             BigDecimal.ONE,
+                                                                             BigDecimal.ONE,
+                                                                             BigDecimal.ZERO);
 
         when(populator.populate(projectId))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(123L,

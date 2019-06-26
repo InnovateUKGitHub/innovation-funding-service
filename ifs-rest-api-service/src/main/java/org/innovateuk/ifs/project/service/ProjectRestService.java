@@ -20,8 +20,6 @@ public interface ProjectRestService {
 
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
 
-    RestResult<Void> withdrawProject(long projectId);
-
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
@@ -29,8 +27,4 @@ public interface ProjectRestService {
     RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 
     RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
-
-    RestResult<Void> handleProjectOffline(long projectId);
-
-    RestResult<Void> completeProjectOffline(long projectId);
 }

@@ -331,7 +331,8 @@ public class FinanceChecksQueriesController {
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
-                project.getApplication()
+                project.getApplication(),
+                project.getProjectState().isActive()
         );
     }
 

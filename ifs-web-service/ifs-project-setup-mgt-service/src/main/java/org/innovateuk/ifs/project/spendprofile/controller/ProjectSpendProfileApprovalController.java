@@ -99,10 +99,17 @@ public class ProjectSpendProfileApprovalController {
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? user.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
+        boolean projectIsActive = project.getProjectState().isActive();
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources, applicationId, project.getName());
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary,
+                                                        leadTechnologist,
+                                                        approvalType,
+                                                        organisationResources,
+                                                        applicationId,
+                                                        project.getName(),
+                                                        projectIsActive);
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {

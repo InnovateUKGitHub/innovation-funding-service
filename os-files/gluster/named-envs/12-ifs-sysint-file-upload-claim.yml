@@ -4,9 +4,9 @@ metadata:
   name: ifs-sysint-file-upload-claim
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   resources:
-     requests:
+    requests:
       storage: 20G
   selector:
     matchLabels:

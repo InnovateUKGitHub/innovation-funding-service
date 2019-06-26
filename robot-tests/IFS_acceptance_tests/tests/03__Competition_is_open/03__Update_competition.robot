@@ -22,7 +22,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin    MySQL
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -223,7 +223,7 @@ Initial details editable before notify date (Open)
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
-    [Tags]    MySQL
+    [Tags]
     Given the user clicks the button/link     link = Assessors
     Then the user should see the element      jQuery = .govuk-button:contains("Edit")
     And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")

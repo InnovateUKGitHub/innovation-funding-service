@@ -35,7 +35,7 @@ Assessment overview should show all the questions
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]  MySQL
+    [Tags]
     Given the user should see the element  jQuery = .sub-header:contains("days left to submit")
     #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
@@ -167,7 +167,7 @@ Economic Benefit: Guidance
 
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
-    [Tags]  MySQL
+    [Tags]
     Given the user should see finance overview
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page

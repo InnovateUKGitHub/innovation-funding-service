@@ -32,6 +32,7 @@ import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResource
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -74,7 +75,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompaniesHouseNumber("60674010").build();
         updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompaniesHouseNumber("60674010").build();
         AddressResource address = newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
-        project = newProjectResource().build();
+        project = newProjectResource().withProjectState(SETUP).build();
 
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(address).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompaniesHouseNumber()).build();
 
@@ -97,7 +98,26 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
         bankDetailsReviewViewModel = buildModelView(project, projectUsers.get(0), organisationResource, bankDetailsResource);
 
-        notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getApplicationId(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), false);
+        notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(),
+                                                                              bankDetailsReviewViewModel.getApplicationId(),
+                                                                              bankDetailsReviewViewModel.getProjectName(),
+                                                                              bankDetailsReviewViewModel.getFinanceContactName(),
+                                                                              bankDetailsReviewViewModel.getFinanceContactEmail(),
+                                                                              bankDetailsReviewViewModel.getFinanceContactPhoneNumber(),
+                                                                              bankDetailsReviewViewModel.getOrganisationId(),
+                                                                              bankDetailsReviewViewModel.getOrganisationName(),
+                                                                              bankDetailsReviewViewModel.getRegistrationNumber(),
+                                                                              bankDetailsReviewViewModel.getBankAccountNumber(),
+                                                                              bankDetailsReviewViewModel.getSortCode(),
+                                                                              bankDetailsReviewViewModel.getOrganisationAddress(),
+                                                                              bankDetailsReviewViewModel.getVerified(),
+                                                                              bankDetailsReviewViewModel.getCompanyNameScore(),
+                                                                              bankDetailsReviewViewModel.getRegistrationNumberMatched(),
+                                                                              bankDetailsReviewViewModel.getAddressScore(),
+                                                                              bankDetailsReviewViewModel.getApproved(),
+                                                                              bankDetailsReviewViewModel.getApprovedManually(),
+                                                                              bankDetailsReviewViewModel.isProjectActive(),
+                                                                              false);
     }
 
     private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
@@ -119,7 +139,8 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 bankDetails.getRegistrationNumberMatched(),
                 bankDetails.getAddressScore(),
                 bankDetails.isApproved(),
-                bankDetails.isManualApproval());
+                bankDetails.isManualApproval(),
+                project.getProjectState().isActive());
     }
 
     @Override
