@@ -38,7 +38,7 @@ public class AttachmentPermissionsRules {
     private QueryMapper queryMapper;
 
     @Autowired
-    private MessageThreadRepository threadRepository;
+    private MessageThreadRepository messageThreadRepository;
 
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
@@ -100,7 +100,7 @@ public class AttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return threadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
+        return messageThreadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {

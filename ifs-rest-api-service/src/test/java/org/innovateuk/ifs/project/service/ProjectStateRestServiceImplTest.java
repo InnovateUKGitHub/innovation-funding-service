@@ -49,7 +49,7 @@ public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<Pro
     @Test
     public void putProjectOnHold() {
         long projectId = 123L;
-        OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource();
+        OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource("something", "else");
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/on-hold", onHoldReasonResource, OK );
         RestResult<Void> result = service.putProjectOnHold(projectId, onHoldReasonResource);
         setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/on-hold", Void.class, onHoldReasonResource);

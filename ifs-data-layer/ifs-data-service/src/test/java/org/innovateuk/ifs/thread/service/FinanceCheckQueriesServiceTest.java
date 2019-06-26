@@ -21,6 +21,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
+import org.innovateuk.ifs.threads.domain.MessageThread;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -391,8 +392,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
 
         List<Object> allArguments = new ArrayList<>();
-        allArguments.add(Thread.class.getSimpleName());
-        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, Thread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
+        allArguments.add(MessageThread.class.getSimpleName());
+        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, MessageThread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
     }
 
     @Test
