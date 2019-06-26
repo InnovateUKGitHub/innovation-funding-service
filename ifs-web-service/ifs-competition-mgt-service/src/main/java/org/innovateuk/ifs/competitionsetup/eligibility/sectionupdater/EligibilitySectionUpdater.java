@@ -77,7 +77,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             }
         }
 
-        boolean multiStream = "yes" .equals(eligibilityForm.getMultipleStream());
+        boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
         competition.setMultiStream(multiStream);
 
         if (multiStream) {
