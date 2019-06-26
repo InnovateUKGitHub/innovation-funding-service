@@ -10,6 +10,8 @@ Documentation     Suite description
 ...               IFS-4046 Person to organisation acceptance test updates
 ...
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -38,7 +40,7 @@ Applicant applies to newly created EOI competition
     Then logged in user applies to competition  ${comp_name}  1
 
 Applicant submits his application
-    [Documentation]  IFS-2196  IFS-2941  IFS-4046
+    [Documentation]  IFS-2196  IFS-2941  IFS-4046  IFS-5920
     [Tags]
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
