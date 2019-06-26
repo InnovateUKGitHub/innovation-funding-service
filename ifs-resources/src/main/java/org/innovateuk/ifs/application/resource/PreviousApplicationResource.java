@@ -80,7 +80,4 @@ public class PreviousApplicationResource {
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
-
-    @JsonIgnore
-    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 }

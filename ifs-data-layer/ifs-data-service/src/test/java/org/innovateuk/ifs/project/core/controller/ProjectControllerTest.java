@@ -10,9 +10,6 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -90,60 +87,4 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).createProjectFromApplication(applicationId);
     }
-
-    @Test
-    public void testWithdrawProject() throws Exception {
-        Long projectId = 456L;
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
-                .andExpect(status().isOk());
-
-        verify(projectServiceMock).withdrawProject(projectId);
-    }
-
-    @Test
-    public void testWithdrawProjectFails() throws Exception {
-        Long projectId = 789L;
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
-
-        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
-                .andExpect(status().isBadRequest());
-
-        verify(projectServiceMock).withdrawProject(projectId);
-    }
-
-    @Test
-    public void testWithdrawProjectWhenProjectDoesntExist() throws Exception {
-        Long projectId = 432L;
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
-
-        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
-                .andExpect(status().isNotFound());
-
-        verify(projectServiceMock).withdrawProject(projectId);
-    }
-
-    @Test
-    public void handleProjectOffline() throws Exception {
-        Long projectId = 456L;
-        when(projectServiceMock.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/handle-offline", projectId))
-                .andExpect(status().isOk());
-
-        verify(projectServiceMock).handleProjectOffline(projectId);
-    }
-
-    @Test
-    public void completeProjectOffline() throws Exception {
-        Long projectId = 456L;
-        when(projectServiceMock.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/complete-offline", projectId))
-                .andExpect(status().isOk());
-
-        verify(projectServiceMock).completeProjectOffline(projectId);
-    }
 }
-

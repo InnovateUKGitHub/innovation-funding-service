@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.domain.ActivityType;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -12,6 +14,8 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
+
 /**
  * Service dealing with Project finance operations
  */
@@ -19,6 +23,7 @@ public interface SpendProfileService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can generate a Spend Profile for any Project" )
+    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_GENERATED)
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
@@ -27,7 +32,13 @@ public interface SpendProfileService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
+    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_APPROVED, condition = "isSpendProfileApproved")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    default boolean isSpendProfileApproved(Long projectId, ApprovalType approvalType) {
+        return APPROVED == approvalType;
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SPEND_PROFILE_STATUS')")
     ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId);
@@ -45,15 +56,18 @@ public interface SpendProfileService {
     ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'EDIT_SPEND_PROFILE')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.SPEND_PROFILE_EDIT)
     ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.SPEND_PROFILE_COMPLETE)
     ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
     ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'COMPLETE_SPEND_PROFILE_REVIEW')")
+    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_SENT)
     ServiceResult<Void> completeSpendProfilesReview(@P("projectId")Long projectId);
 
 }

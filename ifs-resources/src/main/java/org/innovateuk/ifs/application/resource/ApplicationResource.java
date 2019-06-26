@@ -18,21 +18,16 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 public class ApplicationResource {
-    private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
 
+    private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
     private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = singletonList(OPEN);
 
     private Long id;
-
     private String name;
-
     private LocalDate startDate;
-
     private ZonedDateTime submittedDate;
-
     private Long durationInMonths;
-
     private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
@@ -40,20 +35,14 @@ public class ApplicationResource {
     private BigDecimal completion;
     private Boolean stateAidAgreed;
     private Boolean resubmission;
-
     private String previousApplicationNumber;
     private String previousApplicationTitle;
     private ResearchCategoryResource researchCategory;
     private InnovationAreaResource innovationArea;
-
     private boolean noInnovationAreaApplicable;
-
     private IneligibleOutcomeResource ineligibleOutcome;
-
     private Long leadOrganisationId;
-
     private boolean isInAssessmentReviewPanel;
-
     private CollaborationLevel collaborationLevel;
     private boolean collaborativeProject;
 
@@ -197,9 +186,6 @@ public class ApplicationResource {
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
-
-    @JsonIgnore
-    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 
     private boolean isInSubmittableCompetitionState() {
         return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);

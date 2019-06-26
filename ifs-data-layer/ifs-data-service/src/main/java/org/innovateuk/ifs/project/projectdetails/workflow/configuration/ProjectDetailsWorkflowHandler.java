@@ -53,8 +53,8 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_ADDRESS_ADDED), project);
     }
 
-    public boolean projectManagerAdded(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_MANAGER_ADDED), project);
+    public boolean projectLocationAdded(Project project, ProjectUser projectUser) {
+        return fireEvent(mandatoryValueAddedEvent(project, projectUser, PROJECT_LOCATION_ADDED), project);
     }
 
     @Override

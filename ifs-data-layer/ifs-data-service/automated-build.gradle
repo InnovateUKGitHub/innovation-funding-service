@@ -16,6 +16,6 @@ ext.ifsFinanceTotalsEnabled=false
 //
 // Note the 4 backslashes in Windows paths (this is to preserve the backslashes
 // so they are retained in application.properties during the processResource task)
-ext.ifsFileStorageLocation="/tmp"
+ext.ifsFileStorageLocation="/mnt/ifs_storage"
 
 ext.activeProfile="environment"

@@ -23,12 +23,12 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource {
 
-    private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
-    private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-
     public static final String H2020_TYPE_NAME = "Horizon 2020";
     public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
+
+    private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
+    private static final int CLOSING_SOON_AMOUNT = 3;
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
 
     private Long id;
@@ -65,58 +65,41 @@ public class CompetitionResource {
     private String innovationSectorName;
     private Set<Long> innovationAreas;
     private Set<String> innovationAreaNames;
-
     private String pafCode;
     private String budgetCode;
     private String code;
-
     private Boolean resubmission;
     private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
     private List<Long> leadApplicantTypes;
     private Set<Long> researchCategories;
-
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
-
     private Integer assessorCount;
     private BigDecimal assessorPay;
-
     private String activityCode;
-
     private boolean setupComplete = false;
-
     private Boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
-
     private boolean nonIfs = false;
     private String nonIfsUrl;
-
     private GrantTermsAndConditionsResource termsAndConditions;
-
     private boolean locationPerPartner = true;
     private Boolean stateAid;
     private Boolean includeYourOrganisationSection;
-
     private Set<Long> grantClaimMaximums;
-
     private ApplicationFinanceType applicationFinanceType;
     private Boolean includeProjectGrowthTable;
-
     private String createdBy;
     private ZonedDateTime createdOn;
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
-
     private Boolean includeJesForm;
-
     private boolean nonFinanceType;
-
     private CompetitionCompletionStage completionStage;
-
     private FundingType fundingType;
 
     public CompetitionResource() {

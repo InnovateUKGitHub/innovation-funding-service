@@ -121,10 +121,6 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         }
     }
 
-     public boolean withdraw(Application application, User internalUser) {
-        return fireEvent(applicationMessageWithInternalUser(application, ApplicationEvent.WITHDRAW, internalUser), application);
-     }
-
     private static MessageBuilder<ApplicationEvent> markIneligibleMessage(Application application, IneligibleOutcome ineligibleOutcome) {
         return applicationMessage(application, ApplicationEvent.MARK_INELIGIBLE)
                 .setHeader("ineligible", ineligibleOutcome);

@@ -149,7 +149,7 @@
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
 
-            <th:block th:unless="${summaryModel.isApproved()}">
+            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
                 <p th:unless="${summaryModel.isH2020()}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
