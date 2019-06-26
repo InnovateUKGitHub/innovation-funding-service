@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
+
+import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 
 /**
  * View model backing the internal members view of the Grant Offer Letter send page
@@ -22,7 +25,7 @@ public class GrantOfferLetterModel {
     private final FileDetailsViewModel signedGrantOfferLetterFile;
     private final GrantOfferLetterStateResource grantOfferState;
     private final String grantOfferLetterRejectionReason;
-    private final boolean projectIsActive;
+    private final ProjectState projectState;
 
     public GrantOfferLetterModel(long competitionId,
                                  boolean h2020,
@@ -36,7 +39,7 @@ public class GrantOfferLetterModel {
                                  FileDetailsViewModel signedGrantOfferLetterFile,
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
-                                 boolean projectIsActive) {
+                                 ProjectState projectState) {
         this.competitionId = competitionId;
         this.h2020 = h2020;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -49,7 +52,7 @@ public class GrantOfferLetterModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
-        this.projectIsActive = projectIsActive;
+        this.projectState = projectState;
     }
 
     public long getCompetitionId() {
@@ -106,8 +109,12 @@ public class GrantOfferLetterModel {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
+    public boolean isOnHold() {
+        return ON_HOLD.equals(projectState);
+    }
+
     public boolean isProjectIsActive() {
-        return projectIsActive;
+        return projectState.isActive();
     }
 
     @Override
@@ -131,7 +138,7 @@ public class GrantOfferLetterModel {
                 .append(signedGrantOfferLetterFile, that.signedGrantOfferLetterFile)
                 .append(grantOfferState, that.grantOfferState)
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
-                .append(projectIsActive, that.projectIsActive)
+                .append(projectState, that.projectState)
                 .isEquals();
     }
 
@@ -150,7 +157,7 @@ public class GrantOfferLetterModel {
                 .append(signedGrantOfferLetterFile)
                 .append(grantOfferState)
                 .append(grantOfferLetterRejectionReason)
-                .append(projectIsActive)
+                .append(projectState)
                 .toHashCode();
     }
 }

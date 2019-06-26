@@ -9,7 +9,7 @@ import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.threads.repository.ThreadRepository;
+import org.innovateuk.ifs.threads.repository.MessageThreadRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class AttachmentPermissionsRules {
     private QueryMapper queryMapper;
 
     @Autowired
-    private ThreadRepository threadRepository;
+    private MessageThreadRepository messageThreadRepository;
 
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
@@ -100,7 +100,7 @@ public class AttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return threadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
+        return messageThreadRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).isEmpty();
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {

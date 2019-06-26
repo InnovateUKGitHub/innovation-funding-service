@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("NOTE")
-public class Note extends Thread {
+public class Note extends MessageThread {
     public Note() {super();}
     public Note(Long id, Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
         super(id, classPk, className, posts, title, createdOn);

@@ -19,7 +19,7 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
             description = "The lead partners can update the basic project details, like start date, address, Project Manager")
     public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId()) && isProjectInSetup(project.getId());
+        return isLeadPartner(project.getId(), user.getId()) && isProjectActive(project.getId());
     }
 
     @PermissionRule(
@@ -27,7 +27,7 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
             description = "A partner can update the finance contact for their own organisation")
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectOrganisationCompositeId composite, UserResource user) {
         return isPartner(composite.getProjectId(), user.getId()) &&
-                isProjectInSetup(composite.getProjectId()) &&
+                isProjectActive(composite.getProjectId()) &&
                 partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
     }
 

@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantO
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
@@ -197,7 +197,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateProjectIsInSetup(project).
+                andOnSuccess(project -> validateProjectIsActive(project).
                         andOnSuccess(() -> validateRemoveGrantOfferLetter(project)).
                         andOnSuccess(() -> removeGrantOfferLetterFileFromProject(project)).
                         andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId())).
@@ -212,7 +212,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private ServiceResult<FileEntry> removeGrantOfferLetterFileFromProject(Project project) {
 
-        return validateProjectIsInSetup(project).andOnSuccessReturn(() -> {
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getGrantOfferLetter();
             project.setGrantOfferLetter(null);
             return fileEntry;
@@ -224,7 +224,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(this::validateProjectIsActive).
                 andOnSuccess(project -> getCurrentlyLoggedInUser().
                 andOnSuccess(user -> removeSignedGrantOfferLetterIfAllowed(project, user).
                 andOnSuccessReturnVoid()));
@@ -241,7 +241,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<FileEntry> removeSignedGrantOfferLetterFileFromProject(Project project) {
-        return validateProjectIsInSetup(project).andOnSuccessReturn(() -> {
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getSignedGrantOfferLetter();
             project.setSignedGrantOfferLetter(null);
             return fileEntry;
@@ -266,7 +266,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup).
+        return getProject(projectId).andOnSuccess(this::validateProjectIsActive).
                 andOnSuccess(project -> {
                     if (golWorkflowHandler.isSent(project)) {
                         return fileService.updateFile(fileEntryResource, inputStreamSupplier).
@@ -292,8 +292,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
-    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
-        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+    private ServiceResult<Project> validateProjectIsActive(final Project project) {
+        if (!projectWorkflowHandler.getState(project).isActive()) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 
@@ -348,7 +348,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return validateApprovalOrRejection(grantOfferLetterApprovalResource).andOnSuccess(() ->
             getProject(projectId).andOnSuccess(project -> {
                 if (golWorkflowHandler.isReadyToApprove(project)) {
-                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType()) && !isOnHold(project)) {
                         return approveGOL(project)
                                 .andOnSuccess(() -> moveProjectToLiveState(project))
                                 .andOnSuccess(() -> createGrantProcess(project));
@@ -358,6 +358,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 }
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
         }));
+    }
+
+    private boolean isOnHold(Project project) {
+        return ON_HOLD.equals(project.getProjectProcess().getProcessState());
     }
 
     private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {

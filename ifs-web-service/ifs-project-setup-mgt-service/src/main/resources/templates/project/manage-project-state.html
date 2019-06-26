@@ -52,6 +52,17 @@
         </div>
         <!--/* END */-->
 
+        <!-- On Hold -->
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert">
+                <p class="govuk-body">This project is on hold.</p>
+            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a href="#" class="govuk-link">View details, reply or remove on hold status </a>
+            </p>
+        </th:block>
+        <!-- END -->
+
         <p th:if="${model.endState}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
@@ -62,8 +73,10 @@
               method="POST"
               novalidate="novalidate"
               enctype="multipart/form-data"
-              th:unless="${model.endState}">
-            <div class="govuk-form-group"
+              th:unless="${model.cantChangeState()}">
+
+            <div th:if="${model.ifsAdmin}"
+                 class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">
@@ -77,6 +90,7 @@
                               th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                        <!-- Handle offline -->
                         <th:block th:if="${model.canHandleOffline()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="state"
@@ -128,6 +142,60 @@
                                 </div>
                             </div>
                         </th:block>
+                        <!-- On hold -->
+                        <th:block th:if="${model.canPutOnHold()}">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="status-on-hold"
+                                       type="radio"
+                                       th:field="*{state}"
+                                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"
+                                       aria-describedby="status-on-hold-hint"
+                                       data-aria-controls="project-status-conditional-on-hold">
+                                <label class="govuk-label govuk-radios__label govuk-label--s"
+                                       for="status-on-hold">
+                                    Mark project as on hold
+                                </label>
+                                <span id="status-on-hold-hint" class="govuk-hint govuk-radios__hint">
+                                    Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.
+                                </span>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                 id="project-status-conditional-on-hold">
+                                <div class="govuk-form-group"
+                                     th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" for="onHoldReason">
+                                        Reason
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
+                                              th:text="${err}"></span>
+                                    </th:block>
+                                    <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
+                                </div>
+                                <div class="govuk-form-group word-count"
+                                    th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label" for="onHoldDetails">
+                                        Details
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
+                                              th:text="${err}"></span>
+                                    </th:block>
+                                    <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                              id="onHoldDetails"
+                                              maxlength="5000"
+                                              data-max_words="400"
+                                              data-maxwordslength="400"
+                                              data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                              th:field="*{onHoldDetails}"
+                                              rows="5"></textarea>
+                                    <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                        <!-- Withdraw -->
                         <th:block th:if="${model.canWithdraw()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="status-withdrawn"
@@ -178,6 +246,7 @@
                                 </div>
                             </div>
                         </th:block>
+                        <!-- Complete offline -->
                         <th:block th:if="${model.canCompleteOffline()}">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="status-complete-offline"
@@ -232,6 +301,47 @@
                     </div>
                 </fieldset>
             </div>
+            <th:block th:unless="${model.ifsAdmin}">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Mark project as on hold</h3>
+                <p class="govuk-body">Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.</p>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="onHoldReason">
+                                Reason
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
+                        </div>
+                        <div class="govuk-form-group word-count"
+                             th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="onHoldDetails">
+                                Details
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                      id="onHoldDetails"
+                                      maxlength="5000"
+                                      data-max_words="400"
+                                      data-maxwordslength="400"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                      th:field="*{onHoldDetails}"
+                                      rows="5"></textarea>
+                            <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="state" th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
+            </th:block>
             <div class="govuk-form-group">
                 <button class="govuk-button">Change project status</button>
             </div>

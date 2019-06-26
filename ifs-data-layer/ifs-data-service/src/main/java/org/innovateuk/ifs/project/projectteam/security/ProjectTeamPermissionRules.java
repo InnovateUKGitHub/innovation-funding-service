@@ -13,7 +13,7 @@ public class ProjectTeamPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "REMOVE_PROJECT_USER", description = "A user can remove users from their own organisation on a project")
     public boolean partnersOnProjectCanRemoveUsersFromTheirOrganisation(final ProjectUserCompositeId composite, UserResource user) {
-        return isProjectInSetup(composite.getProjectId())
+        return isProjectActive(composite.getProjectId())
                 && isSameProjectOrganisation(composite.getProjectId(), composite.getUserId(), user.getId());
     }
 }
