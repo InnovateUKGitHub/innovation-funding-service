@@ -55,7 +55,7 @@ public class ApplicationDocs {
             .withStartDate(LocalDate.now())
             .withSubmittedDate(ZonedDateTime.now())
             .withDurationInMonths(1L)
-            .withApplicationState(ApplicationState.OPEN)
+            .withApplicationState(ApplicationState.OPENED)
             .withCompetition(1L)
             .withCompetitionName("competition name")
             .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)

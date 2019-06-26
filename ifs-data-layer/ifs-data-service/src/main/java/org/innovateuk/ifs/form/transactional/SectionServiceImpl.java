@@ -45,7 +45,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(final Long competitionId, final SectionType type) {
+    public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(final long competitionId, final SectionType type) {
         return getCompetition(competitionId).andOnSuccessReturn(comp -> sectionsOfType(comp, type));
     }
 

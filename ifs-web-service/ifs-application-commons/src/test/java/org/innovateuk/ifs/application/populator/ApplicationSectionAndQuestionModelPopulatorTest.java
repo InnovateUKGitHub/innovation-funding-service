@@ -158,7 +158,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Test
     public void testAddAssignableDetails() {
         ApplicationResource application = newApplicationResource()
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         Long userId = 1L;
         UserResource user = newUserResource().withId(userId).build();
         Long organisationId = 3L;

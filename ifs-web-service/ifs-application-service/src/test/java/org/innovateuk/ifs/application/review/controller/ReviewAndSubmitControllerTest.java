@@ -82,7 +82,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     public void applicationSubmit() throws Exception {
         ApplicationResource application = newApplicationResource()
                 .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
@@ -99,7 +99,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     public void applicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource application = newApplicationResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
@@ -180,7 +180,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     @Test
     public void notSubmittedApplicationTrack() throws Exception {
         ApplicationResource application = newApplicationResource()
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 

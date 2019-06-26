@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -156,7 +155,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.OPEN).
+                applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.OPENED).
                         getSuccess());
     }
 

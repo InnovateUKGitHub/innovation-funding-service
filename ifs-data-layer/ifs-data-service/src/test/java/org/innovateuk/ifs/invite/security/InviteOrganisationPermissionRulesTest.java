@@ -167,7 +167,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -213,7 +213,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -251,7 +251,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(SINGLE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -269,7 +269,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -289,7 +289,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -306,7 +306,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 
@@ -326,7 +326,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Competition competition = newCompetition().withCollaborationLevel(COLLABORATIVE).build();
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
-                .withApplicationState(ApplicationState.OPEN).build();
+                .withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findById(applicationResource.getId()))
                 .thenReturn(Optional.of(application));
 

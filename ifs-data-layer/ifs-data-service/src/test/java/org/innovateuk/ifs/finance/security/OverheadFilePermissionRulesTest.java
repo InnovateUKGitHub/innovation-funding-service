@@ -69,7 +69,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
             final Application application = newApplication()
                     .with(id(applicationId))
-                    .withApplicationState(ApplicationState.OPEN)
+                    .withApplicationState(ApplicationState.OPENED)
                     .build();
 
             final Application submittedApplication = newApplication()
