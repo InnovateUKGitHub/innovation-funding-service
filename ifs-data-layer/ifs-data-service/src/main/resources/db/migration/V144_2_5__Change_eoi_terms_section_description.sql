@@ -3,7 +3,7 @@
 SET @eoi_competition_type = (SELECT id FROM competition_type ct WHERE ct.name='Expression of interest');
 
 UPDATE section s
-    SET s.description = 'You are agreeing to these by submitting your application'
+    SET s.description = 'You are agreeing to these by submitting your application.'
 WHERE
         s.section_type = 'TERMS_AND_CONDITIONS' AND
         s.competition_id IN (
