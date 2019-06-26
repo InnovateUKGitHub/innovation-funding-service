@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|PROJECTID: PROJECTNAME - Project status|"/>
+</head>
+<body class="govuk-template__body competition-management project-management">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Manage project status',linkUrl=@{/competition/{competitionId}/project/{projectId}/manage-status(competitionId='COMPID',projectId='PROJECTID')}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Project status',subTitle=|PROJECTID: PROJECTNAME|,size='govuk-heading-xl'"/>
+
+        <!-- On hold -->
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is on hold. Only Innovate UK can see this and it does not affect the applicant.</p>
+        </div>
+        <!-- End -->
+
+        <!-- On hold removed -->
+        <div class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is no longer on hold.</p>
+        </div>
+        <!-- End -->
+
+        <h2 class="govuk-heading-m">Reason</h2>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <h3 class="govuk-heading-m">Marked as on hold - THIS IS A PLACEHOLDER</h3>
+        <p class="govuk-body">
+            <strong>Lee Bowman - Innovate UK (Finance team)</strong> <span class="hint">13 May 2019 9:04am</span><br/>
+            This project is currently on hold blah blah
+        </p>
+
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Add a comment
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                PLACEHOLDER
+            </div>
+        </details>
+
+        <div class="govuk-form-group">
+            <button class="govuk-button">Remove on hold status</button>
+        </div>
+
+        <p class="govuk-body">
+            <a th:href="@{/competition/{competitionId}/project/{projectId}/details(competitionId='COMPID',projectId='PROJECTID')}"
+               class="govuk-link">Return to mange project status</a>
+        </p>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

@@ -243,8 +243,6 @@ public class GrantOfferLetterController {
 
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        boolean projectIsActive = project.getProjectState().isActive();
-
         return new GrantOfferLetterModel(competition.getId(),
                 competition.isH2020(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),

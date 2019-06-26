@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.projectId}: ${model.projectName} - Manage project status|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -58,7 +58,7 @@
                 <p class="govuk-body">This project is on hold.</p>
             </div>
             <p class="govuk-body govuk-!-margin-bottom-6">
-                <a href="#" class="govuk-link">View details, reply or remove on hold status </a>
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/on-hold-status(competitionId=${model.competitionId},projectId=${model.projectId})}" class="govuk-link">View details, reply or remove on hold status </a>
             </p>
         </th:block>
         <!-- END -->
