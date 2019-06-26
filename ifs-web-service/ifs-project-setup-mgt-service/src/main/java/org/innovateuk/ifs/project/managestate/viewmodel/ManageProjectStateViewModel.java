@@ -8,6 +8,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.*;
 public class ManageProjectStateViewModel {
 
     private final long competitionId;
+    private final long applicationId;
     private final long projectId;
     private final String projectName;
     private final ProjectState state;
@@ -16,6 +17,7 @@ public class ManageProjectStateViewModel {
 
     public ManageProjectStateViewModel(ProjectResource project, boolean onHoldFeatureToggle, boolean ifsAdmin) {
         this.competitionId = project.getCompetition();
+        this.applicationId = project.getApplication();
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.state = project.getProjectState();
@@ -23,6 +25,9 @@ public class ManageProjectStateViewModel {
         this.ifsAdmin = ifsAdmin;
     }
 
+    public long getApplicationId() {
+        return applicationId;
+    }
 
     public long getCompetitionId() {
         return competitionId;
