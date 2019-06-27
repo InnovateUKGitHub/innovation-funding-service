@@ -116,7 +116,7 @@ Funding Information is editable (Open)
     And the user should see the element         id = pafNumber
     And the user should see the element         id = budgetCode
     And the user should see the element         id = activityCode
-    And the user clicks the button twice        jQuery = button:contains("Done")
+    And the user clicks the button/link         jQuery = button:contains("Done")
     Then The user should see the element        jQuery = button:contains("Edit")
     And The user should see the element         jQuery = td:contains("Aerospace Technology Institute (ATI)")
     [Teardown]    the user clicks the button/link  link = Competition setup
