@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.form.AssignQuestionForm;
+import org.innovateuk.ifs.application.forms.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
@@ -50,7 +52,9 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
+@SecuredBySpring(value = "Controller",
+        description = "Applicants are allowed to view questions on their own applications",
+        securedType = ApplicationQuestionController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationQuestionController {
 
@@ -88,6 +92,9 @@ public class ApplicationQuestionController {
 
     @Autowired
     private ApplicationQuestionSaver applicationSaver;
+
+    @Autowired
+    private AssignQuestionModelPopulator assignQuestionModelPopulator;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -162,6 +169,21 @@ public class ApplicationQuestionController {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
+    }
+
+    @GetMapping("/question/{questionId}/assign")
+    public String getAssignPage(@ModelAttribute(value = "form", binding = false) AssignQuestionForm form,
+                                @PathVariable("questionId") long questionId,
+                                @PathVariable("applicationId") long applicationId,
+                                Model model) {
+        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId));
+        return "application/questions/assign-question";
+    }
+
+    @PostMapping("/question/{questionId}/assign")
+    public String assign() {
+//        questionService.assign().getSuccess();
+        return "redirect:/";
     }
 
     private void handleAssignedQuestions(Long applicationId,
