@@ -21,7 +21,7 @@ WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
 
-# start and other useful scripts
+# copy certs into build
 RUN mkdir -p /var/certs/
 COPY certs/* /var/certs/
 
