@@ -27,7 +27,7 @@ Labour
     Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £104,348  jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £104,348
     And the user clicks the button/link                         name = remove_cost
     And The row should be removed                               css = .labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    And the user reloads the page with autosave
+    And the user reloads page with autosave
     Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £52,174   jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £52,174
     And the applicant edits the working days field
     Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £48,000   jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £48,000
@@ -58,7 +58,7 @@ Materials
     When the Applicant fills the Materials fields
     Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Materials") [data-mirror^="#section-total"]  £2,000
     And the user clicks the button/link            css = #material-costs-table tbody tr:nth-of-type(1) button
-    And the user reloads the page with autosave
+    And the user reloads page with autosave
     Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]    £1,000  jQuery = button:contains("Materials") [data-mirror^="#section-total"]  £1,000
     [Teardown]    the user clicks the button/link  jQuery = button:contains("Materials")
 
@@ -68,7 +68,7 @@ Capital usage
     When the applicant fills the 'capital usage' field
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £200
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
-    And the user reloads the page with autosave
+    And the user reloads page with autosave
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £100
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link       jQuery = button:contains("Capital usage")
@@ -94,7 +94,7 @@ Travel and subsistence
     When the Applicant fills the Travel fields
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £2,000
     And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
-    And the user reloads the page with autosave
+    And the user reloads page with autosave
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £1,000
     [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
 
@@ -103,7 +103,7 @@ Other costs
     [Tags]  HappyPath
     When the applicant adds one row for the other costs
     Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Other costs") [data-mirror^="#section-total"]  £200
-    Then the user reloads the page with autosave
+    Then the user reloads page with autosave
     Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Other costs") [data-mirror^="#section-total"]  £200
     [Teardown]    the user clicks the button/link        jQuery = button:contains("Other costs")
 
