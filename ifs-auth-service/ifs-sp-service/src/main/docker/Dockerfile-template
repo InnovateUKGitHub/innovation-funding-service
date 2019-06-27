@@ -26,6 +26,10 @@ WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
 
+# start and other useful scripts
+RUN mkdir -p /var/certs/
+COPY certs/* /var/certs/
+
 RUN apt-get update --fix-missing && \
 
 # install apache and shibboleth sp module \
