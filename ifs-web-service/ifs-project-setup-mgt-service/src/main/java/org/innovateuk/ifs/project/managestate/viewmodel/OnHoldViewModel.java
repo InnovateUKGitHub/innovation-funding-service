@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.managestate.viewmodel;
 
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 
 public class OnHoldViewModel {
 
@@ -9,7 +10,12 @@ public class OnHoldViewModel {
     private final long projectId;
     private final String projectName;
 
-    public OnHoldViewModel(ProjectResource project) {
+    private final String title;
+    private final List<ProjectStateCommentViewModel> comments;
+
+
+
+    public OnHoldViewModel(ProjectResource project, ProjectStateCommentsResource success) {
         this.competitionId = project.getCompetition();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();

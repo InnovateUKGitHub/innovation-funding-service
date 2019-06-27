@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
+import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 
 public interface ProjectStateRestService {
     RestResult<Void> withdrawProject(long projectId);
@@ -13,5 +14,7 @@ public interface ProjectStateRestService {
     RestResult<Void> putProjectOnHold(long projectId, OnHoldReasonResource reason);
 
     RestResult<Void> resumeProject(long projectId);
+
+    RestResult<ProjectStateCommentsResource> findOpenComments(long projectId);
 
 }

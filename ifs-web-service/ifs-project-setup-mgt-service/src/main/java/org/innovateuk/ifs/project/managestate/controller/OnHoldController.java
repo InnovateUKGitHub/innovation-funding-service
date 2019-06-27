@@ -41,7 +41,8 @@ public class OnHoldController {
             return redirectToManagePage(projectId, competitionId);
         }
         model.addAttribute("model",
-                new OnHoldViewModel(project));
+                new OnHoldViewModel(project,
+                        projectStateRestService.findOpenComments(projectId).getSuccess()));
         return "project/on-hold-status";
     }
 

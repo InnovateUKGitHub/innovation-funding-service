@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/project/finance/notes")
-public class ProjectFinanceNotesController extends CommonMessageThreadController<NoteResource> {
+public class ProjectFinanceNotesController extends CommonMessageThreadController<NoteResource, FinanceCheckNotesService> {
 
     @Autowired
     public ProjectFinanceNotesController(FinanceCheckNotesService service) {

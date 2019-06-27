@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public class CommonMessageThreadController<R> {
-    private final MessageThreadService<R, PostResource> service;
+public class CommonMessageThreadController<R, S extends MessageThreadService<R, PostResource>> {
+    protected final S service;
 
-    public CommonMessageThreadController(MessageThreadService<R, PostResource> service) {
+    public CommonMessageThreadController(S service) {
         this.service = service;
     }
 
