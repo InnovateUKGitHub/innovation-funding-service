@@ -8,7 +8,7 @@ public class OnHoldReasonResource {
     private String title;
     private String body;
 
-    public OnHoldReasonResource() {
+    private OnHoldReasonResource() {
     }
 
     public OnHoldReasonResource(String title, String body) {

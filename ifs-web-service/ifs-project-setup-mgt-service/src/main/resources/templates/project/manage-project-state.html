@@ -167,25 +167,35 @@
                                  id="project-status-conditional-on-hold">
                                 <div class="govuk-form-group"
                                      th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="on-hold-reason">
+                                    <label class="govuk-label" for="onHoldReason">
                                         Reason
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('onHoldReason')}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
                                               th:text="${err}"></span>
                                     </th:block>
-                                    <input class="govuk-input" id="on-hold-reason" th:field="*{onHoldReason}" type="text" />
+                                    <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
                                 </div>
-                                <div class="govuk-form-group"
+                                <div class="govuk-form-group word-count"
                                     th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="on-hold-details">
+                                    <label class="govuk-label" for="onHoldDetails">
                                         Details
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
                                               th:text="${err}"></span>
                                     </th:block>
-                                    <textarea class="govuk-textarea" id="on-hold-details" th:field="*{onHoldDetails}" rows="5"></textarea>
+                                    <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                              id="onHoldDetails"
+                                              maxlength="5000"
+                                              data-max_words="400"
+                                              data-maxwordslength="400"
+                                              data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                              th:field="*{onHoldDetails}"
+                                              rows="5"></textarea>
+                                    <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                                    </div>
                                 </div>
                             </div>
                         </th:block>
@@ -302,25 +312,35 @@
                     <div class="govuk-grid-column-one-half">
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" for="on-hold-reason">
+                            <label class="govuk-label" for="onHoldReason">
                                 Reason
                             </label>
                             <th:block th:if="${#fields.hasErrors('onHoldReason')}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
                                               th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input" id="on-hold-reason" th:field="*{onHoldReason}" type="text" />
+                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
                         </div>
-                        <div class="govuk-form-group"
+                        <div class="govuk-form-group word-count"
                              th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" for="on-hold-details">
+                            <label class="govuk-label" for="onHoldDetails">
                                 Details
                             </label>
                             <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
                                               th:text="${err}"></span>
                             </th:block>
-                            <textarea class="govuk-textarea" id="on-hold-details" th:field="*{onHoldDetails}" rows="5"></textarea>
+                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                      id="onHoldDetails"
+                                      maxlength="5000"
+                                      data-max_words="400"
+                                      data-maxwordslength="400"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                      th:field="*{onHoldDetails}"
+                                      rows="5"></textarea>
+                            <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                            </div>
                         </div>
                     </div>
                 </div>

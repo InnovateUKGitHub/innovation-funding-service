@@ -7,13 +7,13 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 
-public interface ProjectStateCommentsService extends ThreadService<ProjectStateCommentsResource, PostResource> {
+public interface ProjectStateCommentsService extends MessageThreadService<ProjectStateCommentsResource, PostResource> {
 
     @NotSecured("Not secured")
     ServiceResult<Long> create(long projectId, ProjectState state);

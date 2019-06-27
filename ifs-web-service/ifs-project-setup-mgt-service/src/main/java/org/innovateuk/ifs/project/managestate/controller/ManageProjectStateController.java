@@ -89,7 +89,7 @@ public class ManageProjectStateController {
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasFieldErrors("state")) {
             return;
         }
 
@@ -109,11 +109,11 @@ public class ManageProjectStateController {
         }
 
         if (form.isOnHold()) {
-            if (isBlank(form.getOnHoldDetails())) {
-                result.rejectValue("onHoldDetails", "validation.manage.project.on.hold.details.required");
-            }
             if (isBlank(form.getOnHoldReason())) {
                 result.rejectValue("onHoldReason", "validation.manage.project.on.hold.reason.required");
+            }
+            if (isBlank(form.getOnHoldDetails())) {
+                result.rejectValue("onHoldDetails", "validation.manage.project.on.hold.details.required");
             }
         }
     }

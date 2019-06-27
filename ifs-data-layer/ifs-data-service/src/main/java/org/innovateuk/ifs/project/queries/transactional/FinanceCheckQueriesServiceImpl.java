@@ -17,8 +17,8 @@ import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.threads.service.MappingThreadService;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl implements FinanceCheckQueriesService {
 
-    private final ThreadService<QueryResource, PostResource> service;
+    private final MessageThreadService<QueryResource, PostResource> service;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -68,7 +68,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
     @Autowired
     public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, AuthenticationHelper authenticationHelper, QueryMapper queryMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(queryRepository, authenticationHelper, queryMapper, postMapper, ProjectFinance.class);
+        service = new MappingMessageThreadService<>(queryRepository, authenticationHelper, queryMapper, postMapper, ProjectFinance.class);
     }
 
     @Override
