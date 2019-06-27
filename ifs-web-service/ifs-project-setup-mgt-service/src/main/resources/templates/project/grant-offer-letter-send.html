@@ -36,7 +36,9 @@
 
         <th:block th:if="${model.onHold}">
             <div class="message-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body govuk-!-margin-top-0">This project is on hold. You can change this from the <a href="#">Project status</a> page.</p>
+                <p class="govuk-body govuk-!-margin-top-0">This project is on hold. You can change this from the
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/on-hold-status(competitionId=${model.competitionId},projectId=${model.projectId})}">
+                    Project status</a> page.</p>
             </div>
         </th:block>
 

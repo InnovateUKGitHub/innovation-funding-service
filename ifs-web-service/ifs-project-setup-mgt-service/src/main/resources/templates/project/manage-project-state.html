@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.projectId}: ${model.projectName} - Manage project status|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Manage project status|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -26,7 +26,11 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Manage project status',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Manage project status',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+
+        <div th:if="${resumedFromOnHold}" class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is no longer on hold.</p>
+        </div>
 
         <!--/* Completed offline */-->
         <div th:if="${model.completedOffline}" class="success-alert govuk-!-margin-bottom-6">
