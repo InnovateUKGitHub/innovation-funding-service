@@ -50,11 +50,8 @@ task prepareIDPProxySecrets {
                 !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists()) {
             buildDir.mkdir()
             // a valid CA certificate is required for the data service to work
-            assert project.hasProperty('idp.proxy.key')
             new File(idpProxyKeyFile).write(project['idp.proxy.key'])
-            assert project.hasProperty('idp.proxy.certificate')
             new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
-            assert project.hasProperty('idp.proxy.cacertificate')
             new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
 
             copy {
