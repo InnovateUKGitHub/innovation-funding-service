@@ -15,9 +15,10 @@ Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${apcCompetitionTitle}  Advanced Propulsion Centre Competition
-${apcApplicationTitle}  Advanced Propulsion Centre Application
-${submittedapplication}  ${server}/management/competition/${competitionId}/applications/submitted
+${apcCompetitionTitle}         Advanced Propulsion Centre Competition
+${apcApplicationTitle}         Advanced Propulsion Centre Application
+${submittedapplication}        ${server}/management/competition
+${termaandconditionsHeading}   Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition
 
 *** Test Cases ***
 Comp Admin creates an APC competition
@@ -25,7 +26,6 @@ Comp Admin creates an APC competition
     [Tags]
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
-    [Teardown]  Get competitions id and set it as suite variable  ${apcCompetitionTitle}
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
@@ -51,15 +51,21 @@ Applicant submits his application
 The internal user checks accepted terms and conditions for submitted application
     [Documentation]  IFS-5920
     [Tags]
+    [Setup]  Get competitions id and set it as suite variable   ${apcCompetitionTitle}
     ${acpapplicationId} =  get application id by name  ${apcApplicationTitle}
     Given log in as a different user                   &{Comp_admin1_credentials}
-    Then the internal user should see read only view of terms and conditions   ${submittedapplication}   ${acpapplicationId}   Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition
+    Then the internal user should see read only view of terms and conditions   ${submittedapplication}/${competitionId}/applications/submitted   ${acpapplicationId}   ${termaandconditionsHeading}
 
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
+
+Get competitions id and set it as suite variable
+    [Arguments]  ${competitionTitle}
+    ${competitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
 
 the lead applicant fills all the questions and marks as complete(APC)
     the user marks the project details as complete
