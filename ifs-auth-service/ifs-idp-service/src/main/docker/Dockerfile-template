@@ -123,8 +123,9 @@ RUN mkdir /etc/tomcat8/certs && \
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
 
-# copy certs onto container
-COPY certs/* /opt/shibboleth-idp/credentials/
+# start and other useful scripts
+RUN mkdir -p /var/certs/
+COPY certs/* /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/
