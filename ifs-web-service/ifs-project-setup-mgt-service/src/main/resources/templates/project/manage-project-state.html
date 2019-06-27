@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -122,7 +123,8 @@
                                             still view the project but will no longer be able to make changes.
                                         </p>
                                         <th:block th:if="${#fields.hasErrors('confirmationOffline')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationOffline')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationOffline')}"
                                                   th:text="${err}"></span>
                                         </th:block>
                                         <div class="govuk-checkboxes">
@@ -161,36 +163,47 @@
                             </div>
                             <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
                                  id="project-status-conditional-on-hold">
-                                <div class="govuk-form-group"
-                                     th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="onHoldReason">
-                                        Reason
-                                    </label>
-                                    <th:block th:if="${#fields.hasErrors('onHoldReason')}">
-                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
+
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-one-half">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label" for="onHoldReason">
+                                                Reason
+                                            </label>
+                                            <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldReason')}"
                                               th:text="${err}"></span>
-                                    </th:block>
-                                    <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
-                                </div>
-                                <div class="govuk-form-group word-count"
-                                    th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="onHoldDetails">
-                                        Details
-                                    </label>
-                                    <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
-                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
+                                            </th:block>
+                                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}"
+                                                   type="text"/>
+                                        </div>
+                                        <div class="govuk-form-group word-count"
+                                             th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label" for="onHoldDetails">
+                                                Details
+                                            </label>
+                                            <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldDetails')}"
                                               th:text="${err}"></span>
-                                    </th:block>
-                                    <textarea class="govuk-textarea govuk-!-margin-bottom-0"
-                                              id="onHoldDetails"
-                                              maxlength="5000"
-                                              data-max_words="400"
-                                              data-maxwordslength="400"
-                                              data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
-                                              th:field="*{onHoldDetails}"
-                                              rows="5"></textarea>
-                                    <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
-                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                                            </th:block>
+                                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                                      id="onHoldDetails"
+                                                      maxlength="5000"
+                                                      data-max_words="400"
+                                                      data-maxwordslength="400"
+                                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                                      th:field="*{onHoldDetails}"
+                                                      rows="5"></textarea>
+                                            <div class="govuk-body textarea-footer"
+                                                 th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite"
+                                                 aria-atomic="true" role="status">
+                                                <th:block
+                                                    th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +239,8 @@
                                             setup progress but will no longer be able to make changes.
                                         </p>
                                         <th:block th:if="${#fields.hasErrors('confirmationWithdrawn')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationWithdrawn')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationWithdrawn')}"
                                                   th:text="${err}"></span>
                                         </th:block>
                                         <div class="govuk-checkboxes">
@@ -278,7 +292,8 @@
                                             still view the project but will no longer be able to make changes.
                                         </p>
                                         <th:block th:if="${#fields.hasErrors('confirmationCompleteOffline')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationCompleteOffline')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationCompleteOffline')}"
                                                   th:text="${err}"></span>
                                         </th:block>
                                         <div class="govuk-checkboxes">
@@ -303,7 +318,8 @@
             </div>
             <th:block th:unless="${model.ifsAdmin}">
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Mark project as on hold</h3>
-                <p class="govuk-body">Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.</p>
+                <p class="govuk-body">Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not
+                    affect the applicant.</p>
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <div class="govuk-form-group"
@@ -312,10 +328,11 @@
                                 Reason
                             </label>
                             <th:block th:if="${#fields.hasErrors('onHoldReason')}">
-                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldReason')}"
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldReason')}"
                                               th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text" />
+                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text"/>
                         </div>
                         <div class="govuk-form-group word-count"
                              th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
@@ -323,7 +340,8 @@
                                 Details
                             </label>
                             <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
-                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('onHoldDetails')}"
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldDetails')}"
                                               th:text="${err}"></span>
                             </th:block>
                             <textarea class="govuk-textarea govuk-!-margin-bottom-0"
@@ -334,13 +352,16 @@
                                       data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
                                       th:field="*{onHoldDetails}"
                                       rows="5"></textarea>
-                            <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite" aria-atomic="true" role="status">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})" />
+                            <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}"
+                                 aria-live="polite" aria-atomic="true" role="status">
+                                <th:block
+                                    th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})"/>
                             </div>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="state" th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
+                <input type="hidden" name="state"
+                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
             </th:block>
             <div class="govuk-form-group">
                 <button class="govuk-button">Change project status</button>
