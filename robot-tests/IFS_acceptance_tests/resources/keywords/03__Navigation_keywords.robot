@@ -31,3 +31,9 @@ the user reloads the page
     Reload Page
     # Error checking
     the user should not see an error in the page
+
+the user reloads page with autosave
+    wait for autosave
+    Reload Page
+    # Error checking
+    the user should not see an error in the page
