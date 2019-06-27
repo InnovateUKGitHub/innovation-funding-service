@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.managestate.viewmodel.OnHoldViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -13,6 +14,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,9 +81,13 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
     }
 
     @Test
-    public void resumeProject() throws Exception {
+    public void resumeProject_admin() throws Exception {
         long competitionId = 1L;
         long projectId = 123L;
+
+        setLoggedInUser(newUserResource()
+                .withRoleGlobal(Role.IFS_ADMINISTRATOR)
+                .build());
 
         when(projectStateRestService.resumeProject(projectId)).thenReturn(restSuccess());
 
@@ -92,4 +98,24 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
 
         verify(projectStateRestService).resumeProject(projectId);
     }
+
+    @Test
+    public void resumeProject_projectFinance() throws Exception {
+        long competitionId = 1L;
+        long projectId = 123L;
+
+        setLoggedInUser(newUserResource()
+                .withRoleGlobal(Role.PROJECT_FINANCE)
+                .build());
+
+        when(projectStateRestService.resumeProject(projectId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/on-hold-status", competitionId, projectId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, projectId)))
+                .andExpect(flash().attribute("resumedFromOnHold", true));
+
+        verify(projectStateRestService).resumeProject(projectId);
+    }
+
 }

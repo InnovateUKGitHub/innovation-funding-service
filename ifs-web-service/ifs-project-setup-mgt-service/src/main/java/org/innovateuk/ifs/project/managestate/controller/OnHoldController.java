@@ -6,6 +6,8 @@ import org.innovateuk.ifs.project.managestate.viewmodel.OnHoldViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,14 +50,22 @@ public class OnHoldController {
     @PostMapping
     public String resumeProject(@PathVariable long projectId,
                                 @PathVariable long competitionId,
+                                UserResource user,
                                 RedirectAttributes redirectAttributes) {
         projectStateRestService.resumeProject(projectId).getSuccess();
         redirectAttributes.addFlashAttribute("resumedFromOnHold", true);
-        return redirectToManagePage(projectId, competitionId);
+        return user.hasRole(Role.IFS_ADMINISTRATOR)
+                ? redirectToManagePage(projectId, competitionId)
+                : redirectToProjectDetails(projectId, competitionId);
     }
 
     private String redirectToManagePage(long projectId,
                                         long competitionId) {
         return format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+    }
+
+    private String redirectToProjectDetails(long projectId,
+                                        long competitionId) {
+        return format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 }
