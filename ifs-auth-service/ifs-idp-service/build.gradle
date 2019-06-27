@@ -18,16 +18,6 @@ version project.version
 
 apply plugin: 'idea'
 
-def String idpCertsVolume = 'src/main/docker/certs'
-
-def String spProxyCertificateFile = "${idpCertsVolume}/sp_proxy_certificate.pem"
-
-def String idpSigningKeyFile = "${idpCertsVolume}/idp-signing.key"
-def String idpSigningCertificateFile = "${idpCertsVolume}/idp-signing.crt"
-def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
-def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
-
-def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?: "changeit"
 
 apply from: rootProject.file("gradle-support/new-relic.gradle")
@@ -43,15 +33,6 @@ task prepareDockerFile {
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
-        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-
-        def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
-        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-        def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
-        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
-        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
         def buildTimestamp = new Date().format("yyyyMMddHHmmssSSS")
 
         def resource_domain  = project.hasProperty('resource_domain') ? project.properties['resource_domain'] : '';
@@ -61,13 +42,7 @@ task prepareDockerFile {
             into inputDir
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_sp_proxy_certificate       : spProxyCertificate,
-                                           auth_idp_signing_key            : idpSigningKey,
-                                           auth_idp_signing_certificate    : idpSigningCertificate,
-                                           auth_idp_encryption_key         : idpEncryptionKey,
-                                           auth_idp_encryption_certificate : idpEncryptionCertificate,
-                                           auth_ldap_encryption_certificate: ldapEncryptionCertificate,
-                                           java_keystore_password          : javaKeystorePassword,
+            filter(ReplaceTokens, tokens: [java_keystore_password          : javaKeystorePassword,
                                            build_timestamp                 : buildTimestamp,
                                            resource_domain                 : resource_domain,
                                            version                         : project.properties['version']])

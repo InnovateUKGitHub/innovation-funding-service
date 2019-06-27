@@ -58,12 +58,6 @@ ENV HTTP_PORT=9080 \
   RESOURCE_DOMAIN="@resource_domain@" \
 
   IDP_LOG_LEVEL=INFO \
-  SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
-  IDP_SAML_SIGNING_KEY="@auth_idp_signing_key@" \
-  IDP_SAML_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-  IDP_SAML_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
-  IDP_SAML_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
-  LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
 
   JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=

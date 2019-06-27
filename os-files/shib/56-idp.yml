@@ -51,8 +51,6 @@ items:
             value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
-          - name: SP_PROXY_CERTIFICATE
-            value: "<<SSLCERT>>"
           - name: SP_DOMAIN
             value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
