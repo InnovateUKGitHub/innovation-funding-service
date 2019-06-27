@@ -38,7 +38,7 @@ public class OnHoldController {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         if (!ON_HOLD.equals(project.getProjectState())) {
-            redirectToManagePage(projectId, competitionId);
+            return redirectToManagePage(projectId, competitionId);
         }
         model.addAttribute("model",
                 new OnHoldViewModel(project));
