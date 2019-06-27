@@ -83,21 +83,33 @@
                                 </h3>
                             </div>
                             <th:block th:unless="${row.complete}">
-
-                                <!-- /* 'Assigned to' info */-->
-                                <th:block th:if="${row.assignable}">
+                                <!-- /* Assigned to */-->
+                                <div th:if="${row.assignable}"
+                                     class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">
-                                        <th:block
-                                            th:insert="question-type/form-elements :: assign-buttons (${row.assignButtonsViewModel.get()})"
-                                            th:with="hideAssignedTo=${true}"/>
+                                        <a href="/" class="govuk-link">Assigned to <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">you</th:block></a>
                                     </th:block>
-                                    <!--/* collabr */-->
+                                    <!--/* collaborator */-->
                                     <th:block th:unless="${model.lead}">
-                                        <th:block
-                                            th:insert="question-type/form-elements :: assigned-to (${row.assignButtonsViewModel.get()})"/>
+                                        Assigned to <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">Pete Tom</th:block>
                                     </th:block>
-                                </th:block>
+                                </div>
+
+                                <!-- /* 'Assigned to' info */-->
+                                <!--<th:block th:if="${row.assignable}">-->
+                                    <!--&lt;!&ndash;/* lead */&ndash;&gt;-->
+                                    <!--<th:block th:if="${model.lead}">-->
+                                        <!--<th:block-->
+                                            <!--th:insert="question-type/form-elements :: assign-buttons (${row.assignButtonsViewModel.get()})"-->
+                                            <!--th:with="hideAssignedTo=${true}"/>-->
+                                    <!--</th:block>-->
+                                    <!--&lt;!&ndash;/* collabr */&ndash;&gt;-->
+                                    <!--<th:block th:unless="${model.lead}">-->
+                                        <!--<th:block-->
+                                            <!--th:insert="question-type/form-elements :: assigned-to (${row.assignButtonsViewModel.get()})"/>-->
+                                    <!--</th:block>-->
+                                <!--</th:block>-->
 
                                 <div class="task-status-incomplete">
                                     <span>Incomplete</span>
