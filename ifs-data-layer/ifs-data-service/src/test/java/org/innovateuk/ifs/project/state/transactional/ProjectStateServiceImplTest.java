@@ -1,10 +1,12 @@
-package org.innovateuk.ifs.project.core.transactional;
+package org.innovateuk.ifs.project.state.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -34,6 +36,9 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
     @Mock
     private ProjectRepository projectRepositoryMock;
 
+    @Mock
+    private ProjectStateCommentsService projectStateCommentsService;
+
     @Test
     public void withdrawProject() {
         Long projectId = 123L;
@@ -57,6 +62,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.WITHDRAWN);
     }
 
     @Test
@@ -82,6 +88,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
+        verifyZeroInteractions(projectStateCommentsService);
     }
 
     @Test
@@ -99,6 +106,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         assertTrue(result.isFailure());
         verify(projectRepositoryMock).findById(projectId);
         verifyZeroInteractions(projectWorkflowHandlerMock);
+        verifyZeroInteractions(projectStateCommentsService);
     }
 
     @Test
@@ -124,6 +132,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).handleProjectOffline(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.HANDLED_OFFLINE);
     }
 
     @Test
@@ -149,12 +158,14 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).completeProjectOffline(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.COMPLETED_OFFLINE);
     }
 
     @Test
     public void putProjectOnHold() {
         Long projectId = 123L;
         Long userId = 456L;
+        OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource("Title", "Body");
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(PROJECT_FINANCE)
@@ -168,12 +179,13 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
         when(projectWorkflowHandlerMock.putProjectOnHold(eq(project), any())).thenReturn(true);
 
-        ServiceResult<Void> result = service.putProjectOnHold(projectId);
+        ServiceResult<Void> result = service.putProjectOnHold(projectId, onHoldReasonResource);
         assertTrue(result.isSuccess());
 
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).putProjectOnHold(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.ON_HOLD, onHoldReasonResource);
     }
 
     @Test
@@ -199,11 +211,12 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).resumeProject(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.SETUP);
     }
 
 
     @Override
     protected ProjectStateService supplyServiceUnderTest() {
-        return new ProjectStateServiceImpl(projectWorkflowHandlerMock);
+        return new ProjectStateServiceImpl();
     }
 }

@@ -60,7 +60,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;

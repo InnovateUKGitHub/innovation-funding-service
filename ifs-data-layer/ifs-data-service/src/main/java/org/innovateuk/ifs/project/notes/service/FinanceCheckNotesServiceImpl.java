@@ -7,8 +7,8 @@ import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.service.MappingThreadService;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class FinanceCheckNotesServiceImpl implements FinanceCheckNotesService {
-    private final ThreadService<NoteResource, PostResource> service;
+    private final MessageThreadService<NoteResource, PostResource> service;
 
     @Autowired
     public FinanceCheckNotesServiceImpl(NoteRepository noteRepository, AuthenticationHelper authenticationHelper, NoteMapper noteMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(noteRepository, authenticationHelper, noteMapper, postMapper, ProjectFinance.class);
+        service = new MappingMessageThreadService<>(noteRepository, authenticationHelper, noteMapper, postMapper, ProjectFinance.class);
     }
 
     @Override

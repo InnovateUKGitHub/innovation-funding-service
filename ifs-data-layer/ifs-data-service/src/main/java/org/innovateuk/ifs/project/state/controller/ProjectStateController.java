@@ -1,12 +1,10 @@
-package org.innovateuk.ifs.project.core.controller;
+package org.innovateuk.ifs.project.state.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * ProjectStateController exposes Project state data and operations through a REST API.
@@ -38,8 +36,9 @@ public class ProjectStateController {
     }
 
     @PostMapping("/{projectId}/on-hold")
-    public RestResult<Void> putProjectOnHold(@PathVariable("projectId") final long projectId) {
-        return projectStateService.putProjectOnHold(projectId).toPostWithBodyResponse();
+    public RestResult<Void> putProjectOnHold(@PathVariable("projectId") final long projectId,
+                                             @RequestBody OnHoldReasonResource reason) {
+        return projectStateService.putProjectOnHold(projectId, reason).toPostWithBodyResponse();
     }
 
     @PostMapping("/{projectId}/resume")

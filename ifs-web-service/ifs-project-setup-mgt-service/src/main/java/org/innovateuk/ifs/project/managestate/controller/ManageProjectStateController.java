@@ -6,9 +6,9 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.managestate.form.ManageProjectStateForm;
 import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewModel;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +67,13 @@ public class ManageProjectStateController {
         Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(updateProjectState(form.getState(), projectId));
+            validationHandler.addAnyErrors(updateProjectState(form, projectId));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }
 
-    private RestResult<Void> updateProjectState(ProjectState state, long projectId) {
-        switch (state) {
+    private RestResult<Void> updateProjectState(ManageProjectStateForm form, long projectId) {
+        switch (form.getState()) {
             case WITHDRAWN:
                 return projectStateRestService.withdrawProject(projectId);
             case HANDLED_OFFLINE:
@@ -82,7 +82,7 @@ public class ManageProjectStateController {
                 return projectStateRestService.completeProjectOffline(projectId);
             case ON_HOLD:
                 if (onHoldFeatureToggle) {
-                    return projectStateRestService.putProjectOnHold(projectId);
+                    return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
                 }
         }
         throw new IFSRuntimeException("Unknown project state");

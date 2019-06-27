@@ -38,7 +38,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thread_id", insertable = false, updatable = false)
-    private Thread thread;
+    private MessageThread thread;
 
     public Post(){}
     public Post(Long id, User author, String body, List<Attachment> attachments, ZonedDateTime createdOn) {
@@ -69,7 +69,7 @@ public class Post {
         return createdOn;
     }
 
-    public final Thread thread() {
+    public final MessageThread thread() {
         return thread;
     }
 }

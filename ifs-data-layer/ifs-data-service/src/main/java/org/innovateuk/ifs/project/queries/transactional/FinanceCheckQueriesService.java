@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-public interface FinanceCheckQueriesService extends ThreadService<QueryResource, PostResource> {
+public interface FinanceCheckQueriesService extends MessageThreadService<QueryResource, PostResource> {
     @Override
     @PostFilter("hasPermission(filterObject, 'PF_READ')")
     ServiceResult<List<QueryResource>> findAll(Long contextClassPk);

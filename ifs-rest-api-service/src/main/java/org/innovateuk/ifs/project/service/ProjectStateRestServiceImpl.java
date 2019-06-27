@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,8 +26,8 @@ public class ProjectStateRestServiceImpl extends BaseRestService implements Proj
     }
 
     @Override
-    public RestResult<Void> putProjectOnHold(long projectId) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/on-hold");
+    public RestResult<Void> putProjectOnHold(long projectId, OnHoldReasonResource reason) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/on-hold", reason, Void.class);
     }
 
     @Override
