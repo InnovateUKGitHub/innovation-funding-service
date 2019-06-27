@@ -59,7 +59,7 @@ the user marks the project as managed offline
 
 the user marks the project as completed offline
     the user navigates to the page     ${server}/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
-    the user clicks the button/link    jQuery = #table-project-status td:contains("View") a
+    the user clicks the button/link    css = #table-project-status td:nth-child(2).status.ok a
     the user clicks the button/link    link = Manage project status
     the user selects the radio button  state  COMPLETED_OFFLINE
     the user selects the checkbox      confirmationCompleteOffline

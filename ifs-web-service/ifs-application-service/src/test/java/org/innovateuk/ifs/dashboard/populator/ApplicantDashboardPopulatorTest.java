@@ -258,7 +258,6 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertEquals(TRUE, previousViewModel.isCreatedOrOpen());
         assertEquals(FALSE, previousViewModel.isInformedIneligible());
         assertEquals(FALSE, previousViewModel.isRejected());
-        assertEquals(FALSE, previousViewModel.isWithdrawn());
     }
 
     @Test

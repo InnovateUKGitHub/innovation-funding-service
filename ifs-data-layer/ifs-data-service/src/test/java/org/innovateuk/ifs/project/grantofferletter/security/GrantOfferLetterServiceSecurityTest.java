@@ -248,7 +248,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, new
                 GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null)), () -> {
-            verify(projectGrantOfferPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project,
+            verify(projectGrantOfferPermissionRules).internalUsersCanApproveOrRejectSignedGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });

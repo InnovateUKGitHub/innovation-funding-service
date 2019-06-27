@@ -13,7 +13,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -35,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -52,16 +50,18 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMockMVCTest<FinanceChecksEligibilityController> {
-    @Mock
-    private Model model;
 
     @Mock
     private ProjectService projectService;
@@ -77,9 +77,6 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Mock
     private ProjectFinanceRestService projectFinanceRestService;
-
-    @Mock
-    private ProjectFinanceRowRestService projectFinanceRowRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
@@ -110,7 +107,13 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
 
-    private ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).withCompetition(competitionResource.getId()).build();
+    private ProjectResource project = newProjectResource()
+            .withId(1L)
+            .withName("Project1")
+            .withApplication(application)
+            .withCompetition(competitionResource.getId())
+            .withProjectState(SETUP)
+            .build();
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 

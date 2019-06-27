@@ -9,7 +9,10 @@ import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewMo
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +23,17 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
-@PreAuthorize("hasAuthority('ifs_administrator')")
-@SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only IFS Admin can manage project state")
+@PreAuthorize("hasAuthority('project_finance')")
+@SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only project finance users can manage project state")
 public class ManageProjectStateController {
+
+    @Value("${ifs.project.management.on.hold}")
+    private boolean onHoldFeatureToggle;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -35,23 +43,28 @@ public class ManageProjectStateController {
 
     @GetMapping
     public String manageProjectState(@ModelAttribute(value = "form", binding = false) ManageProjectStateForm form,
-                                      BindingResult result,
-                                      @PathVariable long projectId,
-                                      Model model) {
-        model.addAttribute("model", new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess()));
+                                     BindingResult result,
+                                     @PathVariable long projectId,
+                                     Model model,
+                                     UserResource user) {
+        model.addAttribute("model",
+                new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
+                        onHoldFeatureToggle,
+                        user.hasRole(Role.IFS_ADMINISTRATOR)));
         return "project/manage-project-state";
     }
 
     @PostMapping
     public String setProjectState(@Valid @ModelAttribute(value = "form") ManageProjectStateForm form,
-                                   BindingResult result,
-                                   ValidationHandler validationHandler,
-                                   @PathVariable long projectId,
-                                   @PathVariable long competitionId,
-                                   Model model) {
+                                  BindingResult result,
+                                  ValidationHandler validationHandler,
+                                  @PathVariable long projectId,
+                                  @PathVariable long competitionId,
+                                  Model model,
+                                  UserResource user) {
         validate(form, result);
-        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model);
-        Supplier<String> successView = () -> String.format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model, user);
+        Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(updateProjectState(form.getState(), projectId));
@@ -67,13 +80,16 @@ public class ManageProjectStateController {
                 return projectStateRestService.handleProjectOffline(projectId);
             case COMPLETED_OFFLINE:
                 return projectStateRestService.completeProjectOffline(projectId);
-            default:
-                throw new IFSRuntimeException("Unknown project state");
+            case ON_HOLD:
+                if (onHoldFeatureToggle) {
+                    return projectStateRestService.putProjectOnHold(projectId);
+                }
         }
+        throw new IFSRuntimeException("Unknown project state");
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasFieldErrors("state")) {
             return;
         }
 
@@ -90,6 +106,15 @@ public class ManageProjectStateController {
         if (form.isCompletedOffline() && !TRUE.equals(form.getConfirmationCompleteOffline())) {
             result.rejectValue("confirmationCompleteOffline", "validation.field.must.not.be.blank");
             return;
+        }
+
+        if (form.isOnHold()) {
+            if (isBlank(form.getOnHoldReason())) {
+                result.rejectValue("onHoldReason", "validation.manage.project.on.hold.reason.required");
+            }
+            if (isBlank(form.getOnHoldDetails())) {
+                result.rejectValue("onHoldDetails", "validation.manage.project.on.hold.details.required");
+            }
         }
     }
 }

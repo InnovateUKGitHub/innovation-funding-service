@@ -18,6 +18,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -150,9 +151,59 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectWorkflowHandlerMock).completeProjectOffline(eq(project), any());
     }
 
+    @Test
+    public void putProjectOnHold() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRoleGlobal(PROJECT_FINANCE)
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        when(projectWorkflowHandlerMock.putProjectOnHold(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.putProjectOnHold(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
+        verify(projectWorkflowHandlerMock).putProjectOnHold(eq(project), any());
+    }
+
+    @Test
+    public void resumeProject() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRoleGlobal(PROJECT_FINANCE)
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        when(projectWorkflowHandlerMock.resumeProject(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.resumeProject(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
+        verify(projectWorkflowHandlerMock).resumeProject(eq(project), any());
+    }
+
 
     @Override
     protected ProjectStateService supplyServiceUnderTest() {
-        return new ProjectStateServiceImpl();
+        return new ProjectStateServiceImpl(projectWorkflowHandlerMock);
     }
 }

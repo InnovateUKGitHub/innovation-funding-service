@@ -7,23 +7,41 @@ import java.math.BigDecimal;
  */
 public class SummaryFinanceTableModel {
 
-    private final BigDecimal totalProjectCosts;
+    private final BigDecimal totalEligibleCosts;
     private final BigDecimal totalProjectGrant;
+    private final BigDecimal totalGrantPercentage;
+    private final BigDecimal totalOtherFunding;
 
     public SummaryFinanceTableModel(
-            BigDecimal totalProjectCosts,
-            BigDecimal totalProjectGrant
+            BigDecimal totalEligibleCosts,
+            BigDecimal totalProjectGrant,
+            BigDecimal totalGrantPercentage,
+            BigDecimal totalOtherFunding
     ) {
-        this.totalProjectCosts = totalProjectCosts;
+        this.totalEligibleCosts = totalEligibleCosts;
         this.totalProjectGrant = totalProjectGrant;
+        this.totalGrantPercentage = totalGrantPercentage;
+        this.totalOtherFunding = totalOtherFunding;
     }
 
-    public BigDecimal getTotalProjectCosts() {
-        return totalProjectCosts;
+    public BigDecimal getTotalEligibleCosts() {
+        return totalEligibleCosts;
     }
 
     public BigDecimal getTotalProjectGrant() {
         return totalProjectGrant;
+    }
+
+    public BigDecimal getTotalGrantPercentage() {
+        return totalGrantPercentage;
+    }
+
+    public BigDecimal getTotalOtherFunding() {
+        return totalOtherFunding;
+    }
+
+    public boolean showOtherFundingRow() {
+        return totalOtherFunding.compareTo(BigDecimal.ZERO) > 0;
     }
 }
 

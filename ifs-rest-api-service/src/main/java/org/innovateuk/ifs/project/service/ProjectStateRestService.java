@@ -8,4 +8,9 @@ public interface ProjectStateRestService {
     RestResult<Void> handleProjectOffline(long projectId);
 
     RestResult<Void> completeProjectOffline(long projectId);
+
+    RestResult<Void> putProjectOnHold(long projectId);
+
+    RestResult<Void> resumeProject(long projectId);
+
 }

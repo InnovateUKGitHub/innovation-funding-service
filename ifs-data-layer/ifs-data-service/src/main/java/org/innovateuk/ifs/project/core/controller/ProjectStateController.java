@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/project")
 public class ProjectStateController {
 
-    @Autowired
     private ProjectStateService projectStateService;
+
+    @Autowired
+    public ProjectStateController(ProjectStateService projectStateService) {
+        this.projectStateService = projectStateService;
+    }
 
     @PostMapping("/{projectId}/withdraw")
     public RestResult<Void> withdrawProject(@PathVariable("projectId") final long projectId) {
@@ -31,5 +35,15 @@ public class ProjectStateController {
     @PostMapping("/{projectId}/complete-offline")
     public RestResult<Void> completeProjectOffline(@PathVariable("projectId") final long projectId) {
         return projectStateService.completeProjectOffline(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/on-hold")
+    public RestResult<Void> putProjectOnHold(@PathVariable("projectId") final long projectId) {
+        return projectStateService.putProjectOnHold(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/resume")
+    public RestResult<Void> resumeProject(@PathVariable("projectId") final long projectId) {
+        return projectStateService.resumeProject(projectId).toPostWithBodyResponse();
     }
 }

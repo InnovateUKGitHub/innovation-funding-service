@@ -13,9 +13,9 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.projectResourceFields;
 import static org.innovateuk.ifs.documentation.ProjectMonitoringOfficerResourceDocs.*;
-import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.documentation.UserDocs.simpleUserResourceFields;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.builder.SimpleUserResourceBuilder.newSimpleUserResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -40,13 +40,13 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
     @Test
     public void findAll() throws Exception {
 
-        when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(newUserResource().build(1)));
+        when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(newSimpleUserResource().build(1)));
 
         mockMvc.perform(get("/monitoring-officer/find-all"))
                 .andExpect(status().isOk())
                 .andDo(document("monitoring-officer/{method-name}",
                                 responseFields(fieldWithPath("[]").description("List of monitoring officers"))
-                                        .andWithPrefix("[].", userResourceFields)
+                                        .andWithPrefix("[].", simpleUserResourceFields)
                 ));
 
         verify(projectMonitoringOfficerServiceMock).findAll();
