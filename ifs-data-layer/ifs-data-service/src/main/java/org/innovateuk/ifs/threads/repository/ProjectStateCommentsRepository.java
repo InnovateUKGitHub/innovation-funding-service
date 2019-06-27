@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface ProjectStateCommentsRepository extends MessageThreadRepository<ProjectStateComments> {
 
-    Optional<ProjectStateComments> findDistinctByClassPkAndClassNameAndClosedDateNotNull(Long classPk, String className);
+    Optional<ProjectStateComments> findDistinctByClassPkAndClassNameAndClosedDateIsNull(Long classPk, String className);
 
     default Optional<ProjectStateComments> findOpenComments(long projectId) {
-        return findDistinctByClassPkAndClassNameAndClosedDateNotNull(projectId, Project.class.getName());
+        return findDistinctByClassPkAndClassNameAndClosedDateIsNull(projectId, Project.class.getName());
     }
 }

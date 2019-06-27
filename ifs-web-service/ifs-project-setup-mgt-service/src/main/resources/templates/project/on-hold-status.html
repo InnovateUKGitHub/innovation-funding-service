@@ -15,6 +15,17 @@
               th:with="linkTitle='Manage project status',linkUrl=@{/competition/{competitionId}/project/{projectId}/manage-status(competitionId=${model.competitionId},projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+            </div>
+        </div>
+
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Project status',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
@@ -26,26 +37,53 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"
               novalidate="novalidate"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              th:object="${form}">
             <h2 class="govuk-heading-m">Reason</h2>
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
-            <h3 class="govuk-heading-m">Marked as on hold - THIS IS A PLACEHOLDER</h3>
-            <p class="govuk-body">
-                <strong>Lee Bowman - Innovate UK (Finance team)</strong> <span
-                class="hint">13 May 2019 9:04am</span><br/>
-                This project is currently on hold blah blah
+            <h3 class="govuk-heading-m" th:text="${model.title}">Marked as on hold - THIS IS A PLACEHOLDER</h3>
+            <p class="govuk-body" th:each="comment : ${model.comments}" >
+                <strong th:text="|${comment.user} - ${comment.userRole}|">Lee Bowman - Innovate UK (Finance team)</strong>
+                <span class="hint" th:text="|${#temporals.format(comment.date, 'dd MMMM yyyy')} ${#strings.toLowerCase(#temporals.format(comment.date, 'hh:mma'))}|">13 May 2019 9:04am</span><br/>
+                <th:block th:text="${comment.comment}">This project is currently on hold blah blah</th:block>
             </p>
 
-            <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Add a comment
-                </span>
-                </summary>
-                <div class="govuk-details__text">
-                    PLACEHOLDER
-                </div>
-            </details>
+            <th:block th:with="hasErrors=${#fields.hasErrors('details')}">
+                <details class="govuk-details" th:attr="open=${hasErrors} ? 'open' : null ">
+                    <summary class="govuk-details__summary" th:attr="aria-expanded=${hasErrors} ? 'true' : 'false'">
+                    <span class="govuk-details__summary-text">
+                      Add a comment
+                    </span>
+                    </summary>
+                    <div class="govuk-details__text" th:attr="aria-hidden=${hasErrors} ? 'false' : null">
+                        <div class="govuk-form-group word-count"
+                             th:classappend="${hasErrors} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="details">
+                                Details
+                            </label>
+                            <th:block th:if="${hasErrors}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('details')}"
+                                      th:text="${err}"></span>
+                            </th:block>
+                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                      id="details"
+                                      maxlength="5000"
+                                      data-max_words="400"
+                                      data-maxwordslength="400"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                      th:field="*{details}"
+                                      rows="5"></textarea>
+                            <div class="govuk-body textarea-footer" th:with="details=*{details}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, details)})" />
+                            </div>
+                        </div>
+                        <div class="govuk-form-group">
+                            <input type="hidden" th:field="*{commentId}" />
+                            <button name="add-comment" class="button-secondary">Save comment</button>
+                        </div>
+                    </div>
+                </details>
+            </th:block>
 
             <div class="govuk-form-group">
                 <button class="govuk-button">Remove on hold status</button>

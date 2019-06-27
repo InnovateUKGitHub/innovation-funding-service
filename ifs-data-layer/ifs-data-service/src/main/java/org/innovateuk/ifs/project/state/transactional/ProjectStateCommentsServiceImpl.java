@@ -115,7 +115,7 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
             case WITHDRAWN:
                 return "Project has been withdrawn.";
             case ON_HOLD:
-                return "Project has been put on hold.";
+                return "Marked as on hold.";
             case SETUP:
                 return "Project has been resumed from on hold.";
             default:

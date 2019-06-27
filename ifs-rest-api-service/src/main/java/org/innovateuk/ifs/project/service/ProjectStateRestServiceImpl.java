@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,10 @@ public class ProjectStateRestServiceImpl extends BaseRestService implements Proj
     @Override
     public RestResult<ProjectStateCommentsResource> findOpenComments(long projectId) {
         return getWithRestResult(format("/project/state/comments/open/%d", projectId), ProjectStateCommentsResource.class);
+    }
+
+    @Override
+    public RestResult<Void> addPost(PostResource post, long threadId) {
+        return postWithRestResult("/project/state/comments/" + threadId + "/post", post, Void.class);
     }
 }
