@@ -11,13 +11,18 @@ public class ManageProjectStateViewModel {
     private final long projectId;
     private final String projectName;
     private final ProjectState state;
+    private final boolean onHoldFeatureToggle;
+    private final boolean ifsAdmin;
 
-    public ManageProjectStateViewModel(ProjectResource project) {
+    public ManageProjectStateViewModel(ProjectResource project, boolean onHoldFeatureToggle, boolean ifsAdmin) {
         this.competitionId = project.getCompetition();
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.state = project.getProjectState();
+        this.onHoldFeatureToggle = onHoldFeatureToggle;
+        this.ifsAdmin = ifsAdmin;
     }
+
 
     public long getCompetitionId() {
         return competitionId;
@@ -31,6 +36,9 @@ public class ManageProjectStateViewModel {
         return projectName;
     }
 
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
+    }
 
     /* view logic */
     public boolean isCompletedOffline() {
@@ -49,6 +57,10 @@ public class ManageProjectStateViewModel {
         return SETUP.equals(state);
     }
 
+    public boolean isOnHold() {
+        return ON_HOLD.equals(state);
+    }
+
     public boolean isLive() {
         return LIVE.equals(state);
     }
@@ -58,12 +70,20 @@ public class ManageProjectStateViewModel {
     }
 
     public boolean canHandleOffline() {
-        return isInSetup();
+        return isInSetup() || isOnHold();
+    }
+
+    public boolean canPutOnHold() {
+        return isInSetup() && onHoldFeatureToggle;
     }
 
     public boolean canWithdraw() {
-        return isInSetup() || isHandledOffline();
+        return isInSetup() || isHandledOffline() || isOnHold();
     }
 
     public boolean isEndState() { return isCompletedOffline() || isLive() || isWithdrawn(); }
+
+    public boolean cantChangeState() {
+        return isEndState() || (!ifsAdmin && isOnHold());
+    }
 }

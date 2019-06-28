@@ -43,7 +43,7 @@ Manage project status Validations
 
 IFS Admin is able to Withdraw a project
     [Documentation]  IFS-2945 IFS-3654 IFS-5939
-    Given the user selects the checkbox     confirmationWithdrawn
+    And the user selects the checkbox     confirmationWithdrawn
     When the user clicks the button/link   jQuery = button:contains("Change project status")
     Then the project should be withdrawn
 
@@ -113,7 +113,7 @@ The user navigates to the Manage Project status page
 
 The user should be able to see all validations working correctly
     the user clicks the button/link    jQuery = button:contains("Change project status")
-    the user should see a field and summary error     ${empty_field_warning_message}
+    the user should see a field and summary error     Select a new project status.
     the user should see Manage offline validations
     the user should see Withdraw validations
 

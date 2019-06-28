@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Grant offer letter|" />
 </head>
 <body class="govuk-template__body competition-management project-management grant-offer-letter">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -31,6 +31,12 @@
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">
                 <h2 class="govuk-heading-s govuk-!-margin-top-0">These documents have been approved.</h2>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body govuk-!-margin-top-0">This project is on hold. You can change this from the <a href="#">Project status</a> page.</p>
             </div>
         </th:block>
 
@@ -241,7 +247,8 @@
                         </div>
                     </fieldset>
                 </div>
-                <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+                <button th:disabled="${model.onHold}" class="govuk-button" type="submit" id="submit-button" data-js-modal=""
+                        th:attr="data-enable-button-when=${model.onHold ? null : 'one-checked'}">Submit</button>
             </form>
 
         </th:block>

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 @PermissionRules
@@ -38,6 +37,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
     public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
         return isSystemRegistrationUser(user)
-                && isProjectInSetup(project.getId());
+                && isProjectActive(project.getId());
     }
 }

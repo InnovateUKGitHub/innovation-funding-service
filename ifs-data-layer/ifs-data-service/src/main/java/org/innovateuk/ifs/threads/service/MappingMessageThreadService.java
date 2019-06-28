@@ -2,9 +2,9 @@ package org.innovateuk.ifs.threads.service;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.threads.domain.Thread;
+import org.innovateuk.ifs.threads.domain.MessageThread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
-import org.innovateuk.ifs.threads.repository.ThreadRepository;
+import org.innovateuk.ifs.threads.repository.MessageThreadRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 
@@ -12,13 +12,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R, Long>, C> implements ThreadService<R, PostResource> {
-    private final GenericThreadService<D, C> service;
+public class MappingMessageThreadService<D extends MessageThread, R, M extends BaseMapper<D, R, Long>, C> implements MessageThreadService<R, PostResource> {
+    private final GenericMessageThreadService<D, C> service;
     private final M threadMapper;
     private final PostMapper postMapper;
 
-    public MappingThreadService(ThreadRepository<D> threadRepository, AuthenticationHelper authenticationHelper, M threadMapper, PostMapper postMapper, Class<C> context) {
-        this.service = new GenericThreadService<>(threadRepository, authenticationHelper, context);
+    public MappingMessageThreadService(MessageThreadRepository<D> threadRepository, AuthenticationHelper authenticationHelper, M threadMapper, PostMapper postMapper, Class<C> context) {
+        this.service = new GenericMessageThreadService<>(threadRepository, authenticationHelper, context);
         this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }

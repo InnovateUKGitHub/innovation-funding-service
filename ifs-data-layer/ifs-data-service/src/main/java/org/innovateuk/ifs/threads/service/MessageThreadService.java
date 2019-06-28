@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import java.util.List;
 
 
-public interface ThreadService<E, P> {
+public interface MessageThreadService<E, P> {
 
     ServiceResult<List<E>> findAll(Long contextClassPk);
 

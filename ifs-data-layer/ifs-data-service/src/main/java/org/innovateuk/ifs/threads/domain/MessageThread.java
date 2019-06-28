@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.threads.domain;
 
-
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -14,12 +13,11 @@ import java.util.Optional;
 
 import static java.util.Optional.*;
 
-;
-
 @Entity
+@Table(name = "thread")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "thread_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Thread {
+public abstract class MessageThread {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,10 +44,10 @@ public abstract class Thread {
     @JoinColumn(name = "closed_by_user_id", referencedColumnName = "id")
     private User closedBy;
 
-    Thread() {
+    MessageThread() {
     }
 
-    Thread(Long id, Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
+    MessageThread(Long id, Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
         this.id = id;
         this.classPk = classPk;
         this.className = className;

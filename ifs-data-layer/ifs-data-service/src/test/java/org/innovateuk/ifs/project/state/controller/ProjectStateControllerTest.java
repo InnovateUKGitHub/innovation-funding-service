@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.project.core.controller;
+package org.innovateuk.ifs.project.state.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.core.transactional.ProjectStateService;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -9,6 +10,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,6 +80,31 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
                 .andExpect(status().isOk());
 
         verify(projectStateService, only()).completeProjectOffline(projectId);
+    }
+
+    @Test
+    public void putProjectOnHold() throws Exception {
+        Long projectId = 456L;
+        OnHoldReasonResource reason =  new OnHoldReasonResource("Title", "Body");
+        when(projectStateService.putProjectOnHold(projectId, reason)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/on-hold", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reason)))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).putProjectOnHold(projectId, reason);
+    }
+
+    @Test
+    public void resumeProject() throws Exception {
+        Long projectId = 456L;
+        when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).resumeProject(projectId);
     }
 }
 

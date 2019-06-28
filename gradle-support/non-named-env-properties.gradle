@@ -69,6 +69,8 @@ ext.FINANCE_DB_PORT=3306
 
 ext.DATA_SERVICE_HOST="data-service"
 
+ext.IFS_PROJECT_MANAGEMENT_ON_HOLD="true"
+
 // For webtest data
 ext.ACC_USERNAME=""
 ext.ACC_PASSWORD=""

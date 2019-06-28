@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Search for a monitoring officer by email'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add a monitoring officer'"/>
 </head>
 
 <body class="govuk-template__body">
@@ -12,10 +12,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" />
-
-    <!--Back link to be added when search MO search page IFS-5245 is delivered-->
-    <!--<th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/project-setup-management/monitoring-officer/list'" />-->
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/project-setup-management/monitoring-officer/view-all'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
