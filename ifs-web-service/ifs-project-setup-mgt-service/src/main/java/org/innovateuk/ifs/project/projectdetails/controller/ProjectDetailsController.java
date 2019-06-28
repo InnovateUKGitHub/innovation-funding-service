@@ -23,7 +23,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -52,8 +51,6 @@ public class ProjectDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-
-    private boolean onHoldFeatureToggle;
     private ProjectService projectService;
     private CompetitionRestService competitionRestService;
     private ProjectDetailsService projectDetailsService;
@@ -69,15 +66,13 @@ public class ProjectDetailsController {
                                     ProjectDetailsService projectDetailsService,
                                     PartnerOrganisationRestService partnerOrganisationService,
                                     FinanceReviewerRestService financeReviewerRestService,
-                                    OrganisationRestService organisationRestService,
-                                    @Value("${ifs.project.management.on.hold}") boolean onHoldFeatureToggle) {
+                                    OrganisationRestService organisationRestService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
         this.partnerOrganisationService = partnerOrganisationService;
         this.financeReviewerRestService = financeReviewerRestService;
         this.organisationRestService = organisationRestService;
-        this.onHoldFeatureToggle = onHoldFeatureToggle;
     }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
@@ -105,7 +100,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                onHoldFeatureToggle ? loggedInUser.hasRole(PROJECT_FINANCE) : loggedInUser.hasRole(IFS_ADMINISTRATOR),
+                loggedInUser.hasRole(PROJECT_FINANCE),
                 loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
