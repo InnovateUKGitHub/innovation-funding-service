@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign QUESTION TITLE|"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationName} - Assign ${model.question.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -11,14 +11,28 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId='149')}"/>
+              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <form>
-            <div class="govuk-form-group">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="POST"
+              th:object="${form}"
+              novalidate="novalidate"
+              enctype="multipart/form-data">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('${form.*}')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset" aria-describedby="assign-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                        <span class="govuk-caption-l" th:text="${model.application.name}">APPLICATION NAME</span>
+                        <span class="govuk-caption-l" th:text="${model.applicationName}">APPLICATION NAME</span>
                         <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8" th:text="|Assign ${model.question.name}|">
                             Assign QUESTION TITLE
                         </h1>
@@ -26,17 +40,21 @@
                     <span id="assign-hint" class="govuk-hint">
                         Assign this question to someone else.
                     </span>
+                    <th:block th:if="${#fields.hasErrors('${form.*}')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('users')}"
+                              th:text="${err}"></span>
+                    </th:block>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="user-1" name="user" type="radio">
-                            <label class="govuk-label govuk-radios__label govuk-label--s" for="user-1">
-                                Steve Smith
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="user-2" name="user" type="radio">
-                            <label class="govuk-label govuk-radios__label govuk-label--s" for="user-2">
-                                Jessica Doe
+                        <div class="govuk-radios__item"
+                             th:each="user : ${model.users}">
+                            <input class="govuk-radios__input"
+                                   th:id="'user-'+${user.id}"
+                                   th:value="${user.id}"
+                                   type="radio">
+                            <label class="govuk-label govuk-radios__label govuk-label--s"
+                                   th:for="'user-'+${user.id}"
+                                   th:text="${user.userName}">
+                                Name
                             </label>
                         </div>
                     </div>
