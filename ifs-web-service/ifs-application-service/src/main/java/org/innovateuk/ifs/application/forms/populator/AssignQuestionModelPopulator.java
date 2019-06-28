@@ -30,7 +30,7 @@ public class AssignQuestionModelPopulator {
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         QuestionResource question = questionRestService.findById(questionId).getSuccess();
 
-        return new AssignQuestionViewModel(application.getName(),
+        return new AssignQuestionViewModel(application,
                                            processRoles,
                                            question);
     }
