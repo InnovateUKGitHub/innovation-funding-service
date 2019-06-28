@@ -21,7 +21,7 @@ Documentation     INFUND-4840 As a project finance team member I want to be able
 ...
 ...               IFS-3559 Email subject for new finance queries to include competition name and application ID
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+#Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -483,7 +483,7 @@ the user should see the response to query server side validation
 #    And the user should see a summary error            ${empty_field_warning_message}
     the user enters text to a text field          css = .editor  this is some response text
     the user uploads the file                     name = attachment  ${valid_pdf}
-    the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")
+    the user should see the element               jQuery = a:contains("${valid_pdf}") ++ button:contains("Remove")
     the user should not see an error in the page
 
 the user should see the response to query client side validations

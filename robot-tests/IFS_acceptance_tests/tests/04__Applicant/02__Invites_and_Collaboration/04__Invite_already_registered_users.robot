@@ -17,7 +17,7 @@ The invited user should not follow the registration flow again
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user reads his email and clicks the link   ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
-    Then the user should see the element                jQuery = h2:contains("We have found an account with the invited email address")
+    Then the user should see the element                jQuery = h3:contains("We have found an account with the invited email address")
 
 The user clicks the login link
     [Documentation]    INFUND-1458

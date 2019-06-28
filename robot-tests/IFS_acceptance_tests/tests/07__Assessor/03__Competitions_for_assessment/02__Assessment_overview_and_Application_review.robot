@@ -74,7 +74,6 @@ Project details sections should not be scorable
 
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
-    [Tags]
     Given the user should see assessment question details
     [Teardown]  the user clicks the button/link   link = Back to your assessment overview
 
@@ -278,7 +277,7 @@ the user navigate to previous pages
 
 Application detail section should not be scorable
     the user clicks the button/link        link = Application details
-    the user should see the element        jQuery = h3:contains("Project title")
+    the user should see the element        jQuery = h2:contains("Project title")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
 

@@ -333,7 +333,7 @@ Invite Collaborator in Application with Growth table
     Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
     When log in as a different user                    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
-    When the user should see the element               jQuery = h2:contains("We have found an account with the invited email address")
+    When the user should see the element               jQuery = h3:contains("We have found an account with the invited email address")
     Then the user clicks the button/link               link = Continue
     And the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
 
