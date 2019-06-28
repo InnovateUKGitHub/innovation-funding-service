@@ -39,7 +39,7 @@ public class OnHoldController {
                                    Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        if (!ON_HOLD.equals(project.getProjectState())) {
+        if (project.getProjectState() != ON_HOLD) {
             return redirectToManagePage(projectId, competitionId);
         }
         model.addAttribute("model",
