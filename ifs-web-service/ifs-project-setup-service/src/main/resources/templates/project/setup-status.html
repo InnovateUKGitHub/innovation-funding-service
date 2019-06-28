@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Set up your project'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' + pageTitle}" />
 </head>
 <body class="govuk-template__body project-overview">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -11,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=${model.monitoringOfficer ? '/project-setup/monitoring-officer/dashboard' : '/applicant/dashboard'}" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'},subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div class="message-alert" th:if="${model.projectState.offline}">
             <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
