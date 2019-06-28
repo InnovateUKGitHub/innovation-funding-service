@@ -316,6 +316,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_CANNOT_BE_COMPLETED_OFFLINE(BAD_REQUEST),
 
     /**
+     * Projects on hold
+     */
+    PROJECT_CANNOT_BE_PUT_ON_HOLD(BAD_REQUEST),
+    PROJECT_CANNOT_BE_RESUMED(BAD_REQUEST),
+
+    /**
      * SIL CRM
      */
     CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),

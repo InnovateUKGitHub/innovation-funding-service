@@ -168,7 +168,7 @@
             </tbody>
         </table>
 
-        <p th:if="${model.ifsAdministrator}" class="govuk-body">
+        <p th:if="${model.ableToManageProjectState}" class="govuk-body">
             <a th:href="@{/competition/{competitionId}/project/{projectId}/manage-status(competitionId=${model.competitionId},projectId=${model.project.id})}"
                class="govuk-link">Manage project status</a>
         </p>

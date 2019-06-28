@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("QUERY")
-public final class Query extends Thread {
+public final class Query extends MessageThread {
 
     @Enumerated(EnumType.STRING)
     private FinanceChecksSectionType section;

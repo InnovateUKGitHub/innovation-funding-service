@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -79,7 +80,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setField(controller, "onHoldFeatureToggle", true);
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
@@ -153,7 +155,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Comp 1", model.getCompetitionName());
-        assertTrue(model.isIfsAdministrator());
+        assertTrue(model.isAbleToManageProjectState());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());

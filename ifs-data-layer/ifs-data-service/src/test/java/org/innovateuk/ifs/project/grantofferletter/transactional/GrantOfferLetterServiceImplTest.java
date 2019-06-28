@@ -78,6 +78,7 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESE
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
@@ -202,6 +203,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 withAddress(address).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withProjectProcess(newProjectProcess().
+                        withActivityState(ProjectState.SETUP).
+                        build()).
                 build();
 
         SpendProfile orgSpendProfile = newSpendProfile()
@@ -496,7 +500,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withUser(user)
                 .withOrganisation(nonAcademicUnfunded)
                 .withInvite(newProjectUserInvite()
-                .build())
+                        .build())
                 .build(1);
 
         Competition competition = newCompetition()
@@ -516,8 +520,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project project = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1)).withGrantOfferLetter(golFile)
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1)).withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
 
@@ -576,8 +580,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project p = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1))
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1))
                 .withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
@@ -629,8 +633,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project project = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1)).withGrantOfferLetter(golFile)
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1)).withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
 
@@ -750,10 +754,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withId(projectId)
                 .withProjectUsers(projectUsers)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                    .withOrganisation(organisation1, organisation2)
-                    .build(2)
+                        .withOrganisation(organisation1, organisation2)
+                        .build(2)
                 )
                 .withApplication(application)
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
                 .build();
 
         List<NotificationTarget> to = asList(
@@ -805,7 +812,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withRole(PROJECT_MANAGER, PROJECT_FINANCE_CONTACT)
                 .withUser(user).withOrganisation(nonAcademicUnfunded)
                 .withInvite(newProjectUserInvite()
-                .build())
+                        .build())
                 .build(2);
 
         Competition competition = newCompetition()
@@ -824,6 +831,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                         .withOrganisation(nonAcademicUnfunded)
                         .build(1))
                 .withApplication(application)
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
                 .build();
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
@@ -862,7 +872,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newProjectUserInvite().build()).build(1);
-        Project project = newProject().withId(projectId).withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).build();
+        Project project = newProject()
+                .withId(projectId)
+                .withProjectUsers(pu)
+                .withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1))
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
+                .build();
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
