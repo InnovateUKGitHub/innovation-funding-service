@@ -8,10 +8,14 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.forms.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
+import org.innovateuk.ifs.application.forms.viewmodel.AssignQuestionViewModel;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
@@ -26,6 +30,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,19 +48,21 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -124,6 +131,15 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
+    @Mock
+    private ApplicationResearchCategoryModelPopulator applicationResearchCategoryModelPopulator;
+
+    @Mock
+    private ApplicationResearchCategoryFormPopulator applicationResearchCategoryFormPopulator;
+
+    @Mock
+    private AssignQuestionModelPopulator assignQuestionModelPopulator;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -134,7 +150,21 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Override
     protected ApplicationQuestionController supplyControllerUnderTest() {
-        return new ApplicationQuestionController();
+
+        return new ApplicationQuestionController(applicationResearchCategoryModelPopulator,
+                                                 questionModelPopulator,
+                                                 applicationResearchCategoryFormPopulator,
+                                                 applicationNavigationPopulator,
+                                                 applicationService,
+                                                 userRestService,
+                                                 questionService,
+                                                 assignQuestionModelPopulator,
+                                                 cookieFlashMessageFilter,
+                                                 applicantRestService,
+                                                 applicationRedirectionService,
+                                                 applicationSaver
+                                                 );
+
     }
 
     @Before
@@ -164,8 +194,8 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
         sectionBuilder =  newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
+        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
         when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
@@ -283,5 +313,29 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals(fileError, bindingResult.getFieldError("formInput[" + formInputId + "]").getCode());
+    }
+
+    @Test
+    public void viewAssign() throws Exception {
+        QuestionResource question = newQuestionResource().build();
+        ApplicationResource applicationResource = newApplicationResource()
+                .withName("Super imaginative application name")
+                .build();
+
+        AssignQuestionViewModel model = new AssignQuestionViewModel(applicationResource,
+                                                                    emptyList(),
+                                                                    question);
+
+        when(assignQuestionModelPopulator.populateModel(question.getId(), applicationResource.getId())).thenReturn(model);
+
+        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign", applicationResource.getId(), question.getId()))
+                .andExpect(status().isOk());
+
+        verify(assignQuestionModelPopulator).populateModel(question.getId(), applicationResource.getId());
+    }
+
+    @Test
+    public void assignQuestion() throws Exception {
+        // TODO
     }
 }

@@ -16,6 +16,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -39,10 +40,13 @@ import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
@@ -60,41 +64,58 @@ public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
-    @Autowired
     private QuestionModelPopulator questionModelPopulator;
 
-    @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryPopulator;
 
-    @Autowired
     private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
 
-    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
     private UserRestService userRestService;
 
-    @Autowired
     private QuestionService questionService;
 
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
     private ApplicantRestService applicantRestService;
 
-    @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
 
-    @Autowired
     private ApplicationQuestionSaver applicationSaver;
 
-    @Autowired
     private AssignQuestionModelPopulator assignQuestionModelPopulator;
+
+    @Autowired
+    public ApplicationQuestionController(
+            ApplicationResearchCategoryModelPopulator researchCategoryPopulator,
+            QuestionModelPopulator questionModelPopulator,
+            ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator,
+            ApplicationNavigationPopulator applicationNavigationPopulator,
+            ApplicationService applicationService,
+            UserRestService userRestService,
+            QuestionService questionService,
+            AssignQuestionModelPopulator assignQuestionModelPopulator,
+            CookieFlashMessageFilter cookieFlashMessageFilter,
+            ApplicantRestService applicantRestService,
+            ApplicationRedirectionService applicationRedirectionService,
+            ApplicationQuestionSaver applicationSaver
+    ) {
+        this.researchCategoryPopulator = researchCategoryPopulator;
+        this.questionModelPopulator = questionModelPopulator;
+        this.researchCategoryFormPopulator = researchCategoryFormPopulator;
+        this.applicationNavigationPopulator = applicationNavigationPopulator;
+        this.applicationService = applicationService;
+        this.userRestService = userRestService;
+        this.questionService = questionService;
+        this.assignQuestionModelPopulator = assignQuestionModelPopulator;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
+        this.applicantRestService = applicantRestService;
+        this.applicationRedirectionService = applicationRedirectionService;
+        this.applicationSaver = applicationSaver;
+    }
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -123,7 +144,7 @@ public class ApplicationQuestionController {
                         user.getId(),
                         request,
                         response,
-                        Optional.of(Boolean.TRUE)
+                        Optional.of(TRUE)
                 );
                 validationHandler.addAnyErrors(errors);
             }
@@ -132,6 +153,7 @@ public class ApplicationQuestionController {
         return viewQuestion(user, applicationId, questionId, model, form, markAsComplete);
     }
 
+    @ZeroDowntime(description = "remove references to assign", reference = "IFS-TODO")
     @PostMapping(value = {
             QUESTION_URL + "{" + QUESTION_ID + "}",
             QUESTION_URL + "edit/{" + QUESTION_ID + "}"
@@ -181,9 +203,14 @@ public class ApplicationQuestionController {
     }
 
     @PostMapping("/question/{questionId}/assign")
-    public String assign() {
-//        questionService.assign().getSuccess();
-        return "redirect:/";
+    public String assign(@Valid @ModelAttribute AssignQuestionForm form,
+                         @PathVariable("questionId") long questionId,
+                         @PathVariable ("applicationId") long applicationId,
+                         Model model,
+                         UserResource loggedInUser) {
+        ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        questionService.assign(questionId, applicationId, form.getAssigneeId(), assignedBy.getId()).getSuccess();
+        return format("redirect:/application/%d", applicationId);
     }
 
     private void handleAssignedQuestions(Long applicationId,
@@ -236,18 +263,15 @@ public class ApplicationQuestionController {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
 
         if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+            return format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
         } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+            return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
         } else if (APPLICATION_TEAM.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
+            return format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
                     (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
         }
 
-
-
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
-
         boolean isSupport = user.hasRole(SUPPORT);
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
@@ -301,16 +325,14 @@ public class ApplicationQuestionController {
         return (request.getParameter(UPLOAD_FILE) != null && errors.hasErrors());
     }
 
-    private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
+    private boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
         List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(
                 questionId,
                 applicationId);
         return questionStatuses.isEmpty() || questionStatuses.stream()
-                .anyMatch(questionStatusResource ->
-                        (questionStatusResource.getAssignee() == null
-                                || questionStatusResource.getAssigneeUserId().equals(userId))
-                        && (questionStatusResource.getMarkedAsComplete() == null
-                                || !questionStatusResource.getMarkedAsComplete())
+                .anyMatch(question ->
+                                  userId.equals(question.getAssignedByUserId())
+                                          && !TRUE.equals(question.getMarkedAsComplete())
                 );
     }
 }
