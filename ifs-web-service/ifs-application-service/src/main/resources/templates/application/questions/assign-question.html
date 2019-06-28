@@ -18,8 +18,8 @@
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset" aria-describedby="assign-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                        <span class="govuk-caption-l">APPLICATION NAME</span>
-                        <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8">
+                        <span class="govuk-caption-l" th:text="${model.application.name}">APPLICATION NAME</span>
+                        <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8" th:text="|Assign ${model.question.name}|">
                             Assign QUESTION TITLE
                         </h1>
                     </legend>

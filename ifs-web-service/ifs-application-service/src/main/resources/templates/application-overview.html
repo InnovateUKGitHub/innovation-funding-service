@@ -85,36 +85,24 @@
                             <th:block th:unless="${row.complete}">
                                 <!-- /* Assigned to */-->
                                 <div th:if="${row.assignable}"
+                                     th:with="rowModel=${row.assignButtonsViewModel.get()}, assignee=${rowModel.assignedToCurrentUser ? 'you' : rowModel.assignee.userName}"
                                      class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">
-                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${row.assignButtonsViewModel.get().question.id})}"
-                                           class="govuk-link">
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
+                                           class="govuk-link"
+                                           aria-describedby="assign-hint">
                                             Assigned to
-                                            <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">you</th:block>
+                                            <th:block th:text="${assignee}">you/Name</th:block>
+                                            <span id="assign-hint" class="govuk-visually-hidden">,assign to somebody else in your team</span>
                                         </a>
                                     </th:block>
                                     <!--/* collaborator */-->
                                     <th:block th:unless="${model.lead}">
                                         Assigned to
-                                        <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">Pete Tom</th:block>
+                                        <th:block th:text="${assignee}">you/Name</th:block>
                                     </th:block>
                                 </div>
-
-                                <!-- /* 'Assigned to' info */-->
-                                <!--<th:block th:if="${row.assignable}">-->
-                                    <!--&lt;!&ndash;/* lead */&ndash;&gt;-->
-                                    <!--<th:block th:if="${model.lead}">-->
-                                        <!--<th:block-->
-                                            <!--th:insert="question-type/form-elements :: assign-buttons (${row.assignButtonsViewModel.get()})"-->
-                                            <!--th:with="hideAssignedTo=${true}"/>-->
-                                    <!--</th:block>-->
-                                    <!--&lt;!&ndash;/* collabr */&ndash;&gt;-->
-                                    <!--<th:block th:unless="${model.lead}">-->
-                                        <!--<th:block-->
-                                            <!--th:insert="question-type/form-elements :: assigned-to (${row.assignButtonsViewModel.get()})"/>-->
-                                    <!--</th:block>-->
-                                <!--</th:block>-->
 
                                 <div class="task-status-incomplete">
                                     <span>Incomplete</span>
