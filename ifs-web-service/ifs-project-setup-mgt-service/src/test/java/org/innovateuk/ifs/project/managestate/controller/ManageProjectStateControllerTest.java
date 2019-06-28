@@ -36,11 +36,13 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void manageProjectState() throws Exception {
         long competitionId = 1L;
+        long applicationId = 2L;
         long projectId = 123L;
         ProjectResource project = newProjectResource()
                 .withId(projectId)
                 .withName("Name")
                 .withCompetition(competitionId)
+                .withApplication(applicationId)
                 .withProjectState(SETUP).build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
@@ -53,6 +55,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(applicationId, viewModel.getApplicationId());
         assertEquals("Name", viewModel.getProjectName());
 
         assertTrue(viewModel.canHandleOffline());

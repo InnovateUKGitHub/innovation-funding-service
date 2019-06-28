@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage innovation leads'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionName} + ' - Manage innovation leads'" />
     </head>
     <body class="govuk-template__body competition-management">
         <th:block th:insert="fragments/layout :: body-start" />

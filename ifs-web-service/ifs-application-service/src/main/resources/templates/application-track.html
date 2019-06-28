@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Status'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${applicationName + ' - Application Status'}" />
 </head>
 <body class="govuk-template__body app-track">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -13,7 +14,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+        <th:block>
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
