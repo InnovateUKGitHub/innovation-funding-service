@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign QUESTION TITLE|"/>
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId='149')}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="assign-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <span class="govuk-caption-l">APPLICATION NAME</span>
+                        <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8">
+                            Assign QUESTION TITLE
+                        </h1>
+                    </legend>
+                    <span id="assign-hint" class="govuk-hint">
+                        Assign this question to someone else.
+                    </span>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="user-1" name="user" type="radio">
+                            <label class="govuk-label govuk-radios__label govuk-label--s" for="user-1">
+                                Steve Smith
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="user-2" name="user" type="radio">
+                            <label class="govuk-label govuk-radios__label govuk-label--s" for="user-2">
+                                Jessica Doe
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-form-group">
+                <button class="govuk-button">Save and return to application overview</button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+</body>
+</html>

@@ -88,11 +88,16 @@
                                      class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">
-                                        <a href="/" class="govuk-link">Assigned to <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">you</th:block></a>
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${row.assignButtonsViewModel.get().question.id})}"
+                                           class="govuk-link">
+                                            Assigned to
+                                            <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">you</th:block>
+                                        </a>
                                     </th:block>
                                     <!--/* collaborator */-->
                                     <th:block th:unless="${model.lead}">
-                                        Assigned to <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">Pete Tom</th:block>
+                                        Assigned to
+                                        <th:block th:text="${row.assignButtonsViewModel.get().assignee.userName}">Pete Tom</th:block>
                                     </th:block>
                                 </div>
 
