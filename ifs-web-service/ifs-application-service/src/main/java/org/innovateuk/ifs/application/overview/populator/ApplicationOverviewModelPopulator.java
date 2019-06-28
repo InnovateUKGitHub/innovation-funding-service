@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
@@ -135,7 +136,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 isTermsAndConditionsComplete(data, question, section) :
                 data.getStatuses().get(question.getId())
                         .stream()
-                        .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
+                        .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()));
 
         boolean showStatus = !(section.isTermsAndConditions() && data.getCompetition().isExpressionOfInterest());
 

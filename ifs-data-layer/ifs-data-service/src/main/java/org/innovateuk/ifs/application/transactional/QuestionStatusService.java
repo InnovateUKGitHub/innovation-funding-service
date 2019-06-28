@@ -65,7 +65,7 @@ public interface QuestionStatusService {
                                                                                  long organisationId);
 
     @PostAuthorize("hasPermission(filterObject, 'READ')")
-    ServiceResult<Optional<QuestionStatusResource>> findApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId);
+    ServiceResult<Optional<QuestionStatusResource>> findByApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> findCompletedQuestionsByApplicationId(long applicationId);

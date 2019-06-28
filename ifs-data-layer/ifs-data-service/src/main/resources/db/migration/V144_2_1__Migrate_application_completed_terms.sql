@@ -42,6 +42,6 @@ FROM process_role pr
          INNER JOIN application a ON pr.application_id = a.id
          INNER JOIN question q ON q.competition_id = a.competition
          INNER JOIN section s ON q.section_id = s.id
-WHERE a.submitted_date IS NOT NUll
+WHERE a.submitted_date IS NOT NULL
   AND s.section_type = 'TERMS_AND_CONDITIONS'
 GROUP BY pr.application_id, pr.organisation_id;

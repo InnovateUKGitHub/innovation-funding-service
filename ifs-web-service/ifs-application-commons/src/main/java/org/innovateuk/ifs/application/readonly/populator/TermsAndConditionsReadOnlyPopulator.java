@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 import static java.util.Collections.singleton;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
 
 @Component
 public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<TermsAndConditionsReadOnlyViewModel> {
@@ -36,6 +37,6 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return singleton(QuestionSetupType.TERMS_AND_CONDITIONS);
+        return singleton(TERMS_AND_CONDITIONS);
     }
 }

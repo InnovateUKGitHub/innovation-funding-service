@@ -175,7 +175,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Optional<QuestionStatusResource>> findApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId) {
+    public ServiceResult<Optional<QuestionStatusResource>> findByApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
         return serviceSuccess(questionStatuses.stream().findFirst().map(questionStatusMapper::mapToResource));
     }

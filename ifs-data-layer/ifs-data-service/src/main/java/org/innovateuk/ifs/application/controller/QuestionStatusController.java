@@ -45,7 +45,7 @@ public class QuestionStatusController {
 
     @GetMapping("/find-marked-complete-by-question-and-application-and-organisation/{questionId}/{applicationId}/{organisationId}")
     public RestResult<Optional<QuestionStatusResource>> getMarkedAsCompleteByQuestionApplicationAndOrganisation(@PathVariable("questionId") long questionId, @PathVariable("applicationId") long applicationId, @PathVariable("organisationId") long organisationId) {
-        return questionStatusService.findApplicationAndMarkedAsCompleteByOrganisation(questionId, applicationId, organisationId).toGetResponse();
+        return questionStatusService.findByApplicationAndMarkedAsCompleteByOrganisation(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @GetMapping("/{id}")
