@@ -101,7 +101,6 @@ public class ProjectDetailsController {
                 competitionId,
                 competitionResource.getName(),
                 loggedInUser.hasRole(PROJECT_FINANCE),
-                loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
