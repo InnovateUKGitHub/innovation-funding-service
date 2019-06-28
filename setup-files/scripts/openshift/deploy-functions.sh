@@ -185,14 +185,6 @@ function substituteMandatoryEnvVariable() {
 }
 
 function tailorAppInstance() {
-
-
-    if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
-    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
-    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
-    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
-
-
     if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
