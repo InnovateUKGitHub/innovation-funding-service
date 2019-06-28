@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.managestate.controller;
 
-
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.managestate.form.OnHoldCommentForm;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +47,7 @@ public class OnHoldController {
                                    Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        if (!ON_HOLD.equals(project.getProjectState())) {
+        if (project.getProjectState() != ON_HOLD) {
             return redirectToManagePage(projectId, competitionId);
         }
         ProjectStateCommentsResource comments = projectStateRestService.findOpenComments(projectId).getSuccess();
@@ -59,10 +59,13 @@ public class OnHoldController {
     @PostMapping
     public String resumeProject(@PathVariable long projectId,
                                 @PathVariable long competitionId,
+                                UserResource user,
                                 RedirectAttributes redirectAttributes) {
         projectStateRestService.resumeProject(projectId).getSuccess();
         redirectAttributes.addFlashAttribute("resumedFromOnHold", true);
-        return redirectToManagePage(projectId, competitionId);
+        return user.hasRole(Role.IFS_ADMINISTRATOR)
+                ? redirectToManagePage(projectId, competitionId)
+                : redirectToProjectDetails(projectId, competitionId);
     }
 
     @PostMapping(params = "add-comment")
@@ -90,5 +93,10 @@ public class OnHoldController {
     private String redirectToManagePage(long projectId,
                                         long competitionId) {
         return format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+    }
+
+    private String redirectToProjectDetails(long projectId,
+                                        long competitionId) {
+        return format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 }

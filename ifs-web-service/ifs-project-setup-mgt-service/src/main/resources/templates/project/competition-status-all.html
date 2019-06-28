@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Navigation'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.competitionProjectsStatusResource.competitionNumber}: ${model.competitionProjectsStatusResource.competitionName} - Project setup|" />
 </head>
 <body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkUrl=@{~/management/dashboard/project-setup}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: ${model.competitionProjectsStatusResource.competitionName}|,size='govuk-heading-xl'" />
 
         <form method="GET">
             <div class="search-filters govuk-!-margin-top-6">
@@ -86,6 +86,9 @@
                                             </th:block>
                                             <th:block th:if="${project.projectState.isCompletedOffline()}">
                                                 <strong class="ifs-completed-offline">Completed offline</strong>
+                                            </th:block>
+                                            <th:block th:if="${project.projectState.isOnHold()}">
+                                                <strong class="ifs-on-hold">On hold</strong>
                                             </th:block>
                                         </div>
                                     </div>
