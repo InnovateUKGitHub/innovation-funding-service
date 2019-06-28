@@ -20,6 +20,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-8065 File download links are broken for assessors
 ...
 ...               IFS-2854 Allow assessors to see full application finances
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
@@ -77,6 +79,12 @@ Application questions should be scorable
     [Tags]
     Given the user should see assessment question details
     [Teardown]  the user clicks the button/link   link = Back to your assessment overview
+
+Assessor should see terms and conditions question
+    [Documentation]  IFS-5920
+    [Tags]
+    Given the terms and condition question should not be scorable
+    Then the user should see read only view of terms and conditions
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
@@ -261,10 +269,11 @@ the user fills in rejection details
 
 the uesr should see assessment overview details
     the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
-    And the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And The user should see the element      jQuery = h2:contains("Project details")
-    And The user should see the element      jQuery = h2:contains("Application questions")
-    And The user should see the element      jQuery = h2:contains("Finances")
+    the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    the user should see the element      jQuery = h2:contains("Project details")
+    the user should see the element      jQuery = h2:contains("Application questions")
+    the user should see the element      jQuery = h2:contains("Finances")
+    the user should see the element      jQuery = h2:contains("Terms and conditions")
 
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation
@@ -335,3 +344,15 @@ the users should see detailed finance overview
     the user clicks the button/link         link = Back to funding
     the user clicks the button/link         jQuery = th:contains("University of Bath") a:contains("View finances")
     the academic finances are correct
+
+the terms and condition question should not be scorable
+    the user should see the element         jQuery = ul li:contains("Award terms and conditions") .task-status:contains("No score required")
+    the user clicks the button/link         link = Award terms and conditions
+    the user should not see the element     jQuery = label:contains("Question score")
+
+the user should see read only view of terms and conditions
+    the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should not see the element     jQuery = button:contains("Agree and continue")
+    the user should not see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user should not see the element     link = Return to application overview
+    the user clicks the button/link         link = Back to your assessment overview

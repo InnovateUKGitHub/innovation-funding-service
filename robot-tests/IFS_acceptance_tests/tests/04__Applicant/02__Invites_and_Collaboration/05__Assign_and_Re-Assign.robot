@@ -71,11 +71,12 @@ Collaborator should see the terms and conditions from the overview page
     ...  This test depends on the previous test suite to run first
     [Tags]
     Given the user clicks the button/link          link = Application overview
-    When The user clicks the button/link           link = View the award terms and conditions
+    When The user clicks the button/link           link = Award terms and conditions
     Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     # checking new Innovate UK terms and conditions
-    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = li:contains("Background")
-    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = li:contains("Entire agreement") .ifs-list--number
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = li:contains("Background")
+    Run Keyword If  '${status}' == 'PASS'    Run Keywords    the user should see the element   jQuery = li:contains("Entire agreement") .ifs-list--number
+    ...                                               AND    the user should see the element   jQuery = .disabled:contains("Agree and continue")
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
