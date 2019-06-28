@@ -87,6 +87,9 @@
                                             <th:block th:if="${project.projectState.isCompletedOffline()}">
                                                 <strong class="ifs-completed-offline">Completed offline</strong>
                                             </th:block>
+                                            <th:block th:if="${project.projectState.isOnHold()}">
+                                                <strong class="ifs-on-hold">On hold</strong>
+                                            </th:block>
                                         </div>
                                     </div>
                                     <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
