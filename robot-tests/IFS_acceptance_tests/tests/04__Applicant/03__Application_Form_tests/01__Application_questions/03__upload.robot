@@ -64,9 +64,7 @@ Lead applicant can view a file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
     Given the file has been scanned for viruses
-    And the user clicks the button/link  link = ${5mb_pdf}
-    When Select Window  NEW
-    Then the user should not see an error in the page
+    Then open pdf link   ${5mb_pdf}
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
