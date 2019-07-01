@@ -7,12 +7,7 @@ import java.time.LocalDate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
-import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 
 /**
  * View model for each application row in the 'Grant transfer' section of the applicant dashboard.
@@ -67,7 +62,7 @@ public class EuGrantTransferDashboardRowViewModel extends
 
     public boolean isInProgress() {
         return CREATED.equals(applicationState) ||
-                OPEN.equals(applicationState);
+                OPENED.equals(applicationState);
     }
 
     public boolean isIneligible() {

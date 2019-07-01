@@ -19,7 +19,7 @@ public interface ApplicationRestService {
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName);
-    RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);
+    RestResult<Void> updateApplicationState(long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);

@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  */
 public interface ApplicationProgressService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId);
+    ServiceResult<BigDecimal> updateApplicationProgress(final long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    boolean applicationReadyForSubmit(@P("applicationId") final Long applicationId);
+    boolean applicationReadyForSubmit(@P("applicationId") final long applicationId);
 }

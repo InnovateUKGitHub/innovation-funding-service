@@ -34,7 +34,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
@@ -113,6 +113,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user);
 
+        long applicationTermsQuestion = sectionService.getTermsAndConditionsSection(application.getCompetition()).getQuestions().get(0);
+
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
             interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
@@ -123,8 +125,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
-        queryParams.put("competitionId", asList(String.valueOf(application.getCompetition())));
-        queryParams.put("applicationId", asList(String.valueOf(application.getId())));
+        queryParams.put("competitionId", singletonList(String.valueOf(application.getCompetition())));
+        queryParams.put("applicationId", singletonList(String.valueOf(application.getId())));
 
         return new ApplicationFeedbackViewModel(
                 application,
@@ -140,6 +142,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
                 interviewFeedbackViewModel,
+                applicationTermsQuestion,
                 projectWithdrawn,
                 application.isCollaborativeProject(),
                 ApplicationSummaryOrigin.valueOf(origin),

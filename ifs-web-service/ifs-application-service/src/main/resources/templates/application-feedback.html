@@ -116,7 +116,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-6">Application details</h2>
                 <p class="govuk-body govuk-hint">Assessors do not provide scores on these sections of the application.</p>
 
-                <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
+                <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances') or section.name.equals('Terms and conditions')}">
                     <th:block th:if="${section.name.equals('Project details')}">
                         <ul class="govuk-list list-overview govuk-!-margin-top-6">
                             <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
@@ -199,6 +199,17 @@
                             <h2 class="govuk-heading-m">Funding breakdown</h2>
                             <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
                         </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
+                    <div class="collapsible">
+                        <p class="govuk-body">
+                            <a class="govuk-link"
+                               th:href="@{/application/{apId}/form/question/{qId}(apId=${model.application.id},qId=${model.applicationTermsQuestionId})} + ${model.originQuery}">
+                                View award terms and conditions</a>
+                        </p>
                     </div>
                 </section>
 

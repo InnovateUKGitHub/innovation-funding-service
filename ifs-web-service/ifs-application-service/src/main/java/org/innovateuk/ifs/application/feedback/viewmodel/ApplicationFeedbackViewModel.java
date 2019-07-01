@@ -29,6 +29,7 @@ public class ApplicationFeedbackViewModel {
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
+    private final long applicationTermsQuestionId;
     private final boolean projectWithdrawn;
     private final boolean collaborativeProject;
     private final ApplicationSummaryOrigin origin;
@@ -48,6 +49,7 @@ public class ApplicationFeedbackViewModel {
                                         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
+                                        long applicationTermsQuestionId,
                                         boolean projectWithdrawn,
                                         boolean collaborativeProject,
                                         ApplicationSummaryOrigin origin,
@@ -66,6 +68,7 @@ public class ApplicationFeedbackViewModel {
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
+        this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
         this.origin = origin;
@@ -123,6 +126,10 @@ public class ApplicationFeedbackViewModel {
 
     public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
         return interviewFeedbackViewModel;
+    }
+
+    public long getApplicationTermsQuestionId() {
+        return applicationTermsQuestionId;
     }
 
     public boolean isProjectWithdrawn() {

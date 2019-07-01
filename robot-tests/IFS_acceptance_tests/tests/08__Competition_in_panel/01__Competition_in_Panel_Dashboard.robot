@@ -1,4 +1,7 @@
 *** Settings ***
+Documentation     IFS-3036 As an internal IFS user I am able to see the grant terms and conditions applicable to an application
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -16,12 +19,13 @@ In Panel Dashboard
     Then the user should see milestones for In Panel Competitions
 
 Internal user can see grant terms and conditions
-    [Documentation]  IFS-3036
+    [Documentation]  IFS-3036  IFS-5920
     [Tags]
     Given The user clicks the button/link  link = Applications: All, submitted, ineligible
     And The user clicks the button/link    link = All applications
-    When the user clicks the button/link   link = ${application_ids["SISM - Smart Internet Security Monitor"]}
-    And the user clicks the button/link    link = view the award terms and conditions
+    When the user clicks the button/link   link = ${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
+    And the user clicks the button/link    jQuery = button:contains("Award terms and conditions")
+    And the user clicks the button/link    link = View terms and conditions
     Then the user should see the element   jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***
