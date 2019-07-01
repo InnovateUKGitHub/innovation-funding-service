@@ -267,27 +267,8 @@
     <div class="govuk-body wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
 </th:block>
 
-<!-- ========================= Current Assignee =========================== -->
-<th:block th:fragment="current-assignee(model)" th:with="question=${model.question}">
-    <th:block th:if="${model.assigned}">
-        <div class="assignee govuk-body" th:if="${model.assignedByCurrentUser}"
-             th:classappend="(${model.assignedToCurrentUser} ? 'assigned-to-me')"
-             th:unless="${model.currentUserIsLead}">
-          <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
-          <span th:unless="${model.assignedToLead}">You have assigned this question to</span>
-          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.userName}" />
-        </div>
+<!-- ========================= Ready for review =========================== -->
 
-        <div class="assignee govuk-body" th:unless="${model.assignedByCurrentUser}"
-             th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
-            <th:block th:if="${model.assignedByLead}">This question is assigned to
-              <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.userName}"/>
-            </th:block>
-        </div>
-    </th:block>
-
-</th:block>
-<!-- ========================= Assign / reassign buttons =========================== -->
 <th:block th:fragment="ready-for-review">
     <th:block th:if="${model != null}" th:with="question=${model.question}">
       <th:block th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
@@ -298,130 +279,6 @@
         </button>
       </th:block>
     </th:block>
-</th:block>
-
-<th:block th:fragment="assign-buttons-dialog(model)" th:with="question=${model.question}">
-
-    <div class="assign-container assigned-alert"
-         th:if="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assign-button-body (${model})" />
-    </div>
-
-    <th:block th:unless="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assigned-to (${model})" />
-    </th:block>
-</th:block>
-
-<th:block th:fragment="assign-buttons(model)" th:with="question=${model.question}">
-    <div th:class="(${model.assignedToCurrentUser} ? 'assign-container secondary-notification' : 'assign-container')"
-         th:if="${question.isAssignEnabled()}">
-        <th:block th:insert="question-type/form-elements :: assign-button-body (${model})" />
-    </div>
-
-    <th:block th:unless="${question.isAssignEnabled()}">
-      <th:block th:insert="question-type/form-elements :: assigned-to (${model})" />
-    </th:block>
-</th:block>
-
-<!-- ========================= Assign - make selection =========================== -->
-<th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
-    <th:block th:if="${model.assigned}">
-        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
-          <th:block th:if="${model.assignedByLead}"
-                    th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
-          <th:block th:unless="${model.assignedByLead}"
-                    th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
-        </span>
-        <span class="secondary-notification govuk-body"
-              th:unless="${model.assignedToCurrentUser}"
-              th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
-              th:with="name=${model.assignee.userName}">
-            <span class="assign-name" th:text="${name}">NAME</span>
-        </span>
-    </th:block>
-
-    <th:block th:if="${model.notAssigned}">
-        <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
-            <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
-        </span>
-        <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
-            Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
-        </span>
-    </th:block>
-
-    <div class="assign-button-container">
-
-        <div class="assign-button">
-            <th:block th:insert="question-type/form-elements :: assigned-to (${model})"/>
-        </div>
-
-        <div class="assign-team">
-            <!--/* Reassign question */-->
-            <label th:for="'assign'+${question.id}">Assign question to</label>
-            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
-                <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
-                    <option th:value="${question.id}+'_'+${assignableApplicant.id}"
-                            th:unless="${model.isAssignedTo(assignableApplicant)}"
-                            th:text="${assignableApplicant.userName}"
-                    />
-                    <option th:if="${model.isAssignedTo(assignableApplicant)}"
-                            th:text="${assignableApplicant.userName}"
-                            selected="selected"
-                            disabled="disabled"/>
-                </th:block>
-                <th:block th:each="pendingAssignableUser : ${model.pendingAssignableUsers}">
-                    <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
-                </th:block>
-            </select>
-            <button type="submit">Reassign</button>
-        </div>
-        <th:block th:unless="${hideAssignedTo}"
-                  th:include="question-type/form-elements :: current-assignee (${model})" />
-
-    </div>
-
-</th:block>
-
-<!-- ========================= Assigned to =========================== -->
-<th:block th:fragment="assigned-to (model)" th:with="question=${model.question}">
-  <th:block th:unless="${model.notAssigned} ">
-
-    <th:block th:if="${model.currentUserIsLead}">
-        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
-            <th:block th:if="${model.assignedByLead}"
-                      th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
-            <th:block th:unless="${model.assignedByLead}"
-                      th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">REASSIGN BUTTON TEXT</th:block>
-        </span>
-    </th:block>
-
-    <th:block th:unless="${model.currentUserIsLead}">
-        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
-            <th:block th:if="${model.assignedByLead}">Assigned to you</th:block>
-            <th:block th:unless="${model.assignedByLead}">Reassigned to you</th:block>
-        </span>
-    </th:block>
-
-    <span class="secondary-notification govuk-body secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
-        <th:block th:unless="${model.currentUserIsLead}">Assigned to</th:block>
-        <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
-              th:with="name=${model.assignee.userName}">
-
-        </span>
-    </span>
-
-  </th:block>
-
-  <th:block th:if="${model.notAssigned}">
-    <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
-        <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
-                  th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
-        <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
-    </span>
-    <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
-      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.userName}"></span>
-    </span>
-  </th:block>
 </th:block>
 
 <!-- ========================= Last update info =========================== -->
