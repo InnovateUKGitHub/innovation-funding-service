@@ -90,8 +90,6 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
         assertEquals("Innovate UK (IFS Administrator)", commentViewModel.getUserRole());
         assertEquals("Body", commentViewModel.getComment());
         assertEquals(created, commentViewModel.getDate());
-
-
     }
 
     @Test
