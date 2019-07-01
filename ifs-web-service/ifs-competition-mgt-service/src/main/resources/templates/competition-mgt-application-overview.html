@@ -119,10 +119,11 @@
                     <a target="_blank"
                        class="govuk-link"
                        th:href="${appendix.getDownloadURL()}"
-                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize()}">
+                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize()}"
+                       aria-describedby="appendix-hint">
                         Project-plan.pdf (161.96 KB)
                     </a>
-                    (opens in a new window).
+                    <span id="appendix-hint">(opens in a new window)</span>.
                 </div>
             </th:block>
         </th:block>

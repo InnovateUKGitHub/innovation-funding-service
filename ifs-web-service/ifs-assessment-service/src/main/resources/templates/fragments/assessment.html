@@ -46,11 +46,11 @@
 <th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <h3 class="govuk-heading-s">Project title</h3>
+            <h2 class="govuk-heading-s">Project title</h2>
             <p class="govuk-body" th:text="${applicationName}" />
-            <h3 class="govuk-heading-s">Lead organisation</h3>
+            <h2 class="govuk-heading-s">Lead organisation</h2>
             <p class="govuk-body" th:text="${leadOrganisation.name}" />
-            <h3 class="govuk-heading-s">Partners</h3>
+            <h2 class="govuk-heading-s">Partners</h2>
             <ul class="govuk-list govuk-list--bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
@@ -62,7 +62,7 @@
             </ul>
         </div>
         <div class="govuk-grid-column-one-half">
-            <h3 class="govuk-heading-s">Project timescales</h3>
+            <h2 class="govuk-heading-s">Project timescales</h2>
             <p class="govuk-body">Project start date:<br/>
             <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
             </p>
