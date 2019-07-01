@@ -49,7 +49,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     public boolean isCreatedOrOpen() {
-        return ApplicationState.OPEN.equals(applicationState)
+        return ApplicationState.OPENED.equals(applicationState)
                 ||  ApplicationState.CREATED.equals(applicationState);
     }
 

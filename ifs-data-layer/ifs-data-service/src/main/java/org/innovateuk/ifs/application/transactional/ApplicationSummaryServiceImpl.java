@@ -51,7 +51,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     public static final Set<ApplicationState> NOT_SUBMITTED_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN));
+            ApplicationState.OPENED));
 
     public static final Set<ApplicationState> INELIGIBLE_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.INELIGIBLE,
@@ -59,7 +59,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     public static final Set<ApplicationState> CREATED_AND_OPEN_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN));
+            ApplicationState.OPENED));
 
     public static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.APPROVED,

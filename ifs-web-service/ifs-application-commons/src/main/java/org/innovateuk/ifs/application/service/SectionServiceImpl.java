@@ -12,6 +12,8 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.SectionType.ORGANISATION_FINANCES;
+import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -35,7 +37,7 @@ public class SectionServiceImpl implements SectionService {
     private QuestionRestService questionRestService;
 
     @Override
-    public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+    public List<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
         LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
         return sectionStatusRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }
@@ -94,7 +96,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<SectionResource> getAllByCompetitionId(final Long competitionId) {
+    public List<SectionResource> getAllByCompetitionId(final long competitionId) {
         return sectionRestService.getByCompetition(competitionId).getSuccess();
     }
 
@@ -151,31 +153,36 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionResource getSectionByQuestionId(Long questionId) {
+    public SectionResource getSectionByQuestionId(long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId).getSuccess();
     }
 
     @Override
-    public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
+    public Set<Long> getQuestionsForSectionAndSubsections(long sectionId) {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccess();
     }
 
     @Override
-    public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
+    public List<SectionResource> getSectionsForCompetitionByType(long competitionId, SectionType type) {
         return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccess();
     }
 
     @Override
-    public SectionResource getFinanceSection(Long competitionId) {
+    public SectionResource getFinanceSection(long competitionId) {
         return getSingleSectionByType(competitionId, SectionType.FINANCE);
     }
 
     @Override
-    public SectionResource getOrganisationFinanceSection(Long competitionId) {
-        return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
+    public SectionResource getTermsAndConditionsSection(long competitionId) {
+        return getSingleSectionByType(competitionId, TERMS_AND_CONDITIONS);
     }
 
-    private SectionResource getSingleSectionByType(Long competitionId, SectionType type) {
+    @Override
+    public SectionResource getOrganisationFinanceSection(long competitionId) {
+        return getSingleSectionByType(competitionId, ORGANISATION_FINANCES);
+    }
+
+    private SectionResource getSingleSectionByType(long competitionId, SectionType type) {
         List<SectionResource> sections = getSectionsForCompetitionByType(competitionId, type);
         if (sections.isEmpty()) {
             LOG.error("no " + type + " section found for competition " + competitionId);

@@ -483,7 +483,7 @@ the user should see the response to query server side validation
 #    And the user should see a summary error            ${empty_field_warning_message}
     the user enters text to a text field          css = .editor  this is some response text
     the user uploads the file                     name = attachment  ${valid_pdf}
-    the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")
+    the user should see the element               jQuery = a:contains("${valid_pdf}") ++ button:contains("Remove")
     the user should not see an error in the page
 
 the user should see the response to query client side validations

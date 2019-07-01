@@ -61,9 +61,6 @@
                 <th:block th:if="${procurementCompetition}">
                     <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
                 </th:block>
-                <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link govuk-!-font-size-19">View the award terms and conditions</a>
-                </th:block>
             </div>
         </div>
 
@@ -79,7 +76,6 @@
                                     <a th:href="${row.url}"
                                        th:text="${row.title}"
                                        class="govuk-link" />
-
                                 </h3>
                             </div>
                             <th:block th:unless="${row.complete}">
@@ -92,19 +88,18 @@
                                             th:insert="question-type/form-elements :: assign-buttons (${row.assignButtonsViewModel.get()})"
                                             th:with="hideAssignedTo=${true}"/>
                                     </th:block>
-                                    <!--/* collabr */-->
+                                    <!--/* collaborator */-->
                                     <th:block th:unless="${model.lead}">
                                         <th:block
                                             th:insert="question-type/form-elements :: assigned-to (${row.assignButtonsViewModel.get()})"/>
                                     </th:block>
                                 </th:block>
 
-                                <div class="task-status-incomplete">
+                                <div th:if="${row.showStatus}" class="task-status-incomplete">
                                     <span>Incomplete</span>
                                 </div>
                             </th:block>
-                            <div th:if="${row.complete}"
-                                 class="task-status-complete">
+                            <div th:if="${row.complete and row.showStatus}" class="task-status-complete">
                                 <span>Complete</span>
                             </div>
                         </li>

@@ -2,44 +2,39 @@ package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ApplicationFinanceTest {
-    ApplicationFinance applicationFinance;
+import static org.junit.Assert.assertEquals;
 
-    Long id;
-    Organisation organisation;
-    Application application;
+public class ApplicationFinanceTest {
+    private ApplicationFinance applicationFinance;
+    private Organisation organisation;
+    private Application application;
 
     @Before
-    public void setUp() throws Exception {
-        id=0L;
+    public void setUp() {
         organisation = new Organisation("Worth Internet Systems");
         application = new Application();
-        applicationFinance = new ApplicationFinance(id, application, organisation);
+        applicationFinance = new ApplicationFinance(application, organisation);
     }
 
     @Test
-    public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
+    public void constructorsShouldCreateInstancesOnValidInput() {
         new ApplicationFinance();
         new ApplicationFinance(application, organisation);
-        new ApplicationFinance(1234132434L, application, organisation);
     }
 
     @Test
-    public void applicationFinanceShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(applicationFinance.getId(), id);
-        Assert.assertEquals(applicationFinance.getOrganisation(), organisation);
-        Assert.assertEquals(applicationFinance.getApplication(), application);
+    public void applicationFinanceShouldReturnCorrectAttributeValues() {
+        assertEquals(applicationFinance.getOrganisation(), organisation);
+        assertEquals(applicationFinance.getApplication(), application);
     }
 
     @Test
-    public void applicationFinanceShouldReturnCorrectAttributeValuesAfterSetId() throws Exception {
+    public void applicationFinanceShouldReturnCorrectAttributeValuesAfterSetId() {
         Long newId = 2L;
         applicationFinance.setId(newId);
-        Assert.assertEquals(applicationFinance.getId(), newId);
+        assertEquals(applicationFinance.getId(), newId);
     }
-
 }

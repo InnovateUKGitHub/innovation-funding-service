@@ -20,6 +20,8 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
 ...
 ...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
@@ -46,7 +48,7 @@ Submit button disabled when application is incomplete
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 RTO lead has read only view after submission
-    [Documentation]    INFUND-7405, INFUND-8599
+    [Documentation]    INFUND-7405, INFUND-8599  IFS-5920
     [Tags]
     Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
@@ -57,6 +59,7 @@ RTO lead has read only view after submission
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
     And the user puts zero project costs
     When the user clicks the button/link                   link = Return to application overview
+    And the user accept the competition terms and conditions
     And the user clicks the button/link                    link = Review and submit
     And the user should not see the element                css = input
 

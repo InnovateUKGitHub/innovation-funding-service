@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
+import static java.lang.String.format;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -106,8 +107,8 @@ public class ManagementApplicationPopulatorTest {
 
         assertEquals(application, actual.getApplication());
         assertEquals(competition, actual.getCompetition());
-        assertEquals(String.format("/competition/%d/applications/all", competition.getId()), actual.getBackUrl());
-        assertEquals("?origin=ALL_APPLICATIONS", actual.getOriginQuery());
+        assertEquals(format("/competition/%d/applications/all", competition.getId()), actual.getBackUrl());
+        assertEquals(format("?origin=MANAGEMENT_APPLICATION&competitionId=%d&applicationId=%d", competition.getId(), application.getId()), actual.getOriginQuery());
         assertEquals(1, actual.getAppendices().size());
         assertEquals("My file", actual.getAppendices().get(0).getName());
 

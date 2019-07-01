@@ -10,6 +10,9 @@ public class QuestionStatusResource {
 
     private Boolean markedAsComplete;
     private Long markedAsCompleteBy;
+    private ZonedDateTime markedAsCompleteOn;
+    private long markedAsCompleteByUserId;
+    private String markedAsCompleteByUserName;
     private Long question;
     private Long assignee;
     private ZonedDateTime assignedDate;
@@ -25,7 +28,6 @@ public class QuestionStatusResource {
     private long assignedByUserId;
 
     public QuestionStatusResource() {
-        // no-arg constructor
     }
 
     public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource markedAsCompleteBy, Boolean markedAsComplete) {
@@ -163,11 +165,35 @@ public class QuestionStatusResource {
         this.assignedByUserId = assignedByUserId;
     }
 
+    public ZonedDateTime getMarkedAsCompleteOn() {
+        return markedAsCompleteOn;
+    }
+
+    public void setMarkedAsCompleteOn(ZonedDateTime markedAsCompleteOn) {
+        this.markedAsCompleteOn = markedAsCompleteOn;
+    }
+
+    public long getMarkedAsCompleteByUserId() {
+        return markedAsCompleteByUserId;
+    }
+
     public Long getMarkedAsCompleteByOrganisationId() {
         return markedAsCompleteByOrganisationId;
     }
 
     public void setMarkedAsCompleteByOrganisationId(Long markedAsCompleteByOrganisationId) {
         this.markedAsCompleteByOrganisationId = markedAsCompleteByOrganisationId;
+    }
+
+    public void setMarkedAsCompleteByUserId(long markedAsCompleteByUserId) {
+        this.markedAsCompleteByUserId = markedAsCompleteByUserId;
+    }
+
+    public String getMarkedAsCompleteByUserName() {
+        return markedAsCompleteByUserName;
+    }
+
+    public void setMarkedAsCompleteByUserName(String markedAsCompleteByUserName) {
+        this.markedAsCompleteByUserName = markedAsCompleteByUserName;
     }
 }

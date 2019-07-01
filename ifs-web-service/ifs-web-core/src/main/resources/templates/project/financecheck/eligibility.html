@@ -138,8 +138,9 @@
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
                        class="govuk-link"
                        th:text="${summaryModel.jesFileDetails?.filename}"
-                       target="_blank">The-uploaded-file-example.pdf</a>
-                    (opens in a new window).
+                       target="_blank"
+                       aria-describedby="file-download-hint">The-uploaded-file-example.pdf</a>
+                    <span id="file-download-hint">(opens in a new window)</span>.
                 </p>
             </div>
         </th:block>

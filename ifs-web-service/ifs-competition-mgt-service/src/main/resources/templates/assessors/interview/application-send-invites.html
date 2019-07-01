@@ -90,8 +90,9 @@
                                             <a th:text="${app.filename}"
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                                target="_blank"
-                                               class="govuk-link">Uploaded-file.pdf</a>
-                                            <p class="govuk-hint">(opens in a new window).</p>
+                                               class="govuk-link"
+                                               aria-describedby="attachment-hint">Uploaded-file.pdf</a>
+                                            <p class="govuk-hint"><span id="attachment-hint">(opens in a new window)</span>.</p>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                             <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button-clear">Remove</button>
