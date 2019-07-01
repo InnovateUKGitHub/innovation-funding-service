@@ -15,8 +15,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.TreeMap;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 public class ApplicationOverviewData {
@@ -33,25 +35,31 @@ public class ApplicationOverviewData {
     private final List<ApplicationInviteResource> invites;
     private final List<Long> completedSectionIds;
     private final UserResource user;
+    private final Map<Long, Set<Long>> completedSectionsByOrganisation;
 
-    public ApplicationOverviewData(CompetitionResource competition, ApplicationResource application, List<SectionResource> sections,
-                                   List<QuestionResource> questions, List<ProcessRoleResource> processRoles,
-                                   OrganisationResource organisation, List<QuestionStatusResource> statuses,
-                                   List<ApplicationInviteResource> invites, List<Long> completedSectionIds, UserResource user) {
+    public ApplicationOverviewData(CompetitionResource competition,
+                                   ApplicationResource application,
+                                   List<SectionResource> sections,
+                                   List<QuestionResource> questions,
+                                   List<ProcessRoleResource> processRoles,
+                                   OrganisationResource organisation,
+                                   List<QuestionStatusResource> statuses,
+                                   List<ApplicationInviteResource> invites,
+                                   List<Long> completedSectionIds,
+                                   Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                   UserResource user) {
         this.competition = competition;
         this.application = application;
-        this.sections = sections.stream()
-            .collect(toMap(SectionResource::getId, Function.identity()));;
-        this.questions = questions.stream()
-            .collect(toMap(QuestionResource::getId, Function.identity()));
-        this.processRoles = processRoles.stream()
-            .collect(toMap(ProcessRoleResource::getId, Function.identity()));
+        this.sections = sections.stream().collect(toMap(SectionResource::getId, v -> v, (v1, v2) -> v1, TreeMap::new)); // retain ordering of sections
+        this.questions = questions.stream().collect(toMap(QuestionResource::getId, identity()));
+        this.processRoles = processRoles.stream().collect(toMap(ProcessRoleResource::getId, identity()));
         this.organisation = organisation;
         this.statuses = Multimaps.index(statuses, QuestionStatusResource::getQuestion);
         this.userProcessRole = processRoles.stream().filter(role -> role.getUser().equals(user.getId())).findFirst().orElseThrow(ObjectNotFoundException::new);
         this.leadApplicant = processRoles.stream().filter(role -> role.getRole().isLeadApplicant()).findAny().orElseThrow(ObjectNotFoundException::new);
         this.invites = invites;
         this.completedSectionIds = completedSectionIds;
+        this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.user = user;
     }
 
@@ -101,5 +109,9 @@ public class ApplicationOverviewData {
 
     public UserResource getUser() {
         return user;
+    }
+
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation() {
+        return completedSectionsByOrganisation;
     }
 }

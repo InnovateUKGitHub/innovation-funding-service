@@ -70,7 +70,7 @@ public class ApplicationSummaryMapperTest {
                         newInnovationArea()
                                 .withName("Digital Manufacturing")
                                 .build())
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .withDurationInMonths(7L)
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
                 .build();
@@ -139,7 +139,7 @@ public class ApplicationSummaryMapperTest {
 
     @Test
     public void testMapFundedBecauseOfFundingDecision() {
-        source.getApplicationProcess().setProcessState(ApplicationState.OPEN);
+        source.getApplicationProcess().setProcessState(ApplicationState.OPENED);
         source.setFundingDecision(FundingDecisionStatus.FUNDED);
 
         ApplicationSummaryResource result = mapper.mapToResource(source);

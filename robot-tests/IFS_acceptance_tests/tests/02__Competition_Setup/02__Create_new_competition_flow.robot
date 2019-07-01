@@ -324,22 +324,10 @@ Eligibility: Should have a Green Check
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
-    When the user clicks the button/link            link = Milestones
-    Then the user should see the element            jQuery = p:contains("Select the stage at which the competition is complete for Innovate UK.")
-    When the user should see the element            jQuery = li span:contains("1. Open date")
-    And the user should see the element             jQuery = li span:contains("2. Briefing event")
-    And the user should see the element             jQuery = li span:contains("3. Submission date")
-    And the user should see the element             jQuery = li span:contains("4. Allocate assessors")
-    And the user should see the element             jQuery = li span:contains("5. Assessor briefing")
-    And the user should see the element             jQuery = li span:contains("6. Assessor accepts")
-    And the user should see the element             jQuery = li span:contains("7. Assessor deadline")
-    And the user should see the element             jQuery = li span:contains("8. Line draw")
-    And the user should see the element             jQuery = li span:contains("9. Assessment panel")
-    And the user should see the element             jQuery = li span:contains("10. Panel date")
-    And the user should see the element             jQuery = li span:contains("11. Funders panel")
-    And the user should see the element             jQuery = li span:contains("12. Notifications")
-    And the user should see the element             jQuery = label:contains("13. Release feedback")
-    And the user should see the element             jQuery = label:contains("14. Project setup")
+    Given the user clicks the button/link           link = Milestones
+    Then the user should see the element            jQuery = h1:contains("Completion stage")
+    And the user should see the element             jQuery = label:contains("Release feedback")
+    And the user should see the element             jQuery = label:contains("Project setup")
     And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
@@ -418,7 +406,7 @@ Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Application details
-    And the user should see the element           jQuery = h1:contains("Application details")
+    And the user should see the element           jQuery = h1:contains("Details")
     When the user selects the radio button        useResubmissionQuestion  false
     Then the user enters text to a text field     id = minProjectDuration  2
     And the user enters text to a text field      id = maxProjectDuration  60
@@ -532,7 +520,7 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
-    When the user should see the element           jQuery = h1:contains("Application finances")
+    When the user should see the element           jQuery = h1:contains("Finances")
     And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]

@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.resource;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 public enum ApplicationEvent implements ProcessEvent {
-    OPENED("opened"),
-    APPROVED("approved"),
-    SUBMITTED("submitted"),
-    REJECTED("rejected"),
+    OPEN("opened"),
+    APPROVE("approved"),
+    SUBMIT("submitted"),
+    REJECT("rejected"),
     MARK_INELIGIBLE("mark-ineligible"),
     INFORM_INELIGIBLE("inform-ineligible"),
     REINSTATE_INELIGIBLE("reinstate-ineligible"),

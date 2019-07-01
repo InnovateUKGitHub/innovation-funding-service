@@ -64,7 +64,7 @@ public class ApplicationSummaryController {
         this.euGrantTransferRestService = euGrantTransferRestService;
     }
 
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, monitoring officers and stakeholders have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod

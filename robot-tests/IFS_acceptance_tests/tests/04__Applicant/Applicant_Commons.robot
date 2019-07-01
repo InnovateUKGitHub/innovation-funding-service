@@ -14,7 +14,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = .in-progress a:contains("${Application}")
+    the user clicks the button/link  jQuery = h3:contains("${Application}") a
     the user clicks the button/link  link = Your finances
 
 Applicant navigates to the finances of the Robot application
@@ -264,14 +264,13 @@ the user selects research area
 the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
-    the user clicks the button/link       link = Your funding
-    the user selects the radio button     requestingFunding   true
-    the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
-    the user selects the radio button     otherFunding   false
-    the user selects the checkbox         agree-terms-page
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Your funding
-    the user should see the element       jQuery = button:contains("Edit")
+    the user clicks the button/link            link = Your funding
+    the user selects the radio button          requestingFunding   true
+    the user enters text to a text field       css = [name^="grantClaimPercentage"]  45
+    the user selects the radio button          otherFunding   false
+    the user clicks the button/link            jQuery = button:contains("Mark as complete")
+    the user clicks the button/link            link = Your funding
+    the user should see the element            jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
@@ -436,6 +435,23 @@ the user marks your funding section as complete
 the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+
+the user accept the competition terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview
+
+the internal user should see read only view of terms and conditions
+    [Arguments]  ${url}  ${applicationid}  ${heading}
+    the user navigates to the page             ${url}
+    the user clicks the button/link            link = ${applicationid}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    the user clicks the button/link            link = View terms and conditions
+    the user should see the element            jQuery = h1:contains("${heading}")
+    the user should not see the element        jQuery = button:contains("Agree and continue")
 
 the user adds a partner organisation
     [Arguments]  ${orgName}  ${name}  ${email}

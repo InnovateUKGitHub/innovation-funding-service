@@ -86,8 +86,12 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}" class="govuk-link" target="_blank">file</a>
-                                            (opens in a new window)
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
+                                               th:text="${attachment.name}"
+                                               class="govuk-link"
+                                               target="_blank"
+                                               aria-describedby="supporting-documentation-hint">file</a>
+                                            <span id="supporting-documentation-hint">(opens in a new window)</span>
                                         </li>
                                     </ul>
                                 </th:block>
@@ -131,8 +135,12 @@
                                             <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                             <ul class="govuk-list">
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
-                                                    (opens in a new window)
+                                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
+                                                       th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                                       class="govuk-link"
+                                                       target="_blank"
+                                                       aria-describedby="supporting-documentation-hint">filename</a>
+                                                    <span id="supporting-documentation-hint">(opens in a new window)</span>
                                                     <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                                 </li>
                                             </ul>
@@ -183,8 +191,12 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}" class="govuk-link" target="_blank">file</a>
-                                            (opens in a new window)
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
+                                               th:text="${attachment.name}"
+                                               class="govuk-link"
+                                               target="_blank"
+                                               aria-describedby="supporting-documentation-hint">file</a>
+                                            <span id="supporting-documentation-hint">(opens in a new window)</span>
                                         </li>
                                     </ul>
                                 </th:blocK>
@@ -228,8 +240,12 @@
                                         <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                         <ul class="govuk-list">
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
-                                                (opens in a new window)
+                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
+                                                   th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                                   class="govuk-link"
+                                                   target="_blank"
+                                                   aria-describedby="supporting-documentation-hint">filename</a>
+                                                <span id="supporting-documentation-hint">(opens in a new window)</span>
                                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>
@@ -278,8 +294,12 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}" class="govuk-link" target="_blank">file</a>
-                                            (opens in a new window)
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
+                                               th:text="${attachment.name}"
+                                               class="govuk-link"
+                                               target="_blank"
+                                               aria-describedby="supporting-documentation-hint">file</a>
+                                            <span id="supporting-documentation-hint">(opens in a new window)</span>
                                         </li>
                                     </ul>
                                 </th:blocK>
@@ -323,8 +343,12 @@
                                         <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                         <ul class="govuk-list">
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
-                                                (opens in a new window)
+                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
+                                                   th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                                   class="govuk-link"
+                                                   target="_blank"
+                                                   aria-describedby="supporting-documentation-hint">filename</a>
+                                                <span id="supporting-documentation-hint">(opens in a new window)</span>
                                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>

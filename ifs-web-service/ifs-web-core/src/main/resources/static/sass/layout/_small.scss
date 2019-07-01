@@ -240,3 +240,11 @@ pre,
 .display-content {
   white-space: pre-wrap;
 }
+
+.accepted {
+  color: govuk-colour("green");
+}
+
+.unaccepted {
+  color: govuk-colour("grey-1");
+}

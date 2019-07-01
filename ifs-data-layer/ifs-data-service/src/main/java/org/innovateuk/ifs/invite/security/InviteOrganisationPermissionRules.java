@@ -80,7 +80,7 @@ public class InviteOrganisationPermissionRules extends BasePermissionRules {
 
     private boolean applicationIsEditable(final Application application) {
         ApplicationProcess state = application.getApplicationProcess();
-        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
+        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPENED);
     }
 
     @PermissionRule(value = "READ", description = "a consortium member and the lead applicant can view the invites of all organisations")
