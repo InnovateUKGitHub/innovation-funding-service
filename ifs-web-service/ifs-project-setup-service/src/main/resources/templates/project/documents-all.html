@@ -29,11 +29,11 @@
         <ul class="task-list">
             <li th:each="document : ${model.documents}">
                 <div class="task">
-                    <h3 class="govuk-heading-s">
+                    <span class="govuk-heading-s">
                         <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                            th:text=${document.title}
                            class="govuk-link" />
-                    </h3>
+                    </span>
                 </div>
                <div th:if="${document.notSubmitted || document.rejected}"
                      class="task-status-incomplete">

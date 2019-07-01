@@ -98,7 +98,7 @@ Collaborators can view a file
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
     [Tags]
-    When the user should see the element               jQuery = h3:contains("Appendix")
+    When the user should see the element               jQuery = h2:contains("Appendix")
     Then the user should not see the element           jQuery = label:contains("Upload")
 
 Collaborators cannot remove a file if not assigned
@@ -194,7 +194,7 @@ the user can see the option to upload a file on the question
 the user checks the Appendix guidance
     [Documentation]  IFS-2564
     the user clicks the button/link           jQuery = span:contains("What should I include in the appendix?")
-    the user should see the element           jQuery = h4:contains("Accepted appendix file types")
+    the user should see the element           jQuery = h3:contains("Accepted appendix file types")
     the user should see the element           jQuery = li:contains("PDF")
     the user should see the element           jQuery = p:contains("It must be less than 10MB in size.")
 

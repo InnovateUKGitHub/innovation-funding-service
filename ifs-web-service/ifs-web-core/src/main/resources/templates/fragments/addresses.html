@@ -179,7 +179,7 @@
     <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
         <div class="govuk-form-group">
-            <h3 class="govuk-heading-s">Organisation name</h3>
+            <h2 class="govuk-heading-s">Organisation name</h2>
             <p class="govuk-body" th:text="${selectedOrganisation.name}"></p>
         </div>
     </fieldset>
@@ -191,22 +191,22 @@
         <div class="govuk-form-group">
 
             <th:block th:if="${showOrgType}">
-                <h3 class="govuk-heading-s">Organisation type</h3>
+                <h2 class="govuk-heading-s">Organisation type</h2>
                 <p class="govuk-body" th:text="${organisationType.name}">Business</p>
             </th:block>
 
-            <h3 class="govuk-heading-s">Registered name</h3>
+            <h2 class="govuk-heading-s">Registered name</h2>
             <p class="govuk-body" th:text="${organisationForm.organisationName}"></p>
 
             <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
-                    <h3 class="govuk-heading-s">Registration number</h3>
+                    <h2 class="govuk-heading-s">Registration number</h2>
                     <p class="govuk-body" th:text="${selectedOrganisation?.organisationSearchId}"></p>
                 </th:block>
             </th:block>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
-                <h3 class="govuk-heading-s">Registered address</h3>
+                <h2 class="govuk-heading-s">Registered address</h2>
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>

@@ -85,8 +85,9 @@
                                         <a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                            th:text="${model.interviewFeedbackViewModel.responseFilename}"
                                            target="_blank"
-                                           class="govuk-link">File</a>
-                                        (opens in a new window).</p>
+                                           class="govuk-link"
+                                           aria-describedby="file-hint">File</a>
+                                        <span id="file-hint">(opens in a new window)</span>.</p>
                                     <button th:unless="${model.interviewFeedbackViewModel.feedbackReleased}" name="removeResponse" class="button-secondary">Remove</button>
                                 </div>
                             </div>
@@ -104,8 +105,9 @@
                                     <a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                        th:text="${model.interviewFeedbackViewModel.responseFilename}"
                                        target="_blank"
-                                       class="govuk-link">File</a>
-                                    (opens in a new window).</p>
+                                       class="govuk-link"
+                                       aria-describedby="file-hint">File</a>
+                                    <span id="file-hint">(opens in a new window)</span>.</p>
                             </div>
                         </th:block>
                     </th:block>
@@ -182,8 +184,9 @@
                         <a target="_blank"
                            th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"
                            th:text="${model.interviewFeedbackViewModel.feedbackFilename}"
-                           class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>
-                        <span class="govuk-body"> (opens in a new window).</span>
+                           class="govuk-link"
+                           aria-describedby="feedback-hint">panel-assessment-feedback.pdf, 6 KB </a>
+                        <span id="feedback-hint" class="govuk-body"> (opens in a new window).</span>
                     </div>
                 </th:block>
 
