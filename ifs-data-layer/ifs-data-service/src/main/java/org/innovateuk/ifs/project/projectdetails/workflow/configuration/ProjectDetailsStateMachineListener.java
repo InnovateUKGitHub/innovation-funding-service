@@ -11,7 +11,7 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.activitylog.domain.ActivityType.PROJECT_DETAILS_COMPLETE;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.PROJECT_DETAILS_COMPLETE;
 import static org.innovateuk.ifs.project.resource.ProjectDetailsState.SUBMITTED;
 import static org.springframework.statemachine.StateContext.Stage.STATE_CHANGED;
 

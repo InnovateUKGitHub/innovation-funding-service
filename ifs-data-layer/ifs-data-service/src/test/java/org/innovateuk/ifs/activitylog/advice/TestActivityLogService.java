@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.activitylog.advice;
 
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 

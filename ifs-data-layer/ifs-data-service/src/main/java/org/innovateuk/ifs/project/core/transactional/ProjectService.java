@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -31,6 +33,7 @@ public interface ProjectService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a project (by making decision)" )
+    @Activity(type = ActivityType.APPLICATION_INTO_PROJECT_SETUP, applicationId = "applicationId")
     ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

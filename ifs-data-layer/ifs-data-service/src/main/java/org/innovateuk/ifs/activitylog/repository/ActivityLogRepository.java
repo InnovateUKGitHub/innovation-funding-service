@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ActivityLogRepository extends CrudRepository<ActivityLog, Long> {
 
-    List<ActivityLog> findByApplicationId(long applicationId);
+    List<ActivityLog> findByApplicationIdOrderByCreatedOnDesc(long applicationId);
 }

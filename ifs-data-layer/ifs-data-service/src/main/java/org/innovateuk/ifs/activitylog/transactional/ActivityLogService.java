@@ -1,7 +1,12 @@
+
 package org.innovateuk.ifs.activitylog.transactional;
 
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+
+import java.util.List;
 
 public interface ActivityLogService {
 
@@ -19,4 +24,6 @@ public interface ActivityLogService {
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     void recordQueryActivityByProjectFinanceId(long projectFinanceId, ActivityType type, long threadId);
+
+    ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId);
 }

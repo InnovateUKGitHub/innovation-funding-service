@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.activitylog.transactional;
 
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;

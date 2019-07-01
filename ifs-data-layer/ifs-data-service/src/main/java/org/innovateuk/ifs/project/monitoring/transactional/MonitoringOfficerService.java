@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.activitylog.domain.ActivityType.MONITORING_OFFICER_ASSIGNED;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.MONITORING_OFFICER_ASSIGNED;
 
 public interface MonitoringOfficerService {
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;

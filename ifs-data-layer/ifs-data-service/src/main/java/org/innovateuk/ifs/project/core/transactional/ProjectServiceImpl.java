@@ -103,7 +103,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .keySet()
                 .stream()
                 .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
-                .map(this::createSingletonProjectFromApplicationId)
+                .map(this::createProjectFromApplication)
                 .collect(toList());
 
         boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseFailingOrSucceedingResult::isFailure);

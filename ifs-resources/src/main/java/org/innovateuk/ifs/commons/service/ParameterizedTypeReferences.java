@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
@@ -368,4 +369,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<MonitoringOfficerAssignmentResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
+        return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
+    }
 }

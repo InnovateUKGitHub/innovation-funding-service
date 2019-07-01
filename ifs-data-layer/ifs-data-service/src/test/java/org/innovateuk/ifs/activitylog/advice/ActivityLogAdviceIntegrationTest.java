@@ -2,7 +2,7 @@ package org.innovateuk.ifs.activitylog.advice;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -170,11 +170,11 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
     }
 
     private void assertZeroActivityLogsExistForApplication() {
-        assertTrue(activityLogRepository.findByApplicationId(application.getId()).isEmpty());
+        assertTrue(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(application.getId()).isEmpty());
     }
 
     private ActivityLog assertOneActivityLogsExistForApplication() {
-        List<ActivityLog> activityLogs = activityLogRepository.findByApplicationId(application.getId());
+        List<ActivityLog> activityLogs = activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(application.getId());
         assertEquals(activityLogs.size(), 1);
         return activityLogs.get(0);
     }

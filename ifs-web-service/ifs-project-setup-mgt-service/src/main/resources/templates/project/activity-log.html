@@ -15,6 +15,13 @@
               th:with="linkTitle='PLACEHOLDER',linkUrl=@{''}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div class="govuk-grid-row" th:each="activity : ${activities}">
+            <h1 th:text="${#messages.msg('ifs.activity.log.' + activity.activityType.name() + '.title')}"></h1>
+            <p th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}${#strings.toLowerCase(#temporals.format(activity.createdOn, 'hh:mma'))}|"></p>
+
+        </div>
+
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
