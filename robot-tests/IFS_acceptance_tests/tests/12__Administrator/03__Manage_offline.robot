@@ -60,6 +60,7 @@ IFS Admin is able to remove on hold status
     [Documentation]  IFS-5941
     Given the user clicks the button/link    jQuery = button:contains("Remove on hold status")
     Then the user should see the element     jQuery = p:contains("This project is no longer on hold.")
+    And the user should see the element      jQuery = h1:contains("Manage project status")
 
 Finance contact is able to mark a project as on hold
     [Documentation]  IFS-5941
@@ -78,10 +79,16 @@ Finance contact is able to add a comment on the Project status page
 
 Finance contact is able to remove on hold status
     [Documentation]  IFS-5941
-    Given the user clicks the button/link    jQuery = button:contains("Remove on hold status")
-    Then the user should see the element     jQuery = p:contains("This project is no longer on hold.")
+    Given the user clicks the button/link     jQuery = button:contains("Remove on hold status")
+    When the user should see the element      jQuery = p:contains("This project is no longer on hold.")
+    And the user should see the element      jQuery = h1:contains("Project details")
+    Then after a page refresh on hold status is no longer displayed
 
 *** Keywords ***
+After a page refresh on hold status is no longer displayed
+    the user navigates to the page        ${server}/project-setup-management/competition/${OnHoldCompId}/project/${OnHoldProjectId}/details
+    the user should not see the element   jQuery = p:contains("This project is on hold.")
+
 The user should see on hold validation errors
     the user should see a field and summary error   Enter the reason to mark project as on hold.
     the user should see a field and summary error   Enter the details.
