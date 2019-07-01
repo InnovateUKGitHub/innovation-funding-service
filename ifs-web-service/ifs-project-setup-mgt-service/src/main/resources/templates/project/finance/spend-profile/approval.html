@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Spend profile|" />
 </head>
 <body class="govuk-template__body competition-management project-management finance-checks-overview">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -64,7 +64,7 @@
                 </li>
             </ul>
 
-            <th:block th:if="${model.notApprovedOrRejected}">
+            <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive}">
                 <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">

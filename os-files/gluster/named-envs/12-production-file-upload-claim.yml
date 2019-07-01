@@ -4,10 +4,10 @@ metadata:
   name: production-file-upload-claim
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   resources:
-     requests:
-       storage: 20G
+    requests:
+      storage: 20G
   selector:
     matchLabels:
       production: "production"

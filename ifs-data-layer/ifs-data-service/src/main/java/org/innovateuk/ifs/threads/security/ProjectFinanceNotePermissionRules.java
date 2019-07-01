@@ -4,9 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,7 +28,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
     public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectInSetup(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+        return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
     private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
@@ -39,7 +37,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectInSetup(note.contextClassPk);
+        return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk);
     }
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
@@ -56,17 +54,13 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return projectFinanceRepository.findById(id);
     }
 
-    private boolean isProjectInSetup(Long projectFinance) {
+    private boolean isProjectActive(Long projectFinance) {
         Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
         if (pf.isPresent()){
             long projectId = pf.get().getProject().getId();
-            return isProjectStateInSetup(projectId);
+            return isProjectActive(projectId);
         }
         return false;
     }
 
-    private boolean isProjectStateInSetup(long projectId){
-        ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return ProjectState.SETUP.equals(projectProcess.getProcessState());
-    }
 }

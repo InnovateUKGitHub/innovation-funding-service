@@ -418,7 +418,7 @@ Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Application details
-    And the user should see the element           jQuery = h1:contains("Application details")
+    And the user should see the element           jQuery = h1:contains("Details")
     When the user selects the radio button        useResubmissionQuestion  false
     Then the user enters text to a text field     id = minProjectDuration  2
     And the user enters text to a text field      id = maxProjectDuration  60
@@ -532,7 +532,7 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
-    When the user should see the element           jQuery = h1:contains("Application finances")
+    When the user should see the element           jQuery = h1:contains("Finances")
     And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
@@ -728,7 +728,7 @@ User cannot delete competition with assessors
 
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
-    [Tags]  MySQL
+    [Tags]
     [Setup]  update milestone to yesterday          ${competitionId}  OPEN_DATE
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1

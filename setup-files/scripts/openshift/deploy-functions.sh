@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -42,7 +42,7 @@ function isPerfEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -193,7 +193,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
@@ -283,7 +283,7 @@ function blockUntilServiceIsUp() {
     while [ ${UNREADY_PODS} -ne "0" ] || [ ${UNSATISFIED_DEPLOYMENTS} -ne "0" ];
     do
         UNREADY_PODS=$(oc get pods ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep -v 1 | wc -l)
+        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep 0 | wc -l)
         ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
         ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)

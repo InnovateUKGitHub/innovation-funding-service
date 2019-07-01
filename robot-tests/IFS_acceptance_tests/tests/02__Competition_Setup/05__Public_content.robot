@@ -22,7 +22,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               IFS-5370 Public content review button is always redirecting to Dates page
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin  MySQL
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
@@ -234,7 +234,7 @@ How to apply: server side validation and autosave
     [Documentation]    INFUND-7490
     [Tags]
     When the user clicks the button/link          link = How to apply
-    Then the user should see the element          jQuery = h1:contains("How to apply")
+    Then the user should see the element          jQuery = h1:contains("Public content how to apply")
     And the user should see the element           jQuery = p:contains("Text entered into this section will appear within the how to apply tab.")
     When the user clicks the button/link          jQuery = button:contains("Save and review")
     Then the user should see a summary error      Please enter content.
@@ -552,18 +552,18 @@ the user can add and remove multiple event groups
     And the user clicks the button/link        link = Return to public content
 
 the user visits the sub sections then he should not see any errors
-    the user visits  Competition information and search
-    the user visits  Summary
-    the user visits  Eligibility
-    the user visits  Scope
-    the user visits  Dates
-    the user visits  How to apply
-    the user visits  Supporting information
+    the user visits  Competition information and search   Competition information and search
+    the user visits  Summary   Public content summary
+    the user visits  Eligibility   Public content eligibility
+    the user visits  Scope   Public content scope
+    the user visits  Dates   Public content dates
+    the user visits  How to apply   Public content how to apply
+    the user visits  Supporting information   Public content supporting information
 
 the user visits
-    [Arguments]  ${section}
+    [Arguments]  ${section}  ${title}
     the user clicks the button/link  link = ${section}
-    the user should see the element  jQuery = h1:contains("${section}")
+    the user should see the element  jQuery = h1:contains("${title}")
     the user should not see an error in the page
     the user clicks the button/link  link = Public content
 
@@ -576,17 +576,17 @@ Custom suite teardown
     Disconnect from database
 
 the user should redirect to the correct page after publish and review
-    the user able to see edit view for  Summary
-    the user able to see edit view for  Eligibility
-    the user able to see edit view for  Scope
-    the user able to see edit view for  Dates
-    the user able to see edit view for  How to apply
-    the user able to see edit view for  Supporting information
+    the user able to see edit view for  Summary   Public content summary
+    the user able to see edit view for  Eligibility   Public content eligibility
+    the user able to see edit view for  Scope   Public content scope
+    the user able to see edit view for  Dates   Public content dates
+    the user able to see edit view for  How to apply   Public content how to apply
+    the user able to see edit view for  Supporting information   Public content supporting information
 
 the user able to see edit view for
-    [Arguments]  ${section_name}
+    [Arguments]  ${section_name}  ${sectionTitle}
     the user clicks the button/link    link = ${section_name}
     the user clicks the button/link    link = Edit
     the user clicks the button/link    jQuery = button:contains("Publish and review")
-    the user should see the element    jQuery = h1:contains("${section_name}")
+    the user should see the element    jQuery = h1:contains("${sectionTitle}")
     the user clicks the button/link    link = Return to public content

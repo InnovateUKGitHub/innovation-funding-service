@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WO
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -82,7 +83,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             build();
 
     private ApplicationResource app = newApplicationResource().withId(456L).withCompetition(123L).build();
-    private ProjectResource project = newProjectResource().withApplication(app).build();
+    private ProjectResource project = newProjectResource()
+            .withApplication(app)
+            .withProjectState(SETUP)
+            .build();
 
     private Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
             FinanceRowType.LABOUR, newLabourCostCategory().withCosts(

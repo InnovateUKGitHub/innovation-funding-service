@@ -312,10 +312,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(allDocumentsApproved);
         SectionAccess sectionAccess = internalUser.canAccessDocumentsSection(user);
 
-        verifyInteractions(
-                SetupProgressChecker::allDocumentsApproved,
-                SetupProgressChecker::isOffline
-        );
+        verifyInteractions(SetupProgressChecker::allDocumentsApproved);
 
         return sectionAccess;
     }

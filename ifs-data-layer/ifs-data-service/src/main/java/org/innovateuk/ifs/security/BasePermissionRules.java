@@ -18,7 +18,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -148,8 +147,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return monitoringOfficerCompetitionIds.contains(competitionId);
     }
 
-    protected boolean isProjectInSetup(long projectId) {
+    protected boolean isProjectActive(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return ProjectState.SETUP.equals(projectProcess.getProcessState());
+        return projectProcess.getProcessState().isActive();
     }
 }

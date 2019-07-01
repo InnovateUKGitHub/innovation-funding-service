@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.project.application}: ${model.project.name} - Project details|" />
 </head>
 <body class="govuk-template__body competition-management project-management project-detail">
 
@@ -18,12 +18,20 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='govuk-heading-xl'" />
 
+        <div th:if="${resumedFromOnHold}" class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is no longer on hold.</p>
+        </div>
+
         <div class="warning-alert" th:if="${model.handleOffline}">
             <p class="govuk-body">This project is being managed offline.</p>
         </div>
 
         <div class="warning-alert" th:if="${model.completeOffline}">
             <p class="govuk-body">Project setup has been completed offline.</p>
+        </div>
+
+        <div class="success-alert" th:if="${displayFinanceReviewerSuccess}">
+            <p class="govuk-body">Innovate UK project finance reviewer has been updated.</p>
         </div>
 
         <h2 class="govuk-heading-m">Project details</h2>
@@ -135,27 +143,39 @@
                 </tbody>
             </table>
         </th:block>
-        <th:block th:if="${model.showWithdrawLink}">
-            <div>
-                <a data-js-modal="modal-withdraw-project" class="button-clear govuk-!-margin-top-6">Withdraw project</a>
-                    <th:block th:insert="fragments/modals :: modal-withdraw-project" />
-            </div>
-        </th:block>
 
+        <h2 class="govuk-heading-m">Innovate UK project finance reviewer</h2>
 
-        <th:block th:if="${model.showHandleOfflineLink}">
-            <div>
-                <a data-js-modal="modal-handle-project-offline" class="button-clear govuk-!-margin-top-6">Manage offline</a>
-                <th:block th:insert="fragments/modals :: modal-handle-project-offline" />
-            </div>
-        </th:block>
+        <table class="govuk-table" id="project-finance-reviewer">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header larger-cols">Full name</th>
+                <th class="govuk-table__header" scope="col">Email</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <th:block th:if="${model.financeReviewerAssigned}" th:text="${model.financeReviewerName}"></th:block>
+                    <th:block th:unless="${model.financeReviewerAssigned}">None added</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:if="${model.financeReviewerAssigned}" th:text="${model.financeReviewerEmail}"></th:block>
+                </td>
+                <td class="govuk-table__cell alignright">
+                    <a th:if="${model.projectFinance}"
+                       th:href="@{/competition/{competitionId}/project/{projectId}/finance-reviewer(competitionId=${model.competitionId},projectId=${model.project.id})}">
+                        Edit <span class="govuk-visually-hidden">finance reviewer</span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-        <th:block th:if="${model.showCompleteOfflineLink}">
-            <div>
-                <a data-js-modal="modal-complete-project-offline" class="button-clear govuk-!-margin-top-6">Mark as completed offline</a>
-                <th:block th:insert="fragments/modals :: modal-complete-project-offline" />
-            </div>
-        </th:block>
+        <p th:if="${model.ableToManageProjectState}" class="govuk-body">
+            <a th:href="@{/competition/{competitionId}/project/{projectId}/manage-status(competitionId=${model.competitionId},projectId=${model.project.id})}"
+               class="govuk-link">Manage project status</a>
+        </p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
