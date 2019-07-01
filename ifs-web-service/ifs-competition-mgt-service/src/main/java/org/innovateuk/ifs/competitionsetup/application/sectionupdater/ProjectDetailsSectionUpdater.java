@@ -35,14 +35,4 @@ public class ProjectDetailsSectionUpdater extends AbstractApplicationSectionUpda
     protected void mapGuidanceRows(AbstractQuestionForm form) {
         //nothing to do here. The guidance rows are set on the form already.
     }
-
-    @Override
-    protected ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value) {
-        if (fieldName.endsWith("subject")) {
-            guidanceRow.setSubject(value);
-            return serviceSuccess();
-        } else {
-            return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
-        }
-    }
 }

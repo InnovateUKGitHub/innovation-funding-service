@@ -6,18 +6,7 @@ The user clicks the button/link
     [Arguments]    ${BUTTON}
     Wait Until Element Is Enabled  ${BUTTON}
     Set Focus To Element    ${BUTTON}
-    wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
-
-The user clicks the button without autosave
-    [Arguments]    ${BUTTON}
-    ${Start_Url} =   Get Location
-    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
-    Wait Until Element Is Enabled  ${BUTTON}
-    Set Focus To Element    ${BUTTON}
-    Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
-    ${End_Url} =   Get Location
-    Run Keyword If   '${Start_Url}' == '${End_Url}'     The user retries submission    ${BUTTON}
 
 The user retries submission
     [Arguments]    ${BUTTON}

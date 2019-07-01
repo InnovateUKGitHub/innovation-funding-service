@@ -35,7 +35,6 @@ The user should not see an error in the page
 
 The user navigates to the page and gets a custom error message
     [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
-    Wait for autosave
     Go To    ${TARGET_URL}
     Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
 

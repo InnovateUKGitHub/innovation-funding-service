@@ -13,24 +13,22 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
-import org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -97,87 +95,6 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
         return MilestonesForm.class.equals(clazz);
-    }
-
-    @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              String fieldName,
-                                                              String value,
-                                                              Optional<Long> questionId) {
-        List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
-        if (!errors.isEmpty()) {
-            return serviceFailure(errors);
-        }
-        return serviceSuccess();
-    }
-
-
-    private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
-        List<Error> errors = new ArrayList<>();
-        try {
-            MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(
-                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId())
-                    .getSuccess();
-
-            errors.addAll(validateMilestoneDateOnAutosave(milestone, fieldName, value));
-
-            if (!errors.isEmpty()) {
-                return errors;
-            }
-            milestoneRestService.updateMilestone(milestone).getSuccess();
-        } catch (Exception ex) {
-            LOG.debug(ex.getMessage(), ex);
-            return makeErrorList();
-        }
-        return errors;
-    }
-
-    private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
-        Integer day = null, month = null, year = null, hour = 0;
-        ZonedDateTime currentDate = milestone.getDate();
-
-        if (isTimeField(fieldName)) {
-            if (null != currentDate) {
-                day = currentDate.getDayOfMonth();
-                month = currentDate.getMonthValue();
-                year = currentDate.getYear();
-                hour = MilestoneTime.valueOf(value).getHour();
-            }
-        } else {
-            String[] dateParts = value.split("-");
-            day = Integer.parseInt(dateParts[0]);
-            month = Integer.parseInt(dateParts[1]);
-            year = Integer.parseInt(dateParts[2]);
-
-            if (null != currentDate) {
-                hour = milestone.getDate().getHour();
-            }
-        }
-
-        String fieldValidationError = milestone.getType().getMilestoneDescription();
-
-        if (!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
-            return singletonList(fieldError(fieldName, fieldName, "error.milestone.invalid", fieldValidationError));
-        } else {
-            milestone.setDate(TimeZoneUtil.fromUkTimeZone(year, month, day, hour));
-        }
-
-        return Collections.emptyList();
-    }
-
-    private boolean isTimeField(String fieldName) {
-        return fieldName.endsWith(".time");
-    }
-
-    private List<Error> makeErrorList() {
-        return singletonList(fieldError("", null, "error.milestone.autosave.unable"));
-    }
-
-    private String getMilestoneTypeFromFieldName(String fieldName) {
-        Pattern typePattern = Pattern.compile("\\[(.*?)\\]");
-        Matcher typeMatcher = typePattern.matcher(fieldName);
-        typeMatcher.find();
-        return typeMatcher.group(1);
     }
 
 }

@@ -199,9 +199,6 @@
                                   required="required"
                                   ifs:utext="${question.guidance}">
                         </textarea>
-                    <div class="textarea-footer">
-                        <span class="autosave-info"></span>
-                    </div>
                 </div>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
@@ -281,8 +278,7 @@
                                            class="govuk-checkboxes__input"
                                            th:field="*{question.allowedFileTypes}"
                                            th:value="${fileTypeCategory}"
-                                           required="required"
-                                           data-autosave-list/> <!-- data-autosave-disabled -->
+                                           required="required"/>
                                     <label th:for="${#ids.prev('question.allowedFileTypes')}"
                                            th:text="${fileTypeCategory.displayName}"
                                            class="govuk-label govuk-checkboxes__label">PDF</label>
@@ -311,9 +307,6 @@
                                   required="required"
                                   ifs:utext="${question.appendixGuidance}">
                         </textarea>
-                            <div class="textarea-footer">
-                                <span class="autosave-info"></span>
-                            </div>
                         </div>
                     </div>
                 </div>

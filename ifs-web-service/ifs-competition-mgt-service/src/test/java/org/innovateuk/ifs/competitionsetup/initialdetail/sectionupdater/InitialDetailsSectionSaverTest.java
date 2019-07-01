@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -143,47 +141,6 @@ public class InitialDetailsSectionSaverTest {
         verify(competitionSetupRestService).initApplicationForm(competition.getId(), competitionSetupForm.getCompetitionTypeId());
         verify(userService).existsAndHasRole(executiveUserId, COMP_ADMIN);
         verify(userService).existsAndHasRole(leadTechnologistId, INNOVATION_LEAD);
-    }
-
-    @Test
-    public void autoSaveCompetitionSetupSection() {
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-        competition.setMilestones(singletonList(10L));
-        when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(getMilestoneList()));
-        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
-        when(competitionSetupMilestoneService.createMilestonesForIFSCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));
-        when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
-
-        ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (ZonedDateTime.now().getYear() + 1), null);
-
-        assertTrue(result.isSuccess());
-        verify(competitionSetupRestService).update(competition);
-    }
-
-    @Test
-    public void autoSaveInnovationAreaCategoryIds() {
-
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-        competition.setInnovationAreas(Collections.singleton(999L));
-
-        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
-
-        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "autosaveInnovationAreaIds", "1,2, 3", null);
-
-        assertTrue(errors.isSuccess());
-        assertThat(competition.getInnovationAreas(), hasItems(1L, 2L, 3L));
-        assertThat(competition.getInnovationAreas(), hasSize(3));
-        verify(competitionSetupRestService).update(competition);
-    }
-
-    @Test
-    public void autoSaveCompetitionSetupSectionUnknown() {
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-
-        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "notExisting", "Strange!@#1Value", null);
-
-        assertTrue(!errors.isSuccess());
-        verify(competitionSetupRestService, never()).update(competition);
     }
 
     @Test
