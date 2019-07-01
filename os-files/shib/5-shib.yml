@@ -102,7 +102,7 @@ items:
   metadata:
     name: shib
     annotations:
-      haproxy.router.openshift.io/balance: source
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host:  ${SHIB_ADDRESS}
     port:
