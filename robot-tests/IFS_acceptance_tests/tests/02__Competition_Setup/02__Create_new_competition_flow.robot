@@ -514,9 +514,9 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button without autosave                                   css = p button[type="submit"]  #Add question link
+    Given the user clicks the button/link                                               css = p button[type="submit"]  #Add question link
     When the user is able to configure the new question                                 ${customQuestion}
-    And the user clicks the button without autosave                                     jQuery = li:contains("${customQuestion}")
+    And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}
 
 Removing an Assessed Application Question
@@ -689,7 +689,7 @@ Assessor: Should have a Green Check
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
-    [Setup]  the user clicks the button without autosave  link = ${competitionTitle}
+    [Setup]  the user clicks the button/link  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
     And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
@@ -802,7 +802,6 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
     Set Focus To Element    jQuery = button:contains(Done)
-    wait for autosave
 
 the weekdays should be correct
     element should contain    css = tr:nth-child(1) td:nth-child(3)     Wed
