@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
@@ -147,7 +147,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Transactional
     public ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource) {
         ApplicationInvite invite = applicationInviteMapper.mapToDomain(inviteResource);
-        invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        invite.send(loggedInUserSupplier.get(), now());
         applicationInviteRepository.save(invite);
         return applicationInviteNotificationService.resendCollaboratorInvite(invite);
     }

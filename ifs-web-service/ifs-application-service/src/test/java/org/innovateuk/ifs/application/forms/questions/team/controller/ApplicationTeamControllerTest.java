@@ -222,7 +222,8 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
                 .param("resend-invite", String.valueOf(inviteId)))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + applicationId + "/form/question/" + questionId + "/team"));
 
         verify(inviteRestService).resendInvite(applicationInviteResource);
     }
