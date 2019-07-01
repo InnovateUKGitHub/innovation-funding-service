@@ -86,7 +86,6 @@ Initial details: mark as done
     [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888  IFS-4982
     [Tags]
     Given The user enters valid data in the initial details
-    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = .govuk-button:contains("Edit")
 
@@ -141,20 +140,14 @@ Eligibility client-side validations
     When the user selects the checkbox                   research-categories-33
     And the user selects the checkbox                    research-categories-34
     And the user selects the checkbox                    research-categories-35
-    And the user moves focus and waits for autosave
     When the user selects the radio button               singleOrCollaborative    single
     And the user selects the checkbox                    lead-applicant-type-1  #business
-    And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus and waits for autosave
     And the user clicks the button twice                 css = label[for="comp-overrideFundingRules-no"]
-    And the user moves focus and waits for autosave
     Then the user should not see the element             jQuery = .govuk-error-message:contains("Please select a collaboration level")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select a lead applicant type")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select at least one research category")
-    And the user moves focus and waits for autosave
     And the user selects the radio button                resubmission    no
-    And the user moves focus and waits for autosave
     And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page
 
@@ -252,13 +245,10 @@ Documents in project setup: The competition admin addresses the errors
     [Documentation]
     [Tags]
     Given the user enters text to a text field    id = title    Test document type
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("Please enter a title.")
     When the user clicks the button/link          jQuery = span:contains("PDF")
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
     When the user enters text to a text field     css = .editor    Guidance test.
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
