@@ -22,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -134,15 +133,12 @@ public class ApplicationTeamController {
 
     private void resendApplicationInvite(long inviteId, long applicationId){
         List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(applicationId).getSuccess();
-        Optional<ApplicationInviteResource> invite = inviteOrganisationResources.stream()
-                .map(inviteOrganisationResource -> inviteOrganisationResource.getInviteResources())
-                .flatMap(Collection::stream)
+        inviteOrganisationResources.stream()
+                .map(InviteOrganisationResource::getInviteResources)
+                .flatMap(List::stream)
                 .filter(applicationInvite -> applicationInvite.getId().equals(inviteId))
-                .findFirst();
-
-        if (invite.isPresent()) {
-            inviteRestService.resendInvite(invite.get());
-        }
+                .findFirst()
+                .ifPresent(invite -> inviteRestService.resendInvite(invite));
     }
 
     @PostMapping(params = "add-team-member")

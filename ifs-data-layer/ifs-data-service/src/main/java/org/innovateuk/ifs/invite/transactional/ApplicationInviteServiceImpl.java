@@ -20,6 +20,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,11 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
@@ -83,6 +87,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Autowired
     private ApplicationInviteNotificationService applicationInviteNotificationService;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
@@ -139,8 +146,10 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource) {
-        return applicationInviteNotificationService.inviteCollaborators(
-                        singletonList(mapInviteResourceToInvite(inviteResource, null)));
+        ApplicationInvite invite = applicationInviteMapper.mapToDomain(inviteResource);
+        invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        applicationInviteRepository.save(invite);
+        return applicationInviteNotificationService.resendCollaboratorInvite(invite);
     }
 
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
