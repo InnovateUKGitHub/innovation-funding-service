@@ -124,7 +124,6 @@ Initial details - User enters valid values and marks as done
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
-    And the user moves focus and waits for autosave
     And the user clicks the button twice                        css = label[for = "stateAid2"]
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
@@ -297,9 +296,7 @@ Eligibility: Mark as Done then Edit again
     And the user selects the checkbox        lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user selects the radio button    resubmission    no
-    And the user moves focus and waits for autosave
     And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
-    And the user moves focus and waits for autosave
     When the user clicks the button/link     jQuery = button:contains("Done")
     Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
     And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
