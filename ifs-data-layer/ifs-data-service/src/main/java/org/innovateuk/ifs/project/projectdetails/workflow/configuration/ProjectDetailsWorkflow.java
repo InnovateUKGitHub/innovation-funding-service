@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
+import org.innovateuk.ifs.project.projectdetails.workflow.actions.ProjectDetailsCompleteAction;
 import org.innovateuk.ifs.project.projectdetails.workflow.guards.AllProjectDetailsSuppliedGuard;
 import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
@@ -28,13 +29,12 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
 
     @Autowired
-    private ProjectDetailsStateMachineListener projectDetailsStateMachineListener;
+    private ProjectDetailsCompleteAction projectDetailsCompleteAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsEvent> config) throws Exception {
         config.withConfiguration()
-                .listener(new WorkflowStateMachineListener<>())
-                .listener(projectDetailsStateMachineListener);
+                .listener(new WorkflowStateMachineListener<>());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .and()
             .withChoice()
                 .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(SUBMITTED, allProjectDetailsSuppliedGuard)
+                .first(SUBMITTED, allProjectDetailsSuppliedGuard, projectDetailsCompleteAction)
                 .last(PENDING);
 
     }
