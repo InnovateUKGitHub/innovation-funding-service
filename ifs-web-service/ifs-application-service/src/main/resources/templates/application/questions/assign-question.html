@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+              th:with="linkTitle=${param.origin[0] == 'question' ? model.question.name : 'Application overview'},linkClass='link-back',linkUrl=${param.origin[0] == 'question' ? '/application/' + model.applicationId + '/form/question/' + model.question.id : '/application/' + model.applicationId}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
@@ -61,7 +61,7 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group">
-                <button class="govuk-button">Save and return to application overview</button>
+                <button class="govuk-button">Save and return to <th:block th:text="${param.origin[0] == 'question' ? model.question.name : 'application overview'}"></th:block></button>
             </div>
         </form>
 

@@ -89,7 +89,7 @@
                                      class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">
-                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign?origin=overview(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
                                            class="govuk-link"
                                            aria-describedby="assign-hint">
                                             Assigned to
