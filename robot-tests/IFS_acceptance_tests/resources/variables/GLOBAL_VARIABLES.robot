@@ -3,12 +3,10 @@ Variables  ../../libs/Initialisation.py
 
 *** Variables ***
 ${docker}         0
-${smoke_test}     0
 ${BROWSER}        chrome
 ${SERVER_BASE}    ifs.local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
-${RUNNING_ON_DEV}    ${EMPTY}
 ${SAUCELABS_RUN}    1
 ${LOGIN_URL}      ${SERVER}/
 ${frontDoor}  ${server}/competition/search
