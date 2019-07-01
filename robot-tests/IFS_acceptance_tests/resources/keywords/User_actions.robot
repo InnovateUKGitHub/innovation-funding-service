@@ -29,7 +29,7 @@ The user retries submission
 
 The user clicks the button/link in the paginated list
     [Arguments]    ${BUTTON}
-    Do Keyword With Pagination     The user clicks the button/link     ${BUTTON}
+    Do Keyword With Pagination     click element     ${BUTTON}
 
 the user clicks the button twice
     [Arguments]    ${element}

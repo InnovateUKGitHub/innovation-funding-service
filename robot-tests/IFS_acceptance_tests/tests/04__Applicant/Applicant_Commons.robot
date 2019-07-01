@@ -337,23 +337,11 @@ logged in user applies to competition
     the user select the competition and starts application    ${competition}
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
-navigate to next page if not found
-    [Arguments]  ${competition}
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
-
 the user select the competition and starts application
     [Arguments]  ${competition}
-    the user navigates to the page      ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link     link = ${competition}
-    the user clicks the button/link     jQuery = a:contains("Start new application")
+    the user navigates to the page                            ${frontDoor}
+    The user clicks the button/link in the paginated list     link = ${competition}
+    the user clicks the button/link                           jQuery = a:contains("Start new application")
 
 the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
