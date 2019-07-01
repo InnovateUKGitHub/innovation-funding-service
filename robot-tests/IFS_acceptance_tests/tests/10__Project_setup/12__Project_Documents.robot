@@ -114,13 +114,9 @@ Lead partner can view both documents
     Given Log in as a different user                lewis.poole@vitruvius.example.com  ${short_password}
     When the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link             link = Collaboration agreement
-    Then the user opens the link in new window      ${valid_pdf}
-    And the user should not see an error in the page
-    And the user closes the last opened tab
+    Then open pdf link                              ${valid_pdf}
     When the user goes to documents page            Back to document overview  Exploitation plan
-    And the user opens the link in new window       ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                               ${valid_pdf}
     [Teardown]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 
 Lead partner does not have the option to submit the documents
@@ -146,14 +142,9 @@ Non-lead partner can view both documents
     Given log in as a different user        &{collaborator1_credentials_bd}
     When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page     Documents  Collaboration agreement
-    And the user clicks the button/link     link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                       ${valid_pdf}
     When the user goes to documents page    Return to documents  Exploitation plan
-    And the user clicks the button/link     link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
-    And the user goes back to the previous page
+    Then open pdf link                      ${valid_pdf}
 
 Non-lead partner cannot remove or submit right
     [Documentation]  INFUND-3013
@@ -232,13 +223,9 @@ PM can still view both documents after submitting
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link    link = Collaboration agreement
-    And the user clicks the button/link     link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                       ${valid_pdf}
     When the user goes to documents page    Return to documents  Exploitation plan
-    Then the user clicks the button/link    link = ${valid_pdf}
-    And the user should not see an error in the page
-    And the user closes the last opened tab
+    Then open pdf link                      ${valid_pdf}
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -259,13 +246,9 @@ Lead partner cannot remove the documents after submission by PM
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    When the user clicks the button/link    link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    Given open pdf link                    ${valid_pdf}
     When the user goes to documents page    Return to documents  Collaboration agreement
-    Then the user clicks the button/link    link = ${valid_pdf}
-    And the user should not see an error in the page
-    And the user closes the last opened tab
+    Then open pdf link                     ${valid_pdf}
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
@@ -280,14 +263,10 @@ Non-lead partner cannot remove the documents after submission by PM
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     [Tags]
-    When the user clicks the button/link        link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    Given open pdf link                         ${valid_pdf}
     When the user goes to documents page        Return to documents  Collaboration agreement
-    Then the user clicks the button/link        link = ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
-    When the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then open pdf link                          ${valid_pdf}
+    And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
@@ -300,11 +279,9 @@ CompAdmin can see uploaded files
     And the user clicks the button/link     link = ${PS_Competition_Name}
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
-    And the user clicks the button/link     link = ${valid_pdf}
-    Then the user should see the file without error
+    And open pdf link                       ${valid_pdf}
     When the user goes to documents page    Documents  Exploitation plan
-    And the user clicks the button/link     link = ${valid_pdf}
-    Then the user should see the file without error
+    Then open pdf link                      ${valid_pdf}
 
 CompAdmin rejects both documents
     [Documentation]    INFUND-4620
@@ -432,8 +409,7 @@ CompAdmin sees uploaded file and approves it
     Given the user navigates to the page        ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/document/all
     Then the user should not see the element    link = Collaboration agreement
     And the user clicks the button/link         link = Exploitation plan
-    When the user clicks the button/link        link = ${valid_pdf}
-    Then the user should see the file without error
+    When open pdf link                          ${valid_pdf}
     And internal user approve uploaded documents
 
 Sole applicant can see documents approval
@@ -454,10 +430,6 @@ the user navigates to the competition
     the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
     the user clicks the button/link     jQuery = button:contains("Next")
     the user clicks the button/link     link = ${PS_Competition_Name}
-
-the user should see the file without error
-    the user should not see an error in the page
-    the user closes the last opened tab
 
 compAdmin reject uploaded documents
     the user selects the radio button           approved   false

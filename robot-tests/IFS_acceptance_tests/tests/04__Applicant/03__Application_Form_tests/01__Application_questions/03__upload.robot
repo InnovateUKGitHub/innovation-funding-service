@@ -63,18 +63,16 @@ Lead applicant can upload a pdf file
 Lead applicant can view a file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
-    Given The user opens the link in new window  ${5mb_pdf}
-    And the file has been scanned for viruses
-    When the applicant opens the uploaded file
-    And the user closes the last opened tab
+    Given the file has been scanned for viruses
+    And the user clicks the button/link  link = ${5mb_pdf}
+    When Select Window  NEW
     Then the user should not see an error in the page
-    When The user goes back to the previous page
-    And the user closes the last opened tab
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
     [Tags]  HappyPath
-    When Log in as a different user               &{Comp_admin1_credentials}
+    [Setup]  get application id by name and set as suite variable   Academic robot test application
+    Given Log in as a different user               &{Comp_admin1_credentials}
     Then User verifies if uploaded document can be viewed
     When Log in as a different user               &{internal_finance_credentials}
     Then User verifies if uploaded document can be viewed
@@ -90,10 +88,7 @@ Collaborators can view a file
     Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
-    And the user should see the element           link = ${5mb_pdf}
-    When The user opens the link in new window    ${5mb_pdf}
-    And the user should not see an error in the page
-    Then the user closes the last opened tab
+    Then open pdf link                             ${5mb_pdf}
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -127,11 +122,8 @@ Collaborators can view a file when the question is assigned
     [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link         link = Academic robot test application
-    And the user clicks the button/link         link = 5. Technical approach
-    And the user should see the element         link = ${5mb_pdf}
-    When The user opens the link in new window  ${5mb_pdf}
-    And the user should not see an error in the page
-    Then the user closes the last opened tab
+    When the user clicks the button/link        link = 5. Technical approach
+    Then open pdf link                          ${5mb_pdf}
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
@@ -198,16 +190,10 @@ the user checks the Appendix guidance
     the user should see the element           jQuery = li:contains("PDF")
     the user should see the element           jQuery = p:contains("It must be less than 10MB in size.")
 
-The applicant opens the uploaded file
-    The user opens the link in new window        ${5mb_pdf}
-
 User verifies if uploaded document can be viewed
-     ${academic_applicaton_id} =  get application id by name  Academic robot test application
      the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
-     The user opens the link in new window     ${5mb_pdf}
-     the user should not see an error in the page
-     the user closes the last opened tab
+     open pdf link                             ${5mb_pdf}
 
 Custom suite teardown
     Close browser and delete emails

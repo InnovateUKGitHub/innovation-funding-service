@@ -298,9 +298,7 @@ PM can view the uploaded Annex file
     [Tags]  HappyPath
     [Setup]    log in as a different user        ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    When the user opens the link in new window   ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    Then open pdf link                           ${valid_pdf}
 
 PM can download the annex
     [Documentation]    INFUND-5998
