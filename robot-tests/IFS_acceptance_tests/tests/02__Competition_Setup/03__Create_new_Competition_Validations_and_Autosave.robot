@@ -73,21 +73,12 @@ Initial details: client-side validations
     Then the user should not see the error any more             Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id = executiveUserId
     Then The user should not see the element                    jQuery = .govuk-error-message:contains("Please select a Portfolio manager.")
-    [Teardown]  wait for autosave
-
-Initial details: Autosave
-    [Documentation]    INFUND-3001
-    [Tags]
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Initial details
-    Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
     [Documentation]    INFUND-4682
     Given the user enters text to a text field    id = openingDateDay    01
     And the user enters text to a text field      id = openingDateMonth    12
     And the user enters text to a text field      id = openingDateYear    2015
-    And the user moves focus and waits for autosave
     When the user clicks the button/link          jQuery = button:contains("Done")
     Then The user should not see the element      jQuery = .govuk-button:contains("Edit")
 
@@ -95,7 +86,6 @@ Initial details: mark as done
     [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888  IFS-4982
     [Tags]
     Given The user enters valid data in the initial details
-    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = .govuk-button:contains("Edit")
 
@@ -125,13 +115,6 @@ Funding information client-side validations
     And the user enters text to a text field           id = activityCode    4242
     Then The user should not see the error text in the page   Please enter a budget.
 
-Funding information Autosave
-    [Documentation]    INFUND-4581
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Funding information
-    Then the user should see the correct details in the funding information form
-
 Eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]
@@ -157,29 +140,16 @@ Eligibility client-side validations
     When the user selects the checkbox                   research-categories-33
     And the user selects the checkbox                    research-categories-34
     And the user selects the checkbox                    research-categories-35
-    And the user moves focus and waits for autosave
     When the user selects the radio button               singleOrCollaborative    single
     And the user selects the checkbox                    lead-applicant-type-1  #business
-    And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus and waits for autosave
     And the user clicks the button twice                 css = label[for="comp-overrideFundingRules-no"]
-    And the user moves focus and waits for autosave
     Then the user should not see the element             jQuery = .govuk-error-message:contains("Please select a collaboration level")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select a lead applicant type")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select at least one research category")
-    And the user moves focus and waits for autosave
     And the user selects the radio button                resubmission    no
-    And the user moves focus and waits for autosave
     And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page
-
-Eligibility Autosave
-    [Documentation]  INFUND-4582
-    [Tags]
-    When the user clicks the button/link    link = Competition setup
-    And the user clicks the button/link     link = Eligibility
-    Then the user should see the correct details in the eligibility form
 
 Milestones: Server side validations, submission time is default
     [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
@@ -191,7 +161,6 @@ Milestones: Server side validations, submission time is default
     And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
-    And the users waits until the page is autosaved
     And the user clicks the button/link               jQuery = button:contains(Done)
     Then Validation summary should be visible
     Then the user should see the text in the element  jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
@@ -276,13 +245,10 @@ Documents in project setup: The competition admin addresses the errors
     [Documentation]
     [Tags]
     Given the user enters text to a text field    id = title    Test document type
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("Please enter a title.")
     When the user clicks the button/link          jQuery = span:contains("PDF")
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
     When the user enters text to a text field     css = .editor    Guidance test.
-    And the user moves focus and waits for autosave
     Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
@@ -404,10 +370,6 @@ The user should not see the error text in the page
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
-the users waits until the page is autosaved
-    Set Focus To Element    jQuery=button:contains(Done)
-    Wait For Autosave
-
 the user should see the correct inputs in the Milestones form
     the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
@@ -444,9 +406,8 @@ The user navigates to the Validation competition
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
+    Mouse out    css = input
     Set Focus To Element    jQuery = button:contains("Done")
-    Wait for autosave
     Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
 
 the user should see the group of errors

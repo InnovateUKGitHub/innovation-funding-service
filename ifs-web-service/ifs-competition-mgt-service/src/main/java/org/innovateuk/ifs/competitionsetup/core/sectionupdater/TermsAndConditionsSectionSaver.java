@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.core.sectionupdater;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -11,12 +10,7 @@ import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSe
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.TermsAndConditionsForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Competition setup section saver for the terms and conditions section.
@@ -43,16 +37,9 @@ public class TermsAndConditionsSectionSaver extends AbstractSectionUpdater imple
     protected ServiceResult<Void> doSaveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
         TermsAndConditionsForm form = (TermsAndConditionsForm) competitionSetupForm;
 
-        try {
-            competitionRestService.updateTermsAndConditionsForCompetition(
-                    competitionResource.getId(),
-                    form.getTermsAndConditionsId()
-            ).getSuccess();
-        } catch (RuntimeException e) {
-            LOG.error("Competition object not available", e);
-            return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));
-        }
-
-        return serviceSuccess();
+        return competitionRestService.updateTermsAndConditionsForCompetition(
+                competitionResource.getId(),
+                form.getTermsAndConditionsId()
+        ).toServiceResult();
     }
 }

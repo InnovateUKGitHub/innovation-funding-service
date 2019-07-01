@@ -9,7 +9,7 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='govuk-heading-xl'" />
 
     <form th:action="@{(${model.general.editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="assessors">
+          th:attr="data-competition=${model.general.competition.id}" data-section="assessors">
         <th:block th:if="${model.general.editable}" id="section-assessors-edit">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
