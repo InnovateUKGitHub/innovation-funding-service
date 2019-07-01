@@ -3,6 +3,8 @@ Documentation    IFS-5110 Handle IFS applications offline CTA
 ...
 ...              IFS-5939 New manage project status page
 ...
+...              IFS-5941 Respond to onhold status changes
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
@@ -10,7 +12,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
-Ifs Admin marks a project as offline
+IFS Admin marks a project as offline
     [Documentation]  IFS-5110
     [Setup]  the user navigates to the project to be Manage offline
     Given the user marks the project as managed offline
@@ -23,13 +25,77 @@ Applicant sees the project is being managed offline
     Then the user should see the element   jQuery = .message-alert:contains("Innovate UK is managing this project's setup offline. For help call 0300 321 4357.")
     And the user should see the element    jQuery = .progress-list .read-only + .read-only +.waiting +.read-only + .read-only + .read-only + .read-only
 
-Ifs Admin marks a project as completed offline
+IFS Admin marks a project as completed offline
     [Documentation]  IFS-5110
     Given Log in as a different user     &{ifs_admin_user_credentials}
     When the user marks the project as completed offline
     Then the user is able to see that the project is beeing completed offline
 
+On hold Validations
+    [Documentation]  IFS-5941
+    [Setup]  the user navigates to the page              ${server}/project-setup-management/competition/${OnHoldCompId}/project/${OnHoldProjectId}/details
+    Given the user clicks the button/link                link = Manage project status
+    When the user selects the radio button               state   ON_HOLD
+    And the user clicks the button/link                  jQuery = button:contains("Change project status")
+    Then the user should see on hold validation errors
+
+IFS Admin is able to mark a project as on hold
+    [Documentation]  IFS-5941
+    Given the user marks the project as on hold
+    Then the user is able to see that the project is on hold
+
+Project status page validations
+    [Documentation]  IFS-5941
+    Given the user clicks the button/link                jQuery = span:contains("Add a comment")
+    When the user clicks the button/link                 jQuery = button:contains("Save comment")
+    Then the user should see a field and summary error   Enter the details.
+
+IFS Admin is able to add a comment on the Project status page
+    [Documentation]  IFS-5941
+    Given the user enters text to a text field  id = details   Adding a comment
+    When the user clicks the button/link        jQuery = button:contains("Save comment")
+    Then the user should see the element        jQuery = p:contains("Adding a comment")
+
+IFS Admin is able to remove on hold status
+    [Documentation]  IFS-5941
+    Given the user clicks the button/link    jQuery = button:contains("Remove on hold status")
+    Then the user should see the element     jQuery = p:contains("This project is no longer on hold.")
+
+Finance contact is able to mark a project as on hold
+    [Documentation]  IFS-5941
+    [Setup]   Log in as a different user    &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${OnHoldCompId}/project/${OnHoldProjectId}/details
+    When the user clicks the button/link    link = Manage project status
+    And the user marks the project as on hold
+    Then the user is able to see that the project is on hold
+
+Finance contact is able to add a comment on the Project status page
+    [Documentation]  IFS-5941
+    Given the user clicks the button/link       jQuery = span:contains("Add a comment")
+    When the user enters text to a text field   id = details   Adding a comment
+    And the user clicks the button/link         jQuery = button:contains("Save comment")
+    Then the user should see the element        jQuery = p:contains("Adding a comment")
+
+Finance contact is able to remove on hold status
+    [Documentation]  IFS-5941
+    Given the user clicks the button/link    jQuery = button:contains("Remove on hold status")
+    Then the user should see the element     jQuery = p:contains("This project is no longer on hold.")
+
 *** Keywords ***
+The user should see on hold validation errors
+    the user should see a field and summary error   Enter the reason to mark project as on hold.
+    the user should see a field and summary error   Enter the details.
+
+The user is able to see that the project is on hold
+    the user should see the element   jQuery = p:contains("This project is on hold.")
+    the user clicks the button/link   link = View details, reply or remove on hold status
+    the user should see the element   jQuery = p:contains("Details")
+
+The user marks the project as on hold
+    the user enters text to a text field   id = onHoldReason   Reason
+    the user enters text to a text field   id = onHoldDetails  Details
+    the user clicks the button/link        jQuery = button:contains("Change project status")
+
 The user is able to see that the project is beeing completed offline
     the user should see the element   jQuery = p:contains("Project setup has been completed offline.")
     the user clicks the button/link   link = Return to project details
