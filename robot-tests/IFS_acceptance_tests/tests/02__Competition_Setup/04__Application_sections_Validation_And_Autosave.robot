@@ -37,9 +37,7 @@ Business opportunity: Client side validations
     [Tags]
     Given the user fills the empty question fields
     And the user enters text to a text field                            id = question.shortTitle    Test Heading
-    And the user moves focus and waits for autosave
     And the user selects the radio button                               question.appendix  0
-    And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.title"]                 ${empty_field_warning_message}
