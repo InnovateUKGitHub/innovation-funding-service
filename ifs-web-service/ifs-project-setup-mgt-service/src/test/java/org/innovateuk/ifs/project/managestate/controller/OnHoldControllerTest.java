@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -89,7 +90,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
         assertEquals("Bob Someone", commentViewModel.getUser());
         assertEquals("Innovate UK (IFS Administrator)", commentViewModel.getUserRole());
         assertEquals("Body", commentViewModel.getComment());
-        assertEquals(created, commentViewModel.getDate());
+        assertEquals(toUkTimeZone(created), commentViewModel.getDate());
     }
 
     @Test
