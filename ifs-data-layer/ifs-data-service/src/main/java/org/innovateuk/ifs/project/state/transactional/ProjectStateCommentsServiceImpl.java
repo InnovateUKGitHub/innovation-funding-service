@@ -109,15 +109,15 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
     private String textForState(ProjectState state) {
         switch (state) {
             case COMPLETED_OFFLINE:
-                return "Project has been completed offline.";
+                return "Project has been completed offline";
             case HANDLED_OFFLINE:
-                return "Project has been handled offline.";
+                return "Project has been handled offline";
             case WITHDRAWN:
-                return "Project has been withdrawn.";
+                return "Project has been withdrawn";
             case ON_HOLD:
-                return "Marked as on hold.";
+                return "Marked as on hold";
             case SETUP:
-                return "Project has been resumed from on hold.";
+                return "Project has been resumed from on hold";
             default:
                 throw new IFSRuntimeException(String.format("Unsupported state change to %s", state.name()));
         }
