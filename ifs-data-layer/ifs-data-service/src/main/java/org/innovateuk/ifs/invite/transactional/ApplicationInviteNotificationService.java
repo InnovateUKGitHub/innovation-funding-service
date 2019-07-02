@@ -70,7 +70,7 @@ class ApplicationInviteNotificationService {
     ServiceResult<Void> inviteCollaborators(List<ApplicationInvite> invites) {
 
         for (ApplicationInvite invite : invites) {
-            ServiceResult<Void> inviteResult = processCollaboratorInvite(webBaseUrl, invite);
+            ServiceResult<Void> inviteResult = processCollaboratorInvite(webBaseUrl, invite, false);
 
             if (inviteResult.isFailure()) {
                 return inviteResult;
@@ -80,7 +80,7 @@ class ApplicationInviteNotificationService {
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite) {
+    private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite, boolean isResend) {
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         validator.validate(invite, errors);
 
@@ -90,11 +90,18 @@ class ApplicationInviteNotificationService {
             if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
-            invite.setHash(generateInviteHash());
+            if(!isResend) {
+                invite.setHash(generateInviteHash());
+            }
             applicationInviteRepository.save(invite);
             return inviteCollaboratorToApplication(baseUrl, invite).
                     andOnSuccessReturnVoid(() -> handleInviteSuccess(invite));
         }
+    }
+
+    @Transactional
+    public ServiceResult<Void> resendCollaboratorInvite(ApplicationInvite invite) {
+        return processCollaboratorInvite(webBaseUrl, invite, true);
     }
 
     private ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {

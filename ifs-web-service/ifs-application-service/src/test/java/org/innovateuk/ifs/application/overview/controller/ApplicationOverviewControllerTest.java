@@ -65,7 +65,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
         when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
         when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withRole(LEADAPPLICANT).build()));
-        when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPEN)).thenReturn(restSuccess());
+        when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPENED)).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(get("/application/" + application.getId()))
                 .andExpect(status().isOk())
@@ -75,7 +75,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertSame(expectedModel, viewModel);
-        verify(applicationRestService).updateApplicationState(application.getId(), ApplicationState.OPEN);
+        verify(applicationRestService).updateApplicationState(application.getId(), ApplicationState.OPENED);
     }
 
     @Test

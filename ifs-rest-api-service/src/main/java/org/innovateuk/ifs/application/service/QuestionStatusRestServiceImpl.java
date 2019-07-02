@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.adapt;
 
@@ -48,6 +50,11 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
     @Override
     public RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, long applicationId, long organisationId) {
         return getWithRestResult(questionStatusRestURL + "/find-by-question-ids-and-application-id-and-organisation-id/" + CollectionFunctions.simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.questionStatusResourceListType());
+    }
+
+    @Override
+    public RestResult<Optional<QuestionStatusResource>> getMarkedAsCompleteByQuestionApplicationAndOrganisation(long questionId, long applicationId, long organisationId) {
+        return getWithRestResult(format(questionStatusRestURL + "/find-marked-complete-by-question-and-application-and-organisation/%d/%d/%d", questionId, applicationId, organisationId), QuestionStatusResource.class).toOptionalIfNotFound();
     }
 
     @Override

@@ -255,7 +255,7 @@ public class ApplicationNavigationPopulatorTest {
 
     private void setupApplicationOpen(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build());
     }
@@ -269,7 +269,7 @@ public class ApplicationNavigationPopulatorTest {
 
     private void setupApplicationCompetitionClosed(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build());
     }

@@ -26,6 +26,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
+#${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.
@@ -351,10 +352,17 @@ Non-lead can mark Organisation as complete
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
 
-Non-lead can can edit and remark Organisation as Complete
+Non-lead can edit and remark Organisation as Complete
     [Documentation]    INFUND-8518 INFUND-8561
     [Tags]
     Given the user can edit resubmit and read only of the organisation    headCountAtLastFinancialYear
+
+Non-lead can mark terms and conditions as complete
+    [Documentation]  IFS-5920
+    [Setup]  the user clicks the button/link      link = Your finances
+    Given the user clicks the button/link         link = Application overview
+    When the user accept the competition terms and conditions
+    Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
@@ -370,8 +378,29 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
-*** Keywords ***
+The lead applicant checks for terms and conditions partners status
+    [Documentation]  IFS-5920
+    [Tags]
+    [Setup]  the user navigate to competition
+    Given the user accept the competition terms and conditions
+    And the user clicks the button/link             link = Award terms and conditions
+    When the user clicks the button/link            link = View partners' acceptance
+    Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
+    And the user should see the element             jQuery = td:contains("Empire Ltd (Lead)") ~ td:contains("Accepted")
+    And the user should see the element             jQuery = td:contains("INNOVATE LTD") ~ td:contains("Not yet accepted")
+    [Teardown]  the user clicks the button/link     link = Terms and conditions of an Innovate UK grant award
 
+The lead applicant checks for terms and conditions validations
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link         link = Application overview
+    And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete
+    When the user clicks the button/link          link = Review and submit
+    And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")
+    Then the user should see the element          jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
+    [Teardown]  the user clicks the button/link   link = Application overview
+
+*** Keywords ***
 the user should see the dates in full format
     ${today} =    Get time
     ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true
@@ -501,6 +530,10 @@ the user logs in and apply to a competition
 Custom suite setup
     Set predefined date variables
     Connect to database  @{database}
+
+the user navigate to competition
+    log in as a different user             &{lead_applicant_credentials}
+    the user clicks the button/link        link = All-Innov-Areas Application With GrowthTable
 
 Custom suite teardown
     Close browser and delete emails

@@ -24,7 +24,8 @@ public enum ManagementApplicationOrigin implements BackLinkOrigin {
     INTERVIEW_APPLICATION_ALLOCATION("/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{assessorId}"),
     INTERVIEW_PANEL_ALLOCATED("/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{assessorId}"),
     INTERVIEW_PANEL_VIEW_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view"),
-    INTERVIEW_PANEL_EDIT_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit");
+    INTERVIEW_PANEL_EDIT_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit"),
+    MANAGEMENT_APPLICATION("/management/competition/{competitionId}/application/{applicationId}");
 
     private String originUrl;
 

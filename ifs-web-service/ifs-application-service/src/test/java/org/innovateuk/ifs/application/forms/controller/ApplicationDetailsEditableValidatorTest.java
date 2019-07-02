@@ -41,7 +41,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPENED).build();
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName(APPLICATION_DETAILS.getShortName())
@@ -83,7 +83,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPENED).build();
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName(APPLICATION_DETAILS.getShortName())
@@ -125,7 +125,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPENED).build();
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName("non-application details")

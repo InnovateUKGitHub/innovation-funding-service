@@ -29,7 +29,7 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -115,7 +115,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         long competitionId = 2L;
 
         ApplicationResource applicationResource = newApplicationResource()
-                .withApplicationState(OPEN)
+                .withApplicationState(OPENED)
                 .withId(applicationId)
                 .withCompetition(competitionId)
                 .build();

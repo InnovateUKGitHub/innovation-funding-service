@@ -140,36 +140,6 @@
     <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'h:mma'))}"/>
 </th:block>
 
-<!--  ========================== Element: Agree to application terms =============== -->
-<th:block th:fragment="application-agree-to-terms (competitionId)">
-    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'govuk-form-group--error'">
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
-                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
-            </legend>
-            <th:block th:if="${#fields.hasErrors('termsAgreed')}">
-                <span class="govuk-error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
-            </th:block>
-            <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    <input id="agree-terms-page"
-                           class="govuk-checkboxes__input"
-                           th:field="${form.termsAgreed}"
-                           type="checkbox"
-                           value="yes"
-                           data-switches-button-status="#mark-all-as-complete"
-                           data-autosave-disabled />
-                    <label for="agree-terms-page"
-                           class="govuk-label govuk-checkboxes__label">
-                        As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${competitionId})}" class="govuk-link">competition terms and conditions</a> set out by Innovate UK.
-                    </label>
-                </div>
-            </div>
-
-        </fieldset>
-    </div>
-</th:block>
-
 <!--  ========================== Element: Agree to eligible for state aid =============== -->
 <th:block th:fragment="application-agree-eligible-for-state-aid">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAidAgreed')} ? 'govuk-form-group--error'">
@@ -238,7 +208,7 @@
 <!-- =========================== Element: Competition status warning ================ -->
 
 <th:block th:fragment="competition-status-message (applicationState, competition, projectWithdrawn)">
-    <div class="warning-alert" th:if="${(applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPEN) and competition.competitionStatus.name() != 'OPEN'}">
+    <div class="warning-alert" th:if="${(applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPENED) and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="govuk-heading-s govuk-!-margin-0">Application not submitted</h2>
         <p class="govuk-body">This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>

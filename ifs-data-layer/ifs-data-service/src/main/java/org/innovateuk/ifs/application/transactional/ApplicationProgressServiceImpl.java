@@ -47,7 +47,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
     @Override
     @Transactional
-    public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
+    public ServiceResult<BigDecimal> updateApplicationProgress(final long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
                     BigDecimal percentageProgress = calculateApplicationProgress(application);
@@ -58,7 +58,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
     @Override
     @Transactional
-    public boolean applicationReadyForSubmit(final Long id) {
+    public boolean applicationReadyForSubmit(final long id) {
         return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
 

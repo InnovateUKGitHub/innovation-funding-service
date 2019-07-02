@@ -23,16 +23,16 @@ public class SectionResource {
     private Boolean displayInAssessmentApplicationSummary = false;
     private SectionType type;
 
+
+    public SectionResource() {
+    }
+
     public SectionResource(long id, CompetitionResource competition, List<QuestionResource> questions, String name, Long parentSection) {
         this.id = id;
         this.competition = competition.getId();
         this.questions = simpleMap(questions, QuestionResource::getId);
         this.name = name;
         this.parentSection = parentSection;
-    }
-
-    public SectionResource() {
-    	// no-arg constructor
     }
 
     public String getName() {
@@ -131,6 +131,12 @@ public class SectionResource {
     public SectionType getType() {
 		return type;
 	}
+
+    @JsonIgnore
+	public boolean isTermsAndConditions() {
+        return this.type == SectionType.TERMS_AND_CONDITIONS;
+    }
+
     public void setType(SectionType type) {
 		this.type = type;
 	}

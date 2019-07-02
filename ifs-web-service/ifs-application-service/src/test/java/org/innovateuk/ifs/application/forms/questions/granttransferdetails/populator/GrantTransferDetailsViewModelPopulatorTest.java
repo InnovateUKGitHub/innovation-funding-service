@@ -63,7 +63,7 @@ public class GrantTransferDetailsViewModelPopulatorTest {
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competitionId)
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.OPEN)

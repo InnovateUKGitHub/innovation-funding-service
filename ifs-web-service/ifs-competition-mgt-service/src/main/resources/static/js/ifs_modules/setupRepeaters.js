@@ -39,14 +39,12 @@ IFS.competitionManagement.repeater = (function () {
       switch (type) {
         case 'cofunder':
           jQuery('[name="removeFunder"]').val(inst.val())
-          IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
           inst.closest('.funder-row').remove()
           IFS.competitionManagement.repeater.reindexRows('.funder-row')
           jQuery('body').trigger('recalculateAllFinances')
           break
         case 'guidance':
           jQuery('[name="removeGuidanceRow"]').val(inst.val())
-          IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]')
           inst.closest('tr').remove()
           IFS.competitionManagement.repeater.reindexRows('tr[id^="guidance-"]')
           break
@@ -54,7 +52,6 @@ IFS.competitionManagement.repeater = (function () {
           inst.closest('[id^="innovation-row"]').remove()
           IFS.competitionManagement.repeater.reindexRows('.govuk-form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
-          IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
           IFS.competitionManagement.initialDetails.rebindInnovationAreas()
           break
         case 'contentGroup':
