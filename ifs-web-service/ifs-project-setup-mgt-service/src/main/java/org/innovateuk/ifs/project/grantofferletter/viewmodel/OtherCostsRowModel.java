@@ -42,6 +42,9 @@ public class OtherCostsRowModel {
     }
 
     public BigDecimal getCostValuesForOrg(String organisation) {
+        if(!otherCostValues.containsKey(organisation)) {
+            return BigDecimal.ZERO;
+        }
         return otherCostValues.get(organisation)
                 .stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

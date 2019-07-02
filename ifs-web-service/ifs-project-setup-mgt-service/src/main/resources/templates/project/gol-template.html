@@ -335,8 +335,8 @@
                             <th:block th:text=${otherCost.getDescription()}></th:block>
                         </td>
                         <td style="text-align:right;"
-                            th:each="(orgName : ${otherCost.getOrganisations()})"
-                            th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="value=${otherCost.getCostValuesForOrg(organisation)}">
                             &pound;<th:block th:text="${#numbers.formatInteger(value, 0, 'DEFAULT')}"></th:block>
                         </td>
                         <td style="text-align:right;"
