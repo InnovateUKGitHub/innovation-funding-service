@@ -30,4 +30,5 @@ public class StatusRestServiceImpl extends BaseRestService implements StatusRest
     public RestResult<ProjectStatusResource> getProjectStatus(Long projectId) {
         return getWithRestResult(PROJECT_REST_URL + "/" + projectId + "/status", ProjectStatusResource.class);
     }
+
 }
