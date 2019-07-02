@@ -30,33 +30,33 @@
           </elementProp>
           <elementProp name="short_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">short_pause_deviation</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
+            <stringProp name="Argument.value">${__P(short_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="normal_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">normal_pause_deviation</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
+            <stringProp name="Argument.value">${__P(normal_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="micro_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">micro_pause_deviation</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
+            <stringProp name="Argument.value">${__P(micro_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="long_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">long_pause_deviation</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
+            <stringProp name="Argument.value">${__P(long_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="global_pause_deviation" elementType="Argument">
-            <stringProp name="Argument.name">global_pause_deviation</stringProp>
+            <stringProp name="Argument.name">${__P(global_pause_deviation)}</stringProp>
             <stringProp name="Argument.value">3</stringProp>
             <stringProp name="Argument.desc">Deviation in the pauses added to every test step globally</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="longer_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">longer_pause_deviation</stringProp>
-            <stringProp name="Argument.value">3</stringProp>
+            <stringProp name="Argument.value">${__P(longer_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -71,7 +71,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">ifs.local-dev</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(server_url)}</stringProp>
         <stringProp name="HTTPSampler.port"></stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -280,7 +280,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">https://auth.local-dev:9443${posturi}</stringProp>
+          <stringProp name="HTTPSampler.path">https://${__P(authorisation_url)}${posturi}</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
