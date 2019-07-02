@@ -88,11 +88,15 @@ Assessor should see terms and conditions question
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given the user clicks the button/link  intelligent-water-system-technical-approach.pdf, 8 KB
-    And the user clicks the button/link    intelligent-water-system-innovation.pdf, 8 KB
-    And the user clicks the button/link    intelligent-water-system-project-team.pdf, 8 KB
+    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
+    And the user closes the last opened tab
+    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
+    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB
+    And the user closes the last opened tab
     When the user clicks the button/link         jQuery = a:contains("6. Innovation")
-    And the user clicks the button/link    intelligent-water-system-innovation.pdf, 8 KB
+    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
 
 Scope: Validations
     [Documentation]  IFS-508

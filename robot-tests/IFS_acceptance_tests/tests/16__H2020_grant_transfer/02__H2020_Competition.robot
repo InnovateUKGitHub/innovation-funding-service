@@ -343,7 +343,7 @@ The user is able to complete your project costs section
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user clicks the button/link           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab

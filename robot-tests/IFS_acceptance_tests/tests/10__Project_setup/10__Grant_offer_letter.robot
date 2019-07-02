@@ -132,7 +132,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
     Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    When the user clicks the button/link   View the grant offer letter page
+    When the user clicks the button/link         link = View the grant offer letter page
     Then the user is able to see the Grant Offer letter page
 
 Comp Admin should be able to see GOL template download link
@@ -146,7 +146,7 @@ Validating GOL page error message
 
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
-    Given the user clicks the button/link   View the grant offer letter page
+    Given the user clicks the button/link   link = View the grant offer letter page
     Then the user is able to see the Grant Offer letter page
 
 Comp Admin user uploads new grant offer letter
