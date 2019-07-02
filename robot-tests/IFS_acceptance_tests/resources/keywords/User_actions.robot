@@ -8,13 +8,6 @@ The user clicks the button/link
     Set Focus To Element    ${BUTTON}
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
-The user retries submission
-    [Arguments]    ${BUTTON}
-    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
-    Wait Until Element Is Enabled  ${BUTTON}
-    Set Focus To Element    ${BUTTON}
-    Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
-
 The user clicks the button/link in the paginated list
     [Arguments]    ${BUTTON}
     Do Keyword With Pagination     The user clicks the button/link     ${BUTTON}
