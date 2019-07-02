@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,13 +29,8 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         return new InviteRestServiceImpl();
     }
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
     @Test
-    public void createInvitesByInviteOrganisation() throws Exception {
+    public void createInvitesByInviteOrganisation() {
         final String organisationName = "OrganisationName";
         final List<ApplicationInviteResource> invites = singletonList(new ApplicationInviteResource());
         InviteOrganisationResource inviteOrganisationResource = new InviteOrganisationResource();
@@ -52,7 +46,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void createInvitesByOrganisation() throws Exception {
+    public void createInvitesByOrganisation() {
         final Long organisationId = 1289124L;
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
 
@@ -68,7 +62,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void saveInvites() throws Exception {
+    public void saveInvites() {
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
 
         setupPostWithRestResultExpectations(inviteRestURL +  "/save-invites", invites, OK);
@@ -79,7 +73,18 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void acceptInvite() throws Exception {
+    public void resendInvites() {
+        final ApplicationInviteResource invite = newApplicationInviteResource().build();
+
+        setupPostWithRestResultExpectations(inviteRestURL +  "/resend-invite", invite, OK);
+        RestResult<Void> response = service.resendInvite(invite);
+        assertTrue(response.isSuccess());
+
+        setupPostWithRestResultVerifications(inviteRestURL +  "/resend-invite", Void.class, invite);
+    }
+
+    @Test
+    public void acceptInvite() {
         final long userId = 124214L;
 
         setupPutWithRestResultAnonymousExpectations(inviteRestURL +  String.format("/accept-invite/%s/%s", inviteHash, userId), null, OK);
@@ -89,7 +94,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void acceptInvite_OrganisationId() throws Exception {
+    public void acceptInvite_OrganisationId() {
         final long userId = 124214L;
         final long organisationId = 23L;
 
@@ -100,7 +105,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void removeApplicationInvite() throws Exception {
+    public void removeApplicationInvite() {
         final Long inviteId = 20310L;
 
         setupDeleteWithRestResultExpectations(inviteRestURL +  String.format("/remove-invite/%s", inviteId), OK);
@@ -109,7 +114,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void checkExistingUser() throws Exception {
+    public void checkExistingUser() {
         String url = inviteRestURL + String.format("/check-existing-user/%s", inviteHash);
         setupGetWithRestResultAnonymousExpectations(url, Boolean.class, TRUE);
         RestResult<Boolean> response = service.checkExistingUser(inviteHash);
@@ -119,7 +124,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void getUser() throws Exception {
+    public void getUser() {
         UserResource expected = new UserResource();
 
         String url = inviteRestURL + String.format("/get-user/" + "%s", inviteHash);
@@ -131,7 +136,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void getInviteByHash() throws Exception {
+    public void getInviteByHash() {
         ApplicationInviteResource expected = new ApplicationInviteResource();
 
         String url = inviteRestURL + "/get-invite-by-hash/" + inviteHash;
@@ -143,7 +148,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void getInviteOrganisationByHash() throws Exception {
+    public void getInviteOrganisationByHash() {
         InviteOrganisationResource expected = new InviteOrganisationResource();
         expected.setId(1234L);
 
@@ -156,7 +161,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
     }
 
     @Test
-    public void getInvitesByApplication() throws Exception {
+    public void getInvitesByApplication() {
         Long applicationId = 2341L;
         List<InviteOrganisationResource> expected = newInviteOrganisationResource().build(2);
         String url = inviteRestURL + "/get-invites-by-application-id/" + applicationId;

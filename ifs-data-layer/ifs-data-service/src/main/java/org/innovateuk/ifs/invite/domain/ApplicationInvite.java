@@ -31,6 +31,12 @@ public class ApplicationInvite extends Invite<Application, ApplicationInvite> {
         this.inviteOrganisation = inviteOrganisation;
     }
 
+    public ApplicationInvite(Long id, String name, String email, Application application, InviteOrganisation inviteOrganisation,  String hash, InviteStatus status) {
+        super(id, name, email, hash, status);
+        this.application = application;
+        this.inviteOrganisation = inviteOrganisation;
+    }
+
     public InviteOrganisation getInviteOrganisation() {
         return inviteOrganisation;
     }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -120,6 +121,24 @@ public class ApplicationTeamController {
                                @RequestParam("remove-invite") final long inviteId) {
         inviteRestService.removeApplicationInvite(inviteId).getSuccess();
         return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    @PostMapping(params = "resend-invite")
+    public String resendInvite(@PathVariable long applicationId,
+                               @PathVariable long questionId,
+                               @RequestParam("resend-invite") final long inviteId) {
+        resendApplicationInvite(inviteId, applicationId);
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    private void resendApplicationInvite(long inviteId, long applicationId){
+        List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(applicationId).getSuccess();
+        inviteOrganisationResources.stream()
+                .map(InviteOrganisationResource::getInviteResources)
+                .flatMap(List::stream)
+                .filter(applicationInvite -> applicationInvite.getId().equals(inviteId))
+                .findFirst()
+                .ifPresent(invite -> inviteRestService.resendInvite(invite));
     }
 
     @PostMapping(params = "add-team-member")
