@@ -110,13 +110,16 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     private ActivityLogResource toResource(ActivityLog activityLog) {
         return new ActivityLogResource(
                 activityLog.getType(),
+                activityLog.getCreatedBy().getId(),
                 activityLog.getCreatedBy().getName(),
                 activityLog.getCreatedBy().getRoles(),
                 activityLog.getCreatedOn(),
                 activityLog.getOrganisation().map(Organisation::getId).orElse(null),
                 activityLog.getOrganisation().map(Organisation::getName).orElse(null),
+                activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
                 activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
-                activityLog.getQuery().map(Query::id).orElse(null)
+                activityLog.getQuery().map(Query::id).orElse(null),
+                activityLog.getQuery().map(Query::section).orElse(null)
         );
     }
 }

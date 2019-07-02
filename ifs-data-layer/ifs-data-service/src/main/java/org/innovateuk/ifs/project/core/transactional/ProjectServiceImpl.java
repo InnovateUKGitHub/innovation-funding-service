@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
@@ -86,6 +88,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private ProjectUserMapper projectUserMapper;
 
+    @Autowired
+    private ActivityLogService activityLogService;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -103,7 +108,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .keySet()
                 .stream()
                 .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
-                .map(this::createProjectFromApplication)
+                .map(this::createSingletonProjectFromApplicationId)
                 .collect(toList());
 
         boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseFailingOrSucceedingResult::isFailure);
@@ -198,7 +203,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
                 success -> serviceSuccess(success)
-        );
+        ).andOnSuccessReturn(project -> {
+            activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+            return project;
+        });
     }
 
     private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {

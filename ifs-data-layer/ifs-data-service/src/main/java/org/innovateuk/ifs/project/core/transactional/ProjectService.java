@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.activitylog.advice.Activity;
-import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,10 +7,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +31,6 @@ public interface ProjectService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a project (by making decision)" )
-    @Activity(type = ActivityType.APPLICATION_INTO_PROJECT_SETUP, applicationId = "applicationId")
     ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

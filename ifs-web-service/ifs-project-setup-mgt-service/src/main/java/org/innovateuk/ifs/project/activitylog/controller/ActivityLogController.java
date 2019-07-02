@@ -4,6 +4,7 @@ package org.innovateuk.ifs.project.activitylog.controller;
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.activitylog.service.ActivityLogRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ActivityLogController {
                                   Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         List<ActivityLogResource> activities = activityLogRestService.findByApplicationId(project.getApplication()).getSuccess();
-        model.addAttribute("activities", activities);
+        model.addAttribute("model", new ActivityLogViewModel(project, activities));
         return "project/activity-log";
     }
 

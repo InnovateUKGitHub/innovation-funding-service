@@ -15,13 +15,6 @@
               th:with="linkTitle='Back to competition overview',linkUrl=@{''}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-
-        <div class="govuk-grid-row" th:each="activity : ${activities}">
-            <h1 th:text="${#messages.msg('ifs.activity.log.' + activity.activityType.name() + '.title')}"></h1>
-            <p th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}${#strings.toLowerCase(#temporals.format(activity.createdOn, 'hh:mma'))}|"></p>
-
-        </div>
-
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Activity log',subTitle=|PROJECT NAME|,size='govuk-heading-xl'" />
@@ -37,52 +30,24 @@
                 <h2 class="govuk-heading-m">Activities</h2>
                 <p class="govuk-body">The most recent activities are at the top.</p>
                 <ol class="activity-log govuk-body govuk-list">
-                    <li class="activity-log__item">
+                    <li th:each="activity : ${model.activities}" class="activity-log__item">
                         <div class="activity-log__left">
-                    <span class="activity-log__title">
-                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
-                    </span>
-                            <span class="activity-log__user">
-                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
-                    </span>
+                            <span class="activity-log__title">
+                                <strong th:text="${#messages.msg('ifs.activity.log.' + activity.activityType.name() + '.title')}">Grant offer letter approved</strong>
+                                <th:block th:if="${activity.organisationName != null}" th:text="| for ${activity.organisationName}|">for Verylong Company Name &amp; Sons Limited</th:block>
+                            </span>
+                                    <span class="activity-log__user">
+                                        <strong>By:</strong>  <th:block th:text="${model.userText(activity)}">Wendy Wallis, UKRI finance admin</th:block>
+                            </span>
                         </div>
                         <div class="activity-log__right">
-                    <span class="activity-log__time">
-                        28 Feb 2019, 07:47 AM
-                    </span>
-                            <a href="#" class="activity-log__link">View grant offer letter</a>
-                        </div>
-                    </li>
-                    <li class="activity-log__item">
-                        <div class="activity-log__left">
-                    <span class="activity-log__title">
-                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
-                    </span>
-                            <span class="activity-log__user">
-                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
-                    </span>
-                        </div>
-                        <div class="activity-log__right">
-                    <span class="activity-log__time">
-                        28 Feb 2019, 07:47 AM
-                    </span>
-                            <a href="#" class="activity-log__link">View grant offer letter</a>
-                        </div>
-                    </li>
-                    <li class="activity-log__item">
-                        <div class="activity-log__left">
-                    <span class="activity-log__title">
-                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
-                    </span>
-                            <span class="activity-log__user">
-                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
-                    </span>
-                        </div>
-                        <div class="activity-log__right">
-                    <span class="activity-log__time">
-                        28 Feb 2019, 07:47 AM
-                    </span>
-                            <a href="#" class="activity-log__link">View grant offer letter</a>
+                            <span class="activity-log__time"
+                                  th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}, ${#temporals.format(activity.createdOn, 'hh:mma')}|">
+                                28 Feb 2019, 07:47 AM
+                            </span>
+                            <a th:href="${model.url(activity)}"
+                               th:text="${#messages.msg('ifs.activity.log.' + activity.activityType.name() + '.link')}"
+                               class="activity-log__link">View grant offer letter</a>
                         </div>
                     </li>
                 </ol>
