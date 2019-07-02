@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle='PLACEHOLDER'"/>
+              th:with="pageTitle=|PROJECT NAME - Activity log|"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='PLACEHOLDER',linkUrl=@{''}"/>
+              th:with="linkTitle='Back to competition overview',linkUrl=@{''}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -22,6 +22,72 @@
 
         </div>
 
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Activity log',subTitle=|PROJECT NAME|,size='govuk-heading-xl'" />
+                <h2 class="govuk-heading-m">Project details</h2>
+                <dl class="govuk-list govuk-!-font-size-16">
+                    <dt>Competition name:</dt>
+                    <dd>PLACEHOLDER</dd>
+                    <dt>Lead partner:</dt>
+                    <dd>PLACEHOLDER</dd>
+                    <dt>Other partners:</dt>
+                    <dd>PLACEHOLDER</dd>
+                </dl>
+                <h2 class="govuk-heading-m">Activities</h2>
+                <p class="govuk-body">The most recent activities are at the top.</p>
+                <ol class="activity-log govuk-body govuk-list">
+                    <li class="activity-log__item">
+                        <div class="activity-log__left">
+                    <span class="activity-log__title">
+                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
+                    </span>
+                            <span class="activity-log__user">
+                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
+                    </span>
+                        </div>
+                        <div class="activity-log__right">
+                    <span class="activity-log__time">
+                        28 Feb 2019, 07:47 AM
+                    </span>
+                            <a href="#" class="activity-log__link">View grant offer letter</a>
+                        </div>
+                    </li>
+                    <li class="activity-log__item">
+                        <div class="activity-log__left">
+                    <span class="activity-log__title">
+                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
+                    </span>
+                            <span class="activity-log__user">
+                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
+                    </span>
+                        </div>
+                        <div class="activity-log__right">
+                    <span class="activity-log__time">
+                        28 Feb 2019, 07:47 AM
+                    </span>
+                            <a href="#" class="activity-log__link">View grant offer letter</a>
+                        </div>
+                    </li>
+                    <li class="activity-log__item">
+                        <div class="activity-log__left">
+                    <span class="activity-log__title">
+                        <strong>Grant offer letter approved</strong> for Verylong Company Name &amp; Sons Limited
+                    </span>
+                            <span class="activity-log__user">
+                        <strong>By:</strong>  Wendy Wallis, UKRI finance admin
+                    </span>
+                        </div>
+                        <div class="activity-log__right">
+                    <span class="activity-log__time">
+                        28 Feb 2019, 07:47 AM
+                    </span>
+                            <a href="#" class="activity-log__link">View grant offer letter</a>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
