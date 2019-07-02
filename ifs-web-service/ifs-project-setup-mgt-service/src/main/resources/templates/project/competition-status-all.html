@@ -96,7 +96,8 @@
                                     <small>
                                         <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                                         <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
-                                        <a th:href="@{/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competitionProjectsStatusResource.competitionNumber},projectId=${project.projectNumber})}">activity log</a>
+                                        <a th:href="@{/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competitionProjectsStatusResource.competitionNumber},projectId=${project.projectNumber})}"
+                                           class="govuk-link">View activity log</a>
                                     </small>
                                 </th>
                                 <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
