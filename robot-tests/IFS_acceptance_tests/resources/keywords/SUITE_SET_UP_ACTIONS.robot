@@ -36,7 +36,6 @@ the user selects Research category
     the user clicks the button/link   id=application-question-complete
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
-
 the lead applicant fills all the questions and marks as complete(programme)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions}
@@ -86,14 +85,6 @@ check if there is an existing application in progress for this competition
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
-
-create new submit application
-    [Arguments]  ${overview}  ${email}  ${application_name}
-    And The guest user inserts user email and password  ${email}   ${correct_password}
-    And the guest user clicks the log-in button
-    And the user clicks the button/link                 link=Application details
-    And the user enters text to a text field            css=[id="application.name"]    ${application_name}
-    And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}

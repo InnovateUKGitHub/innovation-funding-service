@@ -124,7 +124,6 @@ Initial details - User enters valid values and marks as done
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
-    And the user moves focus and waits for autosave
     And the user clicks the button twice                        css = label[for = "stateAid2"]
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
@@ -297,9 +296,7 @@ Eligibility: Mark as Done then Edit again
     And the user selects the checkbox        lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user selects the radio button    resubmission    no
-    And the user moves focus and waits for autosave
     And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
-    And the user moves focus and waits for autosave
     When the user clicks the button/link     jQuery = button:contains("Done")
     Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
     And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
@@ -502,9 +499,9 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button without autosave                                   css = p button[type="submit"]  #Add question link
+    Given the user clicks the button/link                                               css = p button[type="submit"]  #Add question link
     When the user is able to configure the new question                                 ${customQuestion}
-    And the user clicks the button without autosave                                     jQuery = li:contains("${customQuestion}")
+    And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}
 
 Removing an Assessed Application Question
@@ -677,7 +674,7 @@ Assessor: Should have a Green Check
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
-    [Setup]  the user clicks the button without autosave  link = ${competitionTitle}
+    [Setup]  the user clicks the button/link  link = ${competitionTitle}
     Given The user clicks the button/link     link = View and update competition setup
     And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
@@ -790,7 +787,6 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
     Set Focus To Element    jQuery = button:contains(Done)
-    wait for autosave
 
 the weekdays should be correct
     element should contain    css = tr:nth-child(1) td:nth-child(3)     Wed

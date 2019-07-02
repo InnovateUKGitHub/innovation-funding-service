@@ -262,40 +262,6 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
 		return emptyList();
 	}
 
-    @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              String fieldName,
-                                                              String value,
-                                                              Optional<Long> questionId) {
-        if("openingDate".equals(fieldName)) {
-            try {
-                ZonedDateTime startDate = parseDate(value);
-
-                competitionResource.setStartDate(startDate);
-                List<Error> errors = saveOpeningDateAsMilestone(startDate, competitionResource.getId(), false);
-
-                if(!errors.isEmpty()) {
-                    return serviceFailure(errors);
-                } else {
-                    return competitionSetupRestService.update(competitionResource).toServiceResult();
-                }
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
-                return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
-            }
-        } else if("autosaveInnovationAreaIds".equals(fieldName)) {
-            processInnovationAreas(value, competitionResource);
-            return competitionSetupRestService.update(competitionResource).toServiceResult();
-        } else if ("fundingType".equals(fieldName)) {
-            competitionResource.setFundingType(FundingType.valueOf(value));
-            return competitionSetupRestService.update(competitionResource).toServiceResult();
-        }
-        return super.handleIrregularAutosaveCase(competitionResource,
-                fieldName,
-                value,
-                questionId);
-    }
-
     private ZonedDateTime parseDate(String value) {
         String[] dateParts = value.split("-");
         ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
