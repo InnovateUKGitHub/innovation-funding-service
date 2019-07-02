@@ -168,7 +168,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
         boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
         boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER);
-        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN && application.getApplicationState() != ApplicationState.CREATED;
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPENED && application.getApplicationState() != ApplicationState.CREATED;
 
         return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
     }

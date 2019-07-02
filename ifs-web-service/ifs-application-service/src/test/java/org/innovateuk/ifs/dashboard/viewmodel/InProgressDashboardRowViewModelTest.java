@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,7 +20,7 @@ public class InProgressDashboardRowViewModelTest {
     public void constructOpen() {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
-                "Competition", true, OPEN, true,
+                "Competition", true, OPENED, true,
                 end, 0, 50 , false, YESTERDAY);
 
         assertEquals("/application/1", viewModel.getLinkUrl());

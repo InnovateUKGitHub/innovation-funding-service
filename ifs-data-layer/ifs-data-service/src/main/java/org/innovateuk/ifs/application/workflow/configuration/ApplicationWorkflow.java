@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.workflow.configuration;
 
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
 import org.innovateuk.ifs.application.workflow.actions.SendFinanceTotalsAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
@@ -31,6 +32,9 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
     @Autowired
     private SendFinanceTotalsAction sendFinanceTotalsAction;
 
+    @Autowired
+    private AutoCompleteSectionsAction autoCompleteSectionsAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -48,12 +52,13 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
         transitions
                 .withExternal()
                     .source(ApplicationState.CREATED)
-                    .event(ApplicationEvent.OPENED)
-                    .target(ApplicationState.OPEN)
+                    .event(ApplicationEvent.OPEN)
+                    .action(autoCompleteSectionsAction)
+                    .target(ApplicationState.OPENED)
                 .and()
                 .withExternal()
-                    .source(ApplicationState.OPEN)
-                    .event(ApplicationEvent.SUBMITTED)
+                    .source(ApplicationState.OPENED)
+                    .event(ApplicationEvent.SUBMIT)
                     .action(sendFinanceTotalsAction)
                     .target(ApplicationState.SUBMITTED)
                 .and()
@@ -80,17 +85,17 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.APPROVED)
+                    .event(ApplicationEvent.APPROVE)
                     .target(ApplicationState.APPROVED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.REJECTED)
+                    .event(ApplicationEvent.REJECT)
                     .target(ApplicationState.REJECTED)
                 .and()
                 .withExternal()
                     .source(ApplicationState.REJECTED)
-                    .event(ApplicationEvent.APPROVED)
+                    .event(ApplicationEvent.APPROVE)
                     .target(ApplicationState.APPROVED);
     }
 }

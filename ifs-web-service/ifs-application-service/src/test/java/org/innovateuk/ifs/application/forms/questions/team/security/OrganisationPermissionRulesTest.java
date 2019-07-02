@@ -14,7 +14,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.*;
 import static org.junit.Assert.assertFalse;
@@ -36,7 +36,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, COLLABORATIVE);
+                OPENED, COLLABORATIVE);
         assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
@@ -69,7 +69,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, COLLABORATIVE);
+                OPENED, COLLABORATIVE);
         assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
@@ -80,7 +80,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, SINGLE);
+                OPENED, SINGLE);
         assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
@@ -91,7 +91,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, SINGLE_OR_COLLABORATIVE);
+                OPENED, SINGLE_OR_COLLABORATIVE);
         assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
@@ -102,7 +102,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, COLLABORATIVE);
+                OPENED, COLLABORATIVE);
         assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
@@ -113,7 +113,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, COLLABORATIVE);
+                OPENED, COLLABORATIVE);
         assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 
@@ -146,7 +146,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ApplicationCompositeId applicationId = ApplicationCompositeId.id(14L);
 
         UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId.id(),
-                OPEN, COLLABORATIVE);
+                OPENED, COLLABORATIVE);
         assertTrue(rules.addNewOrganisation(applicationId, loggedInUser));
     }
 

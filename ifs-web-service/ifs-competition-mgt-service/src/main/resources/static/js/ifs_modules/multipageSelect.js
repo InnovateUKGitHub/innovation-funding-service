@@ -51,7 +51,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           url: url,
           data: data,
           dataType: 'json',
-          timeout: IFS.core.autoSave.settings.ajaxTimeOut
+          timeout: 15000
         }).done(function (result) {
           checkbox.removeProp('disabled')
           if (isSelectAll) {
@@ -68,9 +68,6 @@ IFS.competitionManagement.multipageSelect = (function () {
             }
             IFS.competitionManagement.multipageSelect.updateLimitExceededMessage(limitExceeded, checkbox)
           }
-        }).fail(function (data) {
-          var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-          checkbox.closest('fieldset').find('legend').after('<span class="govuk-error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
         })

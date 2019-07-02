@@ -16,7 +16,6 @@
 
     <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
           th:object="${landingPageForm}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-section="project-document"
           method="post" novalidate="novalidate">
 

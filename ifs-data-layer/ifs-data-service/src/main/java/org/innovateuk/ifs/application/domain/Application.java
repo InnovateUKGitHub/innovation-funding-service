@@ -232,7 +232,7 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return applicationProcess.isInState(ApplicationState.OPEN);
+        return applicationProcess.isInState(ApplicationState.OPENED);
     }
 
     public boolean isSubmitted() {
