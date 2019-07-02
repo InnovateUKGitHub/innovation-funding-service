@@ -149,7 +149,6 @@ Non-lead partner can view both documents
 Non-lead partner cannot remove or submit right
     [Documentation]  INFUND-3013
     [Tags]
-    [Setup]  the user clicks the button/link      link = Exploitation plan
     Given partners can not remove the documents
     And the user should not see the element       id = submitDocumentButton
 
