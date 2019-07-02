@@ -4,7 +4,6 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 The user clicks the button/link
     [Arguments]    ${BUTTON}
-    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
     Wait Until Element Is Enabled  ${BUTTON}
     Set Focus To Element    ${BUTTON}
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
@@ -95,42 +94,6 @@ the address fields should be filled with dummy data
     Textfield Should Contain    id=addressForm.selectedPostcode.town    Neston
     Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
     Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
-
-the user submits their information
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    the user selects the checkbox    termsAndConditions
-    Submit Form
-
-the user cannot login with either password
-    The user navigates to the page    ${LOGIN_URL}
-    Input Text    id=username    ${valid_email}
-    Input Password    id=password    ${correct_password}
-    Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work.
-    go to    ${LOGIN_URL}
-    Input Text    id=username    ${valid_email}
-    Input Password    id=password    ${incorrect_password}
-    Click Button    css=button[name="_eventId_proceed"]
-    Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work.
-
-the lead applicant invites a registered user
-    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    run keyword if    ${smoke_test}!=1    invite a registered user    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    run keyword if    ${smoke_test}==1    invite a new academic    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-
-invite a new academic
-    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
-    the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=Application team
-    the user clicks the button/link    jQuery=.govuk-button:contains("Invite new contributors")
-    the user clicks the button/link    jQuery=.govuk-button:contains("Add additional partner organisation")
-    the user enters text to a text field    id = organisationName    university of liverpool
-    the user enters text to a text field    id = name    Academic User
-    the user enters text to a text field    id = email    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=.govuk-button:contains("Save changes")
 
 the user should see that the element is disabled
     [Arguments]    ${element}

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +20,7 @@ public interface ApplicationInviteService {
     ServiceResult<ApplicationInvite> findOneByHash(String hash);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'CREATE_APPLICATION_INVITES')")
-    ServiceResult<Void> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId);
+    ServiceResult<Void> createApplicationInvites(final InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",
@@ -31,9 +30,12 @@ public interface ApplicationInviteService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
-
+    
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
-    ServiceResult<Void> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
+    ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
+
+    @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
+    ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

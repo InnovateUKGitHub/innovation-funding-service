@@ -67,7 +67,8 @@
 
                     <th:block th:if="${organisation.type != null}">
                         <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
-                        <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+                        <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
+                            (RTOs)</p>
                     </th:block>
 
                     <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
@@ -80,9 +81,9 @@
                            th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header larger-cols">Full name</th>
-                            <th scope="col" class="govuk-table__header">Email</th>
-                            <th scope="col" class="govuk-table__header width-200"><span
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
                                 class="govuk-visually-hidden">Remove</span></th>
                         </tr>
                         </thead>
@@ -95,18 +96,15 @@
                             <td class="govuk-table__cell"
                                 th:text="${row.email}"
                                 th:classappend="${row.invite ? 'hint' : ''}"></td>
-                            <td class="govuk-table__cell"
+                            <td class="govuk-table__cell alignright"
                                 th:classappend="${row.invite ? 'hint' : ''}">
                                 <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
-                                    <!--/* TODO Resend invite
                                     <th:block th:if="${row.invite}">
                                         <button class="button-clear govuk-!-margin-right-1" type="submit"
                                                 name="resend-invite" th:value="${row.id}">Resend invite
                                         </button>
                                         <span>|</span>
                                     </th:block>
-                                    */-->
-
                                     <th:block th:unless=${organisation.singleUserRemaining}>
                                         <th:block th:if="${!row.invite and model.loggedInUserId != row.id}">
                                             <th:block
@@ -116,13 +114,13 @@
                                                class="govuk-link">Remove</a>
                                         </th:block>
                                         <th:block th:if="${row.invite}">
-                                            <!--/* TODO add class with resend story govuk-!-margin-left-1 */-->
-                                            <button class="button-clear" type="submit"
+                                            <button class="button-clear govuk-!-margin-left-1" type="submit"
                                                     name="remove-invite" th:value="${row.id}">Remove
                                             </button>
                                         </th:block>
                                     </th:block>
-                                    <th:block th:if="${organisation.singleUserRemaining and (row.invite or model.loggedInUserId != row.id)}">
+                                    <th:block
+                                        th:if="${organisation.singleUserRemaining and (row.invite or model.loggedInUserId != row.id)}">
                                         <th:block
                                             th:insert="fragments/modals :: modal-application-team-remove-organisation (${organisation}, ${row})"/>
                                         <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
@@ -186,7 +184,7 @@
                                        th:disabled="${!organisation.openAddTeamMemberForm}"
                                        th:attr="data-required-errormessage=#{validation.applicationteam.email.required},
                                                     data-email-invalid-errormessage=#{validation.applicationteam.email.format},
-                                                    data-email-duplication-errormessage=#{email.already.in.invite}" />
+                                                    data-email-duplication-errormessage=#{email.already.in.invite}"/>
                             </td>
                             <td class="govuk-table__cell">
                                 <button
@@ -196,7 +194,7 @@
                                     Invite to application
                                 </button>
                             </td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell alignright">
                                 <button name="close-add-team-member-form"
                                         class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
                                         th:attr="data-hide-form=${'invite-user-' + organisation.id}">
@@ -227,7 +225,8 @@
                    class="govuk-!-margin-top-5 button-clear">Add a partner organisation</a>
 
                 <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">
-                    <button th:unless="${model.complete}" id="application-question-complete" type="submit" name="complete"
+                    <button th:unless="${model.complete}" id="application-question-complete" type="submit"
+                            name="complete"
                             class="button-clear">Mark as complete
                     </button>
                     <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit

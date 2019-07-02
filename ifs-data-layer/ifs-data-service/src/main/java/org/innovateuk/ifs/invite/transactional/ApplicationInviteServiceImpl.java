@@ -20,6 +20,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -34,6 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
@@ -86,6 +88,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Autowired
     private ApplicationInviteNotificationService applicationInviteNotificationService;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
         return ApplicationInvite.class;
@@ -104,7 +109,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
-        String errorField = applicationId.isPresent() ? EDIT_EMAIL_FIELD  : NEW_EMAIL_FIELD;
+        String errorField = applicationId.isPresent() ? EDIT_EMAIL_FIELD : NEW_EMAIL_FIELD;
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources(), errorField)).andOnSuccess(() ->
                 findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> {
@@ -136,6 +141,15 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             applicationInviteRepository.saveAll(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource) {
+        ApplicationInvite invite = applicationInviteMapper.mapToDomain(inviteResource);
+        invite.send(loggedInUserSupplier.get(), now());
+        applicationInviteRepository.save(invite);
+        return applicationInviteNotificationService.resendCollaboratorInvite(invite);
     }
 
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
@@ -242,7 +256,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     private InviteOrganisation buildNewInviteOrganisationForOrganisation(InviteOrganisationResource inviteOrganisationResource, Organisation organisation) {
         return new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
-                organisation,null);
+                organisation, null);
     }
 
     private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
@@ -256,7 +270,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
         }
-        return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
+        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {

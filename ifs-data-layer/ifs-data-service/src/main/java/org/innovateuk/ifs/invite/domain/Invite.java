@@ -72,6 +72,11 @@ public abstract class Invite<T, I extends Invite<T,I>> {
         this.status = status;
     }
 
+    protected Invite(Long id, String name, String email, String hash, InviteStatus status) {
+        this(name, email, hash, status);
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
