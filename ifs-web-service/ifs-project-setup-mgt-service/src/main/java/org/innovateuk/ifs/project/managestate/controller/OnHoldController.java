@@ -80,7 +80,9 @@ public class OnHoldController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(projectStateRestService.addPost
-                    (new PostResource(null, user, form.getDetails(), emptyList(), now()), form.getCommentId()));
+                    (new PostResource(null, user, form.getDetails(), emptyList(), now()),
+                            projectId,
+                            form.getCommentId()));
             return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToOnHoldStatusPage(projectId, competitionId));
         });
     }

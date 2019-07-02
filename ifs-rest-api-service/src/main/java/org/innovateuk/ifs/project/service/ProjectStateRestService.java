@@ -18,5 +18,5 @@ public interface ProjectStateRestService {
 
     RestResult<ProjectStateCommentsResource> findOpenComments(long projectId);
 
-    RestResult<Void> addPost(PostResource post, long commentId);
+    RestResult<Void> addPost(PostResource post, long projectId, long threadId);
 }
