@@ -37,4 +37,8 @@ public class CommonMessageThreadController<R, S extends MessageThreadService<R, 
         return service.close(threadId).toPostResponse();
     }
 
+    @PostMapping("/{threadId}/post")
+    public RestResult<Void> addPost(@RequestBody PostResource post, @PathVariable("threadId") Long threadId) {
+        return service.addPost(post, threadId).toPostCreateResponse();
+    }
 }
