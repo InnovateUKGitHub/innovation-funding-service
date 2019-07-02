@@ -103,6 +103,12 @@ ${Project_Address_Page}                 ${Project_In_Setup_Details_Page}/project
 ${Internal_Competition_Status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${Notified_Application_Competition_Status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
+#Project: Project Setup Comp 10 - On Hold
+${OnHoldCompName}      Project Setup Comp 10
+${OnHoldCompId}        ${competition_ids["${OnHoldCompName}"]}
+${OnHoldProjectName}   PSC application 10
+${OnHoldProjectId}     ${project_ids["${OnHoldProjectName}"]}
+
 #Finances Checks
 ${PS_FC_Application_Title}    Office Chair for Life
 ${PS_FC_Project_Id}           ${project_ids["${PS_FC_Application_Title}"]}

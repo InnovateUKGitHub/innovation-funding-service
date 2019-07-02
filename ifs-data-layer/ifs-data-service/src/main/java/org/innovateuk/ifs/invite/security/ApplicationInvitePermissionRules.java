@@ -117,6 +117,6 @@ public class ApplicationInvitePermissionRules {
 
     private boolean applicationIsEditable(final Application application) {
         ApplicationProcess state = application.getApplicationProcess();
-        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
+        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPENED);
     }
 }

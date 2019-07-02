@@ -64,7 +64,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         {
             final Competition competition = newCompetition().build();
             final Organisation organisation = OrganisationBuilder.newOrganisation().build();
-            final Application application = newApplication().withApplicationState(ApplicationState.OPEN).withCompetition(competition).build();
+            final Application application = newApplication().withApplicationState(ApplicationState.OPENED).withCompetition(competition).build();
             final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
             invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
             inviteResource = new ApplicationInviteResource();
@@ -82,7 +82,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         otherLeadApplicant = newUserResource().build();
         otherCollaborator = newUserResource().build();
         {
-            final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPEN).build();
+            final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPENED).build();
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
             final InviteOrganisation otherInviteOrganisation = newInviteOrganisation().withOrganisation(otherOrganisation).build();
             otherInvite = newApplicationInvite().withApplication(otherApplication).withInviteOrganisation(otherInviteOrganisation).build();

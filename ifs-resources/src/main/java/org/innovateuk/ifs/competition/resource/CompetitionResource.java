@@ -25,6 +25,7 @@ public class CompetitionResource {
 
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
+    public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
 
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     private static final int CLOSING_SOON_AMOUNT = 3;
@@ -128,6 +129,11 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
+    public boolean isExpressionOfInterest() {
+        return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
+    }
+
+    @JsonIgnore
     public boolean hasAssessmentStage() {
         return !isH2020();
     }
@@ -152,6 +158,11 @@ public class CompetitionResource {
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
+    @JsonIgnore
+    public boolean isProcurement() {
+        return FundingType.PROCUREMENT.equals(fundingType);
     }
 
     @JsonIgnore

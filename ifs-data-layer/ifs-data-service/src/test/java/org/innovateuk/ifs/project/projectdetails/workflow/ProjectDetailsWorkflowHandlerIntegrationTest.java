@@ -172,7 +172,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Override
-    protected Class getBaseActionType() {
+    protected Class<BaseProjectDetailsAction> getBaseActionType() {
         return BaseProjectDetailsAction.class;
     }
 

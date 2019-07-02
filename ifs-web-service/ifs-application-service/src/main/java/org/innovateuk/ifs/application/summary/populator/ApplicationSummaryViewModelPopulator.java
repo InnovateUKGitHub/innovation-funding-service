@@ -23,9 +23,11 @@ public class ApplicationSummaryViewModelPopulator {
     private ProjectService projectService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, boolean support) {
-        ApplicationReadOnlyViewModel applicationSummaryViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
-        return new ApplicationSummaryViewModel(applicationSummaryViewModel, application, competition,
-                isProjectWithdrawn(application.getId()), support);
+        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
+        return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
+                                               application,
+                                               competition,
+                                               isProjectWithdrawn(application.getId()), support);
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

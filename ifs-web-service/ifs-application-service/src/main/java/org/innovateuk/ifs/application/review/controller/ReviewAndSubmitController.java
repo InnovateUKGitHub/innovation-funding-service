@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,7 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.*;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Controller
@@ -69,8 +74,12 @@ public class ReviewAndSubmitController {
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
                                   Model model,
-                                  UserResource user) {
+                                  UserResource user,
+                                  @RequestParam MultiValueMap<String, String> queryParams) {
+
+        model.addAttribute("originQuery", buildOriginQueryString(ApplicationSummaryOrigin.REVIEW_AND_SUBMIT, queryParams));
         model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
+
         return "application/review-and-submit";
     }
 
@@ -84,20 +93,18 @@ public class ReviewAndSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.isFullyFunded()) {
+        if (competition.isProcurement()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                String errorCode = competition.isH2020() ?
-                        "validation.application.h2020.terms.required" :
-                        "validation.application.procurement.terms.required";
+                String errorCode = "validation.application.procurement.terms.required";
                 bindingResult.rejectValue("agreeTerms", errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
-                return String.format("redirect:/application/%d/summary", applicationId);
+                return format("redirect:/application/%d/summary", applicationId);
             }
 
         }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
-        return String.format("redirect:/application/%d/confirm-submit", applicationId);
+        return format("redirect:/application/%d/confirm-submit", applicationId);
     }
 
     @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_RETURN_AND_EDIT",
@@ -151,11 +158,11 @@ public class ReviewAndSubmitController {
     }
 
     private String redirectToQuestion(long applicationId, long questionId) {
-        return String.format("redirect:/application/%d/form/question/%d", applicationId, questionId);
+        return format("redirect:/application/%d/form/question/%d", applicationId, questionId);
     }
 
     private String redirectToReview(long applicationId) {
-        return String.format("redirect:/application/%d/review-and-submit", applicationId);
+        return format("redirect:/application/%d/review-and-submit", applicationId);
     }
 
 
@@ -166,8 +173,8 @@ public class ReviewAndSubmitController {
                                            @ModelAttribute("termsAgreed") Boolean termsAgreed,
                                            @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                            Model model) {
-        if (!Boolean.TRUE.equals(termsAgreed)) {
-            return String.format("redirect:/application/%d/summary", applicationId);
+        if (!TRUE.equals(termsAgreed)) {
+            return format("redirect:/application/%d/summary", applicationId);
         }
         model.addAttribute("applicationId", applicationId);
         return "application-confirm-submit";
@@ -196,7 +203,7 @@ public class ReviewAndSubmitController {
         Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, form, model);
 
         return validationHandler.addAnyErrors(updateResult)
-                .failNowOrSucceedWith(failureView, () -> String.format("redirect:/application/%d/track", applicationId));
+                .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
     }
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")

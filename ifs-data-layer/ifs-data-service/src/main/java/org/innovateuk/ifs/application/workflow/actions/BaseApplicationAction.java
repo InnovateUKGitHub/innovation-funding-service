@@ -12,7 +12,7 @@ import org.springframework.statemachine.StateContext;
 public abstract class BaseApplicationAction extends TestableTransitionWorkflowAction<ApplicationState, ApplicationEvent> {
 
     @Override
-    protected void doExecute(final StateContext<ApplicationState, ApplicationEvent> context) {
+    protected final void doExecute(final StateContext<ApplicationState, ApplicationEvent> context) {
         Application application = getApplicationFromContext(context);
         doExecute(application, context);
     }

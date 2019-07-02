@@ -14,7 +14,6 @@
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'initial/edit')}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:attr="data-competition=${model.general.competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
@@ -122,8 +121,7 @@
                         id="innovationSectorCategoryId"
                         name="innovationSectorCategoryId"
                         required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
-                        data-autosave-disabled="">
+                        th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
@@ -148,7 +146,6 @@
                             th:name="innovationAreaCategoryIds[__${status.index}__]"
                             th:id="innovationAreaCategoryIds[__${status.index}__]"
                             required="required"
-                            data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
                         <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == null}">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
@@ -171,7 +168,6 @@
                             name="innovationAreaCategoryIds[0]"
                             id="innovationAreaCategoryIds"
                             required="required"
-                            data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
                         <option value="" disabled="disabled" selected="selected">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
@@ -179,7 +175,6 @@
                     <input type="hidden" th:if="${model.general.state.setupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryIds[0]}" />
                 </div>
             </th:block>
-            <input type="hidden" name="autosaveInnovationAreaIds" />
             <div class="govuk-form-group" th:unless="${model.general.state.setupAndLive}">
                 <button class="button-clear" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>

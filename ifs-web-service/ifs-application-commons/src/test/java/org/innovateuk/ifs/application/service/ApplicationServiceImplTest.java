@@ -62,8 +62,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         List<ApplicationResource> applications = newApplicationResource()
                 .withId(1L, 2L, 3L, 4L, 5L, 6L)
                 .withApplicationState(ApplicationState.CREATED,
-                        ApplicationState.OPEN,
-                        ApplicationState.OPEN,
+                        ApplicationState.OPENED,
+                        ApplicationState.OPENED,
                         ApplicationState.SUBMITTED,
                         ApplicationState.SUBMITTED,
                         ApplicationState.SUBMITTED)

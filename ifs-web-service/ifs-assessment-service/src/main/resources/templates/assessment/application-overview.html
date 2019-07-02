@@ -33,7 +33,8 @@
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list">
-                        <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
+                        <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
+                            th:unless="${section.finance || section.termsAndConditions}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
@@ -55,6 +56,16 @@
                             </div>
                             <div class="task-status"><span>No score required</span></div>
                         </li>
+
+                        <li class="read-only" th:if="${section.termsAndConditions}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="@{/{id}/terms-and-conditions(id=${model.assessmentId})}" class="govuk-link">Award terms and conditions</a>
+                                </h3>
+                            </div>
+                            <div class="task-status"><span>No score required</span></div>
+                        </li>
+
                     </ul>
                 </section>
 
@@ -63,8 +74,11 @@
                     <ul th:each="appendix : ${model.appendices}" class="govuk-body govuk-list">
                         <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
-                            <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size}|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
-                            (opens in a new window)
+                            <a target="_blank"
+                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}"
+                               th:text="|${appendix.name}, ${appendix.size}|"
+                               aria-describedby="appendix-hint">Project-plan.pdf, 161.96 KB</a>
+                            <span id="appendix-hint">(opens in a new window)</span>
                         </li>
                     </ul>
                 </th:block>

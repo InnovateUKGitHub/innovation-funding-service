@@ -78,17 +78,17 @@
                                             <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
                                         </div>
                                         <div class="govuk-grid-column-one-half alignright">
-                                            <th:block th:if="${project.projectState.isWithdrawn()}">
-                                                <strong class="ifs-withdrawn">Withdrawn</strong>
+                                            <th:block th:if="${project.projectState.withdrawn}">
+                                                <strong class="ifs-project-status-withdrawn">Withdrawn</strong>
                                             </th:block>
-                                            <th:block th:if="${project.projectState.isHandledOffline()}">
-                                                <strong class="ifs-managed-offline">Managed offline</strong>
+                                            <th:block th:if="${project.projectState.handledOffline}">
+                                                <strong class="ifs-project-status-managed-offline">Managed offline</strong>
                                             </th:block>
-                                            <th:block th:if="${project.projectState.isCompletedOffline()}">
-                                                <strong class="ifs-completed-offline">Completed offline</strong>
+                                            <th:block th:if="${project.projectState.completedOffline}">
+                                                <strong class="ifs-project-status-completed-offline">Completed offline</strong>
                                             </th:block>
-                                            <th:block th:if="${project.projectState.isOnHold()}">
-                                                <strong class="ifs-on-hold">On hold</strong>
+                                            <th:block th:if="${project.projectState.onHold}">
+                                                <strong class="ifs-project-status-on-hold">On hold</strong>
                                             </th:block>
                                         </div>
                                     </div>

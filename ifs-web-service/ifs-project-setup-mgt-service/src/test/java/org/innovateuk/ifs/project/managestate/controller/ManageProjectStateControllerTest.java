@@ -15,7 +15,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,11 +35,13 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void manageProjectState() throws Exception {
         long competitionId = 1L;
+        long applicationId = 2L;
         long projectId = 123L;
         ProjectResource project = newProjectResource()
                 .withId(projectId)
                 .withName("Name")
                 .withCompetition(competitionId)
+                .withApplication(applicationId)
                 .withProjectState(SETUP).build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
@@ -53,6 +54,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(applicationId, viewModel.getApplicationId());
         assertEquals("Name", viewModel.getProjectName());
 
         assertTrue(viewModel.canHandleOffline());
@@ -184,7 +186,6 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 1L;
         long projectId = 123L;
 
-        setField(controller, "onHoldFeatureToggle", true);
         when(projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource("Reason", "Details"))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
@@ -209,7 +210,6 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .withProjectState(SETUP).build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        setField(controller, "onHoldFeatureToggle", true);
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/manage-status", competitionId, projectId)
                 .param("state", ON_HOLD.name()))

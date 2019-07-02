@@ -29,11 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,8 +43,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -51,7 +54,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
 public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
@@ -105,7 +108,8 @@ public class ApplicationQuestionController {
             @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @RequestParam MultiValueMap<String, String> queryParams
     ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
             if (markAsCompleteSet) {
@@ -122,7 +126,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete);
+        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete, queryParams);
     }
 
     @PostMapping(value = {
@@ -138,13 +142,14 @@ public class ApplicationQuestionController {
             @PathVariable(QUESTION_ID) final Long questionId,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @RequestParam MultiValueMap<String, String> queryParams
     ) {
         Map<String, String[]> params = request.getParameterMap();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
-            return handleEditQuestion(form, model, applicationId, questionId, user);
+            return handleEditQuestion(form, model, applicationId, questionId, user, queryParams);
         } else {
             handleAssignedQuestions(applicationId, user, request, response);
 
@@ -157,7 +162,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
+                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty(), queryParams);
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -209,20 +214,30 @@ public class ApplicationQuestionController {
             Long questionId,
             Model model,
             ApplicationForm form,
-            Optional<Boolean> markAsComplete
-    ) {
+            Optional<Boolean> markAsComplete,
+            MultiValueMap<String, String> queryParams) {
+
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+        QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
 
-        if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
-        } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
-        } else if (APPLICATION_TEAM.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
-                    (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
+        if (questionType != null) {
+            switch (questionType) {
+                case GRANT_AGREEMENT:
+                    return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+                case GRANT_TRANSFER_DETAILS:
+                    return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+                case APPLICATION_TEAM:
+                    return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
+                            (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
+                case TERMS_AND_CONDITIONS:
+                    String originQuery =  UriComponentsBuilder.fromPath("")
+                            .queryParams(queryParams)
+                            .encode()
+                            .toUriString();
+
+                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
+            }
         }
-
-
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
@@ -230,7 +245,7 @@ public class ApplicationQuestionController {
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
 
-        if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+        if (question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
                     applicationResource, user.getId(), questionId));
@@ -239,7 +254,6 @@ public class ApplicationQuestionController {
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
-        QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
         if (questionType == null) {
             return APPLICATION_FORM;
         }
@@ -250,14 +264,16 @@ public class ApplicationQuestionController {
                 return APPLICATION_FORM_LEAD;
             default:
                 return APPLICATION_FORM;
-        }    }
+        }
+    }
 
     private String handleEditQuestion(
             ApplicationForm form,
             Model model,
             Long applicationId,
             Long questionId,
-            UserResource user
+            UserResource user,
+            MultiValueMap<String, String> queryParams
     ) {
         ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         if (processRole != null) {
@@ -266,7 +282,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
+        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty(), queryParams);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,

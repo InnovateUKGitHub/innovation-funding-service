@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.competition.controller;
 
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestServi
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static java.lang.String.format;
 
 /**
  * This controller will handle all Competition Management requests that are related to a Competition.
@@ -42,14 +46,21 @@ public class CompetitionManagementCompetitionController {
     @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     @GetMapping("/{competitionId}")
-    public String competition(Model model, @PathVariable("competitionId") Long competitionId, UserResource user) {
+    public String competition(Model model,
+                              @PathVariable("competitionId") Long competitionId,
+                              UserResource user,
+                              HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competition.getCompetitionStatus().isInFlight()) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition, user));
             return "competition/competition-in-flight";
         } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
-            throw new ObjectNotFoundException();
+            String url = format("project-setup-management/competition/%s/status/all", competition.getId());
+            return navigationUtils.getRedirectToSameDomainUrl(request, url);
         } else {
             throw new IncorrectStateForPageException("Unexpected competition state for competition: " + competitionId);
         }

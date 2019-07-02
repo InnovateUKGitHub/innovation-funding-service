@@ -27,6 +27,8 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
@@ -79,6 +81,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<List<ApplicationInviteResource>> invites = async(() -> inviteService.getPendingInvitationsByApplicationId(application.getId()));
         Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
+        Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess());
 
         async(() -> {
             List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(resolve(statuses), user.getId());
@@ -87,7 +90,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         ApplicationOverviewData data = new ApplicationOverviewData(resolve(competition), application, resolve(sections),
                 resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses), resolve(invites),
-                resolve(completedSectionIds), user);
+                resolve(completedSectionIds), resolve(completedSectionsByOrganisation), user);
 
         Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
                 .values()
@@ -107,21 +110,20 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
-                    .map(childSection -> new ApplicationOverviewRowViewModel(childSection.getName(),
-                            String.format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
-                            data.getCompletedSectionIds().contains(childSection.getId()),
-                            Optional.empty())
+                    .map(childSection ->
+                            new ApplicationOverviewRowViewModel(
+                                    childSection.getName(),
+                                    format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
+                                    data.getCompletedSectionIds().contains(childSection.getId()),
+                                    true
+                            )
                     )
                     .collect(toCollection(LinkedHashSet::new));
         } else {
             rows = section.getQuestions()
                     .stream()
                     .map(data.getQuestions()::get)
-                    .map(question -> new ApplicationOverviewRowViewModel(getQuestionTitle(question),
-                            String.format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
-                            data.getStatuses().get(question.getId()).stream().anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete()),
-                            getAssignableViewModel(question, data))
-                    )
+                    .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
         return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(),
@@ -129,7 +131,48 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 rows);
     }
 
-    private Optional<AssignButtonsViewModel> getAssignableViewModel(QuestionResource question, ApplicationOverviewData data) {
+    private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
+        boolean complete = section.isTermsAndConditions() ?
+                isTermsAndConditionsComplete(data, question, section) :
+                data.getStatuses().get(question.getId())
+                        .stream()
+                        .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()));
+
+        boolean showStatus = !(section.isTermsAndConditions() && data.getCompetition().isExpressionOfInterest());
+
+        return getAssignableViewModel(question, data)
+                .map(avm ->
+                        new ApplicationOverviewRowViewModel(
+                                getQuestionTitle(question),
+                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                complete,
+                                avm,
+                                showStatus)
+                ).orElse(
+                        new ApplicationOverviewRowViewModel(
+                                getQuestionTitle(question),
+                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                complete,
+                                showStatus)
+                );
+    }
+
+    private static boolean isTermsAndConditionsComplete(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
+        boolean completeForOrganisation = data.getStatuses().get(question.getId())
+                .stream()
+                .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
+
+        boolean leadOrganisation = data.getLeadApplicant().getOrganisationId() == data.getOrganisation().getId();
+
+        boolean completeForAll = data.getCompletedSectionsByOrganisation()
+                .values()
+                .stream()
+                .allMatch(completedSections -> completedSections.contains(section.getId()));
+
+        return !leadOrganisation && completeForOrganisation || completeForAll;
+    }
+
+    private static Optional<AssignButtonsViewModel> getAssignableViewModel(QuestionResource question, ApplicationOverviewData data) {
         if (!question.isAssignEnabled()) {
             return Optional.empty();
         } else {
@@ -151,9 +194,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private String getQuestionTitle(QuestionResource question) {
+    private static String getQuestionTitle(QuestionResource question) {
         return question.getQuestionSetupType() == ASSESSED_QUESTION ?
-                String.format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
+                format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
     }
 

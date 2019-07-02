@@ -345,7 +345,7 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button without autosave     css = button[type = "submit"]
+    the user clicks the button/link       css = button[type = "submit"]
     the user should see the element       jQuery = li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
@@ -404,7 +404,3 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=GOV.UK
-    Wait For Autosave

@@ -80,6 +80,10 @@ table {
   .empty-table-cell-select {
     margin-left: 20px;
   }
+
+  .govuk-table__cell {
+    word-break: break-word;
+  }
 }
 
 @include media-down(mobile) {
@@ -246,9 +250,5 @@ hr,
   color: $govuk-button-colour;
   font-weight: bold;
   padding-left: 20px;
-  text-align: right;
-}
-
-.text-align-right {
   text-align: right;
 }
