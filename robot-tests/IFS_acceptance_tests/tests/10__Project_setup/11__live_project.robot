@@ -248,10 +248,14 @@ Project fiance approves the grant offer letter
 
 the use can see the mandatory documents
     the user clicks the button/link        link = Collaboration agreement
-    open pdf link                          ${valid_pdf}
+    the user clicks the button/link        link = ${valid_pdf}
+    Select Window                          NEW
+    the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
     the user clicks the button/link        link = Exploitation plan
-    open pdf link                          ${valid_pdf}
+    the user clicks the button/link        link = ${valid_pdf}
+    Select Window                          NEW
+    the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
 
 the lead partner logs in and navigate to applications dashboard
