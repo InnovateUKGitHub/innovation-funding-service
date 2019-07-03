@@ -130,10 +130,10 @@
                                             th:unless="${model.isInternalUserView()}">Remove
                                     </button>
                                 </th:block>
-                                <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
+                            </th:block>
+                            <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
                                     <span th:text="${user.getRolesNames()}"
                                           th:classappend="${user.invite ? 'hint' : ''}">Roles</span>
-                                </th:block>
                             </th:block>
                         </td>
                     </tr>

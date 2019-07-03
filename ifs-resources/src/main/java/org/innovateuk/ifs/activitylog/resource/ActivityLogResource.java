@@ -18,13 +18,13 @@ public class ActivityLogResource {
     private Long organisation;
     private String organisationName;
     private Long documentConfig;
-    private String documenConfigName;
+    private String documentConfigName;
     private Long queryId;
     private FinanceChecksSectionType queryType;
 
     private ActivityLogResource() {}
 
-    public ActivityLogResource(ActivityType activityType, Long createdBy, String createdByName, Set<Role> createdByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documenConfigName, Long queryId, FinanceChecksSectionType queryType) {
+    public ActivityLogResource(ActivityType activityType, Long createdBy, String createdByName, Set<Role> createdByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long queryId, FinanceChecksSectionType queryType) {
         this.activityType = activityType;
         this.createdBy = createdBy;
         this.createdByName = createdByName;
@@ -33,7 +33,7 @@ public class ActivityLogResource {
         this.organisation = organisation;
         this.organisationName = organisationName;
         this.documentConfig = documentConfig;
-        this.documenConfigName = documenConfigName;
+        this.documentConfigName = documentConfigName;
         this.queryId = queryId;
         this.queryType = queryType;
     }
@@ -70,8 +70,8 @@ public class ActivityLogResource {
         return documentConfig;
     }
 
-    public String getDocumenConfigName() {
-        return documenConfigName;
+    public String getDocumentConfigName() {
+        return documentConfigName;
     }
 
     public Long getQueryId() {
@@ -81,4 +81,5 @@ public class ActivityLogResource {
     public FinanceChecksSectionType getQueryType() {
         return queryType;
     }
+
 }

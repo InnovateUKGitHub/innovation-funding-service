@@ -3,9 +3,8 @@ package org.innovateuk.ifs.activitylog.advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 
 @Component
 public class ActivityLogInterceptor implements MethodInterceptor {
-    private static final Log LOG = LogFactory.getLog(ActivityLogInterceptor.class);
 
     @Autowired
     private ActivityLogService activityLogService;
@@ -56,7 +54,7 @@ public class ActivityLogInterceptor implements MethodInterceptor {
             Optional<ProjectOrganisationCompositeId> projectOrganisationCompositeId = findId(activity.projectOrganisationCompositeId(), invocation, ProjectOrganisationCompositeId.class);
             projectOrganisationCompositeId.ifPresent(id -> activityLogService.recordActivityByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId(), activity.type()));
         } else {
-            LOG.error(String.format("@Activity annotated method must provide an applicationId or projectId: %s on %s",
+            throw new IFSRuntimeException(String.format("@Activity annotated method must provide an applicationId or projectId: %s on %s",
                     invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
         }
     }
@@ -65,17 +63,15 @@ public class ActivityLogInterceptor implements MethodInterceptor {
         Optional<Object> parameter = findParameterByName(invocation, name);
 
         if (!parameter.isPresent()) {
-            LOG.error(String.format("@Activity annotated methods couldn't find identifier parameter: %s on %s",
+            throw new IFSRuntimeException(String.format("@Activity annotated methods couldn't find identifier parameter: %s on %s",
                     name, invocation.getMethod().getName()));
-            return Optional.empty();
         }
 
         Object identifier = parameter.get();
 
         if (!(idClass.isAssignableFrom(identifier.getClass()))) {
-            LOG.error(String.format("@Activity annotated methods identifier parameter must be a long: %s on %s",
+            throw new IFSRuntimeException(String.format("@Activity annotated methods identifier parameter must be of the correct class: %s on %s",
                     name, invocation.getMethod().getName()));
-            return Optional.empty();
         }
 
         return Optional.of(idClass.cast(identifier));
@@ -84,9 +80,8 @@ public class ActivityLogInterceptor implements MethodInterceptor {
 
     private boolean isSuccessfulServiceResult(Object returned, MethodInvocation invocation) {
         if (returned == null || !(returned instanceof ServiceResult)) {
-            LOG.error(String.format("@Activity annotated methods must return not nullable service results: %s on %s",
+            throw new IFSRuntimeException(String.format("@Activity annotated methods must return not nullable service results: %s on %s",
                     invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
-            return false;
         } else {
             return ((ServiceResult) returned).isSuccess();
         }
@@ -100,10 +95,8 @@ public class ActivityLogInterceptor implements MethodInterceptor {
         try {
             method = service.getClass().getMethod(condition, invocation.getMethod().getParameterTypes());
         } catch (NoSuchMethodException e) {
-            LOG.error(String.format("@Activity annotated method has no such condition method %s with same params as %s on service %s",
-                    condition, invocation.getMethod().getName(), service.getClass().getCanonicalName()),
-                    e);
-            return false;
+            throw new IFSRuntimeException(String.format("@Activity annotated method has no such condition method %s with same params as %s on service %s",
+                    condition, invocation.getMethod().getName(), service.getClass().getCanonicalName()), e);
         }
 
         Object result;
@@ -111,14 +104,12 @@ public class ActivityLogInterceptor implements MethodInterceptor {
             result = method.invoke(invocation.getThis(), invocation.getArguments());
         } catch (IllegalAccessException
                 | InvocationTargetException e) {
-            LOG.error(String.format("@Activity annotated method encountered error trying to call condition %s on service %s", condition, service.getClass().getCanonicalName()),
+            throw new IFSRuntimeException(String.format("@Activity annotated method encountered error trying to call condition %s on service %s", condition, service.getClass().getCanonicalName()),
                     e);
-            return false;
         }
 
         if (result == null || !(result instanceof Boolean)) {
-            LOG.error(String.format("@Activity annotated method condition didn't return a boolean %s on service %s", condition, service.getClass().getCanonicalName()));
-            return false;
+            throw new IFSRuntimeException(String.format("@Activity annotated method condition didn't return a boolean %s on service %s", condition, service.getClass().getCanonicalName()));
         }
         return (Boolean) result;
     }
