@@ -1,6 +1,11 @@
 package org.innovateuk.ifs.project.managestate.viewmodel;
 
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class OnHoldViewModel {
 
@@ -9,11 +14,20 @@ public class OnHoldViewModel {
     private final long projectId;
     private final String projectName;
 
-    public OnHoldViewModel(ProjectResource project) {
+    private final String title;
+    private final List<ProjectStateCommentViewModel> comments;
+
+
+
+    public OnHoldViewModel(ProjectResource project, ProjectStateCommentsResource commentsResource) {
         this.competitionId = project.getCompetition();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
         this.projectName = project.getName();
+        this.title = commentsResource.title;
+        this.comments = commentsResource.posts.stream()
+                .map(ProjectStateCommentViewModel::new)
+                .collect(toList());
     }
 
     public long getCompetitionId() {
@@ -30,5 +44,13 @@ public class OnHoldViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<ProjectStateCommentViewModel> getComments() {
+        return comments;
     }
 }

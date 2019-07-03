@@ -23,7 +23,6 @@ public class ProjectDetailsViewModel {
     private ProjectResource project;
     private Long competitionId;
     private String competitionName;
-    private boolean ableToManageProjectState;
     private boolean projectFinance;
     private String leadOrganisation;
     private ProjectUserResource projectManager;
@@ -34,7 +33,7 @@ public class ProjectDetailsViewModel {
     private String financeReviewerEmail;
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
-                                   String competitionName, boolean ableToManageProjectState,
+                                   String competitionName,
                                    boolean projectFinance,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
@@ -45,7 +44,6 @@ public class ProjectDetailsViewModel {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.ableToManageProjectState = ableToManageProjectState;
         this.projectFinance = projectFinance;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;
@@ -60,7 +58,6 @@ public class ProjectDetailsViewModel {
         return new ProjectDetailsViewModel(project,
                 competition.getId(),
                 competition.getName(),
-                false,
                 false,
                 null,
                 null,
@@ -92,7 +89,7 @@ public class ProjectDetailsViewModel {
     }
 
     public boolean isAbleToManageProjectState() {
-        return ableToManageProjectState;
+        return projectFinance;
     }
 
     public boolean isProjectFinance() {
@@ -145,7 +142,6 @@ public class ProjectDetailsViewModel {
         ProjectDetailsViewModel that = (ProjectDetailsViewModel) o;
 
         return new EqualsBuilder()
-                .append(ableToManageProjectState, that.ableToManageProjectState)
                 .append(projectFinance, that.projectFinance)
                 .append(locationPerPartnerRequired, that.locationPerPartnerRequired)
                 .append(project, that.project)
@@ -166,7 +162,6 @@ public class ProjectDetailsViewModel {
                 .append(project)
                 .append(competitionId)
                 .append(competitionName)
-                .append(ableToManageProjectState)
                 .append(projectFinance)
                 .append(leadOrganisation)
                 .append(projectManager)

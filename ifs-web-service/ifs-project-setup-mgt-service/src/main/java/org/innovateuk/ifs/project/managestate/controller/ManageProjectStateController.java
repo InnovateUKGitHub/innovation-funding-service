@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +22,14 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
-import static org.apache.commons.lang.StringUtils.isBlank;
 import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.isBlank;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
 @PreAuthorize("hasAuthority('project_finance')")
 @SecuredBySpring(value = "MANAGE_PROJECT_STATE", description = "Only project finance users can manage project state")
 public class ManageProjectStateController {
-
-    @Value("${ifs.project.management.on.hold}")
-    private boolean onHoldFeatureToggle;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -49,7 +45,6 @@ public class ManageProjectStateController {
                                      UserResource user) {
         model.addAttribute("model",
                 new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
-                        onHoldFeatureToggle,
                         user.hasRole(Role.IFS_ADMINISTRATOR)));
         return "project/manage-project-state";
     }
@@ -81,9 +76,7 @@ public class ManageProjectStateController {
             case COMPLETED_OFFLINE:
                 return projectStateRestService.completeProjectOffline(projectId);
             case ON_HOLD:
-                if (onHoldFeatureToggle) {
-                    return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
-                }
+                return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
         }
         throw new IFSRuntimeException("Unknown project state");
     }
