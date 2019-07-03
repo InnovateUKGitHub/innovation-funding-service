@@ -244,5 +244,5 @@ ShibCompatValidUser On
 
   LogLevel warn proxy:info proxy_ajp:info
   ErrorLog /dev/stderr
-  CustomLog /dev/stdout "%a %l %u %t \"%r\" %>s %b %T"
+  CustomLog /dev/stdout "%a %l %u %t \"%r\" %>s %b %T %{X-Forwarded-For}i"
 </VirtualHost>
