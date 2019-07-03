@@ -14,7 +14,7 @@ ShibCompatValidUser On
   SSLCertificateChainFile /etc/apache2/certs/sp_proxy_cacertificate.pem
 
   RemoteIPHeader X-Forwarded-For
-  RemoteIPTrustedProxy 10.130.4.1
+  RemoteIPTrustedProxy 10.131.4.1
 
   Header always set Strict-Transport-Security "max-age=15768000"
 
