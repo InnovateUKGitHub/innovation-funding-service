@@ -186,10 +186,10 @@ fi
 useContainerRegistry
 upgradeServices
 
-if [[ ${bamboo_openshift_force_reload} == "true" ]]
-then
-    forceReload
-fi
+#if [[ ${bamboo_openshift_force_reload} == "true" ]]
+#then
+#    forceReload
+#fi
 
 if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" ]]
 then
