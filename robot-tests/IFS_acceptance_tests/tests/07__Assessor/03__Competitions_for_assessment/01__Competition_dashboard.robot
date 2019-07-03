@@ -43,7 +43,7 @@ Competition link should navigate to the applications
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    Given The user opens the link in new window           View competition brief
+    Given the user clicks the button/link           link = View competition brief
     Then the user should get a competition brief window
     [Teardown]    the user closes the competition brief
 

@@ -132,7 +132,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
     Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    When the user opens the link in new window   View the grant offer letter page
+    When the user clicks the button/link         link = View the grant offer letter page
     Then the user is able to see the Grant Offer letter page
 
 Comp Admin should be able to see GOL template download link
@@ -146,7 +146,7 @@ Validating GOL page error message
 
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
-    Given the user opens the link in new window   View the grant offer letter page
+    Given the user clicks the button/link   link = View the grant offer letter page
     Then the user is able to see the Grant Offer letter page
 
 Comp Admin user uploads new grant offer letter
@@ -298,9 +298,7 @@ PM can view the uploaded Annex file
     [Tags]  HappyPath
     [Setup]    log in as a different user        ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    When the user opens the link in new window   ${valid_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    Then open pdf link                           ${valid_pdf}
 
 PM can download the annex
     [Documentation]    INFUND-5998
