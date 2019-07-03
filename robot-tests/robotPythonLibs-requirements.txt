@@ -9,6 +9,7 @@ robotframework-ftplibrary==1.6
 robotframework-imaplibrary==0.3.0
 robotframework-selenium2library==3.0.0
 robotframework-xvfb==1.2.2
+robotframework-pabot==0.72
 
 #In order to query the database
 PyMySQL==0.9.2
