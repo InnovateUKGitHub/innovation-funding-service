@@ -41,7 +41,6 @@ RUN apt-get update --fix-missing && \
   a2disconf other-vhosts-access-log && \
   mv /usr/local/files/apache2/mpm_event.conf /etc/apache2/mods-available/ && \
   sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
-#  sed -i -e '/LogFormat/s/%h/%a/' /etc/apache2/apache2.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 
 # put holding pages in place. A dedicated container is probably a better idea \
