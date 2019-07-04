@@ -205,7 +205,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
                     return project;
                 }),
-                success -> serviceSuccess(success)
+                ServiceResult::serviceSuccess
         );
     }
 
