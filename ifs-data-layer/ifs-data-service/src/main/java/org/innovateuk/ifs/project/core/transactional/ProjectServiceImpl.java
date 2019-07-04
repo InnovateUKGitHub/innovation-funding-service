@@ -201,12 +201,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
 
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
-                failure -> createProjectFromApplicationId(applicationId),
+                failure -> createProjectFromApplicationId(applicationId).andOnSuccessReturn(project -> {
+                    activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+                    return project;
+                }),
                 success -> serviceSuccess(success)
-        ).andOnSuccessReturn(project -> {
-            activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
-            return project;
-        });
+        );
     }
 
     private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {

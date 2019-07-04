@@ -6,6 +6,7 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -23,6 +24,7 @@ import java.util.List;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Transactional
@@ -97,7 +99,7 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         ServiceResult<Void> result = testActivityLogService.withNotMatchingApplicationId(application.getId());
 
         assertZeroActivityLogsExistForApplication();
-        assertTrue(result.isSuccess());
+        assertFalse(result.isSuccess());
     }
 
     @Test
@@ -107,7 +109,7 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         ServiceResult<Void> result = testActivityLogService.withNotMatchingProjectId(project.getId());
 
         assertZeroActivityLogsExistForApplication();
-        assertTrue(result.isSuccess());
+        assertFalse(result.isSuccess());
     }
 
     @Test
@@ -146,7 +148,7 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         ServiceResult<Void> result = testActivityLogService.withApplicationIdNotMatchingConditional(application.getId(), true);
 
         assertZeroActivityLogsExistForApplication();
-        assertTrue(result.isSuccess());
+        assertFalse(result.isSuccess());
     }
 
     @Test
@@ -159,7 +161,7 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         assertTrue(result.isFailure());
     }
 
-    @Test
+    @Test(expected = IFSRuntimeException.class)
     public void withApplicationIdNotServiceResult() {
         assertZeroActivityLogsExistForApplication();
 

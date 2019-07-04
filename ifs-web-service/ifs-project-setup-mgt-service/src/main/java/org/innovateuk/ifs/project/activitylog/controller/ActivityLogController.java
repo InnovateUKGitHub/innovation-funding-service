@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/activity-log")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-@SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only project finance users can manage project state")
+@SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only project finance users can view activity log")
 public class ActivityLogController {
 
     @Autowired

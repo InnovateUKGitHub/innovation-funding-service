@@ -79,11 +79,11 @@ public class ActivityLogInterceptor implements MethodInterceptor {
     }
 
     private boolean isSuccessfulServiceResult(Object returned, MethodInvocation invocation) {
-        if (returned == null || !(returned instanceof ServiceResult)) {
+        if (!invocation.getMethod().getReturnType().isAssignableFrom(ServiceResult.class)) {
             throw new IFSRuntimeException(String.format("@Activity annotated methods must return not nullable service results: %s on %s",
                     invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
         } else {
-            return ((ServiceResult) returned).isSuccess();
+            return returned != null && ((ServiceResult) returned).isSuccess();
         }
     }
 
