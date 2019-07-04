@@ -6,7 +6,7 @@
     "eslint": "^4.19.1",
     "files-exist": "^1.1.0",
     "govuk-frontend": "^1.1.1",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.1",
