@@ -32,7 +32,13 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -43,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -120,7 +127,7 @@ public class ApplicationQuestionController {
                         user.getId(),
                         request,
                         response,
-                        Optional.of(Boolean.TRUE)
+                        Optional.of(TRUE)
                 );
                 validationHandler.addAnyErrors(errors);
             }
@@ -222,6 +229,8 @@ public class ApplicationQuestionController {
 
         if (questionType != null) {
             switch (questionType) {
+                case APPLICATION_DETAILS:
+                    return String.format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
                 case GRANT_AGREEMENT:
                     return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
                 case GRANT_TRANSFER_DETAILS:
@@ -234,7 +243,6 @@ public class ApplicationQuestionController {
                             .queryParams(queryParams)
                             .encode()
                             .toUriString();
-
                     return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
             }
         }
@@ -258,7 +266,6 @@ public class ApplicationQuestionController {
             return APPLICATION_FORM;
         }
         switch (questionType) {
-            case APPLICATION_DETAILS:
             case APPLICATION_TEAM:
             case RESEARCH_CATEGORY:
                 return APPLICATION_FORM_LEAD;
@@ -279,7 +286,7 @@ public class ApplicationQuestionController {
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
-            LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
+            LOG.error("Not able to find process role for user {} for application id {}", user.getName(), applicationId);
         }
 
         return viewQuestion(user, applicationId, questionId, model, form, Optional.empty(), queryParams);
