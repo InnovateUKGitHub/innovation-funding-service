@@ -35,15 +35,6 @@ execution:
     files:
       - jmeter/Representative/user_data.csv
 
-  - scenario: front_door_users
-    iterations: 1
-    locations:
-      eu-west-2: 1
-      europe-west2-a: 1
-    concurrency: ${front_door_users}
-    files:
-      - jmeter/Representative/front-door-competitions.csv
-
   - scenario: competition_management
     iterations: 1
     locations:
