@@ -30,33 +30,33 @@
           </elementProp>
           <elementProp name="short_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">short_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(short_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="normal_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">normal_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(normal_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="micro_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">micro_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(micro_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="long_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">long_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(long_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="global_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">global_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(global_pause_deviation)}</stringProp>
             <stringProp name="Argument.desc">Deviation in the pauses added to every test step globally</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="longer_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">longer_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(longer_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -64,7 +64,7 @@
       <hashTree/>
       <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
         <stringProp name="ConstantTimer.delay">1000</stringProp>
-        <stringProp name="RandomTimer.range">120000</stringProp>
+        <stringProp name="RandomTimer.range">${global_pause_deviation}</stringProp>
       </UniformRandomTimer>
       <hashTree/>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
@@ -220,7 +220,7 @@
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">10</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">30000</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
