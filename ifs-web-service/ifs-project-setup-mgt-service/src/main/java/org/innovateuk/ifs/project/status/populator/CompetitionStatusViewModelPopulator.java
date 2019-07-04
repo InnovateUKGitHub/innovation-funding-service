@@ -41,7 +41,7 @@ public class CompetitionStatusViewModelPopulator {
         long pendingSpendProfilesCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0;
         CompetitionProjectsStatusResource competitionProjectsStatus = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess();
 
-        return new CompetitionStatusViewModel(competitionProjectsStatus, hasProjectFinanceRole, projectStatusPermissions(user, competitionProjectsStatus), openQueryCount, pendingSpendProfilesCount);
+        return new CompetitionStatusViewModel(competitionProjectsStatus, hasProjectFinanceRole, projectStatusPermissions(user, competitionProjectsStatus), openQueryCount, pendingSpendProfilesCount, applicationSearchString);
     }
 
     private Map<Long, StatusPermission> projectStatusPermissions(UserResource user, CompetitionProjectsStatusResource competitionProjectsStatus) {

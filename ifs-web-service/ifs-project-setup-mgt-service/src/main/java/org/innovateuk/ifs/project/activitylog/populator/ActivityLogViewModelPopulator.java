@@ -136,9 +136,9 @@ public class ActivityLogViewModelPopulator {
     private String url(ActivityLogResource log, ProjectResource project) {
         switch (log.getActivityType()) {
             case APPLICATION_SUBMITTED:
-                return format("/management/competition/%d/application/%d?origin=ACTIVITY_LOG&projectId=%d", project.getCompetition(), project.getApplication(), project.getId());
+                return format("/management/competition/%d/application/%d?origin=PROJECT_SETUP_MANAGEMENT_ACTIVITY_LOG&projectId=%d", project.getCompetition(), project.getApplication(), project.getId());
             case APPLICATION_INTO_PROJECT_SETUP:
-                return format("/project-setup-management/competition/%d/status/all", project.getCompetition());
+                return format("/project-setup-management/competition/%d/status/all?applicationSearchString=%d", project.getCompetition(), project.getApplication());
             case PROJECT_DETAILS_COMPLETE:
             case FINANCE_REVIEWER_ADDED:
             case MANAGED_OFFLINE:

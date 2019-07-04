@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +26,12 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.activitylog.resource.ActivityLogResourceBuilder.newActivityLogResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityLogViewModelPopulatorTest {
@@ -57,6 +60,8 @@ public class ActivityLogViewModelPopulatorTest {
         long partnerUserId = 6L;
         long financeUserId = 7L;
         long organisationId = 8L;
+        long documentId = 9L;
+        long queryId = 10L;
         ZonedDateTime now = now();
 
         CompetitionResource competition = newCompetitionResource()
@@ -69,6 +74,7 @@ public class ActivityLogViewModelPopulatorTest {
                 .build();
         PartnerOrganisationResource partner = newPartnerOrganisationResource()
                 .withOrganisation(organisationId)
+                .withOrganisationName("My organisation")
                 .build();
         ProjectUserResource projectUserResource = newProjectUserResource()
                 .withRole(Role.PROJECT_MANAGER)
@@ -82,8 +88,15 @@ public class ActivityLogViewModelPopulatorTest {
                 .withCreatedByRoles(singleton(Role.APPLICANT), singleton(Role.PROJECT_FINANCE))
                 .withCreatedByName("Adam applicant", "Frank finance")
                 .withCreatedOn(now.minusDays(3), now.minusDays(2), now.minusDays(1),  now)
-                .withOrganisation(null, )
+                .withOrganisation(null, organisationId)
+                .withOrganisationName(null, partner.getOrganisationName())
+                .withDocumentConfig(null, null, documentId, null)
+                .withDocumentConfigName(null, null, "Collaboration agreement", null)
+                .withQuery(null, null, null, queryId)
+                .withQueryType(null, null, null, FinanceChecksSectionType.VIABILITY)
+                .build(4);
 
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
 
         /*
 
