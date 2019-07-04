@@ -86,10 +86,9 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         ServiceResult<Void> result = testActivityLogService.withProjectOrganisationCompositeId(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()));
 
         ActivityLog activityLog = assertOneActivityLogsExistForApplication();
-        assertEquals(organisation.getId(), activityLog.getOrganisation().getId());
+        assertEquals(organisation.getId(), activityLog.getOrganisation().get().getId());
         assertTrue(result.isSuccess());
     }
-
 
     @Test
     public void withNotMatchingApplicationId() {

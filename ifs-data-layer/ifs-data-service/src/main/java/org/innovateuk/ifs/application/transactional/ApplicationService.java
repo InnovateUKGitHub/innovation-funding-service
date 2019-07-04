@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -45,7 +44,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> updateApplicationState(long applicationId, ApplicationState state);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default boolean isSubmitted(Long applicationId, ApplicationState state) {
+    default boolean isSubmitted(long applicationId, ApplicationState state) {
         return SUBMITTED == state;
     }
 
