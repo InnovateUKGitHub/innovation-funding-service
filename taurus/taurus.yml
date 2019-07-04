@@ -4,51 +4,51 @@ modules:
   jmeter:
     gui: false
     properties:
-      global_pause_deviation : 120000
-      micro_pause_deviation : 120000
-      short_pause_deviation : 120000
-      normal_pause_deviation : 120000
-      long_pause_deviation : 120000
-      longer_pause_deviation : 120000
-      server_url : "${server_url}"
-      authorisation_url : "${authorisation_url}"
-      users_csv : "${data_path}user_data.csv"
-      competitions_csv : "${data_path}competition_data.csv"
-      invites_csv : "${data_path}invite_data.csv"
-      assessor_csv : "${data_path}assessor_data.csv"
-      front_door_competitions_csv : "${data_path}front-door-competitions.csv"
-      summariser.name : summary
-      summariser.interval : 5
-      summariser.log : true
-      summariser.out : true
+      global_pause_deviation: 120000
+      micro_pause_deviation: 120000
+      short_pause_deviation: 120000
+      normal_pause_deviation: 120000
+      long_pause_deviation: 120000
+      longer_pause_deviation: 120000
+      server_url: "${server_url}"
+      authorisation_url: "${authorisation_url}"
+      users_csv: "${data_path}user_data.csv"
+      competitions_csv: "${data_path}competition_data.csv"
+      invites_csv: "${data_path}invite_data.csv"
+      assessor_csv: "${data_path}assessor_data.csv"
+      front_door_competitions_csv: "${data_path}front-door-competitions.csv"
+      summariser.name: summary
+      summariser.interval: 5
+      summariser.log: true
+      summariser.out: true
 
   cloud:
     test: High load test
 
-- scenario: applicant_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: 1000
-  files:
-  - jmeter/Representative/user_data.csv
+  - scenario: applicant_users
+    iterations: 1
+    locations:
+      eu-west-2: 1
+      europe-west2-a: 1
+    concurrency: 1000
+    files:
+      - jmeter/Representative/user_data.csv
 
-- scenario: front_door_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: ${front_door_users}
-  files:
-  - jmeter/Representative/front-door-competitions.csv
+  - scenario: front_door_users
+    iterations: 1
+    locations:
+      eu-west-2: 1
+      europe-west2-a: 1
+    concurrency: ${front_door_users}
+    files:
+      - jmeter/Representative/front-door-competitions.csv
 
-- scenario: competition_management
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: 150
+  - scenario: competition_management
+    iterations: 1
+    locations:
+      eu-west-2: 1
+      europe-west2-a: 1
+    concurrency: 150
 
 scenarios:
   applicant_users:
@@ -57,6 +57,6 @@ scenarios:
     script: taurus/competition_management.jmx
 
 reporting:
-- module: passfail
-  criteria:
-  - ${fail_criteria}
+  - module: passfail
+    criteria:
+      - ${fail_criteria}
