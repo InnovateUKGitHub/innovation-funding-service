@@ -25,6 +25,7 @@ modules:
   cloud:
     test: High load test
 
+execution:
   - scenario: applicant_users
     iterations: 1
     locations:
