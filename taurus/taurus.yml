@@ -4,12 +4,12 @@ modules:
   jmeter:
     gui: false
     properties:
-      global_pause_deviation : 100
-      micro_pause_deviation : 100
-      short_pause_deviation : 500
-      normal_pause_deviation : 5000
-      long_pause_deviation : 10000
-      longer_pause_deviation : 15000
+      global_pause_deviation : 120000
+      micro_pause_deviation : 120000
+      short_pause_deviation : 120000
+      normal_pause_deviation : 120000
+      long_pause_deviation : 120000
+      longer_pause_deviation : 120000
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
       users_csv : "${data_path}user_data.csv"
@@ -25,33 +25,14 @@ modules:
   cloud:
     test: High load test
 
-execution:
-- scenario: invite_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: ${invite_users}
-  files:
-  - jmeter/Representative/invite_data.csv
-
 - scenario: applicant_users
   iterations: 1
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: ${applicant_users}
+  concurrency: 1000
   files:
   - jmeter/Representative/user_data.csv
-
-- scenario: registration_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: ${registration_users}
-  files:
-  - jmeter/Representative/competition_data.csv
 
 - scenario: front_door_users
   iterations: 1
@@ -67,30 +48,13 @@ execution:
   locations:
     eu-west-2: 1
     europe-west2-a: 1
-  concurrency: ${comp_management_users}
-
-- scenario: assessor_users
-  iterations: 1
-  locations:
-    eu-west-2: 1
-    europe-west2-a: 1
-  concurrency: ${assessor_users}
-  files:
-  - jmeter/Representative/assessor_data.csv
+  concurrency: 150
 
 scenarios:
-  invite_users:
-    script: taurus/invite.jmx
   applicant_users:
     script: taurus/application.jmx
-  registration_users:
-    script: taurus/registration.jmx
-  front_door_users:
-    script: taurus/front_door.jmx
   competition_management:
     script: taurus/competition_management.jmx
-  assessor_users:
-    script: taurus/assessor.jmx
 
 reporting:
 - module: passfail
