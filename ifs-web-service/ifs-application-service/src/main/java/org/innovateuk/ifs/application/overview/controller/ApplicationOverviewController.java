@@ -93,7 +93,7 @@ public class ApplicationOverviewController {
                 .getRole() == LEADAPPLICANT;
     }
 
-    @ZeroDowntime(description = "remove this method", reference = "IFS-TODO")
+    @ZeroDowntime(description = "remove this method", reference = "IFS-6123")
     @PostMapping(value = "/{applicationId}")
     public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
@@ -110,7 +110,7 @@ public class ApplicationOverviewController {
         return "application-terms-and-conditions";
     }
 
-    @ZeroDowntime(description = "remove method and comment", reference = "IFS-TODO")
+    @ZeroDowntime(description = "remove method and comment", reference = "IFS-6123")
     /**
      * Assign a question to a user
      *
@@ -130,7 +130,7 @@ public class ApplicationOverviewController {
         return "redirect:/application/" + applicationId + "/section/" + sectionId;
     }
 
-    @ZeroDowntime(description = "remove method", reference = "IFS-TODO")
+    @ZeroDowntime(description = "remove method", reference = "IFS-6123")
     private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
         ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
 
