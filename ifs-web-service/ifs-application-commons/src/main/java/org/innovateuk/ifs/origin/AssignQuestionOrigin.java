@@ -2,8 +2,8 @@ package org.innovateuk.ifs.origin;
 
 public enum AssignQuestionOrigin implements BackLinkOrigin {
 
-    APPLICATION_QUESTION("/application/{applicationId}/form/question/{questionId}", "Question"),
-    APPLICATION("/application/{applicationId}", "Application overview");
+    QUESTION("/application/{applicationId}/form/question/{questionId}", "Question"),
+    OVERVIEW("/application/{applicationId}", "Overview");
 
     private String title;
     private String originUrl;

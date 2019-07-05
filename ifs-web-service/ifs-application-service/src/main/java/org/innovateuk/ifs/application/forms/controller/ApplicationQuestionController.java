@@ -23,6 +23,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.origin.AssignQuestionOrigin;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -210,10 +211,10 @@ public class ApplicationQuestionController {
     public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
                                 @PathVariable("questionId") long questionId,
                                 @PathVariable("applicationId") long applicationId,
-                                @RequestParam MultiValueMap<String, String> queryParams,
+                                @RequestParam("origin") String origin,
                                 Model model) {
         populateAssigneeForm(questionId, applicationId, form);
-        return doViewAssignPage(model, questionId, applicationId, "");
+        return doViewAssignPage(model, questionId, applicationId, origin);
     }
 
     @PostMapping("/question/{questionId}/assign")
@@ -222,27 +223,28 @@ public class ApplicationQuestionController {
                          ValidationHandler validationHandler,
                          @PathVariable("questionId") long questionId,
                          @PathVariable ("applicationId") long applicationId,
-                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
                          Model model,
                          UserResource loggedInUser) {
-        String originQuery = "";
-        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, originQuery);
+        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, origin);
         ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
 
             return validationHandler.addAnyErrors(assignResult)
-                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, origin));
         });
     }
 
-    private String doViewAssignPage(Model model, long questionId, long applicationId, String originQuery) {
-        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId, originQuery));
+    private String doViewAssignPage(Model model, long questionId, long applicationId, String origin) {
+
+        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId, origin));
         return "application/questions/assign-question";
     }
 
-    private String redirectToRelevantPage(long applicationId, long questionId) {
-        return format("redirect:/application/%d", applicationId);
+    private String redirectToRelevantPage(long applicationId, long questionId, String origin) {
+        AssignQuestionOrigin questionOrigin  = AssignQuestionOrigin.valueOf(origin);
+        return "redirect:" + questionOrigin.getOriginUrl();
     }
 
     private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {
@@ -368,9 +370,11 @@ public class ApplicationQuestionController {
                 questionId,
                 applicationId);
         return questionStatuses.isEmpty() || questionStatuses.stream()
-                .anyMatch(question ->
-                                  userId.equals(question.getAssignedByUserId())
-                                          && !TRUE.equals(question.getMarkedAsComplete())
+                .anyMatch(questionStatusResource ->
+                                  (questionStatusResource.getAssignee() == null
+                                          || questionStatusResource.getAssigneeUserId().equals(userId))
+                                          && (questionStatusResource.getMarkedAsComplete() == null
+                                          || !questionStatusResource.getMarkedAsComplete())
                 );
     }
 }
