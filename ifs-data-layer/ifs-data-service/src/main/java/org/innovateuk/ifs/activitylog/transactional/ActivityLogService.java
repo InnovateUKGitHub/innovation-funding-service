@@ -28,6 +28,6 @@ public interface ActivityLogService {
     void recordQueryActivityByProjectFinanceId(long projectFinanceId, ActivityType type, long threadId);
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    @SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only project finance users can view activity log")
+    @SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only project finance and comp admin users can view activity log")
     ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId);
 }

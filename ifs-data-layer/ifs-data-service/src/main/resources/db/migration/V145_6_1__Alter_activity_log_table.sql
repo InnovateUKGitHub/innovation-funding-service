@@ -1,4 +1,4 @@
--- IFS-6062
+-- IFS-6062 adding new activity types
 
 ALTER TABLE activity_log MODIFY type ENUM(
     'APPLICATION_SUBMITTED',

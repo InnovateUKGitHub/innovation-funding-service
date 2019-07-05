@@ -3,8 +3,6 @@ package org.innovateuk.ifs.project.activitylog.populator;
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.service.ActivityLogRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogEntryViewModel;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -30,7 +28,6 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.activitylog.resource.ActivityLogResourceBuilder.newActivityLogResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -56,14 +53,12 @@ public class ActivityLogViewModelPopulatorTest {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Mock
-    private CompetitionRestService competitionRestService;
-
-    @Mock
     private MessageSource messageSource;
 
     @Test
     public void populate() {
         long projectId = 1L;
+        long competitionId = 2L;
         long partnerUserId = 6L;
         long financeUserId = 7L;
         long organisationId = 8L;
@@ -72,12 +67,10 @@ public class ActivityLogViewModelPopulatorTest {
         String organisationName = "My organisation";
         ZonedDateTime now = now();
 
-        CompetitionResource competition = newCompetitionResource()
-                .withName("Competition")
-                .build();
         ProjectResource project = newProjectResource()
                 .withName("Project")
-                .withCompetition(competition.getId())
+                .withCompetition(competitionId)
+                .withCompetitionName("Competition")
                 .withApplication(2L)
                 .build();
         PartnerOrganisationResource partner = newPartnerOrganisationResource()
@@ -115,12 +108,13 @@ public class ActivityLogViewModelPopulatorTest {
         when(messageSource.getMessage(eq("ifs.activity.log.FINANCE_QUERY.link"), aryEq(new Object[]{"viability", null}), any())).thenReturn("FINANCE_QUERY");
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partner)));
         when(projectRestService.getProjectUsersForProject(projectId)).thenReturn(restSuccess(singletonList(projectUserResource)));
         when(activityLogRestService.findByApplicationId(project.getApplication())).thenReturn(restSuccess(activities));
 
         ActivityLogViewModel viewModel = activityLogViewModelPopulator.populate(projectId);
+
+        assertEquals("Competition", viewModel.getCompetitionName());
 
         assertEquals(4, viewModel.getActivities().size());
 

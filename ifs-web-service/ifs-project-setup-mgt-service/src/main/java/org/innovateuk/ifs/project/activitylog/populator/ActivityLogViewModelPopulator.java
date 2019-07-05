@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.activitylog.populator;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.activitylog.service.ActivityLogRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogEntryViewModel;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -26,9 +24,7 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 @Component
@@ -44,14 +40,10 @@ public class ActivityLogViewModelPopulator {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private CompetitionRestService competitionRestService;
-
-    @Autowired
     private MessageSource messageSource;
 
     public ActivityLogViewModel populate(long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         List<PartnerOrganisationResource> partnerOrganisationResources = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         List<ProjectUserResource> projectUserResources = projectRestService.getProjectUsersForProject(projectId).getSuccess();
         List<ActivityLogResource> activities = activityLogRestService.findByApplicationId(project.getApplication()).getSuccess();
@@ -72,7 +64,7 @@ public class ActivityLogViewModelPopulator {
                 project.getApplication(),
                 project.getId(),
                 project.getName(),
-                competition.getName(),
+                project.getCompetitionName(),
                 partnerOrganisationResources.stream()
                     .filter(PartnerOrganisationResource::isLeadOrganisation)
                     .findFirst()
