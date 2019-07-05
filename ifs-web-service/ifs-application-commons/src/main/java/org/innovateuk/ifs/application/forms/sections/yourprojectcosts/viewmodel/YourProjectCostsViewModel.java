@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import java.util.Set;
+
 public class YourProjectCostsViewModel {
     private final Long applicationId;
 
@@ -27,6 +29,8 @@ public class YourProjectCostsViewModel {
 
     private final boolean procurementCompetition;
 
+    private final Set<FinanceRowType> financeRowTypes;
+
     public YourProjectCostsViewModel(long applicationId,
                                      long sectionId,
                                      long competitionId,
@@ -37,7 +41,8 @@ public class YourProjectCostsViewModel {
                                      String applicationName,
                                      String organisationName,
                                      String financesUrl,
-                                     boolean procurementCompetition) {
+                                     boolean procurementCompetition,
+                                     Set<FinanceRowType> financeRowTypes) {
         this.internal = false;
 
         this.organisationId = organisationId;
@@ -51,13 +56,15 @@ public class YourProjectCostsViewModel {
         this.financesUrl = financesUrl;
         this.includeVat = includeVat;
         this.procurementCompetition = procurementCompetition;
+        this.financeRowTypes = financeRowTypes;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
         this.open = open;
         this.complete = false;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
+        this.financeRowTypes = financeRowTypes;
 
         this.applicationName = null;
         this.organisationName = null;
@@ -111,6 +118,10 @@ public class YourProjectCostsViewModel {
 
     public boolean isIncludeVat() {
         return includeVat;
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
     }
 
     /* view logic */

@@ -471,7 +471,7 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new FinanceChecksProjectCostsViewModel());
+        model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview,
