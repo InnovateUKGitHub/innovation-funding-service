@@ -52,7 +52,7 @@ public class ActivityLogUrlHelper {
             case GRANT_OFFER_LETTER_APPROVED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
             default:
-                return "#";
+                return null;
         }
     }
 }

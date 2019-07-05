@@ -37,6 +37,5 @@ public class ActivityLogUrlHelperTest {
         stream(ActivityType.values()).forEach((type) ->
             assertNotNull(ActivityLogUrlHelper.url(activity.withActivityType(type).build(), project))
         );
-
     }
 }
