@@ -33,6 +33,8 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.origin.AssignQuestionOrigin;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +55,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 
+import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -66,8 +69,10 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -166,7 +171,8 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                                                  assignQuestionModelPopulator,
                                                  applicantRestService,
                                                  applicationRedirectionService,
-                                                 applicationSaver
+                                                 applicationSaver,
+                                                 cookieFlashMessageFilter
                                                  );
 
     }
@@ -327,25 +333,42 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                 .build();
         UserResource user = newUserResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().withAssignee(user.getId()).build();
+        String originQuery = "OVERVIEW";
 
         AssignQuestionViewModel model = new AssignQuestionViewModel(applicationResource,
                                                                     emptyList(),
                                                                     question,
-                                                                    "originQuery");
+                                                                    originQuery,
+                                                                    AssignQuestionOrigin.OVERVIEW);
 
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId()))
                 .thenReturn(singletonList(questionStatus));
-        when(assignQuestionModelPopulator.populateModel(question.getId(), applicationResource.getId())).thenReturn(model);
+        when(assignQuestionModelPopulator.populateModel(question.getId(), applicationResource.getId(), originQuery)).thenReturn(model);
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign", applicationResource.getId(), question.getId()))
+        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", applicationResource.getId(), question.getId()))
                 .andExpect(status().isOk());
 
         verify(questionService).findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId());
-        verify(assignQuestionModelPopulator).populateModel(question.getId(), applicationResource.getId());
+        verify(assignQuestionModelPopulator).populateModel(question.getId(), applicationResource.getId(), originQuery);
     }
 
     @Test
     public void assignQuestion() throws Exception {
-        // TODO
+
+        QuestionResource question = newQuestionResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        ProcessRoleResource processRole = newProcessRoleResource().build();
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+        long assigneeId = 123L;
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
+        when(questionService.assign(question.getId(), application.getId(), assigneeId, processRole.getId())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", application.getId(), question.getId())
+                                .param("assignee", valueOf(assigneeId)))
+                .andExpect(status().is3xxRedirection());
+
+        verify(userRestService).findProcessRole(user.getId(), application.getId());
+        verify(questionService).assign(question.getId(), application.getId(), assigneeId, processRole.getId());
     }
 }
