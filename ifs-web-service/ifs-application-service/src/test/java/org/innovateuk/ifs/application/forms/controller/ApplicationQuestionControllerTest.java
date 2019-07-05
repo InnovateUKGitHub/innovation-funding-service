@@ -24,6 +24,7 @@ import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -32,6 +33,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,10 +55,12 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -64,6 +68,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -159,7 +164,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                                                  userRestService,
                                                  questionService,
                                                  assignQuestionModelPopulator,
-                                                 cookieFlashMessageFilter,
                                                  applicantRestService,
                                                  applicationRedirectionService,
                                                  applicationSaver
@@ -321,16 +325,22 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Super imaginative application name")
                 .build();
+        UserResource user = newUserResource().build();
+        QuestionStatusResource questionStatus = newQuestionStatusResource().withAssignee(user.getId()).build();
 
         AssignQuestionViewModel model = new AssignQuestionViewModel(applicationResource,
                                                                     emptyList(),
-                                                                    question);
+                                                                    question,
+                                                                    "originQuery");
 
+        when(questionService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId()))
+                .thenReturn(singletonList(questionStatus));
         when(assignQuestionModelPopulator.populateModel(question.getId(), applicationResource.getId())).thenReturn(model);
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign", applicationResource.getId(), question.getId()))
                 .andExpect(status().isOk());
 
+        verify(questionService).findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId());
         verify(assignQuestionModelPopulator).populateModel(question.getId(), applicationResource.getId());
     }
 
