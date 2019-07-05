@@ -54,6 +54,7 @@ IFS.core.repeatableFinanceRows = (function () {
           },
           cache: false
         }).done(function (data) {
+          IFS.core.timeoutWarning.startTimer()
           var target = jQuery(addRowButton.attr('data-repeatable-rowcontainer'))
           var buttonHtml = '<button type="submit" name="remove_cost" class="button-clear js-remove-row" value="">Remove <span class="govuk-visually-hidden">item</span></button>'
           // find the .buttonplaceholder span and add empty valued remove_cost as it hasn't been persisted yet but can be removed client side
@@ -81,6 +82,7 @@ IFS.core.repeatableFinanceRows = (function () {
           jQuery.ajaxProtected({
             url: url
           }).done(function (data) {
+            IFS.core.timeoutWarning.startTimer()
             data = jQuery.parseJSON(data)
             if (data.status === 'OK') {
               jQuery('[data-repeatable-row=' + rowValue + ']').remove()

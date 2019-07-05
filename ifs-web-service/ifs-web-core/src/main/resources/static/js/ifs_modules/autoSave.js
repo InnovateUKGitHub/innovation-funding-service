@@ -221,6 +221,7 @@ IFS.core.autoSave = (function () {
           timeout: s.ajaxTimeOut
         })
           .done(function (data) {
+            IFS.core.timeoutWarning.startTimer()
             var doneAjaxTime = new Date().getTime()
             var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime - (doneAjaxTime - startAjaxTime))
 

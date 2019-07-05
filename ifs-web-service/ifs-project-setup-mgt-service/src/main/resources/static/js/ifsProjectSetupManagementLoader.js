@@ -16,41 +16,11 @@
 // Please think before adding javascript, this project should work without any of this scripts.
 
 if (typeof (IFS) === 'undefined') { var IFS = {} } // eslint-disable-line
-IFS.competitionManagement = {}
-IFS.competitionManagement.loadOrder = {
+IFS.projectSetupManagement = {}
+IFS.projectSetupManagement.loadOrder = {
   common: {
     init: function () {
       IFS.core.timeoutWarning.init()
-      IFS.competitionManagement.various.init()
-    },
-    finalize: function () {
-      IFS.competitionManagement.multipageSelect.init()
-    }
-  },
-  'competition-management': {
-    init: function () {
-      IFS.competitionManagement.repeatableRows.init()
-    }
-  },
-  'competition-setup': {
-    init: function () {
-      IFS.competitionManagement.initialDetails.init()
-      IFS.competitionManagement.milestones.init()
-      IFS.competitionManagement.fundingInformation.init()
-      IFS.competitionManagement.eligibility.init()
-      IFS.competitionManagement.repeater.init()
-      IFS.core.finance.init()
-    }
-  },
-  'resend-applicant-invite': {
-    init: function () {
-      IFS.competitionManagement.resendApplicantInvite.init()
-    }
-  },
-  'eu-notified': {
-    init: function () {
-      IFS.competitionManagement.select.init()
     }
   }
-
 }

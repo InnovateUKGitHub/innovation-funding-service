@@ -20,6 +20,7 @@ IFS.assessment = {}
 IFS.assessment.loadOrder = {
   common: {
     init: function () {
+      IFS.core.timeoutWarning.init()
       IFS.assessment.conditionallyRequired.init()
     },
     finalize: function () {}

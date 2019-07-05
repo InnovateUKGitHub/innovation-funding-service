@@ -34,6 +34,7 @@ IFS.core.financeRowForm = (function () {
         },
         cache: false
       }).done(function (data) {
+        IFS.core.timeoutWarning.startTimer()
         var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
         target.append(data)
         addRowButton.prevAll('.govuk-hint').remove()
@@ -56,6 +57,7 @@ IFS.core.financeRowForm = (function () {
         url: IFS.core.financeRowForm.getUrl(el) + '/remove-row/' + id,
         method: 'POST'
       }).done(function (data) {
+        IFS.core.timeoutWarning.startTimer()
         removeRow()
       })
     },
