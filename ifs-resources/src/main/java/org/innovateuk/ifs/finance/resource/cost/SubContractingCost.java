@@ -32,11 +32,16 @@ public class SubContractingCost extends AbstractFinanceRowItem {
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
-    public SubContractingCost(){
+    private SubContractingCost() {
+        super(null);
     }
 
-    public SubContractingCost(Long id, BigDecimal cost, String country, String name, String role) {
-        this();
+    public SubContractingCost(Long targetId) {
+        super(targetId);
+    }
+
+    public SubContractingCost(Long id, BigDecimal cost, String country, String name, String role, Long targetId) {
+        this(targetId);
         this.id = id;
         this.cost = cost;
         this.country = country;

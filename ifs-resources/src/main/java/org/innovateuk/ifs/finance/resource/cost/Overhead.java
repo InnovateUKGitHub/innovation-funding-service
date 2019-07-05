@@ -28,13 +28,18 @@ public class Overhead extends AbstractFinanceRowItem {
     private Integer rate;
     private String name;
 
-    public Overhead() {
+    private Overhead() {
+        super(null);
+    }
+
+    public Overhead(Long targetId) {
+        super(targetId);
         this.rateType = OverheadRateType.NONE;
         this.name = getCostType().getType();
     }
 
-    public Overhead(Long id, OverheadRateType rateType, Integer rate) {
-        this();
+    public Overhead(Long id, OverheadRateType rateType, Integer rate, Long targetId) {
+        this(targetId);
         this.id = id;
         this.rateType = rateType;
         this.rate = rate;

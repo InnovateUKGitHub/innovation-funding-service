@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
@@ -200,10 +199,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
         FinanceRowType costType = OTHER_COSTS;
         if (availableRow != null) {
-            List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
-            if (!formInputs.isEmpty()) {
-                costType = FinanceRowType.fromType(formInputs.get(0).getType());
-            }
+            costType = availableRow.getType();
         }
         return costType;
     }
@@ -274,14 +270,14 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
                                                          ApplicationFinance applicationFinance) {
         return optionalCost.map(cost -> {
             ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(),
-                    cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+                    cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getType());
             applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
             return applicationFinanceRow;
         });
     }
 
     private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost) {
-        return getCostHandler(financeRowType).toCostItem(applicationCost);
+        return getCostHandler(financeRowType).toResource(applicationCost);
     }
 
     private List<ProjectFinanceRow> getProjectCosts(Long projectFinanceId) {
@@ -291,13 +287,5 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
     private List<ApplicationFinanceRow> getApplicationCosts(Long applicationId, Long organisationId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         return applicationFinanceRowRepository.findByTargetId(applicationFinance.getId());
-    }
-
-    public ApplicationFinanceRow updateCost(ApplicationFinanceRow newCostItem) {
-        return applicationFinanceRowRepository.save(newCostItem);
-    }
-
-    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
-        return applicationFinanceRowRepository.save(newCostItem);
     }
 }

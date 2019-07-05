@@ -24,21 +24,21 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(Materials materials) {
+    public ApplicationFinanceRow toApplicationDomain(Materials materials) {
         return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(Materials materials) {
+    public ProjectFinanceRow toProjectDomain(Materials materials) {
         return new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
+        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity(), cost.getTarget().getId());
     }
 }

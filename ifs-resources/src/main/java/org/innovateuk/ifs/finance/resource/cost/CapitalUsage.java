@@ -44,13 +44,18 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer utilisation;
 
-    public CapitalUsage() {
+    private CapitalUsage() {
+        super(null);
+    }
+
+    public CapitalUsage(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
-                        BigDecimal npv, BigDecimal residualValue, Integer utilisation) {
-        this();
+                        BigDecimal npv, BigDecimal residualValue, Integer utilisation, Long targetId) {
+        this(targetId);
         this.id = id;
         this.deprecation = deprecation;
         this.description = description;

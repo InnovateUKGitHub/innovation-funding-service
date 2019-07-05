@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class AcademicCostFormPopulator {
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService defaultFinanceRowRestService;
+    private ApplicationFinanceRowRestService defaultFinanceRowRestService;
 
     public void populate(AcademicCostForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
@@ -74,8 +74,8 @@ public class AcademicCostFormPopulator {
     private AcademicCost getCostByName(Map<String, AcademicCost> costMap, String name, ApplicationFinanceResource finance) {
         AcademicCost cost = costMap.get(name);
         if (cost == null) {
-            cost = new AcademicCost(null, name, BigDecimal.ZERO, null, costTypeFromName(name));
-            defaultFinanceRowRestService.addWithResponse(finance. getId(), cost);
+            cost = new AcademicCost(null, name, BigDecimal.ZERO, null, costTypeFromName(name), finance.getId());
+            defaultFinanceRowRestService.create(cost);
         }
         return cost;
     }

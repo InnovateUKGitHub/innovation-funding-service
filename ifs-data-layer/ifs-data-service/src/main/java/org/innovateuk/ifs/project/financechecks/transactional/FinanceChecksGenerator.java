@@ -107,7 +107,7 @@ public class FinanceChecksGenerator {
             newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
             newRow.setName(original.getName());
             newRow.setQuantity(original.getQuantity());
-            newRow.setQuestion(original.getQuestion());
+            newRow.setType(original.getType());
             return newRow;
         });
 

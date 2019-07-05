@@ -34,6 +34,6 @@ public class GrantClaimCostBuilder extends AbstractCostBuilder<GrantClaim, Grant
 
     @Override
     protected GrantClaim createInitial() {
-        return new GrantClaim();
+        return newInstance(GrantClaim.class);
     }
 }

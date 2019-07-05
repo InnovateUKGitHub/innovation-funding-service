@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,14 +29,14 @@ public class ProjectFinanceRow extends FinanceRow<ProjectFinance> {
         this.target = target;
     }
 
-    public ProjectFinanceRow(ProjectFinance projectFinance, Question question) {
-        super(question);
+    public ProjectFinanceRow(ProjectFinance projectFinance, FinanceRowType financeRowType) {
+        super(financeRowType);
         this.target = projectFinance;
     }
 
     public ProjectFinanceRow(Long id, String name, String item, String description, Integer quantity,
-                             BigDecimal cost, ProjectFinance projectFinance, Question question) {
-        super(id, name, item, description, quantity, cost, question);
+                             BigDecimal cost, ProjectFinance projectFinance,FinanceRowType financeRowType) {
+        super(id, name, item, description, quantity, cost, financeRowType);
         this.target = projectFinance;
     }
 

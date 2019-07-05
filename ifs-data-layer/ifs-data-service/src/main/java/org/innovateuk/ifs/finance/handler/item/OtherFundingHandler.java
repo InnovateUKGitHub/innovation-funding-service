@@ -38,25 +38,25 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
     
     @Override
-    public ApplicationFinanceRow toCost(OtherFunding otherFunding) {
+    public ApplicationFinanceRow toApplicationDomain(OtherFunding otherFunding) {
         return otherFunding != null ? mapOtherFunding(otherFunding) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(OtherFunding otherFunding) {
+    public ProjectFinanceRow toProjectDomain(OtherFunding otherFunding) {
         return otherFunding != null ? mapOtherFundingToProjectCost(otherFunding) : null;
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost) {
         if (OTHER_FUNDING_NAME.equals(cost.getDescription())) {
-            return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost());
+            return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost(), cost.getTarget().getId());
         }
-        return new OtherFunding(cost.getId(), null, cost.getDescription(), cost.getItem(), cost.getCost());
+        return new OtherFunding(cost.getId(), null, cost.getDescription(), cost.getItem(), cost.getCost(), cost.getTarget().getId());
     }
 
     private ApplicationFinanceRow mapOtherFunding(FinanceRowItem costItem) {
@@ -95,8 +95,8 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
-        OtherFunding costItem = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
-        ApplicationFinanceRow cost = toCost(costItem);
+        OtherFunding costItem = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, applicationFinance.getId());
+        ApplicationFinanceRow cost = toApplicationDomain(costItem);
 
         costs.add(cost);
         return costs;

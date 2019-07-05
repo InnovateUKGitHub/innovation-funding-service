@@ -54,7 +54,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         LabourCost costToUpdate = new LabourCost();
         String expectedUrl = costRestURL + "/add-with-response/123";
         setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, costToUpdate, new LabourCost(), HttpStatus.OK);
-        service.addWithResponse(123L, costToUpdate).getSuccess();
+        service.create(123L, costToUpdate).getSuccess();
     }
 
     @Test

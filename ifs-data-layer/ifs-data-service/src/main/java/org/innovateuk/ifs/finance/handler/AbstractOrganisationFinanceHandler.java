@@ -50,12 +50,10 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
         if (initialiseCostTypeSupported(costType)) {
-            long competitionId = applicationFinance.getApplication().getCompetition().getId();
-            Question question = getQuestionByCostType(competitionId, costType);
             try {
                 List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost(applicationFinance);
                 cost.forEach(c -> {
-                    c.setQuestion(question);
+                    c.setType(costType);
                     c.setTarget(applicationFinance);
                 });
                 return applicationFinanceRowRepository.saveAll(cost);
@@ -112,21 +110,21 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     private void addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
+        FinanceRowType costType = cost.getType();
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
-        FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
+        FinanceRowItem costItem = financeRowHandler.toResource(cost);
         FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
         financeRowCostCategory.addCost(costItem);
     }
 
     @Override
-    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
-        return buildFinanceRowHandler(costItem).toCost(costItem);
+    public ApplicationFinanceRow toApplicationDomain(FinanceRowItem costItem) {
+        return buildFinanceRowHandler(costItem).toApplicationDomain(costItem);
     }
 
     @Override
-    public ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem) {
-        return buildFinanceRowHandler(costItem).toProjectCost(costItem);
+    public ProjectFinanceRow toProjectDomain(FinanceRowItem costItem) {
+        return buildFinanceRowHandler(costItem).toProjectDomain(costItem);
     }
 
     private FinanceRowHandler buildFinanceRowHandler(FinanceRowItem costItem) {
@@ -137,30 +135,28 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     }
 
     @Override
-    public FinanceRowItem costToCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         FinanceRowHandler financeRowHandler = getRowHandler(cost);
-        return financeRowHandler.toCostItem(cost);
+        return financeRowHandler.toResource(cost);
     }
 
     private FinanceRowHandler getRowHandler(FinanceRow cost) {
-        cost.getQuestion().getFormInputs().size();
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
-        return getCostHandler(costType);
+        return getCostHandler(cost.getType());
     }
 
     @Override
-    public List<FinanceRowItem> costsToCostItems(List<? extends FinanceRow> costs) {
-        return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
+    public List<FinanceRowItem> toResources(List<? extends FinanceRow> costs) {
+        return costs.stream().map(c -> toResource(c)).collect(Collectors.toList());
     }
 
     @Override
-    public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findById(newCostItem.getId()), notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
-                .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccess();
+    public ApplicationFinanceRow updateCost(final ApplicationFinanceRow financeRow) {
+        return find(applicationFinanceRowRepository.findById(financeRow.getId()), notFoundError(ApplicationFinanceRow.class, financeRow.getId()))
+                .andOnSuccess(existing -> serviceSuccess(applicationFinanceRowRepository.save(financeRow))).getSuccess();
     }
 
     @Override
-    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
-        return applicationFinanceRowRepository.save(newCostItem);
+    public ApplicationFinanceRow addCost(ApplicationFinanceRow financeRow) {
+        return applicationFinanceRowRepository.save(financeRow);
     }
 }

@@ -69,78 +69,43 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     private QuestionService questionService;
 
     @Override
-    public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
-        throw new NotImplementedException("This method enforced by interface is not required for Project finance");
-    }
-
-    @Override
-    public ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, String costTypeName, Long questionId) {
-        throw new NotImplementedException("This method enforced by interface is not required for Project finance");
-    }
-
-    @Override
-    public ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, Long questionId) {
-        throw new NotImplementedException("This method enforced by interface is not required for Project finance");
-    }
-
-    @Override
-    public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
+    public ServiceResult<FinanceRowItem> get(Long costItemId) {
         ProjectFinanceRow cost = projectFinanceRowRepository.findById(costItemId).get();
         ProjectFinance projectFinance = cost.getTarget();
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
 
-        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+        return serviceSuccess(organisationFinanceHandler.toResource(cost));
     }
 
     @Override
     @Transactional
-    public ServiceResult<FinanceRowItem> addCost(Long projectFinanceId, Long questionId, FinanceRowItem newCostItem) {
-        return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
-                    if (newCostItem != null) {
-                        FinanceRow newCost = addCostItem(projectFinance, question, newCostItem);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem((ProjectFinanceRow) newCost));
-                    } else {
-                        ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
-                        projectFinanceRowRepository.save(cost);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
-                    }
-                }
-        );
+    public ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem) {
+        return find(projectFinance(newCostItem.getTargetId())).andOnSuccess(projectFinance -> {
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
+            FinanceRow newCost = addCostItem(projectFinance, newCostItem);
+            return serviceSuccess(organisationFinanceHandler.toResource(newCost));
+        });
     }
 
     @Override
     @Transactional
-    public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
-
+    public ServiceResult<FinanceRowItem> update(final Long id, final FinanceRowItem newCostItem) {
         return find(projectFinanceRowRepository.findById(id), notFoundError(ProjectFinanceRow.class)).
                 andOnSuccess(projectFinanceRow -> doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
                             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ProjectFinanceRow) cost).getTarget().getProject().getApplication().getCompetition().getId(), ((ProjectFinanceRow) cost).getTarget().getOrganisation().getOrganisationType().getId());
-                            return organisationFinanceHandler.costToCostItem((ProjectFinanceRow) cost);
+                            return organisationFinanceHandler.toResource(cost);
                         })
                 );
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> deleteCost(Long costId) {
+    public ServiceResult<Void> delete(Long costId) {
         return find(projectFinanceRowRepository.findById(costId), notFoundError(ProjectFinanceRow.class)).
                 andOnSuccessReturnVoid(projectFinanceRow -> {
                     financeRowMetaValueRepository.deleteByFinanceRowId(costId);
                     projectFinanceRowRepository.deleteById(costId);
                 });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
-        return getProject(projectFinance.getProject()).andOnSuccess(project ->
-                find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
-                    dbFinance = projectFinanceRepository.save(dbFinance);
-                    return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
-                })
-        );
     }
 
     @Override
@@ -158,19 +123,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         return organisationFinanceDefaultHandler.getCostHandler(costItem.getCostType());
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<FinanceRowItem> addCost(Long financeId, FinanceRowItem newCostItem) {
-        return find(projectFinance(financeId)).andOnSuccess((projectFinance) ->
-                        getQuestion(newCostItem, projectFinance.getProject().getApplication().getCompetition()).andOnSuccess(question ->
-                                addCost(projectFinance.getId(), question.getId(), newCostItem)));
-    }
-
-    private ServiceResult<Question> getQuestion(FinanceRowItem newCostItem, Competition competition) {
-        return questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), newCostItem.getCostType().getFormInputType())
-                .andOnSuccess(questionResource ->  getQuestion(questionResource.getId()));
-    }
-
     private Supplier<ServiceResult<ProjectFinance>> projectFinance(Long projectFinanceId) {
         return () -> getProjectFinance(projectFinanceId);
     }
@@ -183,11 +135,11 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         return projectFinanceHandler.getProjectOrganisationFinances(projectFinanceResourceId);
     }
 
-    private FinanceRow addCostItem(ProjectFinance projectFinance, Question question, FinanceRowItem newCostItem) {
+    private FinanceRow addCostItem(ProjectFinance projectFinance, FinanceRowItem newCostItem) {
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
 
-        ProjectFinanceRow cost = organisationFinanceHandler.costItemToProjectCost(newCostItem);
-        cost.setQuestion(question);
+        ProjectFinanceRow cost = organisationFinanceHandler.toProjectDomain(newCostItem);
+        cost.setType(newCostItem.getCostType());
         cost.setTarget(projectFinance);
 
         return persistCostHandlingCostValues(cost);
@@ -248,7 +200,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         return find(cost(id)).andOnSuccessReturn(existingCost -> {
             ProjectFinance projectFinance = existingCost.getTarget();
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
-            ProjectFinanceRow newCost = organisationFinanceHandler.costItemToProjectCost(newCostItem);
+            ProjectFinanceRow newCost = organisationFinanceHandler.toProjectDomain(newCostItem);
             ProjectFinanceRow updatedCost = mapCost(existingCost, newCost);
 
             ProjectFinanceRow savedCost = projectFinanceRowRepository.save(updatedCost);

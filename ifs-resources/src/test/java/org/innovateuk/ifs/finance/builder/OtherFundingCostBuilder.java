@@ -53,6 +53,6 @@ public class OtherFundingCostBuilder extends BaseBuilder<OtherFunding, OtherFund
 
     @Override
     protected OtherFunding createInitial() {
-        return new OtherFunding();
+        return newInstance(OtherFunding.class);
     }
 }

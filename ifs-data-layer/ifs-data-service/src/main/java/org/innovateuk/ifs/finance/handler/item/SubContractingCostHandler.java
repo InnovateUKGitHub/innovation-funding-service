@@ -20,17 +20,17 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     public static final String COST_KEY = "subcontracting";
 
     @Override
-    public ApplicationFinanceRow toCost(SubContractingCost costItem) {
+    public ApplicationFinanceRow toApplicationDomain(SubContractingCost costItem) {
         return costItem != null ? mapSubContractingCost(costItem) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(SubContractingCost costItem) {
+    public ProjectFinanceRow toProjectDomain(SubContractingCost costItem) {
         return mapSubContractingToProjectCost(costItem);
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
 
@@ -42,7 +42,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
             }
         }
 
-        return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
+        return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription(), cost.getTarget().getId());
     }
 
     private ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {

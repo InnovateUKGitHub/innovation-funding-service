@@ -16,21 +16,21 @@ public class OtherCostHandler extends FinanceRowHandler<OtherCost> {
     public static final String COST_KEY = "other-cost";
 
     @Override
-    public ApplicationFinanceRow toCost(OtherCost otherCost) {
+    public ApplicationFinanceRow toApplicationDomain(OtherCost otherCost) {
         return new ApplicationFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(OtherCost otherCost) {
+    public ProjectFinanceRow toProjectDomain(OtherCost otherCost) {
         return new ProjectFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new OtherCost(cost.getId(),cost.getDescription(), cost.getCost());
+        return new OtherCost(cost.getId(),cost.getDescription(), cost.getCost(), cost.getTarget().getId());
     }
 }

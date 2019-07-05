@@ -173,8 +173,8 @@ public class ApplicationValidationUtil {
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
-            FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
-            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
+            FinanceRowType type = FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
+            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
             LOG.trace("input type not a cost type", e);

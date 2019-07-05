@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
@@ -42,7 +43,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
     private OverheadForm overhead(BaseFinanceResource finance) {
         OverheadCostCategory costCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
-        Overhead overhead = costCategory.getCosts().stream().findFirst().map(Overhead.class::cast).orElseGet(Overhead::new);
+        Overhead overhead = costCategory.getCosts().stream().findFirst().map(Overhead.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected overheads cost."));
         String filename = overheadFile(overhead.getId()).map(FileEntryResource::getName).orElse(null);
         return new OverheadForm(overhead, filename);
     }
