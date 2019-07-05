@@ -100,7 +100,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.description}">Project management appendix</h3>
+        <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.description}">Project management appendix</h2>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance-appendix (${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
@@ -121,8 +121,9 @@
                  class="govuk-body uploaded-file">
                 <a class="govuk-link"
                    th:href="${downloadUrl}"
-                   th:text="${filename}" target="_blank">The-uploaded-file-example.pdf</a>
-                (opens in a new window).
+                   th:text="${filename}" target="_blank"
+                   aria-describedby="uploaded-file-hint">The-uploaded-file-example.pdf</a>
+                <span id="uploaded-file-hint">(opens in a new window)</span>.
             </p>
         </th:block>
         <!--/* file upload can still be changed */-->
@@ -156,8 +157,9 @@
                         <a class="govuk-link"
                            th:href="${downloadUrl}"
                            th:text="${filename}"
-                           target="_blank">The-uploaded-file-example.pdf</a>
-                        (opens in a new window).
+                           target="_blank"
+                           aria-describedby="uploaded-file-hint">The-uploaded-file-example.pdf</a>
+                        <span id="uploaded-file-hint">(opens in a new window)</span>.
                     </p>
                     <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit" aria-label="Remove uploaded document">Remove</button>
                 </th:block>

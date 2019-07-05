@@ -18,7 +18,6 @@
 
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
           th:object="${competitionSetupForm}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-section="terms-and-conditions"
           method="post" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-3-edit">
@@ -31,8 +30,7 @@
                     th:field="*{termsAndConditionsId}"
                     required="required"
                     class="govuk-select govuk-!-width-one-third"
-                    th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
-                    data-autosave-disabled="">
+                    th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}">
                     <option value="" disabled="disabled">Please select &hellip;</option>
                     <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
                             th:text="${termsAndConditions.name}"

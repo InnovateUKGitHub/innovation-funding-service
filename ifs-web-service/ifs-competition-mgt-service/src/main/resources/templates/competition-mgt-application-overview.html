@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary',hasFormErrors=${#fields.hasErrors('${ineligibleForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.application.id}: ${applicationName} - Application overview|,hasFormErrors=${#fields.hasErrors('${ineligibleForm.*}')}" />
 </head>
 
 <body class="govuk-template__body app-summary competition-management" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
@@ -19,9 +20,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(ineligibleForm)" />
         </div>
 
-        <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
-        </th:block>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=|${model.application.id}: ${applicationName}|,size='govuk-heading-xl'" />
 
         <th:block th:if="${model.ineligibility.ineligible}">
             <h2 class="govuk-heading-s">Removed by</h2>
@@ -90,16 +89,6 @@
                             view contributors and collaborators
                         </a>
                     </li>
-                    <li th:with="procurementCompetition=${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-                        <th:block th:if="${procurementCompetition}">
-                            <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link">view the draft contract</a> (opens in new window).</p>
-                        </th:block>
-                        <th:block th:unless="${procurementCompetition}">
-                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link">
-                                view the award terms and conditions
-                            </a>
-                        </th:block>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -130,10 +119,11 @@
                     <a target="_blank"
                        class="govuk-link"
                        th:href="${appendix.getDownloadURL()}"
-                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize()}">
+                       th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize()}"
+                       aria-describedby="appendix-hint">
                         Project-plan.pdf (161.96 KB)
                     </a>
-                    (opens in a new window).
+                    <span id="appendix-hint">(opens in a new window)</span>.
                 </div>
             </th:block>
         </th:block>

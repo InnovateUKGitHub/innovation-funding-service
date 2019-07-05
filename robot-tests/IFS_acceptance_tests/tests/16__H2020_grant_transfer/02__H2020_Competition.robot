@@ -264,6 +264,7 @@ The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
+    the user accept the competition terms and conditions
     the user is able to submit the application
 
 The user is able to complete Application details section
@@ -342,7 +343,7 @@ The user is able to complete your project costs section
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user opens the link in new window           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab
@@ -350,7 +351,6 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user selects the checkbox             agreeTerms
     the user clicks the button/link           id = submit-application-button
     the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
 

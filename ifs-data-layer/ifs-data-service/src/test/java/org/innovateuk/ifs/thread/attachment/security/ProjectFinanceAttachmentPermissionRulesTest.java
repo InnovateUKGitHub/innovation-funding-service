@@ -11,7 +11,7 @@ import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.threads.repository.ThreadRepository;
+import org.innovateuk.ifs.threads.repository.MessageThreadRepository;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -51,7 +51,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     private QueryRepository queryRepositoryMock;
 
     @Mock
-    private ThreadRepository threadRepository;
+    private MessageThreadRepository threadRepository;
 
     @Mock
     private AttachmentMapper attachmentMapperMock;

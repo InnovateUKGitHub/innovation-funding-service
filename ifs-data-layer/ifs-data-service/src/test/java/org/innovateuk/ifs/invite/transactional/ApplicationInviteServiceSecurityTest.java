@@ -38,7 +38,7 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testCreateApplicationInvites() {
+    public void createApplicationInvites() {
         final InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().build();
         final long applicationId = 1L;
         assertAccessDenied(
@@ -51,7 +51,7 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testGetInvitesByApplication() {
+    public void getInvitesByApplication() {
         long applicationId = 1L;
 
         when(classUnderTestMock.getInvitesByApplication(applicationId))
@@ -67,9 +67,10 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testSaveInvites() {
+    public void saveInvites() {
         int nInvites = 2;
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(nInvites);
+
         classUnderTest.saveInvites(invites);
         verify(invitePermissionRules, times(nInvites))
                 .collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any
@@ -77,6 +78,22 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         verify(invitePermissionRules, times(nInvites))
                 .leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource
                         .class));
+    }
+
+    @Test
+    public void resendInvite() {
+        final ApplicationInviteResource invite = newApplicationInviteResource().build();
+
+        assertAccessDenied(
+                () -> classUnderTest.resendInvite(invite),
+                () -> {
+                    verify(invitePermissionRules)
+                            .collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any
+                                    (UserResource.class));
+                    verify(invitePermissionRules)
+                            .leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource
+                                    .class));
+                });
     }
 
     @Override

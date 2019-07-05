@@ -100,7 +100,6 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                loggedInUser.hasRole(IFS_ADMINISTRATOR),
                 loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),

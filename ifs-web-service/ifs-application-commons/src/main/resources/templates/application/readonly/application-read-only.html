@@ -15,10 +15,8 @@
                     <h3>
                         <span th:text="${question.name}"></span>
                         <th:block th:if="${model.settings.includeStatuses}">
-                            <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
-                            <div th:unless="${question.isComplete()}" class="section-status section-incomplete">
-                                Incomplete
-                            </div>
+                            <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
+                            <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
                         </th:block>
                     </h3>
                     <div class="question">

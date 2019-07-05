@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestServi
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.populator.CompetitionStatusViewModelPopulator;
-import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
@@ -38,8 +37,6 @@ import static java.lang.String.format;
 @RequestMapping("/competition/{competitionId}/status")
 public class CompetitionStatusController {
 
-    @Autowired
-    private StatusRestService statusRestService;
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
     @Autowired

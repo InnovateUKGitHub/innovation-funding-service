@@ -17,7 +17,8 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     LIVE(18, State.ACCEPTED),
     WITHDRAWN(48, State.WITHDRAWN),
     HANDLED_OFFLINE(51, State.HANDLED_OFFLINE),
-    COMPLETED_OFFLINE(52, State.COMPLETED_OFFLINE);
+    COMPLETED_OFFLINE(52, State.COMPLETED_OFFLINE),
+    ON_HOLD(53, State.ON_HOLD);
 
     private final long id;
     private final State backingState;
@@ -54,9 +55,8 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return this == COMPLETED_OFFLINE || this == HANDLED_OFFLINE;
     }
 
-    // TODO IFS-5940 include on hold in this list once the state exists
     public boolean isActive() {
-        return this == SETUP;
+        return this == SETUP || this == ON_HOLD;
     }
 
     public boolean isWithdrawn() {
@@ -69,5 +69,9 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
 
     public boolean isCompletedOffline() {
         return this == COMPLETED_OFFLINE;
+    }
+
+    public boolean isOnHold() {
+        return this == ON_HOLD;
     }
 }

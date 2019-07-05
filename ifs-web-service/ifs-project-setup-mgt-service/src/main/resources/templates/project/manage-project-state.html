@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Manage project status|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -26,7 +27,11 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Manage project status',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Manage project status',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+
+        <div th:if="${resumedFromOnHold}" class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">This project is no longer on hold.</p>
+        </div>
 
         <!--/* Completed offline */-->
         <div th:if="${model.completedOffline}" class="success-alert govuk-!-margin-bottom-6">
@@ -52,9 +57,24 @@
         </div>
         <!--/* END */-->
 
-        <p th:if="${model.endState}" class="govuk-body">
+        <!-- On Hold -->
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert">
+                <p class="govuk-body">This project is on hold.</p>
+            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/on-hold-status(competitionId=${model.competitionId},projectId=${model.projectId})}" class="govuk-link">View details, reply or remove on hold status </a>
+            </p>
+        </th:block>
+        <!-- END -->
+
+        <p th:if="${model.endState and !model.completedOffline}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
+        </p>
+
+        <p th:if="${model.completedOffline}" class="govuk-body">
+            Innovate UK and all project partners can view the project but can no longer make changes online. This cannot be undone.
         </p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -62,178 +82,298 @@
               method="POST"
               novalidate="novalidate"
               enctype="multipart/form-data"
-              th:unless="${model.endState}">
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">
-                        <h2 class="govuk-fieldset__heading">
-                            Set the project status
-                        </h2>
-                    </legend>
+              th:unless="${model.cantChangeState()}">
 
-                    <th:block th:if="${#fields.hasErrors('state')}">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+
+                    <div th:if="${model.ifsAdmin}"
+                         class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('state')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-visually-hidden">
+                                <h2 class="govuk-fieldset__heading">
+                                    Set the project status
+                                </h2>
+                            </legend>
+
+                            <th:block th:if="${#fields.hasErrors('state')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('state')}"
                               th:text="${err}"></span>
-                    </th:block>
-                    <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-                        <th:block th:if="${model.canHandleOffline()}">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="state"
-                                       type="radio"
-                                       th:field="*{state}"
-                                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).HANDLED_OFFLINE.name()}"
-                                       aria-describedby="status-offline-hint"
-                                       data-aria-controls="project-status-conditional-offline">
-                                <label class="govuk-label govuk-radios__label govuk-label--s"
-                                       for="state">
-                                    Manage offline
-                                </label>
-                                <span id="status-offline-hint" class="govuk-hint govuk-radios__hint">
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                                <!-- Handle offline -->
+                                <th:block th:if="${model.canHandleOffline()}">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="state"
+                                               type="radio"
+                                               th:field="*{state}"
+                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).HANDLED_OFFLINE.name()}"
+                                               aria-describedby="status-offline-hint"
+                                               data-aria-controls="project-status-conditional-offline">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="state">
+                                            Manage offline
+                                        </label>
+                                        <span id="status-offline-hint" class="govuk-hint govuk-radios__hint">
                                 Manage this project outside the Innovation Funding Service.
                             </span>
-                            </div>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
-                                 id="project-status-conditional-offline">
-                                <div class="govuk-form-group"
-                                     th:classappend="${#fields.hasErrors('confirmationOffline')} ? 'govuk-form-group--error'">
-                                    <fieldset class="govuk-fieldset" aria-describedby="manage-offline-hint">
-                                        <legend class="govuk-visually-hidden">
-                                            <h1 class="govuk-fieldset__heading">
-                                                Manage offline
-                                            </h1>
-                                        </legend>
-                                        <p id="manage-offline-hint" class="govuk-body">
-                                            Are you sure? This cannot be reversed. Innovate UK and the partners can
-                                            still view the project but will no longer be able to make changes.
-                                        </p>
-                                        <th:block th:if="${#fields.hasErrors('confirmationOffline')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationOffline')}"
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-status-conditional-offline">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('confirmationOffline')} ? 'govuk-form-group--error'">
+                                            <fieldset class="govuk-fieldset" aria-describedby="manage-offline-hint">
+                                                <legend class="govuk-visually-hidden">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        Manage offline
+                                                    </h1>
+                                                </legend>
+                                                <p id="manage-offline-hint" class="govuk-body">
+                                                    Are you sure? This cannot be reversed. Innovate UK and the partners
+                                                    can
+                                                    still view the project but will no longer be able to make changes.
+                                                </p>
+                                                <th:block th:if="${#fields.hasErrors('confirmationOffline')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationOffline')}"
                                                   th:text="${err}"></span>
-                                        </th:block>
-                                        <div class="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input"
-                                                       id="confirmationOffline"
-                                                       th:field="*{confirmationOffline}"
-                                                       value="true"
-                                                       type="checkbox">
-                                                <label class="govuk-label govuk-checkboxes__label"
-                                                       for="confirmationOffline">
-                                                    I understand that I cannot undo this.
-                                                </label>
+                                                </th:block>
+                                                <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input"
+                                                               id="confirmationOffline"
+                                                               th:field="*{confirmationOffline}"
+                                                               value="true"
+                                                               type="checkbox">
+                                                        <label class="govuk-label govuk-checkboxes__label"
+                                                               for="confirmationOffline">
+                                                            I understand that I cannot undo this.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </th:block>
+                                <!-- On hold -->
+                                <th:block th:if="${model.canPutOnHold()}">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="status-on-hold"
+                                               type="radio"
+                                               th:field="*{state}"
+                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"
+                                               aria-describedby="status-on-hold-hint"
+                                               data-aria-controls="project-status-conditional-on-hold">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="status-on-hold">
+                                            Mark project as on hold
+                                        </label>
+                                        <span id="status-on-hold-hint" class="govuk-hint govuk-radios__hint">
+                                    Add an 'on hold' badge. Only Innovate UK will be able to see this and it will not affect the applicant.
+                                </span>
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-status-conditional-on-hold">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label" for="onHoldReason">
+                                                Reason
+                                            </label>
+                                            <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldReason')}"
+                                              th:text="${err}"></span>
+                                            </th:block>
+                                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}"
+                                                   type="text"/>
+                                        </div>
+                                        <div class="govuk-form-group word-count"
+                                             th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                                            <label class="govuk-label" for="onHoldDetails">
+                                                Details
+                                            </label>
+                                            <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldDetails')}"
+                                              th:text="${err}"></span>
+                                            </th:block>
+                                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                                      id="onHoldDetails"
+                                                      maxlength="5000"
+                                                      data-max_words="400"
+                                                      data-maxwordslength="400"
+                                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                                      th:field="*{onHoldDetails}"
+                                                      rows="5"></textarea>
+                                            <div class="govuk-body textarea-footer"
+                                                 th:with="onHoldDetails=*{onHoldDetails}" aria-live="polite"
+                                                 aria-atomic="true" role="status">
+                                                <th:block
+                                                    th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})"/>
                                             </div>
                                         </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </th:block>
-                        <th:block th:if="${model.canWithdraw()}">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="status-withdrawn"
-                                       type="radio"
-                                       th:field="*{state}"
-                                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).WITHDRAWN.name()}"
-                                       aria-describedby="status-withdrawn-hint"
-                                       data-aria-controls="project-status-conditional-withdrawn">
-                                <label class="govuk-label govuk-radios__label govuk-label--s" for="status-withdrawn">
-                                    Withdraw project
-                                </label>
-                                <span id="status-withdrawn-hint" class="govuk-hint govuk-radios__hint">
+                                    </div>
+                                </th:block>
+                                <!-- Withdraw -->
+                                <th:block th:if="${model.canWithdraw()}">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="status-withdrawn"
+                                               type="radio"
+                                               th:field="*{state}"
+                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).WITHDRAWN.name()}"
+                                               aria-describedby="status-withdrawn-hint"
+                                               data-aria-controls="project-status-conditional-withdrawn">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="status-withdrawn">
+                                            Withdraw project
+                                        </label>
+                                        <span id="status-withdrawn-hint" class="govuk-hint govuk-radios__hint">
                                     Withdraw this project from the Innovation Funding Service.
                                 </span>
-                            </div>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
-                                 id="project-status-conditional-withdrawn">
-                                <div class="govuk-form-group"
-                                     th:classappend="${#fields.hasErrors('confirmationWithdrawn')} ? 'govuk-form-group--error'">
-                                    <fieldset class="govuk-fieldset" aria-describedby="withdraw-project-hint">
-                                        <legend class="govuk-visually-hidden">
-                                            <h1 class="govuk-fieldset__heading">
-                                                Withdraw project
-                                            </h1>
-                                        </legend>
-                                        <p id="withdraw-project-hint" class="govuk-body">
-                                            Are you sure? This cannot be reversed. Innovate UK can still view project
-                                            setup progress but will no longer be able to make changes.
-                                        </p>
-                                        <th:block th:if="${#fields.hasErrors('confirmationWithdrawn')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationWithdrawn')}"
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-status-conditional-withdrawn">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('confirmationWithdrawn')} ? 'govuk-form-group--error'">
+                                            <fieldset class="govuk-fieldset" aria-describedby="withdraw-project-hint">
+                                                <legend class="govuk-visually-hidden">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        Withdraw project
+                                                    </h1>
+                                                </legend>
+                                                <p id="withdraw-project-hint" class="govuk-body">
+                                                    Are you sure? This cannot be reversed. Innovate UK can still view
+                                                    project
+                                                    setup progress but will no longer be able to make changes.
+                                                </p>
+                                                <th:block th:if="${#fields.hasErrors('confirmationWithdrawn')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationWithdrawn')}"
                                                   th:text="${err}"></span>
-                                        </th:block>
-                                        <div class="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input"
-                                                       id="confirmationWithdrawn"
-                                                       th:field="*{confirmationWithdrawn}"
-                                                       value="true"
-                                                       type="checkbox">
-                                                <label class="govuk-label govuk-checkboxes__label"
-                                                       for="confirmationWithdrawn">
-                                                    I understand that I cannot undo this.
-                                                </label>
-                                            </div>
+                                                </th:block>
+                                                <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input"
+                                                               id="confirmationWithdrawn"
+                                                               th:field="*{confirmationWithdrawn}"
+                                                               value="true"
+                                                               type="checkbox">
+                                                        <label class="govuk-label govuk-checkboxes__label"
+                                                               for="confirmationWithdrawn">
+                                                            I understand that I cannot undo this.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
                                         </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </th:block>
-                        <th:block th:if="${model.canCompleteOffline()}">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="status-complete-offline"
-                                       type="radio"
-                                       th:field="*{state}"
-                                       th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).COMPLETED_OFFLINE.name()}"
-                                       aria-describedby="status-complete-offline-hint"
-                                       data-aria-controls="project-status-conditional-complete-offline">
-                                <label class="govuk-label govuk-radios__label govuk-label--s"
-                                       for="status-complete-offline">
-                                    Mark as completed offline
-                                </label>
-                                <span id="status-complete-offline-hint" class="govuk-hint govuk-radios__hint">
+                                    </div>
+                                </th:block>
+                                <!-- Complete offline -->
+                                <th:block th:if="${model.canCompleteOffline()}">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="status-complete-offline"
+                                               type="radio"
+                                               th:field="*{state}"
+                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).COMPLETED_OFFLINE.name()}"
+                                               aria-describedby="status-complete-offline-hint"
+                                               data-aria-controls="project-status-conditional-complete-offline">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="status-complete-offline">
+                                            Mark as completed offline
+                                        </label>
+                                        <span id="status-complete-offline-hint" class="govuk-hint govuk-radios__hint">
                                 Complete this project outside the Innovation Funding Service.
                             </span>
-                            </div>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
-                                 id="project-status-conditional-complete-offline">
-                                <div class="govuk-form-group"
-                                     th:classappend="${#fields.hasErrors('confirmationCompleteOffline')} ? 'govuk-form-group--error'">
-                                    <fieldset class="govuk-fieldset" aria-describedby="complete-offline-hint">
-                                        <legend class="govuk-visually-hidden">
-                                            <h1 class="govuk-fieldset__heading">
-                                                Mark as completed offline
-                                            </h1>
-                                        </legend>
-                                        <p id="complete-offline-hint" class="govuk-body">
-                                            Are you sure? This cannot be reversed. Innovate UK and the partners can
-                                            still view the project but will no longer be able to make changes.
-                                        </p>
-                                        <th:block th:if="${#fields.hasErrors('confirmationCompleteOffline')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmationCompleteOffline')}"
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-status-conditional-complete-offline">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('confirmationCompleteOffline')} ? 'govuk-form-group--error'">
+                                            <fieldset class="govuk-fieldset" aria-describedby="complete-offline-hint">
+                                                <legend class="govuk-visually-hidden">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        Mark as completed offline
+                                                    </h1>
+                                                </legend>
+                                                <p id="complete-offline-hint" class="govuk-body">
+                                                    Are you sure? This cannot be reversed. Innovate UK and the partners
+                                                    can
+                                                    still view the project but will no longer be able to make changes.
+                                                </p>
+                                                <th:block th:if="${#fields.hasErrors('confirmationCompleteOffline')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('confirmationCompleteOffline')}"
                                                   th:text="${err}"></span>
-                                        </th:block>
-                                        <div class="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input"
-                                                       id="confirmationCompleteOffline"
-                                                       th:field="*{confirmationCompleteOffline}"
-                                                       value="true"
-                                                       type="checkbox">
-                                                <label class="govuk-label govuk-checkboxes__label"
-                                                       for="confirmationCompleteOffline">
-                                                    I understand that I cannot undo this.
-                                                </label>
-                                            </div>
+                                                </th:block>
+                                                <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input"
+                                                               id="confirmationCompleteOffline"
+                                                               th:field="*{confirmationCompleteOffline}"
+                                                               value="true"
+                                                               type="checkbox">
+                                                        <label class="govuk-label govuk-checkboxes__label"
+                                                               for="confirmationCompleteOffline">
+                                                            I understand that I cannot undo this.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
                                         </div>
-                                    </fieldset>
-                                </div>
+                                    </div>
+                                </th:block>
                             </div>
-                        </th:block>
+                        </fieldset>
                     </div>
-                </fieldset>
-            </div>
-            <div class="govuk-form-group">
-                <button class="govuk-button">Change project status</button>
+                    <th:block th:unless="${model.ifsAdmin}">
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Mark project as on hold</h3>
+                        <p class="govuk-body">Add an 'on hold' badge. Only Innovate UK will be able to see this and it
+                            will not
+                            affect the applicant.</p>
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('onHoldReason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="onHoldReason">
+                                Reason
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldReason')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldReason')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <input class="govuk-input" id="onHoldReason" th:field="*{onHoldReason}" type="text"/>
+                        </div>
+                        <div class="govuk-form-group word-count"
+                             th:classappend="${#fields.hasErrors('onHoldDetails')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label" for="onHoldDetails">
+                                Details
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('onHoldDetails')}">
+                                        <span class="govuk-error-message"
+                                              th:each="err : ${#fields.errors('onHoldDetails')}"
+                                              th:text="${err}"></span>
+                            </th:block>
+                            <textarea class="govuk-textarea govuk-!-margin-bottom-0"
+                                      id="onHoldDetails"
+                                      maxlength="5000"
+                                      data-max_words="400"
+                                      data-maxwordslength="400"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                      th:field="*{onHoldDetails}"
+                                      rows="5"></textarea>
+                            <div class="govuk-body textarea-footer" th:with="onHoldDetails=*{onHoldDetails}"
+                                 aria-live="polite" aria-atomic="true" role="status">
+                                <th:block
+                                    th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, onHoldDetails)})"/>
+                            </div>
+                        </div>
+                        <input type="hidden" name="state"
+                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
+                    </th:block>
+                    <div class="govuk-form-group">
+                        <button class="govuk-button">Change project status</button>
+                    </div>
+                </div>
             </div>
         </form>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finances',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body class="govuk-template__body competition-management competition-setup">
 
@@ -18,8 +18,8 @@
             <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='govuk-heading-xl'" />
-        <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finances',size='govuk-heading-xl'" />
+        <form th:if="${model.editable}" method="POST"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${competitionSetupForm}"
               novalidate="novalidate"

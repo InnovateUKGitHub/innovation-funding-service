@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id}: $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${competitionTitle + ' - Public Content'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body competition-management competition-setup">
 
@@ -21,7 +22,7 @@
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
-            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id}: $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
+            <th:block>
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 

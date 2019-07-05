@@ -308,7 +308,7 @@ ul {
   }
 }
 
-.ifs-withdrawn {
+.ifs-project-status-withdrawn {
   @extend %badge;
 
   &:before {
@@ -316,7 +316,7 @@ ul {
   }
 }
 
-.ifs-completed-offline {
+.ifs-project-status-completed-offline {
   @extend %badge;
 
   &:before {
@@ -324,10 +324,18 @@ ul {
   }
 }
 
-.ifs-managed-offline {
+.ifs-project-status-managed-offline {
   @extend %badge;
 
   &:before {
     background-color: govuk-colour("blue");
+  }
+}
+
+.ifs-project-status-on-hold {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("yellow");
   }
 }

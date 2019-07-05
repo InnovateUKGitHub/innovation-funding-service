@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -84,7 +84,7 @@ public class ApplicationOverviewController {
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
         if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
                 && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
-            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccess();
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPENED).getSuccess();
         }
     }
 

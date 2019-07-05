@@ -171,61 +171,6 @@ public class CompetitionSetupController {
         return "competition/setup";
     }
 
-    /**
-     * This method is for supporting ajax saving from the competition setup subsections forms.
-     */
-    @PostMapping("/{competitionId}/section/{sectionPath}/sub/{subsectionPath}/saveFormElement")
-    @ResponseBody
-    public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
-                                    @RequestParam("value") String value,
-                                    @RequestParam(name = "objectId", required = false) Long objectId,
-                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @PathVariable(SECTION_PATH_KEY) String sectionPath,
-                                    @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-        CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
-
-        try {
-            competitionSetupService.autoSaveCompetitionSetupSubsection(
-                    competition,
-                    section, subsection,
-                    fieldName, value,
-                    Optional.ofNullable(objectId));
-            return createJsonObjectNode(true);
-        } catch (Exception e) {
-            LOG.error("exception thrown saving form element", e);
-            return createJsonObjectNode(false);
-        }
-    }
-
-    /**
-     * This method is for supporting ajax saving from the competition setup sections forms.
-     */
-    @PostMapping("/{competitionId}/section/{sectionPath}/saveFormElement")
-    @ResponseBody
-    public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
-                                    @RequestParam("value") String value,
-                                    @RequestParam(name = "objectId", required = false) Long objectId,
-                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @PathVariable(SECTION_PATH_KEY) String sectionPath) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-        try {
-            competitionSetupService.autoSaveCompetitionSetupSection(competition,
-                    section,
-                    fieldName,
-                    value,
-                    Optional.ofNullable(objectId));
-            return createJsonObjectNode(true);
-        } catch (Exception e) {
-            LOG.error("exception thrown saving form element", e);
-            return createJsonObjectNode(false);
-        }
-    }
-
     @PostMapping(value = "/{competitionId}/section/initial", params = "unrestricted")
     public String submitUnrestrictedInitialSectionDetails(
             @Validated({Unrestricted.class, Default.class}) @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,

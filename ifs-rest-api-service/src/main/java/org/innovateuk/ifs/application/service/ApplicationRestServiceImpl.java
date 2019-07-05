@@ -59,7 +59,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
+    public RestResult<Void> updateApplicationState(long applicationId, ApplicationState state) {
         return putWithRestResult(applicationRestURL + "/update-application-state?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 

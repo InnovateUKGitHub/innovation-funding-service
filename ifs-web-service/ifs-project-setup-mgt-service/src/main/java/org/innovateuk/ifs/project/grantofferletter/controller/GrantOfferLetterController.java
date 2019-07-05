@@ -243,8 +243,6 @@ public class GrantOfferLetterController {
 
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        boolean projectIsActive = project.getProjectState().isActive();
-
         return new GrantOfferLetterModel(competition.getId(),
                 competition.isH2020(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
@@ -257,7 +255,7 @@ public class GrantOfferLetterController {
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 golState,
                 project.getGrantOfferLetterRejectionReason(),
-                projectIsActive);
+                project.getProjectState());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")

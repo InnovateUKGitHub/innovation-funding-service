@@ -21,7 +21,6 @@ public class CompletionStageFormPopulatorTest {
         CompletionStageForm form = new CompletionStageFormPopulator().populateForm(competition);
 
         assertThat(form.getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.RELEASE_FEEDBACK);
-        assertThat(form.isAutoSaveAction()).isFalse();
         assertThat(form.isMarkAsCompleteAction()).isTrue();
     }
 

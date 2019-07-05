@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -42,6 +43,25 @@ public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<Pro
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/complete-offline", null, OK );
         RestResult<Void> result = service.completeProjectOffline(projectId);
         setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/complete-offline", Void.class);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void putProjectOnHold() {
+        long projectId = 123L;
+        OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource("something", "else");
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/on-hold", onHoldReasonResource, OK );
+        RestResult<Void> result = service.putProjectOnHold(projectId, onHoldReasonResource);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/on-hold", Void.class, onHoldReasonResource);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void resumeProject() {
+        long projectId = 123L;
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/resume", null, OK );
+        RestResult<Void> result = service.resumeProject(projectId);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/resume", Void.class);
         assertTrue(result.isSuccess());
     }
 

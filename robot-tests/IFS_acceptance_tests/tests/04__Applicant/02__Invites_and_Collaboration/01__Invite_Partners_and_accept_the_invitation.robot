@@ -225,6 +225,12 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link           jQuery = button:contains("Add person to ${organisation}")
     When the user invites a person to the same organisation  Roger Axe  ${test_mailbox_one}+inviteorg2@gmail.com
     Then the user should see the element           jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
+
+Lead is able to resend invitation
+    [Documentation]  IFS-5960
+    [Tags]
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td button:contains("Resend invite")
+    Then the user should see the element     jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
@@ -240,15 +246,15 @@ Registered partner should not create new org but should follow the create accoun
     And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
-Lead should not see pending status for accepted invite
-    [Documentation]    IFS-68
+Lead should not see pending status or resend invite for accepted invite
+    [Documentation]    IFS-68  IFS-5960
     [Tags]
     Given the user clicks the button/link       jQuery = a:contains("Sign in")
     And Logging in and Error Checking           &{lead_applicant_credentials}
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
-    And the user clicks the button/link         jQuery = button:contains("Add person to ${organisation}")
     Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And The user should not see the element     jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
@@ -258,7 +264,6 @@ The guest user applies to a competition and creates account
     Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
     Then the user creates an account and signs in
 
-
 New Lead Applicant invites new user as collaborator on his application
     [Documentation]  IFS-2440
     [Tags]
@@ -266,7 +271,6 @@ New Lead Applicant invites new user as collaborator on his application
     Given the lead applicant invites the collaborator
     Then the collaborator accepts the invite and is able to see the application without any errors
     And the lead applicant is no longer directed to the team page
-
 
 *** Keywords ***
 The lead applicant should have the correct status

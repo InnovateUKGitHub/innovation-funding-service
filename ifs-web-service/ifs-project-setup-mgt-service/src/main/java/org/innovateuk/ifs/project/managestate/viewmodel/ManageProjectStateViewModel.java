@@ -8,15 +8,23 @@ import static org.innovateuk.ifs.project.resource.ProjectState.*;
 public class ManageProjectStateViewModel {
 
     private final long competitionId;
+    private final long applicationId;
     private final long projectId;
     private final String projectName;
     private final ProjectState state;
+    private final boolean ifsAdmin;
 
-    public ManageProjectStateViewModel(ProjectResource project) {
+    public ManageProjectStateViewModel(ProjectResource project, boolean ifsAdmin) {
         this.competitionId = project.getCompetition();
+        this.applicationId = project.getApplication();
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.state = project.getProjectState();
+        this.ifsAdmin = ifsAdmin;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
     }
 
     public long getCompetitionId() {
@@ -31,6 +39,9 @@ public class ManageProjectStateViewModel {
         return projectName;
     }
 
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
+    }
 
     /* view logic */
     public boolean isCompletedOffline() {
@@ -49,6 +60,10 @@ public class ManageProjectStateViewModel {
         return SETUP.equals(state);
     }
 
+    public boolean isOnHold() {
+        return ON_HOLD.equals(state);
+    }
+
     public boolean isLive() {
         return LIVE.equals(state);
     }
@@ -58,12 +73,20 @@ public class ManageProjectStateViewModel {
     }
 
     public boolean canHandleOffline() {
+        return isInSetup() || isOnHold();
+    }
+
+    public boolean canPutOnHold() {
         return isInSetup();
     }
 
     public boolean canWithdraw() {
-        return isInSetup() || isHandledOffline();
+        return isInSetup() || isHandledOffline() || isOnHold();
     }
 
     public boolean isEndState() { return isCompletedOffline() || isLive() || isWithdrawn(); }
+
+    public boolean cantChangeState() {
+        return isEndState() || (!ifsAdmin && isOnHold());
+    }
 }

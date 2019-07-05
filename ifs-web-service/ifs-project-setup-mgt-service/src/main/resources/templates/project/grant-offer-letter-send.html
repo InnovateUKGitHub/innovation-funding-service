@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Grant offer letter|" />
 </head>
 <body class="govuk-template__body competition-management project-management grant-offer-letter">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -34,6 +34,14 @@
             </div>
         </th:block>
 
+        <th:block th:if="${model.onHold}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body govuk-!-margin-top-0">This project is on hold. You can change this from the
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/on-hold-status(competitionId=${model.competitionId},projectId=${model.projectId})}">
+                    Project status</a> page.</p>
+            </div>
+        </th:block>
+
         <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
             <p class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
             <p class="govuk-body">If you have not already done so, please contact the Project Manager to explain your decision.</p>
@@ -52,8 +60,9 @@
         <p class="govuk-body">
             <a class="govuk-link"
                target="_blank"
-               th:href="@{/project/{id}/grant-offer-letter/template(id=${model.projectId})}">View the grant offer letter page</a>
-                (opens in a new window)
+               th:href="@{/project/{id}/grant-offer-letter/template(id=${model.projectId})}"
+               aria-describedby="grant-offer-letter-hint">View the grant offer letter page</a>
+            <span id="grant-offer-letter-hint">(opens in a new window)</span>
         </p>
 
         <ol class="govuk-list govuk-list--number">
@@ -172,8 +181,9 @@
                         <a class="govuk-link"
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a>
-                        (opens in a new window).
+                           th:text="${model.signedGrantOfferLetterFile?.filename}"
+                           aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>
+                        <span id="signed-gol-hint">(opens in a new window)</span>.
                     </p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
@@ -241,7 +251,8 @@
                         </div>
                     </fieldset>
                 </div>
-                <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+                <button th:disabled="${model.onHold}" class="govuk-button" type="submit" id="submit-button" data-js-modal=""
+                        th:attr="data-enable-button-when=${model.onHold ? null : 'one-checked'}">Submit</button>
             </form>
 
         </th:block>
