@@ -47,16 +47,16 @@ ext {
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
+//buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
 
 
     dependsOn ":ifs-commons:build"

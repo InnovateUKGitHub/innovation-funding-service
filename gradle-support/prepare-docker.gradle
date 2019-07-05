@@ -1,5 +1,5 @@
-
 apply from: rootProject.file("gradle-support/new-relic.gradle")
+import org.apache.tools.ant.filters.ReplaceTokens
 
 /**
  * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
@@ -10,7 +10,8 @@ apply from: rootProject.file("gradle-support/new-relic.gradle")
 
 ext.dockerDir = "docker/"
 
-task prepareDockerBaseInput {
+task prepareDockerBaseInput(type: Copy) {
+
     dependsOn build
     def inputDir = "$project.buildDir/docker"
     def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
@@ -19,37 +20,43 @@ task prepareDockerBaseInput {
     String uid = System.env.bamboo_gluster_UID ?: "996"
     String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
-    inputs.file("$project.buildDir/libs/$executableJarFile")
+    inputs.file file("$project.buildDir/libs/$executableJarFile")
 
-    outputs.files(
-            project.file("$inputDir/Dockerfile"),
-            project.file("$inputDir/$jarFile")
-    )
+//    def outputFile1 = "$inputDir/Dockerfile"
+//    def outputFile2 = "$inputDir/$jarFile"
+//
+//    outputs.file files(
+//            outputFile1,
+//            outputFile2
+//    )
 
-    doFirst {
-        copy {
-            from dockerDir
-            into project.file(inputDir)
+    println 'Start of copying'
 
+    copy {
+        from(dockerDir) {
             include 'Dockerfile-template'
-            rename 'Dockerfile-template', 'Dockerfile'
-            filter {
-                it.replaceAll('@version@', project.properties['version'])
-                        .replaceAll('@app_name@', jar.baseName)
-                        .replaceAll('@server_context@', project.properties['serverContext'] ?: '')
-                        .replaceAll('@glusterGID@', gid)
-                        .replaceAll('@glusterUID@', uid)
-                        .replaceAll('@glusterUserPassword@', userPassword)
-            }
         }
-        copy {
-            from("$project.buildDir/libs")
-            into project.file(inputDir)
-            include(executableJarFile)
-            rename (executableJarFile, jarFile)
-            into project.file(inputDir)
-        }
+        into project.file(inputDir)
+        rename 'Dockerfile-template', 'Dockerfile'
+        filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+        filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
+        filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
+        filter(ReplaceTokens, tokens: ['glusterGID': gid])
+        filter(ReplaceTokens, tokens: ['glusterUID': uid])
+        filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
     }
+    copy {
+        def libs = "$project.buildDir/libs"
+        from(libs) {
+            include(executableJarFile)
+        }
+        into project.file(inputDir)
+        rename(executableJarFile, jarFile)
+        into project.file(inputDir)
+    }
+
+    println 'end of copying'
+
 }
 
 

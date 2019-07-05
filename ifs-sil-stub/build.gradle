@@ -39,9 +39,9 @@ test {
 }
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-sil-resources/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+    inputs.file file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.file file("$rootProject.projectDir/ifs-sil-resources/build/classes")
+    inputs.file file("$rootProject.projectDir/ifs-security/build/classes")
 
     dependsOn ":ifs-commons:build"
     dependsOn ":ifs-sil-resources:build"
@@ -52,7 +52,7 @@ prepareDockerBaseInput {
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerBaseInput
 
-buildDocker.inputDir = project.file("$project.buildDir/docker")
+//buildDocker.inputDir = project.file("$project.buildDir/docker")
 
 osStageRemote.onlyIf { isNotProductionEnv() }
 

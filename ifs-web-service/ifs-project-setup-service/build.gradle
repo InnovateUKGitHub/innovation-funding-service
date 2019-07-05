@@ -7,7 +7,7 @@ ext.dockerDir = "$project.parent.projectDir/docker/"
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
+//buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
 buildscript {
@@ -40,7 +40,7 @@ def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project
 }
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
     dependsOn ":ifs-web-service:ifs-web-core:build"
 }
 
