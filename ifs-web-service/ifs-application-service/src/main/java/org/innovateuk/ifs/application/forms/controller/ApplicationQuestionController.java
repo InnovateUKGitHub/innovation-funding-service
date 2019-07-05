@@ -21,6 +21,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -86,6 +87,8 @@ public class ApplicationQuestionController {
 
     private AssignQuestionModelPopulator assignQuestionModelPopulator;
 
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     @Autowired
     public ApplicationQuestionController(
             ApplicationResearchCategoryModelPopulator researchCategoryPopulator,
@@ -98,7 +101,8 @@ public class ApplicationQuestionController {
             AssignQuestionModelPopulator assignQuestionModelPopulator,
             ApplicantRestService applicantRestService,
             ApplicationRedirectionService applicationRedirectionService,
-            ApplicationQuestionSaver applicationSaver
+            ApplicationQuestionSaver applicationSaver,
+            CookieFlashMessageFilter cookieFlashMessageFilter
     ) {
         this.researchCategoryPopulator = researchCategoryPopulator;
         this.questionModelPopulator = questionModelPopulator;
@@ -111,6 +115,7 @@ public class ApplicationQuestionController {
         this.applicantRestService = applicantRestService;
         this.applicationRedirectionService = applicationRedirectionService;
         this.applicationSaver = applicationSaver;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
 
     @InitBinder
@@ -173,6 +178,7 @@ public class ApplicationQuestionController {
         if (params.containsKey(EDIT_QUESTION)) {
             return handleEditQuestion(form, model, applicationId, questionId, user, queryParams);
         } else {
+            handleAssignedQuestions(applicationId, user, request, response);
             // First check if any errors already exist in bindingResult
             ValidationMessages errors = checkErrorsInFormAndSave(form, applicationId, questionId, user.getId(), request, response);
 
@@ -186,6 +192,17 @@ public class ApplicationQuestionController {
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
+        }
+    }
+
+    private void handleAssignedQuestions(Long applicationId,
+                                         UserResource user,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+            questionService.assignQuestion(applicationId, user, request);
+            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
     }
 
