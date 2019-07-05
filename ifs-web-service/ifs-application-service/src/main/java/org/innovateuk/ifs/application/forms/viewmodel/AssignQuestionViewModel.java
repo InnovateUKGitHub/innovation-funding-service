@@ -12,14 +12,17 @@ public class AssignQuestionViewModel {
     private final long applicationId;
     private final List<ProcessRoleResource> users;
     private final QuestionResource question;
+    private final String originQuery;
 
     public AssignQuestionViewModel(ApplicationResource application,
                                    List<ProcessRoleResource> users,
-                                   QuestionResource question) {
+                                   QuestionResource question,
+                                   String originQuery) {
         this.applicationName = application.getName();
         this.applicationId = application.getId();
         this.question = question;
         this.users = users;
+        this.originQuery = originQuery;
     }
 
     public String getApplicationName() {
@@ -36,5 +39,13 @@ public class AssignQuestionViewModel {
 
     public List<ProcessRoleResource> getUsers() {
         return users;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
+    }
+
+    public boolean isArrivedFromOverview() {
+        return "/application/overview".equals(originQuery);
     }
 }

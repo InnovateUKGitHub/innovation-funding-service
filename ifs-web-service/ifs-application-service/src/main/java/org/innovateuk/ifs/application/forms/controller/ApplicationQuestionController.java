@@ -19,8 +19,8 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -78,8 +80,6 @@ public class ApplicationQuestionController {
 
     private QuestionService questionService;
 
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     private ApplicantRestService applicantRestService;
 
     private ApplicationRedirectionService applicationRedirectionService;
@@ -98,7 +98,6 @@ public class ApplicationQuestionController {
             UserRestService userRestService,
             QuestionService questionService,
             AssignQuestionModelPopulator assignQuestionModelPopulator,
-            CookieFlashMessageFilter cookieFlashMessageFilter,
             ApplicantRestService applicantRestService,
             ApplicationRedirectionService applicationRedirectionService,
             ApplicationQuestionSaver applicationSaver
@@ -111,7 +110,6 @@ public class ApplicationQuestionController {
         this.userRestService = userRestService;
         this.questionService = questionService;
         this.assignQuestionModelPopulator = assignQuestionModelPopulator;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
         this.applicantRestService = applicantRestService;
         this.applicationRedirectionService = applicationRedirectionService;
         this.applicationSaver = applicationSaver;
@@ -175,8 +173,6 @@ public class ApplicationQuestionController {
         if (params.containsKey(EDIT_QUESTION)) {
             return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
-            handleAssignedQuestions(applicationId, user, request, response);
-
             // First check if any errors already exist in bindingResult
             ValidationMessages errors = checkErrorsInFormAndSave(form, applicationId, questionId, user.getId(), request, response);
 
@@ -194,34 +190,47 @@ public class ApplicationQuestionController {
     }
 
     @GetMapping("/question/{questionId}/assign")
-    public String getAssignPage(@ModelAttribute(value = "form", binding = false) AssignQuestionForm form,
+    public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
                                 @PathVariable("questionId") long questionId,
                                 @PathVariable("applicationId") long applicationId,
+                                @RequestParam MultiValueMap<String, String> queryParams,
                                 Model model) {
-        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId));
-        return "application/questions/assign-question";
+        populateAssigneeForm(questionId, applicationId, form);
+        return doViewAssignPage(model, questionId, applicationId, "");
     }
 
     @PostMapping("/question/{questionId}/assign")
-    public String assign(@Valid @ModelAttribute AssignQuestionForm form,
+    public String assign(@Valid @ModelAttribute("form") AssignQuestionForm form,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler,
                          @PathVariable("questionId") long questionId,
                          @PathVariable ("applicationId") long applicationId,
+                         @RequestParam MultiValueMap<String, String> queryParams,
                          Model model,
                          UserResource loggedInUser) {
+        String originQuery = "";
+        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, originQuery);
         ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-        questionService.assign(questionId, applicationId, form.getAssigneeId(), assignedBy.getId()).getSuccess();
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
+
+            return validationHandler.addAnyErrors(assignResult)
+                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId));
+        });
+    }
+
+    private String doViewAssignPage(Model model, long questionId, long applicationId, String originQuery) {
+        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId, originQuery));
+        return "application/questions/assign-question";
+    }
+
+    private String redirectToRelevantPage(long applicationId, long questionId) {
         return format("redirect:/application/%d", applicationId);
     }
 
-    private void handleAssignedQuestions(Long applicationId,
-                                         UserResource user,
-                                         HttpServletRequest request,
-                                         HttpServletResponse response) {
-        Map<String, String[]> params = request.getParameterMap();
-        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            questionService.assignQuestion(applicationId, user, request);
-            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        }
+    private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {
+        QuestionStatusResource questionStatus = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).get(0);
+        form.setAssignee(questionStatus.getAssignee());
     }
 
     private ValidationMessages checkErrorsInFormAndSave(ApplicationForm form,

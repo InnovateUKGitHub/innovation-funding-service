@@ -24,7 +24,7 @@ public class AssignQuestionModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
-    public AssignQuestionViewModel populateModel(long questionId, long applicationId) {
+    public AssignQuestionViewModel populateModel(long questionId, long applicationId, String originQuery) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
@@ -32,6 +32,7 @@ public class AssignQuestionModelPopulator {
 
         return new AssignQuestionViewModel(application,
                                            processRoles,
-                                           question);
+                                           question,
+                                           originQuery);
     }
 }
