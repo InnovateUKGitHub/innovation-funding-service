@@ -10,8 +10,8 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle=${param.origin[0] == 'question' ? model.question.name : 'Application overview'},linkClass='link-back',linkUrl=${param.origin[0] == 'question' ? '/application/' + model.applicationId + '/form/question/' + model.question.id : '/application/' + model.applicationId}"/>
+    <!--<th:block th:insert="fragments/layout :: header-sub"-->
+              <!--th:with="linkTitle=${param.origin[0] == 'question' ? model.question.name : 'Application overview'},linkClass='link-back',linkUrl=${param.origin[0] == 'question' ? '/application/' + model.applicationId + '/form/question/' + model.question.id : '/application/' + model.applicationId}"/>-->
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
@@ -33,35 +33,36 @@
                 <fieldset class="govuk-fieldset" aria-describedby="assign-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <span class="govuk-caption-l" th:text="${model.applicationName}">APPLICATION NAME</span>
-                        <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8" th:text="|Assign ${model.question.name}|">
+                        <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-8" th:text="|Assign ${model.question.shortName}|">
                             Assign QUESTION TITLE
                         </h1>
                     </legend>
                     <span id="assign-hint" class="govuk-hint">
                         Assign this question to someone else.
                     </span>
-                    <th:block th:if="${#fields.hasErrors('${form.*}')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('users')}"
+                    <th:block th:if="${#fields.hasErrors('*')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}"
                               th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item"
-                             th:each="user : ${model.users}">
-                            <input class="govuk-radios__input"
-                                   th:id="'user-'+${user.id}"
+                        <div class="govuk-radios__item" th:each="user : ${model.users}" >
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   th:field="*{assignee}"
                                    th:value="${user.id}"
-                                   type="radio">
-                            <label class="govuk-label govuk-radios__label govuk-label--s"
-                                   th:for="'user-'+${user.id}"
-                                   th:text="${user.userName}">
-                                Name
-                            </label>
+                                   required="required"/>
+                            <label th:for="${#ids.prev('assignee')}"
+                                   th:text="${user.userName}"
+                                   data-set-section-valid="#project-manager-section"
+                                   data-clear-inputs="#name-project-manager,#email-project-manager"
+                                   class="govuk-label govuk-radios__label"></label>
                         </div>
                     </div>
                 </fieldset>
             </div>
             <div class="govuk-form-group">
-                <button class="govuk-button">Save and return to <th:block th:text="${param.origin[0] == 'question' ? model.question.name : 'application overview'}"></th:block></button>
+                <!--<button class="govuk-button">Save and return to <th:block th:text="${param.origin[0] == 'question' ? model.question.name : 'application overview'}"></th:block></button>-->
+                <button class="govuk-button" type="submit">Save and return to <th:block th:text="${model.arrivedFromOverview ? 'application overview' : model.question.shortName}"></th:block></button>
             </div>
         </form>
 

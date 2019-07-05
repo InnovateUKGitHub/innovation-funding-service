@@ -1,18 +1,21 @@
 package org.innovateuk.ifs.application.forms.form;
 
+import javax.validation.constraints.NotNull;
+
 public class AssignQuestionForm {
 
-    private Long assigneeId;
+    @NotNull
+    private Long assignee;
 
-    public AssignQuestionForm(Long assigneeId){
-        this.assigneeId = assigneeId;
+    public AssignQuestionForm(Long assignee){
+        this.assignee = assignee;
     }
 
-    public Long getAssigneeId() {
-        return assigneeId;
+    public Long getAssignee() {
+        return assignee;
     }
 
-    public void setAssigneeId(Long assigneeId) {
-        this.assigneeId = assigneeId;
+    public void setAssignee(Long assignee) {
+        this.assignee = assignee;
     }
 }
