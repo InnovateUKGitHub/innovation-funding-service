@@ -150,6 +150,7 @@ The user completes funding information
     the user enters text to a text field    id = activityCode    4242
     the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
