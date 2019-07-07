@@ -22,14 +22,13 @@ osStageRemote.tag = alertServiceVersion
 tagDockerLocal.tag = alertServiceVersion
 osStageLocal.tag = alertServiceVersion
 
-//this may not work, sounds like a monday problem
 ext.dockerDir = "$project.parent.projectDir/docker/"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-//buildDocker.inputDir = project.file("$project.buildDir/docker")
+buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 

@@ -44,6 +44,6 @@ include 'ifs-web-service:eu-grant-registration-service'
 include 'ifs-auth-service:ifs-ldap-service'
 include 'ifs-auth-service:ifs-sp-service'
 include 'ifs-auth-service:ifs-idp-service'
-include 'ifs-registration-service'
+//include 'ifs-registration-service'
 include 'robot-tests'
 

@@ -9,6 +9,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
  */
 
 ext.dockerDir = "docker/"
+//ext.dockerDir = "$project.parent.projectDir/docker/"
 
 task prepareDockerBaseInput(type: Copy) {
 
@@ -31,6 +32,7 @@ task prepareDockerBaseInput(type: Copy) {
 //    )
 
     println 'Start of copying'
+    println dockerDir
 
     copy {
         from(dockerDir) {
