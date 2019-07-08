@@ -141,6 +141,7 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
+    the user clicks the button/link         id = generate-code
     the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
     the user clicks the button/link         id = funders[0].funder
     click element                           id = funders[0].funder__option--0
@@ -148,7 +149,6 @@ The user completes funding information
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
     the user enters text to a text field    id = activityCode    4242
-    the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
     the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
