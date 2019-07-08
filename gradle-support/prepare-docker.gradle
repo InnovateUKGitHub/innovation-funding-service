@@ -23,38 +23,46 @@ task prepareDockerBaseInput(type: Copy) {
 
     inputs.file file("$project.buildDir/libs/$executableJarFile")
 
-//    def outputFile1 = "$inputDir/Dockerfile"
-//    def outputFile2 = "$inputDir/$jarFile"
-//
-//    outputs.file files(
-//            outputFile1,
-//            outputFile2
-//    )
+    def outputFile1 = "$inputDir/Dockerfile"
+    def outputFile2 = "$inputDir/$jarFile"
+
+    outputs.file files(
+            outputFile1,
+            outputFile2
+    )
 
     println 'Start of copying'
     println dockerDir
-
-    copy {
-        from(dockerDir) {
-            include 'Dockerfile-template'
+    println inputDir
+    doFirst {
+        println 'inside do first'
+        copy {
+            println "copy"
+            println dockerDir
+            println inputDir
+            from(dockerDir) {
+                include 'Dockerfile-template'
+            }
+            into project.file(inputDir)
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+            filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
+            filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
+            filter(ReplaceTokens, tokens: ['glusterGID': gid])
+            filter(ReplaceTokens, tokens: ['glusterUID': uid])
+            filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
         }
-        into project.file(inputDir)
-        rename 'Dockerfile-template', 'Dockerfile'
-        filter(ReplaceTokens, tokens: ['version': project.properties['version']])
-        filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
-        filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
-        filter(ReplaceTokens, tokens: ['glusterGID': gid])
-        filter(ReplaceTokens, tokens: ['glusterUID': uid])
-        filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
-    }
-    copy {
-        def libs = "$project.buildDir/libs"
-        from(libs) {
-            include(executableJarFile)
+        copy {
+            def libs = "$project.buildDir/libs"
+            println libs
+            println executableJarFile
+            from(libs) {
+                include(executableJarFile)
+            }
+            into project.file(inputDir)
+            rename(executableJarFile, jarFile)
+            into project.file(inputDir)
         }
-        into project.file(inputDir)
-        rename(executableJarFile, jarFile)
-        into project.file(inputDir)
     }
 
     println 'end of copying'
