@@ -4,7 +4,6 @@ log4j.appender.shibd_log=org.apache.log4j.ConsoleAppender
 log4j.appender.shibd_log.Target=System.out
 log4j.appender.shibd_log.layout=org.apache.log4j.PatternLayout
 log4j.appender.shibd_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
-log4j.appender.shibd_log.threshold=TRACE
 
 log4j.appender.warn_log=org.apache.log4j.ConsoleAppender
 log4j.appender.warn_log.Target=System.out
