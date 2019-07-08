@@ -2,7 +2,6 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
@@ -15,6 +14,13 @@ buildscript {
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
+    }
+    ext {
+        serverContext = '/survey'
+    }
+
+    ext {
+        dockerDir = "$project.parent.projectDir/docker/"
     }
 }
 
@@ -40,8 +46,6 @@ createContainer.hostName="survey-svc"
 createContainer.containerName="survey-svc"
 createContainer.containerId="survey-svc"
 createContainer.portBindings = ['9007:8000']
-
-ext.serverContext = '/survey'
 
 prepareDockerBaseInput {
     inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")

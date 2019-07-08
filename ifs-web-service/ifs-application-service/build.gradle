@@ -2,7 +2,7 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
+//ext.dockerDir = "$project.parent.projectDir/docker/"
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
@@ -15,6 +15,10 @@ buildscript {
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
+    }
+    
+    ext {
+        dockerDir = "$project.parent.projectDir/docker/"
     }
 }
 

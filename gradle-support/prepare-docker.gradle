@@ -33,7 +33,6 @@ task prepareDockerBaseInput {
     )
 
     copy {
-        from "$dockerDir/Dockerfile-template"
         into project.file(inputDir)
         rename 'Dockerfile-template', 'Dockerfile'
         filter(ReplaceTokens, tokens: ['version': project.properties['version']])
