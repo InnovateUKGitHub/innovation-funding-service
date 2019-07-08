@@ -35,6 +35,7 @@ task prepareDockerInputRegService {
     dependsOn ':ifs-auth-service:prepareLDAPEncryptionSecrets'
 
     def inputDir = project.file("$project.buildDir/docker")
+    def test = "test"
 
     doFirst {
         copy {
@@ -45,9 +46,9 @@ task prepareDockerInputRegService {
 }
 
 buildDocker.dependsOn ":docker:openjdk:buildDocker"
+buildDocker.dependsOn prepareDockerInputRegService
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
-buildDocker.dependsOn prepareDockerInputRegService
 
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 tagDockerLocal.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"

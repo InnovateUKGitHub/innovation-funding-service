@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
@@ -46,6 +48,19 @@ prepareDockerBaseInput {
     dependsOn ":ifs-commons:build"
     dependsOn ":ifs-sil-resources:build"
     dependsOn ":ifs-security:build"
+    def dockerDir = "docker"
+    def inputDir = project.file("$project.buildDir/docker")
+
+    outputs.file files(
+            project.file("$inputDir/Dockerfile")
+    )
+
+    copy {
+        from "${rootProject.projectDir}/ifs-sil-stub/$dockerDir/Dockerfile-template"
+        into project.file(inputDir)
+        rename 'Dockerfile-template', 'Dockerfile'
+        filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+    }
 
 }
 

@@ -1,6 +1,6 @@
-apply from: rootProject.file("gradle-support/new-relic.gradle")
 import org.apache.tools.ant.filters.ReplaceTokens
 
+apply from: rootProject.file("gradle-support/new-relic.gradle")
 /**
  * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
  * where it will write all the necessary files to build a docker container.
@@ -8,41 +8,90 @@ import org.apache.tools.ant.filters.ReplaceTokens
  * in the output directory.
  */
 
-ext.dockerDir = "docker/"
+ext.dockerDir = "docker"
 //ext.dockerDir = "$project.parent.projectDir/docker/"
 
-task prepareDockerBaseInput(type: Copy) {
+task prepareDockerBaseInput {
+
+    println 'start of copying'
 
     dependsOn build
-    def inputDir = "$project.buildDir/docker"
+
     def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
+    def inputDir = "$project.buildDir/docker"
     def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
+    def libs = "$project.buildDir/libs"
     String gid = System.env.bamboo_gluster_GID ?: "993"
     String uid = System.env.bamboo_gluster_UID ?: "996"
     String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
-    inputs.file file("$project.buildDir/libs/$executableJarFile")
-
-    def outputFile1 = "$inputDir/Dockerfile"
-    def outputFile2 = "$inputDir/$jarFile"
-
     outputs.file files(
-            outputFile1,
-            outputFile2
+            project.file("$inputDir/Dockerfile"),
+            project.file("$inputDir/$jarFile")
     )
 
-    println 'Start of copying'
-    println dockerDir
-    println inputDir
+    copy {
+        from "$dockerDir/Dockerfile-template"
+        into project.file(inputDir)
+        rename 'Dockerfile-template', 'Dockerfile'
+        filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+        filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
+        filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
+        filter(ReplaceTokens, tokens: ['glusterGID': gid])
+        filter(ReplaceTokens, tokens: ['glusterUID': uid])
+        filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
+    }
+    copy {
+        from "$libs/$executableJarFile"
+        into project.file(inputDir)
+        rename(executableJarFile, jarFile)
+    }
+
+}
+
+task prepareDockerInput {
+//task prepareDockerInput() {
+    dependsOn build
+//    dependsOn prepareDockerBaseInput
+    dependsOn getNewRelicAgent
+
+    def currentFilePath = "${rootProject.projectDir}/setup-files/scripts/docker"
+    def inputDir = "$project.buildDir/docker"
+    def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
+    def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
+    def libs = "$project.buildDir/libs"
+    String gid = System.env.bamboo_gluster_GID ?: "993"
+    String uid = System.env.bamboo_gluster_UID ?: "996"
+    String userPassword = System.env.bamboo_gluster_user_password ?: "default"
+
+    outputs.files(
+            project.file("$inputDir/coscale-monitoring.sh"),
+            project.file("$inputDir/newrelic.jar"),
+            project.file("$inputDir/newrelic.yml"),
+            project.file("$inputDir/Dockerfile"),
+            project.file("$inputDir/$jarFile")
+    )
+
     doFirst {
-        println 'inside do first'
+        println 'start of copying files i dont care about'
         copy {
-            println "copy"
-            println dockerDir
-            println inputDir
-            from(dockerDir) {
-                include 'Dockerfile-template'
-            }
+            from file("$currentFilePath/coscale-monitoring.sh")
+            from file("$currentFilePath/newrelic.jar")
+            from file("$currentFilePath/newrelic.yml")
+            from file("$currentFilePath/set-umask0002.sh")
+            into file(inputDir)
+        }
+        println 'end of copying files i dont care about'
+
+        println 'start of copying'
+
+
+
+        println 'start of copying files i do care about'
+        println "$dockerDir/Dockerfile-template"
+        println "$project.buildDir/docker"
+        copy {
+            from "$dockerDir/Dockerfile-template"
             into project.file(inputDir)
             rename 'Dockerfile-template', 'Dockerfile'
             filter(ReplaceTokens, tokens: ['version': project.properties['version']])
@@ -53,44 +102,13 @@ task prepareDockerBaseInput(type: Copy) {
             filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
         }
         copy {
-            def libs = "$project.buildDir/libs"
-            println libs
-            println executableJarFile
-            from(libs) {
-                include(executableJarFile)
-            }
+            from "$libs/$executableJarFile"
             into project.file(inputDir)
             rename(executableJarFile, jarFile)
-            into project.file(inputDir)
         }
-    }
+        println 'end of copying files i do care about'
 
-    println 'end of copying'
-
-}
-
-
-task prepareDockerInput {
-    dependsOn prepareDockerBaseInput
-    dependsOn getNewRelicAgent
-
-    def currentFilePath = "${rootProject.projectDir}/setup-files/scripts/docker"
-    def inputDir = "$project.buildDir/docker"
-
-    outputs.files(
-            project.file("$inputDir/coscale-monitoring.sh"),
-            project.file("$inputDir/newrelic.jar"),
-            project.file("$inputDir/newrelic.yml")
-    )
-
-    doFirst {
-        copy {
-            from file("$currentFilePath/coscale-monitoring.sh")
-            from file("$currentFilePath/newrelic.jar")
-            from file("$currentFilePath/newrelic.yml")
-            from file("$currentFilePath/set-umask0002.sh")
-            into file(inputDir)
-        }
+        println 'end of copying'
     }
 
 }
