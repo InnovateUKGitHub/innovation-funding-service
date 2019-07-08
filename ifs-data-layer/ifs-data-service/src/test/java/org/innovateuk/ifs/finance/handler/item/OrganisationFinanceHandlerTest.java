@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
-    private OrganisationFinanceDefaultHandler handler;
+    private IndustrialCostFinanceHandler handler;
     @Mock
     private ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock

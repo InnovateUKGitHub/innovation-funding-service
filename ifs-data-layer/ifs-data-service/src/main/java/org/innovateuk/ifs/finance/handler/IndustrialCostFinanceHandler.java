@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.repository.*;
@@ -22,10 +23,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * an organisation's perspective and calculates the totals
  */
 @Component
-public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
-
-    private ProjectFinanceRepository projectFinanceRepository;
+public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
+    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
     private LabourCostHandler labourCostHandler;
 
@@ -45,20 +44,19 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
     private OtherFundingHandler otherFundingHandler;
 
-    public OrganisationFinanceDefaultHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                             ProjectFinanceRowRepository projectFinanceRowRepository,
-                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                             QuestionService questionService,
-                                             ApplicationFinanceRepository applicationFinanceRepository,
-                                             ProjectFinanceRepository projectFinanceRepository,
-                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                             OverheadsHandler overheadsHandler,
-                                             SubContractingCostHandler subContractingCostHandler,
-                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                             OtherFundingHandler otherFundingHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
-        this.projectFinanceRepository = projectFinanceRepository;
+    public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                                        ProjectFinanceRowRepository projectFinanceRowRepository,
+                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                        QuestionService questionService,
+                                        ApplicationFinanceRepository applicationFinanceRepository,
+                                        ProjectFinanceRepository projectFinanceRepository,
+                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                        OverheadsHandler overheadsHandler,
+                                        SubContractingCostHandler subContractingCostHandler,
+                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                        OtherFundingHandler otherFundingHandler) {
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
         this.materialsHandler = materialsHandler;
@@ -83,9 +81,9 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
     }
 
     @Override
-    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
-        for (FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : competition.getFinanceRowTypes()) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
         }

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Action to retrieve the finances of the organisations
  */
-public interface OrganisationFinanceHandler {
+public interface OrganisationTypeFinanceHandler {
     //actions
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
     ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);

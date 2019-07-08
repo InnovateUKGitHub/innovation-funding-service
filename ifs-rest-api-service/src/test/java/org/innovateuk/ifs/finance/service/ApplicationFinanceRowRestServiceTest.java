@@ -4,14 +4,36 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<ProjectFinanceRowRestServiceImpl> {
-    private static final String costRestURL = "/project-finance-row";
+/**
+ *
+ */
+public class ApplicationFinanceRowRestServiceTest extends BaseRestServiceUnitTest<ApplicationFinanceRowRestServiceImpl> {
 
+    private static final String costRestURL = "/application-finance-row";
+
+    @Override
+    protected ApplicationFinanceRowRestServiceImpl registerRestServiceUnderTest() {
+        ApplicationFinanceRowRestServiceImpl costService = new ApplicationFinanceRowRestServiceImpl();
+        return costService;
+    }
+
+    @Test
+    public void get() {
+        LabourCost returnedResponse = new LabourCost(1L);
+
+        setupGetWithRestResultExpectations(costRestURL + "/123", FinanceRowItem.class, returnedResponse);
+
+        FinanceRowItem cost = service.get(123L).getSuccess();
+        assertNotNull(cost);
+        Assert.assertEquals(returnedResponse, cost);
+    }
 
     @Test
     public void create() {
@@ -22,8 +44,9 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void delete() {
-        setupDeleteWithRestResultExpectations(costRestURL + "/456");
-        service.delete(456L);
+        setupDeleteWithRestResultExpectations(costRestURL + "/123");
+        service.delete(123L);
+        setupDeleteWithRestResultVerifications(costRestURL + "/123");
     }
 
     @Test
@@ -32,10 +55,5 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         String expectedUrl = costRestURL + "/" + costToUpdate.getId();
         setupPutWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages());
         service.update(costToUpdate).getSuccess();
-    }
-
-    @Override
-    protected ProjectFinanceRowRestServiceImpl registerRestServiceUnderTest() {
-        return new ProjectFinanceRowRestServiceImpl();
     }
 }

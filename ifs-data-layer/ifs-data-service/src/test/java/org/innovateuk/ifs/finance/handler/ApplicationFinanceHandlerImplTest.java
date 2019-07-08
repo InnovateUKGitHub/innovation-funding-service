@@ -41,7 +41,7 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
     private ApplicationFinanceHandler handler = new ApplicationFinanceHandlerImpl();
 
     @Mock
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandlerMock;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;

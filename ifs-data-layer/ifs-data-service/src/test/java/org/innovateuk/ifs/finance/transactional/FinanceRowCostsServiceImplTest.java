@@ -7,13 +7,11 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
-import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -57,7 +55,7 @@ import static org.mockito.Mockito.*;
 public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceRowCostsServiceImpl> {
 
     @Mock
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandlerMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;

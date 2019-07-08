@@ -2,12 +2,10 @@ package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -22,29 +20,34 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public abstract class AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
-
-    protected ApplicationFinanceRowRepository applicationFinanceRowRepository;
-
-    protected ProjectFinanceRowRepository projectFinanceRowRepository;
-
-    protected FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+public abstract class AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
+    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
     protected QuestionService questionService;
 
     protected ApplicationFinanceRepository applicationFinanceRepository;
 
+    protected ProjectFinanceRepository projectFinanceRepository;
+
+    protected ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    protected ProjectFinanceRowRepository projectFinanceRowRepository;
+
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+
     public AbstractOrganisationFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                                               ProjectFinanceRowRepository projectFinanceRowRepository,
                                               FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
                                               QuestionService questionService,
-                                              ApplicationFinanceRepository applicationFinanceRepository) {
+                                              ApplicationFinanceRepository applicationFinanceRepository,
+                                              ProjectFinanceRepository projectFinanceRepository) {
         this.applicationFinanceRowRepository = applicationFinanceRowRepository;
         this.projectFinanceRowRepository = projectFinanceRowRepository;
         this.financeRowMetaFieldRepository = financeRowMetaFieldRepository;
         this.questionService = questionService;
         this.applicationFinanceRepository = applicationFinanceRepository;
+        this.projectFinanceRepository = projectFinanceRepository;
     }
 
     @Override
@@ -66,7 +69,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     protected abstract boolean initialiseCostTypeSupported(FinanceRowType costType);
 
-    protected abstract Map<FinanceRowType, FinanceRowCostCategory> createCostCategories();
+    protected abstract Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition);
 
     protected abstract Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories);
 
@@ -76,18 +79,22 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
-        List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs));
+        return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId)).andOnSuccessReturn(finance -> {
+            List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
+            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition()));
+        }).getSuccess();
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
-        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs));
+        return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccessReturn(finance -> {
+            List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition()));
+        }).getSuccess();
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories(competition);
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
         return costCategories;

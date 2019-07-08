@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     @InjectMocks
-    private OrganisationJESFinance organisationJESFinance;
+    private JesFinanceHandler organisationJESFinance;
 
     @Mock
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;

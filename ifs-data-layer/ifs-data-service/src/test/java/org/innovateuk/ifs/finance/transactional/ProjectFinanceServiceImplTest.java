@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -67,7 +67,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandlerMock;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;
