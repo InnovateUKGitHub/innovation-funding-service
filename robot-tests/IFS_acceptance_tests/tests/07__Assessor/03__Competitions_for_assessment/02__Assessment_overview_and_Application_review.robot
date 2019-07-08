@@ -113,6 +113,7 @@ Scope: Status in the overview is updated
     When the user selects the index from the drop-down menu  1    css = .research-category
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
+    And Wait for autosave
     Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
     And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
