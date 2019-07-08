@@ -35,7 +35,6 @@ task prepareDockerInputRegService {
     dependsOn ':ifs-auth-service:prepareLDAPEncryptionSecrets'
 
     def inputDir = project.file("$project.buildDir/docker")
-    def test = "test"
 
     doFirst {
         copy {
