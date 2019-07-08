@@ -23,16 +23,40 @@
             <section class="govuk-tabs__panel">
                 <h2 class="govuk-heading-m"
                     th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
-                <ul class="govuk-list list-overview">
-                    <li class="govuk-grid-row" th:each="competition : ${model.result.content}">
-                        <th:block
-                            th:insert="competition/dashboard :: dashboard-row"
-                            th:with="competition=${competition},
-                                innovationAreas=competition.innovationAreaNames,
-                                cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                                customLink='/competition/'+${competition.id}+'/applications/previous'"/>
-                    </li>
-                </ul>
+
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Competition number</th>
+                        <th class="govuk-table__header" scope="col">Title</th>
+                        <th class="govuk-table__header" scope="col">Type</th>
+                        <th class="govuk-table__header" scope="col">Innovation area</th>
+                        <th class="govuk-table__header" scope="col">Number of applications</th>
+                        <th class="govuk-table__header" scope="col">Number of completed projects</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__head">
+                    <tr class="govuk-table__row" th:each="competition : ${model.result.content}">
+                        <td class="govuk-table__cell" th:text="${competition.id}"></td>
+                        <td class="govuk-table__cell">
+                            <a th:href="@{/competition/{competitionId}/applications/previous(competitionId=${competition.id})}"
+                               th:text="${competition.name}"
+                               class="govuk-link">
+                                My competition
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${competition.competitionTypeName}"></td>
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body" th:unless="${competition.innovationAreaNames.size() > 5}"
+                               th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
+                            <p class="govuk-body" th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</p>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${competition.applications}"></td>
+                        <td class="govuk-table__cell" th:text="|${competition.completeProjects} of ${competition.projects}|"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
                 <form method="get"
                       th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                     <th:block

@@ -6,9 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
@@ -83,8 +81,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findFeedbackReleasedForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
-                    : competitionRepository.findFeedbackReleased(PageRequest.of(page, size, Sort.by("name")));
+                    ? competitionRepository.findFeedbackReleasedForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "competition.id")))
+                    : competitionRepository.findFeedbackReleased(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
 
             return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
         });
@@ -161,9 +159,6 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     private PreviousCompetitionSearchResultItem toPreviousCompetitionSearchResult(Competition competition) {
-        ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId());
-        ZonedDateTime openDate = openDateMilestone.getOptionalSuccessObject().map(MilestoneResource::getDate).orElse(null);
-
         return new PreviousCompetitionSearchResultItem(
                 competition.getId(),
                 competition.getName(),
@@ -173,7 +168,9 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                openDate
+                applicationRepository.countByCompetitionId(competition.getId()),
+                projectRepository.countByApplicationCompetitionId(competition.getId()),
+                projectRepository.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competition.getId(), ProjectState.COMPLETED_STATES)
         );
     }
 
