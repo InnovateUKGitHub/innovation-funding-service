@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -144,8 +143,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
                                                                                              finances,
                                                                                              singletonList(leadOrg.getName()),
                                                                                              BigDecimal.TEN,
-                                                                                             BigDecimal.ONE,
-                                                                                             emptyList());
+                                                                                             BigDecimal.ONE);
 
         AcademicFinanceTableModel academicFinanceTable = new AcademicFinanceTableModel(true,
                                                                                        finances,

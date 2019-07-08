@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -642,8 +641,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                                       asMap("orgName", projectFinance),
                                                                                       singletonList("orgName"),
                                                                                       BigDecimal.TEN,
-                                                                                      BigDecimal.ONE,
-                                                                                      emptyList());
+                                                                                      BigDecimal.ONE);
         SummaryFinanceTableModel summaryTable = new SummaryFinanceTableModel(BigDecimal.TEN,
                                                                              BigDecimal.ONE,
                                                                              BigDecimal.ONE,
