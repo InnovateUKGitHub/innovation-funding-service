@@ -141,6 +141,7 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
+    the user clicks the button/link         id = generate-code
     the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
     the user clicks the button/link         id = funders[0].funder
     click element                           id = funders[0].funder__option--0
@@ -148,8 +149,8 @@ The user completes funding information
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
     the user enters text to a text field    id = activityCode    4242
-    the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
@@ -343,7 +344,7 @@ The user is able to complete your project costs section
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user opens the link in new window           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab

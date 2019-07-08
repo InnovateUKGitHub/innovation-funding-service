@@ -41,10 +41,9 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Role</span>
-                    </th>
-                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Name</span></th>
-                    <th scope="col" class="govuk-table__header smaller-col"><span
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span class="govuk-visually-hidden">Role</span></th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span class="govuk-visually-hidden">Name</span></th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
                         class="govuk-visually-hidden">Status</span></th>
                 </tr>
                 </thead>
@@ -60,7 +59,7 @@
                     <td class="govuk-table__cell"
                         th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell alignright">
                         <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
                         <strong th:unless="${model.projectManager == null}" class="complete-status">Complete</strong>
                     </td>
@@ -73,7 +72,7 @@
                     <td class="govuk-table__cell"
                         th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell alignright">
                         <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
                                 class="incomplete-status">Incomplete</strong>
                         <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
@@ -95,9 +94,9 @@
                        th:classappend="${organisation.editable and !model.isReadOnly() ? 'govuk-!-margin-bottom-2' : ''}">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header larger-cols">Full name</th>
-                        <th scope="col" class="govuk-table__header smaller-col">Email</th>
-                        <th scope="col" class="govuk-table__header width-200"><span
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
                             class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
@@ -111,7 +110,7 @@
                             th:text="${user.getEmail()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-
                         </td>
-                        <td class="govuk-table__cell"
+                        <td class="govuk-table__cell alignright"
                             th:classappend="${user.invite ? 'hint' : ''}">
                             <th:block th:if="${organisation.editable and !model.isReadOnly()}">
                                 <th:block
@@ -198,7 +197,7 @@
                                 Invite to project
                             </button>
                         </td>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell alignright">
                             <button name="close-add-team-member-form"
                                     class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
                                     th:attr="data-hide-form=${'invite-user-' + organisation.orgId}">

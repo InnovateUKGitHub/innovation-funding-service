@@ -68,9 +68,13 @@
         </th:block>
         <!-- END -->
 
-        <p th:if="${model.endState}" class="govuk-body">
+        <p th:if="${model.withdrawn || model.live}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
+        </p>
+
+        <p th:if="${model.completedOffline}" class="govuk-body">
+            Innovate UK and all project partners can view the project but can no longer make changes online. This cannot be undone.
         </p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"

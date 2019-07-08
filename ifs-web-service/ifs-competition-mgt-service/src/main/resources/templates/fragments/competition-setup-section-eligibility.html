@@ -10,7 +10,7 @@
     <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
+          data-section="eligibility">
 
         <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />

@@ -75,13 +75,7 @@ Academics upload
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
-
-Academic partner can view the file on the finances
-    [Documentation]    INFUND-917
-    [Tags]
-    When the user opens the link in new window  ${5mb_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                                  ${5mb_pdf}
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917

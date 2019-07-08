@@ -199,35 +199,6 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void autoSaveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-        CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
-        String fieldName = "testField";
-        String value = "testValue";
-        Optional<Long> objectId = Optional.of(1L);
-
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
-
-        service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void autoSaveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-        CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
-        CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
-        String fieldName = "testField";
-        String value = "testValue";
-        Optional<Long> objectId = Optional.of(1L);
-
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
-
-        service.autoSaveCompetitionSetupSubsection(competition, section, subsection, fieldName, value, objectId);
-    }
-
-    @Test(expected = IllegalStateException.class)
     public void saveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
@@ -420,47 +391,6 @@ public class CompetitionSetupServiceImplTest {
         assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
         assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
         assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
-    }
-
-    @Test
-    public void autoSaveCompetitionSetupSection_restrictedField() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withId(23L).build();
-        when(competitionSetupRestService.getSectionStatuses(competition.getId())).thenReturn(restSuccess(asMap(
-                CompetitionSetupSection.INITIAL_DETAILS, Optional.of(true),
-                CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
-
-
-        CompetitionSetupSection section = INITIAL_DETAILS;
-        String[] restrictedFieldNames = new String[]{"competitionTypeId", "openingDate"};
-        String[] unrestrictedFieldNames = new String[]{"title", "innovationSectorCategoryId",
-                "autosaveInnovationAreaIds", "innovationLeadUserId", "executiveUserId"};
-        String value = "testValue";
-        Optional<Long> objectId = Optional.empty();
-        CompetitionSetupForm form = new InitialDetailsForm();
-
-        CompetitionSetupSectionUpdater saver = mock(CompetitionSetupSectionUpdater.class);
-        CompetitionSetupFormPopulator populator = mock(CompetitionSetupFormPopulator.class);
-
-        when(saver.sectionToSave()).thenReturn(INITIAL_DETAILS);
-        when(populator.sectionToFill()).thenReturn(INITIAL_DETAILS);
-        when(populator.populateForm(competition)).thenReturn(form);
-
-        service.setCompetitionSetupSectionSavers(singletonList(saver));
-        service.setCompetitionSetupFormPopulators(singletonList(populator));
-
-        for (String fieldName : restrictedFieldNames) {
-            try {
-                service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
-                fail("Expected IllegalStateException attempting to autosave restricted field: " + fieldName);
-            } catch (IllegalStateException ignored) {
-
-            }
-        }
-
-        for (String fieldName : unrestrictedFieldNames) {
-            service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
-            verify(saver).autoSaveSectionField(competition, form, fieldName, value, objectId);
-        }
     }
 
     @Test
