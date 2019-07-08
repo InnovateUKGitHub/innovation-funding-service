@@ -41,7 +41,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                                             labourCostItem.getDescription(),
                                             labourCostItem.getLabourDays(),
                                             labourCostItem.getGrossEmployeeCost(),
-                                            null, null) : null;
+                                            null, labourCostItem.getCostType()) : null;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                     costItem.getDescription(),
                     costItem.getLabourDays(),
                     costItem.getGrossEmployeeCost(),
-                    null, null);
+                    null, costItem.getCostType());
     }
 
     @Override

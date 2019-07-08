@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WO
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -78,12 +77,12 @@ public class Horizon2020CostsSaverTest {
         TravelCost newTravel = newTravelCost().build();
         OtherCost newOther = newOtherCost().build();
 
-        when(financeRowRestService.create(eq(finance.getId()), any(LabourCost.class))).thenReturn(restSuccess(newLabourCost));
-        when(financeRowRestService.create(eq(finance.getId()), any(Materials.class))).thenReturn(restSuccess(newMaterial));
-        when(financeRowRestService.create(eq(finance.getId()), any(CapitalUsage.class))).thenReturn(restSuccess(newCapital));
-        when(financeRowRestService.create(eq(finance.getId()), any(SubContractingCost.class))).thenReturn(restSuccess(newSubcontracting));
-        when(financeRowRestService.create(eq(finance.getId()), any(TravelCost.class))).thenReturn(restSuccess(newTravel));
-        when(financeRowRestService.create(eq(finance.getId()), any(OtherCost.class))).thenReturn(restSuccess(newOther));
+        when(financeRowRestService.create(any(LabourCost.class))).thenReturn(restSuccess(newLabourCost));
+        when(financeRowRestService.create(any(Materials.class))).thenReturn(restSuccess(newMaterial));
+        when(financeRowRestService.create(any(CapitalUsage.class))).thenReturn(restSuccess(newCapital));
+        when(financeRowRestService.create(any(SubContractingCost.class))).thenReturn(restSuccess(newSubcontracting));
+        when(financeRowRestService.create(any(TravelCost.class))).thenReturn(restSuccess(newTravel));
+        when(financeRowRestService.create(any(OtherCost.class))).thenReturn(restSuccess(newOther));
 
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
@@ -101,12 +100,12 @@ public class Horizon2020CostsSaverTest {
         verify(financeRowRestService).update(workingDays);
         verify(financeRowRestService).update(overhead);
 
-        verify(financeRowRestService).create(eq(finance.getId()), any(LabourCost.class));
-        verify(financeRowRestService).create(eq(finance.getId()), any(Materials.class));
-        verify(financeRowRestService).create(eq(finance.getId()), any(CapitalUsage.class));
-        verify(financeRowRestService).create(eq(finance.getId()), any(SubContractingCost.class));
-        verify(financeRowRestService).create(eq(finance.getId()), any(TravelCost.class));
-        verify(financeRowRestService).create(eq(finance.getId()), any(OtherCost.class));
+        verify(financeRowRestService).create(any(LabourCost.class));
+        verify(financeRowRestService).create(any(Materials.class));
+        verify(financeRowRestService).create(any(CapitalUsage.class));
+        verify(financeRowRestService).create(any(SubContractingCost.class));
+        verify(financeRowRestService).create(any(TravelCost.class));
+        verify(financeRowRestService).create(any(OtherCost.class));
 
         verify(financeRowRestService).update(newLabourCost);
         verify(financeRowRestService).update(newMaterial);

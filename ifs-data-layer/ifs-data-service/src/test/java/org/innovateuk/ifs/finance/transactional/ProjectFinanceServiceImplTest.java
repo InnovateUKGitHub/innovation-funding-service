@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
-import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
@@ -22,10 +21,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -36,10 +31,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -50,13 +43,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 
 public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFinanceRowServiceImpl> {
@@ -79,24 +71,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
 
     @Mock
-    private ProjectFinanceRowMapper projectFinanceRowMapperMock;
-
-    @Mock
     private ProjectFinanceRepository projectFinanceRepositoryMock;
-
-    @Mock
-    private QuestionRepository questionRepositoryMock;
 
     @Mock
     private ProjectFinanceMapper projectFinanceMapperMock;
 
     @Mock
-    private QuestionService questionServiceMock;
-
-    @Mock
     private FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
-
-    private HashMap<FinanceRowType, Question> costTypeQuestion;
 
     private Organisation organisation;
 
@@ -107,8 +88,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     private ProjectFinance newFinance;
 
     private Materials material;
-
-    private Question question;
 
     @Before
     public void setUp() throws Exception {
@@ -133,21 +112,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         newFinance = new ProjectFinance(organisation, SMALL, project);
         newFinance.setId(projectFinanceId);
 
-        question = newQuestion().withId(questionId).withCompetition(competition).build();
-
-        material = new Materials();
+        material = new Materials(newFinance.getId());
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("Screws");
         material.setQuantity(5);
 
-        costTypeQuestion = new HashMap<>();
-        for (FinanceRowType costType : FinanceRowType.values()) {
-            if (FinanceRowType.ACADEMIC != costType) {
-                setUpCostTypeQuestions(competition, costType);
-            }
-        }
 
-        materialCost = newProjectFinanceRow().withId(costItemId).withQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS)).withTarget(newFinance).build();
+        materialCost = newProjectFinanceRow().withId(costItemId).withType(FinanceRowType.MATERIALS).withTarget(newFinance).build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
@@ -157,9 +128,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRowRepositoryMock.findById(costItemId)).thenReturn(Optional.of(materialCost));
 
-        when(organisationFinanceDefaultHandlerMock.costItemToProjectCost(material)).thenReturn(materialCost);
-
-        when(questionRepositoryMock.findById(questionId)).thenReturn(Optional.of(question));
+        when(organisationFinanceDefaultHandlerMock.toProjectDomain(material)).thenReturn(materialCost);
 
         when(projectFinanceRepositoryMock.findById(projectFinanceId)).thenReturn(Optional.of(newFinance));
 
@@ -167,8 +136,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetCostItem(){
-        ServiceResult<FinanceRowItem> result = service.getCostItem(materialCost.getId());
+    public void testGetCostItem() {
+        ServiceResult<FinanceRowItem> result = service.get(materialCost.getId());
         assertTrue(result.isSuccess());
     }
 
@@ -193,27 +162,26 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRowRepositoryMock.save(materialCost)).thenReturn(materialCost);
 
-        ServiceResult<FinanceRowItem> result = service.addCost(newFinance.getId(), question.getId(), material);
+        ServiceResult<FinanceRowItem> result = service.create(material);
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void testUpdateCost() {
         when(projectFinanceRowRepositoryMock.save(any(ProjectFinanceRow.class))).thenReturn(materialCost);
-        ServiceResult<FinanceRowItem> result = service.updateCost(materialCost.getId(), material);
+        ServiceResult<FinanceRowItem> result = service.update(materialCost.getId(), material);
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void testDeleteCost() {
-        ServiceResult<Void> result = service.deleteCost(materialCost.getId());
+        ServiceResult<Void> result = service.delete(materialCost.getId());
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void testGetCostHandler(){
-        when(projectFinanceRowMapperMock.mapIdToDomain(1L)).thenReturn(materialCost);
-        when(organisationFinanceDefaultHandlerMock.costToCostItem(materialCost)).thenReturn(material);
+    public void testGetCostHandler() {
+        when(organisationFinanceDefaultHandlerMock.toResource(materialCost)).thenReturn(material);
         when(organisationFinanceDefaultHandlerMock.getCostHandler(FinanceRowType.MATERIALS)).thenReturn(new MaterialsHandler());
 
         FinanceRowHandler financeRowHandler = service.getCostHandler(material);
@@ -242,15 +210,5 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Override
     protected ProjectFinanceRowServiceImpl supplyServiceUnderTest() {
         return new ProjectFinanceRowServiceImpl();
-    }
-
-    private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
-        FormInput formInput = newFormInput()
-                .withType(costType.getFormInputType())
-                .build();
-        Question question = newQuestion().withFormInputs(singletonList(formInput)).build();
-
-        costTypeQuestion.put(costType, question);
-        when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));
     }
 }

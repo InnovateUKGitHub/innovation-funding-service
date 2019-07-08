@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -101,7 +100,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
                         financeRowCostsService.getCostItems(financeDetails.getId(), type).andOnSuccessReturn(costItems ->
-                                applicationValidationUtil.validateCostItem(costItems, new Question())
+                                applicationValidationUtil.validateCostItem(costItems)
                         )
                 )
         ).getSuccess();

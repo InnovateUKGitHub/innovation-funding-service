@@ -5,20 +5,12 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowServiceImpl;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,28 +40,6 @@ public class ProjectFinanceRowSecurityTest extends BaseServiceSecurityTest<Proje
                             .partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(ProjectFinanceResource.class), isA(UserResource.class));
                 }
         );
-    }
-
-    /**
-     * Comp admin is allowed access to update project inance details costs for same reason as above financeChecksDetails
-     * method.
-     */
-    @Test
-    public void testAllInternalUsersCanUpdateFinanceCosts(){
-        asList(Role.values()).forEach(role -> {
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
-            setLoggedInUser(userWithRole);
-            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
-                classUnderTest.updateCost(1L, new ProjectFinanceResource());
-            } else {
-                try{
-                    classUnderTest.updateCost(1L, new ProjectFinanceResource());
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
     }
 
     @Override

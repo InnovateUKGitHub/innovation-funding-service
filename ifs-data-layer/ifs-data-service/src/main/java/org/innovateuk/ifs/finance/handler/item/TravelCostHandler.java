@@ -21,7 +21,7 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     public ApplicationFinanceRow toApplicationDomain(TravelCost travel) {
         ApplicationFinanceRow applicationFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
-            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, travel.getCostType());
         }
         return applicationFinanceRow;
     }
@@ -30,7 +30,7 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     public ProjectFinanceRow toProjectDomain(TravelCost travel) {
         ProjectFinanceRow projectFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
-            projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, travel.getCostType());
         }
         return projectFinanceRow;
     }

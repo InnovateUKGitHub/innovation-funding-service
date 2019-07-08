@@ -60,13 +60,13 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     @Override
     public ApplicationFinanceRow toApplicationDomain(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
-        return new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null);
+        return new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, overhead.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
-        return new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null);
+        return new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, overhead.getCostType());
     }
 
     @Override

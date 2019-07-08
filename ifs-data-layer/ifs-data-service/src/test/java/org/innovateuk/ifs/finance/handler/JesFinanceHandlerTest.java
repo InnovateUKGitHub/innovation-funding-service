@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,13 +12,12 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
+public class JesFinanceHandlerTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private JesFinanceHandler organisationJESFinance;
 
@@ -53,12 +53,14 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     public void addCost_shouldSaveEntityWhenAFinanceRowForNameCannotBeFound() throws Exception {
         String financeRowName = "unique-name";
 
-        ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).withTarget(newApplicationFinance().build()).withQuestion(newQuestion().build()).withId(1L).build();
+        ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).withTarget(newApplicationFinance().build())
+                .withType(FinanceRowType.LABOUR)
+                .withId(1L).build();
 
         when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.empty());
         when(applicationFinanceRowRepository.save(any(ApplicationFinanceRow.class))).thenReturn(applicationFinanceRow);
 
-        ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceRow.getTarget().getId(), applicationFinanceRow.getQuestion().getId(), applicationFinanceRow);
+        ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceRow);
 
         assertEquals(applicationFinanceRow,result);
         verify(applicationFinanceRowRepository, times(1)).save(applicationFinanceRow);

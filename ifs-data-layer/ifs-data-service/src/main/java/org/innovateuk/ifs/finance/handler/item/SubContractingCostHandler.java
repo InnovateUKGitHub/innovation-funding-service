@@ -48,7 +48,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     private ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         ApplicationFinanceRow cost =  new ApplicationFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
-                0, subContractingCost.getCost(),null,null);
+                0, subContractingCost.getCost(),null,costItem.getCostType());
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;
@@ -57,7 +57,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     private ProjectFinanceRow mapSubContractingToProjectCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         ProjectFinanceRow cost =  new ProjectFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
-                0, subContractingCost.getCost(),null,null);
+                0, subContractingCost.getCost(),null,costItem.getCostType());
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;

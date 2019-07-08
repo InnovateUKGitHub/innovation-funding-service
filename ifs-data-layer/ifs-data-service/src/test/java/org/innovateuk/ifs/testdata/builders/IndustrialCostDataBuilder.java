@@ -6,7 +6,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
 import org.slf4j.Logger;
@@ -18,8 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -42,18 +41,18 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withWorkingDaysPerYear(Integer workingDays) {
-        return updateCostItem(LabourCost.class, "Labour", item -> LabourCostCategory.WORKING_DAYS_PER_YEAR.equals(item.getRole()), existingCost -> {
+        return updateCostItem(LabourCost.class, FinanceRowType.LABOUR, item -> LabourCostCategory.WORKING_DAYS_PER_YEAR.equals(item.getRole()), existingCost -> {
             existingCost.setLabourDays(workingDays);
-            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
+            financeRowCostsService.update(existingCost.getId(), existingCost);
         });
     }
 
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
-        return updateCostItem(OtherFunding.class, "Other funding", existingCost -> {
+        return updateCostItem(OtherFunding.class, FinanceRowType.OTHER_FUNDING, "Other funding", existingCost -> {
             existingCost.setOtherPublicFunding("Yes");
-            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
-        }).addCostItem("Other funding", () -> {
-            OtherFunding otherFunding = new OtherFunding();
+            financeRowCostsService.update(existingCost.getId(), existingCost);
+        }).addCostItem("Other funding", (finance) -> {
+            OtherFunding otherFunding = new OtherFunding(finance.getId());
             otherFunding.setFundingAmount(fundingAmount);
             otherFunding.setFundingSource(fundingSource);
             otherFunding.setSecuredDate(dateSecured.format(DateTimeFormatter.ofPattern("MM-yyyy")));
@@ -62,53 +61,55 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withGrantClaim(Integer grantClaim) {
-        return updateCostItem(GrantClaim.class, "Funding level", existingCost -> {
+        return updateCostItem(GrantClaim.class, FinanceRowType.FINANCE, existingCost -> {
             existingCost.setGrantClaimPercentage(grantClaim);
-            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
+            financeRowCostsService.update(existingCost.getId(), existingCost);
         });
     }
 
     public IndustrialCostDataBuilder withLabourEntry(String role, Integer annualSalary, Integer daysToBeSpent) {
-        return addCostItem("Labour", () ->
+        return addCostItem("Labour", (finance) ->
                 newLabourCost().withId().
                     withName().
                     withRole(role).
                         withGrossEmployeeCost(bd(annualSalary)).
                     withLabourDays(daysToBeSpent).
                     withDescription().
+                    withTargetId(finance.getId()).
                     build());
     }
 
     public IndustrialCostDataBuilder withMaterials(String item, BigDecimal cost, Integer quantity) {
-        return addCostItem("Materials", () ->
+        return addCostItem("Materials", (finance) ->
                 newMaterials().
                         withId().
                         withItem(item).
                         withCost(cost).
                         withQuantity(quantity).
+                        withTargetId(finance.getId()).
                         build());
     }
 
     public IndustrialCostDataBuilder withCapitalUsage(Integer depreciation, String description, boolean existing,
                                                       BigDecimal presentValue, BigDecimal residualValue,
                                                       Integer utilisation) {
-        return addCostItem("Capital Usage", () ->
-                new CapitalUsage(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation));
+        return addCostItem("Capital Usage", (finance) ->
+                new CapitalUsage(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withSubcontractingCost(String name, String country, String role, BigDecimal cost) {
-        return addCostItem("Sub-contracting costs", () ->
-                new SubContractingCost(null, cost, country, name, role));
+        return addCostItem("Sub-contracting costs", (finance) ->
+                new SubContractingCost(null, cost, country, name, role, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withTravelAndSubsistence(String purpose, Integer numberOfTimes, BigDecimal costEach) {
-        return addCostItem("Travel and subsistence", () ->
-                new TravelCost(null, purpose, costEach, numberOfTimes));
+        return addCostItem("Travel and subsistence", (finance) ->
+                new TravelCost(null, purpose, costEach, numberOfTimes, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withOtherCosts(String description, BigDecimal estimatedCost) {
-        return addCostItem("Other costs", () ->
-                new OtherCost(null, description, estimatedCost));
+        return addCostItem("Other costs", (finance) ->
+                new OtherCost(null, description, estimatedCost, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withOrganisationSize(OrganisationSize organsationSize) {
@@ -150,34 +151,33 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
-        return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS.getName(), existingCost -> {
-            Overhead updated = new Overhead(existingCost.getId(), rateType, rate);
-            financeRowCostsService.updateCost(existingCost.getId(), updated);
+        return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, FinanceRowType.OVERHEADS.getName(), existingCost -> {
+            Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
+            financeRowCostsService.update(existingCost.getId(), updated);
         });
     }
 
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, String financeRowName, Consumer<T> updateFn) {
-        return updateCostItem(clazz, financeRowName, c -> true, updateFn);
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
+        return updateCostItem(clazz, financeRowType, c -> true, updateFn);
     }
 
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, String financeRowName, Predicate<T> filterFn, Consumer<T> updateFn) {
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, String financeRowName, Consumer<T> updateFn) {
+        return updateCostItem(clazz, financeRowType, c -> financeRowName.equals(c.getName()), updateFn);
+    }
+
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
         return with(data -> {
-
-            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
-
-            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccess();
+            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), financeRowType).getSuccess();
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }
 
-    private IndustrialCostDataBuilder addCostItem(String financeRowName, Supplier<FinanceRowItem> cost) {
+    private IndustrialCostDataBuilder addCostItem(String financeRowName, Function<ApplicationFinanceResource, FinanceRowItem> cost) {
         return with(data -> {
 
-            FinanceRowItem newCostItem = cost.get();
+            FinanceRowItem newCostItem = cost.apply(data.getApplicationFinance());
 
-            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
-
-            financeRowCostsService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
+            financeRowCostsService.create(newCostItem.getTargetId(), newCostItem).
                     getSuccess();
         });
     }

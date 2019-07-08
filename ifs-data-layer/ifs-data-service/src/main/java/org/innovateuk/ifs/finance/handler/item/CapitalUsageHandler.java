@@ -61,7 +61,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     private ApplicationFinanceRow mapCapitalUsage(FinanceRowItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
         ApplicationFinanceRow capitalUsageCost = new ApplicationFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
-                capitalUsage.getNpv(), null, null);
+                capitalUsage.getNpv(), null, costItem.getCostType());
         capitalUsageCost.addCostValues(
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
@@ -72,7 +72,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
 
     private ProjectFinanceRow mapCapitalUsageToProjectCost(CapitalUsage capitalUsage) {
         ProjectFinanceRow capitalUsageCost = new ProjectFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
-                capitalUsage.getNpv(), null, null);
+                capitalUsage.getNpv(), null, capitalUsage.getCostType());
         capitalUsageCost.addCostValues(
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),

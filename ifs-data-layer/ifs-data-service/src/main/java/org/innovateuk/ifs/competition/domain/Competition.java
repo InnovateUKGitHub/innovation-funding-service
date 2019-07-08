@@ -159,7 +159,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @JoinTable(name = "competition_finance_row_types", joinColumns = @JoinColumn(name = "competition_id"))
     @Column(name = "finance_row_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<FinanceRowType> financeRowTypes;
+    private Set<FinanceRowType> financeRowTypes = new HashSet<>();
 
     public Competition() {
         setupComplete = false;

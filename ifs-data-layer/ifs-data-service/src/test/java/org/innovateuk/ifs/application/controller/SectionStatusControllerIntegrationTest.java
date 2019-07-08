@@ -72,12 +72,10 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccess();
-        Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> m.getObjectId().equals(35L)).findFirst();
+        Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> !m.getErrors().isEmpty()).findFirst();
         assertTrue("Could not find ValidationMessage object", findMessage.isPresent());
         ValidationMessages messages = findMessage.get();
         assertEquals(1, messages.getErrors().size());
-        assertEquals(new Long(35), messages.getObjectId());
-        assertEquals("question", messages.getObjectName());
 
         assertThat(messages.getErrors(),
                 contains(

@@ -17,7 +17,6 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,9 +60,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private IndustrialCostFinanceHandler organisationFinanceDefaultHandler;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Override
     public ServiceResult<FinanceRowItem> get(Long costItemId) {

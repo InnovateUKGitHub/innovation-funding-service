@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -94,7 +93,7 @@ public class AbstractYourProjectCostsSaverTest {
 
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.create(eq(APPLICATION_FINANCE_RESOURCE.getId()), any())).thenReturn(restSuccess(mockResponse));
+        when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
 
         ServiceResult<Void> result = target.save(form, 1L, 2L);
 
@@ -109,12 +108,12 @@ public class AbstractYourProjectCostsSaverTest {
         assertEquals(overhead.getRate(), (Integer) 100);
         verify(financeRowRestService).update(overhead);
 
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(LabourCost.class));
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(Materials.class));
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(CapitalUsage.class));
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(SubContractingCost.class));
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(TravelCost.class));
-        verify(financeRowRestService).create(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(OtherCost.class));
+        verify(financeRowRestService).create(isA(LabourCost.class));
+        verify(financeRowRestService).create(isA(Materials.class));
+        verify(financeRowRestService).create(isA(CapitalUsage.class));
+        verify(financeRowRestService).create(isA(SubContractingCost.class));
+        verify(financeRowRestService).create(isA(TravelCost.class));
+        verify(financeRowRestService).create(isA(OtherCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
