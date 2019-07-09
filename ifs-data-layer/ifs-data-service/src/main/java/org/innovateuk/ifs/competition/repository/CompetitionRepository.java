@@ -84,23 +84,26 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
+    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY c.name";
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY ap.competition.name";
 
     String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
-    String PREVIOUS_QUERY = "SELECT c FROM Competition c " + PREVIOUS_WHERE_CLAUSE;
+    String PREVIOUS_QUERY = "SELECT c FROM Competition c " + PREVIOUS_WHERE_CLAUSE + " ORDER BY c.id DESC";
 
     String PREVIOUS_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PREVIOUS_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE + " ORDER BY ap.competition.id DESC";
 
     String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE;
 
-    String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
+    String NON_IFS_QUERY = "SELECT c FROM Competition c " +
+            "LEFT JOIN PublicContent pc ON pc.competitionId=c.id " +
+            "WHERE c.nonIfs = TRUE " +
+            "ORDER BY pc.publishDate";
 
     String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 

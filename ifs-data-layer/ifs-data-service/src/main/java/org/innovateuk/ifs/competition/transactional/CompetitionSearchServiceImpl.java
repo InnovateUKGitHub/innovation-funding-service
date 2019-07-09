@@ -13,7 +13,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -55,8 +54,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     public ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by("competition.name")))
-                    : competitionRepository.findProjectSetup(PageRequest.of(page, size, Sort.by("name")));
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+                    : competitionRepository.findProjectSetup(PageRequest.of(page, size));
 
             return handleCompetitionSearchResultPage(competitions, this::toProjectSetupCompetitionResult);
         });
@@ -72,7 +71,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CompetitionSearchResult> findNonIfsCompetitions(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("name"));
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Competition> competitions = competitionRepository.findNonIfs(pageRequest);
         return handleCompetitionSearchResultPage(competitions, this::toNonIfsCompetitionSearchResult);
     }
@@ -81,8 +80,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "competition.id")))
-                    : competitionRepository.findPrevious(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
+                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+                    : competitionRepository.findPrevious(PageRequest.of(page, size));
 
             return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
         });
