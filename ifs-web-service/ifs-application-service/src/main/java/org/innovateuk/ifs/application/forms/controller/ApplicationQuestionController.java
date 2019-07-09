@@ -26,7 +26,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,7 +82,6 @@ public class ApplicationQuestionController {
 
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
     public ApplicationQuestionController(
             ApplicationResearchCategoryModelPopulator researchCategoryPopulator,
             QuestionModelPopulator questionModelPopulator,
