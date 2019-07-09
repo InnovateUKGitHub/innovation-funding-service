@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -88,7 +89,9 @@ public class AssignQuestionController {
     }
 
     private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {
-        QuestionStatusResource questionStatus = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).get(0);
-        form.setAssignee(questionStatus.getAssignee());
+        List<QuestionStatusResource> statuses = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
+        if(!statuses.isEmpty()) {
+            form.setAssignee(statuses.get(0).getAssignee());
+        }
     }
 }
