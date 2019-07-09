@@ -103,7 +103,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String NON_IFS_QUERY = "SELECT c FROM Competition c " +
             "LEFT JOIN PublicContent pc ON pc.competitionId=c.id " +
             "WHERE c.nonIfs = TRUE " +
-            "ORDER BY pc.publishDate";
+            "ORDER BY pc.publishDate DESC NULLS FIRST";
 
     String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 
