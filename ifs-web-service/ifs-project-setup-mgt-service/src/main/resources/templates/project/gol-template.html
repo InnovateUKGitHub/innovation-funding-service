@@ -330,19 +330,73 @@
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
-                    <tr th:each="(otherCost, iteration : ${model.industrialFinanceTable.otherCosts})">
-                        <td>
-                            <th:block th:text=${otherCost.getDescription()}></th:block>
-                        </td>
+                    <tr>
+                        <td>Other costs 1</td>
                         <td style="text-align:right;"
-                            th:each="(orgName : ${otherCost.getOrganisations()})"
-                            th:with="value=${otherCost.getCostValuesForOrg(orgName)}">
-                            &pound;<th:block th:text="${#numbers.formatInteger(value, 0, 'DEFAULT')}"></th:block>
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
+                                             th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.industrialFinanceTable.showTotalsColumn}"
-                            th:with="total=${otherCost.getTotal()}">
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs 2</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs 3</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs 4</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs 5</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Other costs WBBA</td>
+                        <td style="text-align:right;"
+                            th:each="(organisation : ${model.industrialFinanceTable.organisations})">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
+                        </td>
+                        <td style="text-align:right;"
+                            th:if="${model.industrialFinanceTable.showTotalsColumn}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
                     <tr>
