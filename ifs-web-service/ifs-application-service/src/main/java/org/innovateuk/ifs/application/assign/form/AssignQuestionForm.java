@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.form;
+package org.innovateuk.ifs.application.assign.form;
 
 import javax.validation.constraints.NotNull;
 

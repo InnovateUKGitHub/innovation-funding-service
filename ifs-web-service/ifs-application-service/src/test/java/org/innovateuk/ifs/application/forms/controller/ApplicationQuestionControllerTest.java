@@ -8,14 +8,12 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.forms.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.forms.viewmodel.AssignQuestionViewModel;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
@@ -24,18 +22,13 @@ import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.origin.AssignQuestionOrigin;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,25 +48,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -147,9 +132,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     @Mock
     private ApplicationResearchCategoryFormPopulator applicationResearchCategoryFormPopulator;
 
-    @Mock
-    private AssignQuestionModelPopulator assignQuestionModelPopulator;
-
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -168,7 +150,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                                                  applicationService,
                                                  userRestService,
                                                  questionService,
-                                                 assignQuestionModelPopulator,
                                                  applicantRestService,
                                                  applicationRedirectionService,
                                                  applicationSaver,
@@ -323,52 +304,5 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals(fileError, bindingResult.getFieldError("formInput[" + formInputId + "]").getCode());
-    }
-
-    @Test
-    public void viewAssign() throws Exception {
-        QuestionResource question = newQuestionResource().build();
-        ApplicationResource applicationResource = newApplicationResource()
-                .withName("Super imaginative application name")
-                .build();
-        UserResource user = newUserResource().build();
-        QuestionStatusResource questionStatus = newQuestionStatusResource().withAssignee(user.getId()).build();
-        String originQuery = "OVERVIEW";
-
-        AssignQuestionViewModel model = new AssignQuestionViewModel(applicationResource,
-                                                                    emptyList(),
-                                                                    question,
-                                                                    originQuery,
-                                                                    AssignQuestionOrigin.OVERVIEW);
-
-        when(questionService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId()))
-                .thenReturn(singletonList(questionStatus));
-        when(assignQuestionModelPopulator.populateModel(question.getId(), applicationResource.getId(), originQuery)).thenReturn(model);
-
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", applicationResource.getId(), question.getId()))
-                .andExpect(status().isOk());
-
-        verify(questionService).findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId());
-        verify(assignQuestionModelPopulator).populateModel(question.getId(), applicationResource.getId(), originQuery);
-    }
-
-    @Test
-    public void assignQuestion() throws Exception {
-
-        QuestionResource question = newQuestionResource().build();
-        ApplicationResource application = newApplicationResource().build();
-        ProcessRoleResource processRole = newProcessRoleResource().build();
-        UserResource user = newUserResource().build();
-        setLoggedInUser(user);
-        long assigneeId = 123L;
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
-        when(questionService.assign(question.getId(), application.getId(), assigneeId, processRole.getId())).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", application.getId(), question.getId())
-                                .param("assignee", valueOf(assigneeId)))
-                .andExpect(status().is3xxRedirection());
-
-        verify(userRestService).findProcessRole(user.getId(), application.getId());
-        verify(questionService).assign(question.getId(), application.getId(), assigneeId, processRole.getId());
     }
 }

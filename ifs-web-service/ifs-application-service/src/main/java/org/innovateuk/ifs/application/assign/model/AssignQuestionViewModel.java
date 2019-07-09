@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.viewmodel;
+package org.innovateuk.ifs.application.assign.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;

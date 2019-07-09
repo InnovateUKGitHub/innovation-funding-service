@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.form.AssignQuestionForm;
-import org.innovateuk.ifs.application.forms.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
@@ -19,11 +17,9 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.origin.AssignQuestionOrigin;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -44,11 +40,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
+
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -86,8 +81,6 @@ public class ApplicationQuestionController {
 
     private ApplicationQuestionSaver applicationSaver;
 
-    private AssignQuestionModelPopulator assignQuestionModelPopulator;
-
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
@@ -99,7 +92,6 @@ public class ApplicationQuestionController {
             ApplicationService applicationService,
             UserRestService userRestService,
             QuestionService questionService,
-            AssignQuestionModelPopulator assignQuestionModelPopulator,
             ApplicantRestService applicantRestService,
             ApplicationRedirectionService applicationRedirectionService,
             ApplicationQuestionSaver applicationSaver,
@@ -112,7 +104,6 @@ public class ApplicationQuestionController {
         this.applicationService = applicationService;
         this.userRestService = userRestService;
         this.questionService = questionService;
-        this.assignQuestionModelPopulator = assignQuestionModelPopulator;
         this.applicantRestService = applicantRestService;
         this.applicationRedirectionService = applicationRedirectionService;
         this.applicationSaver = applicationSaver;
@@ -156,7 +147,7 @@ public class ApplicationQuestionController {
         return viewQuestion(user, applicationId, questionId, model, form, markAsComplete, queryParams);
     }
 
-    @ZeroDowntime(description = "remove references to assign", reference = "IFS-TODO")
+    @ZeroDowntime(description = "remove references to assign", reference = "IFS-6123")
     @PostMapping(value = {
             QUESTION_URL + "{" + QUESTION_ID + "}",
             QUESTION_URL + "edit/{" + QUESTION_ID + "}"
@@ -205,51 +196,6 @@ public class ApplicationQuestionController {
             questionService.assignQuestion(applicationId, user, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
-    }
-
-    @GetMapping("/question/{questionId}/assign")
-    public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
-                                @PathVariable("questionId") long questionId,
-                                @PathVariable("applicationId") long applicationId,
-                                @RequestParam("origin") String origin,
-                                Model model) {
-        populateAssigneeForm(questionId, applicationId, form);
-        return doViewAssignPage(model, questionId, applicationId, origin);
-    }
-
-    @PostMapping("/question/{questionId}/assign")
-    public String assign(@Valid @ModelAttribute("form") AssignQuestionForm form,
-                         @SuppressWarnings("unused") BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         @PathVariable("questionId") long questionId,
-                         @PathVariable ("applicationId") long applicationId,
-                         @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
-                         Model model,
-                         UserResource loggedInUser) {
-        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, origin);
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
-
-            return validationHandler.addAnyErrors(assignResult)
-                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, origin));
-        });
-    }
-
-    private String doViewAssignPage(Model model, long questionId, long applicationId, String origin) {
-
-        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId, origin));
-        return "application/questions/assign-question";
-    }
-
-    private String redirectToRelevantPage(long applicationId, long questionId, String origin) {
-        AssignQuestionOrigin questionOrigin  = AssignQuestionOrigin.valueOf(origin);
-        return "redirect:" + questionOrigin.getOriginUrl();
-    }
-
-    private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {
-        QuestionStatusResource questionStatus = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).get(0);
-        form.setAssignee(questionStatus.getAssignee());
     }
 
     private ValidationMessages checkErrorsInFormAndSave(ApplicationForm form,

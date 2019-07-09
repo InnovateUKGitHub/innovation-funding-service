@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.forms.populator;
+package org.innovateuk.ifs.application.assign.populator;
 
-import org.innovateuk.ifs.application.forms.viewmodel.AssignQuestionViewModel;
+import org.innovateuk.ifs.application.assign.model.AssignQuestionViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
