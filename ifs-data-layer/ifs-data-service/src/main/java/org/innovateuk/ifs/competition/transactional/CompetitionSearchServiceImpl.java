@@ -81,8 +81,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findFeedbackReleasedForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "competition.id")))
-                    : competitionRepository.findFeedbackReleased(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
+                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "competition.id")))
+                    : competitionRepository.findPrevious(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
 
             return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
         });
@@ -237,7 +237,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     private Long getFeedbackReleasedCount() {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
                 (isInnovationLead(user) || isStakeholder(user)) ?
-                        competitionRepository.countFeedbackReleasedForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countFeedbackReleased()
+                        competitionRepository.countPreviousForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countPrevious()
         ).getSuccess();
     }
 }

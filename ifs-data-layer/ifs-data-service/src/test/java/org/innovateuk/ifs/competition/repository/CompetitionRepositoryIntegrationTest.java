@@ -125,8 +125,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals(1, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
         // and will also appear in the Previous competitions list
-        assertEquals(1L, repository.countFeedbackReleased().longValue());
-        assertEquals(1, repository.findFeedbackReleased(PageRequest.of(0, 10)).getTotalElements());
+        assertEquals(1L, repository.countPrevious().longValue());
+        assertEquals(1, repository.findPrevious(PageRequest.of(0, 10)).getTotalElements());
 
         assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
@@ -211,10 +211,10 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals(0L, repository.countProjectSetup().longValue());
         assertEquals(0, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(1L, repository.countFeedbackReleased().longValue());
-        assertEquals(1, repository.findFeedbackReleased(PageRequest.of(0, 10)).getTotalElements());
+        assertEquals(1L, repository.countPrevious().longValue());
+        assertEquals(1, repository.findPrevious(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(compFundedAndInformed.getId().longValue(), repository.findFeedbackReleased(PageRequest.of(0, 10)).getContent().get(0).getId()
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findPrevious(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
     }
 
