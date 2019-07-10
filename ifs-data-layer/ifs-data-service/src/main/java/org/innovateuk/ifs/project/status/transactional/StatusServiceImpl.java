@@ -409,11 +409,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return COMPLETE;
         }
 
-        // any state other than complete should show as pending for inactive projects
-        if(!processState.isActive()) {
-            return PENDING;
-        }
-
         if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
             return PENDING;
         }
@@ -424,7 +419,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
 
         if (project.getOfferSubmittedDate() != null) {
-            return ACTION_REQUIRED;
+            return processState.isActive() ?
+                    ACTION_REQUIRED : PENDING;
         }
 
         return notStartedIfProjectActive(processState);
