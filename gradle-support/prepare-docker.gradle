@@ -16,7 +16,6 @@ if (!dockerTemplateFile.exists()) {
 }
 
 task prepareDockerBaseInput {
-
     dependsOn build
 
     def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
@@ -27,25 +26,28 @@ task prepareDockerBaseInput {
     String uid = System.env.bamboo_gluster_UID ?: "996"
     String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
-    outputs.file files(
+    outputs.files(
             project.file("$inputDir/Dockerfile"),
             project.file("$inputDir/$jarFile")
     )
 
-    copy {
-        into project.file(inputDir)
-        rename 'Dockerfile-template', 'Dockerfile'
-        filter(ReplaceTokens, tokens: ['version': project.properties['version']])
-        filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
-        filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
-        filter(ReplaceTokens, tokens: ['glusterGID': gid])
-        filter(ReplaceTokens, tokens: ['glusterUID': uid])
-        filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
-    }
-    copy {
-        from "$libs/$executableJarFile"
-        into project.file(inputDir)
-        rename(executableJarFile, jarFile)
+    doFirst {
+        copy {
+            from file(dockerDir)
+            into project.file(inputDir)
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+            filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
+            filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
+            filter(ReplaceTokens, tokens: ['glusterGID': gid])
+            filter(ReplaceTokens, tokens: ['glusterUID': uid])
+            filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
+        }
+        copy {
+            from file("$libs/$executableJarFile")
+            into project.file(inputDir)
+            rename(executableJarFile, jarFile)
+        }
     }
 }
 
@@ -56,7 +58,6 @@ task prepareDockerInput {
 
     def currentFilePath = "${rootProject.projectDir}/setup-files/scripts/docker"
     def inputDir = "$project.buildDir/docker"
-
     outputs.files(
             project.file("$inputDir/coscale-monitoring.sh"),
             project.file("$inputDir/newrelic.jar"),
