@@ -5,10 +5,13 @@ if (file(targetBuildFile).exists()) {
 
 apply from: rootProject.file("gradle-support/java.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-//apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
 group 'innovateuk'
 version project.version
+
+bootJar.enabled=false
+jar.enabled=true
 
 apply plugin: 'idea'
 
