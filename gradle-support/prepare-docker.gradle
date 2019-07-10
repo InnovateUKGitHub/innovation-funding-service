@@ -12,8 +12,9 @@ def dockerTemplateFile = project.file("$project.parent.projectDir/docker/Dockerf
 def dockerDir = "$project.parent.projectDir/docker/"
 
 if (!dockerTemplateFile.exists()) {
-    dockerDir = "docker"
+    dockerDir = "docker/"
 }
+
 
 task prepareDockerBaseInput {
     dependsOn build
