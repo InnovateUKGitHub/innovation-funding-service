@@ -225,6 +225,7 @@ ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${CLOSED_COMPETITION}  ${competition_ids['${CLOSED_COMPETITION_NAME}']}
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
+${CLOSED_COMPETITION_NAME2}  Smart monitoring in high-pressure engineering systems
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DB}     ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
