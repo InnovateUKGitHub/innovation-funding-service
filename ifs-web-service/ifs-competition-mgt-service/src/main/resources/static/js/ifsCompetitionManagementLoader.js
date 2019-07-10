@@ -20,7 +20,6 @@ IFS.competitionManagement = {}
 IFS.competitionManagement.loadOrder = {
   common: {
     init: function () {
-      IFS.core.timeoutWarning.init()
       IFS.competitionManagement.various.init()
     },
     finalize: function () {

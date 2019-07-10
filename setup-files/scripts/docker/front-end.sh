@@ -36,11 +36,6 @@ function js-ps() {
     gulp js
     cd -
 }
-function js-ps-mgt() {
-    cd ifs-web-service/ifs-project-setup-mgt-service/src/main/resources/static
-    gulp js
-    cd -
-}
 
 target=$1
 shift
@@ -51,7 +46,6 @@ case "$target" in
         js-core
         js-comp-mgt
         js-ps
-        js-ps-mgt
         js-app
         js-ass
     ;;
@@ -62,7 +56,6 @@ case "$target" in
         js-core
         js-comp-mgt
         js-ps
-        js-ps-mgt
         js-app
         js-ass
     ;;
@@ -71,10 +64,6 @@ case "$target" in
     ;;
     js-ps)
         js-ps
-    ;;
-
-    js-ps-mgt)
-        js-ps-mgt
     ;;
     js-app)
         js-app
@@ -86,6 +75,6 @@ case "$target" in
         js-ass
     ;;
     *)
-        echo $"Usage: $0 {all|css|js|js-core|js-ps|js-ps-mgt|js-comp-mgt|js-app|js-ass}"
+        echo $"Usage: $0 {all|css|js|js-core|js-ps|js-comp-mgt|js-app|js-ass}"
         exit 1
 esac

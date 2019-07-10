@@ -26,7 +26,6 @@ IFS.projectSetup.loadOrder = {
   },
   common: {
     init: function () {
-      IFS.core.timeoutWarning.init()
       IFS.projectSetup.clearInputs.init()
     }
   }

@@ -19,9 +19,6 @@ if (typeof (IFS) === 'undefined') { var IFS = {} } // eslint-disable-line
 IFS.application = {}
 IFS.application.loadOrder = {
   common: {
-    init: function () {
-      IFS.core.timeoutWarning.init()
-    },
     finalize: function () {
       IFS.application.progressiveSelect.init()
     }
