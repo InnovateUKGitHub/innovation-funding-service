@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.viewmodel;
+package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;

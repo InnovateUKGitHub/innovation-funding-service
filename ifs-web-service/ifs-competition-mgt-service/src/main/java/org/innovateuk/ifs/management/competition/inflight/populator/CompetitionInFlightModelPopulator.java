@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.populator;
+package org.innovateuk.ifs.management.competition.inflight.populator;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -6,9 +6,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightViewModel;
-import org.innovateuk.ifs.management.competition.viewmodel.MilestonesRowViewModel;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightViewModel;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.MilestonesRowViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;

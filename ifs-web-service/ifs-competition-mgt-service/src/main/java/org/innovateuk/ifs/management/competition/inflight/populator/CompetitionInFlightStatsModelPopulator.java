@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.management.competition.populator;
+package org.innovateuk.ifs.management.competition.inflight.populator;
 
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

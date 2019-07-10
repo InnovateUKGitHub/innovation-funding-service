@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.viewmodel;
+package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;

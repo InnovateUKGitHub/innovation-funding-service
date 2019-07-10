@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.viewmodel;
+package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
