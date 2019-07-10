@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.data.domain.Page;
@@ -174,4 +175,23 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(FIND_BY_PROJECT)
     Application findByProjectId(@Param("projectId") long projectId);
+
+    @Query("SELECT new org.innovateuk.ifs.application.resource.PreviousApplicationResource(" +
+            "app.id, " +
+            "app.name, " +
+            "lead.name, " +
+            "app.applicationProcess.activityState, " +
+            "app.competition.id " +
+            ") FROM Application app " +
+            " LEFT JOIN Project project " +
+            "   ON project.application.id = app.id " +
+            " JOIN ProcessRole pr" +
+            "   ON pr.applicationId = app.id  " +
+            " JOIN Organisation lead " +
+            "   ON lead.id = pr.organisationId" +
+            " WHERE project.id IS NULL " +
+            " AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+            " AND app.competition.id = :competitionId")
+    List<PreviousApplicationResource> findPrevious(long competitionId);
+
 }

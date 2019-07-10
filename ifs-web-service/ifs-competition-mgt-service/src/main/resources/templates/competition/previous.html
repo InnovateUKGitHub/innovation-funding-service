@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Previous applications - ${model.competitionName}|" />
+</head>
+
+<body class="govuk-template__body wide-page">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous competitions',linkUrl=@{/dashboard/previous}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
+
+        <div class="table-overflow">
+            <table class="govuk-table" id="application-list">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Project title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
+                    <th class="govuk-table__header" scope="col" th:colspan="${model.ifsAdmin ? '2' : '1'}">Status</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="row, iterStat : ${model.applications}">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                    </td>
+                    <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
+                    <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>
+                    <td class="govuk-table__cell" th:text="${#messages.msg('ifs.application.previous.' + row.applicationState.getStateName())}"
+                        th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
+                    <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
+                        <td class="govuk-table__cell alignright cta">
+                            <a
+                                data-js-modal="mark-as-successful-modal"
+                                th:attr="data-modal-form-action=@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
+                                class="button-secondary"
+                                th:href="@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"> Mark as successful
+                            </a>
+                        </td>
+                    </th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
