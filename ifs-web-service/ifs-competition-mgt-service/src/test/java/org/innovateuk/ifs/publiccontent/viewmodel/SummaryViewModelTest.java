@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.viewmodel;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.publiccontent.viewmodel.section.SummaryViewModel;
+import org.innovateuk.ifs.management.publiccontent.viewmodel.section.SummaryViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

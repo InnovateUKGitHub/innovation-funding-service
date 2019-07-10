@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.application.list.viewmodel.ManageApplicationsViewModel;
+import org.innovateuk.ifs.management.assessment.controller.AssessmentApplicationsController;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InjectMocks;

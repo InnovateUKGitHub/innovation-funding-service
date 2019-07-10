@@ -12,6 +12,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
+import org.innovateuk.ifs.management.assessment.controller.InviteAssessorsOverviewController;
 import org.innovateuk.ifs.management.assessor.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionInviteAssessorsOverviewViewModel;

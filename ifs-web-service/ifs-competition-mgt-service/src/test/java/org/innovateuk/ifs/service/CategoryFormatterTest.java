@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.service;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.competition.service.CategoryFormatter;
+import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
 import org.junit.Before;
 import org.junit.Test;
 

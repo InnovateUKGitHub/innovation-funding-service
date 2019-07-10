@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.management.interview.controller.InterviewAssessorSendInviteController;
 import org.innovateuk.ifs.management.invite.form.SendInviteForm;
 import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
 import org.innovateuk.ifs.util.CookieUtil;

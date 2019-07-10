@@ -5,11 +5,12 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.service.PublicContentService;
+import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.management.publiccontent.controller.AbstractContentGroupController;
+import org.innovateuk.ifs.management.publiccontent.formpopulator.PublicContentFormPopulator;
+import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentViewModelPopulator;
+import org.innovateuk.ifs.management.publiccontent.saver.PublicContentFormSaver;
+import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.stereotype.Controller;
@@ -114,7 +115,7 @@ public class AbstractContentGroupControllerTest extends BaseControllerMockMVCTes
     @Controller
     @RequestMapping("/competition/setup/public-content/test-content-group")
     public class TestContentGroupController extends AbstractContentGroupController<TestPublicContentViewModel,
-            TestPublicContentForm> {
+                TestPublicContentForm> {
 
         @Override
         protected PublicContentSectionType getType() {

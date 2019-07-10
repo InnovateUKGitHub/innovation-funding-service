@@ -12,9 +12,9 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestServ
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;

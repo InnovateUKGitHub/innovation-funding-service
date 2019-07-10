@@ -5,10 +5,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
-import org.innovateuk.ifs.registration.form.MonitoringOfficerRegistrationForm;
-import org.innovateuk.ifs.registration.populator.MonitoringOfficerRegistrationModelPopulator;
-import org.innovateuk.ifs.registration.service.MonitoringOfficerService;
-import org.innovateuk.ifs.registration.viewmodel.MonitoringOfficerRegistrationViewModel;
+import org.innovateuk.ifs.management.registration.controller.MonitoringOfficerRegistrationController;
+import org.innovateuk.ifs.management.registration.form.MonitoringOfficerRegistrationForm;
+import org.innovateuk.ifs.management.registration.populator.MonitoringOfficerRegistrationModelPopulator;
+import org.innovateuk.ifs.management.registration.service.MonitoringOfficerService;
+import org.innovateuk.ifs.management.registration.viewmodel.MonitoringOfficerRegistrationViewModel;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +17,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;

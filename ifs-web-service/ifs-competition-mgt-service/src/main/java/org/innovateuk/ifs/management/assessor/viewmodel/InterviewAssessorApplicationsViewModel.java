@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
-import org.innovateuk.ifs.interview.model.InterviewAllocatedApplicationRowViewModel;
+import org.innovateuk.ifs.management.interview.model.InterviewAllocatedApplicationRowViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;

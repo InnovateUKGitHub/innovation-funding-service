@@ -4,10 +4,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
-import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
-import org.innovateuk.ifs.publiccontent.saver.AbstractContentGroupFormSaver;
-import org.innovateuk.ifs.publiccontent.service.PublicContentService;
+import org.innovateuk.ifs.management.publiccontent.saver.AbstractPublicContentFormSaver;
+import org.innovateuk.ifs.management.publiccontent.form.AbstractContentGroupForm;
+import org.innovateuk.ifs.management.publiccontent.form.ContentGroupForm;
+import org.innovateuk.ifs.management.publiccontent.saver.AbstractContentGroupFormSaver;
+import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests for abstract form savers in public content.
- * {@link org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver} {@link org.innovateuk.ifs.publiccontent.saver.AbstractContentGroupFormSaver}
+ * {@link AbstractPublicContentFormSaver} {@link AbstractContentGroupFormSaver}
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractPublicContentFormSaverTest {

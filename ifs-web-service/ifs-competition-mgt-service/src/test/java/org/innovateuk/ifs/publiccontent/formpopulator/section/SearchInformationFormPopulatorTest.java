@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.publiccontent.formpopulator.section;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.publiccontent.form.section.SearchInformationForm;
+import org.innovateuk.ifs.management.publiccontent.form.section.SearchInformationForm;
+import org.innovateuk.ifs.management.publiccontent.formpopulator.section.SearchInformationFormPopulator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

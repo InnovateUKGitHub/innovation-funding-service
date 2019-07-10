@@ -2,7 +2,8 @@ package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
-import org.innovateuk.ifs.eu.viewmodel.EuInviteViewModel;
+import org.innovateuk.ifs.management.eu.controller.EuInviteController;
+import org.innovateuk.ifs.management.eu.viewmodel.EuInviteViewModel;
 import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.junit.Test;

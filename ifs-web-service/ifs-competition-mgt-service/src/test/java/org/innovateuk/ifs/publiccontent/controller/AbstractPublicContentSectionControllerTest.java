@@ -5,11 +5,12 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.service.PublicContentService;
+import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.management.publiccontent.controller.AbstractPublicContentSectionController;
+import org.innovateuk.ifs.management.publiccontent.formpopulator.PublicContentFormPopulator;
+import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentViewModelPopulator;
+import org.innovateuk.ifs.management.publiccontent.saver.PublicContentFormSaver;
+import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.stereotype.Controller;

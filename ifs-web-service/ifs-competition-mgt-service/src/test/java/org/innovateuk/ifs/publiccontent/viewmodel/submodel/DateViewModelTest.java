@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.viewmodel.submodel;
 
-import org.innovateuk.ifs.publiccontent.viewmodel.DatesViewModel;
+import org.innovateuk.ifs.management.publiccontent.viewmodel.DatesViewModel;
+import org.innovateuk.ifs.management.publiccontent.viewmodel.submodel.DateViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

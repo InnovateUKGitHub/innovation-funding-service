@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.assessment.controller.AssessmentAssessorsController;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;

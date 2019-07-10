@@ -5,8 +5,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.publiccontent.service.PublicContentService;
-import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
+import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentMenuPopulator;
+import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
+import org.innovateuk.ifs.management.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

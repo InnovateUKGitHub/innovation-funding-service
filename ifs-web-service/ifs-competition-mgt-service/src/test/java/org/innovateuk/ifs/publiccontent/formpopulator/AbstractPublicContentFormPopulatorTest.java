@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.publiccontent.formpopulator;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.*;
-import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
+import org.innovateuk.ifs.management.publiccontent.form.AbstractContentGroupForm;
+import org.innovateuk.ifs.management.publiccontent.formpopulator.AbstractContentGroupFormPopulator;
+import org.innovateuk.ifs.management.publiccontent.formpopulator.AbstractPublicContentFormPopulator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

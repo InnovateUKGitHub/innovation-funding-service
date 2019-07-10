@@ -7,8 +7,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.publiccontent.modelpopulator.section.SummaryViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.viewmodel.section.SummaryViewModel;
+import org.innovateuk.ifs.management.publiccontent.modelpopulator.section.SummaryViewModelPopulator;
+import org.innovateuk.ifs.management.publiccontent.viewmodel.section.SummaryViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

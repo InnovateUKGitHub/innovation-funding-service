@@ -11,6 +11,7 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.assessment.controller.AssessmentAssessorProgressController;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;

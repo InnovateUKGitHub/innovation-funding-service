@@ -11,6 +11,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.management.assessment.controller.InviteAssessorsController;
 import org.innovateuk.ifs.management.assessor.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.assessor.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
