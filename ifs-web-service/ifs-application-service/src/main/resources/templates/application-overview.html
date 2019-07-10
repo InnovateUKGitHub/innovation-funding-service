@@ -81,7 +81,7 @@
                             <th:block th:unless="${row.complete}">
                                 <!-- /* Assigned to */-->
                                 <div th:if="${row.assignable}"
-                                     th:with="rowModel=${row.assignButtonsViewModel.get()}, assignee=${rowModel.assignedToCurrentUser ? 'you' : rowModel.assignee.userName}"
+                                     th:with="rowModel=${row.assignButtonsViewModel.get()}, assignee=${rowModel.assignedToCurrentUser ? 'you' : rowModel.assigneeUserName}"
                                      class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">

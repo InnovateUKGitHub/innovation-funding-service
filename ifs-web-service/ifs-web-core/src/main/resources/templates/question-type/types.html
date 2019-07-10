@@ -33,7 +33,7 @@
     <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? govuk-form-group--error">
 
         <th:block th:unless="${model.complete or model.closed or model.summary}"
-                  th:with="assignee=${model.assignButtonsViewModel.assignedToCurrentUser ? 'you' : model.assignButtonsViewModel.assignee.userName}">
+                  th:with="assignee=${model.assignButtonsViewModel.assignedToCurrentUser ? 'you' : model.assignButtonsViewModel.assigneeUserName}">
             <div class="assigned-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">This question is assigned to
                     <th:block th:text="${assignee}"/>.
