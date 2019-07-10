@@ -77,11 +77,9 @@
                             <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/details(id=${model.projectId})}"
                                class="govuk-link">Project details</a>
-                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}"
-                               class="govuk-link">Project
-                                details</a>
-                            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
-                                details
+                            <a th:if="${model.projectComplete}"  th:href="@{/project/{id}/readonly(id=${model.projectId})}"
+                               class="govuk-link">Project details</a>
+                            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project details
                             </th:block>
                         </h2>
                         <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the proposed start date and
