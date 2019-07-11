@@ -77,6 +77,7 @@ gulp_default {
     inputs.dir file("${projectDir}/ifs-assessment-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-competition-mgt-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-front-door-service/src/main/resources/static")
+    inputs.dir file("${projectDir}/ifs-project-setup-mgt-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-project-setup-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-web-core/src/main/resources/static")
 
@@ -84,6 +85,7 @@ gulp_default {
     outputs.dir file("${projectDir}/ifs-assessment-service/build/resources/main/static")
     outputs.dir file("${projectDir}/ifs-competition-mgt-service/build/resources/main/static")
     outputs.dir file("${projectDir}/ifs-front-door-service/build/resources/main/static")
+    outputs.dir file("${projectDir}/ifs-project-setup-mgt-service/build/resources/main/static")
     outputs.dir file("${projectDir}/ifs-project-setup-service/build/resources/main/static")
     outputs.dir file("${projectDir}/ifs-web-core/build/resources/main/static")
 }
