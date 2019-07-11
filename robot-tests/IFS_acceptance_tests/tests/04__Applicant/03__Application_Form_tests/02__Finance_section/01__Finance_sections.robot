@@ -34,13 +34,13 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'org2'")
-    And the user should see the element     jQuery = label:contains("'org2' Total project costs")
+    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'Adaptive Optics'")
+    And the user should see the element     jQuery = label:contains("'Adaptive Optics' Total project costs")
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
+    [Setup]  the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
     Given the user clicks the button/link   link = Your project costs
     When the user clicks the button/link    jQuery = button:contains("Labour")
     And the user clicks the button/link     css = .govuk-details summary
@@ -54,7 +54,7 @@ Working days per year should be 232
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
+    [Setup]  the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
     And The user clicks the button/link     link = Your finances
@@ -135,8 +135,8 @@ Applicant chooses Calculate overheads option
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create new application if there is not one already  Robot test application
-    Applicant navigates to the finances of the Robot application
+    the user logs-in in new browser  	karen.smith@load.example.com  Passw0rd
+    the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
 
 the user adds three material rows
     the user expands the section          Materials
@@ -148,7 +148,6 @@ the user adds three material rows
     the user clicks the button/link       css = #collapsible-2 > div > div.govuk-form-group.table-overflow > p > button
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
-
 
 the user removes the materials rows
     [Documentation]    INFUND-2965

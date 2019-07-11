@@ -8,6 +8,7 @@ ${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-co
 the user should see all the Your-Finances Sections
     the user should see the element  link = Your project costs
     the user should see the element  link = Your organisation
+    the user should see the element  link = Your project location
     the user should see the element  jQuery = h3:contains("Your funding")
     the user should see the element  jQuery = h2:contains("Finance summary")
 

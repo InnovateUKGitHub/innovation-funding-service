@@ -7,7 +7,7 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Custom Suite Setup
-Suite Teardown    Custom suite teardown
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -16,20 +16,23 @@ Resource          ../../Applicant_Commons.robot
 Before org size is selected, your funding link is not available
     [Documentation]    INFUND-6394  IFS-3938
     [Tags]  HappyPath
-    Given applicant navigates to the finances of the robot application
+    Given the user navigates to Your-finances page  Optimising engine output
     When the user clicks the button/link        link = Your funding
     Then the user should see the element        jQuery = li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]  HappyPath
-    Given applicant navigates to the finances of the robot application
+    Given the user navigates to Your-finances page  Optimising engine output
     And the user clicks the button/link         link = Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
+    [Teardown]  the user clicks the button/link  link = Application overview
 
 Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]  HappyPath
+    Given the user selects Research category         Feasibility studies
+    And the user navigates to Your-finances page     Optimising engine output
     When the user clicks the button/link             link = Your funding
     Then The user should see the element             jQuery = legend:contains("Are you requesting funding?")
 
@@ -123,9 +126,7 @@ Funding section can be completed with under 50%
 
 *** Keywords ***
 Custom Suite Setup
-    Connect to database  @{database}
-    Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    the user logs-in in new browser  	david.wellington@load.example.com  Passw0rd
 
 The user marks their organisation as
     [Arguments]    ${org_size}
@@ -160,6 +161,3 @@ the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link = Your funding
     the user clicks the button/link    jQuery = button:contains("Edit")
 
-Custom suite teardown
-    Mark application details as incomplete and the user closes the browser  Robot test application
-    Disconnect from database
