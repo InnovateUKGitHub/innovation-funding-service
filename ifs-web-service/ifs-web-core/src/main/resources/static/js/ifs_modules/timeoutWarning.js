@@ -1,4 +1,3 @@
-console.log('Loaded')
 IFS.core.timeoutWarning = (function () {
   'use strict'
   var s // private alias to settings
@@ -9,7 +8,7 @@ IFS.core.timeoutWarning = (function () {
   return {
     settings: {
       sessionTimeoutLength: 8, // in hours
-      sessionWarningLength: 1, // in minutes 5
+      sessionWarningLength: 5, // in minutes
       inactivityTimeoutLength: 60, // in minutes
       inactivityWarningLength: 5, // in minutes
       cancelTimeout: '[data-stay-signed-in]'
@@ -17,10 +16,8 @@ IFS.core.timeoutWarning = (function () {
     init: function () {
       s = this.settings
       var domain = IFS.core.timeoutWarning.getDomain()
-      console.log(Cookies.get('CSRF-TOKEN'))
       if (Cookies.get('CSRF-TOKEN')) {
         // we are logged in so start the inactivity timer
-        console.log('Logged in')
         inactivityCountdown = (s.inactivityTimeoutLength - s.inactivityWarningLength) * 60000 // minutes * milliseconds
         IFS.core.timeoutWarning.startInactivityTimer()
         jQuery('body').on('click', s.cancelTimeout, function () {
@@ -29,35 +26,26 @@ IFS.core.timeoutWarning = (function () {
         })
         if (Cookies.get('SESSION-TIMEOUT')) {
           // we have a session timeout cookie, start the timer
-          console.log('Session cookie')
-          console.log(Cookies.get('SESSION-TIMEOUT'))
           IFS.core.timeoutWarning.startSessionTimer()
         } else {
-          console.log('No session cookie')
           // its the first time on a logged in page so set session timeout cookie
           var date = new Date()
           date.setHours(date.getHours() + s.sessionTimeoutLength)
-          console.log(date)
-          console.log(domain)
           Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain })
           // and start the session timer
           IFS.core.timeoutWarning.startSessionTimer()
         }
       } else {
-        console.log('Logged out')
         // logged out so delete the session timeout cookie
-        console.log(Cookies.get('SESSION-TIMEOUT'))
         Cookies.remove('SESSION-TIMEOUT', { path: '/', domain: domain })
       }
     },
     startSessionTimer: function () {
-      console.log('Start countdown')
       // start session countdown
       var sessionTimeout = new Date(Cookies.get('SESSION-TIMEOUT'))
       var now = new Date()
       var difference = sessionTimeout.getTime() - now.getTime()
       var differenceInMinutes = Math.round(difference / 60000)
-      console.log(differenceInMinutes)
       sessionCountdown = (differenceInMinutes - s.sessionWarningLength) * 60000 // minutes * milliseconds
       clearTimeout(sessionTimer)
       sessionTimer = setTimeout(function () {
@@ -87,7 +75,6 @@ IFS.core.timeoutWarning = (function () {
       jQuery.ajaxProtected({
         url: '/',
         success: function () {
-          console.log('Ajax done')
           IFS.core.timeoutWarning.closeModal()
         }})
     },
@@ -101,10 +88,8 @@ IFS.core.timeoutWarning = (function () {
         var domain = subDomains.slice(-2)
         return domain[0] + '.' + domain[1]
       } else {
-        return host
+        return host // this for local development
       }
-      // ifs-uat.apps.org-env-0.org.innovateuk.ukri.org
-      // auth-ifs-uat.apps.org-env-0.org.innovateuk.ukri.org
     }
   }
 })()
