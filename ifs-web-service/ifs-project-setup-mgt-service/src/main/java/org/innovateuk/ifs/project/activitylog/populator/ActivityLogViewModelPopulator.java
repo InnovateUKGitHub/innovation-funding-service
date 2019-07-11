@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -128,27 +127,38 @@ public class ActivityLogViewModelPopulator {
     }
 
     private String userText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
-        if (log.getCreatedByRoles().stream().anyMatch(role -> Role.internalRoles().contains(role))) {
-            String role = log.getCreatedByRoles().contains(IFS_ADMINISTRATOR) ? IFS_ADMINISTRATOR.getDisplayName()
-                    : log.getCreatedByRoles().iterator().next().getDisplayName();
-            return log.getCreatedByName() + ", " + role;
+        if (log.isInternalUser()) {
+            return internalUserText(log);
         } else {
-            Supplier<Stream<ProjectUserResource>> projectUsers = () -> projectUserResources
-                    .stream()
-                    .filter(pu -> pu.getUser().equals(log.getCreatedBy()));
-            String organisationName = projectUsers.get()
-                    .findAny()
-                    .flatMap(pu -> partnerOrganisationResources.stream()
-                            .filter(po -> po.getOrganisation().equals(pu.getOrganisation()))
-                            .findAny())
-                    .map(PartnerOrganisationResource::getOrganisationName)
-                    .orElse(null);
-            String role = projectUsers.get().anyMatch(pu -> pu.getRole().equals(PROJECT_MANAGER.getId())) ? "Project manager"
-                    : projectUsers.get().anyMatch(pu -> pu.getRole().equals(FINANCE_CONTACT.getId())) ? "Finance contact"
-                    : "Partner";
-            return format("%s, %s for %s", log.getCreatedByName(), role, organisationName);
+            return externalUserText(log, projectUserResources, partnerOrganisationResources);
         }
     }
 
+    private String internalUserText(ActivityLogResource log) {
+        String role = log.isIfsAdmin() ? IFS_ADMINISTRATOR.getDisplayName()
+                : log.getCreatedByRoles().iterator().next().getDisplayName();
+        return log.getCreatedByName() + ", " + role;
+    }
+
+    private String externalUserText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
+        Supplier<Stream<ProjectUserResource>> projectUsers = () -> projectUserResources
+                .stream()
+                .filter(pu -> pu.getUser().equals(log.getCreatedBy()));
+        String organisationName = organisationNameOfProjectUser(projectUsers, partnerOrganisationResources);
+        String role = projectUsers.get().anyMatch(ProjectUserResource::isProjectManager) ? "Project manager"
+                : projectUsers.get().anyMatch(ProjectUserResource::isFinanceContact) ? "Finance contact"
+                : "Partner";
+        return format("%s, %s for %s", log.getCreatedByName(), role, organisationName);
+    }
+
+    private String organisationNameOfProjectUser(Supplier<Stream<ProjectUserResource>> projectUsers, List<PartnerOrganisationResource> partnerOrganisationResources) {
+        projectUsers.get()
+                .findAny()
+                .flatMap(pu -> partnerOrganisationResources.stream()
+                        .filter(po -> po.getOrganisation().equals(pu.getOrganisation()))
+                        .findAny())
+                .map(PartnerOrganisationResource::getOrganisationName)
+                .orElse(null);
+    }
 
 }

@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.activitylog.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
+
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 public class ActivityLogResource {
 
@@ -80,6 +83,16 @@ public class ActivityLogResource {
 
     public FinanceChecksSectionType getQueryType() {
         return queryType;
+    }
+
+    @JsonIgnore
+    public boolean isInternalUser() {
+        return getCreatedByRoles().stream().anyMatch(role -> Role.internalRoles().contains(role));
+    }
+
+    @JsonIgnore
+    public boolean isIfsAdmin() {
+        return getCreatedByRoles().contains(IFS_ADMINISTRATOR);
     }
 
 }

@@ -199,18 +199,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
-
-        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
-                failure -> createProjectFromApplicationId(applicationId).andOnSuccessReturn(project -> {
-                    activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
-                    return project;
-                }),
-                ServiceResult::serviceSuccess
-        );
-    }
-
-    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId);
+        Optional<ProjectResource> existingProject = getByApplicationId(applicationId).getOptionalSuccessObject();
+        if (existingProject.isPresent()) {
+            return serviceSuccess(existingProject.get());
+        }
+        return createProjectFromApplicationId(applicationId).andOnSuccessReturn(project -> {
+            activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+            return project;
+        });
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
