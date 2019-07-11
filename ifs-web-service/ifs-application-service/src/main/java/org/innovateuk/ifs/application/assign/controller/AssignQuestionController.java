@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.origin.AssignQuestionOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
@@ -38,14 +40,18 @@ public class AssignQuestionController {
 
     private AssignQuestionModelPopulator assignQuestionModelPopulator;
 
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     public AssignQuestionController(
             UserRestService userRestService,
             QuestionService questionService,
-            AssignQuestionModelPopulator assignQuestionModelPopulator
+            AssignQuestionModelPopulator assignQuestionModelPopulator,
+            CookieFlashMessageFilter cookieFlashMessageFilter
     ) {
         this.userRestService = userRestService;
         this.questionService = questionService;
         this.assignQuestionModelPopulator = assignQuestionModelPopulator;
+        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
 
     @GetMapping("/question/{questionId}/assign")
@@ -65,6 +71,7 @@ public class AssignQuestionController {
                          @PathVariable("questionId") long questionId,
                          @PathVariable ("applicationId") long applicationId,
                          @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
+                         HttpServletResponse response,
                          Model model,
                          UserResource loggedInUser) {
         Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, origin);
@@ -73,7 +80,7 @@ public class AssignQuestionController {
             ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
 
             return validationHandler.addAnyErrors(assignResult)
-                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, origin));
+                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, origin, response));
         });
     }
 
@@ -83,7 +90,8 @@ public class AssignQuestionController {
         return "application/questions/assign-question";
     }
 
-    private String redirectToRelevantPage(long applicationId, long questionId, String origin) {
+    private String redirectToRelevantPage(long applicationId, long questionId, String origin, HttpServletResponse response) {
+        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         AssignQuestionOrigin questionOrigin  = AssignQuestionOrigin.valueOf(origin);
         return "redirect:" + questionOrigin.getOriginUrl();
     }
