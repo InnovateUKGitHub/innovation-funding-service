@@ -36,7 +36,7 @@ public class ApplicationDetailsViewModelPopulator {
             removeNotifications(question);
         }
 
-        return new ApplicationDetailsViewModel(question, viewModel, navigationViewModel, viewModel.isReadonly(), null, false);
+        return new ApplicationDetailsViewModel(question, viewModel, navigationViewModel);
     }
 
     private ApplicationDetailsInputViewModel getViewModel(ApplicantQuestionResource question) {

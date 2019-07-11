@@ -16,21 +16,14 @@ public class ApplicationDetailsViewModel {
     protected NavigationViewModel navigationViewModel;
     private ApplicationDetailsInputViewModel formInputViewModel;
     private boolean allReadOnly;
-    private Long applicantOrganisationId;
-    private boolean readOnlyAllApplicantApplicationFinances;
 
     public ApplicationDetailsViewModel(ApplicantQuestionResource applicantResource,
                                        ApplicationDetailsInputViewModel formInputViewModel,
-                                       NavigationViewModel navigationViewModel,
-                                       boolean allReadOnly,
-                                       Long applicantOrganisationId,
-                                       boolean readOnlyAllApplicantApplicationFinances) {
+                                       NavigationViewModel navigationViewModel) {
         this.applicantResource = applicantResource;
         this.formInputViewModel = formInputViewModel;
         this.navigationViewModel = navigationViewModel;
-        this.allReadOnly = allReadOnly;
-        this.applicantOrganisationId = applicantOrganisationId;
-        this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances;
+        this.allReadOnly = formInputViewModel.isReadonly();
     }
 
     public NavigationViewModel getNavigation() {
@@ -92,16 +85,5 @@ public class ApplicationDetailsViewModel {
     }
 
     public ApplicantResource getCurrentApplicant() { return applicantResource.getCurrentApplicant(); }
-
-    public Long getApplicantOrganisationId() {
-        return applicantOrganisationId;
-    }
-
-    public void setApplicantOrganisationId(Long applicantOrganisationId) { this.applicantOrganisationId = applicantOrganisationId; }
-
-    public boolean isReadOnlyAllApplicantApplicationFinances() { return readOnlyAllApplicantApplicationFinances; }
-
-    public void  setReadOnlyAllApplicantApplicationFinances(boolean readOnlyAllApplicantApplicationFinances) { this.readOnlyAllApplicantApplicationFinances = readOnlyAllApplicantApplicationFinances; }
-
 
 }
