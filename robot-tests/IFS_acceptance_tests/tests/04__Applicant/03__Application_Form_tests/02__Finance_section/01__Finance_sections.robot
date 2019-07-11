@@ -21,7 +21,7 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
-${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
+${applicationName}  Climate science the history of Greenland's ice
 # ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
@@ -124,7 +124,7 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page           ${applicationName}
-    Then the user fills in the project costs                Calculate  185,997
+    Then the user fills in the project costs                Calculate  251,684
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link = Your project costs
     Then the user should see the element                    link = ${excel_file}
