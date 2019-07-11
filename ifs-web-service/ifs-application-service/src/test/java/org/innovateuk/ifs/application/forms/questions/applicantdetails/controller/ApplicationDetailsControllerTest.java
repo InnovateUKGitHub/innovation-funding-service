@@ -74,7 +74,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         mockMvc.perform(
                 get("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId))
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
 
@@ -129,7 +129,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
 
@@ -159,7 +159,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
@@ -195,7 +195,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
@@ -227,7 +227,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populateViewModel(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
         when(questionStatusRestService.markAsInComplete(anyLong(), anyLong(), anyLong())).thenReturn(restSuccess());
 

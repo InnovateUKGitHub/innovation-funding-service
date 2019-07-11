@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -30,14 +29,14 @@ public class ApplicationDetailsViewModelPopulator {
     @Autowired
     private QuestionService questionService;
 
-    public ApplicationDetailsViewModel populateViewModel(ApplicantQuestionResource question) {
+    public ApplicationDetailsViewModel populate(ApplicantQuestionResource question) {
         ApplicationDetailsInputViewModel viewModel = getViewModel(question);
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
         if (!isApplicationInViewMode(question.getApplication(), question.getCurrentApplicant().getOrganisation())) {
             removeNotifications(question);
         }
 
-        return new ApplicationDetailsViewModel(question, singletonList(viewModel), navigationViewModel, viewModel.isReadonly(), Optional.empty(), false);
+        return new ApplicationDetailsViewModel(question, viewModel, navigationViewModel, viewModel.isReadonly(), null, false);
     }
 
     private ApplicationDetailsInputViewModel getViewModel(ApplicantQuestionResource question) {

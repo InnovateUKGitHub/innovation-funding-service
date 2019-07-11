@@ -35,9 +35,7 @@
 
         <th:block th:if="${model.isQuestion()}">
             <th:block th:with="question=${model.applicantResource.question}">
-                    <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
-                        <th:block th:insert="fragments/forms/application-details-form :: application_details(${formInputViewModel})" />
-                    </th:block>
+                 <th:block th:insert="fragments/forms/application-details-form :: application_details(${model.formInputViewModel})" />
             </th:block>
         </th:block>
 

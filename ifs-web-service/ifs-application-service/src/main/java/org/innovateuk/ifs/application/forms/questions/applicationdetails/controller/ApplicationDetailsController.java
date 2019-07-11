@@ -67,7 +67,7 @@ public class ApplicationDetailsController {
                               UserResource user) {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), user.hasRole(SUPPORT));
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populateViewModel(question);
+        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question);
         if (form.isEmpty()){
             form.populateForm(viewModel.getApplication());
         }
