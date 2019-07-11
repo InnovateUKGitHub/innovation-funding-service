@@ -52,7 +52,7 @@ public class ActivityLogViewModelPopulator {
             PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
 
     private static final Set<ActivityType> COMP_ADMIN_TYPES = Sets.union(STAKEHOLDER_INNOVATION_SUPPORT_TYPES,
-                EnumSet.of(DOCUMENT_UPLOADED, DOCUMENT_REJECTED, SPEND_PROFILE_GENERATED, GRANT_OFFER_LETTER_UPLOADED, GRANT_OFFER_LETTER_PUBLISHED, GRANT_OFFER_LETTER_SIGNED, GRANT_OFFER_LETTER_REJECTED)
+            EnumSet.of(DOCUMENT_UPLOADED, DOCUMENT_REJECTED, SPEND_PROFILE_GENERATED, GRANT_OFFER_LETTER_UPLOADED, GRANT_OFFER_LETTER_PUBLISHED, GRANT_OFFER_LETTER_SIGNED, GRANT_OFFER_LETTER_REJECTED)
     );
 
     public ActivityLogViewModel populate(long projectId, UserResource user) {
@@ -62,16 +62,16 @@ public class ActivityLogViewModelPopulator {
         List<ActivityLogResource> activities = activityLogRestService.findByApplicationId(project.getApplication()).getSuccess();
 
         List<ActivityLogEntryViewModel> views = activities.stream()
-                  .map(activity -> new ActivityLogEntryViewModel(
-                            title(activity),
-                             activity.getOrganisationName(),
-                             userText(activity, projectUserResources, partnerOrganisationResources),
-                             activity.getCreatedOn(),
-                             linkText(activity),
-                             url(activity, project),
-                             userCanSeeLink(activity, user)
-                  ))
-                  .collect(toList());
+                .map(activity -> new ActivityLogEntryViewModel(
+                        title(activity),
+                        activity.getOrganisationName(),
+                        userText(activity, projectUserResources, partnerOrganisationResources),
+                        activity.getCreatedOn(),
+                        linkText(activity),
+                        url(activity, project),
+                        userCanSeeLink(activity, user)
+                ))
+                .collect(toList());
 
         return new ActivityLogViewModel(
                 project.getCompetition(),
@@ -80,10 +80,10 @@ public class ActivityLogViewModelPopulator {
                 project.getName(),
                 project.getCompetitionName(),
                 partnerOrganisationResources.stream()
-                    .filter(PartnerOrganisationResource::isLeadOrganisation)
-                    .findFirst()
-                    .map(PartnerOrganisationResource::getOrganisationName)
-                    .orElse(""),
+                        .filter(PartnerOrganisationResource::isLeadOrganisation)
+                        .findFirst()
+                        .map(PartnerOrganisationResource::getOrganisationName)
+                        .orElse(""),
                 partnerOrganisationResources.stream()
                         .filter(negate(PartnerOrganisationResource::isLeadOrganisation))
                         .map(PartnerOrganisationResource::getOrganisationName)
@@ -118,8 +118,8 @@ public class ActivityLogViewModelPopulator {
                 .map(String::toLowerCase)
                 .orElse(null);
         String documentName = ofNullable(activity.getDocumentConfigName())
-                    .map(String::toLowerCase)
-                    .orElse(null);
+                .map(String::toLowerCase)
+                .orElse(null);
 
         return messageSource.getMessage(format("ifs.activity.log.%s.link", activity.getActivityType().name()),
                 new Object[]{queryType, documentName},
@@ -152,7 +152,7 @@ public class ActivityLogViewModelPopulator {
     }
 
     private String organisationNameOfProjectUser(Supplier<Stream<ProjectUserResource>> projectUsers, List<PartnerOrganisationResource> partnerOrganisationResources) {
-        projectUsers.get()
+        return projectUsers.get()
                 .findAny()
                 .flatMap(pu -> partnerOrganisationResources.stream()
                         .filter(po -> po.getOrganisation().equals(pu.getOrganisation()))
