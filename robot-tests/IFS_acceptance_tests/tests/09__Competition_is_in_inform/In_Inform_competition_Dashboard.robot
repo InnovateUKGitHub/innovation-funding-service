@@ -232,6 +232,6 @@ the user search for successful applications
     the user should not see the element                    jQuery = td:nth-child(2):contains("${application_ids['Electric Drive']}")
 
 the user should see the competition details in previous tab
-    the user should see the element    jQuery = th:contains("Competition number") + th:contains("Title")
-    the user should see the element    jQuery = th:contains("Number of applications") + th:contains("Number of completed projects")
+    the user should see the element    jQuery = th:contains("ID") + th:contains("Title")
+    the user should see the element    jQuery = th:contains("Number of submitted applications") + th:contains("Number of completed projects")
     the user should see the element    jQuery = tr td:contains("Project Setup Comp 20") ~ td:contains("0 of 1")
