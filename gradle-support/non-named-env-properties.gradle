@@ -1,5 +1,3 @@
-
-
 // THESE PROPERTIES ARE SPECIFIC TO NON NAMED ENVS
 // for shib
 ext.SHIBBOLETH_SP_MPM_STARTSERVERS="2"
@@ -24,7 +22,6 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
 ext.GA_TRACKING_ID=""
 
-
 ext.LDAP_USESSL="true"
 ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
@@ -32,7 +29,6 @@ ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
 ext.SHIBBOLETH_LDAP_PORT="8389"
 ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
-
 
 ext.NEW_RELIC_LICENCE_KEY=""
 
@@ -43,6 +39,8 @@ ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties[
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
 ext.ZIPKIN_ADDRESS="zipkin-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+
+ext.IFS_LIVE_PROJECTS_LANDING_PAGE_URL="https://" + project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']+"/live-projects-landing-page"
 
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
@@ -68,8 +66,6 @@ ext.FINANCE_DB_HOST="ifs-finance-database"
 ext.FINANCE_DB_PORT=3306
 
 ext.DATA_SERVICE_HOST="data-service"
-
-ext.IFS_PROJECT_MANAGEMENT_ON_HOLD="true"
 
 // For webtest data
 ext.ACC_USERNAME=""

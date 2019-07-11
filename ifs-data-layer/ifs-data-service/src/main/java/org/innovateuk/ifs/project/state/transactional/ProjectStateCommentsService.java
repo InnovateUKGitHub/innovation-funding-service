@@ -25,13 +25,18 @@ public interface ProjectStateCommentsService extends MessageThreadService<Projec
     @SecuredBySpring(value = "PROJECT_STATE_COMMENTS_FIND_ALL", securedType = ProjectStateCommentsResource.class,
             description = "Project finance users can find all project state comments.")
     @Override
-    ServiceResult<List<ProjectStateCommentsResource>> findAll(Long contextClassPk);
+    ServiceResult<List<ProjectStateCommentsResource>> findAll(Long projectId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "PROJECT_STATE_COMMENTS_FIND_ONE", securedType = ProjectStateCommentsResource.class,
             description = "Project finance users can find project state comments.")
     @Override
     ServiceResult<ProjectStateCommentsResource> findOne(Long threadId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "PROJECT_STATE_COMMENTS_FIND_OPEN", securedType = ProjectStateCommentsResource.class,
+            description = "Project finance users can find open project state comments.")
+    ServiceResult<ProjectStateCommentsResource> findOpenComment(long projectId);
 
     @NotSecured("Not secured")
     @Override
