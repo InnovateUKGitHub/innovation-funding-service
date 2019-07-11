@@ -5,13 +5,9 @@ if (file(targetBuildFile).exists()) {
 
 apply from: rootProject.file("gradle-support/java.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
 group 'innovateuk'
 version project.version
-
-bootJar.enabled=false
-jar.enabled=true
 
 apply plugin: 'idea'
 
@@ -41,6 +37,8 @@ dependencies {
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.2.RELEASE'
+    testCompile 'org.springframework:spring-webmvc:5.0.6.RELEASE'
+
     testCompile "net.sf.opencsv:opencsv:2.3"
     testCompile "com.opencsv:opencsv:4.3.2"
 
