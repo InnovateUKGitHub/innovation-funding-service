@@ -110,7 +110,7 @@
                         <td class="govuk-table__cell"
                             th:text="${user.displayName}"
                             th:classappend="${user.invite ? 'hint' : ''}"></td>
-                        <td class="govuk-table__cell"
+                        <td class="govuk-table__cell ifs-table__email"
                             th:text="${user.getEmail()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-
                         </td>
