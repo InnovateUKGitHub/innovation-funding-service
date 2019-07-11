@@ -18,9 +18,11 @@ buildscript {
     ext {
         serverContext = '/survey'
     }
+}
 
+afterEvaluate {
     ext {
-        dockerDir = "$project.parent.projectDir/docker/"
+        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 

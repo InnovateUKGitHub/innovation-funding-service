@@ -17,9 +17,11 @@ buildscript {
     ext {
         serverContext = '/eu-grant'
     }
+}
 
+afterEvaluate {
     ext {
-        dockerDir = "$project.parent.projectDir/docker/"
+        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 

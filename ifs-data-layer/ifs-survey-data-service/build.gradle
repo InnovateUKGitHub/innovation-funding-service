@@ -33,7 +33,12 @@ if (enabled) {
 
 createContainer.networkAliases=["ifs-survey-data-service"]
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
+    }
+}
+
 ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
 
 ext {

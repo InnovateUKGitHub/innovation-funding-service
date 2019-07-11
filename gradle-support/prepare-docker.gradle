@@ -7,14 +7,7 @@ apply from: rootProject.file("gradle-support/new-relic.gradle")
  * In other words, after this task is executed, one could manually run `docker build .`
  * in the output directory.
  */
-
-def dockerTemplateFile = project.file("$project.parent.projectDir/docker/Dockerfile-template")
-def dockerDir = "$project.parent.projectDir/docker/"
-
-if (!dockerTemplateFile.exists()) {
-    dockerDir = "docker/"
-}
-
+ext.dockerDir = "docker/"
 
 task prepareDockerBaseInput {
     dependsOn build

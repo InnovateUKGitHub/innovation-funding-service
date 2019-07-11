@@ -14,9 +14,11 @@ buildscript {
     ext {
         thymeleafVersion = ext['thymeleaf.version']
     }
+}
 
+afterEvaluate {
     ext {
-        dockerDir = "$project.parent.projectDir/docker/"
+        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 
