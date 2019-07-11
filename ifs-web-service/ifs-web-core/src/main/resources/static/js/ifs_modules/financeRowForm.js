@@ -34,7 +34,7 @@ IFS.core.financeRowForm = (function () {
         },
         cache: false
       }).done(function (data) {
-        IFS.core.timeoutWarning.startTimer()
+        IFS.core.timeoutWarning.startInactivityTimer()
         var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
         target.append(data)
         addRowButton.prevAll('.govuk-hint').remove()
