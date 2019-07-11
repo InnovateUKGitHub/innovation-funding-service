@@ -190,7 +190,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         int size = 20;
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build(1));
         when(competitionRepositoryMock.findPrevious(any())).thenReturn(new PageImpl<>(competitions, PageRequest.of(page, size), 30));
-        when(applicationRepository.countByCompetitionId(competitionId)).thenReturn(1);
+        when(applicationRepository.countPrevious(competitionId)).thenReturn(1);
         when(projectRepositoryMock.countByApplicationCompetitionId(competitionId)).thenReturn(2);
         when(projectRepositoryMock.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, ProjectState.COMPLETED_STATES)).thenReturn(3);
 

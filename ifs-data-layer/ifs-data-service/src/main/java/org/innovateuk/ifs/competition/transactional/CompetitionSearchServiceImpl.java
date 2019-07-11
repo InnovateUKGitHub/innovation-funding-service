@@ -167,7 +167,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                applicationRepository.countByCompetitionId(competition.getId()),
+                applicationRepository.countPrevious(competition.getId()),
                 projectRepository.countByApplicationCompetitionId(competition.getId()),
                 projectRepository.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competition.getId(), ProjectState.COMPLETED_STATES)
         );
