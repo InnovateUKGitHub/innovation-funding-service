@@ -16,6 +16,7 @@ IFS.core.timeoutWarning = (function () {
     },
     init: function () {
       s = this.settings
+      var domain = IFS.core.timeoutWarning.getDomain()
       console.log(Cookies.get('CSRF-TOKEN'))
       if (Cookies.get('CSRF-TOKEN')) {
         // we are logged in so start the inactivity timer
@@ -36,7 +37,6 @@ IFS.core.timeoutWarning = (function () {
           // its the first time on a logged in page so set session timeout cookie
           var date = new Date()
           date.setHours(date.getHours() + s.sessionTimeoutLength)
-          var domain = IFS.core.timeoutWarning.getDomain()
           console.log(date)
           console.log(domain)
           Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain })
@@ -47,7 +47,7 @@ IFS.core.timeoutWarning = (function () {
         console.log('Logged out')
         // logged out so delete the session timeout cookie
         console.log(Cookies.get('SESSION-TIMEOUT'))
-        Cookies.remove('SESSION-TIMEOUT', { path: '/' })
+        Cookies.remove('SESSION-TIMEOUT', { path: '/', domain: domain })
       }
     },
     startSessionTimer: function () {
