@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestServ
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
-import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
