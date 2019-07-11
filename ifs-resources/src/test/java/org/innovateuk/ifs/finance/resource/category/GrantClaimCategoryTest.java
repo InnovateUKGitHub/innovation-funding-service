@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -19,15 +18,19 @@ public class GrantClaimCategoryTest {
     private BigDecimal total = BigDecimal.ZERO;
 
     private FinanceRowItem grantClaim;
+    private FinanceRowItem grantClaim2;
+
     private GrantClaimCategory grantClaimCategory;
 
     @Before
     public void setUp() throws Exception {
-        grantClaim = new GrantClaim(1L, 10);
+        grantClaim = new GrantClaim(1L, 50);
+        grantClaim2 = new GrantClaim(2L, 30);
         costs.add(grantClaim);
+        costs.add(grantClaim2);
 
         grantClaimCategory = new GrantClaimCategory();
-        grantClaimCategory.setCosts(singletonList(grantClaim));
+        grantClaimCategory.setCosts(costs);
     }
 
     @Test
@@ -47,7 +50,7 @@ public class GrantClaimCategoryTest {
 
         grantClaimCategory.calculateTotal();
 
-        assertEquals(new BigDecimal(10), grantClaimCategory.getTotal());
+        assertEquals(new BigDecimal(80), grantClaimCategory.getTotal());
     }
 
     @Test
