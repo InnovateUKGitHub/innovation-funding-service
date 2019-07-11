@@ -64,6 +64,9 @@ ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
 
 prepareDockerBaseInput {
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
