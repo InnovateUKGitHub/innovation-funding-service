@@ -194,4 +194,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             " AND app.competition.id = :competitionId")
     List<PreviousApplicationResource> findPrevious(long competitionId);
 
+    @Query(" SELECT COUNT(app.id)" +
+            " FROM Application app " +
+           " LEFT JOIN Project project " +
+           "   ON project.application.id = app.id " +
+           " WHERE project.id IS NULL " +
+           " AND app.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.CREATED " +
+           " AND app.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.OPENED " +
+           " AND app.competition.id = :competitionId")
+    int countPrevious(long competitionId);
 }
