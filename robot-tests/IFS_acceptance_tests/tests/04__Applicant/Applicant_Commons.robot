@@ -337,7 +337,7 @@ logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application    ${competition}
     ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("org2")
-    Run Keyword if  '${status}' == 'PASS'    the user selects the radio button  selectedOrganisationId   selectedOrganisationId1
+    Run Keyword if  '${status}' == 'PASS'    the user selects the radio button  selectedOrganisationId   21
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 navigate to next page if not found
