@@ -21,7 +21,7 @@ Documentation     This suite depends on the Previous one!
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Test Teardown
-Force Tags        Applicant
+Force Tags        Applicant  Pending
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 
