@@ -33,6 +33,10 @@ afterEvaluate {
     ext {
         dockerDir = file("$project.parent.projectDir/docker/")
     }
+    ext {
+        snippetsDir = file('build/generated-snippets')
+    }
+
 }
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
@@ -62,10 +66,6 @@ ext.grantProcessFilterByCompetitionIds = ext.has('ifs.grant.process.filterBy.com
 
 ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
-}
-
-ext {
-    snippetsDir = file('build/generated-snippets')
 }
 
 prepareDockerBaseInput {

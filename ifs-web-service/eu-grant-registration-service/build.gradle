@@ -14,15 +14,16 @@ buildscript {
     ext {
         thymeleafVersion = ext['thymeleaf.version']
     }
-    ext {
-        serverContext = '/eu-grant'
-    }
 }
 
 afterEvaluate {
     ext {
         dockerDir = file("$project.parent.projectDir/docker/")
     }
+}
+
+ext {
+    serverContext = '/eu-grant'
 }
 
 group 'innovateuk'
