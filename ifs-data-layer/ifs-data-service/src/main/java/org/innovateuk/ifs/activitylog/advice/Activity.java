@@ -20,15 +20,17 @@ public @interface Activity {
     /**
      * The type of activity to be created when this service is called.
      */
-    ActivityType type();
+    ActivityType type() default ActivityType.NONE;
 
     /**
-     * An optional conditional method that will return a boolean. The result of the method will decide whether or not
-     * and activity log entry should be created.
+     * An optional method reference that will return an Optional of ActivityType.
+     *
+     * If the optional is not present an activity will not be created.
+     * If the optional is present an activity will be created with the returned type.
      *
      * The referenced condition method must have the exact same parameters as the annotated method.
      */
-    String condition() default "";
+    String dynamicType() default "";
 
     /**
      * The name of the parameter which is the application id.

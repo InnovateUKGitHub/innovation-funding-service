@@ -170,6 +170,15 @@ public class ActivityLogAdviceIntegrationTest extends BaseAuthenticationAwareInt
         assertZeroActivityLogsExistForApplication();
     }
 
+    @Test(expected = IFSRuntimeException.class)
+    public void withNoneType() {
+        assertZeroActivityLogsExistForApplication();
+
+        testActivityLogService.withNoneType(application.getId());
+
+        assertZeroActivityLogsExistForApplication();
+    }
+
     private void assertZeroActivityLogsExistForApplication() {
         assertTrue(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(application.getId()).isEmpty());
     }

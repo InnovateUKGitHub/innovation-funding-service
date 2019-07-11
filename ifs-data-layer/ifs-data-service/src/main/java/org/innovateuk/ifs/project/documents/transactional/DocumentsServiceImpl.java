@@ -229,6 +229,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                         )).andOnSuccessReturnVoid(() -> {
                     if (decision.getApproved()) {
                         activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
+                    } else {
+                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_REJECTED, documentConfigId);
                     }
                 });
     }

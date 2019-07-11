@@ -15,6 +15,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -71,12 +72,13 @@ public interface GrantOfferLetterService {
     ServiceResult<Void> sendGrantOfferLetter(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_SIGNED_GRANT_OFFER_LETTER')")
-    @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_APPROVED, condition = "isApproved")
+    @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default boolean isApproved(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
-        return grantOfferLetterApprovalResource.getApprovalType() == ApprovalType.APPROVED;
+    default Optional<ActivityType> approveOrRejectActivityType(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        return grantOfferLetterApprovalResource.getApprovalType() == ApprovalType.APPROVED ?
+                Optional.of(ActivityType.GRANT_OFFER_LETTER_APPROVED) : Optional.of(ActivityType.GRANT_OFFER_LETTER_REJECTED);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")

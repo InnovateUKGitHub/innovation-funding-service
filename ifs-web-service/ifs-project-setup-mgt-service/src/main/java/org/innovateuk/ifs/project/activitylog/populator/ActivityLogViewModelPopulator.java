@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.activitylog.populator;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.service.ActivityLogRestService;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogEntryViewModel;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
@@ -11,12 +13,15 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -24,6 +29,7 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.project.activitylog.populator.ActivityLogUrlHelper.url;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
@@ -43,7 +49,14 @@ public class ActivityLogViewModelPopulator {
     @Autowired
     private MessageSource messageSource;
 
-    public ActivityLogViewModel populate(long projectId) {
+    private static final Set<ActivityType> STAKEHOLDER_INNOVATION_SUPPORT_TYPES = EnumSet.of(APPLICATION_SUBMITTED, APPLICATION_INTO_PROJECT_SETUP, PROJECT_DETAILS_COMPLETE,
+            PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
+
+    private static final Set<ActivityType> COMP_ADMIN_TYPES = Sets.union(STAKEHOLDER_INNOVATION_SUPPORT_TYPES,
+                EnumSet.of(DOCUMENT_UPLOADED, DOCUMENT_REJECTED, SPEND_PROFILE_GENERATED, GRANT_OFFER_LETTER_UPLOADED, GRANT_OFFER_LETTER_PUBLISHED, GRANT_OFFER_LETTER_SIGNED, GRANT_OFFER_LETTER_REJECTED)
+    );
+
+    public ActivityLogViewModel populate(long projectId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         List<PartnerOrganisationResource> partnerOrganisationResources = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         List<ProjectUserResource> projectUserResources = projectRestService.getProjectUsersForProject(projectId).getSuccess();
@@ -56,7 +69,8 @@ public class ActivityLogViewModelPopulator {
                              userText(activity, projectUserResources, partnerOrganisationResources),
                              activity.getCreatedOn(),
                              linkText(activity),
-                             url(activity, project)
+                             url(activity, project),
+                             userCanSeeLink(activity, user)
                   ))
                   .collect(toList());
 
@@ -78,6 +92,16 @@ public class ActivityLogViewModelPopulator {
                 views
         );
 
+    }
+
+    private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
+        if (user.hasRole(PROJECT_FINANCE)) {
+            return true;
+        } else if (user.hasRole(COMP_ADMIN)) {
+            return COMP_ADMIN_TYPES.contains(activity.getActivityType());
+        } else {
+            return STAKEHOLDER_INNOVATION_SUPPORT_TYPES.contains(activity.getActivityType());
+        }
     }
 
     private String title(ActivityLogResource activity) {

@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 
@@ -40,12 +41,15 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(Long applicationId, ZonedDateTime fundingEmailDate);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
-    @Activity(type = ActivityType.APPLICATION_SUBMITTED, condition = "isSubmitted", applicationId = "applicationId")
+    @Activity(dynamicType = "submittedActivityType", applicationId = "applicationId")
     ServiceResult<ApplicationResource> updateApplicationState(long applicationId, ApplicationState state);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default boolean isSubmitted(long applicationId, ApplicationState state) {
-        return SUBMITTED == state;
+    default Optional<ActivityType> submittedActivityType(long applicationId, ApplicationState state) {
+        if (SUBMITTED == state) {
+            return Optional.of(ActivityType.APPLICATION_SUBMITTED);
+        }
+        return Optional.empty();
     }
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")

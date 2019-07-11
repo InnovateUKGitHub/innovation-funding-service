@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BankDetailsService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -26,12 +27,16 @@ public interface BankDetailsService {
     ServiceResult<Void> submitBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
     @PreAuthorize("hasPermission(#bankDetailsResource, 'UPDATE')")
-    @Activity(type = ActivityType.BANK_DETAILS_APPROVED, projectOrganisationCompositeId = "projectOrganisationCompositeId", condition = "isManualApproval")
+    @Activity(dynamicType = "bankDetailsActivityType", projectOrganisationCompositeId = "projectOrganisationCompositeId")
     ServiceResult<Void> updateBankDetails(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default boolean isManualApproval(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
-        return bankDetailsResource.isManualApproval();
+    default Optional<ActivityType> bankDetailsActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, BankDetailsResource bankDetailsResource) {
+        if (bankDetailsResource.isManualApproval()) {
+            return Optional.of(ActivityType.BANK_DETAILS_APPROVED);
+        } else {
+            return Optional.of(ActivityType.BANK_DETAILS_EDITED);
+        }
     }
 
     @PreAuthorize("hasAuthority('project_finance')")

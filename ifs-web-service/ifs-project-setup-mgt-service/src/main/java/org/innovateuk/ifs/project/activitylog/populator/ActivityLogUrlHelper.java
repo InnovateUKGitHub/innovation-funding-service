@@ -26,11 +26,13 @@ public class ActivityLogUrlHelper {
                 return format("/project-setup-management/competition/%d/project/%d/team", project.getCompetition(), project.getId());
             case DOCUMENT_UPLOADED:
             case DOCUMENT_APPROVED:
+            case DOCUMENT_REJECTED:
                 return format("/project-setup-management/project/%d/document/config/%d", project.getId(), log.getDocumentConfig());
             case MONITORING_OFFICER_ASSIGNED:
                 return format("/project-setup-management/project/%d/monitoring-officer", project.getId());
             case BANK_DETAILS_SUBMITTED:
             case BANK_DETAILS_APPROVED:
+            case BANK_DETAILS_EDITED:
                 return format("/project-setup-management/project/%d/organisation/%d/review-bank-details", project.getId(), log.getOrganisation());
             case VIABILITY_APPROVED:
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/viability", project.getId(), log.getOrganisation());
@@ -40,16 +42,16 @@ public class ActivityLogUrlHelper {
             case FINANCE_QUERY_RESPONDED:
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), log.getOrganisation(), log.getQueryType().name());
             case SPEND_PROFILE_GENERATED:
-            case SPEND_PROFILE_EDIT:
-            case SPEND_PROFILE_COMPLETE:
                 return format("/project-setup-management/project/%d/finance-check", project.getId());
             case SPEND_PROFILE_SENT:
             case SPEND_PROFILE_APPROVED:
+            case SPEND_PROFILE_REJECTED:
                 return format("/project-setup-management/project/%d/spend-profile/approval", project.getId());
             case GRANT_OFFER_LETTER_UPLOADED:
             case GRANT_OFFER_LETTER_PUBLISHED:
             case GRANT_OFFER_LETTER_SIGNED:
             case GRANT_OFFER_LETTER_APPROVED:
+            case GRANT_OFFER_LETTER_REJECTED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
             default:
                 return null;

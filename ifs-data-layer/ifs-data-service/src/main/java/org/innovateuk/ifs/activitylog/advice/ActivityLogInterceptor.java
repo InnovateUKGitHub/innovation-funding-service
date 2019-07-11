@@ -3,6 +3,7 @@ package org.innovateuk.ifs.activitylog.advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -28,31 +29,39 @@ public class ActivityLogInterceptor implements MethodInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Activity activity = findAnnotation(invocation.getMethod(), Activity.class);
 
-        if (!StringUtils.isBlank(activity.condition())) {
-            if (!handleConditionalStatement(activity, invocation)) {
+        ActivityType activityType = activity.type();
+        if (!StringUtils.isBlank(activity.dynamicType())) {
+            Optional<ActivityType> dynamicType = handleDynamicActivityType(activity, invocation);
+            if (!dynamicType.isPresent()) {
                 return invocation.proceed();
             }
+            activityType = dynamicType.get();
+        }
+
+        if (activityType == ActivityType.NONE) {
+            throw new IFSRuntimeException(String.format("@Activity annotated method cannot save a NONE ActivityType.%s on %s",
+                    invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
         }
 
         Object returned = invocation.proceed();
 
         if (isSuccessfulServiceResult(returned, invocation)) {
-            callAppropriateActivityLogMethod(activity, invocation);
+            callAppropriateActivityLogMethod(activity, activityType, invocation);
         }
 
         return returned;
     }
 
-    private void callAppropriateActivityLogMethod(Activity activity, MethodInvocation invocation) {
+    private void callAppropriateActivityLogMethod(Activity activity, ActivityType activityType, MethodInvocation invocation) {
         if (!StringUtils.isBlank(activity.applicationId())) {
             Optional<Long> applicationId = findId(activity.applicationId(), invocation, Long.class);
-            applicationId.ifPresent(id -> activityLogService.recordActivityByApplicationId(id, activity.type()));
+            applicationId.ifPresent(id -> activityLogService.recordActivityByApplicationId(id, activityType));
         } else if (!StringUtils.isBlank(activity.projectId())) {
             Optional<Long> projectId = findId(activity.projectId(), invocation, Long.class);
-            projectId.ifPresent(id -> activityLogService.recordActivityByProjectId(id, activity.type()));
+            projectId.ifPresent(id -> activityLogService.recordActivityByProjectId(id, activityType));
         } else if (!StringUtils.isBlank(activity.projectOrganisationCompositeId())) {
             Optional<ProjectOrganisationCompositeId> projectOrganisationCompositeId = findId(activity.projectOrganisationCompositeId(), invocation, ProjectOrganisationCompositeId.class);
-            projectOrganisationCompositeId.ifPresent(id -> activityLogService.recordActivityByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId(), activity.type()));
+            projectOrganisationCompositeId.ifPresent(id -> activityLogService.recordActivityByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId(), activityType));
         } else {
             throw new IFSRuntimeException(String.format("@Activity annotated method must provide an applicationId or projectId: %s on %s",
                     invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
@@ -87,16 +96,16 @@ public class ActivityLogInterceptor implements MethodInterceptor {
         }
     }
 
-    private boolean handleConditionalStatement(Activity activity, MethodInvocation invocation) {
-        String condition = activity.condition();
+    private Optional<ActivityType> handleDynamicActivityType(Activity activity, MethodInvocation invocation) {
+        String dynamicType = activity.dynamicType();
         Object service = invocation.getThis();
 
         Method method;
         try {
-            method = service.getClass().getMethod(condition, invocation.getMethod().getParameterTypes());
+            method = service.getClass().getMethod(dynamicType, invocation.getMethod().getParameterTypes());
         } catch (NoSuchMethodException e) {
-            throw new IFSRuntimeException(String.format("@Activity annotated method has no such condition method %s with same params as %s on service %s",
-                    condition, invocation.getMethod().getName(), service.getClass().getCanonicalName()), e);
+            throw new IFSRuntimeException(String.format("@Activity annotated method has no such dynamicType method %s with same params as %s on service %s",
+                    dynamicType, invocation.getMethod().getName(), service.getClass().getCanonicalName()), e);
         }
 
         Object result;
@@ -104,14 +113,14 @@ public class ActivityLogInterceptor implements MethodInterceptor {
             result = method.invoke(invocation.getThis(), invocation.getArguments());
         } catch (IllegalAccessException
                 | InvocationTargetException e) {
-            throw new IFSRuntimeException(String.format("@Activity annotated method encountered error trying to call condition %s on service %s", condition, service.getClass().getCanonicalName()),
+            throw new IFSRuntimeException(String.format("@Activity annotated method encountered error trying to call dynamicType %s on service %s", dynamicType, service.getClass().getCanonicalName()),
                     e);
         }
 
-        if (result == null || !(result instanceof Boolean)) {
-            throw new IFSRuntimeException(String.format("@Activity annotated method condition didn't return a boolean %s on service %s", condition, service.getClass().getCanonicalName()));
+        if (result == null || !(result instanceof Optional)) {
+            throw new IFSRuntimeException(String.format("@Activity annotated method dynamicType didn't return a boolean %s on service %s", dynamicType, service.getClass().getCanonicalName()));
         }
-        return (Boolean) result;
+        return (Optional<ActivityType>) result;
     }
 
 

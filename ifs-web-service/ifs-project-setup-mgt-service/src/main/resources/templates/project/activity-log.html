@@ -46,6 +46,7 @@
                                 28 Feb 2019, 07:47 AM
                             </span>
                             <a th:href="${activity.linkUrl}"
+                               th:if="${activity.displayLink}"
                                th:text="${activity.linkText}"
                                class="activity-log__link">View grant offer letter</a>
                         </div>
