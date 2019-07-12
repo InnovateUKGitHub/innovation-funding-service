@@ -26,7 +26,7 @@ from time import sleep, time
 try:
     from urllib.request import urlopen
 except ImportError:
-    from urllib2 import urlopen
+    from urllib3 import urlopen
 from builtins import str as ustr
 
 __version__ = '0.3.2'
@@ -127,7 +127,7 @@ class ImapLibrary(object):
         if self._is_walking_multipart(email_index):
             body = self.get_multipart_payload(decode=True)
         else:
-            body = self._imap.fetch(email_index, '(BODY[TEXT])')[1][0][1].decode('quoted-printable')
+            body = self._imap.fetch(email_index, '(BODY[TEXT])')[1][0][1].decode('utf-8')
         return body
 
     def get_links_from_email(self, email_index):
