@@ -130,6 +130,10 @@ dependencies {
 }
 
 test {
+
+    minHeapSize = "1024m"
+    maxHeapSize = "2048m"
+    
     finalizedBy asciidoctor
 
     if (project.hasProperty('excludeTests')) {
