@@ -70,7 +70,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         when(applicationSummaryRestService.getPreviousApplications(competitionId)).thenReturn(restSuccess(previousApplications));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/previous", competitionId))
-                .andExpect(view().name("asnaisdn"))
+                .andExpect(view().name("competition/previous"))
                 .andReturn();
 
         PreviousCompetitionViewModel viewModel = (PreviousCompetitionViewModel) result.getModelAndView().getModel().get("model");
@@ -85,7 +85,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
 
         String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
 
-        assertEquals("", originQuery);
+        assertEquals("?origin=PREVIOUS_APPLICATIONS", originQuery);
     }
 
     @Test

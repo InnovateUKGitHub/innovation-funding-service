@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationSummaryRestServiceImpl> {
 
-    private static final String APPLICATION_SUMMARY_REST_URL = "/appsummary";
+    private static final String APPLICATION_SUMMARY_REST_URL = "/application-summary";
 
     @Override
     protected ApplicationSummaryRestServiceImpl registerRestServiceUnderTest() {
@@ -240,7 +240,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
                 previous
         );
 
-        RestResult<List<PreviousApplicationResource>> result = service.getPreviousApplications(123L);
+        RestResult<List<PreviousApplicationResource>> result = service.getPreviousApplications(competitionId);
 
         assertTrue(result.isSuccess());
         assertEquals(previous, result.getSuccess());
