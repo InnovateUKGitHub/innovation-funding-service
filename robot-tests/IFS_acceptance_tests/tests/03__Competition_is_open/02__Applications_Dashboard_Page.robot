@@ -124,6 +124,11 @@ Comp admin can open the view mode of the application
     #    And the user cannot see this file but gets a quarantined message
     # TODO when working on Guarantined files. Variable has been removed
 
+Comp admin can link to the comp page from application overview
+    [Documentation]  IFS-6060
+    Given the user clicks the button/link  link = ${openCompetitionRTO_name}
+    Then the user should be redirected to the correct page                 ${server}/management/competition/${openCompetitionRTO}
+
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
     [Tags]
