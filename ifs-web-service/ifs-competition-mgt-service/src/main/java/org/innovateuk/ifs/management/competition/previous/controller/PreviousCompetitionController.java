@@ -8,6 +8,8 @@ import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousComp
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.project.status.security.StatusHelper.projectStatusPermissions;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/previous")
@@ -37,14 +40,20 @@ public class PreviousCompetitionController {
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private StatusRestService statusRestService;
+
     @GetMapping
     public String viewPreviousCompetition(@PathVariable long competitionId,
                                           @RequestParam MultiValueMap<String, String> queryParams,
                                           Model model,
                                           UserResource user) {
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = statusRestService.getPreviousCompetitionStatus(competitionId).getSuccess();
         model.addAttribute("model",  new PreviousCompetitionViewModel(
             competitionRestService.getCompetitionById(competitionId).getSuccess(),
             applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
+            competitionProjectsStatusResource,
+            projectStatusPermissions(user, competitionProjectsStatusResource),
             user.hasRole(Role.IFS_ADMINISTRATOR))
         );
 

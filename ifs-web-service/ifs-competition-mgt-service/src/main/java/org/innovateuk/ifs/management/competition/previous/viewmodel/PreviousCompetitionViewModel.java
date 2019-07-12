@@ -2,13 +2,17 @@ package org.innovateuk.ifs.management.competition.previous.viewmodel;
 
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.project.status.security.StatusPermission;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusTableViewModel;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class PreviousCompetitionViewModel {
+public class PreviousCompetitionViewModel implements CompetitionStatusTableViewModel {
 
     private final long competitionId;
     private final String competitionName;
@@ -18,10 +22,11 @@ public class PreviousCompetitionViewModel {
     private final String innovationSector;
     private final boolean ifsAdmin;
 
-    //projects
     private final List<PreviousApplicationResource> applications;
+    private final CompetitionProjectsStatusResource competitionProjectsStatusResource;
+    private Map<Long, StatusPermission> statusPermissions;
 
-    public PreviousCompetitionViewModel(CompetitionResource competition, List<PreviousApplicationResource> applications, boolean ifsAdmin) {
+    public PreviousCompetitionViewModel(CompetitionResource competition, List<PreviousApplicationResource> applications, CompetitionProjectsStatusResource competitionProjectsStatusResource, Map<Long, StatusPermission> statusPermissions, boolean ifsAdmin) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.competitionType = competition.getCompetitionTypeName();
@@ -29,6 +34,8 @@ public class PreviousCompetitionViewModel {
         this.applicationDeadline = toUkTimeZone(competition.getEndDate());
         this.innovationSector = competition.getInnovationSectorName();
         this.applications = applications;
+        this.competitionProjectsStatusResource = competitionProjectsStatusResource;
+        this.statusPermissions = statusPermissions;
         this.ifsAdmin = ifsAdmin;
     }
 
@@ -62,5 +69,15 @@ public class PreviousCompetitionViewModel {
 
     public boolean isIfsAdmin() {
         return ifsAdmin;
+    }
+
+    @Override
+    public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
+        return competitionProjectsStatusResource;
+    }
+
+    @Override
+    public Map<Long, StatusPermission> getStatusPermissions() {
+        return statusPermissions;
     }
 }

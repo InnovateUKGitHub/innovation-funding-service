@@ -69,6 +69,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
+import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -135,6 +136,16 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
     }
+
+    @Override
+    public ServiceResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId).get();
+        List<Project> projects = projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES);
+        List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
+        CompetitionProjectsStatusResource competitionProjectsStatusResource
+                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
+
+        return ServiceResult.serviceSuccess(competitionProjectsStatusResource);    }
 
     private List<ProjectStatusResource> projectStatuses(List<Project> projects) {
         return projects.stream()
