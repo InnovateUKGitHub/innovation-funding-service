@@ -13,5 +13,7 @@ public interface CompetitionStatusTableViewModel {
 
     CompetitionProjectsStatusResource getCompetitionProjectsStatusResource();
     Map<Long, StatusPermission> getStatusPermissions();
+    boolean isCanExportBankDetails();
+    String getEmptyTableText();
 
 }

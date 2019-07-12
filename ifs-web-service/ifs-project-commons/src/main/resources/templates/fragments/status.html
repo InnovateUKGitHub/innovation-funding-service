@@ -4,7 +4,7 @@
 <th:block th:fragment="status-table(model)">
     <section class="govuk-tabs__panel">
         <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
-            <p class="govuk-body">There are currently no active projects in this competition.</p>
+            <p class="govuk-body" th:text="${model.emptyTableText}"></p>
         </th:block>
 
         <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
@@ -103,7 +103,6 @@
     </section>
 </th:block>
 
-
 <th:block th:fragment="project-status-table(status, columnType, isActive)">
     <th:block th:switch="${status.name()}">
         <td th:case="'VIEW'" class="govuk-table__cell status">
@@ -161,59 +160,3 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="project-status-table(status, columnType, isActive)">
-    <th:block th:switch="${status.name()}">
-        <td th:case="'VIEW'" class="govuk-table__cell status">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">View</a>
-            </th:block>
-        </td>
-        <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-            </th:block>
-        </td>
-        <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
-                    <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                    <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
-                <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
-            </th:block>
-        </td>
-        <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
-            <span class="govuk-visually-hidden">Stage is not yet available</span>
-        </td>
-        <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na">
-            <span class="govuk-visually-hidden">Not required for this partner</span>
-        </td>
-        <td th:case="'PENDING'" class="govuk-table__cell status waiting">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
-            </th:block>
-        </td>
-        <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">Rejected</a>
-            </th:block>
-            <th:block th:unless="${url}">Rejected</th:block>
-        </td>
-        <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
-    </th:block>
-</th:block>

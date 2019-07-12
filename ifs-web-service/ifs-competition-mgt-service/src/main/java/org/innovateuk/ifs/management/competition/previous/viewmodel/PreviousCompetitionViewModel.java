@@ -80,4 +80,14 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
     public Map<Long, StatusPermission> getStatusPermissions() {
         return statusPermissions;
     }
+
+    @Override
+    public boolean isCanExportBankDetails() {
+        return false;
+    }
+
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no completed projects in this competition.";
+    }
 }

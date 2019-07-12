@@ -40,8 +40,14 @@ public class CompetitionStatusViewModel implements CompetitionStatusTableViewMod
         return statusPermissions;
     }
 
+    @Override
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
+    }
+
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no projects in this competition.";
     }
 
     public long getOpenQueryCount() { return openQueryCount; }
