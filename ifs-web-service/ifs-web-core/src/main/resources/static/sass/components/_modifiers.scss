@@ -84,6 +84,10 @@ table {
   .ifs-table__email {
     word-break: break-word;
   }
+
+  .govuk-table__header {
+    vertical-align: bottom;
+  }
 }
 
 @include media-down(mobile) {
