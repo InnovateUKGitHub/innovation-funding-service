@@ -120,9 +120,8 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <details class="govuk-details" th:attr="open=${isOpen} ? 'open' : null ">
-                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"
-                                 class="govuk-details__summary">
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">When to include a Je-S form</span>
                         </summary>
                         <div class="govuk-details__text">
@@ -169,9 +168,8 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <details class="govuk-details" th:attr="open=${isOpen} ? 'open' : null ">
-                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"
-                                 class="govuk-details__summary">
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">When to include the 'Your organisation' section for research organisations</span>
                         </summary>
                         <div class="govuk-details__text">
