@@ -15,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 public class GrantClaimCategoryTest {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
 
     private FinanceRowItem grantClaim;
     private FinanceRowItem grantClaim2;
@@ -24,8 +23,10 @@ public class GrantClaimCategoryTest {
 
     @Before
     public void setUp() throws Exception {
-        grantClaim = new GrantClaim(1L, 50);
-        grantClaim2 = new GrantClaim(2L, 30);
+
+        grantClaim = new GrantClaim(1L, 10);
+        grantClaim2 = new GrantClaim(2L, 20);
+
         costs.add(grantClaim);
         costs.add(grantClaim2);
 
@@ -42,21 +43,16 @@ public class GrantClaimCategoryTest {
     @Test
     public void getTotal() {
 
-        assertEquals(total, grantClaimCategory.getTotal());
-    }
-
-    @Test
-    public void calculateTotal() {
-
         grantClaimCategory.calculateTotal();
-
-        assertEquals(new BigDecimal(80), grantClaimCategory.getTotal());
+        assertEquals(new BigDecimal(30), grantClaimCategory.getTotal());
     }
 
     @Test
     public void addCost() {
 
-        assertEquals(grantClaim, grantClaimCategory.getCosts().get(0));
+        FinanceRowItem grantClaim3 = new GrantClaim(3L, 30);
+        grantClaimCategory.addCost(grantClaim3);
+        assertEquals(costs, grantClaimCategory.getCosts());
     }
 
     @Test
