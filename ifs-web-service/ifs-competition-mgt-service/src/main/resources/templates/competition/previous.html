@@ -21,21 +21,22 @@
                     <dt>Competition number:</dt>
                     <dd th:text="${model.competitionId}">PLACEHOLDER</dd>
                     <dt>Competition type:</dt>
-                    <dd>PLACEHOLDER</dd>
+                    <dd th:text="${model.competitionType}">PLACEHOLDER</dd>
                 </dl>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Funding body:</dt>
-                    <dd>PLACEHOLDER</dd>
+                    <dd th:text="${model.fundingBody}">PLACEHOLDER</dd>
                     <dt>Application deadline:</dt>
-                    <dd>PLACEHOLDER</dd>
+                    <dd th:text="|${#strings.toLowerCase(#temporals.format(model.applicationDeadline, 'hh:mma'))} ${#temporals.format(model.applicationDeadline, 'dd MMMM yyyy')}|">
+                        13 May 2019 9:04am</dd>
                 </dl>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Innovation sector:</dt>
-                    <dd>PLACEHOLDER</dd>
+                    <dd th:text="${model.innovationSector}"></dd>
                 </dl>
             </div>
         </div>
@@ -46,7 +47,7 @@
                 <div class="govuk-accordion__section-header">
                     <h2 class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button" id="accordion-previous-heading-1">
-                          Projects (<th:block>8</th:block>)
+                          Projects (<th:block>0</th:block>)
                         </span>
                     </h2>
                 </div>
@@ -58,7 +59,7 @@
                 <div class="govuk-accordion__section-header">
                     <h2 class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button" id="accordion-previous-heading-2">
-                            Applications (<th:block>26</th:block>)
+                            Applications (<th:block th:text="${model.applications.size()}">26</th:block>)
                         </span>
                     </h2>
                 </div>
