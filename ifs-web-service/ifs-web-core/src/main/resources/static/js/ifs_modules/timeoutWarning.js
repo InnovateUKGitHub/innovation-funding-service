@@ -35,6 +35,9 @@ IFS.core.timeoutWarning = (function () {
           // and start the session timer
           IFS.core.timeoutWarning.startSessionTimer()
         }
+        jQuery(document).ajaxComplete(function () {
+          IFS.core.timeoutWarning.startInactivityTimer()
+        })
       } else {
         // logged out so delete the session timeout cookie
         Cookies.remove('SESSION-TIMEOUT', { path: '/', domain: domain })
@@ -72,11 +75,17 @@ IFS.core.timeoutWarning = (function () {
       }, 50)
     },
     processAjax: function () {
-      jQuery.ajaxProtected({
-        url: '/',
-        success: function () {
-          IFS.core.timeoutWarning.closeModal()
-        }})
+      if (Cookies.get('CSRF-TOKEN')) {
+        // if we are logged in send and ajax request to keep us logged in
+        jQuery.ajaxProtected({
+          url: '/',
+          success: function () {
+            IFS.core.timeoutWarning.closeModal()
+          }})
+      } else {
+        // if we are not logged in refresh the page to send us to the login page
+        window.location.reload()
+      }
     },
     closeModal: function () {
       jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden', 'true')
