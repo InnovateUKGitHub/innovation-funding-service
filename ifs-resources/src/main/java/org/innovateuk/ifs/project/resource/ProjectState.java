@@ -48,7 +48,7 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return ProcessState.fromState(ProjectState.values(), state);
     }
 
-    public static Set<ProjectState> COMPLETED_STATES = EnumSet.of(LIVE, WITHDRAWN, COMPLETED_OFFLINE);
+    public static final Set<ProjectState> COMPLETED_STATES = EnumSet.of(LIVE, WITHDRAWN, COMPLETED_OFFLINE);
 
     @Override
     public long getId() {
