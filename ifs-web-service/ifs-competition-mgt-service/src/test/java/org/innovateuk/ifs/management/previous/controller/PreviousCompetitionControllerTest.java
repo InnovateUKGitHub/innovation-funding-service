@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyListOf;
@@ -78,7 +79,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals("competition", viewModel.getCompetitionName());
         assertEquals("type", viewModel.getCompetitionType());
-        assertEquals(close, viewModel.getApplicationDeadline());
+        assertEquals(toUkTimeZone(close), viewModel.getApplicationDeadline());
         assertEquals("Innovate UK", viewModel.getFundingBody());
         assertEquals("sector", viewModel.getInnovationSector());
         assertEquals(true, viewModel.isIfsAdmin());
