@@ -86,11 +86,6 @@ items:
                 configMapKeyRef:
                   name: db-config
                   key: DB_PASS
-            - name: FLYWAY_TABLE
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: FLYWAY_TABLE
             - name: ACC_BITBUCKET_URL
               valueFrom:
                 configMapKeyRef:
@@ -136,6 +131,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_SCHEME
+            - name: FLYWAY_TABLE
+                valueFrom:
+                  configMapKeyRef:
+                    name: flyway-config
+                    key: FLYWAY_TABLE
             - name: FLYWAY_LOCATIONS
               valueFrom:
                 configMapKeyRef:
