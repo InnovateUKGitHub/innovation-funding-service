@@ -12,7 +12,7 @@ buildscript {
 }
 
 dependencies {
-    compile "org.flywaydb:flyway-core:5.1.0"
+    compile "org.flywaydb:flyway-core:5.0.7"
 }
 
 flyway {
