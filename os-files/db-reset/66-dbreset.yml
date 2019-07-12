@@ -132,10 +132,10 @@ items:
                   name: ldap-config
                   key: LDAP_SCHEME
             - name: FLYWAY_TABLE
-                valueFrom:
-                  configMapKeyRef:
-                    name: flyway-config
-                    key: FLYWAY_TABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: flyway-config
+                  key: FLYWAY_TABLE
             - name: FLYWAY_LOCATIONS
               valueFrom:
                 configMapKeyRef:
