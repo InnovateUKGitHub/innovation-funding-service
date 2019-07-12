@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.project.status.security.StatusHelper.projectSta
 
 @Controller
 @RequestMapping("/competition/{competitionId}/previous")
+@SecuredBySpring(value = "COMPETITION_PREVIOUS", description = "Only internal users can see previous applications")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead', 'stakeholder')")
 public class PreviousCompetitionController {
 

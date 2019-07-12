@@ -191,23 +191,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void findPreviousApplications() {
-        int pageNumber = 0;
-        int pageSize = 20;
-        String sortField = "id";
-        String filter = "ALL";
-
-        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
-
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", PreviousApplicationPageResource.class, previousApplicationPageResource);
-
-        PreviousApplicationPageResource result = service.findPreviousApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
-        assertNotNull(result);
-        Assert.assertEquals(previousApplicationPageResource, result);
-        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/previous-applications?filter=ALL&page=0&size=20&sort=id", null, PreviousApplicationPageResource.class);
-    }
-
-    @Test
     public void getLatestEmailFundingDate() {
         long competitionId = 1L;
         ZonedDateTime returnedDate = ZonedDateTime.now();

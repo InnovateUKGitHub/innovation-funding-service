@@ -213,16 +213,16 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         when(applicationSummaryService.getPreviousApplications(competitionId)).thenReturn(serviceSuccess(newPreviousApplicationResource().build(1)));
 
         mockMvc.perform(
-                get(baseUrl + "/previous/{competitionId}", competitionId)
+                get(baseUrl + "/find-by-competition/{competitionId}/previous", competitionId)
                         .contentType(APPLICATION_JSON))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id to get previous applications")),
                         responseFields(
-                                fieldWithPath("id").description("The id of the application"),
-                                fieldWithPath("name").description("The name of the application"),
-                                fieldWithPath("leadOrganisationName").description("The lead organisation of the application"),
-                                fieldWithPath("applicationState").description("The state of the application"),
-                                fieldWithPath("competition").description("The id of the competition")
+                                fieldWithPath("[].id").description("The id of the application"),
+                                fieldWithPath("[].name").description("The name of the application"),
+                                fieldWithPath("[].leadOrganisationName").description("The lead organisation of the application"),
+                                fieldWithPath("[].applicationState").description("The state of the application"),
+                                fieldWithPath("[].competition").description("The id of the competition")
                         )
                 )
             );
