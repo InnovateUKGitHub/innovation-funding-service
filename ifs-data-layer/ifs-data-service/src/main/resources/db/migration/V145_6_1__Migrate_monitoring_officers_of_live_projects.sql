@@ -1,6 +1,6 @@
 -- IFS-6162: Add live project user role to monitoring officers on already live projects
 
-INSERT INTO user_role (user_id, role_id)
+INSERT IGNORE INTO user_role (user_id, role_id)
 SELECT pu.user_id, 21
 FROM project_user pu
 JOIN project p ON pu.project_id = p.id
