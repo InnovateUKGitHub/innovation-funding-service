@@ -15,17 +15,13 @@ import static org.junit.Assert.assertTrue;
 public class GrantClaimCategoryTest {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-
-    private FinanceRowItem grantClaim;
-    private FinanceRowItem grantClaim2;
-
     private GrantClaimCategory grantClaimCategory;
 
     @Before
     public void setUp() throws Exception {
 
-        grantClaim = new GrantClaim(1L, 10);
-        grantClaim2 = new GrantClaim(2L, 20);
+        FinanceRowItem grantClaim = new GrantClaim(1L, 10);
+        FinanceRowItem grantClaim2 = new GrantClaim(2L, 20);
 
         costs.add(grantClaim);
         costs.add(grantClaim2);
@@ -52,12 +48,13 @@ public class GrantClaimCategoryTest {
 
         FinanceRowItem grantClaim3 = new GrantClaim(3L, 30);
         grantClaimCategory.addCost(grantClaim3);
+
         assertEquals(costs, grantClaimCategory.getCosts());
     }
 
     @Test
     public void excludeFromTotalCost() {
+
         assertTrue(grantClaimCategory.excludeFromTotalCost());
     }
-
 }

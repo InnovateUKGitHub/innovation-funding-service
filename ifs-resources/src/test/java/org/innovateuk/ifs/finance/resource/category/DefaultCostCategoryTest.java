@@ -15,20 +15,16 @@ import static org.junit.Assert.assertFalse;
 public class DefaultCostCategoryTest {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-
-    private FinanceRowItem cost1;
-    private FinanceRowItem cost2;
-
     private DefaultCostCategory defaultCostCategory;
 
     @Before
     public void setUp() throws Exception {
 
-        cost1 = newMaterials()
+        FinanceRowItem cost1 = newMaterials()
                 .withCost(new BigDecimal(1000))
                 .withQuantity(1)
                 .build();
-        cost2 = newMaterials()
+        FinanceRowItem cost2 = newMaterials()
                 .withCost(new BigDecimal(2000))
                 .withQuantity(1)
                 .build();
@@ -60,13 +56,14 @@ public class DefaultCostCategoryTest {
                 .withCost(new BigDecimal(1000))
                 .withQuantity(1)
                 .build();
-
         defaultCostCategory.addCost(cost3);
+
         assertEquals(costs, defaultCostCategory.getCosts());
     }
 
     @Test
     public void excludeFromTotalCost() {
+
         assertFalse(defaultCostCategory.excludeFromTotalCost());
     }
 }
