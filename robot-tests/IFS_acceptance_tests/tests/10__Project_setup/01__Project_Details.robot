@@ -372,10 +372,9 @@ the competition admin should see the status of each project setup stage
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")
-    the user should see the element    jQuery = p:contains("Each partner must provide a finance contact and a project location.")
+    the user should see the element    jQuery = p:contains("Each partner must provide a project location.")
     the user should see the element    css = #project-details
     the user should see the element    jQuery = #project-address:contains("Not yet completed")
-    the user should see the element    jQuery = #no-project-manager:contains("Not yet completed")
     the user should see the element    css = #project-details-finance
     the user should see the element    jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")

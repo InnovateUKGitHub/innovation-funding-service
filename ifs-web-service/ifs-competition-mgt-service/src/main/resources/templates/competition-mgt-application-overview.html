@@ -55,7 +55,11 @@
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Competition name</dt>
-                    <dd th:text="${model.competitionName}"></dd>
+                    <dd>
+                        <a th:href="@{/competition/{competitionId}(competitionId=${model.application.competition})}"
+                           class="govuk-link"
+                           th:text="${model.competitionName}"></a>
+                    </dd>
                     <dt>Application name</dt>
                     <dd th:text="${model.applicationName}"></dd>
                     <dt>When do you wish to start your project?</dt>

@@ -66,6 +66,7 @@ The IFS Admin clears any filters applied and can see all of the applications
     [Teardown]  the user clicks the button/link     link = Previous competitions
 
 The IFS admin checks for compeleted projects on previous tab
+#withdrawn projects count as competed projects
     [Documentation]  IFS-6053
     [Tags]
     Given the user clicks the button/link   jQuery = button:contains("Next")
