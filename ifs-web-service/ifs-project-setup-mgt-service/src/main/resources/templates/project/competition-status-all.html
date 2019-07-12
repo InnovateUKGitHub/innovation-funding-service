@@ -48,8 +48,9 @@
                 Project setup
             </h2>
             <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
-
-            <th:block th:insert="fragments/status :: status-table (model=${model})" />
+            <section class="govuk-tabs__panel">
+                <th:block th:insert="fragments/status :: status-table (model=${model})" />
+            </section>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
