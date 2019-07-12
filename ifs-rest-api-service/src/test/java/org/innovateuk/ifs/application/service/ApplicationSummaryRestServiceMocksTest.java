@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.junit.Assert.assertEquals;
@@ -224,5 +226,23 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
 
         assertTrue(result.isSuccess());
         assertEquals(appIds, result.getSuccess());
+    }
+
+    @Test
+    public void getPreviousApplications() {
+        long competitionId = 1L;
+
+        List<PreviousApplicationResource> previous = newPreviousApplicationResource().build(1);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s/%s", APPLICATION_SUMMARY_REST_URL, "find-by-competition", competitionId, "previous"),
+                ParameterizedTypeReferences.previousApplicationResourceListType(),
+                previous
+        );
+
+        RestResult<List<PreviousApplicationResource>> result = service.getPreviousApplications(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(previous, result.getSuccess());
     }
 }

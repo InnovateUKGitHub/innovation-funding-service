@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.primitives.Longs.asList;
+import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_BUILDER;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -202,5 +204,29 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 fieldWithPath("partnerOrganisations[].users[].lead").description("Is user the lead applicant"))
                         )
                 );
+    }
+
+    @Test
+    public void getPreviousApplications() throws Exception {
+        long competitionId = 4L;
+
+        when(applicationSummaryService.getPreviousApplications(competitionId)).thenReturn(serviceSuccess(newPreviousApplicationResource().build(1)));
+
+        mockMvc.perform(
+                get(baseUrl + "/previous/{competitionId}", competitionId)
+                        .contentType(APPLICATION_JSON))
+                .andDo(document("application-summary/{method-name}",
+                        pathParameters(parameterWithName("competitionId").description("The competition id to get previous applications")),
+                        responseFields(
+                                fieldWithPath("id").description("The id of the application"),
+                                fieldWithPath("name").description("The name of the application"),
+                                fieldWithPath("leadOrganisationName").description("The lead organisation of the application"),
+                                fieldWithPath("applicationState").description("The state of the application"),
+                                fieldWithPath("competition").description("The id of the competition")
+                        )
+                )
+            );
+
+        verify(applicationSummaryService).getPreviousApplications(competitionId);
     }
 }

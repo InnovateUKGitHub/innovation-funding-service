@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller.application.list.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller.application.list.controller;
 
 import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;

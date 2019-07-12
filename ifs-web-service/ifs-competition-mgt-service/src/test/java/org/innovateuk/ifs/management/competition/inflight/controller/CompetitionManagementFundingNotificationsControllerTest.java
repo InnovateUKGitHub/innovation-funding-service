@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;

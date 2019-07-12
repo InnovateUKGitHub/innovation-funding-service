@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.application.list.controller;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 
@@ -127,19 +125,6 @@ public class CompetitionManagementApplicationsController {
         model.addAttribute("originQuery", originQuery);
 
         return "competition/ineligible-applications";
-    }
-
-    @SecuredBySpring(value = "UPDATE", description = "Only the IFS admin is able to mark an application as successful after funding decisions have been made")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @PostMapping("/mark-successful/application/{applicationId}")
-    public String markApplicationAsSuccessful(
-            @PathVariable("competitionId") long competitionId,
-            @PathVariable("applicationId") long applicationId) {
-        checkCompetitionIsOpen(competitionId);
-        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
-        projectRestService.createProjectFromApplicationId(applicationId).getSuccess();
-
-        return "redirect:/competition/{competitionId}/applications/previous";
     }
 
     private void checkCompetitionIsOpen(long competitionId) {

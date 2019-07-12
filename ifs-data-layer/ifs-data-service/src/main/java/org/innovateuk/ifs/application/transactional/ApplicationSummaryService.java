@@ -71,5 +71,7 @@ public interface ApplicationSummaryService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationTeamResource> getApplicationTeamByApplicationId(long applicationId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Internal users can see all previous applications across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId);
 }
