@@ -110,7 +110,7 @@
                                             </a>
                                             <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
                                         </td>
-                                        <td class="govuk-table__cell" th:text="${assessor.email}">dave@email.com</td>
+                                        <td class="govuk-table__cell ifs-table__email" th:text="${assessor.email}">dave@email.com</td>
                                         <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Earth Observation</td>
                                         <td class="govuk-table__cell">
                                             <span class="yes" th:if="${assessor.compliant}">Yes</span>
