@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.assessor.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.management.fixtures.CompetitionFundersFixture;
 import org.junit.Before;
 import org.junit.Test;
 
