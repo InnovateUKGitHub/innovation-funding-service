@@ -12,7 +12,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -23,7 +22,7 @@ import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<FinanceChecksQueriesAddQueryController> {
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private ProjectService projectService;

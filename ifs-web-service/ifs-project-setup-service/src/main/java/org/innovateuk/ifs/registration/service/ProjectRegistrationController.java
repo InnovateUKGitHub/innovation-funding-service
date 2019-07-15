@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class ProjectRegistrationController {
     private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     private final static String EMAIL_FIELD_NAME = "email";
     private static final String REGISTER_MAPPING = "/registration/register";

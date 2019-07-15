@@ -3,11 +3,10 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.controller.OrganisationCreationLeadTypeController;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,7 +36,7 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;

@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -21,7 +20,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +91,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Before
     public void setupCommonExpectations() {

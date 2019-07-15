@@ -17,7 +17,6 @@ import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedV
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.review.controller.ReviewInviteAssessorsController;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.management.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsAcceptedModelPopulator;
@@ -28,7 +27,7 @@ import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewInviteAssessorsFindViewModel;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewInviteAssessorsInviteViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,7 +106,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     private ReviewInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;

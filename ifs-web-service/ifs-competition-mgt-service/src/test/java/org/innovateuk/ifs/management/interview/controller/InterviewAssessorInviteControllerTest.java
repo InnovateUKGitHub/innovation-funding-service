@@ -10,7 +10,6 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.interview.controller.InterviewAssessorInviteController;
 import org.innovateuk.ifs.management.interview.form.InterviewSelectionForm;
 import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsFindModelPopulator;
@@ -27,7 +26,7 @@ import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,7 +108,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
     private InterviewInviteRestService interviewInviteRestService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;

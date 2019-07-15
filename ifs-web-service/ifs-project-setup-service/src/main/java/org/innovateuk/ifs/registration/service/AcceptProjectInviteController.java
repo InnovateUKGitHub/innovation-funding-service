@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +41,7 @@ public class AcceptProjectInviteController {
     private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Autowired
     private NavigationUtils navigationUtils;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eu.grant.EuGrantRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieService> {
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private EuGrantRestService euGrantRestService;

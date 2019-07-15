@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.cookie;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Component
 public abstract class CompetitionManagementCookieController<T> {
     @Autowired
-    protected CookieUtil cookieUtil;
+    protected EncryptedCookieUtil cookieUtil;
 
     public static final int SELECTION_LIMIT = 500;
 

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -43,7 +43,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
     private UserRestService userRestService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private HttpServletRequest request;

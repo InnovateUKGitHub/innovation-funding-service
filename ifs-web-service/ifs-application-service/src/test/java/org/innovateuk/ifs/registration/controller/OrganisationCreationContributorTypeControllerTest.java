@@ -4,7 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     private RegistrationCookieService registrationCookieService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Override
     protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {

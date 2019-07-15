@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.interview.controller.InterviewApplicationSendInviteController;
 import org.innovateuk.ifs.management.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationsSendModelPopulator;
@@ -22,7 +21,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +87,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     }
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieUtil cookieUtil;
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
