@@ -103,6 +103,5 @@ public class LabourCostCategoryTest {
     public void excludeFromTotalCost() {
 
         assertFalse(labourCostCategory.excludeFromTotalCost());
-
     }
 }

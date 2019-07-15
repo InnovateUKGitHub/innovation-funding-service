@@ -11,32 +11,29 @@ import java.util.List;
 
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OtherFundingCostCategoryTest {
 
     private OtherFunding otherFunding;
-
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
 
     private OtherFundingCostCategory otherFundingCostCategory;
 
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem otherFundingFinanceRowItem = newOtherFunding()
+        otherFunding = newOtherFunding()
                 .withFundingSource("Luck")
-                .withOtherPublicFunding("Other public funding")
                 .withName("Lottery")
                 .withFundingAmount(new BigDecimal(10000))
                 .build();
 
-        costs.add(otherFundingFinanceRowItem);
-
-        otherFunding = newOtherFunding().withName("Lottery").withFundingAmount(new BigDecimal(20000)).build();
+        costs.add(otherFunding);
 
         otherFundingCostCategory = new OtherFundingCostCategory();
         otherFundingCostCategory.setCosts(costs);
+        otherFundingCostCategory.setOtherFunding(otherFunding);
     }
 
     @Test
@@ -46,42 +43,66 @@ public class OtherFundingCostCategoryTest {
     }
 
     @Test
-    public void getTotal() {
+    public void getTotalWithYesOtherPublicFunding() {
+
+        otherFunding.setOtherPublicFunding("Yes");
+        otherFundingCostCategory.calculateTotal();
+
+        assertEquals(new BigDecimal(10000), otherFundingCostCategory.getTotal());
     }
 
     @Test
-    public void calculateTotal() {
+    public void getTotalWithNoOtherPublicFunding() {
+
+        otherFunding.setOtherPublicFunding("");
+        otherFundingCostCategory.calculateTotal();
+
+        assertEquals(BigDecimal.ZERO, otherFundingCostCategory.getTotal());
     }
 
     @Test
     public void getOtherFunding() {
 
-//        assertEquals(otherFunding, otherFundingCostCategory.getOtherFunding());
+        assertEquals(otherFunding, otherFundingCostCategory.getOtherFunding());
     }
 
     @Test
     public void getOtherPublicFunding() {
 
-//        assertEquals("Other public funding", otherFundingCostCategory.getOtherPublicFunding());
+        otherFunding.setOtherPublicFunding("Yes");
+        assertEquals("Yes", otherFundingCostCategory.getOtherPublicFunding());
+    }
+
+    @Test
+    public void getOtherPublicFundingWithNullOtherFunding() {
+
+        otherFunding.setOtherPublicFunding("");
+        assertEquals("", otherFundingCostCategory.getOtherPublicFunding());
     }
 
     @Test
     public void getOtherFundingCostItem() {
+
+        assertEquals(otherFunding, otherFundingCostCategory.getOtherFundingCostItem());
     }
 
     @Test
     public void addCost() {
+
+        FinanceRowItem otherFunding2 = newOtherFunding()
+                .withFundingSource("Family")
+                .withName("Savings")
+                .withFundingAmount(new BigDecimal(5000))
+                .build();
+        costs.add(otherFunding2);
+        otherFundingCostCategory.addCost(otherFunding2);
+
+        assertEquals(costs, otherFundingCostCategory.getCosts());
     }
 
     @Test
     public void excludeFromTotalCost() {
-    }
 
-    @Test
-    public void setCosts() {
-    }
-
-    @Test
-    public void otherFundingSet() {
+        assertTrue(otherFundingCostCategory.excludeFromTotalCost());
     }
 }
