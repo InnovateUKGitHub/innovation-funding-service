@@ -157,7 +157,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
         long commentId = 2L;
         String details = "details";
 
-        when(projectStateRestService.addPost(any(PostResource.class), eq(commentId))).thenReturn(restSuccess());
+        when(projectStateRestService.addPost(any(PostResource.class), eq(projectId), eq(commentId))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/on-hold-status", competitionId, projectId)
                 .param("details", details)
@@ -168,7 +168,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
 
 
         ArgumentCaptor<PostResource> argumentCaptor = ArgumentCaptor.forClass(PostResource.class);
-        verify(projectStateRestService).addPost(argumentCaptor.capture(), eq(commentId));
+        verify(projectStateRestService).addPost(argumentCaptor.capture(), eq(projectId), eq(commentId));
         PostResource post = argumentCaptor.getValue();
 
         assertEquals(post.body, details);

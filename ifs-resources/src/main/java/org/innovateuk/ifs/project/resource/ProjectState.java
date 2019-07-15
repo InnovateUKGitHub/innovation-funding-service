@@ -4,7 +4,9 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -45,6 +47,8 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     public static ProjectState fromState(State state) {
         return ProcessState.fromState(ProjectState.values(), state);
     }
+
+    public static Set<ProjectState> COMPLETED_STATES = EnumSet.of(LIVE, WITHDRAWN, COMPLETED_OFFLINE);
 
     @Override
     public long getId() {
