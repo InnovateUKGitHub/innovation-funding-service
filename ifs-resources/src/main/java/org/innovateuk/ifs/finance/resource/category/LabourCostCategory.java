@@ -72,4 +72,8 @@ public class LabourCostCategory implements FinanceRowCostCategory {
     public boolean excludeFromTotalCost() {
         return false;
     }
+
+    public void setWorkingDaysPerYearCostItem(LabourCost workingDaysPerYearCostItem) {
+        this.workingDaysPerYearCostItem = workingDaysPerYearCostItem;
+    }
 }
