@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.invite.form.SendInviteForm;
 import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class InterviewAssessorSendInviteControllerTest extends BaseControllerMoc
     private CompetitionResource competition;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private InterviewInviteRestService interviewInviteRestService;

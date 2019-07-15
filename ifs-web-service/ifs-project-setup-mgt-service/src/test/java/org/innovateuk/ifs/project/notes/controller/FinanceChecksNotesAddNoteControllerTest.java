@@ -20,7 +20,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Before
     public void setupCommonExpectations() {

@@ -23,7 +23,7 @@ import org.innovateuk.ifs.management.interview.viewmodel.InterviewAllocateApplic
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -102,7 +102,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Before
     public void setUpCookies() {

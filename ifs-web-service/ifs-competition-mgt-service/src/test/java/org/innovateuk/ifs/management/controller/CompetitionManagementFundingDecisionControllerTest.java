@@ -17,7 +17,7 @@ import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;

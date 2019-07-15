@@ -1,6 +1,6 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,7 +24,7 @@ public class CookieTestUtil {
     private static String salt = "109240124012412412";
     public static TextEncryptor encryptor = Encryptors.text(password, salt);
 
-    public static void setupCookieUtil(EncryptedCookieUtil cookieUtil) {
+    public static void setupCookieUtil(EncryptedCookieService cookieUtil) {
         ReflectionTestUtils.setField(cookieUtil, "cookieSecure", TRUE);
         ReflectionTestUtils.setField(cookieUtil, "cookieHttpOnly", FALSE);
         ReflectionTestUtils.setField(cookieUtil, "encryptionPassword", password);

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractCookieUtil {
-    private static final Log LOG = LogFactory.getLog(AbstractCookieUtil.class);
+public abstract class AbstractCookieService {
+    private static final Log LOG = LogFactory.getLog(AbstractCookieService.class);
 
     private static final Integer COOKIE_LIFETIME = 3600;
 

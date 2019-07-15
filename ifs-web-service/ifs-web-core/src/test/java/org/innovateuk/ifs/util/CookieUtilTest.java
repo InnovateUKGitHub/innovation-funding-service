@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class CookieUtilTest {
 
     @InjectMocks
-    private EncryptedCookieUtil cookieUtil = new EncryptedCookieUtil();
+    private EncryptedCookieService cookieUtil = new EncryptedCookieService();
 
     @Mock
     private HttpServletRequest request;

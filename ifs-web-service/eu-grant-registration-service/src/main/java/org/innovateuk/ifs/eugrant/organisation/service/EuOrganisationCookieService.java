@@ -2,7 +2,7 @@ package org.innovateuk.ifs.eugrant.organisation.service;
 
 import org.innovateuk.ifs.eugrant.organisation.form.EuOrganisationTypeForm;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantHttpServlet;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class EuOrganisationCookieService {
     private static final String ORGANISATION_TYPE = "euOrganisationType";
 
     @Autowired
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Autowired
     private EuGrantHttpServlet euGrantHttpServlet;

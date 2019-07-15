@@ -9,7 +9,7 @@ import org.innovateuk.ifs.management.invite.form.SendInviteForm;
 import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
 import org.innovateuk.ifs.management.review.form.ReviewOverviewSelectionForm;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
     private CompetitionResource competition;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private ReviewInviteRestService reviewInviteRestService;

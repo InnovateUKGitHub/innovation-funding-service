@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel
 import org.innovateuk.ifs.registration.service.AcceptProjectInviteController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +50,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     private ProjectInviteRestService projectInviteRestServiceMock;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private Environment env;

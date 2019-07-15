@@ -28,7 +28,7 @@ import org.innovateuk.ifs.management.funding.populator.ManageFundingApplications
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,7 +95,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;

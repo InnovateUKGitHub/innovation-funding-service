@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.cookie;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 @Component
 public abstract class CompetitionManagementCookieController<T> {
     @Autowired
-    protected EncryptedCookieUtil cookieUtil;
+    protected CompressedCookieService cookieUtil;
 
     public static final int SELECTION_LIMIT = 500;
 
@@ -65,7 +65,7 @@ public abstract class CompetitionManagementCookieController<T> {
     }
 
     protected Optional<T> getSelectionFormFromCookie(HttpServletRequest request, String identifier) {
-        String selectionCookieJson = cookieUtil.getCompressedCookieValue(request, format("%s_comp_%s", getCookieName(), identifier));
+        String selectionCookieJson = cookieUtil.getCookieValue(request, format("%s_comp_%s", getCookieName(), identifier));
         if (isNotBlank(selectionCookieJson)) {
             return Optional.ofNullable(getObjectFromJson(selectionCookieJson, getFormType()));
         } else {
@@ -77,7 +77,7 @@ public abstract class CompetitionManagementCookieController<T> {
     }
 
     protected void saveFormToCookie(HttpServletResponse response, String identifier, T selectionForm) {
-        cookieUtil.saveToCompressedCookie(response, format("%s_comp_%s", getCookieName(), identifier), getSerializedObject(selectionForm));
+        cookieUtil.saveToCookie(response, format("%s_comp_%s", getCookieName(), identifier), getSerializedObject(selectionForm));
     }
 
     protected void removeCookie(HttpServletResponse response, long competitionId) {

@@ -6,7 +6,7 @@ import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 
 @Service
-public class CompressedCookieUtil extends AbstractCookieUtil {
+public class CompressedCookieService extends AbstractCookieService {
 
     @Override
     protected String getValueToSave(String value) {

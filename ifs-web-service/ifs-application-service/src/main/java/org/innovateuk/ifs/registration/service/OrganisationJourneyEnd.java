@@ -9,7 +9,7 @@ import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ public class OrganisationJourneyEnd {
     private UserRestService userRestService;
 
     @Autowired
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
         if (user != null) {

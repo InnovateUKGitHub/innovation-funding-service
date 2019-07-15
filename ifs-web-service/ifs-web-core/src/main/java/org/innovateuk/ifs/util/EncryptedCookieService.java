@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class EncryptedCookieUtil extends AbstractCookieUtil {
+public class EncryptedCookieService extends AbstractCookieService {
     private TextEncryptor encryptor;
 
     @Value("${ifs.web.security.csrf.encryption.password}")

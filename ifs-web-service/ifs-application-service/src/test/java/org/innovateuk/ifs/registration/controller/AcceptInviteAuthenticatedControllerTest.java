@@ -7,7 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -32,7 +32,7 @@ public class AcceptInviteAuthenticatedControllerTest extends AbstractApplication
     private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
 
     @Mock
-    private EncryptedCookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private RegistrationCookieService registrationCookieService;
