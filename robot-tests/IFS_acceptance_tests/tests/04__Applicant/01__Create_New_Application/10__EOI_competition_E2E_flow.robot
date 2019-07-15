@@ -112,9 +112,7 @@ the EOI comp moves to Previous tab
     [Tags]
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = a:contains("Previous")
-    Then the user clicks the button/link   link = ${comp_name}
-    And the user should see the element    JQuery = h1:contains("${comp_name}")
-#    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
+    Then the user should see the competition details and sucessful application
 
 *** Keywords ***
 Custom Suite Setup
@@ -157,6 +155,13 @@ the applicant checks for competition terms and conditions
     the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
     the user clicks the button/link       link = Application overview
+
+the user should see the competition details and sucessful application
+    the user clicks the button/link    link = ${comp_name}
+    the user should see the element    jQuery = dt:contains("Competition type:") ~ dd:contains("Expression of interest")
+    the user should see the element    jQuery = button:contains("Projects (0)")
+    the user clicks the button/link    jQuery = button:contains("Applications")
+    the user should see the element    jQuery = h1:contains("${comp_name}")
 
 Custom suite teardown
     Close browser and delete emails

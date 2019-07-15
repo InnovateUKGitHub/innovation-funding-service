@@ -108,6 +108,11 @@ The user is able to see that the project is beeing completed offline
     the user clicks the button/link   link = Return to project details
     the user should see the element   jQuery = p:contains("Project setup has been completed offline.")
 
+The user is able to see completed offline project in previous tab
+    the user navigates to the page     ${server}/management/competition/${MARKOFFLINE_COMPETITION}/previous
+    the user clicks the button/link    jQuery = button:contains("Projects")
+    the user should see the element    jQuery = th:contains("${MARKOFFLINE_APPLICATION_1_TITLE}")
+
 The user is able to see that the project is being Managed offline
     the user should see the element   jQuery = p:contains("This project is being managed offline.")
     the user clicks the button/link   link = Return to project details
