@@ -12,6 +12,8 @@ import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousComp
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,10 +26,15 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyListOf;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -51,6 +58,9 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ProjectRestService projectRestService;
 
+    @Mock
+    private StatusRestService statusRestService;
+
     @Test
     public void viewPreviousCompetition() throws Exception {
         long competitionId = 1L;
@@ -65,10 +75,31 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withInnovationSectorName("sector")
                 .build();
 
+        CompetitionProjectsStatusResource statusResource = newCompetitionProjectsStatusResource().
+                withCompetitionName("ABC").
+                withCompetitionNumber(competitionId).
+                withProjectStatusResources(newProjectStatusResource().
+                        withProjectNumber(1L, 2L, 3L).
+                        withApplicationNumber(1L, 2L, 3L).
+                        withProjectTitles("Project ABC", "Project PMQ", "Project XYZ").
+                        withProjectLeadOrganisationName("Hive IT").
+                        withNumberOfPartners(3, 3, 3).
+                        withProjectDetailStatus(COMPLETE, PENDING, COMPLETE).
+                        withProjectTeamStatus(COMPLETE, PENDING, COMPLETE).
+                        withMonitoringOfficerStatus(PENDING, PENDING, COMPLETE).
+                        withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
+                        withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
+                        withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
+                        withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
+                        withProjectState(LIVE).
+                        build(3)).
+                build();
+
         List<PreviousApplicationResource> previousApplications = newPreviousApplicationResource().build(1);
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationSummaryRestService.getPreviousApplications(competitionId)).thenReturn(restSuccess(previousApplications));
+        when(statusRestService.getPreviousCompetitionStatus(competitionId)).thenReturn(restSuccess(statusResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/previous", competitionId))
                 .andExpect(view().name("competition/previous"))
@@ -83,6 +114,8 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         assertEquals("Innovate UK", viewModel.getFundingBody());
         assertEquals("sector", viewModel.getInnovationSector());
         assertEquals(true, viewModel.isIfsAdmin());
+        assertEquals(statusResource, viewModel.getCompetitionProjectsStatusResource());
+        assertNotNull(viewModel.getStatusPermissions());
 
         String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
 
