@@ -1,11 +1,11 @@
-#!/usr/bin/python
+
 
 import subprocess
 import re
 import sys
-import urllib
-from urlparse import urlparse
-from HTMLParser import HTMLParser
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 
 
 # Implement bash commands inside python
@@ -33,7 +33,7 @@ def getBaseAuthUrlAndPortUrl(baseUrl):
 # Post the credentials to the base auth url and get SAML credentials which are needed to continue the authentication process
 def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl):
   # Note that python will put quotes around the individual parameters automatically. In particular the authUrl, and with out these the curl command would not work.
-  curlCommand = "curl --insecure -L --data j_username=" + urllib.quote(user) + "&j_password=" + urllib.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
+  curlCommand = "curl --insecure -L --data j_username=" + urllib.parse.quote(user) + "&j_password=" + urllib.parse.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
   postLoginPage = shell(curlCommand)
   sAMLResponse = re.findall('name="SAMLResponse" value="(.*)"', postLoginPage, re.MULTILINE)[0]
   return sAMLResponse
@@ -41,7 +41,7 @@ def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, login
 # Post the SAML credentials and get back a session cookie. The user is now logged in and the session cookie is all that is required going forward.
 def postShibbolethParametersForSession(sAMLResponse, baseUrl):
   h = HTMLParser()
-  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
+  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.parse.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
   exchange = shell(curlCommand)
   session = re.findall('(_shibsession_([^\s-]*))\s*(.*)', exchange, re.MULTILINE)
   shibCookieName = session[0][0]

@@ -506,13 +506,13 @@ the user tries to reject without a reason he should get a validation message
     the user should see a field error     ${empty_field_warning_message}
 
 the user rejects the GOL and sees the successful status
-    # Insert Rejection text and submit
+    #Insert Rejection text and submit
     The user enters text to a text field  id = gol-reject-reason  The document was not signed.
     the user clicks the button/link       css = #submit-button
     the user clicks the button/link       jQuery = button[type = "submit"]:contains("Reject signed grant offer letter")
-    # Warning message on the same page
+    #Warning message on the same page
     the user should see the element       jQuery = .warning-alert:contains("documents have been reviewed and rejected.")
     the user should see the element       jQuery = .warning-alert:contains("Reason for rejection:")
-    # Warning message on Competition level
+    #Warning message on Competition level
     the user navigates to the page        ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element       jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).rejected

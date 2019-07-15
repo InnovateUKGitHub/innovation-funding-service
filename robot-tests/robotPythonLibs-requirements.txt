@@ -4,7 +4,6 @@
 robotframework==3.1.2
 selenium==3.14.1
 robotframework-databaselibrary==1.1.1
-#robotframework-excellibrary==0.0.2
 robotframework-ftplibrary==1.6
 robotframework-imaplibrary==0.3.0
 robotframework-selenium2library==3.0.0
