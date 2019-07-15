@@ -81,7 +81,6 @@ IFS.core.repeatableFinanceRows = (function () {
           jQuery.ajaxProtected({
             url: url
           }).done(function (data) {
-            IFS.core.timeoutWarning.startTimer()
             data = jQuery.parseJSON(data)
             if (data.status === 'OK') {
               jQuery('[data-repeatable-row=' + rowValue + ']').remove()

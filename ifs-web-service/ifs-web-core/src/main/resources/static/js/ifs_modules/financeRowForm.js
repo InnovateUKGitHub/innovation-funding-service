@@ -56,7 +56,6 @@ IFS.core.financeRowForm = (function () {
         url: IFS.core.financeRowForm.getUrl(el) + '/remove-row/' + id,
         method: 'POST'
       }).done(function (data) {
-        IFS.core.timeoutWarning.startTimer()
         removeRow()
       })
     },
