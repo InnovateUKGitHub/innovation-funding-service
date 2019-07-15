@@ -23,7 +23,7 @@ def getBaseUrl(downloadUrl):
 # Go to the base url. Follow any redirects. Find the final auth base url. Find the relative url to post credentials to
 def getBaseAuthUrlAndPortUrl(baseUrl):
   curlCommand = "curl -L --insecure -w marker%{url_effective}marker " + baseUrl
-  loginHtml = shell(curlCommand)
+  loginHtml = shell(curlCommand).decode('utf8')
   loginPostUrl = re.findall('<form action="(.*)" method="post" id="sign-in-form" novalidate="novalidate">', loginHtml, re.MULTILINE)[0]
   redirectUrl = re.findall("marker(.*)marker", loginHtml, re.MULTILINE)[0]
   o = urlparse(redirectUrl)
@@ -34,7 +34,7 @@ def getBaseAuthUrlAndPortUrl(baseUrl):
 def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl):
   # Note that python will put quotes around the individual parameters automatically. In particular the authUrl, and with out these the curl command would not work.
   curlCommand = "curl --insecure -L --data j_username=" + urllib.parse.quote(user) + "&j_password=" + urllib.parse.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
-  postLoginPage = shell(curlCommand)
+  postLoginPage = shell(curlCommand).decode('utf8')
   sAMLResponse = re.findall('name="SAMLResponse" value="(.*)"', postLoginPage, re.MULTILINE)[0]
   return sAMLResponse
 
@@ -42,7 +42,7 @@ def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, login
 def postShibbolethParametersForSession(sAMLResponse, baseUrl):
   h = HTMLParser()
   curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.parse.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
-  exchange = shell(curlCommand)
+  exchange = shell(curlCommand).decode('utf8')
   session = re.findall('(_shibsession_([^\s-]*))\s*(.*)', exchange, re.MULTILINE)
   shibCookieName = session[0][0]
   shibCookieValue = session[0][2]
