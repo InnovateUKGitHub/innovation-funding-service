@@ -35,28 +35,26 @@ Lead applicant can assign a question
     [Setup]  the user logs-in in new browser   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the applicant changes the name of the application
     And the user clicks the button/link        link = Public description
-    Then the user should not see the element   jQuery = .form-footer:contains("Last updated:")
     When the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then the user should see the notification  Question assigned successfully
-    And the user should see the element        css = .textarea-wrapped .readonly
-    And the user should see the element        jQuery = .assign-container:contains("Dennis Bergkamp")
+    And the user should see the element        jQuery = a:contains("Assigned to"):contains(Dennis Bergkamp)
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
     [Tags]
     When the user assigns the question to the collaborator      Stuart Anderson
-    And the user should see the element                         jQuery = .assign-container:contains("you")
+    And the user should see the element                         jQuery = a:contains("Assigned to"):contains(you)
     And the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then the user should see the element                        css = .textarea-wrapped .readonly
-    And the user should see the element                         jQuery = .assign-container:contains("Dennis Bergkamp")
+    And the user should see the element                         jQuery = a:contains("Assigned to"):contains(Dennis Bergkamp)
 
 The question is enabled for the assignee
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
     [Tags]  HappyPath
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
+    Given the user navigates to the page  $1{APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery = li:contains("Public description") .task-status-incomplete
