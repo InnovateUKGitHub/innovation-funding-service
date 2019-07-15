@@ -35,6 +35,7 @@ var vendorJsFiles = [
   __dirname + '/js/vendor/govuk/application.js',
   __dirname + '/js/vendor/govuk/govuk-cookies.js',
   __dirname + '/js/vendor/wysiwyg-editor/*.js',
+  __dirname + '/js/vendor/tablesorter/jquery.tablesorter.js',
   '!' + __dirname + '/js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
