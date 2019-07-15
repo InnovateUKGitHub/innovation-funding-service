@@ -62,8 +62,7 @@
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                        th:text="${'Allocated (' + model.allocatedApplications + ')' }"
-                       aria-selected="true"
-                       class="govuk-tabs__tab"></a>
+                       class="govuk-tabs__tab govuk-tabs__tab--selected"></a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
