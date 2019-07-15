@@ -211,7 +211,7 @@ Assign applications to panel
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
     [Tags]  HappyPath
-    # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
+    #When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given comp admin invites an assessor
     Then Assessor logs in and accepts the invitation  ${assessor_madeleine_email}
     And the user should see the element               jQuery = h3:contains("${CLOSED_COMPETITION_NAME}") ~ div:contains("applications awaiting review")
