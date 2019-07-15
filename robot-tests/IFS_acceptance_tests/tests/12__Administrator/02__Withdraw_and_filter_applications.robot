@@ -15,6 +15,7 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...
 ...             IFS-5958 Read Only view of withdrawn and offline projects in project setup dashboards
 ...
+...             IFS-6053 Amend competition table in the previous tab
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -62,6 +63,14 @@ The IFS Admin clears any filters applied and can see all of the applications
     [Documentation]  IFS-3473
     Given the user clicks the button/link                         link = Clear all filters
     Then the user can see all of the previous applications when the All filter is applied
+    [Teardown]  the user clicks the button/link     link = Previous competitions
+
+The IFS admin checks for compeleted projects on previous tab
+#withdrawn projects count as competed projects
+    [Documentation]  IFS-6053
+    [Tags]
+    Given the user clicks the button/link   jQuery = button:contains("Next")
+    Then the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
 
 *** Keywords ***
 All project sections should be read only
