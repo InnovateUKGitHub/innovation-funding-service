@@ -105,7 +105,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         when(statusServiceMock.getPreviousCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
-        mockMvc.perform(get("/previous/project/competition/{id}", competitionId)
+        mockMvc.perform(get("/project/previous/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
