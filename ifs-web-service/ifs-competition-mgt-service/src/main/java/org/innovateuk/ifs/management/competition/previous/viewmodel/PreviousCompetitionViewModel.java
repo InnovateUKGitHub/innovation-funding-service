@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.previous.viewmodel;
 
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.security.StatusPermission;
@@ -21,6 +22,7 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
     private final ZonedDateTime applicationDeadline;
     private final String innovationSector;
     private final boolean ifsAdmin;
+    private final boolean competitionCanHaveProjects;
 
     private final List<PreviousApplicationResource> applications;
     private final CompetitionProjectsStatusResource competitionProjectsStatusResource;
@@ -33,6 +35,7 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
         this.fundingBody = "Innovate UK";
         this.applicationDeadline = toUkTimeZone(competition.getEndDate());
         this.innovationSector = competition.getInnovationSectorName();
+        this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.statusPermissions = statusPermissions;
@@ -69,6 +72,10 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
 
     public boolean isIfsAdmin() {
         return ifsAdmin;
+    }
+
+    public boolean isCompetitionCanHaveProjects() {
+        return competitionCanHaveProjects;
     }
 
     @Override

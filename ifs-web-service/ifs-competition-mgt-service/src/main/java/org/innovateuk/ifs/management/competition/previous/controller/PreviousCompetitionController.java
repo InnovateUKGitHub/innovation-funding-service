@@ -49,6 +49,7 @@ public class PreviousCompetitionController {
                                           @RequestParam MultiValueMap<String, String> queryParams,
                                           Model model,
                                           UserResource user) {
+
         CompetitionProjectsStatusResource competitionProjectsStatusResource = statusRestService.getPreviousCompetitionStatus(competitionId).getSuccess();
         model.addAttribute("model",  new PreviousCompetitionViewModel(
             competitionRestService.getCompetitionById(competitionId).getSuccess(),

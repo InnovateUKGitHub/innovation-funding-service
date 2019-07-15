@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.previous.controller.PreviousCompetitionController;
@@ -73,6 +74,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionTypeName("type")
                 .withEndDate(close)
                 .withInnovationSectorName("sector")
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
         CompetitionProjectsStatusResource statusResource = newCompetitionProjectsStatusResource().
@@ -113,6 +115,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         assertEquals(toUkTimeZone(close), viewModel.getApplicationDeadline());
         assertEquals("Innovate UK", viewModel.getFundingBody());
         assertEquals("sector", viewModel.getInnovationSector());
+        assertEquals(false, viewModel.isCompetitionCanHaveProjects());
         assertEquals(true, viewModel.isIfsAdmin());
         assertEquals(statusResource, viewModel.getCompetitionProjectsStatusResource());
         assertNotNull(viewModel.getStatusPermissions());

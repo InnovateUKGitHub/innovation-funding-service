@@ -52,7 +52,7 @@
                     </h2>
                 </div>
                 <div id="accordion-previous-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-previous-heading-1">
-                    <p class='govuk-body'>This list only contains completed projects for this competition. <a th:href="@{~/project-setup-management/competition/{competitionId}/status/all(competitionId=${model.competitionId})}">View all projects for this competitions.</a></p>
+                    <p class='govuk-body' th:if="${model.competitionCanHaveProjects}">This list only contains completed projects for this competition. <a th:href="@{~/project-setup-management/competition/{competitionId}/status/all(competitionId=${model.competitionId})}">View all projects for this competitions.</a></p>
                     <th:block th:insert="fragments/status :: status-table (model=${model})" />
                 </div>
             </div>
