@@ -230,13 +230,14 @@ public class ApplicationQuestionController {
         if (questionType != null) {
             switch (questionType) {
                 case APPLICATION_DETAILS:
-                    return String.format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+                    return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId) +
+                            (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
                 case GRANT_AGREEMENT:
-                    return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+                    return format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
                 case GRANT_TRANSFER_DETAILS:
-                    return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+                    return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
                 case APPLICATION_TEAM:
-                    return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
+                    return format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
                             (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
                 case TERMS_AND_CONDITIONS:
                     String originQuery =  UriComponentsBuilder.fromPath("")

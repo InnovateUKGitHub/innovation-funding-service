@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -34,7 +35,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit application details", securedType = ApplicationDetailsController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
 public class ApplicationDetailsController {
 
     private ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator;
@@ -71,6 +72,7 @@ public class ApplicationDetailsController {
         if (form.isEmpty()){
             form.populateForm(viewModel.getApplication());
         }
+        handleSpringBindingOfNullLocalDate(form);
         model.addAttribute("model", viewModel);
 
         return "application/questions/application-details";
@@ -89,6 +91,16 @@ public class ApplicationDetailsController {
         saveDetails(form, applicationId);
 
         return String.format("redirect:/application/%d", applicationId);
+    }
+
+    @GetMapping(params = "mark_as_complete")
+    public String markAsCompleteAsGetRequest(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
+                                             BindingResult bindingResult,
+                                             Model model,
+                                             @PathVariable long applicationId,
+                                             @PathVariable long questionId,
+                                             UserResource user) {
+        return markAsComplete(form, bindingResult, model, applicationId, questionId, user);
     }
 
     @PostMapping(params = "mark_as_complete")
@@ -130,6 +142,12 @@ public class ApplicationDetailsController {
         application.setPreviousApplicationNumber(form.getResubmission() ? form.getPreviousApplicationNumber() : null);
         application.setPreviousApplicationTitle(form.getResubmission() ? form.getPreviousApplicationTitle() : null);
         applicationService.save(application);
+    }
+
+    private void handleSpringBindingOfNullLocalDate(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form) {
+        if (null != form.getStartDate() && form.getStartDate().equals(LocalDate.MIN)) {
+            form.setStartDate(null);
+        }
     }
 
 }
