@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultIte
 import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
-import org.innovateuk.ifs.management.competition.controller.CompetitionManagementDashboardController;
+import org.innovateuk.ifs.management.competition.inflight.controller.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;

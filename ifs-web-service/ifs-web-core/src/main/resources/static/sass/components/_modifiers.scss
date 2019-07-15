@@ -81,8 +81,12 @@ table {
     margin-left: 20px;
   }
 
-  .govuk-table__cell {
+  .ifs-table__email {
     word-break: break-word;
+  }
+
+  .govuk-table__header {
+    vertical-align: bottom;
   }
 }
 

@@ -200,7 +200,7 @@
                                     th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.time}"
                                     th:field="${form.registrationCloseDate.time}">
                                 <option
-                                    th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
+                                    th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
                                     th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"
                                     th:selected="${time == form.registrationCloseDate.time}"></option>
                             </select>
@@ -259,7 +259,7 @@
                                     th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                     th:field="${form.closeDate.time}">
                                 <option
-                                    th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
+                                    th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
                                     th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"
                                     th:selected="${time == form.closeDate.time}"></option>
                             </select>

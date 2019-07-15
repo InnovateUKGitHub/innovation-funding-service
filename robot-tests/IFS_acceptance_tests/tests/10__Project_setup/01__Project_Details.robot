@@ -75,26 +75,11 @@ Internal finance can see competition terms and conditions
     Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
     Then the user navigates to the page           ${Internal_Competition_Status}
 
-Internal finance can see Project details not yet completed
-    [Documentation]  INFUND-5856
-    [Tags]  HappyPath
-    Given the user clicks the button/link          css = #table-project-status tr:nth-child(2) td:nth-child(2) a
-    Then the user should see the element           jQuery = #no-project-manager:contains("Not yet completed")
-    And the user should see the element            jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
-
 Competition admin can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
     Given Log in as a different user            &{Comp_admin1_credentials}
     Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
-
-Competition admin can see Project details not yet completed
-    [Documentation]    INFUND-5856
-    [Tags]  HappyPath
-    Given the user navigates to the page           ${Internal_Competition_Status}
-    And the user should not see the element        css = #table-project-status tr:nth-child(2) td.status.ok a    #Check here that there is no Green-Check
-    When the user clicks the button/link           css = #table-project-status tr:nth-child(2) td:nth-child(2) a
-    Then the competition admin should see that their Project details aren't completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 INFUND-5507 INFUND-5543
@@ -372,10 +357,9 @@ the competition admin should see the status of each project setup stage
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")
-    the user should see the element    jQuery = p:contains("Each partner must provide a finance contact and a project location.")
+    the user should see the element    jQuery = p:contains("Each partner must provide a project location.")
     the user should see the element    css = #project-details
     the user should see the element    jQuery = #project-address:contains("Not yet completed")
-    the user should see the element    jQuery = #no-project-manager:contains("Not yet completed")
     the user should see the element    css = #project-details-finance
     the user should see the element    jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
