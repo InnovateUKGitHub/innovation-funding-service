@@ -10,23 +10,97 @@ Resource          ../10__Project_setup/PS_Common.robot
 ${PsActivityLogCompetitionName}     Integrated delivery programme - low carbon vehicles
 ${PsActivityLogCompId}              ${competition_ids['${PsActivityLogCompetitionName}']}
 ${AdminPsActivityLogCompUrl}        ${server}/project-setup-management/competition/${PsActivityLogCompId}/status/all
+
 ${PsActivityLogApplicationName}     Climate control solution
-${PsActivityLogProjectId}           ${project_ids["${PsActivityLogProjectId}"]}
+${PsActivityLogProjectId}           ${project_ids["${PsActivityLogApplicationName}"]}
 ${AppPsActivityLogCompUrl}          ${server}/project-setup/project/${PsActivityLogProjectId}
 
 *** Test Cases ***
 Ifs Admin is not able to see logs entries before they have happened
-    Given the user navigates to the page    ${AdminPsActivityLogCompUrl}
-    When the user clicks the button/link    jQuery = small:contains("Radiowaves Ltd") a:contains("View activity log")
+    Given the admin navigates to project activity log
     Then the user is not able to see logs entries before they have happened
 
-Applicant completes Project details and IFS Admin is able to see Project Details log entry
-    [Setup]  log in as a different user    &{lead_applicant2_credentials}
-    Given the user navigates to the page   ${AppPsActivityLogCompUrl}
+Project details log entry
+    [Setup]  log in as a different user                   &{lead_applicant2_credentials}
+    Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
+    When the user completes project details
+    Then the admin is able to see log entry               Project details completed
+    And the admin is able to navigate to log entry link   View project details   Project details
+
+Project team Project manager nominated log entry
+    [Setup]  log in as a different user                   &{lead_applicant2_credentials}
+    Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
+    When the user completes project team
+    Then the admin is able to see log entry               Project manager nominated
+    And the admin is able to navigate to log entry link   View project team   Project team
+
+Project team Finance contact nominated log entry
+    Given the admin is able to see log entry               Finance contact nominated
+    Then the admin is able to navigate to log entry link   View project team   Project team
+
+Documents added log entry
+    [Setup]  log in as a different user                   &{lead_applicant2_credentials}
+    Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
+    When the user completes documents
+    Then the admin is able to see log entry               Document added
+    And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
+
+Documents approved log entry
+    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
+    Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
+    When the user approves documents
+    Then the admin is able to see log entry               Document approved
+    And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
+
+Mo assigned log entry
+    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
+    Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
+    When the user assigns MO
+    Then the admin is able to see log entry               Document approved
+    And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
 *** Keywords ***
 Custom suite setup
-    the user logs-in in new browser              &{ifs_admin_user_credentials}
+    the user logs-in in new browser     &{ifs_admin_user_credentials}
+
+The user assigns MO
+
+
+The user approves documents
+    the user navigates to the page         ${server}/project-setup-management/project/${PsActivityLogProjectId}/document/all
+    the user clicks the button/link        link = Exploitation plan
+    internal user approve uploaded documents
+
+The user completes documents
+    the user clicks the button/link     link = Documents
+    the user clicks the button/link     link = Exploitation plan
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+
+The user completes project team
+    the user clicks the button/link     link = Project team
+    the user clicks the button/link     jQuery = a:contains("Project"):contains("manager")
+    the user selects the radio button   projectManager   53
+    the user clicks the button/link     jQuery = button:contains("Save project manager")
+    the user clicks the button/link     jQuery = a:contains("Your finance contact")
+    the user selects the radio button   financeContact   53
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+
+The admin navigates to project activity log
+    the user navigates to the page     ${AdminPsActivityLogCompUrl}
+    the user clicks the button/link    jQuery = small:contains("Radiowaves Ltd") a:contains("View activity log")
+
+The admin is able to see log entry
+    [Arguments]  ${logActivityName}
+    log in as a different user                   &{ifs_admin_user_credentials}
+    the admin navigates to project activity log
+    the user should see the element              jQuery = strong:contains("${logActivityName}")
+
+The admin is able to navigate to log entry link
+    [Arguments]  ${linkName}  ${pageHeadingName}
+    the user clicks the button/link     jQuery = a:contains("${linkName}")
+    the user should see the element     jQuery = h1:contains("${pageHeadingName}")
 
 The user is not able to see logs entries before they have happened
     the user should see the element       jQuery = h1:contains("Activity log")
@@ -34,10 +108,9 @@ The user is not able to see logs entries before they have happened
     the user should see the element       jQuery = strong:contains("Application submitted")
     the user should not see the element   jQuery = strong:contains("Project details completed")
 
-
 The user completes project details
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
-    the user should see a field and summary error       Search using a valid postcode or enter the address manually.
+    the user clicks the button/link                     link = Project details
+    the user clicks the button/link                     jQuery = a:contains("Correspondence address")
     the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
     the user clicks the button/link                     id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
