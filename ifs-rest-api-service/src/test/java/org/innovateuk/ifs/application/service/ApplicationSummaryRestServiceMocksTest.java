@@ -18,6 +18,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.previousApplicationResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -236,7 +237,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(
                 format("%s/%s/%s/%s", APPLICATION_SUMMARY_REST_URL, "find-by-competition", competitionId, "previous"),
-                ParameterizedTypeReferences.previousApplicationResourceListType(),
+                previousApplicationResourceListType(),
                 previous
         );
 

@@ -25,13 +25,13 @@
             </h2>
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
-                    <a th:href="active" th:text="|Active (${model.activeCount})|" th:attr="aria-selected=${model.tab == 'active' ? true : false}" class="govuk-tabs__tab">Active (38)</a>
+                    <a th:href="active" th:text="|Active (${model.activeCount})|" th:classappend="${model.tab == 'active' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Active (38)</a>
                 </li>
                 <li class="govuk-tabs__list-item">
-                    <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" th:attr="aria-selected=${model.tab == 'inactive' ? true : false}" class="govuk-tabs__tab">Inactive (10)</a>
+                    <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" th:classappend="${model.tab == 'inactive' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Inactive (10)</a>
                 </li>
                 <li class="govuk-tabs__list-item">
-                    <a th:href="pending" th:text="|Pending (${model.pendingCount})|" th:attr="aria-selected=${model.tab == 'pending' ? true : false}" class="govuk-tabs__tab">Pending (10)</a>
+                    <a th:href="pending" th:text="|Pending (${model.pendingCount})|" th:classappend="${model.tab == 'pending' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Pending (10)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
