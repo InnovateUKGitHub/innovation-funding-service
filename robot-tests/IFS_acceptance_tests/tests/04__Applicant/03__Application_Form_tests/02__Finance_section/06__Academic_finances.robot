@@ -19,8 +19,8 @@ Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
     [Tags]
     [Setup]    Lead applicant marks the finances as complete
-    Given Log in as a different user          ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to Your-finances page  Academic robot test application
+    Given Log in as a different user          &{collaborator2_credentials}
+    When the user navigates to Your-finances page  Performance Application 7
     And the user clicks the button/link       link = Your project costs
     Then the user should not see the element  css = #incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
@@ -28,8 +28,8 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399  IFS-2879
     [Tags]  HappyPath
-    [Setup]    Log in as a different user            ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to Your-finances page    Academic robot test application
+    [Setup]    Log in as a different user            &{collaborator2_credentials}
+    When the user navigates to Your-finances page    Performance Application 7
     And the user clicks the button/link              link = Your project costs
     And the applicant enters invalid inputs
     And the user selects the checkbox                agree-terms-page
@@ -62,15 +62,15 @@ Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials}
-    Given the user navigates to Your-finances page  Academic robot test application
+    Given the user navigates to Your-finances page  Performance Application 7
     When the user clicks the button/link      link = Your project costs
     Then the user should not see the element  css = .upload-section label
 
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]    log in as a different user              ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to Your-finances page      Academic robot test application
+    [Setup]    log in as a different user              &{collaborator2_credentials}
+    When the user navigates to Your-finances page      Performance Application 7
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
@@ -94,15 +94,15 @@ Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
     [Setup]    log in as a different user              &{lead_applicant_credentials}
-    When the user navigates to Your-finances page      Academic robot test application
+    When the user navigates to Your-finances page      Performance Application 7
     And the user clicks the button/link                link = Your project costs
     Then the user should not see the element           link = ${5mb_pdf}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
-    [Setup]    log in as a different user             ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to Your-finances page     Academic robot test application
+    [Setup]    log in as a different user             &{collaborator2_credentials}
+    When the user navigates to Your-finances page     Performance Application 7
     And the user should see correct grant percentage
     When the user clicks the button/link              link = Your project costs
     Then the user can see JeS details
@@ -110,8 +110,8 @@ Academic finances JeS link showing
 Mark all as complete
     [Documentation]    INFUND-918  IFS-2879
     [Tags]
-    Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    And the user navigates to Your-finances page   Academic robot test application
+    Given log in as a different user               &{collaborator2_credentials}
+    And the user navigates to Your-finances page   Performance Application 7
     And the user clicks the button/link            link = Your project costs
     And the user should see the element            link = ${5mb_pdf}
     When the user enters text to a text field      css = input[name="tsbReference"]  123123
@@ -128,7 +128,7 @@ Mark all as complete
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to Your-finances page     Academic robot test application
+    When the user navigates to Your-finances page     Performance Application 7
     And the user should see correct grant percentage
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
@@ -137,7 +137,7 @@ User should not be able to edit or upload the form
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to Your-finances page        Academic robot test application
+    When the user navigates to Your-finances page        Performance Application 7
     Then the user should not see the element             jQuery = button:contains("Remove")
 
 Academic finance overview
@@ -153,7 +153,6 @@ Custom Suite Setup
     Set predefined date variables
     the guest user opens the browser
     Connect to database  @{database}
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
     Textfield Value Should Be  id = subtotal-directly-allocated  £3,047
@@ -173,16 +172,15 @@ the finance table should be correct
     Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)  10,895
 
 Lead applicant marks the finances as complete
-    Log in as a different user                         &{lead_applicant_credentials}
-    the user clicks the button/link                    link = Academic robot test application
-    the applicant completes the application details    Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    Logging in and Error Checking                      &{lead_applicant_credentials}
+    the user clicks the button/link                    link = Performance Application 7
     then the user selects research category            Feasibility studies
-    the user navigates to Your-finances page           Academic robot test application
-    the user marks the finances as complete            Academic robot test application  labour costs  n/a  no
+    the user navigates to Your-finances page           Performance Application 7
+    the user marks the finances as complete            Performance Application 7  labour costs  n/a  yes
 
 Lead applicant marks the finances as incomplete
     log in as a different user                  &{lead_applicant_credentials}
-    the user navigates to Your-finances page    Academic robot test application
+    the user navigates to Your-finances page    Performance Application 7
     the user clicks the button/link             link = Your funding
     the user clicks the button/link             jQuery = button:contains("Edit")
 
@@ -213,7 +211,7 @@ the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0
 
 The user marks the academic application finances as incomplete
-    the user navigates to Your-finances page  Academic robot test application
+    the user navigates to Your-finances page  Performance Application 7
     the user clicks the button/link    link = Your project costs
     Set Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")

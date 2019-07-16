@@ -210,6 +210,7 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
     Textfield Value Should Be             id = total  £32,698
+    the user clicks the button/link       jQuery = button:contains("Remove")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       link = ${5mb_pdf}
     the user selects the checkbox         termsAgreed

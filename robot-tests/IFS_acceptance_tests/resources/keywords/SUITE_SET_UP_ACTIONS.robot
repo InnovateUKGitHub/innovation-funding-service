@@ -149,7 +149,7 @@ The user navigates to the overview page of the Robot test application
 
 The user navigates to the finance overview of the academic
     When the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link= Performance Application 7
     And the user clicks the button/link    link=Finances overview
 
 invite a registered user
