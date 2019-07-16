@@ -1,4 +1,4 @@
-# Use "pip install -r robotPythonLibs-requirements.txt" to install the following libraries:
+# Use "pip3 install -r robotPythonLibs-requirements.txt" to install the following libraries:
 
 # Robot Framework and its library dependencies
 robotframework==3.1.2
