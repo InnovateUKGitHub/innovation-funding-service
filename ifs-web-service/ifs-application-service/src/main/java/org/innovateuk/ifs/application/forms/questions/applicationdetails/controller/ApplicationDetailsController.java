@@ -90,6 +90,18 @@ public class ApplicationDetailsController {
         return String.format("redirect:/application/%d", applicationId);
     }
 
+    @PostMapping("/auto-save")
+    public String autoSaveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
+                                BindingResult bindingResult,
+                                Model model,
+                                @PathVariable long applicationId,
+                                @PathVariable long questionId,
+                                UserResource user) {
+        saveDetails(form, applicationId);
+
+        return String.format("redirect:/application/%d", applicationId);
+    }
+
     @GetMapping(params = "mark_as_complete")
     public String markAsCompleteAsGetRequest(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
                                              BindingResult bindingResult,

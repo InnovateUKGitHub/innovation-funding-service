@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application_details(formInputViewModel)" th:with="formInput=${formInputViewModel.formInput}, question=${formInputViewModel.question}, competition=${formInputViewModel.competition}">
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
-          data-autosave="application" enctype="multipart/form-data"
+          data-autosave="autosaveFormPost" enctype="multipart/form-data"
           th:with="appIsClosed=${applicationIsClosed}, readonly=${applicationIsReadOnly}"
           novalidate="novalidate">
         <div class="question">
@@ -75,7 +75,7 @@
                                 </label>
                             </div>
 
-                             <div id="resubmission-details" class="govuk-radios__conditional govuk-form-group">
+                            <div id="resubmission-details" class="govuk-radios__conditional govuk-form-group">
                                 <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{__previousApplicationNumber__}')} ? 'govuk-form-group--error'">
                                     <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
                                     <label class="govuk-label" for="previousApplicationNumber">
