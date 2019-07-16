@@ -101,8 +101,8 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (!history.isEmpty()) {
-            modelAndView.getModel().put("backLinkUrl", history.peek().getUrl());
-            modelAndView.getModel().put("backLinkText", history.peek().getName());
+            modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
+            modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
         }
 
         boolean navigationRoot = Optional.of(handler)

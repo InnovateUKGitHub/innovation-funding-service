@@ -204,15 +204,16 @@
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
     <div class="sub-header">
-        <!--/* <a th:if="${linkTitle != null and linkUrl != null}"
+        <a th:unless="${dynamicBackLink}"
+           th:if="${linkTitle != null and linkUrl != null}"
            class="govuk-back-link"
            th:href="${linkUrl}"
-           th:text="${linkTitle}" /> */-->
+           th:text="${linkTitle}" />
 
-        <a th:if="${backLinkUrl}"
+        <a th:if="${cookieBackLinkUrl != null && dynamicBackLink != null}"
            class="govuk-back-link"
-           th:href="${backLinkUrl}"
-           th:text="${backLinkText == null ? 'Back' : 'Back to ' + backLinkText.toLowerCase()}" />
+           th:href="${cookieBackLinkUrl}"
+           th:text="${cookieBackLinkText == null ? 'Back' : 'Back to ' + cookieBackLinkText.toLowerCase()}" />
         <div class="deadline"
              th:if="${currentCompetition != null && currentCompetition.open}">
             <th:block th:text="${currentCompetition.getDaysLeft()}" />
