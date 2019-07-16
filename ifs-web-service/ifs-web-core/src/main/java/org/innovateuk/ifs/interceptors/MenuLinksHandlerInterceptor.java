@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.navigation.NavigationRoot;
 import org.innovateuk.ifs.navigation.PageHistory;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.EncryptedCookieUtil;
+import org.innovateuk.ifs.util.EncodedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     private NavigationUtils navigationUtils;
 
     @Autowired
-    private EncryptedCookieUtil cookieUtil;
+    private EncodedCookieService encodedCookieService;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
@@ -94,7 +94,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void handleBackLink(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView, Object handler) {
-        Optional<Deque<PageHistory>> cookie = cookieUtil.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {});
+        Optional<Deque<PageHistory>> cookie = encodedCookieService.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {});
         Deque<PageHistory> history = cookie.orElse(new LinkedList<>());
         while (history.contains(new PageHistory(request.getRequestURI()))) {
             history.pop();
@@ -116,6 +116,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         }
 
         history.push(new PageHistory(request.getRequestURI()));
-        cookieUtil.saveToReadableCookie(response, "pageHistory", JsonUtil.getSerializedObject(history));
+        encodedCookieService.saveToCookie(response, "pageHistory", JsonUtil.getSerializedObject(history));
     }
 }

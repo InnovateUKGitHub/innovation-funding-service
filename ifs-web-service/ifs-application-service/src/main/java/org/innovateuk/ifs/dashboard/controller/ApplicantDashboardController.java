@@ -2,6 +2,7 @@ package org.innovateuk.ifs.dashboard.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
+import org.innovateuk.ifs.navigation.NavigationRoot;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class ApplicantDashboardController {
     private ApplicantDashboardPopulator applicantDashboardPopulator;
 
     @GetMapping("/dashboard")
+    @NavigationRoot
     public String dashboard(Model model,
                             UserResource user,
                             @RequestParam MultiValueMap<String, String> queryParams) {
