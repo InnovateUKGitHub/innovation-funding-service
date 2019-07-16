@@ -36,25 +36,24 @@ Lead applicant can assign a question
     Given the applicant changes the name of the application
     And the user clicks the button/link        link = Public description
     When the applicant assigns the question to the collaborator  Dennis Bergkamp
-    Then the user should see the notification  Question assigned successfully
-    And the user should see the element        jQuery = a:contains("Assigned to"):contains(Dennis Bergkamp)
+    And the user should see the element        jQuery = p:contains("This question is assigned to"):contains("Dennis Bergkamp")
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
     [Tags]
     When the user assigns the question to the collaborator      Stuart Anderson
-    And the user should see the element                         jQuery = a:contains("Assigned to"):contains(you)
+    And the user should see the element                         jQuery = p:contains("This question is assigned to"):contains("you")
     And the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then the user should see the element                        css = .textarea-wrapped .readonly
-    And the user should see the element                         jQuery = a:contains("Assigned to"):contains(Dennis Bergkamp)
+    And the user should see the element                         jQuery = p:contains("This question is assigned to"):contains("Dennis Bergkamp")
 
 The question is enabled for the assignee
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
     [Tags]  HappyPath
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    Given the user navigates to the page  $1{APPLICANT_DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery = li:contains("Public description") .task-status-incomplete
@@ -111,8 +110,8 @@ Collaborators can mark as ready for review
     ...  This test depends on the previous test suite to run first
     [Tags]
     When the user clicks the button/link            jQuery = button:contains("Assign to lead for review")
-    Then the user should see the notification       Question assigned successfully
-    And the user should see the element             jQuery = .assignee:contains("You have reassigned this question to")
+    Then the user should see the notification       You have successfully assigned the question
+    And the user should see the element             jQuery = p:contains("This question is assigned to"):contains("Stuart Anderson")
 
 Collaborator cannot edit after marking ready for review
     [Documentation]  INFUND-275
@@ -139,7 +138,7 @@ The question should be reassigned to the lead applicant
     Given the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link      link = Assign test
     Then the user should see the browser notification  Dennis Bergkamp has assigned a question to you
-    And the user should see the element      jQuery = .assign-container:contains("you")
+    And the user should see the element      jQuery = li:contains("Public description"):contains("Assigned to"):contains("you")
     And the user clicks the button/link      link = Public description
     And the user should see the element      css = .textarea-wrapped .editor
     And the user should see the element      jQuery = .form-footer .form-footer__info:contains("today"):contains("by Dennis Bergkamp")

@@ -60,8 +60,9 @@ The applicant assigns the question to the collaborator
     [Arguments]  ${name}
     the user clicks the button/link     jQuery = a:contains("Assign to someone else")
     the user should see the element     jQuery = h2:contains("Assign this question to someone else.")
-    the user clicks the button twice    jQuery = label:contains("${name}")
-    the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
@@ -69,6 +70,9 @@ the user assigns the question to the collaborator
     the user clicks the button/link     jQuery = a:contains("Assign to someone else")
     the user should see the element     jQuery = h2:contains("Assign this question to someone else.")
     the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = button:contains("Save and return to Public description")
     Reload Page
 
 The element should be disabled
