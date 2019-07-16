@@ -19,6 +19,7 @@ import java.time.LocalDate;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.*;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -102,16 +103,16 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
-                        .param("name", String.valueOf(applicationDetailsForm.getName()))
+                        .param("name", valueOf(applicationDetailsForm.getName()))
                         .param("startDate", "startDate")
-                        .param("startDate.year",  String.valueOf(applicationDetailsForm.getStartDate().getYear()))
-                        .param("startDate.monthValue",  String.valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
-                        .param("startDate.dayOfMonth",  String.valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
-                        .param("durationInMonths", String.valueOf(applicationDetailsForm.getDurationInMonths()))
-                        .param("resubmission", String.valueOf(applicationDetailsForm.getResubmission()))
+                        .param("startDate.year",  valueOf(applicationDetailsForm.getStartDate().getYear()))
+                        .param("startDate.monthValue",  valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
+                        .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/application/%d", applicationId)))
+                .andExpect(redirectedUrl(format("/application/%d", applicationId)))
                 .andReturn();
     }
 
@@ -135,13 +136,13 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
-                        .param("name", String.valueOf(invalidForm.getName()))
-                        .param("startDate",  String.valueOf(invalidForm.getStartDate()))
-                        .param("durationInMonths", String.valueOf(invalidForm.getDurationInMonths()))
-                        .param("resubmission", String.valueOf(invalidForm.getResubmission()))
+                        .param("name", valueOf(invalidForm.getName()))
+                        .param("startDate",  valueOf(invalidForm.getStartDate()))
+                        .param("durationInMonths", valueOf(invalidForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(invalidForm.getResubmission()))
         )
-                .andExpect(status().isOk())
-                .andExpect(view().name("application/questions/application-details"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(format("redirect:/application/%d", applicationId)))
                 .andReturn();
     }
 
@@ -167,17 +168,17 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
-                        .param("mark_as_complete", String.valueOf(TRUE))
-                        .param("name", String.valueOf(applicationDetailsForm.getName()))
+                        .param("mark_as_complete", valueOf(TRUE))
+                        .param("name", valueOf(applicationDetailsForm.getName()))
                         .param("startDate", "startDate")
-                        .param("startDate.year",  String.valueOf(applicationDetailsForm.getStartDate().getYear()))
-                        .param("startDate.monthValue",  String.valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
-                        .param("startDate.dayOfMonth",  String.valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
-                        .param("durationInMonths", String.valueOf(applicationDetailsForm.getDurationInMonths()))
-                        .param("resubmission", String.valueOf(applicationDetailsForm.getResubmission()))
+                        .param("startDate.year",  valueOf(applicationDetailsForm.getStartDate().getYear()))
+                        .param("startDate.monthValue",  valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
+                        .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/application-details", applicationId, questionId)))
+                .andExpect(redirectedUrl(format("/application/%d/form/question/%d/application-details", applicationId, questionId)))
                 .andReturn();
     }
 
@@ -199,14 +200,14 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
-                        .param("mark_as_complete", String.valueOf(TRUE))
-                        .param("name", String.valueOf(applicationDetailsForm.getName()))
+                        .param("mark_as_complete", valueOf(TRUE))
+                        .param("name", valueOf(applicationDetailsForm.getName()))
                         .param("startDate", "startDate")
-                        .param("startDate.year",  String.valueOf(applicationDetailsForm.getStartDate().getYear()))
-                        .param("startDate.monthValue",  String.valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
-                        .param("startDate.dayOfMonth",  String.valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
-                        .param("durationInMonths", String.valueOf(applicationDetailsForm.getDurationInMonths()))
-                        .param("resubmission", String.valueOf(applicationDetailsForm.getResubmission()))
+                        .param("startDate.year",  valueOf(applicationDetailsForm.getStartDate().getYear()))
+                        .param("startDate.monthValue",  valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
+                        .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("application/questions/application-details"))
@@ -233,14 +234,14 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
-                        .param("mark_as_incomplete", String.valueOf(TRUE))
-                        .param("name", String.valueOf(applicationDetailsForm.getName()))
+                        .param("mark_as_incomplete", valueOf(TRUE))
+                        .param("name", valueOf(applicationDetailsForm.getName()))
                         .param("startDate", "startDate")
-                        .param("startDate.year",  String.valueOf(applicationDetailsForm.getStartDate().getYear()))
-                        .param("startDate.monthValue",  String.valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
-                        .param("startDate.dayOfMonth",  String.valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
-                        .param("durationInMonths", String.valueOf(applicationDetailsForm.getDurationInMonths()))
-                        .param("resubmission", String.valueOf(applicationDetailsForm.getResubmission()))
+                        .param("startDate.year",  valueOf(applicationDetailsForm.getStartDate().getYear()))
+                        .param("startDate.monthValue",  valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
+                        .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("application/questions/application-details"))

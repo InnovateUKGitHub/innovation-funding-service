@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
@@ -78,16 +79,12 @@ public class ApplicationDetailsController {
     }
 
     @PostMapping
-    public String saveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
+    public String saveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
                                 BindingResult bindingResult,
                                 Model model,
                                 @PathVariable long applicationId,
                                 @PathVariable long questionId,
                                 UserResource user) {
-        if (bindingResult.hasErrors()) {
-            form.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
-            return viewDetails(form, bindingResult, model, applicationId, questionId, user);
-        }
         saveDetails(form, applicationId);
 
         return String.format("redirect:/application/%d", applicationId);
@@ -137,11 +134,11 @@ public class ApplicationDetailsController {
     private void saveDetails(ApplicationDetailsForm form, long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         application.setName(form.getName());
-        application.setStartDate(form.getStartDate());
+        application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
         application.setDurationInMonths(form.getDurationInMonths());
         application.setResubmission(form.getResubmission());
-        application.setPreviousApplicationNumber(form.getResubmission() ? form.getPreviousApplicationNumber() : null);
-        application.setPreviousApplicationTitle(form.getResubmission() ? form.getPreviousApplicationTitle() : null);
+        application.setPreviousApplicationNumber(form.getResubmission() == TRUE ? form.getPreviousApplicationNumber() : null);
+        application.setPreviousApplicationTitle(form.getResubmission() == TRUE ? form.getPreviousApplicationTitle() : null);
         applicationService.save(application);
     }
 
