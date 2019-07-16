@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -57,7 +57,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
         this.setupFinances();
         this.setupInvites();
         this.setupOrganisationTypes();
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
     }

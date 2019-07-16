@@ -17,7 +17,7 @@ import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssesso
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -38,7 +38,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -52,6 +51,7 @@ import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
@@ -71,7 +71,7 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
     }
 
     @Mock
-    private EncryptedCookieService cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -88,7 +88,7 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)

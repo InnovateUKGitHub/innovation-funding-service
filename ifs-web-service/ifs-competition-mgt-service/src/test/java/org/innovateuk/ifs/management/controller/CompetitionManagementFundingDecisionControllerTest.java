@@ -17,7 +17,7 @@ import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -76,7 +76,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private EncryptedCookieService cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
@@ -168,7 +168,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
@@ -202,7 +202,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         expectedCookie.setFundingDecisionFilterForm(expectedFilterFrom);
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
@@ -215,7 +215,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, newApplicationSummaryResource().build(2), 1, 20);
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, Optional.of(FILTER_STRING), empty())).thenReturn(restSuccess(summary));
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
 
         FundingDecisionFilterForm filterForm = cookieWithFilterAndSelectionParameters.getFundingDecisionFilterForm();
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, filterForm.getStringFilter(),filterForm.getFundingFilter())).thenReturn(restSuccess(asList(1L, 2L)));
@@ -230,7 +230,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(cookieWithFilterAndSelectionParameters)));
+        verify(cookieUtil).saveToCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(cookieWithFilterAndSelectionParameters)));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, newApplicationSummaryResource().build(2), 1, 20);
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
         Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
@@ -258,7 +258,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionSelectionCookie expectedFundingDecisionSelectionCookie = cookieWithFilterAndSelectionParameters;
         expectedFundingDecisionSelectionCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
-        verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
+        verify(cookieUtil).saveToCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
     }
 
     @Test
@@ -273,7 +273,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
         when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecision)).thenReturn(Optional.of(FundingDecision.ON_HOLD));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(applicationIds));
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
 
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);
@@ -292,7 +292,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
 
-        verify(cookieUtil).getCompressedCookieValue(any(),any());
+        verify(cookieUtil).getCookieValue(any(),any());
     }
 
     @Test
@@ -307,7 +307,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
         when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecision)).thenReturn(Optional.of(FundingDecision.ON_HOLD));
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
 
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);
@@ -425,7 +425,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Test
     public void testAddAllApplicationsToSelection_ifCookieCannotBeParsedShouldReturnFailureResponse() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenThrow(RuntimeException.class);
+        when(cookieUtil.getCookieValue(any(),any())).thenThrow(RuntimeException.class);
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -438,7 +438,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Test
     public void testAddSelectedApplicationsToSelection_requestWithAddAllAsTrueWillAddAllFilteredApplicationIdsToCookie() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
 
@@ -453,12 +453,12 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(asList(1L, 2L));
         expectedCookie.getFundingDecisionSelectionForm().setAllSelected(true);
 
-        verify(cookieUtil).saveToCompressedCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
     public void testAddSelectedApplicationsToSelection_requestWithAddAllAsFalseWillRemoveAllApplicationIdsFromCookie() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -471,12 +471,12 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(Collections.EMPTY_LIST);
         expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
 
-        verify(cookieUtil).saveToCompressedCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
     public void testAddSelectedApplicationsToSelection_ifCookieCannotBeParsedShouldReturnFailureResponse() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenThrow(RuntimeException.class);
+        when(cookieUtil.getCookieValue(any(),any())).thenThrow(RuntimeException.class);
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -489,7 +489,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Test
     public void testAddSelectedApplicationsToSelection_requestWithAddSelectionIdWillAddItToCookieAndProvideCorrectResponse() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(new FundingDecisionSelectionCookie()));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
 
@@ -505,7 +505,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(singletonList(1L));
         expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
 
-        verify(cookieUtil).saveToCompressedCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
@@ -513,7 +513,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionSelectionCookie fundingDecisionSelectionCookie = new FundingDecisionSelectionCookie();
         fundingDecisionSelectionCookie.getFundingDecisionSelectionForm().setApplicationIds(singletonList(1L));
 
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(fundingDecisionSelectionCookie));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(fundingDecisionSelectionCookie));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, Optional.empty(), Optional.empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
 
@@ -529,12 +529,12 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(asList(1L, 2L));
         expectedCookie.getFundingDecisionSelectionForm().setAllSelected(true);
 
-        verify(cookieUtil).saveToCompressedCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
     @Test
     public void testAddSelectedApplicationsToSelection_requestWithRemoveSelectionIdWillRemoveItFromCookie() throws Exception {
-        when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -548,7 +548,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedCookie.getFundingDecisionSelectionForm().setApplicationIds(singletonList(1L));
         expectedCookie.getFundingDecisionSelectionForm().setAllSelected(false);
 
-        verify(cookieUtil).saveToCompressedCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
+        verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
 

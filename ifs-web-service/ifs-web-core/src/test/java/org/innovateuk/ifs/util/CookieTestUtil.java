@@ -1,6 +1,5 @@
-package org.innovateuk.ifs;
+package org.innovateuk.ifs.util;
 
-import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,7 +23,7 @@ public class CookieTestUtil {
     private static String salt = "109240124012412412";
     public static TextEncryptor encryptor = Encryptors.text(password, salt);
 
-    public static void setupCookieUtil(EncryptedCookieService cookieUtil) {
+    public static void setupEncryptedCookieService(EncryptedCookieService cookieUtil) {
         ReflectionTestUtils.setField(cookieUtil, "cookieSecure", TRUE);
         ReflectionTestUtils.setField(cookieUtil, "cookieHttpOnly", FALSE);
         ReflectionTestUtils.setField(cookieUtil, "encryptionPassword", password);
@@ -32,13 +31,26 @@ public class CookieTestUtil {
         ReflectionTestUtils.setField(cookieUtil, "encryptor", encryptor);
 
         doCallRealMethod().when(cookieUtil).saveToCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
-        doCallRealMethod().when(cookieUtil).saveToCompressedCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
-        doCallRealMethod().when(cookieUtil).getCompressedCookieValue(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieAs(any(HttpServletRequest.class), any(String.class), any());
         doCallRealMethod().when(cookieUtil).getCookieAsList(any(HttpServletRequest.class), any(String.class), any());
+        doCallRealMethod().when(cookieUtil).getValueFromCookie(any(String.class));
+        doCallRealMethod().when(cookieUtil).getValueToSave(any(String.class));
+        doCallRealMethod().when(cookieUtil).decodeValue(any(String.class));
+        doCallRealMethod().when(cookieUtil).encodeValue(any(String.class));
+    }
+
+    public static void setupCompressedCookieService(CompressedCookieService cookieUtil) {
+        ReflectionTestUtils.setField(cookieUtil, "cookieSecure", TRUE);
+        ReflectionTestUtils.setField(cookieUtil, "cookieHttpOnly", FALSE);
+
+        doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).saveToCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getValueFromCookie(any(String.class));
+        doCallRealMethod().when(cookieUtil).getValueToSave(any(String.class));
     }
 
     public static String getDecryptedCookieValue(Cookie[] cookies, String cookieName) {

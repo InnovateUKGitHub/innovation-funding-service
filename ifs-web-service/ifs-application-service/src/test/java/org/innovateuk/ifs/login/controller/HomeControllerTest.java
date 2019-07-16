@@ -16,7 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,7 +38,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
     @Before
     public void setUpCookies() {
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
     }
 
     @Test

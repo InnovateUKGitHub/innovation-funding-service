@@ -39,7 +39,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -100,7 +100,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withId(1L)

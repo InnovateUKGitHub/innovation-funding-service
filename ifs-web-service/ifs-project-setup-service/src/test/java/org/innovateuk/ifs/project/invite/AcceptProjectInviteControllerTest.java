@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.Cookie;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -69,7 +69,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
     }
 
     @Test

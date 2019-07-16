@@ -8,19 +8,19 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.interview.form.InterviewAssignmentSelectionForm;
-import org.innovateuk.ifs.management.interview.model.InterviewApplicationsFindModelPopulator;
-import org.innovateuk.ifs.management.interview.model.InterviewApplicationsInviteModelPopulator;
-import org.innovateuk.ifs.management.interview.model.InterviewApplicationsStatusModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.management.interview.model.InterviewApplicationsFindModelPopulator;
+import org.innovateuk.ifs.management.interview.model.InterviewApplicationsInviteModelPopulator;
+import org.innovateuk.ifs.management.interview.model.InterviewApplicationsStatusModelPopulator;
 import org.innovateuk.ifs.management.interview.viewmodel.*;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -62,6 +61,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -90,7 +90,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
     private InterviewApplicationsStatusModelPopulator interviewApplicationsStatusModelPopulator;
 
     @Mock
-    private EncryptedCookieService cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -110,7 +110,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withId(1L)

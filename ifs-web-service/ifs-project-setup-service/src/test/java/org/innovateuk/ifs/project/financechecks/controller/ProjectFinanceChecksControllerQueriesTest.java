@@ -56,7 +56,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -160,7 +160,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
         spy(threadViewModelPopulator);

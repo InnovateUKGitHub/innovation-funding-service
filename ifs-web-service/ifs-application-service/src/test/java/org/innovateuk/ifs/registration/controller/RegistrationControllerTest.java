@@ -38,8 +38,8 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
@@ -108,7 +108,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
         MockitoAnnotations.initMocks(this);
         setupInvites();
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 

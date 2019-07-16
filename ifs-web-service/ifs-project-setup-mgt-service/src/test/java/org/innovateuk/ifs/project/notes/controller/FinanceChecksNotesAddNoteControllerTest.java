@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -96,7 +96,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));

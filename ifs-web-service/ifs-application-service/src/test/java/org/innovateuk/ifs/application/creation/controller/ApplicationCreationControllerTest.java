@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -54,7 +54,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     @Before
     public void setUpData() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));

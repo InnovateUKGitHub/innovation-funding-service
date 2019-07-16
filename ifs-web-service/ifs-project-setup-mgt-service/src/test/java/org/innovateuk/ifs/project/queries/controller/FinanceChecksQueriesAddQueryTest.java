@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.queries.controller;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.CookieTestUtil;
+import org.innovateuk.ifs.util.CookieTestUtil;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -99,7 +99,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
         // populate viewmodel

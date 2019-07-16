@@ -47,7 +47,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -126,7 +126,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
