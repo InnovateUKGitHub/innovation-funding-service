@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
+import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
@@ -72,7 +72,6 @@ public class ApplicationDetailsController {
         if (form.isEmpty()){
             form.populateForm(viewModel.getApplication());
         }
-        handleSpringBindingOfNullLocalDate(form);
         model.addAttribute("model", viewModel);
 
         return "application/questions/application-details";
@@ -86,6 +85,7 @@ public class ApplicationDetailsController {
                                 @PathVariable long questionId,
                                 UserResource user) {
         if (bindingResult.hasErrors()) {
+            form.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
             return viewDetails(form, bindingResult, model, applicationId, questionId, user);
         }
         saveDetails(form, applicationId);
@@ -111,6 +111,7 @@ public class ApplicationDetailsController {
                                  @PathVariable long questionId,
                                  UserResource user) {
         if (bindingResult.hasErrors()) {
+            form.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
             return viewDetails(form, bindingResult, model, applicationId, questionId, user);
         }
         saveDetails(form, applicationId);
@@ -142,12 +143,6 @@ public class ApplicationDetailsController {
         application.setPreviousApplicationNumber(form.getResubmission() ? form.getPreviousApplicationNumber() : null);
         application.setPreviousApplicationTitle(form.getResubmission() ? form.getPreviousApplicationTitle() : null);
         applicationService.save(application);
-    }
-
-    private void handleSpringBindingOfNullLocalDate(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form) {
-        if (null != form.getStartDate() && form.getStartDate().equals(LocalDate.MIN)) {
-            form.setStartDate(null);
-        }
     }
 
 }
