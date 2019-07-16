@@ -12,9 +12,6 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestServ
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
@@ -24,11 +21,14 @@ import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionI
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingNotificationsController;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +55,6 @@ import static java.util.Optional.of;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
@@ -67,6 +66,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -95,7 +95,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -120,7 +120,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
         competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
     }

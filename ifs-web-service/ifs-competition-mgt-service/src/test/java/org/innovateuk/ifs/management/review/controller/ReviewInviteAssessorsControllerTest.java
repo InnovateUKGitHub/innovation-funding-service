@@ -17,18 +17,18 @@ import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedV
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.review.controller.ReviewInviteAssessorsController;
-import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.management.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewInviteAssessorsFindViewModel;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewInviteAssessorsInviteViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
+import org.innovateuk.ifs.util.CompressedCookieService;
+import org.innovateuk.ifs.util.CookieTestUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -107,7 +106,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     private ReviewInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -132,7 +131,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        CookieTestUtil.setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
