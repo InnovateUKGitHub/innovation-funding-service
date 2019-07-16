@@ -10,7 +10,8 @@ import org.innovateuk.ifs.management.invite.controller.CompetitionManagementSend
 import org.innovateuk.ifs.management.invite.form.ResendInviteForm;
 import org.innovateuk.ifs.management.invite.form.SendInviteForm;
 import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
+import org.innovateuk.ifs.util.CookieTestUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,6 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -48,7 +48,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     private CompetitionResource competition;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionInviteRestService competitionInviteRestService;
@@ -61,7 +61,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     @Before
     public void setUpCompetition() {
 
-        setupCookieUtil(cookieUtil);
+        CookieTestUtil.setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
