@@ -2,6 +2,9 @@ package org.innovateuk.ifs.util;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to URL encode and decode cookie values.
+ */
 @Service
 public class EncodedCookieService extends AbstractCookieService {
 
