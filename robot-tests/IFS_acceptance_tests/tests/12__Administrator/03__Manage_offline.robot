@@ -5,6 +5,7 @@ Documentation    IFS-5110 Handle IFS applications offline CTA
 ...
 ...              IFS-5941 Respond to onhold status changes
 ...
+...              IFS-6054 Display completed projects in the previous tab
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
@@ -26,10 +27,11 @@ Applicant sees the project is being managed offline
     And the user should see the element    jQuery = .progress-list .read-only + .read-only +.waiting +.read-only + .read-only + .read-only + .read-only
 
 IFS Admin marks a project as completed offline
-    [Documentation]  IFS-5110
+    [Documentation]  IFS-5110  IFS-6054
     Given Log in as a different user     &{ifs_admin_user_credentials}
     When the user marks the project as completed offline
     Then the user is able to see that the project is beeing completed offline
+    And The user is able to see completed offline project in previous tab
 
 On hold Validations
     [Documentation]  IFS-5941
@@ -110,7 +112,7 @@ The user is able to see that the project is beeing completed offline
 
 The user is able to see completed offline project in previous tab
     the user navigates to the page     ${server}/management/competition/${MARKOFFLINE_COMPETITION}/previous
-    the user clicks the button/link    jQuery = button:contains("Projects")
+    the user expands the section       Projects
     the user should see the element    jQuery = th:contains("${MARKOFFLINE_APPLICATION_1_TITLE}")
 
 The user is able to see that the project is being Managed offline
