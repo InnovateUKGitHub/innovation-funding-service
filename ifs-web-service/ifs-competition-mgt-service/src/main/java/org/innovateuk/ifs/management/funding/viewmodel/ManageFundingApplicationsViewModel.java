@@ -2,8 +2,8 @@ package org.innovateuk.ifs.management.funding.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class ManageFundingApplicationsViewModel {

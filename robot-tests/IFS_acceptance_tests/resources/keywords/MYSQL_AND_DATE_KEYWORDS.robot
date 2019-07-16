@@ -183,6 +183,11 @@ get application id by name
     ${id} =   get table id by name  application  ${name}
     [Return]  ${id}
 
+get application id by name and set as suite variable
+    [Arguments]  ${name}
+    ${academic_applicaton_id} =   get table id by name  application  ${name}
+    Set Suite Variable  ${academic_applicaton_id}
+
 get project id by name
     [Arguments]  ${name}
     ${id} =   get table id by name  project  ${name}

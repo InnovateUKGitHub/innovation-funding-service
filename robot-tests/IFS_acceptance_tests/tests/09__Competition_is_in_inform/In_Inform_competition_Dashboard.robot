@@ -32,6 +32,8 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
+...
+...               IFS-6053 Amend competition table in the previous tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -83,6 +85,13 @@ Unsuccessful applicant sees unsuccessful alert
     Given the user should see the element    jQuery = .status:contains("Unsuccessful")
     When the user clicks the button/link     jQuery = a:contains("Electric Drive")
     And the user should see the element      jQuery = .warning-alert:contains("Your application has not been successful in this competition")
+
+Internal user should see competition on previous tab
+    [Documentation]  IFS-6053
+    [Tags]
+    [Setup]  Log in as a different user      &{internal_finance_credentials}
+    Given the user clicks the button/link    jQuery = a:contains("Previous")
+    Then the user should see the competition details in previous tab
 
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
@@ -202,6 +211,7 @@ The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
     log in as a different user         ${email}  ${password}
     the user clicks the button/link    jQuery = a:contains("Previous")
+    the user clicks the button/link    jQuery = button:contains("Next")
     the user clicks the button/link    link = ${NOT_EDITABLE_COMPETITION_NAME}
     the user should see the element    jQuery = td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
     the user should see the element    jQuery = td:contains("${INFORM_COMPETITION_NAME_1}") ~ td:contains("Successful")
@@ -220,3 +230,8 @@ the user search for successful applications
     the user clicks the button/link                        jQuery = button:contains("Filter")
     the user should see the element                        jQuery = td:nth-child(2):contains("${application_ids['Climate control solution']}")
     the user should not see the element                    jQuery = td:nth-child(2):contains("${application_ids['Electric Drive']}")
+
+the user should see the competition details in previous tab
+    the user should see the element    jQuery = th:contains("ID") + th:contains("Title")
+    the user should see the element    jQuery = th:contains("Number of submitted applications") + th:contains("Number of completed projects")
+    the user should see the element    jQuery = tr td:contains("Project Setup Comp 20") ~ td:contains("0 of 1")

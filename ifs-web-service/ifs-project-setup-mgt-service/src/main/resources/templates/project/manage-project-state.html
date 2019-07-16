@@ -68,7 +68,7 @@
         </th:block>
         <!-- END -->
 
-        <p th:if="${model.endState and !model.completedOffline}" class="govuk-body">
+        <p th:if="${model.withdrawn || model.live}" class="govuk-body">
             You can make no further changes to the project although you can still view any data that was added during
             setup.
         </p>
