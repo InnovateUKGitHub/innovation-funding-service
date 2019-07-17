@@ -12,11 +12,17 @@ import java.util.Optional;
 @Service
 public class StatusRestServiceImpl extends BaseRestService implements StatusRestService {
     private static final String COMPETITION_URL = "/project/competition";
+    private static final String PREVIOUS_COMPETITION_URL = "/project/previous/competition";
     private static final String PROJECT_REST_URL = "/project";
 
     @Override
     public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
         return getWithRestResult(COMPETITION_URL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class);
+    }
+
+    @Override
+    public RestResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(Long competitionId) {
+        return getWithRestResult(PREVIOUS_COMPETITION_URL + "/" + competitionId, CompetitionProjectsStatusResource.class);
     }
 
     @Override
