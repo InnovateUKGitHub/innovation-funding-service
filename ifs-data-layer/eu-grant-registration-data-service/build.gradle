@@ -37,7 +37,12 @@ if (enabled) {
 
 createContainer.networkAliases=["ifs-eu-grant-registration-data-service"]
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
+    }
+}
+
 ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
 
 ext {
@@ -52,11 +57,11 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
 
 
     dependsOn ":ifs-commons:build"

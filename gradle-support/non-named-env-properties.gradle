@@ -56,6 +56,7 @@ ext.LDAP_PASS="default"
 ext.LDAP_DOMAIN="dc=int,dc=g2g3digital,dc=net"
 ext.LDAP_SCHEME="ldaps"
 
+ext.FLYWAY_TABLE="schema_version"
 ext.FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 ext.SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 

@@ -42,6 +42,21 @@ public class StatusRestServiceImplTest extends BaseRestServiceUnitTest<StatusRes
     }
 
     @Test
+    public void getPreviousCompetitionStatus() {
+        Long competitionId = 1L;
+
+        CompetitionProjectsStatusResource returnedResponse = new CompetitionProjectsStatusResource();
+
+        setupGetWithRestResultExpectations("/project/previous/competition/" + competitionId, CompetitionProjectsStatusResource.class, returnedResponse);
+
+        RestResult<CompetitionProjectsStatusResource> result = service.getPreviousCompetitionStatus(competitionId);
+
+        assertTrue(result.isSuccess());
+
+        Assert.assertEquals(returnedResponse, result.getSuccess());
+        setupGetWithRestResultVerifications("/project/previous/competition/" + competitionId, null, CompetitionProjectsStatusResource.class);
+    }
+    @Test
     public void getStatusByProjectId() {
         ProjectStatusResource returnedResponse = new ProjectStatusResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);

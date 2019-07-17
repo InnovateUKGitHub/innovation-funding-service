@@ -8,7 +8,7 @@ import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,7 +46,7 @@ public class SiteTermsController {
     private UserRestService userRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @PreAuthorize("permitAll")
     @GetMapping("terms-and-conditions")
