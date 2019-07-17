@@ -28,15 +28,13 @@
         <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
             <th:block th:if="${url}">
                 <a th:href="${url}" class="govuk-link">
-                  <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
                   <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                  <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
+                  <th:block th:unless="${columnType == 'MO'}">Review</th:block>
                 </a>
             </th:block>
             <th:block th:unless="${url}">
-              <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
               <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-              <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
+              <th:block th:unless="${columnType == 'MO'}">Review</th:block>
             </th:block>
         </td>
         <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
@@ -71,7 +69,7 @@
             class="govuk-tabs__list-item">
             <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'all'} ? 'true' : 'false'">All projects</a>
+               th:classappend="${selectedTab == 'all'} ? 'govuk-tabs__tab--selected' : ''">All projects</a>
         </li>
         <li th:if="${showAllTabs}"
             id="section-2"
@@ -79,7 +77,7 @@
             <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
                th:text="'Queries (' + ${openQueryCount} + ')'"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'queries'} ? 'true' : 'false'"></a>
+               th:classappend="${selectedTab == 'queries'} ? 'govuk-tabs__tab--selected' : ''"></a>
         </li>
         <li th:if="${showAllTabs}"
             id="section-3"
@@ -87,7 +85,7 @@
             <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}"
                th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'spend-profile'} ? 'true' : 'false'"></a>
+               th:classappend="${selectedTab == 'spend-profile'} ? 'govuk-tabs__tab--selected' : ''"></a>
         </li>
     </ul>
 </th:block>

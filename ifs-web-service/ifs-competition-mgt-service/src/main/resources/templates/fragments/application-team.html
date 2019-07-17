@@ -19,7 +19,7 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="user : ${organisation.users}">
                 <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
-                <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
+                <td class="govuk-table__cell ifs-table__email" th:text="${user.email}">steve.smith@empire.com</td>
                 <td class="govuk-table__cell" th:text="${user.phoneNumber}">0800</td>
             </tr>
             </tbody>

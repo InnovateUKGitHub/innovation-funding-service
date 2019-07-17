@@ -221,6 +221,12 @@ PM should see project tab on dashboard once GOL is approved
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
     And the user should see the element      jQuery = h2:contains("Projects")
 
+MO sould see project tab on dashboard once GOL is approved
+    [Documentation]
+    Given Log in as a different user  &{monitoring_officer_one_credentials}
+    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
+    And the user should see the element      jQuery = h2:contains("Projects")
+
 *** Keywords ***
 grant offer letter is sent to users
     the user logs-in in new browser    &{internal_finance_credentials}
@@ -248,13 +254,13 @@ Project fiance approves the grant offer letter
 
 the use can see the mandatory documents
     the user clicks the button/link        link = Collaboration agreement
-    the user should not see an error in the page
     the user clicks the button/link        link = ${valid_pdf}
+    Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
     the user clicks the button/link        link = Exploitation plan
-    the user should not see an error in the page
     the user clicks the button/link        link = ${valid_pdf}
+    Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
 

@@ -253,6 +253,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 });
     }
 
+    @Override
+    public ServiceResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId) {
+        return serviceSuccess(applicationRepository.findPrevious(competitionId));
+    }
+
     private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {
         ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
         Organisation organisation = organisationRepository.findById(organisationId).get();

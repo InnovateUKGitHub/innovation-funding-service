@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionName}" />
+</head>
+
+<body class="govuk-template__body wide-page">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkUrl=@{/dashboard/previous}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},size='govuk-heading-xl'" />
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <dl class="govuk-list govuk-!-font-size-16">
+                    <dt>Competition number:</dt>
+                    <dd th:text="${model.competitionId}">PLACEHOLDER</dd>
+                    <dt>Competition type:</dt>
+                    <dd th:text="${model.competitionType}">PLACEHOLDER</dd>
+                </dl>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                <dl class="govuk-list govuk-!-font-size-16">
+                    <dt>Funding body:</dt>
+                    <dd th:text="${model.fundingBody}">PLACEHOLDER</dd>
+                    <dt>Application deadline:</dt>
+                    <dd th:text="|${#strings.toLowerCase(#temporals.format(model.applicationDeadline, 'hh:mma'))} ${#temporals.format(model.applicationDeadline, 'dd MMMM yyyy')}|">
+                        13 May 2019 9:04am</dd>
+                </dl>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                <dl class="govuk-list govuk-!-font-size-16">
+                    <dt>Innovation sector:</dt>
+                    <dd th:text="${model.innovationSector}"></dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="govuk-accordion" data-module="accordion" id="accordion-previous">
+
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-previous-heading-1">
+                          Projects (<th:block>0</th:block>)
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-previous-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-previous-heading-1">
+                    <p class='govuk-body'>Previous projects.</p>
+                </div>
+            </div>
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-previous-heading-2">
+                            Applications (<th:block th:text="${model.applications.size()}">26</th:block>)
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-previous-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-previous-heading-2">
+                    <p class='govuk-body'>This list only contains applications that have not progressed to project setup.</p>
+                    <div class="table-overflow">
+                        <table class="govuk-table" id="application-list">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                <th class="govuk-table__header" scope="col" th:colspan="${model.ifsAdmin ? '2' : '1'}">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="row, iterStat : ${model.applications}">
+                                <td class="govuk-table__cell">
+                                    <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                                </td>
+                                <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
+                                <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>
+                                <td class="govuk-table__cell" th:text="${#messages.msg('ifs.application.previous.' + row.applicationState.getStateName())}"
+                                    th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
+                                <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
+                                    <td class="govuk-table__cell alignright cta">
+                                        <a
+                                            data-js-modal="mark-as-successful-modal"
+                                            th:attr="data-modal-form-action=@{/competition/{cid}/previous/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
+                                            class="button-secondary"
+                                            th:href="@{/competition/{cid}/previous/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"> Mark as successful
+                                        </a>
+                                    </td>
+                                </th:block>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
