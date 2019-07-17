@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.controller;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.form.ApplicationDetailsForm;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -91,15 +94,15 @@ public class ApplicationDetailsController {
     }
 
     @PostMapping("/auto-save")
-    public String autoSaveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
-                                BindingResult bindingResult,
-                                Model model,
-                                @PathVariable long applicationId,
-                                @PathVariable long questionId,
-                                UserResource user) {
+    public @ResponseBody JsonNode autoSaveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
+                               BindingResult bindingResult,
+                               Model model,
+                               @PathVariable long applicationId,
+                               @PathVariable long questionId,
+                               UserResource user) {
         saveDetails(form, applicationId);
 
-        return String.format("redirect:/application/%d", applicationId);
+        return new ObjectMapper().createObjectNode();
     }
 
     @GetMapping(params = "mark_as_complete")
