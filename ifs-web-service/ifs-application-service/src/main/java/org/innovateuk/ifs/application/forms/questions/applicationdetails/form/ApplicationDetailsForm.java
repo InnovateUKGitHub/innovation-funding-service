@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
 import org.hibernate.validator.constraints.Range;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
@@ -9,12 +9,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+import static java.lang.Boolean.*;
+
 /**
  * Form for application details.
  */
 
 @FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
+@FieldRequiredIf(required = "innovationAreaName", argument = "canSelectInnovationArea", predicate = true, message = "{validation.application.innovationarea.category.required}")
 public class ApplicationDetailsForm {
 
     @NotBlank(message = "{validation.project.name.must.not.be.empty}")
@@ -35,22 +38,22 @@ public class ApplicationDetailsForm {
 
     private String previousApplicationTitle;
 
-    public void populateForm(ApplicationResource application) {
-        this.name = application.getName();
-        this.durationInMonths = application.getDurationInMonths();
-        this.resubmission = application.getResubmission();
-        this.previousApplicationNumber = application.getPreviousApplicationNumber();
-        this.previousApplicationTitle = application.getPreviousApplicationTitle();
-        this.startDate = application.getStartDate();
-    }
+    private boolean canSelectInnovationArea;
 
-    public boolean isEmpty() {
-        return null == name &&
-                null == durationInMonths &&
-                null == resubmission &&
-                null == previousApplicationNumber &&
-                null == previousApplicationTitle &&
-                null == startDate;
+    private String innovationArea;
+
+    private String innovationAreaName;
+
+    public void populateForm(ApplicationDetailsViewModel viewModel) {
+        this.name = viewModel.getApplication().getName();
+        this.durationInMonths = viewModel.getApplication().getDurationInMonths();
+        this.resubmission = viewModel.getApplication().getResubmission();
+        this.previousApplicationNumber = viewModel.getApplication().getPreviousApplicationNumber();
+        this.previousApplicationTitle = viewModel.getApplication().getPreviousApplicationTitle();
+        this.startDate = viewModel.getApplication().getStartDate();
+        this.canSelectInnovationArea = viewModel.getFormInputViewModel().isCanSelectInnovationArea() == TRUE;
+        this.innovationArea = viewModel.getFormInputViewModel().getInnovationAreaText();
+        this.innovationAreaName = viewModel.getFormInputViewModel().getSelectedInnovationAreaName();
     }
 
     public String getName() {
@@ -101,4 +104,27 @@ public class ApplicationDetailsForm {
         this.startDate = startDate;
     }
 
+    public boolean isCanSelectInnovationArea() {
+        return canSelectInnovationArea;
+    }
+
+    public void setCanSelectInnovationArea(boolean canSelectInnovationArea) {
+        this.canSelectInnovationArea = canSelectInnovationArea;
+    }
+
+    public String getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(String innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
+    public String getInnovationAreaName() {
+        return innovationAreaName;
+    }
+
+    public void setInnovationAreaName(String innovationAreaName) {
+        this.innovationAreaName = innovationAreaName;
+    }
 }

@@ -52,6 +52,32 @@
                                         data-range-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})}" />
                 </div>
 
+                <div class="govuk-form-group"
+                     th:if="${model.formInputViewModel.canSelectInnovationArea}"
+                     th:classappend="${#fields.hasErrors('*{__innovationAreaName__}')} ? 'govuk-form-group--error'">
+                    <label for="researchArea">
+                        <span class="govuk-heading-m">Innovation area</span>
+                    </label>
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='innovationArea')" />
+                    <div th:if="${model.formInputViewModel.innovationAreaHasBeenSelected}">
+                        <p class="govuk-body">Chosen innovation area:
+                            <th:block th:unless="${model.formInputViewModel.noInnovationAreaApplicable}" th:text="${model.formInputViewModel.selectedInnovationAreaName}"/>
+                            <th:block th:if="${model.formInputViewModel.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
+                        </p>
+                    </div>
+                    <button id="researchArea"
+                            class="button-clear"
+                            name="change_innovation_area"
+                            type="submit"
+                            th:text="${model.formInputViewModel.innovationAreaText}">
+                        Choose your innovation area
+                    </button>
+                </div>
+                <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
+                <input type="hidden" th:if="${model.formInputViewModel.canSelectInnovationArea}" th:field="*{__canSelectInnovationArea__}" value="true"/>
+                <input type="hidden" th:if="${model.formInputViewModel.innovationAreaHasBeenSelected}" th:field="*{__innovationAreaName__}" value="true"/>
+
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__resubmission__}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
@@ -145,7 +171,6 @@
             <!--/* Hidden fields */-->
             <input type="hidden" id="application_id" th:value="${applicationId}"/>
             <input type="hidden" id="competition_id" th:value="${competition.id}"/>
-
             <input type="hidden" id="cacheTest" value=""/>
         </div>
 

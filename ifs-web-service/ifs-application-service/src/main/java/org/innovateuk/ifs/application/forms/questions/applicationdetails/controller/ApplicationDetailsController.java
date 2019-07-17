@@ -33,6 +33,7 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_MODEL;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
@@ -73,10 +74,10 @@ public class ApplicationDetailsController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), user.hasRole(SUPPORT));
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question);
-        if (form.isEmpty()){
-            form.populateForm(viewModel.getApplication());
-        }
-        model.addAttribute("model", viewModel);
+        form.populateForm(viewModel);
+
+        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
 
         return "application/questions/application-details";
     }
@@ -131,6 +132,18 @@ public class ApplicationDetailsController {
         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
 
         return String.format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+    }
+
+    @PostMapping(params = "change_innovation_area")
+    public String changeInnovationArea(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 @PathVariable long applicationId,
+                                 @PathVariable long questionId,
+                                 UserResource user) {
+        saveDetails(form, applicationId);
+
+        return String.format("redirect:/application/%d/form/question/%d/innovation-area", applicationId, questionId);
     }
 
     @PostMapping(params = "mark_as_incomplete")
