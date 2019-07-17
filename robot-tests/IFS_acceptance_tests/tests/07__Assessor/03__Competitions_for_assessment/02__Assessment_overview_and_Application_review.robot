@@ -88,11 +88,15 @@ Assessor should see terms and conditions question
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 8 KB
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
-    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 8 KB
+    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
+    And the user closes the last opened tab
+    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
+    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB
+    And the user closes the last opened tab
     When the user clicks the button/link         jQuery = a:contains("6. Innovation")
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
+    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
 
 Scope: Validations
     [Documentation]  IFS-508
@@ -109,6 +113,7 @@ Scope: Status in the overview is updated
     When the user selects the index from the drop-down menu  1    css = .research-category
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
+    And Wait for autosave
     Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
     And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 

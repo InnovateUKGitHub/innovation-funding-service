@@ -55,7 +55,7 @@
                             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
                         </li>
                         <li class="govuk-tabs__list-item">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab" aria-selected="true">Invite</a>
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Invite</a>
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Pending and declined</a>
@@ -110,7 +110,7 @@
                                             </a>
                                             <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
                                         </td>
-                                        <td class="govuk-table__cell" th:text="${assessor.email}">dave@email.com</td>
+                                        <td class="govuk-table__cell ifs-table__email" th:text="${assessor.email}">dave@email.com</td>
                                         <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Earth Observation</td>
                                         <td class="govuk-table__cell">
                                             <span class="yes" th:if="${assessor.compliant}">Yes</span>

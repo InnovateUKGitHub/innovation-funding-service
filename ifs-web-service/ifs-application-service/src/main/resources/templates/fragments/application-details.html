@@ -32,7 +32,7 @@
                             <span>Estimated timescales</span>
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='When do you wish to start your project? For example: 31 12 2015')"  />
+                        <span class="govuk-hint">When do you wish to start your project? For example: <span data-example-date="">31 12 2020</span></span>
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                     </fieldset>
                 </div>
