@@ -40,8 +40,9 @@ public class OtherFundingCostCategoryTest {
                 .build();
 
         costs.add(otherPublicFunding);
-
-        otherFundingCostCategory = newOtherFundingCostCategory().withCosts(asList(otherFunding, otherPublicFunding)).build();
+        otherFundingCostCategory = newOtherFundingCostCategory()
+                .withCosts(asList(otherFunding, otherPublicFunding))
+                .build();
     }
 
     @Test
@@ -54,7 +55,6 @@ public class OtherFundingCostCategoryTest {
     public void getTotalWithYesOtherPublicFunding() {
 
         otherFundingCostCategory.calculateTotal();
-
         assertEquals(otherPublicFunding.getFundingAmount(), otherFundingCostCategory.getTotal());
     }
 

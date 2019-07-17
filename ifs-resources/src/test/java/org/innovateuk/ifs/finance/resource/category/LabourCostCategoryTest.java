@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
@@ -24,8 +23,7 @@ public class LabourCostCategoryTest {
 
     private LabourCost labourCost;
     private LabourCost workingDays;
-    private LabourCostCategory labourCostCategoryWithWorkingDays;
-    private LabourCostCategory nullWorkingDaysLabourCostCategory;
+    private LabourCostCategory labourCostCategory;
 
     @Before
     public void setUp() throws Exception {
@@ -41,53 +39,55 @@ public class LabourCostCategoryTest {
                 .build();
 
         costs.add(labourCost);
-
-        labourCostCategoryWithWorkingDays = newLabourCostCategory().withCosts(asList(labourCost, workingDays)).build();
-        nullWorkingDaysLabourCostCategory = newLabourCostCategory().withCosts(singletonList(labourCost)).build();
+        labourCostCategory = newLabourCostCategory()
+                .withCosts(asList(labourCost, workingDays))
+                .build();
     }
 
     @Test
     public void getCosts() {
 
-        assertEquals(costs, labourCostCategoryWithWorkingDays.getCosts());
+        assertEquals(costs, labourCostCategory.getCosts());
     }
 
     @Test
     public void getTotalWithWorkingDays() {
 
         BigDecimal result = labourCost.getGrossEmployeeCost();
-        labourCostCategoryWithWorkingDays.calculateTotal();
+        labourCostCategory.calculateTotal();
 
-        assertEquals(result.setScale(5, RoundingMode.HALF_EVEN), labourCostCategoryWithWorkingDays.getTotal());
+        assertEquals(result.setScale(5, RoundingMode.HALF_EVEN), labourCostCategory.getTotal());
     }
 
     @Test
     public void getTotalWithNullWorkingDays() {
 
         int result = 0;
-        nullWorkingDaysLabourCostCategory.calculateTotal();
+        workingDays.setLabourDays(0);
+        labourCostCategory.calculateTotal();
 
-        assertEquals(BigDecimal.valueOf(result), nullWorkingDaysLabourCostCategory.getTotal());
+        assertEquals(BigDecimal.valueOf(result), labourCostCategory.getTotal());
     }
 
     @Test
     public void getWorkingDaysPerYear() {
 
         Integer result = workingDays.getLabourDays();
-        assertEquals(result, labourCostCategoryWithWorkingDays.getWorkingDaysPerYear());
+        assertEquals(result, labourCostCategory.getWorkingDaysPerYear());
     }
 
     @Test
     public void getWorkingDaysPerYearWithNullWorkingDays() {
 
         Integer result = 0;
-        assertEquals(result, nullWorkingDaysLabourCostCategory.getWorkingDaysPerYear());
+        workingDays.setLabourDays(0);
+        assertEquals(result, labourCostCategory.getWorkingDaysPerYear());
     }
 
     @Test
     public void getWorkingDaysPerYearCostItem() {
 
-        assertEquals(workingDays, labourCostCategoryWithWorkingDays.getWorkingDaysPerYearCostItem());
+        assertEquals(workingDays, labourCostCategory.getWorkingDaysPerYearCostItem());
     }
 
     @Test
@@ -100,14 +100,14 @@ public class LabourCostCategoryTest {
                 .build();
 
         costs.add(testerCost);
-        labourCostCategoryWithWorkingDays.addCost(testerCost);
+        labourCostCategory.addCost(testerCost);
 
-        assertEquals(costs, labourCostCategoryWithWorkingDays.getCosts());
+        assertEquals(costs, labourCostCategory.getCosts());
     }
 
     @Test
     public void excludeFromTotalCost() {
 
-        assertFalse(labourCostCategoryWithWorkingDays.excludeFromTotalCost());
+        assertFalse(labourCostCategory.excludeFromTotalCost());
     }
 }
