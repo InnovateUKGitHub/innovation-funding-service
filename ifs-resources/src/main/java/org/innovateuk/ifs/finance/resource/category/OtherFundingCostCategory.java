@@ -84,8 +84,4 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
     public boolean otherFundingSet() {
         return "Yes".equals(getOtherPublicFunding());
     }
-
-    public void setOtherFunding(OtherFunding otherFunding) {
-        this.otherFunding = otherFunding;
-    }
 }
