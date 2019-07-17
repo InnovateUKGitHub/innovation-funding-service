@@ -10,15 +10,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.interview.controller.InterviewAssessorInviteController;
-import org.innovateuk.ifs.management.interview.form.InterviewSelectionForm;
-import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
-import org.innovateuk.ifs.management.interview.viewmodel.InterviewAvailableAssessorRowViewModel;
-import org.innovateuk.ifs.management.interview.viewmodel.InterviewInviteAssessorsFindViewModel;
-import org.innovateuk.ifs.management.interview.viewmodel.InterviewInviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
@@ -26,8 +18,15 @@ import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedV
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.management.interview.form.InterviewSelectionForm;
+import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.interview.viewmodel.InterviewAvailableAssessorRowViewModel;
+import org.innovateuk.ifs.management.interview.viewmodel.InterviewInviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.interview.viewmodel.InterviewInviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +57,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -78,6 +76,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -109,7 +108,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
     private InterviewInviteRestService interviewInviteRestService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -129,7 +128,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
