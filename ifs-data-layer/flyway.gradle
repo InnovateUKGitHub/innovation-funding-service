@@ -6,11 +6,15 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
-        classpath 'org.flywaydb:flyway-core:4.0'
+        classpath 'org.flywaydb:flyway-gradle-plugin:5.0.7'
+        classpath 'org.flywaydb:flyway-core:5.0.7'
     }
 }
 
 dependencies {
-    compile "org.flywaydb:flyway-core:4.1.2"
+    compile "org.flywaydb:flyway-core:5.0.7"
+}
+
+flyway {
+    table = 'schema_version'
 }

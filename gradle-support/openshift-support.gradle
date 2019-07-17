@@ -38,6 +38,10 @@ task setDatabaseDefaults {
     if (!project.hasProperty('DB_PORT')) {
         project.ext.DB_PORT = 3306
     }
+    
+    if (!project.hasProperty('FLYWAY_TABLE')) {
+        project.ext.FLYWAY_TABLE = 'schema_version'
+    }
 }
 prepareDeployment.mustRunAfter setDatabaseDefaults
 
