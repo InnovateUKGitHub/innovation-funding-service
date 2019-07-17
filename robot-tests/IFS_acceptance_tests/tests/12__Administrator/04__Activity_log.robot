@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     IFS-6062 Activity Log front-end
-Suite Setup       Custom suite setup
+Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot
@@ -15,18 +15,19 @@ ${PsActivityLogApplicationName}     Climate control solution
 ${PsActivityLogProjectId}           ${project_ids["${PsActivityLogApplicationName}"]}
 ${AppPsActivityLogCompUrl}          ${server}/project-setup/project/${PsActivityLogProjectId}
 
-#${PsCompleteAppCompName}
-#${PsCompleteAppCompId}
 ${PsCompleteAppApplicationName}     Super-EFFY - Super Efficient Forecasting of Freight Yields
 ${PsCompleteAppApplicationId}       ${project_ids["${PsCompleteAppApplicationName}"]}
 ${PsCompleteAppUrl}                 ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PsCompleteAppApplicationId}/activity-log
 
 *** Test Cases ***
 Ifs Admin is not able to see logs entries before they have happened
+    [Documentation]  IFS-6062
+    [Setup]  the user logs-in in new browser     &{ifs_admin_user_credentials}
     Given the admin navigates to project activity log
     Then the user is not able to see logs entries before they have happened
 
 Project details log entry
+    [Documentation]  IFS-6062
     [Setup]  log in as a different user                   &{lead_applicant2_credentials}
     Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
     When the user completes project details
@@ -34,6 +35,7 @@ Project details log entry
     And the admin is able to navigate to log entry link   View project details   Project details
 
 Project team Project manager nominated log entry
+    [Documentation]  IFS-6062
     [Setup]  log in as a different user                   &{lead_applicant2_credentials}
     Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
     When the user completes project team
@@ -41,10 +43,12 @@ Project team Project manager nominated log entry
     And the admin is able to navigate to log entry link   View project team   Project team
 
 Project team Finance contact nominated log entry
+    [Documentation]  IFS-6062
     Given the admin is able to see log entry               Finance contact nominated
     Then the admin is able to navigate to log entry link   View project team   Project team
 
 Documents added log entry
+    [Documentation]  IFS-6062
     [Setup]  log in as a different user                   &{lead_applicant2_credentials}
     Given the user navigates to the page                  ${AppPsActivityLogCompUrl}
     When the user completes documents
@@ -52,6 +56,7 @@ Documents added log entry
     And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
 Documents approved log entry
+    [Documentation]  IFS-6062
     [Setup]  log in as a different user                   &{Comp_admin1_credentials}
     Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
     When the user approves documents
@@ -59,13 +64,11 @@ Documents approved log entry
     And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
 The admin is able to see existing log entries
+    [Documentation]  IFS-6062
     Given the user navigates to the page          ${PsCompleteAppUrl}
     Then The admin is able to see all existing log entries
 
 *** Keywords ***
-Custom suite setup
-    the user logs-in in new browser     &{ifs_admin_user_credentials}
-
 The user approves documents
     the user navigates to the page         ${server}/project-setup-management/project/${PsActivityLogProjectId}/document/all
     the user clicks the button/link        link = Exploitation plan
@@ -74,7 +77,7 @@ The user approves documents
 The user completes documents
     the user clicks the button/link     link = Documents
     the user clicks the button/link     link = Exploitation plan
-    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           name=document   ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
