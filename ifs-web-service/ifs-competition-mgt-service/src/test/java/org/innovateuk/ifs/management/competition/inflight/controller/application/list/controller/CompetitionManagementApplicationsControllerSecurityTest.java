@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller.application.list.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller.application.list.controller;
 
 import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
@@ -37,20 +37,6 @@ public class CompetitionManagementApplicationsControllerSecurityTest extends Bas
     @Test
     public void testIneligibleApplications() {
         assertAccessDenied(() -> classUnderTest.ineligibleApplications(null, null, competitionId, null, 0, null, null),
-                () -> {
-                });
-    }
-
-    @Test
-    public void testPreviousApplications() {
-        assertAccessDenied(() -> classUnderTest.previousApplications(null, competitionId, null, 0, 0, null, null, null),
-                () -> {
-                });
-    }
-
-    @Test
-    public void testMarkApplicationAsSuccessful() {
-        assertAccessDenied(() -> classUnderTest.markApplicationAsSuccessful(competitionId, 0L),
                 () -> {
                 });
     }

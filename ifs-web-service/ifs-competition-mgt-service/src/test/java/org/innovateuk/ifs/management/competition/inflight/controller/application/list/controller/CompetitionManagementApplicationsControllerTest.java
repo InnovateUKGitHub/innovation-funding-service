@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller.application.list.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller.application.list.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
@@ -66,9 +66,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @InjectMocks
     @Spy
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
-
-    @Mock
-    private PreviousApplicationsModelPopulator previousApplicationsModelPopulator;
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -551,61 +548,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "", 0, 20, Optional.of(""), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
-    }
-
-    @Test
-    public void previousApplications() throws Exception {
-
-        Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-        String filter = "ALL";
-
-        String competitionName = "Competition One";
-        List<PreviousApplicationResource> previousApplications = PreviousApplicationResourceBuilder.newPreviousApplicationResource().build(2);
-        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
-        PreviousApplicationsViewModel viewModel = new PreviousApplicationsViewModel(competitionId,
-                competitionName, true, previousApplications, previousApplications.size(), new Pagination(applicationPageResource, ""));
-
-        when(previousApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), eq(filter), any(UserResource.class), any()))
-                .thenReturn(viewModel);
-
-        mockMvc.perform(get("/competition/{competitionId}/applications/previous?page={pageIndex}&size={pageSize}&sort={sortField}&filter={filter}",
-                competitionId, pageIndex, pageSize, sortField, filter))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/previous-applications"))
-                .andExpect(model().attribute("model", viewModel))
-                .andReturn();
-    }
-
-    @Test
-    public void markApplicationAsSuccessful() throws Exception {
-
-        setLoggedInUser(newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .build());
-
-        ProjectResource projectResource = newProjectResource()
-                .withId(1L)
-                .withName("Successful project")
-                .build();
-
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
-                .thenReturn(ServiceResult.serviceSuccess());
-        when(projectRestService.createProjectFromApplicationId(anyLong()))
-                .thenReturn(restSuccess(projectResource));
-
-        mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/{competitionId}/applications/previous"))
-                .andReturn();
-
-        verify(previousApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), anyString(), any(UserResource.class), any());
-        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
-        verify(projectRestService).createProjectFromApplicationId(anyLong());
-        verifyNoMoreInteractions(applicationFundingDecisionService, projectRestService);
-
     }
 
     @Test

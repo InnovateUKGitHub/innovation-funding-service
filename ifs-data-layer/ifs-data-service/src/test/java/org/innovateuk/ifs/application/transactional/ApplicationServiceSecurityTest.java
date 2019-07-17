@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
@@ -156,21 +155,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                             isA(UserResource.class));
                 }
         );
-    }
-
-    @Test
-    public void findPreviousApplications() {
-        Long competitionId = 1L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
-
-        assertAccessDenied(() -> classUnderTest.findPreviousApplications(competitionId, 0, 0, "", "ALL"), () -> {
-            verify(competitionRules).internalUsersAndIFSAdminCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
-            verify(competitionRules).innovationLeadForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
-            verify(competitionRules).stakeholderForCompetitionCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));
-            verifyNoMoreInteractions(competitionRules);
-        });
     }
 
     @Override

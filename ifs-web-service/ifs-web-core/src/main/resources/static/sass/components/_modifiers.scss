@@ -256,3 +256,17 @@ hr,
   padding-left: 20px;
   text-align: right;
 }
+
+.govuk-accordion {
+  .govuk-table {
+    .govuk-table__body {
+      .govuk-table__row {
+        &:last-child {
+          .govuk-table__cell {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+}
