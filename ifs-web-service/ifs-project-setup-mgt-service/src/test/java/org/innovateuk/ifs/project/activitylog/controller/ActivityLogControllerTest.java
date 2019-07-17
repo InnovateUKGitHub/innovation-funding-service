@@ -23,7 +23,7 @@ public class ActivityLogControllerTest extends BaseControllerMockMVCTest<Activit
         long projectId = 1L;
 
         ActivityLogViewModel viewModel = mock(ActivityLogViewModel.class);
-        when(activityLogViewModelPopulator.populate(projectId)).thenReturn(viewModel);
+        when(activityLogViewModelPopulator.populate(projectId, getLoggedInUser())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/activity-log", competitionId, projectId))
                 .andExpect(view().name("project/activity-log"))
