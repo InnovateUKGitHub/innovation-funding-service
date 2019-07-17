@@ -96,7 +96,6 @@ public class OtherFundingCostCategoryTest {
     public void addCost() {
 
         FinanceRowItem otherFunding2 = newOtherFunding()
-                .withFundingSource("Family")
                 .withName("Savings")
                 .withFundingAmount(new BigDecimal(5000))
                 .build();
