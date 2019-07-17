@@ -12,6 +12,8 @@ Documentation     Suite description
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -108,7 +110,7 @@ the comp admin closes the assessment and releases feedback
     Then the user should not see an error in the page
 
 the EOI comp moves to Previous tab
-    [Documentation]  IFS-2376
+    [Documentation]  IFS-2376  IFS-6054
     [Tags]
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = a:contains("Previous")
@@ -160,7 +162,7 @@ the user should see the competition details and sucessful application
     the user clicks the button/link    link = ${comp_name}
     the user should see the element    jQuery = dt:contains("Competition type:") ~ dd:contains("Expression of interest")
     the user should see the element    jQuery = button:contains("Projects (0)")
-    the user clicks the button/link    jQuery = button:contains("Applications")
+    the user expands the section       Applications
     the user should see the element    jQuery = h1:contains("${comp_name}")
 
 Custom suite teardown

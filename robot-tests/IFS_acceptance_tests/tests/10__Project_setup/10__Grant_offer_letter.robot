@@ -47,6 +47,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-5865 GOL download/upload page for admins
 ...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -466,7 +467,7 @@ Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
-    And the user clicks the button/link     jQuery = button:contains("Projects")
+    And the user expands the section        Projects
     Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
     And the user should see project setup compeletion status
 
@@ -478,6 +479,12 @@ Verify support users permissions in project setup tab
     When the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see project setup compeletion status
     And the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
+
+Support user should see completed project in previous tab
+   [Documentation]  IFS-6054
+   Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+   And the user expands the section        Projects
+   Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
 
 *** Keywords ***
 the user uploads a file

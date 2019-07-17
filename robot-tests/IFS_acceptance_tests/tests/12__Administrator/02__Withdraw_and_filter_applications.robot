@@ -16,6 +16,8 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-5958 Read Only view of withdrawn and offline projects in project setup dashboards
 ...
 ...             IFS-6053 Amend competition table in the previous tab
+...
+...             IFS-6054 Display completed projects in the previous tab
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
