@@ -106,7 +106,7 @@ public class OtherFundingCostCategoryTest {
     }
 
     @Test
-    public void excludeFromTotalCost() {
+    public void checkCostCategorySetToExcludeFromTotalCosts() {
 
         assertTrue(otherFundingCostCategory.excludeFromTotalCost());
     }

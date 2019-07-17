@@ -67,7 +67,7 @@ public class DefaultCostCategoryTest {
     }
 
     @Test
-    public void excludeFromTotalCost() {
+    public void checkCostCategorySetToExcludeFromTotalCosts() {
 
         assertFalse(defaultCostCategory.excludeFromTotalCost());
     }

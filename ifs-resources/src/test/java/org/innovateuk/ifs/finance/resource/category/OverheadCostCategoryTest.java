@@ -57,7 +57,7 @@ public class OverheadCostCategoryTest {
     }
 
     @Test
-    public void excludeFromTotalCost() {
+    public void checkCostCategorySetToExcludeFromTotalCosts() {
 
         assertFalse(overheadCostCategory.excludeFromTotalCost());
     }

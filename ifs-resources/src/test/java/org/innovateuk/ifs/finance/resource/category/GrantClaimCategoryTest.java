@@ -56,7 +56,7 @@ public class GrantClaimCategoryTest {
     }
 
     @Test
-    public void excludeFromTotalCost() {
+    public void checkCostCategorySetToExcludeFromTotalCosts() {
 
         assertTrue(grantClaimCategory.excludeFromTotalCost());
     }
