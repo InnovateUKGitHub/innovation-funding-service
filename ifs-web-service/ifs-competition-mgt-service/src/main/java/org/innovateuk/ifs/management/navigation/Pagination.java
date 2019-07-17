@@ -21,7 +21,7 @@ public class Pagination {
     private List<PaginationLink> pageNames;
 
     public Pagination(PageResource pageResource) {
-        this(pageResource, null);
+        this(pageResource, "");
     }
 
     public Pagination(PageResource pageResource, String existingQuery) {
