@@ -103,7 +103,8 @@ The Administrator should see the ineligible applications in unsuccessful list bu
     [Documentation]  IFS-1458 IFS-1459 IFS-50
     [Tags]  Administrator
     [Setup]  log in as a different user        &{ifs_admin_user_credentials}
-    Given the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/previous
+    Given the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/previous
+    And the user expands the section           Applications
     Then the user should see the element       jQuery = td:contains("${ineligibleApplication}")
     And the user should not see the element    jQuery = td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
@@ -136,7 +137,7 @@ Reinstate an application
     When the user clicks the button/link      jQuery = button:contains("Reinstate application")
     And the user navigates to the page        ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/submitted
     Then the user should see the element      jQuery = td:contains("${ineligibleApplication}")
-    And the reinstated application in no longer shown in the unsuccessful list
+    And the reinstated application in no longer shown in the ineligible list
     And the applicant can see his application in the right section  Applications in progress
 
 Stakeholders cannot mark applications as ineligible
@@ -165,8 +166,8 @@ the user navigates to ineligible applications
     the user clicks the button/link    link = Applications: All, submitted, ineligible
     the user clicks the button/link    link = Ineligible applications
 
-the reinstated application in no longer shown in the unsuccessful list
-    the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/previous
+the reinstated application in no longer shown in the ineligible list
+    the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
     the user should not see the element  jQuery = td:contains("${ineligibleApplication}")
 
 the user is required to enter a subject/message
