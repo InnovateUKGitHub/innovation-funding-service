@@ -28,7 +28,7 @@ public class PreviousApplicationsModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
-    public PreviousApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, String filter, UserResource loggedInUser, String existingQueryString) {
+    public PreviousApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, String filter, UserResource loggedInUser) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -41,6 +41,6 @@ public class PreviousApplicationsModelPopulator {
         return new PreviousApplicationsViewModel(competitionId, competition.getName(), isIfsAdmin,
                 previousApplicationsPagedResult.getContent(),
                 previousApplicationsPagedResult.getTotalElements(),
-                new Pagination(previousApplicationsPagedResult, existingQueryString));
+                new Pagination(previousApplicationsPagedResult));
     }
 }

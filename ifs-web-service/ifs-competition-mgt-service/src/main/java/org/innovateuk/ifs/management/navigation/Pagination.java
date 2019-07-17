@@ -20,6 +20,10 @@ public class Pagination {
     private long totalCount;
     private List<PaginationLink> pageNames;
 
+    public Pagination(PageResource pageResource) {
+        this(pageResource, null);
+    }
+
     public Pagination(PageResource pageResource, String existingQuery) {
         this.totalCount = pageResource.getTotalElements();
         this.hasPrevious = pageResource.hasPrevious();

@@ -41,8 +41,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              int page,
                                                              Optional<Long> innovationArea,
                                                              String sortField,
-                                                             String filter,
-                                                             String origin) {
+                                                             String filter) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccess();
@@ -72,8 +71,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 applicationCounts,
                 competitionId,
                 innovationArea,
-                sortField,
-                origin);
+                sortField);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
 
@@ -170,8 +168,7 @@ public class AssessorAssessmentProgressModelPopulator {
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
                                                                                      long competitionId,
                                                                                      Optional<Long> innovationArea,
-                                                                                     String sortField,
-                                                                                     String origin) {
+                                                                                     String sortField) {
         CompetitionResource competition  = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(
@@ -179,7 +176,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 IN_ASSESSMENT == competition.getCompetitionStatus(),
                 innovationArea,
                 sortField,
-                new Pagination(applicationCounts, origin),
+                new Pagination(applicationCounts),
                 applicationCounts.getTotalElements());
     }
 

@@ -14,7 +14,6 @@ public class InterviewAssignmentApplicationsSentInviteViewModel {
     private final String subject;
     private final String content;
     private final String additionalText;
-    private final String originQuery;
 
     public InterviewAssignmentApplicationsSentInviteViewModel(long competitionId,
                                                               String competitionName,
@@ -25,8 +24,7 @@ public class InterviewAssignmentApplicationsSentInviteViewModel {
                                                               String feedbackFilename,
                                                               String subject,
                                                               String content,
-                                                              String additionalText,
-                                                              String originQuery) {
+                                                              String additionalText) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applicationId = applicationId;
@@ -37,7 +35,6 @@ public class InterviewAssignmentApplicationsSentInviteViewModel {
         this.subject = subject;
         this.content = content;
         this.additionalText = additionalText;
-        this.originQuery = originQuery;
     }
 
     public long getCompetitionId() {
@@ -78,10 +75,6 @@ public class InterviewAssignmentApplicationsSentInviteViewModel {
 
     public String getAdditionalText() {
         return additionalText;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     /* View logic */

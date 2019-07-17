@@ -91,7 +91,7 @@
                             <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
                                 <td class="govuk-table__cell">
                                     <a
-                                    th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                    th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})}"
                                     th:text="${row.id}"
                                     class="govuk-link">194731</a>
                                 </td>

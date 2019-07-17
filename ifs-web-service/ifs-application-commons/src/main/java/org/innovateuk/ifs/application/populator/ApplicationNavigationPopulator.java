@@ -1,20 +1,15 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
-
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 
 @Component
 public class ApplicationNavigationPopulator {
@@ -105,72 +100,5 @@ public class ApplicationNavigationPopulator {
             navigationViewModel.setNextUrl(nextUrl);
             navigationViewModel.setNextText(nextText);
         }
-    }
-
-    /**
-     * This method creates a URL looking at referrer in request.  Because 'back' will be different depending on
-     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892 & IFS-401)
-     */
-    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, Optional<String> originQuery, boolean isSupport) {
-        if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
-            model.addAttribute(BACK_TITLE, "Your finances");
-            if (applicantOrganisationId.isPresent()) {
-                if (originQuery.isPresent()) {
-                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get() + originQuery.get());
-                }
-                else {
-                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
-                }
-            } else {
-                model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/" + SectionType.FINANCE.name());
-            }
-        } else {
-            ApplicationResource application = applicationService.getById(applicationId);
-            String backURL = APPLICATION_BASE_URL + applicationId;
-
-            if (applicantOrganisationId.isPresent() && section != null) {
-                if (isSupport && application.getCompetitionStatus().equals(OPEN)) {
-                    model.addAttribute(BACK_TITLE, "Application summary");
-                    if (originQuery.isPresent()) {
-                        backURL = (backURL + "/summary" + originQuery.get());
-                        model.addAttribute("originQuery", originQuery.get());
-                    } else {
-                        backURL = (backURL + "/summary");
-                    }
-                } else {
-                    if (application.isSubmitted()) {
-                        model.addAttribute(BACK_TITLE, "Application overview");
-                        if (originQuery.isPresent()) {
-                            backURL = ("/management/competition/" + section.getCompetition() + backURL + originQuery.get());
-                            model.addAttribute("originQuery", originQuery.get());
-                        } else {
-                            backURL = ("/management/competition/" + section.getCompetition() + backURL);
-                        }
-                    } else {
-                        model.addAttribute(BACK_TITLE, "Application summary");
-                        if (originQuery.isPresent()) {
-                            backURL = (backURL + "/summary" + originQuery.get());
-                            model.addAttribute("originQuery", originQuery.get());
-                        } else {
-                            backURL = (backURL + "/summary");
-                        }
-                    }
-
-                }
-            } else {
-                if (eitherApplicationOrCompetitionAreNotOpen(application)) {
-                    model.addAttribute(BACK_TITLE, "Application summary");
-                    backURL += "/summary";
-                } else {
-                    model.addAttribute(BACK_TITLE, "Application overview");
-                }
-            }
-
-            model.addAttribute(BACK_URL, backURL);
-        }
-    }
-
-    private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
-        return !application.isOpen() || !(application.getCompetitionStatus().ordinal() >= OPEN.ordinal());
     }
 }

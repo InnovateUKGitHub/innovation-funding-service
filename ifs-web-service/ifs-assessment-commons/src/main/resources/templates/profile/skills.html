@@ -64,7 +64,7 @@
                                class="govuk-tabs__tab"
                                aria-selected="true">Skills</a>
                             <a th:unless="${!model.compAdminUser}"
-                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"
                                class="govuk-tabs__tab"
                                aria-selected="true">Skills</a>
                         </li>
@@ -73,7 +73,7 @@
                                th:href="@{/profile/details/declaration}"
                                class="govuk-tabs__tab">DOI</a>
                             <a th:unless="${!model.compAdminUser}"
-                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}"
+                               th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"
                                class="govuk-tabs__tab">DOI</a>
                         </li>
                     </ul>

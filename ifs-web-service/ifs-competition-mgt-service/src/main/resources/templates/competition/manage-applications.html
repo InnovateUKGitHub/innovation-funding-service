@@ -57,7 +57,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="app : ${model.applications}">
-                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}" class="govuk-link" /></td>
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})}" th:text="${app.id}" class="govuk-link" /></td>
                                 <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                                 <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>

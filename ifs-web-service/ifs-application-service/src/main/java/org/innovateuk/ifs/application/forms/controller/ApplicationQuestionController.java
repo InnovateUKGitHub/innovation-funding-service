@@ -35,7 +35,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +45,6 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -230,20 +228,11 @@ public class ApplicationQuestionController {
                     return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
                             (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
                 case TERMS_AND_CONDITIONS:
-                    String originQuery =  UriComponentsBuilder.fromPath("")
-                            .queryParams(queryParams)
-                            .encode()
-                            .toUriString();
-
-                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
+                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId);
             }
         }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
-
-        boolean isSupport = user.hasRole(SUPPORT);
-
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
 
         if (question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
