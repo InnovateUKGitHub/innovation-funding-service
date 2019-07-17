@@ -15,6 +15,12 @@ ${PsActivityLogApplicationName}     Climate control solution
 ${PsActivityLogProjectId}           ${project_ids["${PsActivityLogApplicationName}"]}
 ${AppPsActivityLogCompUrl}          ${server}/project-setup/project/${PsActivityLogProjectId}
 
+#${PsCompleteAppCompName}
+#${PsCompleteAppCompId}
+${PsCompleteAppApplicationName}     Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PsCompleteAppApplicationId}       ${project_ids["${PsCompleteAppApplicationName}"]}
+${PsCompleteAppUrl}                 ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PsCompleteAppApplicationId}/activity-log
+
 *** Test Cases ***
 Ifs Admin is not able to see logs entries before they have happened
     Given the admin navigates to project activity log
@@ -52,19 +58,13 @@ Documents approved log entry
     Then the admin is able to see log entry               Document approved
     And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
-Mo assigned log entry
-    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
-    Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
-    When the user assigns MO
-    Then the admin is able to see log entry               Document approved
-    And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
+The admin is able to see existing log entries
+    Given the user navigates to the page          ${PsCompleteAppUrl}
+    Then The admin is able to see all existing log entries
 
 *** Keywords ***
 Custom suite setup
     the user logs-in in new browser     &{ifs_admin_user_credentials}
-
-The user assigns MO
-
 
 The user approves documents
     the user navigates to the page         ${server}/project-setup-management/project/${PsActivityLogProjectId}/document/all
@@ -96,6 +96,20 @@ The admin is able to see log entry
     log in as a different user                   &{ifs_admin_user_credentials}
     the admin navigates to project activity log
     the user should see the element              jQuery = strong:contains("${logActivityName}")
+
+The admin is able to see all existing log entries
+    the user should see the element              jQuery = strong:contains("Application submitted")
+    the user should see the element              jQuery = strong:contains("Application moved into setup")
+    the user should see the element              jQuery = strong:contains("Bank details added")
+    the user should see the element              jQuery = strong:contains("Finance contact nominated")
+    the user should see the element              jQuery = strong:contains("Project details completed")
+    the user should see the element              jQuery = strong:contains("Project manager nominated")
+    the user should see the element              jQuery = strong:contains("Finance viability approved")
+    the user should see the element              jQuery = strong:contains("Finance eligibility approved")
+    the user should see the element              jQuery = strong:contains("Spend profile approved")
+    the user should see the element              jQuery = strong:contains("Spend profile sent to Innovate UK")
+    the user should see the element              jQuery = strong:contains("Spend profiles generated")
+
 
 The admin is able to navigate to log entry link
     [Arguments]  ${linkName}  ${pageHeadingName}
