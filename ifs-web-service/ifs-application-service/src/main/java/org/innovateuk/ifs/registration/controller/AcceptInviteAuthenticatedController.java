@@ -11,7 +11,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,13 +36,13 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private OrganisationRestService organisationRestService;
     private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
     private UserRestService userRestService;
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     public AcceptInviteAuthenticatedController(final InviteRestService inviteRestService,
                                                final OrganisationRestService organisationRestService,
                                                final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator,
                                                final UserRestService userRestService,
-                                               final CookieUtil cookieUtil) {
+                                               final EncryptedCookieService cookieUtil) {
         this.inviteRestService = inviteRestService;
         this.organisationRestService = organisationRestService;
         this.confirmOrganisationInviteModelPopulator = confirmOrganisationInviteModelPopulator;

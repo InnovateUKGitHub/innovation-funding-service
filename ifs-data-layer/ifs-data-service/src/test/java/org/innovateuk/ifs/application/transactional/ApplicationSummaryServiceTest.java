@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
@@ -662,6 +663,18 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().getErrors().get(0).getErrorKey().equals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey()));
+    }
+
+    @Test
+    public void getPreviousApplications() {
+        long competitionId = 1L;
+        List<PreviousApplicationResource> previousApplicationResources = newPreviousApplicationResource().build(1);
+
+        when(applicationRepositoryMock.findPrevious(competitionId)).thenReturn(previousApplicationResources);
+
+        ServiceResult<List<PreviousApplicationResource>> result = applicationSummaryService.getPreviousApplications(competitionId);
+
+        assertEquals(previousApplicationResources, result.getSuccess());
     }
 
     private ApplicationSummaryResource sumLead(String lead) {

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
@@ -36,7 +35,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     private RegistrationCookieService registrationCookieService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private CompaniesHouseRestService companiesHouseRestService;
@@ -55,7 +54,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     @Before
     public void setUpData() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));

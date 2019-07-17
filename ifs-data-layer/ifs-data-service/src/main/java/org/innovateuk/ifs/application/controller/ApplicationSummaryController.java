@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -102,6 +103,12 @@ public class ApplicationSummaryController {
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "informFilter", required = false) Optional<Boolean> informFilter) {
         return applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, informFilter).toGetResponse();
+    }
+
+    @GetMapping("/find-by-competition/{competitionId}/previous")
+    public RestResult<List<PreviousApplicationResource>> getPreviousApplications(
+            @PathVariable long competitionId) {
+        return applicationSummaryService.getPreviousApplications(competitionId).toGetResponse();
     }
 
     @GetMapping("/application-team/{applicationId}")

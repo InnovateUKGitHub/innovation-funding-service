@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -25,7 +24,6 @@ import java.util.Optional;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
@@ -38,7 +36,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTest<ApplicationFinancePermissionRules> {
@@ -254,7 +252,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     @Test
     public void monitoringOfficersCanSeeApplicationFinancesForOrganisations() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         allGlobalRoleUsers.forEach(user -> {
