@@ -22,6 +22,8 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     int countByApplicationCompetitionId(long competitionId);
     int countByApplicationCompetitionIdAndProjectProcessActivityStateIn(long competitionId, Set<ProjectState> states);
 
+    List<Project> findByApplicationCompetitionIdAndProjectProcessActivityStateIn(long competitionId, Set<ProjectState> states);
+
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID)
     List<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString);
 
