@@ -266,7 +266,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             }
         }
         if (!started) {
-            return NOT_STARTED;
+            return notStartedIfProjectActive(processState);
         } else if (incomplete) {
             return PENDING;
         } else {
@@ -297,7 +297,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     return PENDING;
                 }
 
-                return NOT_STARTED;
+                return notStartedIfProjectActive(processState);
         }
     }
 
@@ -346,14 +346,14 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             } else {
                 User user = loggedInUserSupplier.get();
                 if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
-                    return NOT_STARTED;
+                    return notStartedIfProjectActive(projectState);
                 } else {
                     return projectState.isActive() ?
                     ACTION_REQUIRED : PENDING;
                 }
             }
         } else {
-            return NOT_STARTED;
+            return notStartedIfProjectActive(projectState);
         }
     }
 
@@ -420,11 +420,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return COMPLETE;
         }
 
-        // any state other than complete should show as pending for inactive projects
-        if(!processState.isActive()) {
-            return PENDING;
-        }
-
         if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
             return PENDING;
         }
@@ -435,10 +430,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
 
         if (project.getOfferSubmittedDate() != null) {
-            return ACTION_REQUIRED;
+            return processState.isActive() ?
+                    ACTION_REQUIRED : PENDING;
         }
 
-        return NOT_STARTED;
+        return notStartedIfProjectActive(processState);
     }
 
     private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
@@ -467,7 +463,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     }
                 }
             } else {
-                roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
+                roleSpecificGolStates.put(COMP_ADMIN, notStartedIfProjectActive(processState));
             }
 
             return roleSpecificGolStates;
@@ -481,6 +477,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return projectState.isActive() ?
                 ACTION_REQUIRED :
                 PENDING;
+    }
+
+    private ProjectActivityStates notStartedIfProjectActive(ProjectState projectState) {
+        return projectState.isActive() ?
+                NOT_STARTED :
+                NOT_REQUIRED;
     }
 
     @Override

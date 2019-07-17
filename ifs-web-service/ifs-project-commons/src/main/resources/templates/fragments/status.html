@@ -121,15 +121,13 @@
         <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
             <th:block th:if="${url}">
                 <a th:href="${url}" class="govuk-link">
-                    <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
                     <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                    <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
+                    <th:block th:unless="${columnType == 'MO'}">Review</th:block>
                 </a>
             </th:block>
             <th:block th:unless="${url}">
-                <th:block th:if="${columnType == 'project-details' or columnType == 'project-team'}">Incomplete</th:block>
                 <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
+                <th:block th:unless="${columnType == 'MO'}">Review</th:block>
             </th:block>
         </td>
         <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
@@ -157,4 +155,3 @@
         <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </th:block>
-

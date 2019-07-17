@@ -7,10 +7,9 @@ import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.invite.form.ResendInviteForm;
 import org.innovateuk.ifs.management.invite.form.SendInviteForm;
 import org.innovateuk.ifs.management.invite.viewmodel.SendInvitesViewModel;
-import org.innovateuk.ifs.management.review.controller.ReviewSendInviteController;
 import org.innovateuk.ifs.management.review.form.ReviewOverviewSelectionForm;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +26,6 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -35,6 +33,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilde
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,7 +47,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
     private CompetitionResource competition;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Mock
     private ReviewInviteRestService reviewInviteRestService;
@@ -60,7 +59,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
