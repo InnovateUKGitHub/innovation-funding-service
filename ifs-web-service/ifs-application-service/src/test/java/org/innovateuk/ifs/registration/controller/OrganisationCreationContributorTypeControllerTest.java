@@ -4,7 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,7 +41,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     private RegistrationCookieService registrationCookieService;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Override
     protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {
@@ -57,7 +57,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
         this.setupFinances();
         this.setupInvites();
         this.setupOrganisationTypes();
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
     }
