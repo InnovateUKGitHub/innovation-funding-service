@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -20,14 +23,13 @@ public class GrantClaimCategoryTest {
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem grantClaim = new GrantClaim(1L, 10);
-        FinanceRowItem grantClaim2 = new GrantClaim(2L, 20);
+        FinanceRowItem grantClaim = newGrantClaim().withGrantClaimPercentage(10).build();
+        FinanceRowItem grantClaim2 = newGrantClaim().withGrantClaimPercentage(20).build();
 
         costs.add(grantClaim);
         costs.add(grantClaim2);
 
-        grantClaimCategory = new GrantClaimCategory();
-        grantClaimCategory.setCosts(costs);
+        grantClaimCategory = newGrantClaimCostCategory().withCosts(asList(grantClaim, grantClaim2)).build();
     }
 
     @Test
@@ -47,6 +49,7 @@ public class GrantClaimCategoryTest {
     public void addCost() {
 
         FinanceRowItem grantClaim3 = new GrantClaim(3L, 30);
+        costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 
         assertEquals(costs, grantClaimCategory.getCosts());
