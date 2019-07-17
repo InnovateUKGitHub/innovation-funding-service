@@ -14,6 +14,8 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -73,6 +75,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
         List<QuestionStatusResource> notifications = newQuestionStatusResource().build(1);
         NavigationViewModel navigationViewModel = new NavigationViewModel();
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(applicationDetailsPopulator.populate(
                 any(AbstractApplicantResource.class),
@@ -86,7 +89,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(question.getQuestion().getId(), question.getApplication().getId(), question.getCurrentApplicant().getOrganisation().getId())).thenReturn(questionStatusResource);
         when(questionService.getNotificationsForUser(singletonList(questionStatusResource), question.getCurrentUser().getId())).thenReturn(notifications);
 
-        ApplicationDetailsViewModel viewModel = populator.populate(question);
+        ApplicationDetailsViewModel viewModel = populator.populate(question, competitionResource);
 
         assertThat(viewModel.isAllReadOnly(), equalTo(true));
         assertThat(viewModel.getCurrentApplicant(), equalTo(question.getCurrentApplicant()));
