@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -76,6 +77,13 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
         when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
+        when(applicationDetailsInputViewModel.getSelectedInnovationAreaName()).thenReturn(null);
+        when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
+        when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
+        when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+
         mockMvc.perform(
                 get("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId))
                 .andExpect(status().isOk())
@@ -196,6 +204,11 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
+        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
+        when(applicationDetailsInputViewModel.getSelectedInnovationAreaName()).thenReturn(null);
+        when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
+        when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
+        when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
         when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
 
         mockMvc.perform(
@@ -231,6 +244,11 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
         when(questionStatusRestService.markAsInComplete(anyLong(), anyLong(), anyLong())).thenReturn(restSuccess());
+        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
+        when(applicationDetailsInputViewModel.getSelectedInnovationAreaName()).thenReturn(null);
+        when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
+        when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
+        when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)

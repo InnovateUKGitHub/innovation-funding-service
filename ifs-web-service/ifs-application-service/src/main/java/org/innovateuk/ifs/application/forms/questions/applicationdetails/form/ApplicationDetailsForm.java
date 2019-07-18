@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.TRUE;
 
 /**
  * Form for application details.
@@ -27,7 +27,7 @@ public class ApplicationDetailsForm {
     @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
 
-    @NotNull(message = "{validation.project.duration.range.invalid}")
+    @NotNull
     @Range(min = 1, max = 36, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
