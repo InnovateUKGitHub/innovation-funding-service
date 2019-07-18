@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Override
-    public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
+    public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class, questionId))
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
@@ -87,13 +88,18 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(formInput.getAllowedFileTypes());
+                setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
                 setupResource.setMaxWords(formInput.getWordCount());
+                break;
+            case TEMPLATE_UPLOAD:
+                setupResource.setTemplateUpload(formInput.getActive());
+                setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
+                setupResource.setTemplateName(formInput.getDescription());
                 break;
         }
     }
@@ -127,7 +133,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
+    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(this::mapQuestionToSuperQuestionResource);
@@ -166,12 +172,28 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markTemplateUploadAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
         return serviceSuccess(competitionSetupQuestionResource);
+    }
+
+    private void markTemplateUploadAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
+                FormInputScope.APPLICATION,
+                FormInputType.TEMPLATE_UPLOAD);
+        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateUpload() != null) {
+            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateUpload());
+
+            if(competitionSetupQuestionResource.getTemplateUpload()) {
+                setTemplateSubOptions(templateFormInput, competitionSetupQuestionResource );
+            } else {
+                resetTemplateSubOptions(templateFormInput);
+            }
+        }
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
@@ -183,18 +205,29 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
             if(competitionSetupQuestionResource.getAppendix()) {
                 setAppendixSubOptions(appendixFormInput, competitionSetupQuestionResource );
-            }
-            else {
+            } else {
                 resetAppendixSubOptions(appendixFormInput);
             }
         }
     }
 
+    private void setTemplateSubOptions(FormInput templateFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
+        if (competitionSetupQuestionResource.getTemplateName() != null) {
+            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateName());
+        }
+    }
+
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedFileTypes());
-        if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
+        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
+        if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
+    }
+
+    private void resetTemplateSubOptions(FormInput appendixFormInput) {
+        appendixFormInput.setAllowedFileTypes(null);
+        appendixFormInput.setDescription(null);
     }
 
     private void resetAppendixSubOptions(FormInput appendixFormInput) {

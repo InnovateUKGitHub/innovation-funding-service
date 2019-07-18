@@ -23,8 +23,10 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "templateName", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -48,8 +50,12 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
+    private Set<FileTypeCategory> allowedAppendixResponseFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
+
+    private Boolean templateUpload;
+    private Set<FileTypeCategory> allowedTemplateResponseFileTypes = new LinkedHashSet<>();
+    private String templateName;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -219,12 +225,12 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public Set<FileTypeCategory> getAllowedFileTypes() {
-        return allowedFileTypes;
+    public Set<FileTypeCategory> getAllowedAppendixResponseFileTypes() {
+        return allowedAppendixResponseFileTypes;
     }
 
-    public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypes = allowedFileTypes;
+    public void setAllowedAppendixResponseFileTypes(Set<FileTypeCategory> allowedAppendixResponseFileTypes) {
+        this.allowedAppendixResponseFileTypes = allowedAppendixResponseFileTypes;
     }
 
     public String getAppendixGuidance() {
@@ -233,6 +239,30 @@ public class CompetitionSetupQuestionResource {
 
     public void setAppendixGuidance(String appendixGuidance) {
         this.appendixGuidance = appendixGuidance;
+    }
+
+    public Boolean getTemplateUpload() {
+        return templateUpload;
+    }
+
+    public void setTemplateUpload(Boolean templateUpload) {
+        this.templateUpload = templateUpload;
+    }
+
+    public Set<FileTypeCategory> getAllowedTemplateResponseFileTypes() {
+        return allowedTemplateResponseFileTypes;
+    }
+
+    public void setAllowedTemplateResponseFileTypes(Set<FileTypeCategory> allowedTemplateResponseFileTypes) {
+        this.allowedTemplateResponseFileTypes = allowedTemplateResponseFileTypes;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public static List<FileTypeCategory> getSupportedTypeCategories(){
@@ -258,6 +288,11 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
+                .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
+                .append(appendixGuidance, that.appendixGuidance)
+                .append(templateUpload, that.templateUpload)
+                .append(allowedTemplateResponseFileTypes, that.allowedTemplateResponseFileTypes)
+                .append(templateName, that.templateName)
                 .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
                 .append(assessmentGuidance, that.assessmentGuidance)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
@@ -283,6 +318,11 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
+                .append(allowedAppendixResponseFileTypes)
+                .append(appendixGuidance)
+                .append(templateUpload)
+                .append(allowedTemplateResponseFileTypes)
+                .append(templateName)
                 .append(assessmentGuidanceTitle)
                 .append(assessmentGuidance)
                 .append(assessmentMaxWords)
@@ -294,5 +334,4 @@ public class CompetitionSetupQuestionResource {
                 .append(scope)
                 .toHashCode();
     }
-
 }
