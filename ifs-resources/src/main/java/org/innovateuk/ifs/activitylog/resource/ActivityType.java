@@ -18,7 +18,7 @@ public enum ActivityType {
     ELIGIBILITY_APPROVED,
     FINANCE_QUERY,
     FINANCE_QUERY_RESPONDED,
-    PROJECT_FINANCE_EDITED,  //Not yet implemented
+    //PROJECT_FINANCE_EDITED, Not yet implemented but exists in database enum.
     SPEND_PROFILE_GENERATED,
     SPEND_PROFILE_SENT,
     SPEND_PROFILE_APPROVED,
