@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -67,4 +64,6 @@ public interface ApplicationSummaryRestService {
                                                                          Optional<Boolean> informFilter);
 
     RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId);
+
+    RestResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId);
 }

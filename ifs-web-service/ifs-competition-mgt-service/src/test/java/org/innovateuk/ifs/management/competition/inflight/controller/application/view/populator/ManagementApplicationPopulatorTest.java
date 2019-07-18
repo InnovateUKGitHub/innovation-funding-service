@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller.application.view.populator;
+package org.innovateuk.ifs.management.competition.inflight.controller.application.view.populator;
 
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;

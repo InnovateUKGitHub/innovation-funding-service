@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.management.competition.inflight.controller.CompetitionManagementCompetitionController;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightViewModel;

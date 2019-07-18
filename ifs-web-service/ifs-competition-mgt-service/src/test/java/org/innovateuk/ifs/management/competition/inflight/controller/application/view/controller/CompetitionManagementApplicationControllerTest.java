@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller.application.view.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller.application.view.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
