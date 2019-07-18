@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,7 +32,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -66,6 +70,10 @@ public class ActivityLogViewModelPopulatorTest {
         long queryId = 10L;
         String organisationName = "My organisation";
         ZonedDateTime now = now();
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.STAKEHOLDER)
+                .build();
 
         ProjectResource project = newProjectResource()
                 .withName("Project")
@@ -112,7 +120,7 @@ public class ActivityLogViewModelPopulatorTest {
         when(projectRestService.getProjectUsersForProject(projectId)).thenReturn(restSuccess(singletonList(projectUserResource)));
         when(activityLogRestService.findByApplicationId(project.getApplication())).thenReturn(restSuccess(activities));
 
-        ActivityLogViewModel viewModel = activityLogViewModelPopulator.populate(projectId);
+        ActivityLogViewModel viewModel = activityLogViewModelPopulator.populate(projectId, user);
 
         assertEquals("Competition", viewModel.getCompetitionName());
 
@@ -125,6 +133,7 @@ public class ActivityLogViewModelPopulatorTest {
         assertEquals(now.minusDays(3), applicationSubmitted.getCreatedOn());
         assertEquals("APPLICATION_SUBMITTED", applicationSubmitted.getLinkText());
         assertEquals(format("/management/competition/%d/application/%d?origin=PROJECT_SETUP_MANAGEMENT_ACTIVITY_LOG&projectId=%d", project.getCompetition(), project.getApplication(), project.getId()), applicationSubmitted.getLinkUrl());
+        assertTrue(applicationSubmitted.isDisplayLink());
 
         ActivityLogEntryViewModel bankDetailsApproved = viewModel.getActivities().get(1);
         assertEquals("BANK_DETAILS_APPROVED", bankDetailsApproved.getTitle());
@@ -133,6 +142,7 @@ public class ActivityLogViewModelPopulatorTest {
         assertEquals(now.minusDays(2), bankDetailsApproved.getCreatedOn());
         assertEquals("BANK_DETAILS_APPROVED", bankDetailsApproved.getLinkText());
         assertEquals(format("/project-setup-management/project/%d/organisation/%d/review-bank-details", project.getId(), organisationId), bankDetailsApproved.getLinkUrl());
+        assertFalse(bankDetailsApproved.isDisplayLink());
 
         ActivityLogEntryViewModel documentUploaded = viewModel.getActivities().get(2);
         assertEquals("DOCUMENT_UPLOADED", documentUploaded.getTitle());
@@ -141,6 +151,7 @@ public class ActivityLogViewModelPopulatorTest {
         assertEquals(now.minusDays(1), documentUploaded.getCreatedOn());
         assertEquals("DOCUMENT_UPLOADED", documentUploaded.getLinkText());
         assertEquals(format("/project-setup-management/project/%d/document/config/%d", project.getId(), documentId), documentUploaded.getLinkUrl());
+        assertFalse(documentUploaded.isDisplayLink());
 
         ActivityLogEntryViewModel financeQuery = viewModel.getActivities().get(3);
         assertEquals("FINANCE_QUERY", financeQuery.getTitle());
@@ -149,5 +160,7 @@ public class ActivityLogViewModelPopulatorTest {
         assertEquals(now, financeQuery.getCreatedOn());
         assertEquals("FINANCE_QUERY", financeQuery.getLinkText());
         assertEquals(format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), organisationId, "VIABILITY"), financeQuery.getLinkUrl());
+        assertFalse(financeQuery.isDisplayLink());
+
     }
 }
