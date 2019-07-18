@@ -107,4 +107,11 @@ public class AssignButtonsViewModel {
     public boolean isAssignedByCurrentUser() { return assignedBy.getUser().equals(currentApplicant.getUser()); }
 
     public boolean isAssignedToLead() { return assignee.getRole().isLeadApplicant(); }
+
+    public String getAssigneeUserName() {
+        if(assignee == null) {
+            return leadApplicant.getUserName();
+        }
+        return assignee.getUserName();
+    }
 }

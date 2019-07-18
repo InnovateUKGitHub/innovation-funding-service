@@ -51,4 +51,8 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
         return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();
     }
 
+    public boolean isSingleApplicant() {
+        return assignButtonsViewModel != null && assignButtonsViewModel.getAssignableApplicants().size() == 1;
+    }
+
 }

@@ -79,21 +79,26 @@
                                 </h3>
                             </div>
                             <th:block th:unless="${row.complete}">
-
-                                <!-- /* 'Assigned to' info */-->
-                                <th:block th:if="${row.assignable}">
+                                <!-- /* Assigned to */-->
+                                <div th:if="${row.assignable}"
+                                     th:with="rowModel=${row.assignButtonsViewModel.get()}, assignee=${rowModel.assignedToCurrentUser ? 'you' : rowModel.assigneeUserName}"
+                                     class="secondary-notification">
                                     <!--/* lead */-->
                                     <th:block th:if="${model.lead}">
-                                        <th:block
-                                            th:insert="question-type/form-elements :: assign-buttons (${row.assignButtonsViewModel.get()})"
-                                            th:with="hideAssignedTo=${true}"/>
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
+                                           class="govuk-link"
+                                           aria-describedby="assign-hint">
+                                            Assigned to
+                                            <th:block th:text="${assignee}">you/Name</th:block>
+                                            <span id="assign-hint" class="govuk-visually-hidden">,assign to somebody else in your team</span>
+                                        </a>
                                     </th:block>
                                     <!--/* collaborator */-->
                                     <th:block th:unless="${model.lead}">
-                                        <th:block
-                                            th:insert="question-type/form-elements :: assigned-to (${row.assignButtonsViewModel.get()})"/>
+                                        Assigned to
+                                        <th:block th:text="${assignee}">you/Name</th:block>
                                     </th:block>
-                                </th:block>
+                                </div>
 
                                 <div th:if="${row.showStatus}" class="task-status-incomplete">
                                     <span>Incomplete</span>
