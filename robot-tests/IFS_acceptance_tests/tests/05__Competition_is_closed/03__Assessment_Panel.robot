@@ -87,7 +87,7 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
-    Given the user navigates to the page    ${assessment_panel}/assessors/find     #the user clicks the button/link     link = Find
+    Given the user navigates to the page    ${assessment_panel}/assessors/find
     Then the competition admin invites assessors to the competition
 
 CompAdmin can remove assessor from invite list
