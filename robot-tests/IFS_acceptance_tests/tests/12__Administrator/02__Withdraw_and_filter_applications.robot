@@ -21,6 +21,7 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
+Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
@@ -153,9 +154,17 @@ The user should see the Low-friction wheel coatings project
 
 the user should see applications and withdrawn projects
     the user clicks the button/link     link = ${WITHDRAWN_PROJECT_COMPETITION_NAME}
+    the user checks for sorting on previous applications
     the user should see the all projects and navigate back to completed projects
     the user should see the element     jQuery = th:contains("Nano-ROAD: Nanocoating for Reduction Of Air Drag") strong:contains("${withdrawnState}")
     the user should see the element     jQuery = th:contains("Low-friction wheel coatings") strong:contains("${withdrawnState}")
+
+the user checks for sorting on previous applications
+    the user expands the section        Application
+    the user clicks the button/link     jQuery = .tablesorter-header:contains("Project title")
+    the applications should be sorted by column  2
+    the user clicks the button/link     jQuery = .tablesorter-header:contains("Status")
+    the applications should be sorted by column  4
 
 the user should see the all projects and navigate back to completed projects
     the user clicks the button/link     jQuery = button:contains("Projects")

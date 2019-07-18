@@ -44,6 +44,7 @@ IFS.core.loadOrder = {
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
       IFS.core.sortingErrors.init()
+      IFS.core.tableSorter.init()
     }
   },
   'finance': {
