@@ -12,6 +12,6 @@ ext {
 dependencies {
     compile "commons-io:commons-io:2.5"
     compile "javax.validation:validation-api:1.1.0.Final"
-    compile "org.springframework:spring-web:4.3.15.RELEASE"
+    compile "org.springframework:spring-web:4.3.18.RELEASE"
     compile project(':ifs-commons')
 }
