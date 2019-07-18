@@ -43,6 +43,7 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
@@ -142,7 +143,7 @@ public class ApplicationSectionController {
                 return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId);
             default:
-                populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
+                populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
                 return APPLICATION_FORM;
         }
     }
@@ -195,7 +196,7 @@ public class ApplicationSectionController {
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
 
                 return populateGenericApplicationFormSectionForInternalUser(
-                        form, bindingResult, model, applicantOrganisationId, applicantSection);
+                        form, bindingResult, model, applicantOrganisationId, applicantSection, user);
         }
     }
 
@@ -243,7 +244,7 @@ public class ApplicationSectionController {
 
         if (!isSaveAndReturnRequest(params) && saveApplicationErrors.hasErrors()) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
+            populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
             return APPLICATION_FORM;
         } else {
             return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
@@ -256,8 +257,10 @@ public class ApplicationSectionController {
                                                        ApplicantSectionResource applicantSection,
                                                        boolean readOnly,
                                                        Optional<Long> applicantOrganisationId,
-                                                       boolean readOnlyAllApplicantApplicationFinances) {
+                                                       boolean readOnlyAllApplicantApplicationFinances,
+                                                       boolean isSupport) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, isSupport);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }
@@ -272,9 +275,12 @@ public class ApplicationSectionController {
             BindingResult bindingResult,
             Model model,
             Long applicantOrganisationId,
-            ApplicantSectionResource applicantSection) {
+            ApplicantSectionResource applicantSection,
+            UserResource user) {
+
+        boolean isSupport = user.hasRole(SUPPORT);
         populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, true,
-                Optional.of(applicantOrganisationId), true);
+                Optional.of(applicantOrganisationId), true, isSupport);
 
         return APPLICATION_FORM;
     }

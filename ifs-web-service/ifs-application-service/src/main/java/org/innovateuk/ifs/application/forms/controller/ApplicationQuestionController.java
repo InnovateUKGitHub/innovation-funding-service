@@ -45,6 +45,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -233,6 +234,9 @@ public class ApplicationQuestionController {
         }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
+
+        boolean isSupport = user.hasRole(SUPPORT);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), isSupport);
 
         if (question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
