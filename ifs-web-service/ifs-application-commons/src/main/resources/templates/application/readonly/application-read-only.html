@@ -8,18 +8,21 @@
         <section>
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-6"/>
-
             <!--/* Show the collapsible sections */-->
-            <th:block th:each="question : ${section.questions}">
-                <div class="collapsible">
-                    <h3>
-                        <span th:text="${question.name}"></span>
-                        <th:block th:if="${model.settings.includeStatuses}">
-                            <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
-                            <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
-                        </th:block>
-                    </h3>
-                    <div class="question">
+            <div class="govuk-accordion" data-module="accordion" id="accordion-questions">
+                <div class="govuk-accordion__section"  th:each="question, iteration : ${section.questions}">
+                    <div class="govuk-accordion__section-header">
+                        <h2 class="govuk-accordion__section-heading">
+                            <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${iteration.count}|">
+                                <th:block th:text="${question.name}"></th:block>
+                                <th:block th:if="${model.settings.includeStatuses}">
+                                    <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
+                                    <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+                                </th:block>
+                            </span>
+                        </h2>
+                    </div>
+                    <div th:id="|accordion-questions-content-${iteration.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${iteration.count}|">
                         <th:block
                             th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
@@ -52,7 +55,49 @@
                         </form>
                     </div>
                 </div>
-            </th:block>
+            </div>
+
+            <!--<div class="collapsible">-->
+                <!--<h3>-->
+                    <!--<span th:text="${question.name}"></span>-->
+                    <!--<th:block th:if="${model.settings.includeStatuses}">-->
+                        <!--<div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>-->
+                        <!--<div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>-->
+                    <!--</th:block>-->
+                <!--</h3>-->
+                <!--<div class="question">-->
+                    <!--<th:block-->
+                        <!--th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>-->
+
+                    <!--<form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"-->
+                          <!--method="post"-->
+                          <!--th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">-->
+
+                        <!--<div class="form-footer govuk-!-margin-top-6">-->
+                            <!--<button class="govuk-button button-clear"-->
+                                    <!--type="submit"-->
+                                    <!--name="complete"-->
+                                    <!--th:if="${question.shouldDisplayMarkAsComplete()}"-->
+                                    <!--th:value="${question.questionId}">-->
+                                <!--Mark as complete-->
+                            <!--</button>-->
+                            <!--<button class="govuk-button button-clear"-->
+                                    <!--type="submit"-->
+                                    <!--name="assign"-->
+                                    <!--th:unless="${question.lead && !question.complete}"-->
+                                    <!--th:value="${question.questionId}">-->
+                                <!--Assign to lead for review-->
+                            <!--</button>-->
+                            <!--<button class="govuk-button button-clear"-->
+                                    <!--type="submit"-->
+                                    <!--th:name="${question.complete ? 'incomplete' : 'edit'}"-->
+                                    <!--th:value="${question.questionId}">-->
+                                <!--Return and edit-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                <!--</div>-->
+            <!--</div>-->
         </section>
     </th:block>
 </th:block>

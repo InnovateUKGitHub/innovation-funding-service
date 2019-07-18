@@ -7,15 +7,19 @@
 
 *********************************/-->
 <th:block th:fragment="labour">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
-        <h3>
-            Labour
-            <span class="finance-total" data-mirror="#section-total-labour"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
+                    Labour
+                    <span class="finance-total" data-mirror="#section-total-labour"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h2>
+        </div>
+        <div id="accordion-finances-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-1">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>
             </th:block>
@@ -131,7 +135,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_labour_row">
