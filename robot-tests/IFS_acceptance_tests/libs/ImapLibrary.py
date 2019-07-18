@@ -22,10 +22,7 @@ from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
 from re import findall
 from time import sleep, time
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib3 import urlopen
+from urllib.request import urlopen
 from builtins import str as ustr
 
 __version__ = '0.3.2'

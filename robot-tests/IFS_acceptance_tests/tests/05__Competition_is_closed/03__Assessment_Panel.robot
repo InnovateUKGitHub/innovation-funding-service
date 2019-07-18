@@ -206,7 +206,7 @@ Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]  HappyPath
     Given comp admin assign applications to panel
-    Then the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
+    Then the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
 
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
