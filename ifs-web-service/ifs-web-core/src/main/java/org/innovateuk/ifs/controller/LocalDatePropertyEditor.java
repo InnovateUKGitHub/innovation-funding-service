@@ -28,25 +28,25 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
     public void setAsText(String dateFieldName) throws IllegalArgumentException {
         Map<String, String[]> parameterMap = webRequest.getParameterMap();
 
-        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".year", ChronoField.YEAR);
-        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR);
-        Integer day = returnZeroWhenNotValid(parameterMap, dateFieldName + ".dayOfMonth", ChronoField.DAY_OF_MONTH);
+        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".year", ChronoField.YEAR, LocalDate.MIN.getYear());
+        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR, LocalDate.MIN.getMonthValue());
+        Integer day = returnZeroWhenNotValid(parameterMap, dateFieldName + ".dayOfMonth", ChronoField.DAY_OF_MONTH, LocalDate.MIN.getDayOfMonth());
 
         try {
             setValue(LocalDate.of(year, month, day));
 
         } catch (Exception ex) {
             LOG.error(ex);
-            setValue(null);
+            setValue(LocalDate.MIN);
         }
     }
 
-    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField) {
+    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField, int defaultValueIfInvalid) {
         try {
             return chronoField.checkValidIntValue(Long.valueOf(parameterMap.get(parameterName)[0]));
         } catch (Exception e){
             LOG.error(e);
-            return null;
+            return defaultValueIfInvalid;
         }
     }
 }
