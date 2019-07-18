@@ -48,7 +48,9 @@ public class ApplicationOverviewRowViewModel {
     }
 
     public boolean isAssignable() {
-        return getAssignButtonsViewModel().isPresent();
+        
+        return getAssignButtonsViewModel().isPresent() &&
+                getAssignButtonsViewModel().get().getAssignableApplicants().size() > 1;
     }
 
     public boolean isShowStatus() {
