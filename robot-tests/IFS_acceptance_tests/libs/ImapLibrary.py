@@ -24,6 +24,7 @@ from re import findall
 from time import sleep, time
 from urllib.request import urlopen
 from builtins import str as ustr
+from codecs import decode
 
 __version__ = '0.3.2'
 
@@ -123,8 +124,8 @@ class ImapLibrary(object):
         if self._is_walking_multipart(email_index):
             body = self.get_multipart_payload(decode=True)
         else:
-            body = self._imap.fetch(email_index, '(BODY[TEXT])')[1][0][1].decode('utf-8')
-        return body
+            body = self._imap.fetch(email_index, '(BODY[TEXT])')[1][0][1]
+        return decode(body, 'quopri_codec').decode('utf-8')
 
     def get_links_from_email(self, email_index):
         """Returns all links found in the email body from given ``email_index``.
