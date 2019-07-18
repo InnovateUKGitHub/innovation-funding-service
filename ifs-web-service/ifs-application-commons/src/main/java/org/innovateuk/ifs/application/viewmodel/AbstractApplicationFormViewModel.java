@@ -21,8 +21,6 @@ public abstract class AbstractApplicationFormViewModel<R extends AbstractApplica
     private List<AbstractFormInputViewModel> formInputViewModels;
     private boolean allReadOnly;
     private Long applicantOrganisationId;
-
-
     private boolean readOnlyAllApplicantApplicationFinances;
 
     public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
