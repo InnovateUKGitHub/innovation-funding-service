@@ -10,7 +10,7 @@
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessments',linkUrl=@{/assessor/dashboard}" />
-            <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{${backUrl}}" />
+            <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/', dynamicBackLink=${true}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
