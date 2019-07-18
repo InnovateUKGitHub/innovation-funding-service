@@ -38,12 +38,13 @@ public class ActivityLogInterceptor implements MethodInterceptor {
             activityType = dynamicType.get();
         }
 
+        Object returned = invocation.proceed();
+
         if (activityType == ActivityType.NONE) {
             throw new IFSRuntimeException(String.format("@Activity annotated method cannot save a NONE ActivityType.%s on %s",
                     invocation.getMethod().getName(), invocation.getThis().getClass().getCanonicalName()));
         }
 
-        Object returned = invocation.proceed();
 
         if (isSuccessfulServiceResult(returned, invocation)) {
             callAppropriateActivityLogMethod(activity, activityType, invocation);

@@ -30,7 +30,7 @@ public interface TestActivityLogService {
     ServiceResult<Void> withApplicationIdConditional(long applicationId, boolean conditional);
 
     default Optional<ActivityType> dynamicType(long applicationId, boolean conditional) {
-        return Optional.of(ActivityType.APPLICATION_SUBMITTED);
+        return conditional ? Optional.of(ActivityType.APPLICATION_SUBMITTED) : Optional.empty();
     }
 
     @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId", dynamicType = "notMatching")

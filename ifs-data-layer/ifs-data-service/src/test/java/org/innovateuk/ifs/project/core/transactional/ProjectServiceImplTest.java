@@ -460,7 +460,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             service.createProjectsFromFundingDecisions(fundingDecisions);
             assertThat("Service failed to throw expected exception.", false);
         } catch (Exception e) {
-            assertEquals(e.getCause().getCause().getCause().getMessage(),"dummy constraint violation");
+            assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
         }
     }
 
