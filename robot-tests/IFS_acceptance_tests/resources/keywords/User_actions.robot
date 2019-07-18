@@ -72,7 +72,7 @@ the user assigns the question to the collaborator
     the user clicks the button/link     jQuery = label:contains("${name}")
     the user clicks the button/link     jQuery = label:contains("${name}")
     the user clicks the button/link     jQuery = label:contains("${name}")
-    the user clicks the button/link     jQuery = button:contains("Save and return to Public description")
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
     Reload Page
 
 The element should be disabled
