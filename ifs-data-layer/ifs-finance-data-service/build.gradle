@@ -33,7 +33,12 @@ deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
 
 createContainer.networkAliases=["ifs-finance-data-service"]
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
+    }
+}
+
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
@@ -48,10 +53,10 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-resources/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
-    inputs.file("$rootProject.projectDir/ifs-security/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
 
 
     dependsOn ":ifs-commons:build"

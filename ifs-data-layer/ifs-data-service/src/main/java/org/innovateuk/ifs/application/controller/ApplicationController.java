@@ -151,15 +151,6 @@ public class ApplicationController {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
 
-    @GetMapping("/{competitionId}/previous-applications")
-    public RestResult<PreviousApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                                @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                                @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
-        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
-    }
-
     @GetMapping("/get-latest-email-funding-date/{competitionId}")
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();

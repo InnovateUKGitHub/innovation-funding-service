@@ -119,15 +119,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return getWithRestResult(applicationRestURL + "/get-latest-email-funding-date/" + applicationId, ZonedDateTime.class);
     }
 
-    @Override
-    public RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
-        if (filter != null) {
-            params.put("filter", singletonList(filter));
-        }
-
-        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
-    }
 }

@@ -67,10 +67,10 @@
                 </h2>
                 <ul class="govuk-tabs__list">
                     <li class="govuk-tabs__list-item">
-                        <button type="submit" name="active" class="govuk-tabs__tab" th:attr="aria-selected=${tab == 'users' ? true : false}">Active accounts</button>
+                        <button type="submit" name="active" class="govuk-tabs__tab" th:classappend="${tab == 'users' ? 'govuk-tabs__tab--selected' : ''}">Active accounts</button>
                     </li>
                     <li class="govuk-tabs__list-item">
-                        <button type="submit" name="pending" class="govuk-tabs__tab" th:attr="aria-selected=${tab == 'invites' ? true : false}">Pending accounts</button>
+                        <button type="submit" name="pending" class="govuk-tabs__tab" th:classappend="${tab == 'invites' ? 'govuk-tabs__tab--selected' : ''}">Pending accounts</button>
                     </li>
                 </ul>
                 <section class="govuk-tabs__panel">
