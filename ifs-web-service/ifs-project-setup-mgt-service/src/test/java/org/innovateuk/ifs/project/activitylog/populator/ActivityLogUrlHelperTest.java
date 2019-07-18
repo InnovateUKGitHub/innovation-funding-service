@@ -8,7 +8,9 @@ import org.junit.Test;
 
 import static java.util.Arrays.stream;
 import static org.innovateuk.ifs.activitylog.resource.ActivityLogResourceBuilder.newActivityLogResource;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.NONE;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 import static org.junit.Assert.assertNotNull;
 
 public class ActivityLogUrlHelperTest {
@@ -34,8 +36,10 @@ public class ActivityLogUrlHelperTest {
                 .withOrganisation(organisationId);
 
         //Test all enum entries have a URL.
-        stream(ActivityType.values()).forEach((type) ->
-            assertNotNull(ActivityLogUrlHelper.url(activity.withActivityType(type).build(), project))
-        );
+        stream(ActivityType.values())
+                .filter(negate(NONE::equals))
+                .forEach((type) ->
+                    assertNotNull(ActivityLogUrlHelper.url(activity.withActivityType(type).build(), project))
+                );
     }
 }
