@@ -31,12 +31,12 @@ Application details: Previous submission
     And the user clicks the button/link                 link = Application details
     When the user clicks the button/link                id = application-question-complete
     Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
-    When the user clicks the button twice               css = label[for = "application.resubmission-yes"]
+    When the user clicks the button twice               css = label[for = "resubmission-yes"]
     And the user clicks the button/link                 id = application-question-complete
     Then the user should see a field and summary error  Please enter the previous application number.
     And the user should see a field and summary error   Please enter the previous application title.
-    When the user clicks the button/link                css = label[for = "application.resubmission-no"]
-    Then The user should not see the element            css = [id = "application.previousApplicationNumber"]
+    When the user clicks the button/link                css = label[for = "resubmission-no"]
+    Then The user should not see the element            css = [id = "previousApplicationNumber"]
 
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
@@ -168,11 +168,11 @@ Custom Suite Setup
     Set suite variable  ${appId}
 
 the application details need to be autosaved
-    the user enters text to a text field    application.durationInMonths    22
+    the user enters text to a text field    durationInMonths    22
     wait for autosave
     the user clicks the button/link         link = Application overview
     the user clicks the button/link         link = Application details
-    the user should not see the text in the element    application.durationInMonths    22
+    the user should not see the text in the element    durationInMonths    22
 
 the word count should be correct for the Project summary
     Wait Until Element Contains Without Screenshots    css = .count-down    369
@@ -207,7 +207,7 @@ Log in and create a new application for the Aerospace competition
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 
     The user clicks the button/link       link = Application details
-    The user enters text to a text field  id = application.name  ${aeroApplication}
+    The user enters text to a text field  id = name  ${aeroApplication}
     The user clicks the button/link       id = application-question-save
 
 the user should no longer see the Mark-as-complete-link

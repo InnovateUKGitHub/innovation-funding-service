@@ -86,6 +86,4 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         headers.set(Authentication.TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
-
-    //steve "6b50cb4f-7222-33a5-99c5-8c068cd0b03c"
 }

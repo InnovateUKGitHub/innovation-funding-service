@@ -1,0 +1,37 @@
+.tablesorter-default {
+  .tablesorter-header {
+    background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+    background-position: center right;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    white-space: normal;
+    padding: 4px 20px 4px 4px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  thead {
+    .headerSortUp,
+    .tablesorter-headerSortUp,
+    .tablesorter-headerAsc {
+      background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+      border-bottom: #000 2px solid;
+    }
+
+    .headerSortDown,
+    .tablesorter-headerSortDown,
+    .tablesorter-headerDesc {
+      background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+      border-bottom: #000 2px solid;
+    }
+
+    .sorter-false {
+      background-image: none;
+      cursor: default;
+      padding: 4px;
+    }
+  }
+
+}
