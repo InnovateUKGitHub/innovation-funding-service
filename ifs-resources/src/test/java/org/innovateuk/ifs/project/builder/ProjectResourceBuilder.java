@@ -58,6 +58,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((competition, project) -> project.setCompetition(competition), competitions);
     }
 
+    public ProjectResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, project) -> project.setCompetitionName(competitionName), competitionNames);
+    }
+
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
         return withArray((date, project) -> project.setTargetStartDate(date), dates);
     }

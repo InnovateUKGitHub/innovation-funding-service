@@ -16,18 +16,21 @@ public class CompetitionStatusViewModel implements CompetitionStatusTableViewMod
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private boolean showTabs;
+    private String applicationSearchString;
 
     public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource,
                                       boolean hasProjectFinanceRole,
                                       Map<Long, StatusPermission> projectStatusPermissionsMap,
                                       long openQueryCount,
-                                      long pendingSpendProfilesCount) {
+                                      long pendingSpendProfilesCount,
+                                      String applicationSearchString) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.canExportBankDetails = hasProjectFinanceRole;
         this.statusPermissions = projectStatusPermissionsMap;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.showTabs = hasProjectFinanceRole;
+        this.applicationSearchString = applicationSearchString;
     }
 
     @Override
@@ -55,4 +58,8 @@ public class CompetitionStatusViewModel implements CompetitionStatusTableViewMod
     public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
 
     public boolean isShowTabs() { return showTabs; }
+
+    public String getApplicationSearchString() {
+        return applicationSearchString;
+    }
 }
