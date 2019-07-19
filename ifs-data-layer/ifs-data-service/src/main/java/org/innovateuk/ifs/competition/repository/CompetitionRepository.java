@@ -42,7 +42,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     /* Filters competitions to those in feedback released state */
-    String  PREVIOUS_WHERE_CLAUSE = "WHERE " +
+    String PREVIOUS_WHERE_CLAUSE = "WHERE " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
