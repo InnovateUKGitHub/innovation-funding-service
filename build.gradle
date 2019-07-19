@@ -76,8 +76,8 @@ dependencyUpdates.resolutionStrategy = {
 apply plugin: "com.github.hierynomus.license"
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '5.5'
 }
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Abstract service for handling cookies.
+ */
 public abstract class AbstractCookieService {
     private static final Log LOG = LogFactory.getLog(AbstractCookieService.class);
 

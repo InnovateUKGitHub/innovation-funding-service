@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Service to encrypt and decrpt cookie values.
+ */
 @Service
 public class EncryptedCookieService extends AbstractCookieService {
     private TextEncryptor encryptor;

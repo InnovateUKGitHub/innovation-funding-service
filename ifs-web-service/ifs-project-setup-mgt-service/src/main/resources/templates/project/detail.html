@@ -118,7 +118,7 @@
                     <th:block th:if="${model.financeReviewerAssigned}" th:text="${model.financeReviewerEmail}"></th:block>
                 </td>
                 <td class="govuk-table__cell alignright">
-                    <a th:if="${model.projectFinance}"
+                    <a th:if="${model.projectFinance and model.project.projectState.active}"
                        th:href="@{/competition/{competitionId}/project/{projectId}/finance-reviewer(competitionId=${model.competitionId},projectId=${model.project.id})}">
                         Edit <span class="govuk-visually-hidden">finance reviewer</span></a>
                 </td>

@@ -52,7 +52,6 @@ Verify that the applicant's name has been changed on other parts of the site
     And The user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_NAME}
     And The user clicks the button/link            link = Application team
     Then the user should see the element           jQuery = td:contains("Chris Brown")
-    And other contributors should see the applicant's updated name for the assignation options
     And the user navigates to the page             ${EDIT_PROFILE_URL}
     And the user can change their details back again
 

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.application.list.controller;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
-
-import static java.util.Collections.singletonList;
 
 
 /**
@@ -57,9 +54,6 @@ public class CompetitionManagementApplicationsController {
 
     @Autowired
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
-
-    @Autowired
-    private PreviousApplicationsModelPopulator previousApplicationsModelPopulator;
 
     @Autowired
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
@@ -118,36 +112,6 @@ public class CompetitionManagementApplicationsController {
         model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, page, sort, filterForm, user));
 
         return "competition/ineligible-applications";
-    }
-
-    @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users," +
-            "Innovation leads, Stakeholders and IFS Admins can view the list of previous applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_administrator', 'innovation_lead', 'stakeholder')")
-    @GetMapping("/previous")
-    public String previousApplications(Model model,
-                                       @PathVariable("competitionId") long competitionId,
-                                       @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
-                                       @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
-                                       @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter,
-                                       UserResource loggedInUser) {
-        checkCompetitionIsOpen(competitionId);
-        model.addAttribute("model", previousApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, filter, loggedInUser));
-
-        return "competition/previous-applications";
-    }
-
-    @SecuredBySpring(value = "UPDATE", description = "Only the IFS admin is able to mark an application as successful after funding decisions have been made")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @PostMapping("/mark-successful/application/{applicationId}")
-    public String markApplicationAsSuccessful(
-            @PathVariable("competitionId") long competitionId,
-            @PathVariable("applicationId") long applicationId) {
-        checkCompetitionIsOpen(competitionId);
-        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
-        projectRestService.createProjectFromApplicationId(applicationId).getSuccess();
-
-        return "redirect:/competition/{competitionId}/applications/previous";
     }
 
     private void checkCompetitionIsOpen(long competitionId) {

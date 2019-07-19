@@ -16,9 +16,12 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-5958 Read Only view of withdrawn and offline projects in project setup dashboards
 ...
 ...             IFS-6053 Amend competition table in the previous tab
+...
+...             IFS-6054 Display completed projects in the previous tab
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
+Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
@@ -53,24 +56,14 @@ Withdrawn project should contain RO links only
     Given the user navigates to the page  ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     Then all project sections should be read only
 
-The IFS Admin filters the applications
-    [Documentation]  IFS-3473
-    [Setup]  the user navigates to the page                 ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/applications/previous
-    Given the user selects a filter for the applications    ${successfulState}  filter
-    Then the user should be able to see previous applications by status
-
-The IFS Admin clears any filters applied and can see all of the applications
-    [Documentation]  IFS-3473
-    Given the user clicks the button/link                         link = Clear all filters
-    Then the user can see all of the previous applications when the All filter is applied
-    [Teardown]  the user clicks the button/link     link = Previous competitions
-
 The IFS admin checks for compeleted projects on previous tab
 #withdrawn projects count as competed projects
     [Documentation]  IFS-6053
     [Tags]
+    [Setup]  the user navigates to the page    ${server}/management/dashboard/previous
     Given the user clicks the button/link   jQuery = button:contains("Next")
     Then the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
+    And the user should see applications and withdrawn projects
 
 *** Keywords ***
 All project sections should be read only
@@ -151,11 +144,6 @@ The user selects a filter for the applications
     Given the user selects the option from the drop-down menu    ${applicationStatusInDropDown}  id=${filterID}
     When the user clicks the button/link                         css = button[class = "govuk-button"]  # Filter
 
-The user can see all of the previous applications when the All filter is applied
-    the user can see the previous application                ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}  ${successfulState}
-    the user can see the previous application                ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}      ${unsuccessfulState}
-    the user can see the previous application                ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}        ${ineligibleState}
-
 The user enters a project to search for and clicks the Filter button
     [Arguments]  ${projectID}
     the user enters text to a text field    id = applicationSearchString  ${projectID}
@@ -164,3 +152,23 @@ The user enters a project to search for and clicks the Filter button
 The user should see the Low-friction wheel coatings project
     the user should see the element        jQuery = th:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") a:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}")
 
+the user should see applications and withdrawn projects
+    the user clicks the button/link     link = ${WITHDRAWN_PROJECT_COMPETITION_NAME}
+    the user checks for sorting on previous applications
+    the user should see the all projects and navigate back to completed projects
+    the user should see the element     jQuery = th:contains("Nano-ROAD: Nanocoating for Reduction Of Air Drag") strong:contains("${withdrawnState}")
+    the user should see the element     jQuery = th:contains("Low-friction wheel coatings") strong:contains("${withdrawnState}")
+
+the user checks for sorting on previous applications
+    the user expands the section        Application
+    the user clicks the button/link     jQuery = .tablesorter-header:contains("Project title")
+    the applications should be sorted by column  2
+    the user clicks the button/link     jQuery = .tablesorter-header:contains("Status")
+    the applications should be sorted by column  4
+
+the user should see the all projects and navigate back to completed projects
+    the user clicks the button/link     jQuery = button:contains("Projects")
+    the user clicks the button/link     link = View all projects for this competitions.
+    the user navigates to the page      ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
+    the user clicks the button/link     link = View only completed projects for this competition
+    the user navigates to the page      ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous

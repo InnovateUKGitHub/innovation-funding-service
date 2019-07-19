@@ -311,7 +311,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -380,7 +380,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -405,7 +405,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }

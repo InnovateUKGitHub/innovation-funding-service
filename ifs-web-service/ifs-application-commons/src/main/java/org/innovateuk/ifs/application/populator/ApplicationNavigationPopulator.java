@@ -50,11 +50,9 @@ public class ApplicationNavigationPopulator {
 
     public NavigationViewModel addNavigation(QuestionResource question, Long applicationId) {
         NavigationViewModel navigationViewModel = new NavigationViewModel();
-
         if (question == null) {
             return navigationViewModel;
         }
-
         Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, navigationViewModel);
         Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());

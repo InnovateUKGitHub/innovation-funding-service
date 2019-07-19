@@ -44,6 +44,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"
 
+    export FLYWAY_TABLE=schema_version
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 fi
 
