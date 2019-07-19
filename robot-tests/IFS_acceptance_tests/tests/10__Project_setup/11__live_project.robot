@@ -245,8 +245,6 @@ users upload signed grant offer letter and submit
     the user clicks the button/link    id = submit-gol-for-review
 
 Project fiance approves the grant offer letter
-    #the user logs-in in new browser    &{internal_finance_credentials}
-    #the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
     grant offer letter is sent to users
     users upload signed grant offer letter and submit
     log in as a different user         &{internal_finance_credentials}

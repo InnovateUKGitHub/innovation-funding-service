@@ -1,6 +1,5 @@
 *** Settings ***
 Documentation     IFS-6062 Activity Log front-end
-Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot

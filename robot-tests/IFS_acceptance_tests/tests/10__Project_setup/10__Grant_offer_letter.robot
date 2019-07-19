@@ -138,9 +138,8 @@ Comp Admin is able to navigate to the Grant Offer letter page
 
 Validating GOL page error message
     [Documentation]  IFS-5865
-    [Setup]  the user navigates to the page   ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    Given the user uploads a file                 grantOfferLetter  ${valid_pdf}
-    #the user clicks the button/link         id = send-gol
+    [Setup]  the user navigates to the page              ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
+    Given the user uploads a file                        grantOfferLetter  ${valid_pdf}
     When the user clicks the button/link                 jQuery = button:contains("Send to project team")
     And the user clicks the button/link                  jQuery = button:contains("Publish to project team")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
@@ -485,13 +484,6 @@ Support user should see completed project in previous tab
    Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
 
 *** Keywords ***
-the admin uploads the GOL
-    the user uploads a file                 grantOfferLetter  ${valid_pdf}
-    the user selects the checkbox           confirmation
-    #the user clicks the button/link         id = send-gol
-    the user clicks the button/link         button:contains("Send to project team")
-    the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
-
 the user uploads a file
     [Arguments]  ${name}  ${file}
     choose file    name = ${name}    ${upload_folder}/${file}
