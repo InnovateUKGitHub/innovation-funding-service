@@ -145,7 +145,7 @@ function startPybot() {
     fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
+    robot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -190,7 +190,7 @@ function runTests() {
 function deleteEmails() {
     section "=> SCRUBBING DOWN THE TEST MAILBOXES"
     cd ${scriptDir}
-    pybot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
+    robot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v local_imap:'ifs.local-dev' \
     -v local_imap_port:9876  \
