@@ -25,8 +25,8 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "templateName", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
+//@FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
+//@FieldRequiredIf(required = "templateName", argument = "templateUpload", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 

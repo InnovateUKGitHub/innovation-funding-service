@@ -37,7 +37,7 @@
                         <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
                         <dd class="govuk-grid-column-two-thirds">
                             <ul>
-                                <li th:each="fileType : ${question.allowedFileTypes}"
+                                <li th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
                                     th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
@@ -261,14 +261,14 @@
                 </div>
                 <div id="allowedFileTypesDiv" class="panel">
                     <div class="govuk-form-group"
-                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'govuk-form-group--error'">
+                         th:classappend="${#fields.hasErrors('question.allowedAppendixResponseFileTypes')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedFileTypes">
                                 <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
                             </legend>
-                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                            <th:block th:if="${#fields.hasErrors('question.allowedAppendixResponseFileTypes')}">
                                 <span class="govuk-error-message"
-                                      th:each="err : ${#fields.errors('question.allowedFileTypes')}"
+                                      th:each="err : ${#fields.errors('question.allowedAppendixResponseFileTypes')}"
                                       th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-checkboxes">
@@ -276,10 +276,10 @@
                                      th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                                     <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           th:field="*{question.allowedFileTypes}"
+                                           th:field="*{question.allowedAppendixResponseFileTypes}"
                                            th:value="${fileTypeCategory}"
                                            required="required"/>
-                                    <label th:for="${#ids.prev('question.allowedFileTypes')}"
+                                    <label th:for="${#ids.prev('question.allowedAppendixResponseFileTypes')}"
                                            th:text="${fileTypeCategory.displayName}"
                                            class="govuk-label govuk-checkboxes__label">PDF</label>
                                 </div>
