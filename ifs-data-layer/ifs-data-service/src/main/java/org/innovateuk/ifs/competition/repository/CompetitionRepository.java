@@ -19,18 +19,22 @@ import java.util.List;
  */
 public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
+    String IN_FLIGHT_PROJECT_STATES = "(org.innovateuk.ifs.project.resource.ProjectState.SETUP, " +
+            "org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD, " +
+            "org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE)";
+
     /* Filters competitions to those in live state */
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    /* Assume competition cannot be in project setup until at least one application is funded and informed
-       Filters competitions to those in project setup state */
-    String PROJECT_SETUP_WHERE_CLAUSE = "WHERE ( " +
-            "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE " +
-            "AND c.completionStage = 'PROJECT_SETUP'";
+
+    /*  Filters competitions to those with at least one in-flight project*/
+    String PROJECT_SETUP_WHERE_CLAUSE = "WHERE EXISTS " +
+            "(SELECT p.id FROM Project p " +
+            "WHERE p.application.competition.id = c.id AND " +
+            "p.projectProcess.activityState IN " + IN_FLIGHT_PROJECT_STATES + ")";
 
     /* Filters competitions to those in upcoming state */
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
@@ -38,7 +42,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     /* Filters competitions to those in feedback released state */
-    String PREVIOUS_WHERE_CLAUSE = "WHERE " +
+    String  PREVIOUS_WHERE_CLAUSE = "WHERE " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
