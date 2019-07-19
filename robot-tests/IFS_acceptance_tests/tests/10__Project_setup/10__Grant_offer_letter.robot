@@ -47,6 +47,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-5865 GOL download/upload page for admins
 ...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -143,11 +144,6 @@ Validating GOL page error message
     Given the user clicks the button/link                 jQuery = button:contains("Send to project team")
     When the user clicks the button/link                  jQuery = button:contains("Publish to project team")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
-
-Comp Admin is able to navigate to the Grant Offer letter page
-    [Documentation]  IFS-5865
-    Given the user clicks the button/link   link = View the grant offer letter page
-    Then the user is able to see the Grant Offer letter page
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
@@ -467,21 +463,28 @@ Academic finance contact receives an email when the GOL is approved
     [Tags]
     Then the user reads his email    ${Elbow_Grease_Academic_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
+Internal user should see completed project in previous tab
+    [Documentation]  IFS-6054
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+    And the user expands the section        Projects
+    Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+    And the user should see project setup compeletion status
+
 Verify support users permissions in project setup tab
     [Documentation]  IFS-1307
     [Tags]
     [Setup]    log in as a different user    &{support_user_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup")
     When the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element     jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(1).status.ok a  # Project details
-    Then the user should see the element     jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(2).status.ok a  # Project team
-    And the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(3).status.ok a  # Documents
-    And the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(4).status.ok a  # Monitoring officer
-    And the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(5).status.ok    # Bank details
-    And the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(6).status.ok    # Finance checks
-    And the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(7).status.ok a  # Spend profile
-    And the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
+    Then the user should see project setup compeletion status
     And the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
+
+Support user should see completed project in previous tab
+   [Documentation]  IFS-6054
+   Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+   And the user expands the section        Projects
+   Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
 
 *** Keywords ***
 the user uploads a file
@@ -506,13 +509,23 @@ the user tries to reject without a reason he should get a validation message
     the user should see a field error     ${empty_field_warning_message}
 
 the user rejects the GOL and sees the successful status
-    # Insert Rejection text and submit
+    #Insert Rejection text and submit
     The user enters text to a text field  id = gol-reject-reason  The document was not signed.
     the user clicks the button/link       css = #submit-button
     the user clicks the button/link       jQuery = button[type = "submit"]:contains("Reject signed grant offer letter")
-    # Warning message on the same page
+    #Warning message on the same page
     the user should see the element       jQuery = .warning-alert:contains("documents have been reviewed and rejected.")
     the user should see the element       jQuery = .warning-alert:contains("Reason for rejection:")
-    # Warning message on Competition level
+    #Warning message on Competition level
     the user navigates to the page        ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element       jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).rejected
+
+the user should see project setup compeletion status
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(1).status.ok a  # Project details
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(2).status.ok a  # Project team
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(3).status.ok a  # Documents
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(4).status.ok a  # Monitoring officer
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(5).status.ok    # Bank details
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(6).status.ok    # Finance checks
+    the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(7).status.ok a  # Spend profile
+    the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL

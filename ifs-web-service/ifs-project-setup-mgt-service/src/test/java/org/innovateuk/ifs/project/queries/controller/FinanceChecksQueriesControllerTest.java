@@ -26,7 +26,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -107,7 +107,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private UserRestService userRestService;
@@ -132,7 +132,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
 
         threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);

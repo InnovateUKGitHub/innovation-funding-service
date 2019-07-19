@@ -16,11 +16,13 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 
     @Override
     List<Project> findAll();
-    Project findOneByApplicationId(final Long applicationId);
-    List<Project> findByApplicationCompetitionId(final Long competitionId);
+    Project findOneByApplicationId(long applicationId);
+    List<Project> findByApplicationCompetitionId(long competitionId);
 
-    int countByApplicationCompetitionId(final Long competitionId);
-    int countByApplicationCompetitionIdAndProjectProcessActivityStateIn(final Long competitionId, Set<ProjectState> states);
+    int countByApplicationCompetitionId(long competitionId);
+    int countByApplicationCompetitionIdAndProjectProcessActivityStateIn(long competitionId, Set<ProjectState> states);
+
+    List<Project> findByApplicationCompetitionIdAndProjectProcessActivityStateIn(long competitionId, Set<ProjectState> states);
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID)
     List<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString);

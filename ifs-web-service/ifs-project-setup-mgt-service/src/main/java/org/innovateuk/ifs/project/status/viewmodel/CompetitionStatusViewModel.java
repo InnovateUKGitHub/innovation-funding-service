@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Interface that defines the minimal information necessary to drive a standard Project page with the standard header information about the project
  */
-public class CompetitionStatusViewModel {
+public class CompetitionStatusViewModel implements CompetitionStatusTableViewModel {
 
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
     private Map<Long, StatusPermission> statusPermissions;
@@ -30,16 +30,24 @@ public class CompetitionStatusViewModel {
         this.showTabs = hasProjectFinanceRole;
     }
 
+    @Override
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
         return competitionProjectsStatusResource;
     }
 
+    @Override
     public Map<Long, StatusPermission> getStatusPermissions() {
         return statusPermissions;
     }
 
+    @Override
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
+    }
+
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no projects in this competition.";
     }
 
     public long getOpenQueryCount() { return openQueryCount; }

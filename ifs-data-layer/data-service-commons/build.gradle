@@ -37,6 +37,8 @@ dependencies {
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.2.RELEASE'
+    testCompile 'org.springframework:spring-webmvc:5.0.6.RELEASE'
+
     testCompile "net.sf.opencsv:opencsv:2.3"
     testCompile "com.opencsv:opencsv:4.3.2"
 

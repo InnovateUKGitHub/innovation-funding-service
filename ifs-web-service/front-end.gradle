@@ -76,8 +76,6 @@ gulp_default {
     inputs.dir file("${projectDir}/ifs-application-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-assessment-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-competition-mgt-service/src/main/resources/static")
-    inputs.dir file("${projectDir}/ifs-front-door-service/src/main/resources/static")
-    inputs.dir file("${projectDir}/ifs-project-setup-mgt-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-project-setup-service/src/main/resources/static")
     inputs.dir file("${projectDir}/ifs-web-core/src/main/resources/static")
 
