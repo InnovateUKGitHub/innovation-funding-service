@@ -1061,17 +1061,16 @@ IFS.core.formValidation = (function () {
       var id = IFS.core.formValidation.removeHash(jQuery(el).attr('href'))
       var target = jQuery('[id="' + id + '"]')
       var targetVisible = IFS.core.formValidation.isVisible(target)
-      var closedCollapsible = target.closest(IFS.core.collapsible.settings.collapsibleEl).not('.' + IFS.core.collapsible.settings.expandedClass)
+      var closedAccordion = target.closest('.govuk-accordion__section').not('.govuk-accordion__section--expanded')
       var formGroupRow = target.closest('.form-group-row')
       if (targetVisible && formGroupRow.length) {
         // it is part a date group so don't put focus on the time select
         IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
       } else if (targetVisible) {
         IFS.core.formValidation.scrollToElement(target.first())
-      } else if (closedCollapsible.length) {
-        // it is within a collapsible element and we open it and then put focus on it
-        var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
-        IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
+      } else if (closedAccordion.length) {
+        // it is within a accordion element and we open it and then put focus on it
+        closedAccordion.addClass('govuk-accordion__section--expanded')
         IFS.core.formValidation.scrollToElement(target.first())
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target

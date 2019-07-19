@@ -20,7 +20,6 @@ IFS.core = {}
 IFS.core.loadOrder = {
   common: {
     init: function () {
-      IFS.core.collapsible.init()
       IFS.core.editor.init()
       IFS.core.autoSave.init()
       IFS.core.formValidation.init()

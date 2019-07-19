@@ -6,10 +6,11 @@
             LABOUR
 
 *********************************/-->
-<th:block th:fragment="labour">
+<th:block th:fragment="labour"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
     <div class="govuk-accordion__section">
         <div class="govuk-accordion__section-header">
-            <h2 class="govuk-accordion__section-heading">
+            <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
                     Labour
                     <span class="finance-total" data-mirror="#section-total-labour"></span>
@@ -17,7 +18,7 @@
                           data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"
                           th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
-            </h2>
+            </h3>
         </div>
         <div id="accordion-finances-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-1">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
@@ -274,17 +275,21 @@
             OVERHEADS
 
 *********************************/-->
-<th:block th:fragment="overheads">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
-        <h3>
-            Overhead costs
-            <span class="finance-total" data-mirror="#section-total-overhead"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-overhead"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
-
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="overheads"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-2">
+                    Overhead costs
+                    <span class="finance-total" data-mirror="#section-total-overhead"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-overhead"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-2">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: overheads_read_only"/>
             </th:block>
@@ -429,7 +434,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="overheads_read_only">
@@ -518,16 +523,21 @@
             MATERIALS
 
 *********************************/-->
-<th:block th:fragment="materials">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}">
-        <h3>
-            Materials
-            <span class="finance-total" data-mirror="#section-total-material"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-material"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="materials"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-3">
+                    Materials
+                    <span class="finance-total" data-mirror="#section-total-material"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-material"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-3">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: materials_read_only"/>
             </th:block>
@@ -617,7 +627,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_materials_row">
@@ -750,16 +760,21 @@
             CAPITAL USAGE
 
 *********************************/-->
-<th:block th:fragment="capital_usage">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
-        <h3>
-            Capital usage
-            <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-capital-usage"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="capital_usage"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-4">
+                    Capital usage
+                    <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-capital-usage"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-4">
             <th:block
                 th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
@@ -819,7 +834,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_capital_usage_row">
@@ -1040,16 +1055,21 @@
             SUB CONTRACTING
 
 *********************************/-->
-<th:block th:fragment="subcontracting_costs">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}">
-        <h3>
-            Subcontracting costs
-            <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-subcontracting"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="subcontracting_costs"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-5">
+                    Subcontracting costs
+                    <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-subcontracting"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-5">
             <th:block
                 th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_read_only"/>
@@ -1114,7 +1134,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_subcontracting_costs_row">
@@ -1243,16 +1263,21 @@
             TRAVEL
 
 *********************************/-->
-<th:block th:fragment="travel" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}">
-    <section class="collapsible">
-        <h3>
-            Travel and subsistence
-            <span class="finance-total" data-mirror="#section-total-travel"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-travel"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="travel"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-6">
+                    Travel and subsistence
+                    <span class="finance-total" data-mirror="#section-total-travel"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-travel"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-6">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: travel_read_only"/>
             </th:block>
@@ -1327,7 +1352,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_travel_row">
@@ -1458,16 +1483,21 @@
             OTHER COSTS
 
 *********************************/-->
-<th:block th:fragment="other_costs">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}">
-        <h3>
-            Other costs
-            <span class="finance-total" data-mirror="#section-total-other"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-other"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="other_costs"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-7">
+                    Other costs
+                    <span class="finance-total" data-mirror="#section-total-other"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-other"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-7" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-7">
             <th:block
                 th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: other_costs_read_only"/>
@@ -1525,7 +1555,7 @@
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_other_costs_row">

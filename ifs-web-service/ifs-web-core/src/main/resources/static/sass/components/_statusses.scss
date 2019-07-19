@@ -56,7 +56,6 @@
   }
 }
 
-.collapsible,
 .list-overview {
   li {
     position: relative;
@@ -69,8 +68,6 @@
       top: 0;
     }
   }
-
-
 
   @include media-down(mobile) {
     div {
