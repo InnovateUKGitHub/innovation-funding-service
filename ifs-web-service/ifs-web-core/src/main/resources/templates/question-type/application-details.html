@@ -34,19 +34,17 @@
                         <dd th:text="${model.application.previousApplicationTitle}"></dd>
                     </th:block>
                 </th:block>
-                <th:block th:if="${model.isProcurementCompetition}">
-                    <th:block th:if="${model.application.competitionReferralSource != null}">
-                        <dt>Who made you aware of the competition?</dt>
-                        <dd th:text="${model.application.competitionReferralSource.name} ?: 'None Selected'"></dd>
-                    </th:block>
-                    <th:block th:if="${model.application.companyAge != null}">
-                        <dt>How long has the company been established for?</dt>
-                        <dd th:text="${model.application.companyAge.name} ?: 'None Selected'"></dd>
-                    </th:block>
-                    <th:block th:if="${model.application.companyPrimaryFocus != null}">
-                        <dt>What is your organisation's primary area of focus?</dt>
-                        <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
-                    </th:block>
+                <th:block th:if="${model.application.competitionReferralSource != null}">
+                    <dt>Who made you aware of the competition?</dt>
+                    <dd th:text="${model.application.competitionReferralSource.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.application.companyAge != null}">
+                    <dt>How long has the company been established for?</dt>
+                    <dd th:text="${model.application.companyAge.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.application.companyPrimaryFocus != null}">
+                    <dt>What is your organisation's primary area of focus?</dt>
+                    <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                 </th:block>
             </dl>
         </div>

@@ -23,14 +23,18 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -70,12 +74,17 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
                 .withCurrentUser(newUserResource().build())
                 .build();
         ApplicationForm form = mock(ApplicationForm.class);
-        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
-        when(applicationDetailsInputViewModel.isReadonly()).thenReturn(true);
+        CompetitionResource competitionResource = CompetitionResourceBuilder
+                .newCompetitionResource()
+                .withCompetitionStatus(CLOSED)
+                .withFundingType(PROCUREMENT)
+                .build();
+        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = new ApplicationDetailsInputViewModel();
+        applicationDetailsInputViewModel.setCompetition(competitionResource);
+        applicationDetailsInputViewModel.setReadonly(TRUE);
         QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
         List<QuestionStatusResource> notifications = newQuestionStatusResource().build(1);
         NavigationViewModel navigationViewModel = new NavigationViewModel();
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(applicationDetailsPopulator.populate(
                 any(AbstractApplicantResource.class),
@@ -97,6 +106,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         assertThat(viewModel.isSection(), equalTo(false));
         assertThat(viewModel.getNavigation(), equalTo(navigationViewModel));
         assertThat(viewModel.isLeadApplicant(), equalTo(true));
+        assertTrue(viewModel.getFormInputViewModel().getIsProcurementCompetition());
 
         verify(questionService).removeNotifications(notifications);
     }

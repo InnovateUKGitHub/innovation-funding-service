@@ -11,6 +11,9 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -60,6 +63,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.CompanyAge.PRE_START_UP;
+import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.CHEMICALS;
+import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.BUSINESS_CONTACT;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
@@ -77,10 +83,17 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link ApplicationServiceImpl}
@@ -193,13 +206,20 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
         ApplicationState applicationState = CREATED;
 
-        Application application = newApplication().
-                withId(1L).
-                withName("testApplication").
-                withApplicationState(applicationState).
-                withDurationInMonths(3L).
-                withCompetition(competition).
-                build();
+        CompetitionReferralSource competitionReferralSource = BUSINESS_CONTACT;
+        CompanyAge companyAge = PRE_START_UP;
+        CompanyPrimaryFocus companyPrimaryFocus = CHEMICALS;
+
+        Application application = newApplication()
+                .withId(1L)
+                .withName("testApplication")
+                .withApplicationState(applicationState)
+                .withDurationInMonths(3L)
+                .withCompetition(competition)
+                .withCompetitionReferralSource(competitionReferralSource)
+                .withCompanyAge(companyAge)
+                .withCompetitionPrimaryFocus(companyPrimaryFocus)
+                .build();
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -224,6 +244,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertEquals(organisation.getId(), createdProcessRole.getOrganisationId());
             assertEquals(Role.LEADAPPLICANT, createdProcessRole.getRole());
             assertEquals(user.getId(), createdProcessRole.getUser().getId());
+
+            assertEquals(competitionReferralSource, created.getCompetitionReferralSource());
+            assertEquals(companyAge, created.getCompanyAge());
+            assertEquals(companyPrimaryFocus, created.getCompanyPrimaryFocus());
 
             return true;
         }));
