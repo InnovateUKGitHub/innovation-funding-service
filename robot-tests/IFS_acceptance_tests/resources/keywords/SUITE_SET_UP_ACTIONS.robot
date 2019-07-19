@@ -77,7 +77,7 @@ Create new application with the same user
     the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            link=Application details
-    the user enters text to a text field       css=[id="application.name"]  ${Application_title}
+    the user enters text to a text field       css=[id="name"]  ${Application_title}
     the user clicks the button/link            jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition

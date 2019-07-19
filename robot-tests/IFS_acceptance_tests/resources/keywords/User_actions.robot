@@ -58,15 +58,21 @@ The user should see the notification
 
 The applicant assigns the question to the collaborator
     [Arguments]  ${name}
-    Set Focus To Element  jQuery=.assign-container
-    the user clicks the button/link  jQuery=button:contains("Assign this question to someone else")
-    the user clicks the button/link  jQuery=li button:contains("${name}")
+    the user clicks the button/link     jQuery = a:contains("Assign to someone else")
+    the user should see the element     jQuery = h2:contains("Assign this question to someone else.")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
     Wait Until Element Is Not Visible Without Screenshots    css=div.event-alert
-    The user clicks the button/link    css=.assign-button > button
-    The user clicks the button/link    jQuery=button:contains("${NAME}")
+    the user clicks the button/link     jQuery = a:contains("Assign to someone else")
+    the user should see the element     jQuery = h2:contains("Assign this question to someone else.")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = label:contains("${name}")
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
     Reload Page
 
 The element should be disabled

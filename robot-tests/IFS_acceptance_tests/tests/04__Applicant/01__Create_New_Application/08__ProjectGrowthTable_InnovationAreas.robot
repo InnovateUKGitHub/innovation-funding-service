@@ -524,7 +524,7 @@ the user logs in and apply to a competition
     Log in as a different user                        &{lead_applicant_credentials}
     logged in user applies to competition             ${compWithGrowth}  1
     the user clicks the button/link                   link = Application details
-    the user enters text to a text field              css = [id="application.name"]  Application With GrowthTable
+    the user enters text to a text field              css = [id="name"]  Application With GrowthTable
     the user clicks the button/link                   link = Application overview
 
 Custom suite setup

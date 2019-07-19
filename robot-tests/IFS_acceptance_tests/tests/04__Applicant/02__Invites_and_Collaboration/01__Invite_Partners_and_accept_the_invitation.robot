@@ -142,15 +142,6 @@ The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
     Then the user should not see the element  css = li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-
-Pending users visible in the assign list but not clickable
-    [Documentation]    INFUND-928  INFUND-1962
-    [Tags]  HappyPath
-    Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link           link = Invite robot test application
-    And the user clicks the button/link           link = Project summary
-    Then the applicant cannot assign to pending invitees
-    And the user should see the element           jQuery = li:contains("Adrian Booth (pending)")
     [Teardown]  logout as user
 
 Business organisation (partner accepts invitation)
@@ -208,13 +199,12 @@ Partner can invite others to his own organisation
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
-    [Tags]
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link = Invite robot test application
     And the user clicks the button/link    link = Project summary
-    When the user clicks the button/link   css = .assign-button > button
-    Then the user should see the element   jQuery = button:contains("Adrian Booth")
+    And the user clicks the button/link    jQuery = a:contains("Assign to someone else")
+    Then the user should see the element   jQuery = label:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928  INFUND-1463  INFUND-7979
@@ -282,10 +272,6 @@ The lead applicant should have the correct status
 The lead applicant should have the correct org status
     the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
-
-the applicant cannot assign to pending invitees
-    the user clicks the button/link      jQuery = button:contains("Assign this question to someone else")
-    the user should not see the element  jQuery = button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page
     the user should see the element  jQuery = .table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
