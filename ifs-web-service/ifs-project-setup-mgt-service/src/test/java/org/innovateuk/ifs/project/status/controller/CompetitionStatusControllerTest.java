@@ -76,7 +76,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
-        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 1L, 4L);
+        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 1L, 4L, applicationSearchString);
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
@@ -94,7 +94,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         long competitionId = 123L;
         String applicationSearchString = "12";
 
-        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 0L, 0L);
+        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 0L, 0L, applicationSearchString);
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))

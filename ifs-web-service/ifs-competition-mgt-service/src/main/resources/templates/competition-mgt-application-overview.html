@@ -93,6 +93,11 @@
                             view contributors and collaborators
                         </a>
                     </li>
+                    <li th:if="${model.hasProject()}">
+                        <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competition.id},projectId=${model.projectId})}" class="govuk-link">
+                            view activity log
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

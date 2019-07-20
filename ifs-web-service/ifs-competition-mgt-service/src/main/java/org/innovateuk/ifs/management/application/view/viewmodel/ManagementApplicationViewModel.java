@@ -26,6 +26,7 @@ public class ManagementApplicationViewModel {
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
+    private final Long projectId;
 
 
     public ManagementApplicationViewModel(ApplicationResource application,
@@ -34,7 +35,8 @@ public class ManagementApplicationViewModel {
                                           ApplicationReadOnlyViewModel applicationReadOnlyViewModel,
                                           List<AppendixViewModel> appendices,
                                           boolean canMarkAsIneligible,
-                                          boolean canReinstate) {
+                                          boolean canReinstate,
+                                          Long projectId) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -42,6 +44,7 @@ public class ManagementApplicationViewModel {
         this.appendices = appendices;
         this.canMarkAsIneligible = canMarkAsIneligible;
         this.canReinstate = canReinstate;
+        this.projectId = projectId;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -88,6 +91,14 @@ public class ManagementApplicationViewModel {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public boolean hasProject() {
+        return projectId != null;
     }
 
     public LocalDate getStartDate() {
