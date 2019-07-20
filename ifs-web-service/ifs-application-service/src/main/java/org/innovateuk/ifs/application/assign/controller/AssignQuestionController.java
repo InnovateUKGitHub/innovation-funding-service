@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.assign.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.assign.form.AssignQuestionForm;
 import org.innovateuk.ifs.application.assign.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -8,18 +9,22 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.origin.AssignQuestionOrigin;
+import org.innovateuk.ifs.navigation.PageHistory;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.EncodedCookieService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Deque;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -34,25 +39,20 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
 public class AssignQuestionController {
 
+    @Autowired
     private UserRestService userRestService;
 
+    @Autowired
     private QuestionService questionService;
 
+    @Autowired
     private AssignQuestionModelPopulator assignQuestionModelPopulator;
 
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    public AssignQuestionController(
-            UserRestService userRestService,
-            QuestionService questionService,
-            AssignQuestionModelPopulator assignQuestionModelPopulator,
-            CookieFlashMessageFilter cookieFlashMessageFilter
-    ) {
-        this.userRestService = userRestService;
-        this.questionService = questionService;
-        this.assignQuestionModelPopulator = assignQuestionModelPopulator;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-    }
+    @Autowired
+    private EncodedCookieService encodedCookieService;
 
     @GetMapping("/question/{questionId}/assign")
     public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
@@ -71,6 +71,7 @@ public class AssignQuestionController {
                          @PathVariable("questionId") long questionId,
                          @PathVariable ("applicationId") long applicationId,
                          @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
+                         HttpServletRequest request,
                          HttpServletResponse response,
                          Model model,
                          UserResource loggedInUser) {
@@ -80,7 +81,7 @@ public class AssignQuestionController {
             ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
 
             return validationHandler.addAnyErrors(assignResult)
-                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, origin, response));
+                    .failNowOrSucceedWith(failureView, () -> redirectToRelevantPage(applicationId, questionId, request, response));
         });
     }
 
@@ -90,10 +91,13 @@ public class AssignQuestionController {
         return "application/questions/assign-question";
     }
 
-    private String redirectToRelevantPage(long applicationId, long questionId, String origin, HttpServletResponse response) {
+    private String redirectToRelevantPage(long applicationId, long questionId, HttpServletRequest request, HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        AssignQuestionOrigin questionOrigin  = AssignQuestionOrigin.valueOf(origin);
-        return "redirect:" + questionOrigin.getOriginUrl();
+        String url = encodedCookieService.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {})
+                .map(Deque::peek)
+                .map(PageHistory::getUrl)
+                .orElse(String.format("/application/%d/form/question/%d", applicationId, questionId));
+        return "redirect:" + url;
     }
 
     private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {

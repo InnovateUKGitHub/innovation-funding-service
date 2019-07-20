@@ -45,10 +45,10 @@ public class CompetitionManagementAssessorProfileController {
     public String profile(@PathVariable("competitionId") long competitionId,
                           @PathVariable("assessorId") long assessorId) {
 
-        return "redirect:/competition/" + competitionId + "/assessors/profile/" + assessorId + "/skills";
+        return "redirect:/competition/" + competitionId + "/assessors/profile/" + assessorId + "?tab=skills";
     }
 
-    @GetMapping("/profile/{assessorId}/skills")
+    @GetMapping(value = "/profile/{assessorId}", params = "tab=skills")
     public String profileSkills(Model model,
                                 @PathVariable("competitionId") long competitionId,
                                 @PathVariable("assessorId") long assessorId) {
@@ -62,7 +62,7 @@ public class CompetitionManagementAssessorProfileController {
         return "profile/skills";
     }
 
-    @GetMapping("/profile/{assessorId}/declaration")
+    @GetMapping(value = "/profile/{assessorId}", params = "tab=declaration")
     public String profileDeclaration(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @PathVariable("assessorId") long assessorId) {
