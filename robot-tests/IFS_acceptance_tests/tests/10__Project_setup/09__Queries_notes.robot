@@ -164,7 +164,7 @@ Applicant - Finance contact can view the project finance user's uploads
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
     [Tags]
-    Given the user should see the element   jQuery = #title-query-2:contains("Pending query")
+    Given the user should see the element   jQuery = button:contains("an eligibility query's title"):contains("Pending query")
     And the user should see the element     jQuery = h2:contains("an eligibility") .section-incomplete
     Then the user should see the response to query client side validations
     And the user should see the response to query server side validation

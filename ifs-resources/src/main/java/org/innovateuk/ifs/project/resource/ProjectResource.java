@@ -18,6 +18,7 @@ public class ProjectResource {
     private Long id;
     private long application;
     private long competition;
+    private String competitionName;
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
@@ -109,6 +110,14 @@ public class ProjectResource {
 
     public void setCompetition(long competition) {
         this.competition = competition;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
     }
 
     public ZonedDateTime getDocumentsSubmittedDate() {

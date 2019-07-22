@@ -63,7 +63,6 @@ public class ApplicationAjaxController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());

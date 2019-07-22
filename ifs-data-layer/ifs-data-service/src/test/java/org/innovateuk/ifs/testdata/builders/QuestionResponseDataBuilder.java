@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -134,10 +135,14 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
 
         List<FormInputResource> formInputs = getFormInputsForQuestion(questionName, data);
 
-        FormInputResource applicantFormInput = simpleFindFirst(formInputs, fi -> FormInputScope.APPLICATION.equals(fi.getScope())).get();
+        Optional<FormInputResource> applicantFormInput = simpleFindFirst(formInputs, fi -> FormInputScope.APPLICATION.equals(fi.getScope()));
+
+        if (!applicantFormInput.isPresent()) {
+            throw new IFSRuntimeException(String.format("Missing form input for question %s, app %s", questionName, data.getApplication().getId()));
+        }
 
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(
-                applicantFormInput.getId(), data.getApplication().getId(), user.getId(), value);
+                applicantFormInput.get().getId(), data.getApplication().getId(), user.getId(), value);
 
         FormInputResponse response = formInputResponseService.saveQuestionResponse(updateRequest).getSuccess();
         formInputResponseRepository.save(response);
