@@ -4,8 +4,12 @@ package org.innovateuk.ifs.management.navigation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.resource.PageResource;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -21,7 +25,7 @@ public class Pagination {
     private List<PaginationLink> pageNames;
 
     public Pagination(PageResource pageResource) {
-        this(pageResource, "");
+        this(pageResource, getQueryStringOrNull());
     }
 
     public Pagination(PageResource pageResource, String existingQuery) {
@@ -62,6 +66,14 @@ public class Pagination {
 
     public long getTotalCount() {
         return totalCount;
+    }
+
+    private static String getQueryStringOrNull() {
+        return Optional.ofNullable(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
+                .map(ServletRequestAttributes::getRequest)
+                .map(HttpServletRequest::getQueryString)
+                .map(query -> "?" + query)
+                .orElse("");
     }
 
     @Override

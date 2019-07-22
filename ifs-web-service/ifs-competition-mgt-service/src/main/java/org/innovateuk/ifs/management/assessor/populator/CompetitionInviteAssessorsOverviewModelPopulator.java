@@ -70,7 +70,6 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
         model.setInnovationAreaOptions(innovationAreasOptions);
         model.setPagination(new Pagination(pageResource));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
-
         return model;
     }
 

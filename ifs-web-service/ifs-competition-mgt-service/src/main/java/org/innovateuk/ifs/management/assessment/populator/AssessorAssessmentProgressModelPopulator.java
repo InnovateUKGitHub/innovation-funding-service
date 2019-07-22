@@ -71,7 +71,8 @@ public class AssessorAssessmentProgressModelPopulator {
                 applicationCounts,
                 competitionId,
                 innovationArea,
-                sortField);
+                sortField,
+                filter);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
 
@@ -168,7 +169,8 @@ public class AssessorAssessmentProgressModelPopulator {
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
                                                                                      long competitionId,
                                                                                      Optional<Long> innovationArea,
-                                                                                     String sortField) {
+                                                                                     String sortField,
+                                                                                     String filterSearch) {
         CompetitionResource competition  = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(

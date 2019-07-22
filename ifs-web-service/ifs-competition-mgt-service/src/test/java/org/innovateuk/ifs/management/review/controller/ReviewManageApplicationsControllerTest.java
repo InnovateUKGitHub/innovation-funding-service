@@ -104,6 +104,6 @@ public class ReviewManageApplicationsControllerTest extends BaseControllerMockMV
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }
