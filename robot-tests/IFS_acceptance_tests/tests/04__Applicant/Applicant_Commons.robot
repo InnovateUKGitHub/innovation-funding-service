@@ -60,12 +60,12 @@ the user moves Application details in Edit mode
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="application.name"]  ${appTitle}
-    the user enters text to a text field  id = application.startDate  ${tomorrowday}
+    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css = [id="application.durationInMonths"]  24
-    the user clicks the button twice      css = label[for="application.resubmission-no"]
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
     The user clicks the button/link       css = button[name="mark_as_complete"]
     the user clicks the button/link       link = Application overview

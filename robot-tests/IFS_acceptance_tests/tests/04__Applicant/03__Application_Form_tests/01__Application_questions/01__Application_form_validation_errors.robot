@@ -19,22 +19,22 @@ Title field client side
     [Documentation]    INFUND-43, INFUND-2843
     [Tags]
     Given the user should see the element        jQuery = h1:contains("Application details")
-    When the user enters text to a text field    id = application.name  ${EMPTY}
+    When the user enters text to a text field    id = name  ${EMPTY}
     Then the user should see a field error       Please enter the full title of the project
-    When the user enters text to a text field    id = application.name  ${applicationTitle}
+    When the user enters text to a text field    id = name  ${applicationTitle}
     Then the applicant should not see the validation error any more
 
 Day field client side
     [Documentation]  INFUND-43 INFUND-2843
     [Tags]
     [Setup]    The applicant inserts a valid date
-    When the user enters text to a text field    id = application.startDate    32
+    When the user enters text to a text field    id = startDate    32
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application.startDate    0
+    When the user enters text to a text field    id = startDate    0
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application.startDate    -1
+    When the user enters text to a text field    id = startDate    -1
     Then the user should see a field error       ${enter_a_valid_date}
-    When the user enters text to a text field    id = application.startDate    ${EMPTY}
+    When the user enters text to a text field    id = startDate    ${EMPTY}
     Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
@@ -57,7 +57,7 @@ Month field client side
 Year field client side
     [Documentation]  INFUND-43 INFUND-2843
     [Tags]
-    Given the user enters text to a text field    id = application.durationInMonths  15
+    Given the user enters text to a text field    id = durationInMonths  15
     When the applicant inserts an invalid date
     Then the user should see a field error        Please enter a future date.
     When the user enters text to a text field     id = application_details-startdate_year    ${EMPTY}
@@ -68,18 +68,18 @@ Year field client side
 Duration field client side
     [Documentation]  INFUND-43 INFUND-2843 IFS-2776
     [Tags]
-    When the user enters text to a text field  id = application.durationInMonths  0
+    When the user enters text to a text field  id = durationInMonths  0
     And the user clicks the button/link        id = application-question-complete
     Then the user should see a field and summary error  Your project should last between 1 and 36 months.
 
-    When the user enters text to a text field  id = application.durationInMonths  -1
+    When the user enters text to a text field  id = durationInMonths  -1
     And the user clicks the button/link        id = application-question-complete
     Then the user should see a field and summary error  Your project should last between 1 and 36 months.
 
-    When the user enters text to a text field  id = application.durationInMonths  ${EMPTY}
+    When the user enters text to a text field  id = durationInMonths  ${EMPTY}
     Then the user should see a field error     ${empty_field_warning_message}
 
-    And the user enters text to a text field   id = application.durationInMonths  25
+    And the user enters text to a text field   id = durationInMonths  25
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
@@ -87,17 +87,17 @@ Application details server side
     [Tags]
     Given the user should see the element     jQuery = h1:contains("Application details")
     When the user clicks the button/link      jQuery = label:contains(Yes)
-    And the user enters text to a text field  id = application.name  ${EMPTY}
-    And the user enters text to a text field  id = application.startDate  ${EMPTY}
+    And the user enters text to a text field  id = name  ${EMPTY}
+    And the user enters text to a text field  id = startDate  ${EMPTY}
     And the user enters text to a text field  id = application_details-startdate_month  ${EMPTY}
     And the user enters text to a text field  id = application_details-startdate_year    ${EMPTY}
-    And the user enters text to a text field  id = application.durationInMonths    ${EMPTY}
+    And the user enters text to a text field  id = durationInMonths    ${EMPTY}
     And the user clicks the button/link       id = application-question-complete
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
     And the user should see a field and summary error   ${empty_field_warning_message}
     And the user should see a field and summary error   Please enter the full title of the project.
-    [Teardown]  the user enters text to a text field    id = application.name  ${applicationTitle}
+    [Teardown]  the user enters text to a text field    id = name  ${applicationTitle}
 
 Empty text area
     [Documentation]    INFUND-43
@@ -122,16 +122,16 @@ the applicant should not see the validation error any more
     the user should not see the element    css = .govuk-error-message
 
 the applicant inserts a valid date
-    Clear Element Text    id = application.startDate
-    The user enters text to a text field    id = application.startDate    12
+    Clear Element Text    id = startDate
+    The user enters text to a text field    id = startDate    12
     Clear Element Text    id = application_details-startdate_month
     The user enters text to a text field    id = application_details-startdate_month    11
     Clear Element Text    id = application_details-startdate_year
     The user enters text to a text field    id = application_details-startdate_year    2020
 
 the applicant inserts an invalid date
-    Clear Element Text    id = application.startDate
-    The user enters text to a text field    id = application.startDate    18
+    Clear Element Text    id = startDate
+    The user enters text to a text field    id = startDate    18
     Clear Element Text    id = application_details-startdate_year
     The user enters text to a text field    id = application_details-startdate_year    2015
     Clear Element Text    id = application_details-startdate_month

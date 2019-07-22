@@ -1,4 +1,7 @@
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -31,7 +34,7 @@ def convert_pdf_to_text(fname, pages=None):
 
 def pdf_should_contain(filename, user_text):
     text_from_pdf = convert_pdf_to_text(filename)
-    print text_from_pdf
+    print (text_from_pdf)
     if user_text in text_from_pdf:
         return True  # could return anything though, really
     else:
