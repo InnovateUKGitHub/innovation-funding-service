@@ -102,7 +102,7 @@ public class DefaultApplicationQuestionCreator {
 
     private FormInput buildTemplateInput(Competition competition) {
         FormInput input = new FormInput();
-        input.setType(FormInputType.TEMPLATE_UPLOAD);
+        input.setType(FormInputType.TEMPLATE_DOCUMENT);
         input.setCompetition(competition);
         input.setIncludedInApplicationSummary(true);
         input.setPriority(1);
