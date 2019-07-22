@@ -6,16 +6,21 @@
             LABOUR
 
 *********************************/-->
-<th:block th:fragment="labour">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
-        <h3>
-            Labour
-            <span class="finance-total" data-mirror="#section-total-labour"></span>
-            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"
-                  th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
-        </h3>
-        <div class="collapsible-content">
+<th:block th:fragment="labour"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
+    <div class="govuk-accordion__section">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
+                    Labour
+                    <span class="finance-total" data-mirror="#section-total-labour"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
+                </span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-1">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>
             </th:block>
@@ -129,147 +134,10 @@
                        th:value="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}"/>
 
             </th:block>
-            <th:block th:text="${model.internal}"/>
-            <th:block th:text="${model.open}"/>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
         </div>
-    </section>
+    </div>
 </th:block>
-
-<!--<th:block th:fragment="labour"-->
-          <!--th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">-->
-    <!--<div class="govuk-accordion__section">-->
-        <!--<div class="govuk-accordion__section-header">-->
-            <!--<h3 class="govuk-accordion__section-heading">-->
-                <!--<span class="govuk-accordion__section-button" id="accordion-finances-heading-1">-->
-                    <!--Labour-->
-                    <!--<span class="finance-total" data-mirror="#section-total-labour"></span>-->
-                    <!--<span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"-->
-                          <!--data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-labour"-->
-                          <!--th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>-->
-                <!--</span>-->
-            <!--</h3>-->
-        <!--</div>-->
-        <!--<div id="accordion-finances-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finances-heading-1">-->
-            <!--<th:block th:if="${model.isReadOnly(financeRowType)}">-->
-                <!--<th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>-->
-            <!--</th:block>-->
-            <!--<th:block-->
-                <!--th:unless="${model.isReadOnly(financeRowType)}">-->
-                <!--<th:block th:unless="${model.internal}">-->
-                    <!--<p class="govuk-body">-->
-                        <!--Be specific and add each role separately.-->
-                    <!--</p>-->
-                    <!--<details class="govuk-details" role="group">-->
-                        <!--<summary class="govuk-details__summary">-->
-                            <!--<span class="govuk-details__summary-text">Labour costs guidance</span>-->
-                        <!--</summary>-->
-                        <!--<div class="govuk-details__text">-->
-                            <!--<p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>-->
-                            <!--<p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>-->
-                            <!--<ul class="govuk-list govuk-list&#45;&#45;bullet">-->
-                                <!--<li>gross salary</li>-->
-                                <!--<li>National Insurance</li>-->
-                                <!--<li>company pension contribution</li>-->
-                                <!--<li>life insurance</li>-->
-                                <!--<li>other non-discretionary package costs</li>-->
-                            <!--</ul>-->
-                            <!--<p class="govuk-body">You cannot include:</p>-->
-                            <!--<ul class="govuk-list govuk-list&#45;&#45;bullet">-->
-                                <!--<li>discretionary bonuses</li>-->
-                                <!--<li>performance related payments of any kind</li>-->
-                            <!--</ul>-->
-                            <!--<p class="govuk-body">You may include the total number of working days for staff but do not include:</p>-->
-                            <!--<ul class="govuk-list govuk-list&#45;&#45;bullet">-->
-                                <!--<li>sick days</li>-->
-                                <!--<li>waiting time</li>-->
-                                <!--<li>training days</li>-->
-                                <!--<li>non-productive time</li>-->
-                            <!--</ul>-->
-                            <!--<p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>-->
-                            <!--<p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>-->
-                        <!--</div>-->
-                    <!--</details>-->
-                <!--</th:block>-->
-                <!--<div class="govuk-form-group inline">-->
-                    <!--<label class="govuk-label" th:for="working-days-per-year">-->
-                        <!--Working days per year-->
-                    <!--</label>-->
-                    <!--<th:block-->
-                        <!--th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>-->
-                    <!--<input type="number" class="govuk-input govuk-input&#45;&#45;width-4"-->
-                           <!--id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"-->
-                           <!--th:errorclass="govuk-input&#45;&#45;error"-->
-                           <!--placeholder="0" min="1" max="365" required="required">-->
-                <!--</div>-->
-                <!--<h3 class="govuk-heading-s">Number of staff and roles within the project</h3>-->
-                <!--<div class="govuk-form-group table-overflow">-->
-                    <!--<table id="labour-costs-table" class="govuk-table">-->
-                        <!--<thead class="govuk-table__head">-->
-                        <!--<tr class="govuk-table__row">-->
-                            <!--<th class="govuk-table__header" id="labour-role" scope="col">Role within-->
-                                <!--project-->
-                            <!--</th>-->
-                            <!--<th id="labour-salary" scope="col"-->
-                                <!--class="govuk-table__header govuk-table__header&#45;&#45;numeric width-100">Gross-->
-                                <!--employee cost-->
-                            <!--</th>-->
-                            <!--<th id="labour-rate" scope="col"-->
-                                <!--class="govuk-table__header govuk-table__header&#45;&#45;numeric width-80">Rate-->
-                                <!--(£/day)-->
-                            <!--</th>-->
-                            <!--<th id="labour-days" scope="col"-->
-                                <!--class="govuk-table__header govuk-table__header&#45;&#45;numeric width-100">Days-->
-                                <!--to be spent by all staff at this grade-->
-                            <!--</th>-->
-                            <!--<th scope="col"-->
-                                <!--class="govuk-table__header govuk-table__header&#45;&#45;numeric width-150">Total-->
-                                <!--costs-->
-                            <!--</th>-->
-                            <!--<th scope="col" class="govuk-table__header width-80">-->
-                                <!--<span class="govuk-visually-hidden">Actions</span>-->
-                            <!--</th>-->
-                        <!--</tr>-->
-                        <!--</thead>-->
-                        <!--<tbody class="govuk-table__body">-->
-                        <!--<th:block th:each="entry : *{labour.rows}">-->
-                            <!--<th:block-->
-                                <!--th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value})"/>-->
-                        <!--</th:block>-->
-                        <!--</tbody>-->
-                    <!--</table>-->
-                    <!--<p class="alignright">-->
-                    <!--</p>-->
-                    <!--<div>-->
-                        <!--<button type="submit"-->
-                                <!--data-repeatable-rowcontainer="#labour-costs-table tbody"-->
-                                <!--name="add_cost"-->
-                                <!--th:value="${financeRowType}"-->
-                                <!--class="button-clear">Add another role-->
-                        <!--</button>-->
-                    <!--</div>-->
-                    <!--<p></p>-->
-                <!--</div>-->
-                <!--<h4 class="govuk-heading-s alignright section-total-summary">-->
-                    <!--Total labour costs-->
-                    <!--<span class="govuk-heading-s"-->
-                          <!--data-mirror='#section-total-labour'-->
-                          <!--th:text="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}"></span>-->
-                <!--</h4>-->
-                <!--<input type="hidden"-->
-                       <!--data-calculation-fields=".labour-totals"-->
-                       <!--data-calculation-operations="+"-->
-                       <!--id="section-total-labour"-->
-                       <!--th:attr="data-calculation-rawvalue=${form.totalLabourCosts}"-->
-                       <!--th:value="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}"/>-->
-
-            <!--</th:block>-->
-            <!--<th:block th:text="${model.internal}"/>-->
-            <!--<th:block th:text="${model.open}"/>-->
-            <!--<th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</th:block>-->
 
 <th:block th:fragment="ajax_labour_row">
     <th:block th:object="${form}">
@@ -1783,7 +1651,6 @@
 </th:block>
 
 <th:block th:fragment="internal_view_buttons (financeType)">
-    Test
     <div class="alignright-button" th:if="${model.open}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}" th:if="${model.isReadOnly(financeType)}"
            class="button-secondary">Edit</a>

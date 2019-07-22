@@ -25,7 +25,6 @@
                 </ul>
             </div>
         </div>
-
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Queries for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <h2 class="govuk-heading-m">Finance Contact</h2>
@@ -80,7 +79,9 @@
                         </span>
                     </h2>
                 </div>
-                <div th:id="|accordion-queries-content-${iteration.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-default-heading-${iteration.count}|">
+                <div th:id="|accordion-queries-content-${iteration.count}|" class="govuk-accordion__section-content"
+                     th:aria-labelledby="|accordion-default-heading-${iteration.count}|"
+                     th:if="${query.viewModelPosts}">
                     <h3 class="govuk-!-margin-0">
                         <span class="govuk-heading-s govuk-!-display-inline">Section: </span>
                         <span th:text="${#strings.capitalize(querySection)}" class="govuk-body">Section title</span>
