@@ -330,8 +330,8 @@ the user is able to configure the new question
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
     the user selects the radio button     question.appendix  1
-    click element                         css = label[for="question.allowedFileTypes1"]
-    the user clicks the button/link       css = label[for="question.allowedFileTypes2"]
+    click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
+    the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
