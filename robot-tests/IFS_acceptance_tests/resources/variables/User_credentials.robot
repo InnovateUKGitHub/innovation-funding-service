@@ -1,5 +1,6 @@
 *** Variables ***
 &{lead_applicant_credentials}             email=steve.smith@empire.com    password=Passw0rd
+&{lead_applicant2_credentials}            email=jesse.edwards@example.com  password=Passw0rd
 &{collaborator1_credentials}              email=jessica.doe@ludlow.co.uk    password=Passw0rd
 &{collaborator2_credentials}              email=pete.tom@egg.com    password=Passw0rd
 &{worth_test_credentials}                 email=${test_mailbox_one}+submit@gmail.com    password=Passw0rd

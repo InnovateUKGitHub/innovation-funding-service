@@ -44,6 +44,7 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     @Mappings({
             @Mapping(target = "projectState", ignore = true),
             @Mapping(target = "competition", source = "application.competition.id"),
+            @Mapping(target = "competitionName", source = "application.competition.name"),
             @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id")
     })
     @Override

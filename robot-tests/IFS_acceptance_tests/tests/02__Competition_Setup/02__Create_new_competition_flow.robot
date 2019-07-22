@@ -882,7 +882,7 @@ the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
+    the user should see the element                        jQuery = #innovation-row-2 option:disabled:contains("Space technology")
     the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again

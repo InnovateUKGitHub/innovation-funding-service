@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application_details(formInputViewModel)" th:with="formInput=${formInputViewModel.formInput}, question=${formInputViewModel.question}, competition=${formInputViewModel.competition}">
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
           data-autosave="application" enctype="multipart/form-data"

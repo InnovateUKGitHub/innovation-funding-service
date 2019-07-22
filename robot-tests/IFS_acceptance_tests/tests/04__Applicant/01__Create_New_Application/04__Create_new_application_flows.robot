@@ -73,14 +73,14 @@ the user edits the application title
     the user clicks the button/link         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link         link = Application details
     The project start date is blank
-    The user enters text to a text field    css = [id = "application.name"]    ${test_title}
+    The user enters text to a text field    css = [id = "name"]    ${test_title}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and return")
 
 the progress indicator should show 0
     Element Should Contain  css = .progress-indicator    0
 
 The project start date is blank
-    the user should see the element  xpath = //*[@id="application.startDate" and @placeholder="DD"]
+    the user should see the element  xpath = //*[@id="startDate" and @placeholder="DD"]
     the user should see the element  xpath = //*[@id="application_details-startdate_month" and @placeholder="MM"]
     the user should see the element  xpath = //*[@id="application_details-startdate_year" and @placeholder="YYYY"]
 
