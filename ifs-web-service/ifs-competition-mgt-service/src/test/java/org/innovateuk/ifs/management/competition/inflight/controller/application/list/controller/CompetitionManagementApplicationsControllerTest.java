@@ -192,7 +192,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/all-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
                 .andReturn();
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -267,7 +266,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -399,7 +398,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 50", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -499,7 +498,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/ineligible?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/ineligible-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
                 .andReturn();
 
         IneligibleApplicationsViewModel model = (IneligibleApplicationsViewModel) result.getModelAndView().getModel().get("model");
