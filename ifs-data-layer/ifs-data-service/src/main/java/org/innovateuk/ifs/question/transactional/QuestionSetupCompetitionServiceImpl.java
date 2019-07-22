@@ -96,7 +96,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
-            case TEMPLATE_UPLOAD:
+            case TEMPLATE_DOCUMENT:
                 setupResource.setTemplateUpload(formInput.getActive());
                 setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setTemplateName(formInput.getDescription());
@@ -184,7 +184,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private void markTemplateUploadAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
-                FormInputType.TEMPLATE_UPLOAD);
+                FormInputType.TEMPLATE_DOCUMENT);
         if (templateFormInput != null && competitionSetupQuestionResource.getTemplateUpload() != null) {
             templateFormInput.setActive(competitionSetupQuestionResource.getTemplateUpload());
 

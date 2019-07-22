@@ -46,7 +46,7 @@ public class QuestionFileSetupCompetitionServiceImplTest extends BaseServiceUnit
                 .build();
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_UPLOAD)).thenReturn(formInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_DOCUMENT)).thenReturn(formInput);
         when(fileEntryServiceMock.findOne(fileEntry.getId())).thenReturn(serviceSuccess(fileEntryResource));
 
         FileEntryResource response = service.findTemplateFile(questionId).getSuccess();
@@ -65,7 +65,7 @@ public class QuestionFileSetupCompetitionServiceImplTest extends BaseServiceUnit
         FileEntryResource fileEntryResource = new FileEntryResource();
         fileEntryResource.setId(fileId);
 
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_UPLOAD)).thenReturn(formInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_DOCUMENT)).thenReturn(formInput);
         when(fileEntryServiceMock.findOne(fileId)).thenReturn(serviceSuccess(fileEntryResource));
         final Supplier<InputStream> contentSupplier = () -> null;
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
@@ -86,7 +86,7 @@ public class QuestionFileSetupCompetitionServiceImplTest extends BaseServiceUnit
                 .withFile(fileEntry)
                 .build();
 
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_UPLOAD)).thenReturn(formInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_DOCUMENT)).thenReturn(formInput);
         when(fileServiceMock.deleteFileIgnoreNotFound(fileId)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
 
         ServiceResult<Void> response = service.deleteTemplateFile(questionId);
