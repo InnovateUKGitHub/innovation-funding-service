@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.navigation;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -106,5 +107,18 @@ public class Pagination {
                 .append(totalCount)
                 .append(pageNames)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("hasPrevious", hasPrevious)
+                .append("hasNext", hasNext)
+                .append("totalPages", totalPages)
+                .append("currentPage", currentPage)
+                .append("pageSize", pageSize)
+                .append("totalCount", totalCount)
+                .append("pageNames", pageNames)
+                .toString();
     }
 }

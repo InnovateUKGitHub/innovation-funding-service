@@ -47,7 +47,7 @@ public class AssessorProfileSkillsModelPopulatorTest extends BaseUnitTest{
     private AssessorRestService assessorRestService;
 
     @Test
-    public void populateModel() throws Exception {
+    public void populateModel() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .build();
