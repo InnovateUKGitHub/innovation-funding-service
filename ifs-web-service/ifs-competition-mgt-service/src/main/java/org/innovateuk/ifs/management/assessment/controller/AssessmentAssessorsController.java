@@ -1,22 +1,25 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.assessment.form.AssessmentAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Optional;
-
+import static java.lang.String.format;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
@@ -34,16 +37,14 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
 
     @GetMapping("/assessors")
     public String manageAssessors(Model model,
-                                     @ModelAttribute(FILTER_FORM_ATTR_NAME) AssessmentAssessorsFilterForm filterForm,
-                                     @PathVariable("competitionId") long competitionId,
-                                     @RequestParam MultiValueMap<String, String> queryParams,
-                                     @RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "filterInnovationSector", required = false) Long filterId,
-                                     @RequestParam(value = "filterBusinessType", required = false) BusinessType businessType
-                                  ) {
+                                  @PathVariable("competitionId") long competitionId,
+                                  @RequestParam MultiValueMap<String, String> queryParams,
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "assessorSearchString", required = false) String assessorSearchString
+    ) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
-        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, filterForm.getInnovationSector(), filterForm.getBusinessType(), page );
+        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, assessorSearchString, page);
 
         String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGE_ASSESSORS, queryParams);
 
@@ -53,9 +54,22 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
         return "competition/manage-assessors";
     }
 
-    private AssessorCountSummaryPageResource getCounts(long competitionId, Long innovationSectorId, BusinessType businessType, int page) {
+    private AssessorCountSummaryPageResource getCounts(long competitionId, String assessorSearchString, int page) {
+
+        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("assessorSearchString", assessorSearchString);
+
+        String baseUrl = format("%s/find-by-competition-id/%s", "/assessor-count-summary", competitionId);
+
+        String uriWithParams =  UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("sort", null)
+                .queryParam("assessorSearchString", assessorSearchString)
+                .build()
+                .encode()
+                .toUriString();
+
         return applicationCountSummaryRestService
-                .getAssessorCountSummariesByCompetitionId(competitionId, Optional.ofNullable(innovationSectorId), Optional.ofNullable(businessType), page, PAGE_SIZE)
+                .getAssessorCountSummariesByCompetitionId(competitionId, StringUtils.trim(assessorSearchString), page, PAGE_SIZE)
                 .getSuccess();
     }
 }

@@ -88,13 +88,9 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  assessmentParticipant.competition.id = :compId AND " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  assessmentParticipant.role = 'ASSESSOR' AND " +
-            " (:innovationSectorId IS NULL OR :innovationSectorId IN (SELECT innovationAreaLink.category.sector.id " +
-            "                                             FROM ProfileInnovationAreaLink innovationAreaLink" +
-            "                                             WHERE innovationAreaLink.profile = profile)) AND " +
-            "  (:businessType IS NULL OR profile.businessType = :businessType) " +
+            "CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorSearchString, '%')" +
             "GROUP BY user ")
-    Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
-                                                                            @Param("innovationSectorId") Optional<Long> innovationSectorId,
-                                                                            @Param("businessType") Optional<BusinessType> businessType,
+    Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,
+                                                                            @Param("assessorSearchString") String assessorSearchString,
                                                                             Pageable pageable);
 }

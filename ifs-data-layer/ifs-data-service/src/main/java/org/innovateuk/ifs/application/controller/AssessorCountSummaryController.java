@@ -3,11 +3,10 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 /**
  * Controller for exposing statistical data on assessors
@@ -23,11 +22,9 @@ public class AssessorCountSummaryController {
 
     @GetMapping("/find-by-competition-id/{competitionId}")
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(@PathVariable("competitionId") long competitionId,
-                                                                                                 @RequestParam(value = "innovationSector") Optional<Long> innovationSector,
-                                                                                                 @RequestParam(value = "businessType") Optional<BusinessType> businessType,
+                                                                                                 @RequestParam(value = "assessorSearchString", defaultValue = "") String assessorSearchString,
                                                                                                  @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-
-        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionId(competitionId, innovationSector, businessType, pageIndex, pageSize).toGetResponse();
+        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionId(competitionId, trim(assessorSearchString), pageIndex, pageSize).toGetResponse();
     }
 }
