@@ -22,7 +22,7 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "FROM User user " +
             "JOIN user.roles roles " +
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR "+
+            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
             "GROUP BY user.id ";
 
     /**
@@ -38,25 +38,22 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
      * <p>
      * Try to keep any other required filtering parameters in this query.
      */
-    String ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA = "SELECT user " +
+    String ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME = "SELECT user " +
             "FROM User user " +
             "JOIN Profile profile ON profile.id = user.profileId " +
-            "JOIN profile.innovationAreas innovationAreas " +
             "JOIN user.roles roles " +
-            "WHERE (innovationAreas.category.id = :innovationArea OR :innovationArea IS NULL) " +
-            "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR "+
+            "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
+            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorSearchString, '%') " +
             "GROUP BY user.id ";
 
     @Query(ASSESSORS_WITH_COMPETITION)
     Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
-    @Query(ASSESSORS_WITH_COMPETITION)
-    List<User> findAssessorsByCompetition(@Param("competitionId") long competitionId);
+    @Query(ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
+    Page<User> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId,
+                                                             @Param("assessorSearchString") String assessorSearchString, Pageable pageable);
 
-    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
-    Page<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
-                                                           @Param("innovationArea") Long innovationArea, Pageable pageable);
-    @Query(ASSESSORS_WITH_COMPETITION_AND_INNOVATION_AREA)
-    List<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId, @Param("innovationArea") Long innovationArea);
+    @Query(ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
+    List<User> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorSearchString") String assessorSearchString);
 }

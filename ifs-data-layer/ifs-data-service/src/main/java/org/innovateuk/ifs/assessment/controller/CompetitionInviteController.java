@@ -75,17 +75,17 @@ public class CompetitionInviteController {
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam Optional<Long> innovationArea
+            @RequestParam String assessorSearchString
     ) {
-        return assessmentInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
+        return assessmentInviteService.getAvailableAssessors(competitionId, pageable, assessorSearchString).toGetResponse();
     }
 
     @GetMapping(value = "/get-available-assessors/{competitionId}", params = "all")
     public RestResult<List<Long>> getAvailableAssessorIds(
             @PathVariable long competitionId,
-            @RequestParam Optional<Long> innovationArea
+            @RequestParam String assessorSearchString
     ) {
-        return assessmentInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
+        return assessmentInviteService.getAvailableAssessorIds(competitionId, assessorSearchString).toGetResponse();
     }
 
     @GetMapping(value = "/get-assessors-not-accepted-invite-ids/{competitionId}")

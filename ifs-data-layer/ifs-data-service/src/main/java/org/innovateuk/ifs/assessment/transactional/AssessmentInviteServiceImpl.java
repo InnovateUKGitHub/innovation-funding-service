@@ -35,6 +35,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.EncodingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -249,9 +250,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        final Page<User> pagedResult = innovationArea.map(i -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
-                .orElse(assessmentInviteRepository.findAssessorsByCompetition(competitionId, pageable));
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorSearchString) {
+        final Page<User> pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorSearchString), pageable);
 
         return serviceSuccess(new AvailableAssessorPageResource(
                 pagedResult.getTotalElements(),
@@ -263,11 +263,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorSearchString) {
 
-        List<User> result = innovationArea.map(innovationAreaId -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(
-                competitionId, innovationAreaId
-        )).orElseGet(() -> assessmentInviteRepository.findAssessorsByCompetition(competitionId));
+        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorSearchString));
 
         return serviceSuccess(simpleMap(result, User::getId));
     }
