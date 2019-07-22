@@ -136,20 +136,17 @@ Comp Admin is able to navigate to the Grant Offer letter page
     When the user clicks the button/link         link = View the grant offer letter page
     Then the user is able to see the Grant Offer letter page
 
-Comp Admin should be able to see GOL template download link
-    Given the user navigates to the page   ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    Then the user should see the element   link = grant_offer_letter.pdf
-
 Validating GOL page error message
-    Given the user clicks the button/link                 jQuery = button:contains("Send to project team")
-    When the user clicks the button/link                  jQuery = button:contains("Publish to project team")
+    [Documentation]  IFS-5865
+    [Setup]  the user navigates to the page              ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
+    Given the user uploads a file                        grantOfferLetter  ${valid_pdf}
+    When the user clicks the button/link                 jQuery = button:contains("Send to project team")
+    And the user clicks the button/link                  jQuery = button:contains("Publish to project team")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
     [Tags]  HappyPath
-    Given the user navigates to the page        ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    Then the user uploads a file                grantOfferLetter  ${valid_pdf}
     And the user should see the element         jQuery = button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
     And the user selects the checkbox           confirmation
@@ -509,14 +506,14 @@ the user tries to reject without a reason he should get a validation message
     the user should see a field error     ${empty_field_warning_message}
 
 the user rejects the GOL and sees the successful status
-    # Insert Rejection text and submit
+    #Insert Rejection text and submit
     The user enters text to a text field  id = gol-reject-reason  The document was not signed.
     the user clicks the button/link       css = #submit-button
     the user clicks the button/link       jQuery = button[type = "submit"]:contains("Reject signed grant offer letter")
-    # Warning message on the same page
+    #Warning message on the same page
     the user should see the element       jQuery = .warning-alert:contains("documents have been reviewed and rejected.")
     the user should see the element       jQuery = .warning-alert:contains("Reason for rejection:")
-    # Warning message on Competition level
+    #Warning message on Competition level
     the user navigates to the page        ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element       jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).rejected
 

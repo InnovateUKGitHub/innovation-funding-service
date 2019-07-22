@@ -43,7 +43,8 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((email, user) -> user.setEmail(email), emailAddresses);
     }
 
-    public UserBuilder withRoles(Set<Role>... rolesList) {
+    @SafeVarargs
+    public final UserBuilder withRoles(Set<Role>... rolesList) {
         return withArray((roles, user) -> setField("roles", roles, user), rolesList);
     }
 

@@ -1,0 +1,62 @@
+.activity-log {
+  width: 100%;
+
+  & > li {
+    margin-bottom: 10px;
+  }
+
+  // .activity-log__item
+  &__item {
+    padding-bottom: 10px;
+    border-bottom: 1px solid govuk-colour("grey-2");
+    clear: both;
+    @include govuk-clearfix;
+  }
+
+  // .activity-log__left
+  &__left {
+    width: 60%;
+    float: left;
+
+    @include media-down(mobile) {
+      width: 100%;
+      float: none;
+      margin-bottom: 10px;
+    }
+  }
+
+  //. activity-log__title
+  &__title {
+    display: block;
+    @include govuk-font(19);
+  }
+
+  //. activity-log__user
+  &__user {
+    @include govuk-font(16);
+  }
+
+  // .activity-log__right
+  &__right {
+    width: 40%;
+    float: right;
+    text-align: right;
+
+    @include media-down(mobile) {
+      width: 100%;
+      float: none;
+      text-align: left;
+    }
+  }
+
+  //. activity-log__time
+  &__time {
+    display: block;
+    @include govuk-font(16);
+  }
+
+  //. activity-log__link
+  &__link {
+    @include govuk-font(16);
+  }
+}

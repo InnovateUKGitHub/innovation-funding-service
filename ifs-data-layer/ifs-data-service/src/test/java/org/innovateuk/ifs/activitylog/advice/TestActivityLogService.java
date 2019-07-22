@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.activitylog.advice;
 
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+
+import java.util.Optional;
 
 public interface TestActivityLogService {
 
@@ -24,14 +26,14 @@ public interface TestActivityLogService {
     @Activity(type = ActivityType.APPLICATION_SUBMITTED, projectOrganisationCompositeId = "notMatching")
     ServiceResult<Void> withNotMatchingProjectOrganisationCompositeId(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
-    @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId", condition = "condition")
+    @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId", dynamicType = "dynamicType")
     ServiceResult<Void> withApplicationIdConditional(long applicationId, boolean conditional);
 
-    default boolean condition(long applicationId, boolean conditional) {
-        return conditional;
+    default Optional<ActivityType> dynamicType(long applicationId, boolean conditional) {
+        return conditional ? Optional.of(ActivityType.APPLICATION_SUBMITTED) : Optional.empty();
     }
 
-    @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId", condition = "notMatching")
+    @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId", dynamicType = "notMatching")
     ServiceResult<Void> withApplicationIdNotMatchingConditional(long applicationId, boolean conditional);
 
     @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId")
@@ -39,4 +41,7 @@ public interface TestActivityLogService {
 
     @Activity(type = ActivityType.APPLICATION_SUBMITTED, applicationId = "applicationId")
     void withApplicationIdNotServiceResult(long applicationId);
+
+    @Activity(applicationId = "applicationId")
+    ServiceResult<Void>  withNoneType(long applicationId);
 }
