@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.origin.AssignQuestionOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.EncodedCookieService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -43,10 +43,7 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
 
     @Override
     protected AssignQuestionController supplyControllerUnderTest() {
-        return new AssignQuestionController(userRestServiceMock,
-                                            questionServiceMock,
-                                            assignQuestionModelPopulatorMock,
-                                            cookieFlashMessageFilterMock);
+        return new AssignQuestionController();
     }
 
     @Mock
@@ -61,6 +58,8 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilterMock;
 
+    @Mock
+    private EncodedCookieService encodedCookieService;
     @Test
     public void viewAssign() throws Exception {
         QuestionResource question = newQuestionResource().build();
@@ -69,23 +68,20 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
                 .build();
         UserResource user = newUserResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().withAssignee(user.getId()).build();
-        String originQuery = "OVERVIEW";
 
         AssignQuestionViewModel model = new AssignQuestionViewModel(applicationResource,
                                                                     emptyList(),
-                                                                    question,
-                                                                    originQuery,
-                                                                    AssignQuestionOrigin.OVERVIEW);
+                                                                    question);
 
         when(questionServiceMock.findQuestionStatusesByQuestionAndApplicationId(anyLong(), anyLong()))
                 .thenReturn(singletonList(questionStatus));
-        when(assignQuestionModelPopulatorMock.populateModel(question.getId(), applicationResource.getId(), originQuery)).thenReturn(model);
+        when(assignQuestionModelPopulatorMock.populateModel(question.getId(), applicationResource.getId())).thenReturn(model);
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", applicationResource.getId(), question.getId()))
+        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/assign", applicationResource.getId(), question.getId()))
                 .andExpect(status().isOk());
 
         verify(questionServiceMock).findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationResource.getId());
-        verify(assignQuestionModelPopulatorMock).populateModel(question.getId(), applicationResource.getId(), originQuery);
+        verify(assignQuestionModelPopulatorMock).populateModel(question.getId(), applicationResource.getId());
     }
 
     @Test

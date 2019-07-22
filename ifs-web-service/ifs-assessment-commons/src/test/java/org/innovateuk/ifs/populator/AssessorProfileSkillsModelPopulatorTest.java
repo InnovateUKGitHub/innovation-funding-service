@@ -91,7 +91,7 @@ public class AssessorProfileSkillsModelPopulatorTest extends BaseUnitTest{
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessorProfileDetailsModelPopulator.populateModel(user, profile)).thenReturn(expectedDetailsViewModel);
 
-        AssessorProfileSkillsViewModel model = populator.populateModel(user, profile, Optional.of(competition.getId()), "", false);
+        AssessorProfileSkillsViewModel model = populator.populateModel(user, profile, Optional.of(competition.getId()), false);
         AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
 
         assertEquals("Test Tester", assessorDetails.getName());

@@ -98,7 +98,7 @@ public class AssessorProfileSkillsModelPopulatorTest {
         when(assessorProfileDetailsModelPopulator.populateModel(userResource, profileResource)).thenReturn(assessorProfileDetailsViewModel);
 
         AssessorProfileSkillsViewModel viewModel =
-                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, null, false);
+                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, false);
         AssessorProfileDetailsViewModel assessorDetails = viewModel.getAssessorProfileDetailsViewModel();
 
         assertNull(viewModel.getCompetition());

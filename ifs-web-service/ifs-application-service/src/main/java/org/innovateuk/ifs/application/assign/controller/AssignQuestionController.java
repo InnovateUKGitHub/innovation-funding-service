@@ -58,10 +58,9 @@ public class AssignQuestionController {
     public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
                                 @PathVariable("questionId") long questionId,
                                 @PathVariable("applicationId") long applicationId,
-                                @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
                                 Model model) {
         populateAssigneeForm(questionId, applicationId, form);
-        return doViewAssignPage(model, questionId, applicationId, origin);
+        return doViewAssignPage(model, questionId, applicationId);
     }
 
     @PostMapping("/question/{questionId}/assign")
@@ -70,12 +69,11 @@ public class AssignQuestionController {
                          ValidationHandler validationHandler,
                          @PathVariable("questionId") long questionId,
                          @PathVariable ("applicationId") long applicationId,
-                         @RequestParam(value = "origin", defaultValue = "OVERVIEW") String origin,
                          HttpServletRequest request,
                          HttpServletResponse response,
                          Model model,
                          UserResource loggedInUser) {
-        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId, origin);
+        Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId);
         ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
@@ -85,9 +83,9 @@ public class AssignQuestionController {
         });
     }
 
-    private String doViewAssignPage(Model model, long questionId, long applicationId, String origin) {
+    private String doViewAssignPage(Model model, long questionId, long applicationId) {
 
-        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId, origin));
+        model.addAttribute("model", assignQuestionModelPopulator.populateModel(questionId, applicationId));
         return "application/questions/assign-question";
     }
 
