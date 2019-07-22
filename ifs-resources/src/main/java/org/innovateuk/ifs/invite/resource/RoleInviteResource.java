@@ -3,7 +3,6 @@ package org.innovateuk.ifs.invite.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.Role;
 
-
 public class RoleInviteResource extends InviteResource {
     private Long id;
     private String name;
