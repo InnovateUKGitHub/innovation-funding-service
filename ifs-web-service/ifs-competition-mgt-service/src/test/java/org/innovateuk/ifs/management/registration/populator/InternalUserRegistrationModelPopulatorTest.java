@@ -3,7 +3,6 @@ package org.innovateuk.ifs.management.registration.populator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.registration.populator.InternalUserRegistrationModelPopulator;
 import org.innovateuk.ifs.management.registration.viewmodel.InternalUserRegistrationViewModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by rav on 30/06/2017.
- */
+
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class InternalUserRegistrationModelPopulatorTest {
 
