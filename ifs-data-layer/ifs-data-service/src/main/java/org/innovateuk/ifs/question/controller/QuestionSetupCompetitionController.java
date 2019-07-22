@@ -39,7 +39,7 @@ public class QuestionSetupCompetitionController {
 
     @PostMapping("/add-default-to-competition/{competitionId}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(
-            @PathVariable("id") long competitionId) {
+            @PathVariable long competitionId) {
         return questionSetupCompetitionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
@@ -76,7 +76,7 @@ public class QuestionSetupCompetitionController {
     }
 
     @GetMapping(value = "/template-file-details/{questionId}", produces = "application/json")
-    public RestResult<FileEntryResource> findFile(@PathVariable("questionId") long questionId) throws IOException {
+    public RestResult<FileEntryResource> findFile(@PathVariable long questionId) throws IOException {
         return questionFileSetupCompetitionService.findTemplateFile(questionId).toGetResponse();
     }
 }

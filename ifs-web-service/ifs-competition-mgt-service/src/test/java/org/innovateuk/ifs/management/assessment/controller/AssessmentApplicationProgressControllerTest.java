@@ -10,7 +10,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentApplicationProgressController;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
