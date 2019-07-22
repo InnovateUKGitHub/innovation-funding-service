@@ -39,6 +39,7 @@ public class DefaultApplicationQuestionCreator {
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
         FormInput appendixInput = buildAppendixInput(competition);
+        FormInput templateInput = buildTemplateInput(competition);
 
         FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
@@ -48,7 +49,7 @@ public class DefaultApplicationQuestionCreator {
         question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
-        question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
+        question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput, templateInput));
 
         return question;
     }
@@ -94,6 +95,19 @@ public class DefaultApplicationQuestionCreator {
         input.setGuidanceAnswer(null);
         input.setGuidanceTitle("What should I include in the appendix?");
         input.setDescription("Appendix");
+        input.setAllowedFileTypes(emptySet());
+
+        return input;
+    }
+
+    private FormInput buildTemplateInput(Competition competition) {
+        FormInput input = new FormInput();
+        input.setType(FormInputType.TEMPLATE_UPLOAD);
+        input.setCompetition(competition);
+        input.setIncludedInApplicationSummary(true);
+        input.setPriority(1);
+        input.setScope(FormInputScope.APPLICATION);
+        input.setActive(false);
         input.setAllowedFileTypes(emptySet());
 
         return input;

@@ -97,9 +97,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
             case TEMPLATE_UPLOAD:
-                setupResource.setTemplateUpload(formInput.getActive());
+                setupResource.setTemplateDocument(formInput.getActive());
                 setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
-                setupResource.setTemplateName(formInput.getDescription());
+                setupResource.setTemplateTitle(formInput.getDescription());
                 break;
         }
     }
@@ -185,10 +185,10 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
                 FormInputType.TEMPLATE_UPLOAD);
-        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateUpload() != null) {
-            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateUpload());
+        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateDocument() != null) {
+            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateDocument());
 
-            if(competitionSetupQuestionResource.getTemplateUpload()) {
+            if(competitionSetupQuestionResource.getTemplateDocument()) {
                 setTemplateSubOptions(templateFormInput, competitionSetupQuestionResource );
             } else {
                 resetTemplateSubOptions(templateFormInput);
@@ -213,8 +213,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     private void setTemplateSubOptions(FormInput templateFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
-        if (competitionSetupQuestionResource.getTemplateName() != null) {
-            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateName());
+        if (competitionSetupQuestionResource.getTemplateTitle() != null) {
+            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
         }
     }
 

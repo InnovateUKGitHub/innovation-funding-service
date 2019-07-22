@@ -2,12 +2,7 @@ package org.innovateuk.ifs.question.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -47,9 +42,6 @@ public class QuestionFileSetupCompetitionServiceImpl implements QuestionFileSetu
     private FileService fileService;
 
     @Autowired
-    private FileEntryService fileEntryService;
-
-    @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
@@ -75,27 +67,6 @@ public class QuestionFileSetupCompetitionServiceImpl implements QuestionFileSetu
                 formInput.setFile(null);
             });
         });
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> downloadTemplateFile(long questionId) {
-        return findFormInputByQuestionId(questionId).andOnSuccess(formInput ->
-            fileEntryService.findOne(formInput.getFile().getId())
-                    .andOnSuccess(this::getFileAndContents));
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> findTemplateFile(long questionId) {
-        return findFormInputByQuestionId(questionId).andOnSuccess(formInput ->
-                ofNullable(formInput.getFile())
-                    .map(FileEntry::getId)
-                    .map(fileEntryService::findOne)
-                    .orElse(ServiceResult.serviceSuccess(null)));
-    }
-
-    private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
-        return fileService.getFileByFileEntryId(fileEntry.getId())
-                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
     }
 
     private ServiceResult<FormInput> findFormInputByQuestionId(long questionId) {

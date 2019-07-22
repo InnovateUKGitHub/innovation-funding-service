@@ -45,6 +45,22 @@
                         <dd class="govuk-grid-column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
                     </th:block>
                 </th:block>
+                <th:block th:if="${question.templateDocument != null}">
+                    <dt class="govuk-grid-column-one-third">Template document</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${question.templateDocument}">Yes</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${question.templateDocument}">No</dd>
+                    <th:block th:if="${question.templateDocument}">
+                        <dt class="govuk-grid-column-one-third">Template title</dt>
+                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles" ifs:utext="${question.templateTitle}"></dd>
+                        <dt class="govuk-grid-column-one-third">Accepted upload file types</dt>
+                        <dd class="govuk-grid-column-two-thirds">
+                            <ul>
+                                <li th:each="fileType : ${question.allowedTemplateResponseFileTypes}"
+                                    th:text="${fileType.displayName}"></li>
+                            </ul>
+                        </dd>
+                    </th:block>
+                </th:block>
             </dl>
         </fieldset>
         <fieldset
@@ -220,6 +236,7 @@
                        th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
             </div>
 
+            <!--/* APPENDIX */-->
             <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('question.appendix')} ? 'govuk-form-group--error'">
@@ -232,7 +249,7 @@
                               th:text="${err}"></span>
                         </th:block>
                         <div class="govuk-radios govuk-radios--inline">
-                            <div class="govuk-radios__item" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                            <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-clear-form="true">
                                 <input id="appendix-yes"
                                        class="govuk-radios__input"
                                        th:name="question.appendix"
@@ -259,7 +276,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div id="allowedFileTypesDiv" class="panel">
+                <div id="allowedAppendixFileTypesDiv" class="panel">
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.allowedAppendixResponseFileTypes')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
@@ -311,6 +328,161 @@
                     </div>
                 </div>
             </th:block>
+
+
+            <!--/* TEMPLATE DOCUMENT */-->
+            <th:block th:if="${question.templateDocument != null or #fields.hasErrors('question.templateDocument')}">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.templateDocument')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.templateDocument">
+                            <h2 class="govuk-fieldset__heading">Template document</h2>
+                        </legend>
+                        <th:block th:if="${#fields.hasErrors('question.templateDocument')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.templateDocument')}"
+                              th:text="${err}"></span>
+                        </th:block>
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item" data-target="allowedTemplateFileTypesDiv" data-target-clear-form="true">
+                                <input id="template-document-yes"
+                                       class="govuk-radios__input"
+                                       th:name="question.templateDocument"
+                                       th:checked="${question.templateDocument != null and question.templateDocument}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="template-document-yes"
+                                       class="govuk-label govuk-radios__label">Yes</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="template-document-no"
+                                       class="govuk-radios__input"
+                                       th:name="question.templateDocument"
+                                       th:checked="${question.templateDocument != null and !question.templateDocument}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="template-document-no"
+                                       class="govuk-label govuk-radios__label">No</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="allowedTemplateFileTypesDiv" class="panel">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.templateTitle')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s"
+                               for="question.templateTitle">
+                            Template title
+                            <span class="govuk-hint">
+                            For example. 'Methodology'. This would display as 'Download methodology template'
+                            </span>
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('question.templateTitle')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.templateTitle')}"
+                                  th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-width-two-thirds"
+                               th:classappend="${#fields.hasErrors('question.templateTitle')} ? 'govuk-input--error'"
+                               type="text"
+                               required="required"
+                               id="question.templateTitle"
+                               th:name="question.templateTitle"
+                               th:value="${question.templateTitle}"
+                               maxlength="255"
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
+                    </div>
+
+
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.templateTitle')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-label--s"
+                               for="question.templateTitle">
+                            Upload template
+                            <span class="govuk-hint">
+                            Accepted file types (.ods, odt)
+                            </span>
+                        </label>
+                    </div>
+
+                    <!--/* <h2 class="govuk-heading-m">Upload your grant agreement</h2>
+                    <p class="govuk-body">Upload a PDF copy of your Horizon 2020 grant agreement letter. This was issued to you as confirmation of funding after your initial application.</p>
+                    <p class="govuk-body">Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup, which will be the second stage of this application process.</p>
+                    <div th:unless="${model.uploaded}">
+                        <th:block th:if="${#fields.hasErrors('grantAgreement')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('grantAgreement')}" th:text="${err}" />
+                        </th:block>
+                        <p class="govuk-body uploaded-file">No file currently uploaded.</p>
+                        <input type="file" id="grant-agreement" name="grantAgreement" class="inputfile">
+                        <label for="grant-agreement" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                        <button th:unless="${model.readonly}" name="uploadGrantAgreement" class="button-secondary" data-for-file-upload="grant-agreement"></button>
+                    </div>
+                    <div th:if="${model.uploaded}">
+                        <p class="govuk-body uploaded-file">
+                            <a th:href="@{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                               th:text="${model.filename}"
+                               target="_blank"
+                               class="govuk-link"
+                               aria-describedby="file-hint">File</a>
+                            <span id="file-hint">(opens in a new window)</span>.</p>
+                        <button th:unless="${model.readonly}" name="removeGrantAgreement" class="button-secondary">Remove</button>
+                    </div>
+                    */-->
+
+
+
+
+
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.allowedTemplateResponseFileTypes')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedTemplateResponseFileTypes">
+                                <h2 class="govuk-fieldset__heading">Accepted upload file types</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('question.allowedTemplateResponseFileTypes')}">
+                                <span class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('question.allowedTemplateResponseFileTypes')}"
+                                      th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item"
+                                     th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:field="*{question.allowedTemplateResponseFileTypes}"
+                                           th:value="${fileTypeCategory}"
+                                           required="required"/>
+                                    <label th:for="${#ids.prev('question.allowedTemplateResponseFileTypes')}"
+                                           th:text="${fileTypeCategory.displayName}"
+                                           class="govuk-label govuk-checkboxes__label">PDF</label>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                </div>
+            </th:block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <th:block
                 th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">

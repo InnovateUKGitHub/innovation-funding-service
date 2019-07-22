@@ -1,6 +1,12 @@
 package org.innovateuk.ifs.form.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.BasicFileAndContents;
+import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.mapper.FormInputMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -13,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -26,6 +33,12 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Autowired
     private FormInputMapper formInputMapper;
+
+    @Autowired
+    private FileEntryService fileEntryService;
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public ServiceResult<FormInputResource> findFormInput(long id) {
@@ -63,6 +76,28 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     public ServiceResult<Void> delete(long id) {
         formInputRepository.delete(formInputMapper.mapIdToDomain(id));
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> downloadTemplateFile(long formInputId) {
+        return findFormInputEntity(formInputId).andOnSuccess(formInput ->
+                fileEntryService.findOne(formInput.getFile().getId())
+                        .andOnSuccess(this::getFileAndContents));
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> findTemplateFile(long formInputId) {
+        return findFormInputEntity(formInputId).andOnSuccess(formInput ->
+                ofNullable(formInput.getFile())
+                        .map(FileEntry::getId)
+                        .map(fileEntryService::findOne)
+                        .orElse(ServiceResult.serviceSuccess(null)));
+    }
+
+
+    private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
+        return fileService.getFileByFileEntryId(fileEntry.getId())
+                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
     }
 
     private List<FormInputResource> formInputToResources(List<FormInput> filtered) {
