@@ -1,20 +1,18 @@
 package org.innovateuk.ifs.management.competition.inflight.controller.application.list.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.list.viewmodel.*;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -37,12 +35,10 @@ import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceB
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationsController> {
@@ -251,7 +247,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/all-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
                 .andReturn();
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -272,7 +267,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=ALL_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -288,8 +283,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         mockMvc.perform(get("/competition/{competitionId}/applications/all?param1=abc&param2=def", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/all-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&param1=abc&param2=def"));
+                .andExpect(view().name("competition/all-applications"));
 
         verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, 20, Optional.empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
@@ -334,7 +328,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/submitted-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS"))
                 .andReturn();
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -388,7 +381,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/submitted-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
                 .andReturn();
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -407,7 +399,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 50", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=SUBMITTED_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -424,7 +416,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         mockMvc.perform(get("/competition/{competitionId}/applications/submitted?param1=abc&param2=def", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/submitted-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&param1=abc&param2=def"))
                 .andReturn();
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, empty(), empty());
@@ -463,7 +454,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/ineligible", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/ineligible-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS"))
                 .andReturn();
 
         IneligibleApplicationsViewModel model = (IneligibleApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -526,7 +516,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 50", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=INELIGIBLE_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -543,7 +533,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         mockMvc.perform(get("/competition/{competitionId}/applications/ineligible?param1=abc&param2=def", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/ineligible-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS&param1=abc&param2=def"))
                 .andReturn();
 
         verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "", 0, 20, Optional.of(""), empty());
@@ -587,7 +576,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/all-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
                 .andReturn();
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -643,7 +631,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/all-applications"))
-                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
                 .andReturn();
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");

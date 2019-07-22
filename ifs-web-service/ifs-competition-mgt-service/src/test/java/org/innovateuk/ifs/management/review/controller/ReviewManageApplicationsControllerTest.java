@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.management.review.controller.ReviewManageApplicationsController;
 import org.innovateuk.ifs.management.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.junit.Test;
@@ -105,6 +104,6 @@ public class ReviewManageApplicationsControllerTest extends BaseControllerMockMV
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=MANAGE_APPLICATIONS_PANEL&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }

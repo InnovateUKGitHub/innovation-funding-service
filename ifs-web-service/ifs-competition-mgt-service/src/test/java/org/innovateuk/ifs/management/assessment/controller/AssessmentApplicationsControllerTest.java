@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.application.list.viewmodel.ManageApplicationsViewModel;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentApplicationsController;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -90,7 +89,7 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=MANAGE_APPLICATIONS&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 
     @Test
@@ -112,10 +111,7 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 0,20,"")).thenReturn(restSuccess(expectedPageResource));
 
-        String origin = "MANAGE_ASSESSMENTS";
-
-        mockMvc.perform(get("/assessment/competition/{competitionId}/applications", competitionResource.getId())
-                .param("origin", origin))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/applications", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"));
     }
