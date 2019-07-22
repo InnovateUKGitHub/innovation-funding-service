@@ -72,6 +72,6 @@ public class QuestionFileSetupCompetitionServiceImpl implements QuestionFileSetu
     private ServiceResult<FormInput> findFormInputByQuestionId(long questionId) {
         return find(ofNullable(formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
-                FormInputType.TEMPLATE_UPLOAD)), notFoundError(FormInput.class, questionId));
+                FormInputType.TEMPLATE_DOCUMENT)), notFoundError(FormInput.class, questionId));
     }
 }

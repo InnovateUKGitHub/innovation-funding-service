@@ -9,7 +9,7 @@ ALTER TABLE form_input DROP COLUMN allowed_file_types;
 -- check with mark b above
 
 -- Insert new form input type for template document.
-INSERT INTO form_input_type (id, name) VALUES ('29', 'TEMPLATE_UPLOAD');
+INSERT INTO form_input_type (id, name) VALUES ('29', 'TEMPLATE_DOCUMENT');
 
 -- Insert inactive template document form inputs wherever there is an appendix form input.
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
