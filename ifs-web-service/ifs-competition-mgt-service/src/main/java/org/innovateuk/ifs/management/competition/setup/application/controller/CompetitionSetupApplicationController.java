@@ -279,7 +279,7 @@ public class CompetitionSetupApplicationController {
 
         MultipartFile file = competitionSetupForm.getTemplateDocumentFile();
         Supplier<String> view = () -> getQuestionPage(model, competitionRestService.getCompetitionById(competitionId).getSuccess(),
-                competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+                questionId, true, competitionSetupForm);
 
         return validationHandler.performActionOrBindErrorsToField("templateDocumentFile", view, view,
                 () -> questionSetupCompetitionRestService.uploadTemplateDocument(questionId,
@@ -295,7 +295,7 @@ public class CompetitionSetupApplicationController {
                                              Model model,
                                              RedirectAttributes redirectAttributes) {
         Supplier<String> view = () -> getQuestionPage(model, competitionRestService.getCompetitionById(competitionId).getSuccess(),
-                competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+                questionId, true, competitionSetupForm);
 
         return validationHandler.performActionOrBindErrorsToField("templateDocumentFile", view, view,
                 () -> questionSetupCompetitionRestService.deleteTemplateDocument(questionId));
