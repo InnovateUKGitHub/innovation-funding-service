@@ -1062,6 +1062,7 @@ IFS.core.formValidation = (function () {
       var target = jQuery('[id="' + id + '"]')
       var targetVisible = IFS.core.formValidation.isVisible(target)
       var closedAccordion = target.closest('.govuk-accordion__section').not('.govuk-accordion__section--expanded')
+      var closedDetails = target.closest('.govuk-details__text').not('[aria-hidden="false"]')
       var formGroupRow = target.closest('.form-group-row')
       if (targetVisible && formGroupRow.length) {
         // it is part a date group so don't put focus on the time select
@@ -1069,8 +1070,16 @@ IFS.core.formValidation = (function () {
       } else if (targetVisible) {
         IFS.core.formValidation.scrollToElement(target.first())
       } else if (closedAccordion.length) {
-        // it is within a accordion element and we open it and then put focus on it
+        // it is within an accordion element and we open it and then put focus on it
         closedAccordion.addClass('govuk-accordion__section--expanded')
+        IFS.core.formValidation.scrollToElement(target.first())
+      } else if (closedDetails.length) {
+        // it is within a detail element and we open it and then put focus on it
+        var detailsWrapper = closedDetails.closest('.govuk-details')
+        var summary = closedDetails.closest('.govuk-details__summary')
+        detailsWrapper.attr('open', '')
+        summary.attr('aria-expanded', 'true')
+        closedDetails.attr('aria-hidden', 'false')
         IFS.core.formValidation.scrollToElement(target.first())
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target
