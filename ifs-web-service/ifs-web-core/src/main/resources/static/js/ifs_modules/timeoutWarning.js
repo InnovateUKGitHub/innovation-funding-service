@@ -31,7 +31,7 @@ IFS.core.timeoutWarning = (function () {
           // its the first time on a logged in page so set session timeout cookie
           var date = new Date()
           date.setHours(date.getHours() + s.sessionTimeoutLength)
-          Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain, expires: 0.35 })
+          Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain, expires: 0.5 })
           // and start the session timer
           IFS.core.timeoutWarning.startSessionTimer()
         }
