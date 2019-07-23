@@ -9,6 +9,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.*;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupPopulator;
@@ -17,11 +19,12 @@ import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionS
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.QuestionSetupViewModel;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +33,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -39,10 +44,12 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
-import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_ID_KEY;
-import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -56,6 +63,7 @@ public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
+    public static final String QUESTION_REDIRECT = "redirect:/competition/setup/%d/section/application/question/%d/edit";
     private static final String QUESTION_VIEW = "competition/setup/question";
     private static final String MODEL = "model";
 
@@ -79,6 +87,9 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Autowired
+    private FormInputRestService formInputRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -257,6 +268,48 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
+
+    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "uploadTemplateDocumentFile"})
+    public String uploadTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
+                                             BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                             @PathVariable long questionId,
+                                             Model model) {
+
+        MultipartFile file = competitionSetupForm.getTemplateDocumentFile();
+        Supplier<String> view = () -> getQuestionPage(model, competitionRestService.getCompetitionById(competitionId).getSuccess(),
+                competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+
+        return validationHandler.performActionOrBindErrorsToField("templateDocumentFile", view, view,
+                () -> questionSetupCompetitionRestService.uploadTemplateDocument(questionId,
+                                file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
+    }
+
+    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "removeTemplateDocumentFile"})
+    public String removeTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
+                                             BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                             @PathVariable long questionId,
+                                             Model model,
+                                             RedirectAttributes redirectAttributes) {
+        Supplier<String> view = () -> getQuestionPage(model, competitionRestService.getCompetitionById(competitionId).getSuccess(),
+                competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+
+        return validationHandler.performActionOrBindErrorsToField("templateDocumentFile", view, view,
+                () -> questionSetupCompetitionRestService.deleteTemplateDocument(questionId));
+    }
+
+    @GetMapping("/question/{questionId}/download-template-file")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFile(Model model,
+                                                   @PathVariable long questionId) {
+        CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
+        return getFileResponseEntity(formInputRestService.downloadFile(question.getTemplateFormInput()).getSuccess(),
+                        formInputRestService.findFile(question.getTemplateFormInput()).getSuccess());
+    }
+
     @PostMapping("/question/{questionId}/edit")
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
@@ -373,13 +426,13 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), FINANCES, isEditable));
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), FINANCES, isEditable, null));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), FINANCES, form));
         return "competition/finances";
     }
 
     private String getDetailsPage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), APPLICATION_DETAILS, isEditable));
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), APPLICATION_DETAILS, isEditable, null));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), APPLICATION_DETAILS, form));
         return "competition/application-details";
     }
@@ -397,7 +450,7 @@ public class CompetitionSetupApplicationController {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
                     }
 
-                    model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable));
+                    model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable, questionResource.getTemplateFilename()));
                     model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
                     return QUESTION_VIEW;
@@ -406,14 +459,14 @@ public class CompetitionSetupApplicationController {
         return view.getSuccess();
     }
 
-    private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {
+    private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable, String filename) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
         CompetitionSetupSubsectionViewModel subsectionViewModel = competitionSetupService.populateCompetitionSubsectionModelAttributes(competition, section,
                 subsection, questionId);
         GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competition, section);
 
-        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable);
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename);
     }
 
     private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {

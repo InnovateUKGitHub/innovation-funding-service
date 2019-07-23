@@ -64,7 +64,7 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
             List<String> validMediaTypes = simpleMap(asList(validMediaTypesString.split(",")), StringUtils::trim);
 
             Optional<EnumSet<FileTypeCategory>> mediaTypeSetSupportingErrorConditions = simpleFindFirst(VALID_MEDIA_TYPE_SETS, set -> {
-                List<String> allMediaTypesInThisSet = flattenLists(simpleMap(set, FileTypeCategory::getMediaTypes));
+                List<String> allMediaTypesInThisSet = flattenLists(simpleMap(set, FileTypeCategory::getMimeTypes));
                 return allMediaTypesInThisSet.size() == validMediaTypes.size() && allMediaTypesInThisSet.containsAll(validMediaTypes);
             });
 

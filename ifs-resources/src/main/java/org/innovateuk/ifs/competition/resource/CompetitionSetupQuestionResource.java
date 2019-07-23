@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.DOCUMENT;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 
@@ -56,6 +57,8 @@ public class CompetitionSetupQuestionResource {
     private Boolean templateDocument;
     private Set<FileTypeCategory> allowedTemplateResponseFileTypes = new LinkedHashSet<>();
     private String templateTitle;
+    private String templateFilename;
+    private Long templateFormInput;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -265,8 +268,27 @@ public class CompetitionSetupQuestionResource {
         this.templateTitle = templateTitle;
     }
 
-    public static List<FileTypeCategory> getSupportedTypeCategories(){
+    public String getTemplateFilename() {
+        return templateFilename;
+    }
+
+    public void setTemplateFilename(String templateFilename) {
+        this.templateFilename = templateFilename;
+    }
+
+    public Long getTemplateFormInput() {
+        return templateFormInput;
+    }
+
+    public void setTemplateFormInput(Long templateFormInput) {
+        this.templateFormInput = templateFormInput;
+    }
+
+    public static List<FileTypeCategory> getAppendixTypeCategories(){
         return asList(PDF, SPREADSHEET);
+    }
+    public static List<FileTypeCategory> getTemplateDocumentTypeCategories() {
+        return asList(PDF, SPREADSHEET, DOCUMENT);
     }
 
     @Override

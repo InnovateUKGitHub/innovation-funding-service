@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
@@ -100,6 +102,10 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setTemplateDocument(formInput.getActive());
                 setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setTemplateTitle(formInput.getDescription());
+                setupResource.setTemplateFilename(Optional.ofNullable(formInput.getFile())
+                        .map(FileEntry::getName)
+                        .orElse(null));
+                setupResource.setTemplateFormInput(formInput.getId());
                 break;
         }
     }

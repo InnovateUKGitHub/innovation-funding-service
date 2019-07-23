@@ -114,17 +114,17 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, PDF.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, PDF.getMimeTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailureSpreadsheetsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, SPREADSHEET.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, SPREADSHEET.getMimeTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOrSpreadsheetsOnly() {
-        List<String> pdfAndSPreadsheetMediaTypes = combineLists(PDF.getMediaTypes(), SPREADSHEET.getMediaTypes());
+        List<String> pdfAndSPreadsheetMediaTypes = combineLists(PDF.getMimeTypes(), SPREADSHEET.getMimeTypes());
         assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY, pdfAndSPreadsheetMediaTypes);
     }
 

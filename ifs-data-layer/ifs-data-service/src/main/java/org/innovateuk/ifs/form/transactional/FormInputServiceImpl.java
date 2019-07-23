@@ -79,14 +79,14 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
-    public ServiceResult<FileAndContents> downloadTemplateFile(long formInputId) {
+    public ServiceResult<FileAndContents> downloadFile(long formInputId) {
         return findFormInputEntity(formInputId).andOnSuccess(formInput ->
                 fileEntryService.findOne(formInput.getFile().getId())
                         .andOnSuccess(this::getFileAndContents));
     }
 
     @Override
-    public ServiceResult<FileEntryResource> findTemplateFile(long formInputId) {
+    public ServiceResult<FileEntryResource> findFile(long formInputId) {
         return findFormInputEntity(formInputId).andOnSuccess(formInput ->
                 ofNullable(formInput.getFile())
                         .map(FileEntry::getId)

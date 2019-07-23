@@ -14,7 +14,7 @@ public class FileTypeCategoryTest {
 
     @Test
     public void testGetMediaTypesPdf() {
-        assertEquals(PDF.getMediaTypes(), singletonList("application/pdf"));
+        assertEquals(PDF.getMimeTypes(), singletonList("application/pdf"));
     }
 
     @Test
@@ -22,6 +22,6 @@ public class FileTypeCategoryTest {
 
         List<String> expectedTypes = asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
 
-        assertEquals(SPREADSHEET.getMediaTypes(), expectedTypes);
+        assertEquals(SPREADSHEET.getMimeTypes(), expectedTypes);
     }
 }

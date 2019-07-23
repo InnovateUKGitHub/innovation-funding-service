@@ -60,14 +60,14 @@ public class FormInputController {
         return formInputService.delete(id).toDeleteResponse();
     }
 
-    @GetMapping(value = "/template-file/{formInputId}", produces = "application/json")
+    @GetMapping(value = "/file/{formInputId}", produces = "application/json")
     public @ResponseBody
     ResponseEntity<Object> downloadFile(@PathVariable long formInputId) throws IOException {
-        return fileControllerUtils.handleFileDownload(() -> formInputService.downloadTemplateFile(formInputId));
+        return fileControllerUtils.handleFileDownload(() -> formInputService.downloadFile(formInputId));
     }
 
-    @GetMapping(value = "/template-file-details/{formInputId}", produces = "application/json")
+    @GetMapping(value = "/file-details/{formInputId}", produces = "application/json")
     public RestResult<FileEntryResource> findFile(@PathVariable long formInputId) throws IOException {
-        return formInputService.findTemplateFile(formInputId).toGetResponse();
+        return formInputService.findFile(formInputId).toGetResponse();
     }
 }

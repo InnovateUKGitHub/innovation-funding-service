@@ -37,8 +37,8 @@ public interface FormInputService {
     ServiceResult<Void> delete(long id);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<FileAndContents> downloadTemplateFile(long formInputId);
+    ServiceResult<FileAndContents> downloadFile(long formInputId);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<FileEntryResource> findTemplateFile(long formInputId);
+    ServiceResult<FileEntryResource> findFile(long formInputId);
 }

@@ -87,6 +87,6 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
     }
 
     private String mediaTypesString(FileTypeCategory fileTypeCategory) {
-        return simpleJoiner(fileTypeCategory.getMediaTypes(), ", ");
+        return simpleJoiner(fileTypeCategory.getMimeTypes(), ", ");
     }
 }
