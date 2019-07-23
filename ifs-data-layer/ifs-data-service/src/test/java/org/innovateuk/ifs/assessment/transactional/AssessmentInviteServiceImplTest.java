@@ -1300,7 +1300,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors_noInnovationArea() {
+    public void getAvailableAssessors_noAssessorFilter() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
@@ -1310,12 +1310,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(assessmentInviteRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
+        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable)).thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, assessorFilter)
                 .getSuccess();
 
-        verify(assessmentInviteRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
+        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());

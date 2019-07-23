@@ -226,8 +226,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
-        Optional<Long> innovationArea = of(4L);
-        String assessorFilter = "";
+        String assessorFilter = "Name";
 
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
 
@@ -239,7 +238,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "firstName,asc")
-                .param("innovationArea", "4"))
+                .param("assessorNameFilter", assessorFilter))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
@@ -252,8 +251,8 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                         .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
                                 parameterWithName("sort").optional()
                                         .description("The property to sort the elements on. For example `sort=firstName,asc`. Defaults to `firstName,asc`"),
-                                parameterWithName("innovationArea").optional()
-                                        .description("Innovation area ID to filter assessors by.")
+                                parameterWithName("assessorNameFilter").optional()
+                                        .description("Name to filter assessors by.")
                         ),
                         responseFields(availableAssessorPageResourceFields)
                                 .andWithPrefix("content[].", availableAssessorResourceFields)

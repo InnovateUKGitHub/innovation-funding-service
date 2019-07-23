@@ -146,7 +146,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 .build();
 
         setupGetWithRestResultExpectations(
-                format("%s/%s/%s1?page=1&assessorNameFilter=name", restUrl, "get-available-assessors", competitionId),
+                format("%s/%s/%s?page=1&assessorNameFilter=name", restUrl, "get-available-assessors", competitionId),
                 AvailableAssessorPageResource.class,
                 expected
         );
@@ -168,7 +168,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 .build();
 
         setupGetWithRestResultExpectations(
-                format("%s/%s/%s?assessorNameFilter=name&page=1", restUrl, "get-available-assessors", competitionId),
+                format("%s/%s/%s?page=1&assessorNameFilter=name", restUrl, "get-available-assessors", competitionId),
                 AvailableAssessorPageResource.class,
                 expected
         );
@@ -180,12 +180,12 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getAvailableAssessors_all() {
         long competitionId = 1L;
-        String assessorNameFilter = "";
+        String assessorNameFilter = "name";
 
         List<Long> assessorItems = asList(1L, 2L);
 
         setupGetWithRestResultExpectations(
-                format("%s/%s/%s?all", restUrl, "get-available-assessors", competitionId),
+                format("%s/%s/%s?all&assessorNameFilter=name", restUrl, "get-available-assessors", competitionId),
                 ParameterizedTypeReferences.longsListType(),
                 assessorItems
         );
