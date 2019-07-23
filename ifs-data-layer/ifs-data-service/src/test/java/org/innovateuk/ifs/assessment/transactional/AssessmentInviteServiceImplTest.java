@@ -1247,8 +1247,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        Optional<Long> innovationAreaId = of(innovationArea.getId());
-
         Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);

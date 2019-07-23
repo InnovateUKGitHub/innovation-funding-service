@@ -17,12 +17,12 @@ public class AssessorCountSummaryRestServiceTest extends BaseRestServiceUnitTest
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/assessor-count-summary/find-by-competition-id/1?page=2&size=3";
+        String expectedUrl = "/assessor-count-summary/find-by-competition-id/1?assessorNameFilter=name&page=2&size=3";
         AssessorCountSummaryPageResource pageResource = AssessorCountSummaryPageResourceBuilder.newAssessorCountSummaryPageResource().build();
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorCountSummaryPageResource.class, pageResource, OK);
 
-        AssessorCountSummaryPageResource result = service.getAssessorCountSummariesByCompetitionId(1L, "", 2, 3).getSuccess();
+        AssessorCountSummaryPageResource result = service.getAssessorCountSummariesByCompetitionId(1L, "name", 2, 3).getSuccess();
         assertEquals(pageResource, result);
     }
 }

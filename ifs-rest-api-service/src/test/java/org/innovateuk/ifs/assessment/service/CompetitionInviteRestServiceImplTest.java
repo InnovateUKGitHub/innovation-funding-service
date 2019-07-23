@@ -22,6 +22,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
@@ -129,68 +131,68 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         assertTrue(service.checkExistingUser("hash").getSuccess());
     }
 
-//    @Test
-//    public void getAvailableAssessors() {
-//        long competitionId = 1L;
-//        int page = 1;
-//        String assessorNameFilter = "Test";
-//
-//        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource()
-//                .withName("Test")
-//                .build(2);
-//
-//        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
-//                .withContent(assessorItems)
-//                .build();
-//
-//        setupGetWithRestResultExpectations(
-//                format("%s/%s/%s1?page=1&assessorNameFilter=Test", restUrl, "get-available-assessors", competitionId),
-//                AvailableAssessorPageResource.class,
-//                expected
-//        );
-//
-//        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, assessorNameFilter).getSuccess();
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void getAvailableAssessors_noAssessorNameFilter() {
-//        long competitionId = 1L;
-//        int page = 1;
-//        String assessorNameFilter = "";
-//
-//        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
-//
-//        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
-//                .withContent(assessorItems)
-//                .build();
-//
-//        setupGetWithRestResultExpectations(
-//                format("%s/%s/%s?page=1", restUrl, "get-available-assessors", competitionId),
-//                AvailableAssessorPageResource.class,
-//                expected
-//        );
-//
-//        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, assessorNameFilter).getSuccess();
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void getAvailableAssessors_all() {
-//        long competitionId = 1L;
-//        String assessorNameFilter = "";
-//
-//        List<Long> assessorItems = asList(1L, 2L);
-//
-//        setupGetWithRestResultExpectations(
-//                format("%s/%s/%s?all", restUrl, "get-available-assessors", competitionId),
-//                ParameterizedTypeReferences.longsListType(),
-//                assessorItems
-//        );
-//
-//        List<Long> actual = service.getAvailableAssessorIds(competitionId, assessorNameFilter).getSuccess();
-//        assertEquals(assessorItems, actual);
-//    }
+    @Test
+    public void getAvailableAssessors() {
+        long competitionId = 1L;
+        int page = 1;
+        String assessorNameFilter = "name";
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource()
+                .withName("Test")
+                .build(2);
+
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s1?page=1&assessorNameFilter=name", restUrl, "get-available-assessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, assessorNameFilter).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_noAssessorNameFilter() {
+        long competitionId = 1L;
+        int page = 1;
+        String assessorNameFilter = "name";
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
+
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?assessorNameFilter=name&page=1", restUrl, "get-available-assessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, assessorNameFilter).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_all() {
+        long competitionId = 1L;
+        String assessorNameFilter = "";
+
+        List<Long> assessorItems = asList(1L, 2L);
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?all", restUrl, "get-available-assessors", competitionId),
+                ParameterizedTypeReferences.longsListType(),
+                assessorItems
+        );
+
+        List<Long> actual = service.getAvailableAssessorIds(competitionId, assessorNameFilter).getSuccess();
+        assertEquals(assessorItems, actual);
+    }
 
     @Test
     public void getCreatedInvites() {

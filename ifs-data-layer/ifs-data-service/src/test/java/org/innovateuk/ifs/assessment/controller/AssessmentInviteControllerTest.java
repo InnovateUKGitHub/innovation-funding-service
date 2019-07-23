@@ -391,7 +391,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
     public void getAvailableAssessors() throws Exception {
         int page = 5;
         int pageSize = 30;
-        String assessorFilter = "";
+        String assessorNameFilter = "name";
 
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
@@ -404,46 +404,44 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         Pageable pageable = PageRequest.of(page, pageSize, new Sort(DESC, "lastName"));
-        Optional<Long> innovationArea = of(4L);
 
-        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter))
+        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID)
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(pageSize))
                 .param("sort", "lastName,desc")
-                .param("innovationArea", "4"))
+                .param("assessorNameFilter", assessorNameFilter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter);
     }
 
     @Test
     public void getAvailableAssessors_all() throws Exception {
         List<Long> expectedAvailableAssessorIds = asList(1L, 2L);
 
-        Optional<Long> innovationArea = of(4L);
-        String assessorFilter = "";
+        String assessorNameFilter = "name";
 
-        when(assessmentInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, assessorFilter))
+        when(assessmentInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, assessorNameFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorIds));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID)
                 .param("all", "")
-                .param("innovationArea", "4"))
+                .param("assessorNameFilter", assessorNameFilter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorIds)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, assessorFilter);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, assessorNameFilter);
     }
 
     @Test
     public void getAvailableAssessors_defaultParameters() throws Exception {
         int page = 0;
         int pageSize = 20;
-        String assessorFilter = "";
+        String assessorNameFilter = "";
 
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
@@ -456,16 +454,16 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName", "lastName"));
-        Optional<Long> innovationArea = empty();
 
-        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter))
+        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
-        mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID))
+        mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID)
+                .param("assessorNameFilter", assessorNameFilter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter);
     }
 
     @Test
