@@ -16,7 +16,7 @@ IFS.core.timeoutWarning = (function () {
     init: function () {
       s = this.settings
       var domain = IFS.core.timeoutWarning.getDomain()
-      if (Cookies.get('CSRF-TOKEN')) {
+      if (Cookies.get('CSRF-TOKEN') && domain !== 'ifs.local-dev') {
         // we are logged in so start the inactivity timer
         inactivityCountdown = (s.inactivityTimeoutLength - s.inactivityWarningLength) * 60000 // minutes * milliseconds
         IFS.core.timeoutWarning.startInactivityTimer()
@@ -31,7 +31,7 @@ IFS.core.timeoutWarning = (function () {
           // its the first time on a logged in page so set session timeout cookie
           var date = new Date()
           date.setHours(date.getHours() + s.sessionTimeoutLength)
-          Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain })
+          Cookies.set('SESSION-TIMEOUT', date, { path: '/', domain: domain, expires: 0.35 })
           // and start the session timer
           IFS.core.timeoutWarning.startSessionTimer()
         }
@@ -91,10 +91,10 @@ IFS.core.timeoutWarning = (function () {
       jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden', 'true')
     },
     getDomain: function () {
-      var host = window.location.host
+      var host = window.location.hostname
       var subDomains = host.split('.')
+      var domain = subDomains.slice(-2)
       if (subDomains.length > 2) {
-        var domain = subDomains.slice(-2)
         return domain[0] + '.' + domain[1]
       } else {
         return host // this for local development
