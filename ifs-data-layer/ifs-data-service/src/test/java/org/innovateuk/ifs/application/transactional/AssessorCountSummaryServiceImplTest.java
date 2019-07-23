@@ -53,7 +53,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getSize()).thenReturn(pageSize);
 
         when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId), eq(innovationSectorId), eq(businessType), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("firstName", Sort.Direction.ASC))))
+                eq(competitionId), eq(innovationSectorId), eq(businessType), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("user.firstName", Sort.Direction.ASC))))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =

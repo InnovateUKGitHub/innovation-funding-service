@@ -298,7 +298,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         setUpUserAsCompAdmin(project, user);
 
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
-        assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
+        assertTrue(rules.internalUsersCanApproveOrRejectSignedGrantOfferLetter(project, user));
     }
 
     @Test
@@ -308,7 +308,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserNotAsCompAdmin(project, user);
 
-        assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
+        assertFalse(rules.internalUsersCanApproveOrRejectSignedGrantOfferLetter(project, user));
     }
 
     @Test

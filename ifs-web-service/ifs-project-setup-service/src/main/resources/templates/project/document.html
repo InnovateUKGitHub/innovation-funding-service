@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Documents',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' +model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -90,13 +90,13 @@
         <th:block th:if="${model.isShowSubmitDocumentsButton()}">
             <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
               <div>
-                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton">Submit</button>
+                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton" aria-label="Submit collaboration agreement">Submit</button>
               </div>
             </form>
         </th:block>
 
          <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit</button>
+             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6" aria-label="Submit collaboration agreement">Submit</button>
          </th:block>
 
          <th:block th:if="${!model.isShowSubmitDocumentsButton() && !model.isShowDisabledSubmitDocumentsButton()}">

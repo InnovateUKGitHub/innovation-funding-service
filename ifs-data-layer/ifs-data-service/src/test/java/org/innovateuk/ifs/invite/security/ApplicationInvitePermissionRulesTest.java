@@ -38,6 +38,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     private UserResource collaborator;
     private ApplicationInvite invite;
     private ApplicationInviteResource inviteResource;
+    private ApplicationInviteResource inviteResourceCollab;
     private ApplicationInviteResource inviteResourceLead;
 
     private UserResource otherLeadApplicant;
@@ -63,13 +64,14 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         {
             final Competition competition = newCompetition().build();
             final Organisation organisation = OrganisationBuilder.newOrganisation().build();
-            final Application application = newApplication().withApplicationState(ApplicationState.OPEN).withCompetition(competition).build();
+            final Application application = newApplication().withApplicationState(ApplicationState.OPENED).withCompetition(competition).build();
             final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
             invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
             inviteResource = new ApplicationInviteResource();
             inviteResource.setApplication(application.getId());
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
             inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
+            inviteResourceCollab = newApplicationInviteResource().withApplication(application.getId()).withUsers(collaborator.getId()).build();
             when(inviteOrganisationRepositoryMock.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
@@ -80,7 +82,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         otherLeadApplicant = newUserResource().build();
         otherCollaborator = newUserResource().build();
         {
-            final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPEN).build();
+            final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPENED).build();
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
             final InviteOrganisation otherInviteOrganisation = newInviteOrganisation().withOrganisation(otherOrganisation).build();
             otherInvite = newApplicationInvite().withApplication(otherApplication).withInviteOrganisation(otherInviteOrganisation).build();
@@ -133,10 +135,17 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testLeadApplicantAndNotDeleteOwnInviteToTheApplication() {
-        assertTrue(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, leadApplicant));
-        assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, collaborator));
-        assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResourceLead, leadApplicant));
+    public void leadCanDeleteNotOwnInvite() {
+        assertTrue(rules.leadCanDeleteNotOwnInvite(inviteResource, leadApplicant));
+        assertFalse(rules.leadCanDeleteNotOwnInvite(inviteResource, collaborator));
+        assertFalse(rules.leadCanDeleteNotOwnInvite(inviteResourceLead, leadApplicant));
+    }
+
+    @Test
+    public void collaboratorCanDeleteNotOwnInvite() {
+        assertFalse(rules.collaboratorCanDeleteNotOwnInvite(inviteResource, leadApplicant));
+        assertTrue(rules.collaboratorCanDeleteNotOwnInvite(inviteResource, collaborator));
+        assertFalse(rules.collaboratorCanDeleteNotOwnInvite(inviteResourceCollab, collaborator));
     }
 
     @Test
@@ -150,9 +159,13 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         inviteResource.setInviteOrganisation(inviteOrganisation.getId());
         when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
 
-        assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, leadApplicant));
-        assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResource, collaborator));
-        assertFalse(rules.leadApplicantAndNotDeleteOwnInviteToTheApplication(inviteResourceLead, leadApplicant));
+        assertFalse(rules.leadCanDeleteNotOwnInvite(inviteResource, leadApplicant));
+        assertFalse(rules.leadCanDeleteNotOwnInvite(inviteResource, collaborator));
+        assertFalse(rules.leadCanDeleteNotOwnInvite(inviteResourceLead, leadApplicant));
+
+        assertFalse(rules.collaboratorCanDeleteNotOwnInvite(inviteResource, leadApplicant));
+        assertFalse(rules.collaboratorCanDeleteNotOwnInvite(inviteResource, collaborator));
+        assertFalse(rules.collaboratorCanDeleteNotOwnInvite(inviteResourceLead, leadApplicant));
 
         assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, collaborator));
         assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, leadApplicant));

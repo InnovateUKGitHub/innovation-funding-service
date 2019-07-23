@@ -5,7 +5,7 @@ import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,14 +16,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     private String liveProjectsUrl = "https://live-projects.example.com";
 
@@ -38,7 +38,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
     @Before
     public void setUpCookies() {
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
     }
 
     @Test

@@ -4,12 +4,10 @@ apply plugin: 'org.springframework.boot'
 
 jacocoTestReport {
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/*Mapper**'])
-        })
+        getClassDirectories().setFrom(
+                fileTree(dir: it,
+                        exclude: ['**/*Mapper**']))
     }
-
 }
 
 dependencies {
@@ -19,7 +17,7 @@ dependencies {
     }
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.4.1"
+        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.5"
     }
 
     compile "org.springframework.boot:spring-boot-starter-actuator"

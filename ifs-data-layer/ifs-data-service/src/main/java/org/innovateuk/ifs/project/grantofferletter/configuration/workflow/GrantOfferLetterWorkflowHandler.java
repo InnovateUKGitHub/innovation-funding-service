@@ -106,7 +106,8 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isReadyToApprove(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState());
+        return process != null
+                && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState());
     }
 
     public boolean isSent(Project project) {

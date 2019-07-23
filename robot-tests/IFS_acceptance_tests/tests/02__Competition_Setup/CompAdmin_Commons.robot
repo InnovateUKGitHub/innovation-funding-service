@@ -70,6 +70,7 @@ the user selects the Terms and Conditions
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link = Funding information
+    the user clicks the button/link       jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field  id = funders[0].funder    Aerospace Technology Institute (ATI)
     the user clicks the button/link       id = funders[0].funder
     click element                         id = funders[0].funder__option--0
@@ -77,8 +78,6 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    the user clicks the button/link       jQuery = button:contains("Generate code")
-    sleep  2s  #This sleeps is intended as the competition Code needs some time
     textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
@@ -93,8 +92,7 @@ the user fills in the CS Eligibility
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
-    the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
-    the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
+    the user selects the radio button   resubmission  yes
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
@@ -335,7 +333,6 @@ the user is able to configure the new question
     click element                         css = label[for="question.allowedFileTypes1"]
     the user clicks the button/link       css = label[for="question.allowedFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
-
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -406,7 +403,3 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=GOV.UK
-    Wait For Autosave

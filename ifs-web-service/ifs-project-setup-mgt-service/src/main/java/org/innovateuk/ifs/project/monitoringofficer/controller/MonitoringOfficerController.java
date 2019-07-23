@@ -6,16 +6,16 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerCreateForm;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignRoleViewModel;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -32,9 +32,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -79,9 +80,9 @@ public class MonitoringOfficerController {
 
     @PostMapping("/search-by-email")
     public String searchByEmail(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
-                         BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model) {
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                Model model) {
         if (validationHandler.hasErrors()) {
             return "project/monitoring-officer/search-by-email";
         }
@@ -101,25 +102,37 @@ public class MonitoringOfficerController {
                              Model model) {
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
         if (!userResource.hasRole(MONITORING_OFFICER)) {
-            model.addAttribute(MODEL, monitoringOfficerAssignRoleViewModelPopulator.populate(userId));
+            MonitoringOfficerAssignRoleViewModel viewModel = monitoringOfficerAssignRoleViewModelPopulator.populate(userId);
+            model.addAttribute(MODEL, viewModel);
             model.addAttribute(FORM, new MonitoringOfficerAssignRoleForm());
-            return "project/monitoring-officer/assign-role";
+            if (isNullOrEmpty(viewModel.getPhoneNumber())) {
+                return "project/monitoring-officer/assign-role";
+            }
+            return "project/monitoring-officer/assign-role-without-edit";
         }
         return monitoringOfficerProjectsRedirect(userResource.getId());
     }
 
     @PostMapping("/{userId}/assign-role")
     public String assignRole(@PathVariable long userId,
-                         @Valid @ModelAttribute(FORM) MonitoringOfficerAssignRoleForm form,
-                         BindingResult bindingResult,
-                         ValidationHandler validationHandler,
-                         Model model) {
+                             @Valid @ModelAttribute(FORM) MonitoringOfficerAssignRoleForm form,
+                             BindingResult bindingResult,
+                             ValidationHandler validationHandler,
+                             Model model) {
         if (validationHandler.hasErrors()) {
             model.addAttribute(MODEL, monitoringOfficerAssignRoleViewModelPopulator.populate(userId));
             model.addAttribute(FORM, form);
             return "project/monitoring-officer/assign-role";
         }
+
+        userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
         updateUserPhoneNumber(userId, form.getPhoneNumber());
+
+        return monitoringOfficerProjectsRedirect(userId);
+    }
+
+    @PostMapping("/{userId}/assign-role-without-edit")
+    public String assignRoleWithoutEdit(@PathVariable long userId) {
         userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
 
         return monitoringOfficerProjectsRedirect(userId);
@@ -130,7 +143,7 @@ public class MonitoringOfficerController {
                          Model model) {
         MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
         model.addAttribute("emailAddress", emailAddress);
-        model.addAttribute(FORM , form);
+        model.addAttribute(FORM, form);
         return "project/monitoring-officer/create-new";
     }
 
@@ -142,22 +155,22 @@ public class MonitoringOfficerController {
 
         Supplier<String> failureView = () -> {
             model.addAttribute("emailAddress", form.getEmailAddress());
-            model.addAttribute(FORM , form);
+            model.addAttribute(FORM, form);
             return "project/monitoring-officer/create-new";
         };
 
         return validationHandler
                 .failNowOrSucceedWith(failureView, () -> {
                     MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(form.getFirstName(),
-                                                                                                   form.getLastName(),
-                                                                                                   form.getPhoneNumber(),
-                                                                                                   form.getEmailAddress());
+                            form.getLastName(),
+                            form.getPhoneNumber(),
+                            form.getEmailAddress());
 
-                    RestResult<Void> result =  monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
+                    RestResult<Void> result = monitoringOfficerRegistrationRestService.createMonitoringOfficer(resource);
                     return validationHandler
                             .addAnyErrors(result)
                             .failNowOrSucceedWith(failureView,
-                                                  () -> "redirect:/monitoring-officer/view-all");
+                                    () -> "redirect:/monitoring-officer/view-all");
                 });
     }
 
@@ -203,8 +216,7 @@ public class MonitoringOfficerController {
 
     @GetMapping("/view-all")
     public String viewAll(Model model) {
-        List<MonitoringOfficerAssignmentResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
-        model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate(monitoringOfficers));
+        model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate());
         model.addAttribute(FORM, new MonitoringOfficerViewAllForm());
         return "project/monitoring-officer-view-all";
     }
@@ -212,7 +224,7 @@ public class MonitoringOfficerController {
     @GetMapping("/view-monitoring-officer")
     public String redirectToMoProjectPage(@ModelAttribute("form") MonitoringOfficerViewAllForm form) {
         // required to allow auto complete to send back the data about the selection
-        if(form == null || form.getUserId() == null) {
+        if (form == null || form.getUserId() == null) {
             return "redirect://monitoring-officer/view-all";
         }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="RECORD 02/08/18 10:45:56 AM" enabled="true">
       <stringProp name="TestPlan.comments">This test plan was created by the BlazeMeter converter v.1.1.309. Please contact support@blazemeter.com for further support.</stringProp>
@@ -32,7 +32,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="BASE_URL_1" elementType="Argument">
             <stringProp name="Argument.name">BASE_URL_1</stringProp>
-            <stringProp name="Argument.value">perf.apps.prod.ifs-test-clusters.com</stringProp>
+            <stringProp name="Argument.value">ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="BASE_URL_2" elementType="Argument">
@@ -42,7 +42,7 @@
           </elementProp>
           <elementProp name="BASE_URL_3" elementType="Argument">
             <stringProp name="Argument.name">BASE_URL_3</stringProp>
-            <stringProp name="Argument.value">auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+            <stringProp name="Argument.value">auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -85,7 +85,7 @@
       </CacheManager>
       <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
@@ -130,7 +130,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -186,7 +186,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -242,7 +242,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -283,7 +283,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -324,7 +324,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -365,7 +365,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/17/overview</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/17/overview</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -406,7 +406,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -447,7 +447,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/20/overview</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/20/overview</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -488,7 +488,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/application/create/check-eligibility/20</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/application/create/check-eligibility/20</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -529,7 +529,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/20/overview</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/20/overview</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -570,7 +570,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/application/create/check-eligibility/20</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/application/create/check-eligibility/20</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -607,17 +607,17 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="execution" elementType="HTTPArgument">
@@ -669,7 +669,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -685,7 +685,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -725,7 +725,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -741,7 +741,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -782,7 +782,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -823,7 +823,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/application/164/team</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/application/164/team</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -864,7 +864,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/application/164</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/application/164</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -905,7 +905,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/applicant/dashboard</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/applicant/dashboard</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -942,17 +942,17 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e5s1" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e5s1" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="execution" elementType="HTTPArgument">
@@ -1004,7 +1004,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -1020,7 +1020,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1060,7 +1060,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -1076,7 +1076,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e5s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1117,7 +1117,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/dashboard/live</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/dashboard/live</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1158,7 +1158,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/dashboard/upcoming</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/dashboard/upcoming</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1199,7 +1199,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1251,7 +1251,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1267,7 +1267,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1319,7 +1319,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1335,7 +1335,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1376,7 +1376,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1428,7 +1428,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1444,7 +1444,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1496,7 +1496,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1512,7 +1512,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1564,7 +1564,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1580,7 +1580,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1632,7 +1632,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1648,7 +1648,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1700,7 +1700,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1716,7 +1716,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1768,7 +1768,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1784,7 +1784,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1836,7 +1836,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -1852,7 +1852,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1977,7 +1977,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -1993,7 +1993,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2034,7 +2034,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2075,7 +2075,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/initial</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/initial</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2127,7 +2127,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2143,7 +2143,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2195,7 +2195,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2211,7 +2211,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2263,7 +2263,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2279,7 +2279,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2331,7 +2331,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2347,7 +2347,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2399,7 +2399,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2415,7 +2415,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2456,7 +2456,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2553,7 +2553,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -2569,7 +2569,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2610,7 +2610,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2651,7 +2651,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/additional</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/additional</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2703,7 +2703,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2719,7 +2719,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2771,7 +2771,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2787,7 +2787,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2839,7 +2839,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2855,7 +2855,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2907,7 +2907,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2923,7 +2923,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -2975,7 +2975,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -2991,7 +2991,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3043,7 +3043,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3059,7 +3059,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3111,7 +3111,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3127,7 +3127,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3168,7 +3168,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3220,7 +3220,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3236,7 +3236,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3288,7 +3288,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3304,7 +3304,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3356,7 +3356,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3372,7 +3372,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3424,7 +3424,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3440,7 +3440,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3492,7 +3492,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3508,7 +3508,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3560,7 +3560,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3576,7 +3576,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3628,7 +3628,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3644,7 +3644,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3696,7 +3696,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3712,7 +3712,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3764,7 +3764,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3780,7 +3780,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3832,7 +3832,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3848,7 +3848,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3900,7 +3900,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3916,7 +3916,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3968,7 +3968,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -3984,7 +3984,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4036,7 +4036,7 @@
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -4052,7 +4052,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4093,7 +4093,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4134,7 +4134,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4175,7 +4175,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/detail/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/detail/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4216,7 +4216,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4326,7 +4326,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -4342,7 +4342,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/816/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/816/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4383,7 +4383,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/816/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/816/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4424,7 +4424,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4529,7 +4529,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -4545,7 +4545,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/817/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/817/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4586,7 +4586,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/817/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/817/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4627,7 +4627,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4830,7 +4830,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -4846,7 +4846,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/818/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/818/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4887,7 +4887,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/818/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/818/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4928,7 +4928,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5183,7 +5183,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -5199,7 +5199,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/819/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/819/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5240,7 +5240,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/819/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/819/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5281,7 +5281,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5544,7 +5544,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -5560,7 +5560,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/820/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/820/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5601,7 +5601,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/820/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/820/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5642,7 +5642,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5905,7 +5905,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -5921,7 +5921,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/821/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/821/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -5962,7 +5962,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/821/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/821/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6003,7 +6003,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6260,7 +6260,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -6276,7 +6276,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/823/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/823/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6317,7 +6317,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/823/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/823/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6358,7 +6358,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6635,7 +6635,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -6651,7 +6651,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/822/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/822/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6692,7 +6692,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/822/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/822/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6733,7 +6733,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -6989,7 +6989,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -7005,7 +7005,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/824/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/824/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7046,7 +7046,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/824/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/824/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7087,7 +7087,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7343,7 +7343,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -7359,7 +7359,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/826/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/826/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7400,7 +7400,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/826/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/826/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7441,7 +7441,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7701,7 +7701,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -7717,7 +7717,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/825/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/825/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7758,7 +7758,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/825/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/825/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -7799,7 +7799,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8049,7 +8049,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -8065,7 +8065,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/828/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/828/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8106,7 +8106,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/828/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/828/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8147,7 +8147,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8408,7 +8408,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -8424,7 +8424,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/827/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/827/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8465,7 +8465,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/827/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/827/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8506,7 +8506,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8564,7 +8564,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -8580,7 +8580,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8630,7 +8630,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -8646,7 +8646,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8696,7 +8696,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -8712,7 +8712,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8762,7 +8762,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -8778,7 +8778,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8828,7 +8828,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -8844,7 +8844,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8894,7 +8894,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -8910,7 +8910,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -8968,7 +8968,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -8984,7 +8984,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9025,7 +9025,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/question/finance/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/question/finance/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9066,7 +9066,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9112,7 +9112,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -9128,7 +9128,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/detail/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/detail/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9169,7 +9169,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/detail/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/detail/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9209,7 +9209,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -9225,7 +9225,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9266,7 +9266,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9307,7 +9307,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/application/landing-page</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/application/landing-page</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9357,7 +9357,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -9373,7 +9373,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9423,7 +9423,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -9439,7 +9439,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9489,7 +9489,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -9505,7 +9505,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9569,7 +9569,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -9585,7 +9585,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9626,7 +9626,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9667,7 +9667,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/assessors</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/assessors</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9708,7 +9708,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9784,7 +9784,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -9800,7 +9800,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/search/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/search/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9841,7 +9841,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/search/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/search/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9882,7 +9882,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -9946,7 +9946,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -9962,7 +9962,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/summary/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/summary/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10003,7 +10003,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/summary/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/summary/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10044,7 +10044,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10114,7 +10114,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10130,7 +10130,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10171,7 +10171,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10212,7 +10212,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10253,7 +10253,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10317,7 +10317,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10333,7 +10333,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10374,7 +10374,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/eligibility/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/eligibility/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10415,7 +10415,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10485,7 +10485,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10501,7 +10501,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/scope/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/scope/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10571,7 +10571,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10587,7 +10587,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/scope/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/scope/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10651,7 +10651,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10667,7 +10667,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/scope/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/scope/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10708,7 +10708,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/scope/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/scope/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10749,7 +10749,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10795,7 +10795,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10811,7 +10811,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/dates/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/dates/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10852,7 +10852,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/dates/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/dates/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10893,7 +10893,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -10963,7 +10963,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -10979,7 +10979,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/how-to-apply/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/how-to-apply/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11020,7 +11020,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/how-to-apply/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/how-to-apply/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11061,7 +11061,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11131,7 +11131,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11147,7 +11147,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/supporting-information/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/supporting-information/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11188,7 +11188,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/supporting-information/28/edit</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/supporting-information/28/edit</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11234,7 +11234,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11250,7 +11250,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11291,7 +11291,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11332,7 +11332,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/public-content/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/public-content/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11373,7 +11373,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11413,7 +11413,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11429,7 +11429,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/manage-innovation-leads/find</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/manage-innovation-leads/find</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11469,7 +11469,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11485,7 +11485,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/add-innovation-lead/21</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/add-innovation-lead/21</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11526,7 +11526,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/add-innovation-lead/33</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/add-innovation-lead/33</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11566,7 +11566,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11582,7 +11582,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/manage-innovation-leads/overview</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/manage-innovation-leads/overview</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11623,7 +11623,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/remove-innovation-lead/33</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/remove-innovation-lead/33</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11664,7 +11664,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11705,7 +11705,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/manage-innovation-leads/find</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/manage-innovation-leads/find</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11746,7 +11746,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11829,7 +11829,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -11845,7 +11845,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11886,7 +11886,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11927,7 +11927,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/eligibility</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -11968,7 +11968,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12020,7 +12020,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12036,7 +12036,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12088,7 +12088,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12104,7 +12104,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12156,7 +12156,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12172,7 +12172,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12224,7 +12224,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12240,7 +12240,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12292,7 +12292,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12308,7 +12308,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12360,7 +12360,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12376,7 +12376,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12428,7 +12428,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12444,7 +12444,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12496,7 +12496,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12512,7 +12512,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12564,7 +12564,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12580,7 +12580,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12632,7 +12632,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12648,7 +12648,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12700,7 +12700,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12716,7 +12716,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12768,7 +12768,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12784,7 +12784,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -12836,7 +12836,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="X-CSRF-TOKEN" elementType="Header">
                 <stringProp name="Header.name">X-CSRF-TOKEN</stringProp>
@@ -12852,7 +12852,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -13330,7 +13330,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -13346,7 +13346,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -13387,7 +13387,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -13428,7 +13428,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/section/milestones</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/section/milestones</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -13469,7 +13469,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/management/competition/setup/28/</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/management/competition/setup/28/</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -13481,9 +13481,5 @@ Does it meet the scope of the competition as defined in the competition brief?</
         </hashTree>
       </hashTree>
     </hashTree>
-    <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">
-      <boolProp name="WorkBench.save">true</boolProp>
-    </WorkBench>
-    <hashTree/>
   </hashTree>
 </jmeterTestPlan>

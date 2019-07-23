@@ -45,7 +45,7 @@ Academic finance calculations
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]    Upload
+    [Tags]
     Given the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
     Then the user clicks the button/link          css = button[name="remove_jes"]
     When the academic partner uploads a file      ${too_large_pdf}
@@ -54,7 +54,7 @@ Large pdf upload not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
-    [Tags]    Upload
+    [Tags]
     When the academic partner uploads a file               ${text_file}
     Then the user should see a field and summary error     ${wrong_filetype_validation_error}
 
@@ -75,13 +75,7 @@ Academics upload
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
-
-Academic partner can view the file on the finances
-    [Documentation]    INFUND-917
-    [Tags]
-    When the user opens the link in new window  ${5mb_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                                  ${5mb_pdf}
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917

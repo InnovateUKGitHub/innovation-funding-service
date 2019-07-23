@@ -20,6 +20,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-8065 File download links are broken for assessors
 ...
 ...               IFS-2854 Allow assessors to see full application finances
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
@@ -35,7 +37,7 @@ Assessment overview should show all the questions
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]  MySQL
+    [Tags]
     Given the user should see the element  jQuery = .sub-header:contains("days left to submit")
     #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
@@ -74,18 +76,27 @@ Project details sections should not be scorable
 
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
-    [Tags]
     Given the user should see assessment question details
     [Teardown]  the user clicks the button/link   link = Back to your assessment overview
+
+Assessor should see terms and conditions question
+    [Documentation]  IFS-5920
+    [Tags]
+    Given the terms and condition question should not be scorable
+    Then the user should see read only view of terms and conditions
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 8 KB
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
-    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 8 KB
+    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
+    And the user closes the last opened tab
+    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
+    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB
+    And the user closes the last opened tab
     When the user clicks the button/link         jQuery = a:contains("6. Innovation")
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
+    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user closes the last opened tab
 
 Scope: Validations
     [Documentation]  IFS-508
@@ -102,6 +113,7 @@ Scope: Status in the overview is updated
     When the user selects the index from the drop-down menu  1    css = .research-category
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
+    And Wait for autosave
     Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
     And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
@@ -167,7 +179,7 @@ Economic Benefit: Guidance
 
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
-    [Tags]  MySQL
+    [Tags]
     Given the user should see finance overview
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page
@@ -261,10 +273,11 @@ the user fills in rejection details
 
 the uesr should see assessment overview details
     the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
-    And the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And The user should see the element      jQuery = h2:contains("Project details")
-    And The user should see the element      jQuery = h2:contains("Application questions")
-    And The user should see the element      jQuery = h2:contains("Finances")
+    the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    the user should see the element      jQuery = h2:contains("Project details")
+    the user should see the element      jQuery = h2:contains("Application questions")
+    the user should see the element      jQuery = h2:contains("Finances")
+    the user should see the element      jQuery = h2:contains("Terms and conditions")
 
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation
@@ -278,7 +291,7 @@ the user navigate to previous pages
 
 Application detail section should not be scorable
     the user clicks the button/link        link = Application details
-    the user should see the element        jQuery = h3:contains("Project title")
+    the user should see the element        jQuery = h2:contains("Project title")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
 
@@ -335,3 +348,15 @@ the users should see detailed finance overview
     the user clicks the button/link         link = Back to funding
     the user clicks the button/link         jQuery = th:contains("University of Bath") a:contains("View finances")
     the academic finances are correct
+
+the terms and condition question should not be scorable
+    the user should see the element         jQuery = ul li:contains("Award terms and conditions") .task-status:contains("No score required")
+    the user clicks the button/link         link = Award terms and conditions
+    the user should not see the element     jQuery = label:contains("Question score")
+
+the user should see read only view of terms and conditions
+    the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should not see the element     jQuery = button:contains("Agree and continue")
+    the user should not see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user should not see the element     link = Return to application overview
+    the user clicks the button/link         link = Back to your assessment overview

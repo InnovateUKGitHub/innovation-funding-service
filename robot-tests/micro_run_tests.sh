@@ -126,12 +126,6 @@ function startPybot() {
       else
         local excludeBespokeTags=''
     fi
-    if [[ ${emails} -eq 1 ]]
-      then
-        local emailsString='--exclude Email'
-      else
-        local emailsString=''
-    fi
     if [[ ${rerunFailed} -eq 1 ]]; then
       local rerunString='--rerunfailed target/${targetDir}/output.xml --output rerun.xml'
     else
@@ -151,7 +145,7 @@ function startPybot() {
     fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
+    python3 -m robot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -167,7 +161,7 @@ function startPybot() {
     $includeBespokeTags \
     $excludeBespokeTags \
     $includeEuTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
+    --exclude Failing --exclude Pending --name ${targetDir} ${1} &
 }
 
 function runTests() {
@@ -196,7 +190,7 @@ function runTests() {
 function deleteEmails() {
     section "=> SCRUBBING DOWN THE TEST MAILBOXES"
     cd ${scriptDir}
-    pybot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
+    python3 -m robot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v local_imap:'ifs.local-dev' \
     -v local_imap_port:9876  \
@@ -266,7 +260,7 @@ webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="ifs.local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
-baseFileStorage="/mnt/ifs_storage"
+baseFileStorage="/tmp"
 storedFileFolder="${baseFileStorage}/ifs/"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
@@ -307,7 +301,6 @@ unset useBespokeIncludeTag
 unset useBespokeExcludeTag
 
 quickTest=0
-emails=0
 rerunFailed=0
 stopGrid=0
 showZapReport=0
@@ -327,9 +320,6 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :o" opt ; do
         ;;
         t)
             testScrub=1
-        ;;
-        e)
-            emails=1
         ;;
         r)
 		    rerunFailed=1

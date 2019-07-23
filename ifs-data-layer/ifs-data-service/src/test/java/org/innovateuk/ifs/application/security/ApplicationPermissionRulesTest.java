@@ -113,7 +113,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
         processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).build();
         processRole2 = newProcessRole().withRole(Role.APPLICANT).build();
-        applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPEN).build();
+        applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withCompetition(competition).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
@@ -224,7 +224,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void monitoringOfficerCanSeeApplicationFinanceTotals() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -250,7 +250,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         ApplicationResource applicationResource = newApplicationResource().build();
 

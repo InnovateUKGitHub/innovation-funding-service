@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 
 import java.util.List;
@@ -13,8 +13,6 @@ import java.util.List;
 public interface CompetitionPostSubmissionRestService {
 
     RestResult<Void> releaseFeedback(long competitionId);
-
-    RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
     RestResult<List<CompetitionOpenQueryResource>> getCompetitionOpenQueries(long competitionId);
 

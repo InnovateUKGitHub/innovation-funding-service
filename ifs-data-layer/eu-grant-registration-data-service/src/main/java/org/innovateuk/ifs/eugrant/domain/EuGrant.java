@@ -25,15 +25,15 @@ public class EuGrant {
     private UUID id;
 
     @JoinColumn(name = "eu_organisation_id")
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private EuOrganisation organisation;
 
     @JoinColumn(name = "eu_contact_id")
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private EuContact contact;
 
     @JoinColumn(name = "eu_funding_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private EuFunding funding;
 
     private boolean submitted;

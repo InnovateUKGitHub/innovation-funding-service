@@ -62,7 +62,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.leadPartner = leadPartner;
         this.hasCompaniesHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
-        this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
+        this.monitoringOfficerName = monitoringOfficerResource.map(MonitoringOfficerResource::getFullName).orElse("");
         this.organisationId = organisation.getId();
         this.sectionAccesses = sectionAccesses;
         this.sectionStatuses = sectionStatuses;
@@ -109,7 +109,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isNonLeadPartner() {
-        return !isLeadPartner();
+        return !leadPartner;
     }
 
     public SectionAccess getCompaniesHouseSection() {
@@ -118,6 +118,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public SectionAccess getProjectDetailsSection() {
         return sectionAccesses.getProjectDetailsSection();
+    }
+
+    public SectionAccess getProjectTeamSection() {
+        return sectionAccesses.getProjectTeamSection();
     }
 
     public SectionAccess getMonitoringOfficerSection() {
@@ -144,7 +148,13 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionAccesses.getGrantOfferLetterSection();
     }
 
-    public SectionStatus getProjectDetailsStatus() { return sectionStatuses.getProjectDetailsStatus(); }
+    public SectionStatus getProjectDetailsStatus() {
+        return sectionStatuses.getProjectDetailsStatus();
+    }
+
+    public SectionStatus getProjectTeamStatus() {
+        return sectionStatuses.getProjectTeamStatus();
+    }
 
     public SectionStatus getMonitoringOfficerStatus() {
         return sectionStatuses.getMonitoringOfficerStatus();

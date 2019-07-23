@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
@@ -124,7 +125,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
 
-        ProjectResource project = projectBuilder.build();
+        ProjectResource project = projectBuilder.withProjectState(SETUP).build();
 
         boolean existingMonitoringOfficer = true;
 

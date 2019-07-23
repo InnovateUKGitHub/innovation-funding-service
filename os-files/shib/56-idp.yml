@@ -72,7 +72,7 @@ items:
           - name: LDAP_URL
             value: "${LDAP_URL}"
           - name: LDAP_PORT
-            value: "389"
+            value: "8389"
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL
@@ -123,7 +123,7 @@ items:
   metadata:
     name: idp
     annotations:
-      haproxy.router.openshift.io/balance: source
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: ${SHIB_IDP_ADDRESS}
     port:

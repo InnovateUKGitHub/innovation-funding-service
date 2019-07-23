@@ -3709,7 +3709,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e2s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3765,7 +3765,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3822,7 +3822,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=39</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3864,7 +3864,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -3906,7 +3906,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://perf.apps.prod.ifs-test-clusters.com/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
+                <stringProp name="Header.value">https://ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/competition/search?keywords=data&amp;innovationAreaId=</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4036,7 +4036,7 @@ hello world</stringProp>
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Origin" elementType="Header">
                 <stringProp name="Header.name">Origin</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org</stringProp>
               </elementProp>
               <elementProp name="Upgrade-Insecure-Requests" elementType="Header">
                 <stringProp name="Header.name">Upgrade-Insecure-Requests</stringProp>
@@ -4052,7 +4052,7 @@ hello world</stringProp>
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://auth-perf.apps.prod.ifs-test-clusters.com/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
+                <stringProp name="Header.value">https://auth-ifs-perf.apps.org-env-0.org.innovateuk.ukri.org/idp/profile/SAML2/Redirect/SSO?execution=e3s1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -4482,24 +4482,6 @@ hello world</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Innovation Area" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/management/competition/setup/getInnovationArea/50</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">

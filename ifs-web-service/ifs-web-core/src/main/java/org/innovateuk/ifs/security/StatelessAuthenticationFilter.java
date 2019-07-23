@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,7 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Value("${management.endpoints.web.base-path}")
     private String monitoringEndpoint;
@@ -80,7 +80,6 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
                         uri.startsWith("/css/") ||
                         uri.startsWith("/images/") ||
                         uri.equals("/favicon.ico") ||
-                        uri.startsWith("/prototypes") ||
                         uri.startsWith("/error")
         );
     }

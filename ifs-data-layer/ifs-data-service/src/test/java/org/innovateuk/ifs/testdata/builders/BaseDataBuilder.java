@@ -60,6 +60,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
@@ -153,6 +154,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
+    protected ProjectStateService projectStateService;
     protected ProjectDetailsService projectDetailsService;
     protected LegacyMonitoringOfficerService monitoringOfficerService;
     protected FinanceRowCostsService financeRowCostsService;
@@ -243,6 +245,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         projectService = serviceLocator.getBean(ProjectService.class);
+        projectStateService = serviceLocator.getBean(ProjectStateService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);

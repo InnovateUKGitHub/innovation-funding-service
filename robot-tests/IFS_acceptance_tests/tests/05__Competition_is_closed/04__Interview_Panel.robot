@@ -68,6 +68,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3541 Assign applications to interview panel - Edit and resend invite
 ...
 ...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
@@ -209,11 +211,11 @@ Assessor can view the list of allocated applications
     And the user should see the element      jQuery = h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
     And an assessor can view feedback overview of an application
 
-Assessor marks appplications as successful and releases competition feedback
+CompAdmin marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
     [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page       ${SERVER}/management/competition/18/funding
+    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
     Then the user marks applications as successful and send funding decision email
     And the user clicks the button/link       css = button[type="submit"]  #Release feedback
 
@@ -358,7 +360,7 @@ the comp admin send invites to the assessors
     the user should see the element         jQuery = label:contains("Subject") ~ input[value = "Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     the user enters text to a text field    css = .editor   Additional message
     the user clicks the button/link         css = button[type="submit"]   #Send invite
-    the user navigates to the page          ${server}/management/assessment/interview/competition/18/assessors/pending-and-declined
+    the user navigates to the page          ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
     the user should see the element         jQuery = td:contains("${assessor_ben}") ~ td:contains("Awaiting response")
     the user should see the element         jQuery = td:contains("${assessor_joel}") ~ td:contains("Awaiting response")
 
@@ -460,6 +462,7 @@ an assessor can view feedback overview of an application
     the user clicks the button/link     link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     the user should see the element     jQuery = h1:contains("Feedback overview")
     the user should see the element     jQuery = .message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+    assessor should see the competition terms and conditions     Interview
 
 Custom suite teardown
     Disconnect from database

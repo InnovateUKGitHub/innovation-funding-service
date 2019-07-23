@@ -39,20 +39,11 @@ Live competition calculations
     And the total calculation in dashboard should be correct     Inform    //section[5]/ul/li
     And the total calculation in dashboard should be correct     Live    //section/ul/li
 
-Project setup Competitions
+Project setup Competitions and Calculations
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176
-    When the user clicks the button/link       jQuery = a:contains(Project setup)
-    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    Then the user should see the element       jQuery = .govuk-heading-m:contains("Project setup ")
-    And the user should see the element        link = ${PROJECT_SETUP_COMPETITION_NAME}
-    And the user should see the element        jQuery =.govuk-body:contains("3 projects")
-    And the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
-    # this step verifies that the ready to open competitions are not visible in other tabs
-
-Project setup competition calculations
-    [Documentation]    INFUND-3831
-    Then the total calculation in dashboard should be correct    Project setup    //section[1]/ul/li
-    And the total calculation in dashboard should be correct     Project setup    //section/ul/li
+    Given the user clicks the button/link       jQuery = a:contains(Project setup)
+    Then the user should see competitions in project set up
+    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
@@ -88,7 +79,7 @@ Upcoming competitions calculations
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]
     Given the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When update milestone to yesterday       ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     When the user navigates to the page      ${CA_Live}
@@ -126,6 +117,38 @@ Non IFS competitions do not appear in search results
     Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME}
 
 *** Keywords ***
+The user should see competitions in project set up
+    # We have used the JQuery selector for the link because the title will change according to the competitions number
+    the user should see the element       jQuery = .govuk-heading-m:contains("Project setup ")
+    the user should see the element        link = ${PROJECT_SETUP_COMPETITION_NAME}
+    the user should see the element        jQuery =.govuk-body:contains("3 projects")
+    the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
+    # this step verifies that the ready to open competitions are not visible in other tabs
+
+The Project set up dashboard calculations should be correct
+    [Arguments]    ${comp_List_Locator}   ${TEXT}   ${Section_Xpath}
+    ${pagination} =   Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  name = page
+    run keyword if  ${pagination} == 'PASS'  Check number of competitions on both pages  ${comp_List_Locator}  ${TEXT}  ${Section_Xpath}
+    run keyword if  ${pagination} == 'FAIL'  Check number of competitions on one page  ${comp_List_Locator}  ${TEXT}  ${Section_Xpath}
+
+Check number of competitions on one page
+    [Arguments]   ${comp_List_Locator}  ${TEXT}   ${Section_Xpath}
+    ${NO_OF_COMP_OR_APPL} =  Get Element Count    ${Section_Xpath}
+    ${element} =  Get Webelements      ${comp_List_Locator}
+    ${length_list} =  Get Length       ${element}
+    Should Be Equal As Integers    ${NO_OF_COMP_OR_APPL}    ${length_list}
+
+Check number of competitions on both pages
+    [Arguments]    ${comp_List_Locator}  ${TEXT}   ${Section_Xpath}
+    ${NO_OF_COMP_OR_APPL} =  Get Element Count    ${Section_Xpath}
+    ${element_page_two} =    Get Webelements    ${comp_List_Locator}
+    ${length_list_page_two} =    Get Length    ${element_page_two}
+    the user clicks the button/link    link = Next
+    ${element} =  Get Webelements    ${comp_List_Locator}
+    ${length_list} =  Get Length    ${element}
+    ${total_length} =  Evaluate    ${length_list}}+${length_list_page_two}
+    Should Be Equal As Integers    ${NO_OF_COMP_OR_APPL}   ${total_length}
+
 Custom suite setup
     Connect to Database  @{database}
     The user logs-in in new browser  &{Comp_admin1_credentials}

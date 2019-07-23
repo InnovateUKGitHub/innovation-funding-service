@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Post a new query for ${model.organisationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="govuk-template__body competition-management project-management query-form">
@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Post a new query for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
         <h2 class="govuk-heading-m">Finance Contact</h2>
         <p class="govuk-body">
             <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
@@ -115,8 +115,12 @@
                         <h3 class="govuk-heading-s">Supporting documentation</h3>
                         <ul class="govuk-list">
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
-                                <span class="govuk-body"> (opens in a new window)</span>
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
+                                   th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                   class="govuk-link"
+                                   target="_blank"
+                                   aria-describedby="supporting-documentation-hint">filename</a>
+                                <span id="supporting-documentation-hint" class="govuk-body">(opens in a new window)</span>
                                 <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button>
                             </li>
                         </ul>

@@ -57,6 +57,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -175,6 +176,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
         when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(rtoOrganisationTypeResource));
+
+        when(organisationService.getLeadOrganisation(anyLong(), anyList())).thenReturn(new OrganisationResource());
+
     }
 
     public void setupCompetition() {
@@ -277,13 +281,17 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         SectionResource sectionResource11 = sectionResourceBuilder.with(id(11L)).with(name("Finances overview")).withPriority(11)
                 .withType(SectionType.OVERVIEW_FINANCES).build();
 
+        QuestionResource termsAndConditionsQuestion = setupQuestionResource(40L, "terms", questionResourceBuilder);
+        SectionResource termsAndConditionsSection = newSectionResource()
+                .withType(TERMS_AND_CONDITIONS).withQuestions(singletonList(termsAndConditionsQuestion.getId())).build();
+
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
                 sectionResource10.getId()));
 
         sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4,
                 sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9,
-                sectionResource10, sectionResource11);
+                sectionResource10, sectionResource11, termsAndConditionsSection);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -360,6 +368,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(new ArrayList<>()));
+
+        when(sectionService.getTermsAndConditionsSection(competitionResource.getId())).thenReturn(termsAndConditionsSection);
     }
 
     public void setupApplicationWithRoles() {
@@ -388,9 +398,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         .withApplicationState(ApplicationState.CREATED).withResearchCategory
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
-
-        Map<Long, ApplicationResource> idsToApplicationResources = applications.stream().collect(toMap(a -> a.getId()
-                , a -> a));
 
         Role role1 = Role.LEADAPPLICANT;
         Role role2 = Role.COLLABORATOR;
@@ -466,7 +473,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
-        when(sectionService.getInCompleted(applications.get(0).getId())).thenReturn(asList(3L, 4L));
         when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole1));
         when(userRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
@@ -523,11 +529,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn
                 (Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0).getId())).thenReturn(processRole1);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1).getId())).thenReturn(processRole2);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2).getId())).thenReturn(processRole3);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
+        when(userService.getLeadApplicantProcessRole(applications.get(0).getId())).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRole(applications.get(1).getId())).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRole(applications.get(2).getId())).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRole(applications.get(3).getId())).thenReturn(processRole4);
+        when(userService.getLeadApplicantProcessRole(applications.get(4).getId())).thenReturn(processRole11);
 
         when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 

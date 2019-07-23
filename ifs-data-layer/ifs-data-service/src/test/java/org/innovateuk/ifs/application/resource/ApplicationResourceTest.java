@@ -27,7 +27,7 @@ public class ApplicationResourceTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationState = ApplicationState.OPEN;
+        applicationState = ApplicationState.OPENED;
         competition = new Competition();
         competition.setId(1L);
 

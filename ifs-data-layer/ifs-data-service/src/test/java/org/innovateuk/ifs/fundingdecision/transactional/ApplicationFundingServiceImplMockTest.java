@@ -259,8 +259,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Test
     public void testSaveFundingDecisionData() {
     	
-    	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
-     	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPEN).build();
+    	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
+     	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
     	when(applicationRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
@@ -270,8 +270,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	assertTrue(result.isSuccess());
     	verify(applicationRepositoryMock).findByCompetitionId(competition.getId());
-    	assertEquals(ApplicationState.OPEN, application1.getApplicationProcess().getProcessState());
-    	assertEquals(ApplicationState.OPEN, application2.getApplicationProcess().getProcessState());
+    	assertEquals(ApplicationState.OPENED, application1.getApplicationProcess().getProcessState());
+    	assertEquals(ApplicationState.OPENED, application2.getApplicationProcess().getProcessState());
     	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
     	assertEquals(FundingDecisionStatus.UNFUNDED, application2.getFundingDecision());
     	assertNull(competition.getFundersPanelEndDate());
@@ -282,7 +282,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Long applicationId = 1L;
         Long competitionId = competition.getId();
-        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
@@ -304,7 +304,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 .withId(applicationId)
                 .withCompetition(competition)
                 .withFundingDecision(FundingDecisionStatus.UNDECIDED)
-                .withApplicationState(ApplicationState.OPEN)
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
 
         when(applicationRepositoryMock.findByCompetitionId(competitionId))
@@ -331,7 +331,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     public void testSaveFundingDecisionDataWontResetEmailDateForSameDecision() {
         Long applicationId = 1L;
         Long competitionId = competition.getId();
-        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 

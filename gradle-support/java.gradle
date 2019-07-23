@@ -7,12 +7,10 @@ targetCompatibility = 1.8
 
 jacocoTestReport {
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/*Mapper**'])
-        })
+        getClassDirectories().setFrom(
+                fileTree(dir: it,
+                        exclude: ['**/*Mapper**']))
     }
-
 }
 
 test {
@@ -55,7 +53,7 @@ dependencies {
 
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.21.0"
-    testCompile "net.bytebuddy:byte-buddy:1.8.16"
+    testCompile "net.bytebuddy:byte-buddy:1.9.11"
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }

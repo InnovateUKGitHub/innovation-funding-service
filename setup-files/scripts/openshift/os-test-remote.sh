@@ -28,7 +28,11 @@ function tailorToAppInstance() {
     cp -r robot-tests robot-tests-tmp
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/os_run_tests.sh
-    sed -i.bak "s#\[\"./os_run_tests.sh\", \"-q\"\]#[\"./os_run_tests.sh\", \"-q\", $ROBOT_COMMAND]#g" robot-tests-tmp/Dockerfile
+
+    if [[  ! -z "${ROBOT_COMMAND}" ]]; then
+      ROBOT_COMMAND=" "$ROBOT_COMMAND;
+      sed -i.bak "s#./os_run_tests.sh\ -q#./os_run_tests.sh\ -q$ROBOT_COMMAND#g" robot-tests-tmp/Dockerfile
+    fi
 }
 
 function cleanUp() {
@@ -37,7 +41,15 @@ function cleanUp() {
 }
 
 function buildAndPushTestImages() {
-    docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
+    docker build --build-arg GID=${System_env_bamboo_gluster_GID} \
+                 --build-arg UID=${System_env_bamboo_gluster_UID} \
+                 --build-arg PW=${System_env_bamboo_gluster_user_password} \
+                 --build-arg BAMBOO_CREDS_ARG=${bamboo_creds_secret} \
+                 --build-arg BAMBOO_URL_ARG=${bamboo_queue_url} \
+                 --build-arg BAMBOO_PLAN_PROJ_ARG=${bamboo_planKey} \
+                 --build-arg BAMBOO_BUILD_NO_ARG=${bamboo_buildNumber} \
+                 -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
+
     docker login -p ${SVC_ACCOUNT_TOKEN} -u unused ${REGISTRY}
     docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
@@ -55,13 +67,9 @@ function deployTests() {
     done
 }
 
-function fileFixtures() {
-    chmod +x robot-tests/openshift/addtestFiles.sh
-    ./robot-tests/openshift/addtestFiles.sh "${SVC_ACCOUNT_CLAUSE}"
-}
-
 function copyNecessaryFiles() {
     cp -r ifs-data-layer/ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
+    cp -r setup-files/scripts/docker/set-umask0002.sh robot-tests-tmp/set-umask0002.sh
 }
 
 function navigateToRoot(){
@@ -74,7 +82,6 @@ function navigateToRoot(){
 navigateToRoot
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
-fileFixtures
 tailorToAppInstance
 copyNecessaryFiles
 buildAndPushTestImages
@@ -84,3 +91,4 @@ cleanUp
 echo ""
 echo "Tests are running now. You can follow the progress with the following command:"
 echo "oc logs -f $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep robot-framework-1- | grep -v deploy | awk '{ print $1 }')"
+

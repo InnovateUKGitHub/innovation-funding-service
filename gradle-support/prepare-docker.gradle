@@ -1,22 +1,24 @@
+import org.apache.tools.ant.filters.ReplaceTokens
 
 apply from: rootProject.file("gradle-support/new-relic.gradle")
-
 /**
  * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
  * where it will write all the necessary files to build a docker container.
  * In other words, after this task is executed, one could manually run `docker build .`
  * in the output directory.
  */
-
 ext.dockerDir = "docker/"
 
 task prepareDockerBaseInput {
     dependsOn build
-    def inputDir = "$project.buildDir/docker"
-    def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
-    def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
 
-    inputs.file("$project.buildDir/libs/$executableJarFile")
+    def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
+    def inputDir = "$project.buildDir/docker"
+    def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
+    def libs = "$project.buildDir/libs"
+    String gid = System.env.bamboo_gluster_GID ?: "993"
+    String uid = System.env.bamboo_gluster_UID ?: "996"
+    String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
     outputs.files(
             project.file("$inputDir/Dockerfile"),
@@ -25,35 +27,31 @@ task prepareDockerBaseInput {
 
     doFirst {
         copy {
-            from dockerDir
+            from file(dockerDir)
             into project.file(inputDir)
-
-            include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter {
-                it.replaceAll('@version@', project.properties['version'])
-                        .replaceAll('@app_name@', jar.baseName)
-                        .replaceAll('@server_context@', project.properties['serverContext'] ?: '')
-            }
+            filter(ReplaceTokens, tokens: ['version': project.properties['version']])
+            filter(ReplaceTokens, tokens: ['app_name': jar.baseName])
+            filter(ReplaceTokens, tokens: ['server_context': project.properties['serverContext'] ?: ''])
+            filter(ReplaceTokens, tokens: ['glusterGID': gid])
+            filter(ReplaceTokens, tokens: ['glusterUID': uid])
+            filter(ReplaceTokens, tokens: ['glusterUserPassword': userPassword])
         }
         copy {
-            from("$project.buildDir/libs")
+            from file("$libs/$executableJarFile")
             into project.file(inputDir)
-            include(executableJarFile)
-            rename (executableJarFile, jarFile)
-            into project.file(inputDir)
+            rename(executableJarFile, jarFile)
         }
     }
 }
 
-
 task prepareDockerInput {
+    dependsOn build
     dependsOn prepareDockerBaseInput
     dependsOn getNewRelicAgent
 
     def currentFilePath = "${rootProject.projectDir}/setup-files/scripts/docker"
     def inputDir = "$project.buildDir/docker"
-
     outputs.files(
             project.file("$inputDir/coscale-monitoring.sh"),
             project.file("$inputDir/newrelic.jar"),
@@ -65,6 +63,7 @@ task prepareDockerInput {
             from file("$currentFilePath/coscale-monitoring.sh")
             from file("$currentFilePath/newrelic.jar")
             from file("$currentFilePath/newrelic.yml")
+            from file("$currentFilePath/set-umask0002.sh")
             into file(inputDir)
         }
     }

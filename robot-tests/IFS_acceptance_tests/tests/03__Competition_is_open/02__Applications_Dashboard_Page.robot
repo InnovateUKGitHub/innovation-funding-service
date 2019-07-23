@@ -119,11 +119,15 @@ Comp admin can open the view mode of the application
     And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
     And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
 
-    And the user can view this file without any errors
-    And the user closes the last opened tab
+    And open pdf link                                                      ${5mb_pdf}, 4 MB
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
     # TODO when working on Guarantined files. Variable has been removed
+
+Comp admin can link to the comp page from application overview
+    [Documentation]  IFS-6060
+    Given the user clicks the button/link  link = ${openCompetitionRTO_name}
+    Then the user should be redirected to the correct page                 ${server}/management/competition/${openCompetitionRTO}
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
@@ -155,12 +159,12 @@ the user can see the option to upload a file on the page
     the user should see the element             jQuery = label:contains("Upload")
 
 the user can view this file without any errors
-    The user opens the link in new window    ${5mb_pdf}, 4 MB
+    the user clicks the button/link    ${5mb_pdf}, 4 MB
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message
     [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
-    The user opens the link in new window       test_quarantine.pdf, 7 KB
+    the user clicks the button/link       test_quarantine.pdf, 7 KB
     the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}
 

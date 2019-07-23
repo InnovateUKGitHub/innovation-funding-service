@@ -30,12 +30,14 @@ the assessor adds score and feedback for every question
     The user selects the index from the drop-down menu    1    css = .research-category
     The user clicks the button/link                       jQuery = label:contains("Yes")
     The user enters text to a text field                  css = .editor    Testing scope feedback text
+    Wait for autosave
     mouse out  css = .editor
     Wait Until Page Contains Without Screenshots          Saved!
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
       \    the user clicks the button/link    css = .next
       \    The user selects the option from the drop-down menu    10    css = .assessor-question-score
       \    The user enters text to a text field    css = .editor    Testing feedback text
+      \    Wait for autosave
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link               jquery = button:contains("Save and return to assessment overview")
@@ -109,3 +111,9 @@ comp admin navigate to manage applications
     the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
     the user clicks the button/link       jQuery = a:contains("Manage assessments")
     the user clicks the button/link       jQuery = a:contains("Manage applications")
+
+assessor should see the competition terms and conditions
+    [Arguments]  ${back_link}
+    Given the user clicks the button/link        link = View award terms and conditions
+    Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    [Teardown]  the user clicks the button/link  link = ${back_link}

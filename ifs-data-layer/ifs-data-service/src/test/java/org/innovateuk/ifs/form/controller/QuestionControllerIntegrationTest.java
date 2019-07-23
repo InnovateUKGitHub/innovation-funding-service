@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @Rollback
 public class QuestionControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionController> {
 
-    public static final List<Long> QUESTION_LIST = asList(248L, 9L, 249L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L);
+    private static final List<Long> QUESTION_LIST = asList(248L, 9L, 249L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L, 269L);
 
     @Autowired
     private FormInputRepository formInputRepository;
@@ -40,10 +40,10 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Autowired
     private QuestionMapper questionMapper;
 
-    private final Long questionId = 13L;
+    private static final long questionId = 13L;
     private QuestionResource questionResource;
     private Question question;
-    private Long competitionId = 1L;
+    private static final long competitionId = 1L;
 
     @Before
     public void setup(){
@@ -61,7 +61,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionById() throws Exception {
+    public void testGetQuestionById() {
         questionResource = controller.getQuestionById(questionId).getSuccess();
 
         assertNotNull(questionResource);
@@ -69,7 +69,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionByIdRemovesInactiveFormInputs() throws Exception {
+    public void testGetQuestionByIdRemovesInactiveFormInputs() {
         //Create an inactive form input for the question.
         Question question = questionRepository.findById(questionId).get();
         FormInputBuilder baseInput = newFormInput()
@@ -92,7 +92,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testFindByCompetition() throws Exception {
+    public void testFindByCompetition() {
         List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
 
         assertNotNull(questions);
@@ -100,14 +100,14 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetNextQuestion() throws Exception {
+    public void testGetNextQuestion() {
         QuestionResource nextQuestion = controller.getNextQuestion(12L).getSuccess();
         assertNotNull(nextQuestion);
         assertEquals(new Long(13L), nextQuestion.getId());
     }
 
     @Test
-    public void testGetPreviousQuestion() throws Exception {
+    public void testGetPreviousQuestion() {
         QuestionResource previousQuestion = controller.getPreviousQuestion(12L).getSuccess();
 
         assertNotNull(previousQuestion);
@@ -115,23 +115,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetPreviousQuestionBySection() throws Exception {
-        QuestionResource previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccess();
-        assertNotNull(previousQuestion);
-        assertNotNull(previousQuestion.getId());
-        assertEquals(16L , previousQuestion.getId().longValue());
-    }
-
-    @Test
-    public void testGetNextQuestionBySection() throws Exception {
-        QuestionResource nextQuestion = controller.getNextQuestionBySection(10L).getSuccess();
-        assertNotNull(nextQuestion);
-        assertNotNull(nextQuestion.getId());
-        assertEquals(40L, nextQuestion.getId().longValue());
-    }
-
-    @Test
-    public void testGetQuestionByIdAndAssessmentId() throws Exception {
+    public void testGetQuestionByIdAndAssessmentId() {
         loginFelixWilson();
         Long questionId = 1L;
         Long assessmentId = 7L;
@@ -141,7 +125,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionsByAssessmentId() throws Exception {
+    public void testGetQuestionsByAssessmentId() {
         loginFelixWilson();
         Long assessmentId = 7L;
 

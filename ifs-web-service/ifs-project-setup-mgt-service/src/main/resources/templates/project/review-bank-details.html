@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Review bank details|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body competition-management project-management review-bank-details">
 
@@ -21,7 +21,7 @@
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review bank details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
                 </div>
                 <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                     <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
@@ -90,7 +90,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="govuk-grid-row govuk-!-margin-top-6" th:unless="${model.approved}">
+            <div class="govuk-grid-row govuk-!-margin-top-6" th:if="${model.isEditable()}">
                 <div class="govuk-grid-column-one-half">
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-body govuk-link">Change bank account details</a>
                 </div>

@@ -28,6 +28,7 @@ import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 /**
  * Competition defines database relations and a model to use client side and server side.
@@ -82,7 +83,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     private Integer maxProjectDuration;
     private Integer minProjectDuration;
 
-    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private CompetitionInnovationSectorLink innovationSector;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -612,7 +613,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
-            return date.format(formatter);
+            return toUkTimeZone(date).format(formatter);
         }
         return "";
     }

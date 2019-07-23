@@ -306,23 +306,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void withdraw() throws Exception {
-        long applicationId = 1L;
-
-        when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc")
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("application/{method-name}",
-                                pathParameters(
-                                        parameterWithName("applicationId").description("Id of the application to withdraw")
-                                )
-                ));
-    }
-
-    @Test
     public void showApplicationTeam() throws Exception {
         Long applicationId = 1L;
         Long userId = 2L;
@@ -338,42 +321,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("userId").description("Id of the user who wants to view the application team")
                         )
                 ));
-    }
-
-    @Test
-    public void findPreviousApplications() throws Exception {
-        final Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-        String filter = "ALL";
-
-        List<PreviousApplicationResource> applicationResources = PreviousApplicationResourceBuilder.newPreviousApplicationResource().build(4);
-        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource(applicationResources.size(), 5, applicationResources, pageIndex, pageSize);
-
-        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
-
-        mockMvc.perform(get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(JsonMappingUtil.toJson(previousApplicationPageResource)))
-                .andDo(document(
-                        "application/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which previous applications need to be found")
-                        ),
-                        requestParameters(
-                                parameterWithName("page").description("The page number to be retrieved"),
-                                parameterWithName("size").description("The page size"),
-                                parameterWithName("sort").description("The field by which sorting needs to be performed"),
-                                parameterWithName("filter").description("The filter to be applied")
-                        ),
-                        responseFields(PageResourceDocs.pageResourceFields)
-                        .andWithPrefix("content[].", ApplicationDocs.previousApplicationResourceFields)
-                ));
-
-        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
-
     }
 
     @Test

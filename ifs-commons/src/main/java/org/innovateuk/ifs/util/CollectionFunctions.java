@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -731,10 +729,7 @@ public final class CollectionFunctions {
                 return notNullSafe.apply(t1, t2);
             } else if (t1 != null) {
                 return t1;
-            } else if (t2 != null) {
-                return t2;
-            }
-            return null;
+            } else return t2;
         };
     }
 
@@ -838,5 +833,9 @@ public final class CollectionFunctions {
 
     public static <T> List<T> flattenOptional(Collection<Optional<T>> toFlatten){
         return  simpleMap(simpleFilter(toFlatten, Optional::isPresent), Optional::get);
+    }
+
+    public static <T> Predicate<T> negate(Predicate<T> predicate) {
+        return predicate.negate();
     }
 }

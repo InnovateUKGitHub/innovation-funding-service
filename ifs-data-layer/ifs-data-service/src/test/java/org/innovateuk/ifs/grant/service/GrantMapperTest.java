@@ -60,7 +60,6 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -129,7 +128,7 @@ public class GrantMapperTest {
         when(projectFinanceRepository.findByProjectIdAndOrganisationId(any(), any()))
                 .thenReturn(projectFinance);
         ProjectFinanceRow projectFinanceRow = mock(ProjectFinanceRow.class);
-        when(projectFinanceRow.getName()).thenReturn(GRANT_CLAIM_IDENTIFIER);
+        when(projectFinanceRow.getName()).thenReturn("grant-claim");
         when(projectFinanceRow.getQuantity()).thenReturn(30);
         when(projectFinanceRowRepository.findByTargetId(any()))
                 .thenReturn(Collections.singletonList(projectFinanceRow));
@@ -363,10 +362,11 @@ public class GrantMapperTest {
 
         private Project createProject() {
 
-            List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
-                    withOrganisation(newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).
-                    withLeadOrganisation(true, false).
-                    build(partnerOrganisationCount);
+            List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
+                    .withOrganisation(newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build())
+                    .withLeadOrganisation(true, false)
+                    .withPostcode("123 ABC")
+                    .build(partnerOrganisationCount);
 
             List<ProjectUser> leadOrganisationProjectUsers = newProjectUser().
                     withOrganisation(partnerOrganisations.get(0).getOrganisation()).

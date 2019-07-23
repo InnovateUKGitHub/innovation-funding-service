@@ -13,8 +13,6 @@ public interface FinanceRowRestService {
 
     RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
 
-    RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId);
-
     RestResult<FinanceRowItem> addWithResponse(long applicationFinanceId, FinanceRowItem costItem);
 
     RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId);

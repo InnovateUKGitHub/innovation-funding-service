@@ -34,6 +34,7 @@ IFS.core.loadOrder = {
       IFS.core.passwordToggle.init()
       IFS.core.preventInputRegex.init()
       IFS.core.autoComplete.init()
+      IFS.core.exampleDate.init()
     },
     finalize: function () {
       IFS.core.modal.init()
@@ -43,6 +44,7 @@ IFS.core.loadOrder = {
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
       IFS.core.sortingErrors.init()
+      IFS.core.tableSorter.init()
     }
   },
   'finance': {
@@ -61,6 +63,11 @@ IFS.core.loadOrder = {
   'overheads': {
     finalize: function () {
       IFS.core.overheads.init()
+    }
+  },
+  'team': {
+    init: function () {
+      IFS.core.team.init()
     }
   }
 }

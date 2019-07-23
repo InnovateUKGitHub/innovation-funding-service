@@ -93,8 +93,8 @@ public class DocumentsPopulator {
                 fileDetails,
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
                 projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(""),
-                isProjectManager(loggedInUserId, projectId)
-                );
+                isProjectManager(loggedInUserId, projectId),
+                project.getProjectState().isActive());
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {

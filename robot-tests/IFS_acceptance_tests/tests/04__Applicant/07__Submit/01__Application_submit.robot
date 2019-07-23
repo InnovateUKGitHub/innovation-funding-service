@@ -20,9 +20,11 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
 ...
 ...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Force Tags        Applicant  MySQL
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
@@ -46,7 +48,7 @@ Submit button disabled when application is incomplete
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 RTO lead has read only view after submission
-    [Documentation]    INFUND-7405, INFUND-8599
+    [Documentation]    INFUND-7405, INFUND-8599  IFS-5920
     [Tags]
     Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
@@ -57,6 +59,7 @@ RTO lead has read only view after submission
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
     And the user puts zero project costs
     When the user clicks the button/link                   link = Return to application overview
+    And the user accept the competition terms and conditions
     And the user clicks the button/link                    link = Review and submit
     And the user should not see the element                css = input
 
@@ -134,11 +137,11 @@ The user can check that the sections are read only
     the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
-    the user clicks the button/link        css = .section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user clicks the button/link        css = section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery = button:contains("Edit")
-    the user clicks the button/link        css = .section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user clicks the button/link        css = section:nth-of-type(2) .collapsible:nth-of-type(10)
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
-    the user clicks the button/link        css = .section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user clicks the button/link        css = section:nth-of-type(3) .collapsible:nth-of-type(1)
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
 
 the submit button should be disabled
@@ -185,7 +188,7 @@ Custom Suite Setup
 create new application for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Application details
-    the user enters text to a text field              css=[id="application.name"]    ${application_name}
+    the user enters text to a text field              css=[id="name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
     the user marks every section but one as complete  ${application_name}  Experimental development
 
@@ -205,7 +208,7 @@ Your Project costs section is read-only once application is marked as complete
     the user should not see the element        css = input
 
 the user can submit their application
-    the user should be redirected to the correct page  summary
+    the user should be redirected to the correct page  review-and-submit
     the applicant clicks Yes in the submit modal
     the user should be redirected to the correct page  track
     And the user should see the element                     jQuery = h2:contains("Application submitted")

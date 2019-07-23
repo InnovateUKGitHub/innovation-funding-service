@@ -28,13 +28,13 @@ Comp Admin creates an ATI competition
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
-    [Tags]  MySQL
+    [Tags]
     Given get competition id and set open date to yesterday  ${ATIcompetitionTitle}
     When log in as a different user                          &{lead_applicant_credentials}
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -43,13 +43,14 @@ Single applicant cannot submit his application to a collaborative comp
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
+    And the user accept the competition terms and conditions
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
     And the finance overview is marked as incomplete
     And the application cannot be submited
 
 Invite a collaborator and check the application can the be submitted
-    [Documentation]  IFS-3421
+    [Documentation]  IFS-3421  IFS-5920
     [Tags]
     Given the lead invites already registered user
     Then the applicant submits the application
@@ -124,7 +125,6 @@ the application cannot be submited
 
 the lead invites already registered user
     the user fills in the inviting steps           ${collaborator1_credentials["email"]}
-    the user clicks the button/link                jQuery=button:contains("Save and return to application overview")
     Logout as user
     the user reads his email and clicks the link   ${collaborator1_credentials["email"]}   Invitation to collaborate in ${ATIcompetitionTitle}    You will be joining as part of the organisation    2
     the user clicks the button/link                link = Continue
@@ -132,6 +132,7 @@ the lead invites already registered user
     the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     the user clicks the button/link                link = Your finances
     the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
+    the user accept the competition terms and conditions
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team

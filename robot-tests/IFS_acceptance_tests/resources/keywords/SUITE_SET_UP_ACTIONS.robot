@@ -36,7 +36,6 @@ the user selects Research category
     the user clicks the button/link   id=application-question-complete
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
-
 the lead applicant fills all the questions and marks as complete(programme)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions}
@@ -78,7 +77,7 @@ Create new application with the same user
     the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            link=Application details
-    the user enters text to a text field       css=[id="application.name"]  ${Application_title}
+    the user enters text to a text field       css=[id="name"]  ${Application_title}
     the user clicks the button/link            jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
@@ -86,14 +85,6 @@ check if there is an existing application in progress for this competition
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
-
-create new submit application
-    [Arguments]  ${overview}  ${email}  ${application_name}
-    And The guest user inserts user email and password  ${email}   ${correct_password}
-    And the guest user clicks the log-in button
-    And the user clicks the button/link                 link=Application details
-    And the user enters text to a text field            css=[id="application.name"]    ${application_name}
-    And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
@@ -114,21 +105,27 @@ Invite and accept the invitation
 the user fills in the inviting steps no edit
     [Arguments]  ${email}
     the user clicks the button/link       link=Application team
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link       link=Add a partner organisation
+    the user enters text to a text field  id = organisationName  New Organisation's Name
+    the user enters text to a text field  id = name  Partner's name
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery=button:contains("Invite partner organisation")
 
 the user fills in the inviting steps
     [Arguments]  ${email}
     the user clicks the button/link       link=Application team
     the user clicks the button/link       jQuery=button:contains("Edit")
-    the user clicks the button/link       link=Add a collaborator organisation
-    the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
-    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link       link=Add a partner organisation
+    the user enters text to a text field  id = organisationName  New Organisation's Name
+    the user enters text to a text field  id = name  Partner's name
+    the user enters text to a text field  id = email   ${email}
+    the user clicks the button/link       jQuery=button:contains("Invite partner organisation")
+
+the user invites a person to the same organisation
+    [Arguments]  ${name}  ${email}
+    the user enters text to a text field   id = name   ${name}
+    the user enters text to a text field   id = email  ${email}
+    the user clicks the button/link        jQuery = button:contains("Invite to application")
 
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
@@ -141,6 +138,10 @@ the research user finds org in companies house
 The user navigates to the summary page of the Robot test application
     ${id} =  get application id by name  Robot test application
     the user navigates to the page       ${server}/application/${id}/summary
+
+The user navigates to the review and submit page of the Robot test application
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}/review-and-submit
 
 The user navigates to the overview page of the Robot test application
     ${id} =  get application id by name  Robot test application
@@ -158,12 +159,12 @@ invite a registered user
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link = Application team
-    the user clicks the button/link                            link=Add a collaborator organisation
-    the user enters text to a text field                       css=#organisationName  New Organisation's Name
-    the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
-    the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
-    the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
-    the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
+    the user clicks the button/link                            link=Add a partner organisation
+    the user enters text to a text field                       id = organisationName  New Organisation's Name
+    the user enters text to a text field                       id = name  Partner's name
+    the user enters text to a text field                       id = email  ${EMAIL_INVITED}
+    the user clicks the button/link                            jQuery=button:contains("Invite partner organisation")
+    the user clicks the button/link                            link = Return to application overview
     the user should see the element                            jQUery = h1:contains("Application overview")
     the user closes the browser
     the guest user opens the browser

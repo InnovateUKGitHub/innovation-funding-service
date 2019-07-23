@@ -9,7 +9,7 @@ public class MonitoringOfficerAssignedProjectResource {
     private final String projectName;
     private final String leadOrganisationName;
 
-    public MonitoringOfficerAssignedProjectResource() {
+    private MonitoringOfficerAssignedProjectResource() {
         projectId = -1;
         applicationId = -1;
         competitionId = -1;

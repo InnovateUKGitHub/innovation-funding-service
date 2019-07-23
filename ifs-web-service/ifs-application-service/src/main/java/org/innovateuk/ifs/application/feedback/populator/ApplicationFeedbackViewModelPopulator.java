@@ -26,16 +26,15 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
@@ -45,7 +44,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     private OrganisationRestService organisationRestService;
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
-    private UserService userService;
+    private OrganisationService organisationService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
@@ -60,7 +59,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     public ApplicationFeedbackViewModelPopulator(OrganisationRestService organisationRestService,
                                                  ApplicationService applicationService,
                                                  CompetitionRestService competitionRestService,
-                                                 UserService userService,
+                                                 OrganisationService organisationService,
                                                  FileEntryRestService fileEntryRestService,
                                                  FinanceService financeService,
                                                  AssessmentRestService assessmentRestService,
@@ -77,7 +76,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
-        this.userService = userService;
+        this.organisationService = organisationService;
         this.fileEntryRestService = fileEntryRestService;
         this.financeService = financeService;
         this.assessmentRestService = assessmentRestService;
@@ -95,10 +94,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
         List<OrganisationResource> partners = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-
+        OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(application.getId(), partners);
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
@@ -116,6 +113,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user);
 
+        long applicationTermsQuestion = sectionService.getTermsAndConditionsSection(application.getCompetition()).getQuestions().get(0);
+
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
             interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
@@ -126,8 +125,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
-        queryParams.put("competitionId", asList(String.valueOf(application.getCompetition())));
-        queryParams.put("applicationId", asList(String.valueOf(application.getId())));
+        queryParams.put("competitionId", singletonList(String.valueOf(application.getCompetition())));
+        queryParams.put("applicationId", singletonList(String.valueOf(application.getId())));
 
         return new ApplicationFeedbackViewModel(
                 application,
@@ -143,6 +142,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
                 interviewFeedbackViewModel,
+                applicationTermsQuestion,
                 projectWithdrawn,
                 application.isCollaborativeProject(),
                 ApplicationSummaryOrigin.valueOf(origin),

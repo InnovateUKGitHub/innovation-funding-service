@@ -61,7 +61,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
         boolean internalUser = false;
         List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
-        ApplicationState applicationState = ApplicationState.OPEN;
+        ApplicationState applicationState = ApplicationState.OPENED;
         CompetitionStatus competitionState = CompetitionStatus.OPEN;
 
         assertViewModelPopulatedOk(
@@ -80,7 +80,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
         boolean internalUser = false;
         List<Long> sectionsMarkedAsComplete = asList(111L, sectionId, 333L);
-        ApplicationState applicationState = ApplicationState.OPEN;
+        ApplicationState applicationState = ApplicationState.OPENED;
         CompetitionStatus competitionState = CompetitionStatus.OPEN;
 
         assertViewModelPopulatedOk(
@@ -99,7 +99,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
         boolean internalUser = false;
         List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
-        ApplicationState applicationState = ApplicationState.OPEN;
+        ApplicationState applicationState = ApplicationState.OPENED;
         CompetitionStatus competitionState = CompetitionStatus.CLOSED;
 
         assertViewModelPopulatedOk(
@@ -137,7 +137,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
         boolean internalUser = true;
         List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
-        ApplicationState applicationState = ApplicationState.OPEN;
+        ApplicationState applicationState = ApplicationState.OPENED;
         CompetitionStatus competitionState = CompetitionStatus.OPEN;
 
         assertViewModelPopulatedOk(

@@ -10,6 +10,10 @@ Documentation     Suite description
 ...               IFS-4046 Person to organisation acceptance test updates
 ...
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
+...
+...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -32,17 +36,18 @@ Comp Admin Creates EOI type competition
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
-    [Tags]  MySQL
+    [Tags]
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{assessor_bob_credentials}
     Then logged in user applies to competition  ${comp_name}  1
 
 Applicant submits his application
-    [Documentation]  IFS-2196  IFS-2941  IFS-4046
+    [Documentation]  IFS-2196  IFS-2941  IFS-4046  IFS-5920
     [Tags]
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
+    And the applicant checks for competition terms and conditions
     Then the user should not see the element            jQuery = h2:contains("Finances")
     And the applicant submits the application
 
@@ -105,13 +110,11 @@ the comp admin closes the assessment and releases feedback
     Then the user should not see an error in the page
 
 the EOI comp moves to Previous tab
-    [Documentation]  IFS-2376
+    [Documentation]  IFS-2376  IFS-6054
     [Tags]
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = a:contains("Previous")
-    Then the user clicks the button/link   link = ${comp_name}
-    And the user should see the element    JQuery = h1:contains("${comp_name}")
-#    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
+    Then the user should see the competition details and sucessful application
 
 *** Keywords ***
 Custom Suite Setup
@@ -147,6 +150,20 @@ logged in user applies to competition
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
+
+the applicant checks for competition terms and conditions
+    the user should see the element       jQuery = h2:contains("Terms and conditions") ~ p:contains("You are agreeing to these by submitting your application.")
+    the user clicks the button/link       link = Award terms and conditions
+    the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should not see the element   jQuery = button:contains("Agree and continue")
+    the user clicks the button/link       link = Application overview
+
+the user should see the competition details and sucessful application
+    the user clicks the button/link    link = ${comp_name}
+    the user should see the element    jQuery = dt:contains("Competition type:") ~ dd:contains("Expression of interest")
+    the user should see the element    jQuery = button:contains("Projects (0)")
+    the user expands the section       Applications
+    the user should see the element    jQuery = h1:contains("${comp_name}")
 
 Custom suite teardown
     Close browser and delete emails

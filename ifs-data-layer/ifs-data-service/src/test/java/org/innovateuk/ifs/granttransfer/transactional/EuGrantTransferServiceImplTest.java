@@ -190,7 +190,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
                 .withGrantAgreementNumber("123456")
                 .withParticipantId("987654321")
                 .withProjectCoordinator(true)
-                .withProjectEndDate(now.plusMonths(2))
+                .withProjectEndDate(now.plusMonths(13))
                 .withProjectStartDate(now.minusDays(1))
                 .withProjectName("Project name")
                 .build();
@@ -216,7 +216,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
 
         assertEquals(application.getName(), grantTransferResource.getProjectName());
         assertEquals(application.getStartDate(), now);
-        assertEquals(application.getDurationInMonths(), (Long) 2L);
+        assertEquals(application.getDurationInMonths(), (Long) 13L);
     }
 
 }

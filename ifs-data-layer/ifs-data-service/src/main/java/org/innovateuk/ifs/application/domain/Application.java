@@ -66,13 +66,13 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ApplicationResearchCategoryLink researchCategory;
 
-    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ApplicationInnovationAreaLink innovationArea;
 
-    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false)
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
 
     private boolean noInnovationAreaApplicable;
@@ -232,7 +232,7 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return applicationProcess.isInState(ApplicationState.OPEN);
+        return applicationProcess.isInState(ApplicationState.OPENED);
     }
 
     public boolean isSubmitted() {

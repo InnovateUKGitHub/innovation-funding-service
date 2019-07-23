@@ -26,7 +26,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
@@ -77,7 +78,12 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private Long queryId = 1L;
 
     private ApplicationResource applicationResource = newApplicationResource().build();
-    private ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
+    private ProjectResource projectResource = newProjectResource()
+            .withId(projectId)
+            .withName("Project1")
+            .withApplication(applicationResource)
+            .withProjectState(SETUP)
+            .build();
 
     private OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
 
@@ -101,7 +107,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private UserRestService userRestService;
@@ -126,7 +132,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
 
         threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
@@ -184,6 +190,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("Project1", queryViewModel.getProjectName());
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
         assertEquals(projectId, queryViewModel.getProjectId());
+        assertTrue(queryViewModel.isProjectIsActive());
 
         assertEquals(3, queryViewModel.getQueries().size());
         assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());

@@ -39,7 +39,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -175,8 +174,8 @@ class GrantMapper {
                 projectFinance.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
 
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
-        ProjectFinanceRow awardRow = simpleFindFirstMandatory(projectFinanceRows, row -> GRANT_CLAIM_IDENTIFIER.equals(row.getName()));
-        BigDecimal awardPercentage = BigDecimal.valueOf(awardRow.getQuantity());
+        ProjectFinanceRow awardRow = simpleFindFirstMandatory(projectFinanceRows, row -> "grant-claim".equals(row.getName()));
+        BigDecimal awardPercentage = awardRow.getQuantity() == null ? BigDecimal.ZERO : BigDecimal.valueOf(awardRow.getQuantity());
 
         List<Forecast> forecasts = contactUser.isFinanceContact() ? spendProfile.get()
                 .getSpendProfileFigures()
@@ -196,6 +195,7 @@ class GrantMapper {
                 lookupLiveProjectsRoleName(contactUser.getRole().name()),
                 contactUser.getUser().getEmail(),
                 organisationSizeOrAcademic,
+                partnerOrganisation.getPostcode(),
                 BigDecimal.valueOf(applicationFinance.getMaximumFundingLevel()),
                 awardPercentage,
                 grantCalculator.getOverheadPercentage(),

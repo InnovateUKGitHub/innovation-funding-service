@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -74,8 +73,7 @@ public class UserController {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByRole/{userRole}", "/find-by-role/{userRole}"})
+    @GetMapping("/find-by-role/{userRole}")
     public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final Role userRole) {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
@@ -115,33 +113,28 @@ public class UserController {
         return userToEdit;
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findAll/", "/find-all/"})
+    @GetMapping("/find-all/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findExternalUsers", "/find-external-users"})
+    @GetMapping("/find-external-users")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
         return userService.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findByEmail/{email}/", "/find-by-email/{email}/"})
+    @GetMapping("/find-by-email/{email}/")
     public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
         return userService.findByEmail(email).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findAssignableUsers/{applicationId}", "/find-assignable-users/{applicationId}"})
+    @GetMapping("/find-assignable-users/{applicationId}")
     public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @GetMapping({"/findRelatedUsers/{applicationId}", "/find-related-users/{applicationId}"})
+    @GetMapping("/find-related-users/{applicationId}")
     public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
@@ -187,26 +180,22 @@ public class UserController {
                 .toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/createLeadApplicantForOrganisation/{organisationId}", "/create-lead-applicant-for-organisation/{organisationId}"})
+    @PostMapping("/create-lead-applicant-for-organisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createUser(userResource).toPostCreateResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", "/create-lead-applicant-for-organisation/{organisationId}/{competitionId}"})
+    @PostMapping("/create-lead-applicant-for-organisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @PathVariable("competitionId") final long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource).toPostCreateResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/id/{userId}/agreeNewSiteTermsAndConditions", "/id/{userId}/agree-new-site-terms-and-conditions"})
+    @PostMapping("/id/{userId}/agree-new-site-terms-and-conditions")
     public RestResult<Void> agreeNewSiteTermsAndConditions(@PathVariable("userId") final long userId) {
         return userService.agreeNewTermsAndConditions(userId).toPostResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-430", description = "remove camelCase mapping in h2020 sprint 6")
-    @PostMapping({"/updateDetails", "/update-details"})
+    @PostMapping("/update-details")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }

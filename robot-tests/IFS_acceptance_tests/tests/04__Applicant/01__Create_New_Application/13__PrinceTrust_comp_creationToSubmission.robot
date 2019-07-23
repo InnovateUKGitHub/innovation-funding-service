@@ -23,18 +23,19 @@ Comp Admin creates The Prince's Trust type competition
 
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
-    [Tags]    MySQL
+    [Tags]
     Given get competition id and set open date to yesterday  ${comp_name}
     And Log in as a different user                           &{RTO_lead_applicant_credentials}
     Then logged in user applies to competition               ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287
+    [Documentation]  IFS-2688  IFS-3287  IFS-5920
     [Tags]
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the applicant completes application team
     And the lead applicant answers the four sections as complete
+    And the user accept the competition terms and conditions
     And the user should not see the element             jQuery = h2:contains("Finances")
     Then the applicant submits the application
 

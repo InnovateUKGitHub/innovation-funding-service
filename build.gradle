@@ -16,7 +16,7 @@ if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabl
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
 
 def isNamedEnv() {
-    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
+    return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "production"].contains(openshiftEnv)
 }
 
 def isNotProductionEnv() {
@@ -24,7 +24,7 @@ def isNotProductionEnv() {
 }
 
 def isSysIntEnv() {
-    "sysint".equals(openshiftEnv)
+    "ifs-sysint".equals(openshiftEnv)
 }
 
 if (!project.hasProperty('osTestArgs')) {
@@ -48,7 +48,7 @@ buildscript {
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
@@ -76,8 +76,8 @@ dependencyUpdates.resolutionStrategy = {
 apply plugin: "com.github.hierynomus.license"
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '5.5'
 }
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

@@ -51,11 +51,9 @@ Invite existing academic collaborator
     [Setup]  log in as a different user                       ${lead_business_email}  ${correct_password}
     When the user clicks the button/link                      link = ${Application_name_business}
     And the user clicks the button/link                       link = Application team
-    And the user clicks the button/link                       link = Add a collaborator organisation
-    Then the user enters text to a text field                 css = #organisationName  eggs
-    And the user enters text to a text field                  css = input[id = "applicants[0].name"]  Pete
-    And the user enters text to a text field                  css = input[id = "applicants[0].email"]  ${collaborator2_credentials["email"]}
-    And the user clicks the button/link                       jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                       link = Add a partner organisation
+    And the user adds a partner organisation                  eggs  Pete  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                       jQuery = button:contains("Invite partner organisation")
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
@@ -103,11 +101,9 @@ Invite existing academic collaborator for RTO lead
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
-    Then the user enters text to a text field          css = #organisationName  eggs
-    And the user enters text to a text field           css = input[id="applicants[0].name"]  Pete
-    And the user enters text to a text field           css = input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
-    And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                link = Add a partner organisation
+    And the user adds a partner organisation           eggs  Pete  ${collaborator2_credentials["email"]}
+    And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     And the correct funding is displayed to academic user
@@ -119,11 +115,9 @@ Invite existing business user into RTO lead application
     [Setup]  log in as a different user                ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link = ${Application_name_RTO}
     And the user clicks the button/link                link = Application team
-    And the user clicks the button/link                link = Add a collaborator organisation
-    And the user enters text to a text field           css = #organisationName  innovate bus
-    And the user enters text to a text field           css = input[id="applicants[0].name"]  oscar
-    And the user enters text to a text field           css = input[id="applicants[0].email"]  ${lead_business_email}
-    And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
+    And the user clicks the button/link                link = Add a partner organisation
+    And the user adds a partner organisation           innovate bus  oscar  ${lead_business_email}
+    And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
     And logout as user
     Then the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${lead_business_email}  ${correct_password}
 
@@ -153,7 +147,7 @@ the user navigates to the competition overview
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link              link = ${Application_details}
-    the user enters text to a text field         css = [id="application.name"]  ${Application_name_business}
+    the user enters text to a text field         css = [id="name"]  ${Application_name_business}
     the user clicks the button/link              jQuery = button:contains("Choose your innovation area")
     the user clicks the button twice             jQuery = label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery = button:contains(Save)
@@ -162,16 +156,16 @@ the applicant completes the application details
 the applicant completes the application details for RTO lead appln
     [Arguments]   ${Application_details}
     the user clicks the button/link             link = ${Application_details}
-    the user enters text to a text field        css = [id="application.name"]  ${Application_name_RTO}
+    the user enters text to a text field        css = [id="name"]  ${Application_name_RTO}
     the user fills the other application details questions
 
 the user fills the other application details questions
-    the user clicks the button twice      css = label[for="application.resubmission-no"]
-    The user enters text to a text field  id = application_details-startdate_day  18
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    The user enters text to a text field  id = startDate  18
     The user enters text to a text field  id = application_details-startdate_year  2018
     The user enters text to a text field  id = application_details-startdate_month  11
-    The user enters text to a text field  css = [id="application.durationInMonths"]  20
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    The user enters text to a text field  css = [id="durationInMonths"]  20
+    the user clicks the button/link       jQuery = button:contains("Mark")
     the user clicks the button/link       link = Application overview
 
 the business user fills in the project costs
@@ -185,7 +179,7 @@ the business user fills in the project costs
     the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user clicks the button/link         jQuery = button:contains("Materials")
     the user selects the checkbox           stateAidAgreed
-    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    the user clicks the button/link         jQuery = button:contains("Mark")
 
 the user edits the research category
     [Arguments]   ${research_category}
@@ -203,7 +197,7 @@ the user edits the organisation size
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user selects the radio button   organisationSize  ${org_size}
     the user selects the checkbox       stateAidAgreed
-    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+    the user clicks the button/link     jQuery = button:contains("Mark")
     the user clicks the button/link     link = Your funding
 
 the user accepts the invite to collaborate
@@ -227,7 +221,7 @@ the academic user marks your project costs as complete
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
     the user selects the checkbox          agree-terms-page
     wait for autosave
-    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+    the user clicks the button/link        jQuery = button:contains("Mark")
 
 the correct funding displayed for lead applicant
     [Arguments]   ${research_cat}  ${org_size}  ${funding_amount}

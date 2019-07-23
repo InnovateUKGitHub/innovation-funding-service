@@ -68,7 +68,7 @@ public class PreviousApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED;
     }
 
     @JsonIgnore
@@ -80,7 +80,4 @@ public class PreviousApplicationResource {
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
-
-    @JsonIgnore
-    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 }

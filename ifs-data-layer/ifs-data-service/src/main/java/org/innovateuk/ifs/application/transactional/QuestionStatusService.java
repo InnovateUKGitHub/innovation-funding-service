@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -52,7 +53,7 @@ public interface QuestionStatusService {
                                                                                               long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(
             long questionId, long applicationId, long organisationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
@@ -62,6 +63,12 @@ public interface QuestionStatusService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(long applicationId,
                                                                                  long organisationId);
+
+    @PostAuthorize("hasPermission(filterObject, 'READ')")
+    ServiceResult<Optional<QuestionStatusResource>> findByApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<QuestionStatusResource>> findCompletedQuestionsByApplicationId(long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id);

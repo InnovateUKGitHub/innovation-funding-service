@@ -2,6 +2,9 @@
 Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-5247 - Application details page
+...
+...            IFS-5700 - Create new project team page to manage roles in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -61,10 +64,15 @@ Applicant user can complete an H2020 grant transfer
     When the user is able to complete Horizon 2020 Grant transfer application
     Then the user reads his email                         ${collaborator1_credentials["email"]}   Submitted application for your Horizon 2020 grant transfer of Project name   You have submitted your application to transfer your Horizon 2020 grant funding to UK Research and Innovation.
 
-
 Application validation checks
     Given the user starts an H2020 applcation
     Then the user is able to verify validation on each page
+
+An internal user is able to progress an H2020 grant transfer to project set up
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user   &{Comp_admin1_credentials}
+    Given the inernal user is able to progress an application to project set up
+    Then the user is able to see that the application is now in project setup
 
 *** Keywords ***
 Custom Suite Setup
@@ -76,6 +84,26 @@ Custom Suite Setup
     ${lastYear} =  get last year
     Set suite variable  ${lastYear}
     Connect to database  @{database}
+
+The user is able to see that the application is now in project setup
+    the user clicks the button/link   jQuery = a:contains("Project setup")
+    the user should see the element   link = H2020 Grant Transfer
+
+The inernal user is able to progress an application to project set up
+    the user clicks the button/link       link = H2020 Grant Transfer
+    the user should see the element       jQuery = h1:contains("Open")
+    the user clicks the button/link       link = Input and review funding decision
+    the user selects the checkbox         app-row-1
+    the user clicks the button/link       jQuery = button:contains("Successful")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name   Project name
+    the user selects the checkbox         app-row-${id}
+    the user clicks the button/link       jQuery = button:contains("Write and send email")
+    the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       link = All competitions
 
 The user starts an H2020 applcation
    the user navigates to the page                  ${server}/competition/${competitionId}/overview
@@ -113,6 +141,7 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
+    the user clicks the button/link         id = generate-code
     the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
     the user clicks the button/link         id = funders[0].funder
     click element                           id = funders[0].funder__option--0
@@ -120,8 +149,8 @@ The user completes funding information
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
     the user enters text to a text field    id = activityCode    4242
-    the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
@@ -236,6 +265,7 @@ The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
+    the user accept the competition terms and conditions
     the user is able to submit the application
 
 The user is able to complete Application details section
@@ -287,7 +317,7 @@ The user is able to complete Your project location section
      the user clicks the button/link           jQuery = a:contains("Your project location")
      the user should see the element           jQuery = h1:contains("Your project location")
      the user enters text to a text field      id = postcode   SE1 9HB
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your project location") > .task-status-complete
 
 The user is able to complete Your organisation section
@@ -296,7 +326,7 @@ The user is able to complete Your organisation section
      the user selects the radio button         organisationSize   MEDIUM
      the user enters text to a text field      id = turnover   500000
      the user enters text to a text field      id = headCount  100
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your organisation") > .task-status-complete
 
 The user is able to complete your project costs section
@@ -310,11 +340,11 @@ The user is able to complete your project costs section
     the user enters text to a text field      id = subcontracting  15000
     the user enters text to a text field      id = travel  10000
     the user enters text to a text field      id = other  0
-    the user clicks the button/link           jQuery = button:contains("Mark as complete")
+    the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user opens the link in new window           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab
@@ -322,7 +352,6 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user selects the checkbox             agreeTerms
     the user clicks the button/link           id = submit-application-button
     the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
 
@@ -349,7 +378,7 @@ Validate errors on Application details page
 
 Validate errors on Public description page
     the user clicks the button/link                      jQuery = a:contains("Public description")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Please enter some text.
     the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
 
@@ -362,11 +391,11 @@ Validate errors on H2020 grant agreement page
 Validate errors on Your Finances section
     the user clicks the button/link                      jQuery = a:contains("Your finances")
     the user clicks the button/link                      jQuery = a:contains("Your project location")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.
     the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter your organisation size.
     the user should see a field and summary error        ${empty_field_warning_message}
     the user should see a field and summary error        ${empty_field_warning_message}

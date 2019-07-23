@@ -29,14 +29,28 @@ public class FinanceChecksViabilityViewModel {
     private String organisationSizeDescription;
     private Long applicationId;
     private String projectName;
+    private final boolean projectIsActive;
 
-    public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
-                                           Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
-                                           Integer contributionToProject, String companyRegistrationNumber,
-                                           Long turnover, Long headCount,
-                                           Long projectId, boolean viabilityConfirmed,
-                                           boolean approved, String approverName, LocalDate approvalDate, Long organisationId,
-                                           String organisationSizeDescription, Long applicationId, String projectName) {
+    public FinanceChecksViabilityViewModel(String organisationName,
+                                           boolean leadPartnerOrganisation,
+                                           Integer totalCosts,
+                                           Integer percentageGrant,
+                                           Integer fundingSought,
+                                           Integer otherPublicSectorFunding,
+                                           Integer contributionToProject,
+                                           String companyRegistrationNumber,
+                                           Long turnover,
+                                           Long headCount,
+                                           Long projectId,
+                                           boolean viabilityConfirmed,
+                                           boolean approved,
+                                           String approverName,
+                                           LocalDate approvalDate,
+                                           Long organisationId,
+                                           String organisationSizeDescription,
+                                           Long applicationId,
+                                           String projectName,
+                                           boolean projectIsActive) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -57,6 +71,7 @@ public class FinanceChecksViabilityViewModel {
         this.organisationSizeDescription = organisationSizeDescription;
         this.applicationId = applicationId;
         this.projectName = projectName;
+        this.projectIsActive = projectIsActive;
     }
 
     public String getOrganisationName() {
@@ -106,7 +121,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityConfirmed;
+        return viabilityConfirmed || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
@@ -123,11 +138,11 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved();
+        return !isApproved() && projectIsActive;
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved();
+        return isApproved() || !projectIsActive;
     }
 
     private boolean isApproved() {
@@ -152,5 +167,9 @@ public class FinanceChecksViabilityViewModel {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public boolean isProjectIsActive() {
+        return projectIsActive;
     }
 }

@@ -1,28 +1,31 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 public class InProgressDashboardRowViewModelTest {
+
+    private static final LocalDate YESTERDAY = LocalDate.now().minusDays(1);
 
     @Test
     public void constructOpen() {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
-                "Competition", true, ApplicationState.OPEN, true,
-                end, 0, 50 , false);
+                "Competition", true, OPENED, true,
+                end, 0, 50 , false, YESTERDAY);
 
-        assertEquals(viewModel.getLinkUrl(), "/application/1");
-        assertEquals(viewModel.getTitle(), "Application");
-        assertEquals(viewModel.getHoursLeftBeforeSubmit(), 1L);
+        assertEquals("/application/1", viewModel.getLinkUrl());
+        assertEquals("Application", viewModel.getTitle());
+        assertEquals(1L, viewModel.getHoursLeftBeforeSubmit());
         if (TimeZoneUtil.toUkTimeZone(end).getDayOfMonth() == TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).getDayOfMonth()) {
             assertTrue(viewModel.isClosingToday());
         } else {
@@ -30,29 +33,29 @@ public class InProgressDashboardRowViewModelTest {
         }
         assertTrue(viewModel.isWithin24Hours());
         assertFalse(viewModel.isApplicationComplete());
-        assertEquals(viewModel.getProgressMessage(), "50% complete");
+        assertEquals("50% complete", viewModel.getProgressMessage());
     }
 
     @Test
     public void constructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
-                "Competition", true, ApplicationState.SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , false);
+                "Competition", true, SUBMITTED, true,
+                ZonedDateTime.now().plusDays(12), 12, 100 , false, YESTERDAY);
 
-        assertEquals(viewModel.getLinkUrl(), "/application/1/track");
-        assertEquals(viewModel.getTitle(), "Untitled application");
+        assertEquals("/application/1/track", viewModel.getLinkUrl());
+        assertEquals("Untitled application", viewModel.getTitle());
         assertTrue(viewModel.isApplicationComplete());
-        assertEquals(viewModel.getProgressMessage(), "Ready to review and submit");
+        assertEquals("Ready to review and submit", viewModel.getProgressMessage());
     }
 
     @Test
     public void constructInterview() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
-                "Competition", true, ApplicationState.SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , true);
+                "Competition", true, SUBMITTED, true,
+                ZonedDateTime.now().plusDays(12), 12, 100 , true, YESTERDAY);
 
-        assertEquals(viewModel.getLinkUrl(), "/application/1/summary");
+        assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertTrue(viewModel.isApplicationComplete());
-        assertEquals(viewModel.getProgressMessage(), "Ready to review and submit");
+        assertEquals("Ready to review and submit", viewModel.getProgressMessage());
     }
 }

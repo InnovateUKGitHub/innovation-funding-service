@@ -10,113 +10,115 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.competition}"></th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
-        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.applicationState}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
+        <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />
+        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false})" />
 
-        <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
         <div class="govuk-!-margin-bottom-6">
-            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.applicationSubmitted and model.user.userIsLeadApplicant}">
-                <p class="govuk-body">Now your application is complete, you need to <a th:href="'#' + ${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}">review and submit</a> at the bottom of this page.</p>
+            <div class="message-alert" th:if="${model.application.completion.intValue() == 100 and !model.application.submitted and model.lead}">
+                <p class="govuk-body">Now your application is complete, you need to <a href="#application-overview-submit-cta">review and submit</a> at the bottom of this page.</p>
             </div>
         </div>
 
-        <th:block th:if="${model.currentCompetition.isH2020()}"
+        <th:block th:if="${model.competition.isH2020()}"
                   th:insert="fragments/elements :: h2020-information-panel" />
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
-                    <th:block th:unless="${model.currentCompetition.isH2020()}">
+                    <th:block th:unless="${model.competition.isH2020()}">
                         <dt>Application number:</dt>
-                        <dd th:text="${model.applicationId}"/>
+                        <dd th:text="${model.application.id}"/>
                         <dt>Competition:</dt>
-                        <dd th:text="${model.currentCompetition.name}"/>
+                        <dd th:text="${model.competition.name}"/>
                         <dt>Funding body:</dt>
                         <dd>Innovate UK</dd>
                         <dt>Application deadline:</dt>
                         <dd>
                             <th:block
-                                th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}"/>
-                            <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}"/>
+                                th:text="${#strings.toLowerCase(#temporals.format(model.competition.endDate, 'hh:mma '))}"/>
+                            <th:block th:text="${#temporals.format(model.competition.endDate, 'EEEE d MMMM yyyy')}"/>
                         </dd>
                     </th:block>
-                    <th:block th:if="${model.currentCompetition.isH2020()}">
+                    <th:block th:if="${model.competition.isH2020()}">
                         <dt>Application number:</dt>
-                        <dd th:text="${model.applicationId}"/>
+                        <dd th:text="${model.application.id}"/>
                         <dt>Funding body:</dt>
                         <dd>Innovate UK, as part of UK Research and Innovation</dd>
                     </th:block>
                 </dl>
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
                 <div th:include="fragments/elements :: progress-indicator"
-                     th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
+                     th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
-            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
                 <th:block th:if="${procurementCompetition}">
                     <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
-                </th:block>
-                <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the award terms and conditions</a>
                 </th:block>
             </div>
         </div>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
-            <th:block th:each="section,iteration : ${model.section.sections}"
-                      th:with="fullyFundedCompetition=${model.currentCompetition.fullyFunded}">
+            <th:block th:each="section : ${model.sections}">
                 <section th:id="'section-'+${section.id}">
-                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.name}" />
-                    <p th:unless="${fullyFundedCompetition and section.name == 'Finances'}" class="govuk-body" th:text="${section.description}"></p>
-                    <p th:if="${fullyFundedCompetition and section.name == 'Finances'}" class="govuk-body">
-                        Submit your organisation's project finances.
-                    </p>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.title}" />
+                    <p class="govuk-body" th:text="${section.subTitle}" />
+                    <ul class="task-list">
+                        <li th:each="row : ${section.rows}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="${row.url}"
+                                       th:text="${row.title}"
+                                       class="govuk-link" />
+                                </h3>
+                            </div>
+                            <th:block th:unless="${row.complete}">
+                                <!-- /* Assigned to */-->
+                                <div th:if="${row.assignable}"
+                                     th:with="rowModel=${row.assignButtonsViewModel.get()}, assignee=${rowModel.assignedToCurrentUser ? 'you' : rowModel.assigneeUserName}"
+                                     class="secondary-notification">
+                                    <!--/* lead */-->
+                                    <th:block th:if="${model.lead}">
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
+                                           class="govuk-link"
+                                           aria-describedby="assign-hint">
+                                            Assigned to
+                                            <th:block th:text="${assignee}">you/Name</th:block>
+                                            <span id="assign-hint" class="govuk-visually-hidden">,assign to somebody else in your team</span>
+                                        </a>
+                                    </th:block>
+                                    <!--/* collaborator */-->
+                                    <th:block th:unless="${model.lead}">
+                                        Assigned to
+                                        <th:block th:text="${assignee}">you/Name</th:block>
+                                    </th:block>
+                                </div>
 
-                    <ul th:with="currentUser=${#authentication.getDetails()}" class="task-list">
-                        <th:block th:unless="${model.section.hasSubSection(section.id)}">
-                            <div th:replace="application/single-section-details :: sectionDetails (questionAssignees=${model.assignable.questionAssignees},
-                            userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, applicationId=${model.applicationId}, currentUser=${currentUser})"></div>
-                        </th:block>
-                        <th:block th:if="${model.section.hasSubSection(section.id)}">
-                            <li th:each="childSection : ${model.section.subSections.get(section.id)}"
-                                th:unless="${fullyFundedCompetition and childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}">
-                                <div class="task">
-                                    <h3 class="govuk-heading-s">
-                                        <a th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${model.applicationId},sectionId=${childSection.id})}"
-                                           th:text="${childSection.name}"
-                                           class="govuk-link" />
-                                    </h3>
+                                <div th:if="${row.showStatus}" class="task-status-incomplete">
+                                    <span>Incomplete</span>
                                 </div>
-                                <div
-                                    th:if="${childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).FINANCE}"
-                                    th:with="complete=${model.completed.financeSectionComplete}"
-                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
-                                </div>
-                                <div
-                                    th:if="${model.user.userIsLeadApplicant && childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}"
-                                    th:with="complete=${model.completed.financeOverviewSectionComplete}"
-                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
-                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
-                                </div>
-                            </li>
-                        </th:block>
+                            </th:block>
+                            <div th:if="${row.complete and row.showStatus}" class="task-status-complete">
+                                <span>Complete</span>
+                            </div>
+                        </li>
                     </ul>
                 </section>
             </th:block>
         </form>
 
-    <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
-       class="govuk-button" th:href="@{/application/{id}/summary(id=${model.applicationId})}"
-       th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a th:id="${model.lead ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
+       class="govuk-button" th:href="@{/application/{id}/review-and-submit(id=${model.application.id})}"
+       th:text="${model.lead ? 'Review and submit' : 'Review'}" />
     <a id="application-overview-print"
        class="button-clear"
-       th:href="@{/application/{id}/print(id=${model.applicationId})}" rel="nofollow" target="_blank">
+       th:href="@{/application/{id}/print(id=${model.application.id})}" rel="nofollow" target="_blank">
         <span class="icon icon-print"></span> Print your application</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

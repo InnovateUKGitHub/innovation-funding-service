@@ -25,8 +25,8 @@ For Example (Blazemeter)
 2) Add command line arguments e.g.
 -Jinvite_user=5 -Japplicant_users=50 -Jregistration_users=5
 3) Add Jmeter Properties e.g.
-server_url=ifs.uat.innovateuk.org
-authorisation_url=auth.uat.innovateuk.org
+server_url=ifs-uat.innovateuk.org
+authorisation_url=auth.ifs-uat.innovateuk.org
 users_csv=user_data.csv
 invites_csv=invite_data.csv
 competitions_csv=competition_data.csv

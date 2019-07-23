@@ -6,22 +6,26 @@ import java.util.Optional;
  * This enum marks sections as a given type.
  */
 public enum SectionType {
-	FINANCE(Optional.empty()),
-	PROJECT_COST_FINANCES(Optional.of(FINANCE)),
-    PROJECT_LOCATION(Optional.of(FINANCE)),
-	ORGANISATION_FINANCES(Optional.of(FINANCE)),
-	FUNDING_FINANCES(Optional.of(FINANCE)),
-    OVERVIEW_FINANCES(Optional.empty()),
-	GENERAL(Optional.empty());
+	FINANCE,
+	PROJECT_COST_FINANCES(FINANCE),
+    PROJECT_LOCATION(FINANCE),
+	ORGANISATION_FINANCES(FINANCE),
+	FUNDING_FINANCES(FINANCE),
+    OVERVIEW_FINANCES,
+	GENERAL,
+    TERMS_AND_CONDITIONS;
 
-    private final Optional<SectionType> parent;
+    private final SectionType parent;
 
-    SectionType(Optional<SectionType> parent) {
+    SectionType() {
+        this.parent = null;
+    }
+    SectionType(SectionType parent) {
         this.parent = parent;
     }
 
     public Optional<SectionType> getParent() {
-        return parent;
+        return Optional.ofNullable(parent);
     }
 
     public String getNameLower() {

@@ -116,7 +116,6 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
                 uri.startsWith("/css/") ||
                 uri.startsWith("/images/") ||
                 uri.startsWith("/favicon.ico") ||
-                uri.startsWith("/prototypes") ||
                 uri.startsWith("/error");
     }
 

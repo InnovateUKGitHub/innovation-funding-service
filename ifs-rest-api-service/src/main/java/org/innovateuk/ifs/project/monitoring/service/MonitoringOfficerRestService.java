@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface MonitoringOfficerRestService {
 
     RestResult<Void> unassignMonitoringOfficerFromProject(long monitoringOfficerId, long projectId);
 
-    RestResult<List<MonitoringOfficerAssignmentResource>> findAll();
+    RestResult<List<SimpleUserResource>> findAll();
 
     RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId);
 

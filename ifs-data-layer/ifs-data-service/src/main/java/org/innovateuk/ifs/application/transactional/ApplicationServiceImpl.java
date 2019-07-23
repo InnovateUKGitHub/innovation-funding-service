@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,15 +26,14 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -115,9 +113,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id,
+    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long applicationId,
                                                                      ApplicationResource application) {
-        return find(() -> getApplication(id)).andOnSuccess(
+        return find(() -> getApplication(applicationId)).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
                         openApplication -> {
                             openApplication.setName(application.getName());
@@ -135,9 +133,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id,
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long applicationId,
                                                                             ZonedDateTime date) {
-        return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
+        return getOpenApplication(applicationId).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
@@ -157,13 +155,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
-                                                                     final ApplicationState state) {
-        if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
+    public ServiceResult<ApplicationResource> updateApplicationState(long applicationId,
+                                                                     ApplicationState state) {
+        if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(applicationId)) {
             return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
         }
 
-        return find(application(id)).andOnSuccess((application) -> {
+        return find(application(applicationId)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
@@ -192,17 +190,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 applicationWorkflowHandler.markIneligible(application, reason) ?
                         serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED)
         );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> withdrawApplication(long applicationId) {
-        return find(application(applicationId))
-                .andOnSuccess(application -> getCurrentlyLoggedInUser()
-                        .andOnSuccess(user -> applicationWorkflowHandler.withdraw(application, user) ?
-                                serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_APPROVED)
-                        )
-                );
     }
 
     @Override
@@ -286,25 +273,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
-        return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId,
-                                                                                   int pageIndex,
-                                                                                   int pageSize,
-                                                                                   String sortField,
-                                                                                   String filter) {
-        Sort sort = getApplicationSortField(sortField);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-
-        Collection<ApplicationState> applicationStates = getApplicationStatesFromFilter(filter);
-
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, applicationStates, pageable);
-        List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
-
-        return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    public ServiceResult<ApplicationResource> getApplicationById(Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(applicationMapper::mapToResource);
     }
 
     @Override
@@ -329,10 +299,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             case "REJECTED":
                 applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
-                break;
-
-            case "WITHDRAWN":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.WITHDRAWN);
                 break;
 
             case "SUCCESSFUL":

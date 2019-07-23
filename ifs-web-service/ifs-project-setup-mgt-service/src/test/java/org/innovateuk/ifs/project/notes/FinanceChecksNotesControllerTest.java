@@ -26,12 +26,14 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -45,13 +47,14 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertEquals;
@@ -66,22 +69,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<FinanceChecksNotesController> {
 
     private Long projectId = 3L;
-    private Long innovateOrganisationId = 11L;
     private Long applicantOrganisationId = 22L;
     private Long projectFinanceId = 45L;
     private Long noteId = 1L;
 
     ApplicationResource applicationResource = newApplicationResource().build();
-    ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
+    ProjectResource projectResource = newProjectResource()
+            .withId(projectId)
+            .withName("Project1")
+            .withApplication(applicationResource)
+            .withProjectState(SETUP)
+            .build();
 
-    OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
     ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
 
     Role financeTeamRole = Role.PROJECT_FINANCE;
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(Arrays.asList(financeTeamRole)).build();
+    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(financeTeamRole).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 
     NoteResource thread;
@@ -96,10 +102,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
     @Mock
-    private CookieUtil cookieUtil;
-
-    @Mock
-    private OrganisationService organisationService;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private ProjectService projectService;
@@ -123,7 +126,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Before
     public void setupCommonExpectations() {
 
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
@@ -165,6 +168,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Project1", noteViewModel.getProjectName());
         assertEquals(applicantOrganisationId, noteViewModel.getOrganisationId());
         assertEquals(projectId, noteViewModel.getProjectId());
+        assertTrue(noteViewModel.isProjectIsActive());
 
         assertEquals(3, noteViewModel.getNotes().size());
         assertEquals("Query title", noteViewModel.getNotes().get(0).getTitle());

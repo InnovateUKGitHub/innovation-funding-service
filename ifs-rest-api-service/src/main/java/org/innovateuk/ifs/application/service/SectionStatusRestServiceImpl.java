@@ -48,11 +48,6 @@ public class SectionStatusRestServiceImpl extends BaseRestService implements Sec
     }
 
     @Override
-    public RestResult<List<Long>> getIncompletedSectionIds(long applicationId) {
-        return getWithRestResult(sectionRestURL + "/get-incomplete-sections/" + applicationId, longsListType());
-    }
-
-    @Override
     public RestResult<Boolean> allSectionsMarkedAsComplete(long applicationId) {
         return getWithRestResult(sectionRestURL + "/all-sections-marked-as-complete/" + applicationId, Boolean.class);
     }

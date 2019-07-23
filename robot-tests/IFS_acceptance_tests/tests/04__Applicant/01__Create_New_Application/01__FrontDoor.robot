@@ -42,7 +42,7 @@ Guest user can see Competitions and their information
 
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
-    [Tags]    MySQL  HappyPath
+    [Tags]  HappyPath
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
     Given update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
@@ -59,7 +59,7 @@ Guest user can filter competitions by Innovation area
     [Setup]    the user navigates to the page                       ${frontDoor}
     When the user selects the option from the drop-down menu        Space technology    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
-    Then the user should see the element                            jQuery = a:contains("Transforming big data")
+    Then The user should see the element in the paginated list      jQuery = a:contains("Webtest Non IFS Comp 8")
     And the user should not see the element in the paginated list   jQuery = a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu        Any    id = innovation-area
     And the user clicks the button/link                             jQuery = button:contains("Update results")
@@ -78,7 +78,7 @@ Guest user can see the public information of an unopened competition
 
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
-    [Tags]    MySQL
+    [Tags]
     Given Change the milestone in the database to tomorrow  ${NON_IFS_COMPETITION}  SUBMISSION_DATE
     And update milestone to yesterday    ${NON_IFS_COMPETITION}  REGISTRATION_DATE
     When the user navigates to the page     ${server}/competition/${NON_IFS_COMPETITION}/overview
@@ -100,25 +100,25 @@ Guest user can see the public Summary of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link    link = Summary
-    Then the user should see the element     jQuery = h3:contains("Description")
+    Then the user should see the element     jQuery = h2:contains("Description")
     And the user should see the element      jQuery = .govuk-body:contains("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.")
-    When the user should see the element     jQuery = h3:contains("Funding type")
+    When the user should see the element     jQuery = h2:contains("Funding type")
     Then the user should see the element     jQuery = p:contains("Grant")
-    When the user should see the element     jQuery = h3:contains("Project size")
+    When the user should see the element     jQuery = h2:contains("Project size")
     Then the user should see the element     jQuery = p:contains("£15 million")
 
 Guest user can see the public Eligibility of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link           link = Eligibility
-    Then the user should see the element            jQuery = h3:contains("Lead applicant eligibility")
+    Then the user should see the element            jQuery = h2:contains("Lead applicant eligibility")
     And the user should see the element             jQuery = .govuk-body:contains("one SME involved in your proposal carry out your project work, and intend to")
 
 Guest user can see the public Scope of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link           link = Scope
-    Then the user should see the element            jQuery = h3:contains("Project scope")
+    Then the user should see the element            jQuery = h2:contains("Project scope")
     And the user should see the element             jQuery = .govuk-body:contains("Projects will: harness E&E technologies across the economy develop and scale-up research and development to bring ideas,")
 
 Guest user can see the public Dates of the competition
@@ -134,14 +134,14 @@ Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link      link = How to apply
-    When the user should see the element       jQuery = h3:contains("How to apply")
+    When the user should see the element       jQuery = h2:contains("How to apply")
     Then the user should see the element       jQuery = .govuk-body:contains("Collaborators will be sent a link,")
 
 Guest user can see the public Supporting information of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link       link = Supporting information
-    When the user should see the element        jQuery = h3:contains("Background and further information")
+    When the user should see the element        jQuery = h2:contains("Background and further information")
     Then the user should see the element        jQuery = .govuk-body:contains("However, we sometimes struggle to fully commercialise the opportunities.")
 
 Guest user can apply to a competition

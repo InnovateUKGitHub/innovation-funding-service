@@ -8,70 +8,17 @@
   </th:block>
 </th:block>
 
-<th:block th:fragment="project-status-table(status, columnType)">
-    <th:block th:switch="${status.name()}">
-        <td th:case="'VIEW'" class="govuk-table__cell status">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">View</a>
-            </th:block>
-        </td>
-        <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
-          <th:block th:if="${url}">
-              <a th:href="${url}" class="govuk-link">
-                  <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-              </a>
-          </th:block>
-          <th:block th:unless="${url}">
-            <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-          </th:block>
-        </td>
-        <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                  <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
-                  <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                  <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-              <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
-              <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-              <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
-            </th:block>
-        </td>
-        <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
-            <span class="govuk-visually-hidden">Stage is not yet available</span>
-        </td>
-        <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na">
-            <span class="govuk-visually-hidden">Not required for this partner</span>
-        </td>
-        <td th:case="'PENDING'" class="govuk-table__cell status waiting">
-          <th:block th:if="${url}">
-              <a th:href="${url}" class="govuk-link">
-                <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
-              </a>
-          </th:block>
-          <th:block th:unless="${url}">
-              <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
-          </th:block>
-        </td>
-        <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">Rejected</a>
-            </th:block>
-            <th:block th:unless="${url}">Rejected</th:block>
-        </td>
-        <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
-    </th:block>
-</th:block>
-
 <th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
+    <div class="alignright">
+        <a class="govuk-link alignright"
+           th:href="@{~/management/competition/{competitionId}/previous(competitionId=${competitionId})}">View only completed projects for this competition</a>
+    </div>
     <ul class="govuk-tabs__list">
         <li id="section-1"
             class="govuk-tabs__list-item">
             <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'all'} ? 'true' : 'false'">All projects</a>
+               th:classappend="${selectedTab == 'all'} ? 'govuk-tabs__tab--selected' : ''">All projects</a>
         </li>
         <li th:if="${showAllTabs}"
             id="section-2"
@@ -79,7 +26,7 @@
             <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
                th:text="'Queries (' + ${openQueryCount} + ')'"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'queries'} ? 'true' : 'false'"></a>
+               th:classappend="${selectedTab == 'queries'} ? 'govuk-tabs__tab--selected' : ''"></a>
         </li>
         <li th:if="${showAllTabs}"
             id="section-3"
@@ -87,7 +34,7 @@
             <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}"
                th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"
                class="govuk-tabs__tab"
-               th:attr="aria-selected=${selectedTab == 'spend-profile'} ? 'true' : 'false'"></a>
+               th:classappend="${selectedTab == 'spend-profile'} ? 'govuk-tabs__tab--selected' : ''"></a>
         </li>
     </ul>
 </th:block>

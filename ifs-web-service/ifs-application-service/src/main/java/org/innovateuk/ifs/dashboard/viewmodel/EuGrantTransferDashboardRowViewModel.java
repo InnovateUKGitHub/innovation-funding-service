@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+
+import java.time.LocalDate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
@@ -10,28 +13,44 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
  * View model for each application row in the 'Grant transfer' section of the applicant dashboard.
  */
 public class EuGrantTransferDashboardRowViewModel extends
-        AbstractApplicantDashboardRowViewModel<EuGrantTransferDashboardRowViewModel> {
+        AbstractApplicantDashboardRowViewModel<EuGrantTransferDashboardRowViewModel>
+        implements Comparable<EuGrantTransferDashboardRowViewModel> {
     private final ApplicationState applicationState;
     private final int applicationProgress;
     private final Long projectId;
+    private final LocalDate startDate;
 
     public EuGrantTransferDashboardRowViewModel(String title,
                                                 long applicationId,
                                                 String competitionTitle,
                                                 ApplicationState applicationState,
                                                 int applicationProgress,
-                                                Long projectId) {
+                                                Long projectId,
+                                                LocalDate startDate) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.applicationProgress = applicationProgress;
         this.projectId = projectId;
+        this.startDate = startDate;
+    }
+
+    public EuGrantTransferDashboardRowViewModel(DashboardApplicationForEuGrantTransferResource resource){
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.applicationState = resource.getApplicationState();
+        this.applicationProgress = resource.getApplicationProgress();
+        this.projectId = resource.getProjectId();
+        this.startDate = resource.getStartDate();
     }
 
     public int getApplicationProgress() {
         return applicationProgress;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
     /* view logic */
+
     public boolean isSubmitted() {
         return SUBMITTED.equals(applicationState) ||
                 INELIGIBLE.equals(applicationState);
@@ -43,7 +62,7 @@ public class EuGrantTransferDashboardRowViewModel extends
 
     public boolean isInProgress() {
         return CREATED.equals(applicationState) ||
-                OPEN.equals(applicationState);
+                OPENED.equals(applicationState);
     }
 
     public boolean isIneligible() {
@@ -81,4 +100,5 @@ public class EuGrantTransferDashboardRowViewModel extends
         }
         return Long.compare(getApplicationNumber(), o.getApplicationNumber());
     }
+
 }

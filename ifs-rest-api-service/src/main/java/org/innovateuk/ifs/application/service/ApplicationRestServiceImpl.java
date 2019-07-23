@@ -59,7 +59,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
+    public RestResult<Void> updateApplicationState(long applicationId, ApplicationState state) {
         return putWithRestResult(applicationRestURL + "/update-application-state?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
@@ -110,11 +110,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> withdrawApplication(long applicationId) {
-        return postWithRestResult(applicationRestURL + "/" + applicationId + "/withdraw", Void.class);
-    }
-
-    @Override
     public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
         return getWithRestResult(applicationRestURL + "/show-application-team/" + applicationId + "/" + userId, Boolean.class);
     }
@@ -124,15 +119,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return getWithRestResult(applicationRestURL + "/get-latest-email-funding-date/" + applicationId, ZonedDateTime.class);
     }
 
-    @Override
-    public RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
-        if (filter != null) {
-            params.put("filter", singletonList(filter));
-        }
-
-        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
-    }
 }

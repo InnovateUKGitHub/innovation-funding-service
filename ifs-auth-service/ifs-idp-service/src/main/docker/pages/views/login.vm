@@ -147,7 +147,7 @@
                     <span class="govuk-caption-l">Innovation Funding Service</span>
                     Sign in
                 </h1>
-                <form action="$flowExecutionUrl" method="post" id="sign-in-form">
+                <form action="$flowExecutionUrl" method="post" id="sign-in-form" novalidate="novalidate">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
                             #set ($serviceName = $rpUIContext.serviceName)
@@ -172,7 +172,7 @@
                                     <input class="govuk-input govuk-input--error" id="password" name="j_password" type="password" value=""
                                          required="required"
                                          data-required-errormessage="Please enter your password.">
-                                    <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                                    <button type="button" role="button" aria-pressed="false" aria-label="Show password in plain text">Show <span class="govuk-visually-hidden">password in plain text</span></button>
                                   </div>
                                 </div>
                               #else
@@ -194,7 +194,7 @@
                                     <input class="govuk-input" id="password" name="j_password" type="password" value=""
                                          required="required"
                                          data-required-errormessage="Please enter your password.">
-                                    <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                                    <button type="button" role="button" aria-pressed="false" aria-label="Show password in plain text">Show <span class="govuk-visually-hidden">password in plain text</span></button>
                                   </div>
                                 </div>
                               #end

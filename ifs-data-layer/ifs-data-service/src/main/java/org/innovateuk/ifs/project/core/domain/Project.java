@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -61,8 +62,12 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project")
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project", fetch = FetchType.LAZY)
     private MonitoringOfficer projectMonitoringOfficer = null;
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
+            mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+    private FinanceReviewer financeReviewer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
@@ -84,12 +89,12 @@ public class Project implements ProcessActivity {
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SpendProfile> spendProfiles;
+    private List<SpendProfile> spendProfiles = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
     private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
-    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true)
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
 
 
@@ -115,12 +120,24 @@ public class Project implements ProcessActivity {
         this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
+    public FinanceReviewer getFinanceReviewer() {
+        return financeReviewer;
+    }
+
+    public void setFinanceReviewer(FinanceReviewer financeReviewer) {
+        this.financeReviewer = financeReviewer;
+    }
+
     public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {
         partnerOrganisations.add(partnerOrganisation);
     }
 
     public boolean removeProjectUser(ProjectUser projectUser) {
         return projectUsers.remove(projectUser);
+    }
+
+    public boolean removeProjectUsers(List<ProjectUser> projectUserstoRemove) {
+        return projectUsers.removeAll(projectUserstoRemove);
     }
 
     public ProjectUser getExistingProjectUserWithRoleForOrganisation(ProjectParticipantRole role, Organisation organisation) {

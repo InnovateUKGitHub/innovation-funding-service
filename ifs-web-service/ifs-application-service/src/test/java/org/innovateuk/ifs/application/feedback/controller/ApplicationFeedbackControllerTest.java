@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -43,9 +45,9 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -122,10 +124,11 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetition(competition.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
-        when(interviewResponseRestService.uploadResponse(app.getId(),"application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+        when(interviewResponseRestService.uploadResponse(app.getId(), "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
                 .thenReturn(restSuccess());
 
         MockMultipartFile file = new MockMultipartFile("response", "testFile.pdf", "application/pdf", "My content!".getBytes());
@@ -137,7 +140,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-feedback"));
 
-        verify(interviewResponseRestService).uploadResponse(app.getId(),"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+        verify(interviewResponseRestService).uploadResponse(app.getId(), "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
     }
 
     @Test
@@ -150,6 +153,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
         ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetition(competition.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
@@ -160,6 +164,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
         when(userRestService.findProcessRole(userResource.getId(), app.getId())).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(processRole.getOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
+
 
         when(interviewResponseRestService.deleteResponse(app.getId()))
                 .thenReturn(restSuccess());
@@ -181,6 +186,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).withRole(Role.LEADAPPLICANT).build();
         when(userRestService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(organisationService.getLeadOrganisation(anyLong(),any())).thenReturn(new OrganisationResource());
 
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(aggregateResource));

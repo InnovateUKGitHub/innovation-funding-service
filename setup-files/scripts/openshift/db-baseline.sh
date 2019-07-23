@@ -39,11 +39,12 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 
     export LDAP_HOST="ldap"
-    export LDAP_PORT=389
+    export LDAP_PORT=8389
     export LDAP_PASS="default"
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"
 
+    export FLYWAY_TABLE=schema_version
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
 fi
 

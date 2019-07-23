@@ -16,7 +16,6 @@ Green check shows after marking a question as complete
     [Documentation]    INFUND-539
     [Tags]
     Given the user navigates to the overview page of the Robot test application
-    And the user should see the element         jQuery = li:contains("Economic benefit") > .assign-container
     When the user clicks the button/link        link = 4. Economic benefit
     And the applicant adds some content and marks this section as complete
     And The user navigates to the overview page of the Robot test application

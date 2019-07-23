@@ -8,8 +8,11 @@ public class QuestionStatusResourceDocs {
 
     public static final FieldDescriptor[] questionStatusResourceFields = {
             fieldWithPath("id").description("The id of the question status"),
-            fieldWithPath("markedAsComplete").description("The marked as complete of the question status"),
-            fieldWithPath("markedAsCompleteBy").description("The marked as complete by of the question status"),
+            fieldWithPath("markedAsComplete").description("True if the question status has been marked as complete"),
+            fieldWithPath("markedAsCompleteBy").description("The id of the process role that marked the question status as complete"),
+            fieldWithPath("markedAsCompleteByUserId").description("The id of the user that marked the question status as complete"),
+            fieldWithPath("markedAsCompleteByUserName").description("The name of the user that marked the question status as complete"),
+            fieldWithPath("markedAsCompleteOn").description("The timestamp when the question status was marked as complete"),
             fieldWithPath("question").description("The question of the question status"),
             fieldWithPath("assignee").description("The assignee of the question status"),
             fieldWithPath("assignedDate").description("The assigned date of the question status"),
@@ -20,5 +23,6 @@ public class QuestionStatusResourceDocs {
             fieldWithPath("assignedByName").description("The assigned by name of the question status"),
             fieldWithPath("assigneeUserId").description("The assignee user id of the question status"),
             fieldWithPath("assignedByUserId").description("The assigned by user id of the question status"),
+            fieldWithPath("markedAsCompleteByOrganisationId").description("The id of the organisation that marked the question as complete"),
     };
 }

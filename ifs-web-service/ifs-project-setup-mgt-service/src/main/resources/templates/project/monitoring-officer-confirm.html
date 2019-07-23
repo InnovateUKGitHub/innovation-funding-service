@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+	  th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
 <head>
-	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a monitoring officer'" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${competitionTitle} - Monitoring officer|" />
 </head>
 <body class="govuk-template__body competition-management project-management application-overview">
 
@@ -14,9 +15,7 @@
 	<main class="govuk-main-wrapper" id="main-content" role="main">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-two-thirds">
-				<th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-					<th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
-				</th:block>
+				<th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
 			</div>
 			<div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
 				<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries',hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Queries for ${model.organisationName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
 </head>
 
 <body class="govuk-template__body competition-management project-management query-form">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Queries for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <h2 class="govuk-heading-m">Finance Contact</h2>
         <p class="govuk-body" th:if="${model.financeContact.isPresent()}">
@@ -43,30 +43,28 @@
         <p class="govuk-body">
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
-        <div class="govuk-grid-row govuk-!-margin-bottom-6">
-            <div class="govuk-grid-column-one-half">
-                <th:block th:if="${model.financeContact.isPresent()}">
-                    <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
-                </th:block>
 
-                <th:block th:unless="${model.financeContact.isPresent()}">
-                    <button disabled="disabled" class="govuk-button">Post a new query</button>
-                </th:block>
-            </div>
-            <div class="govuk-grid-column-one-half">
-                <fieldset class="govuk-fieldset">
-                    <div class="alignright">
-                        <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
-                        <select id="querySection"
-                                onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
-                                class="govuk-select govuk-!-width-one-half">
-                            <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
-                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
-                            <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
-                        </select>
-                    </div>
-                </fieldset>
-            </div>
+        <div class="govuk-form-group" th:if="${model.projectIsActive}">
+            <th:block th:if="${model.financeContact.isPresent()}">
+                <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
+            </th:block>
+
+            <th:block th:unless="${model.financeContact.isPresent()}">
+                <button disabled="disabled" class="govuk-button">Post a new query</button>
+            </th:block>
+        </div>
+
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <label for="querySection" class="govuk-label govuk-!-display-inline">Query section</label>
+                <select id="querySection"
+                        onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)"
+                        class="govuk-select govuk-!-width-one-half">
+                    <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
+                    <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
+                    <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
+                </select>
+            </fieldset>
         </div>
 
         <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
@@ -93,13 +91,17 @@
                             <h3 th:unless="${post.attachments.isEmpty()}" class="govuk-heading-s">Supporting documentation</h3>
                             <ul class="govuk-list">
                                 <li th:each="attachment : ${post.attachments}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}" class="govuk-link" target="_blank">file</a>
-                                    (opens in a new window)
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
+                                       th:text="${attachment.name}"
+                                       class="govuk-link"
+                                       target="_blank"
+                                       aria-describedby="supporting-documentation-hint">file</a>
+                                    <span id="supporting-documentation-hint">(opens in a new window)</span>
                                 </li>
                             </ul>
                         </div>
                     </th:block>
-                    <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
+                    <th:block th:unless="${model.queryId != null} or ${query.isClosed() or !model.projectIsActive}">
                         <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a><br />
                         <a class="button-clear govuk-!-padding-left-0"
                            data-js-modal="modal-confirm-mark-resolved"
@@ -108,7 +110,7 @@
                             Mark as resolved
                         </a>
                     </th:block>
-                    <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
+                    <th:block th:if="${model.queryId != null and query.id == model.queryId and model.projectIsActive}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
                             <h3 class="govuk-heading-m">Respond to query</h3>
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
@@ -142,8 +144,12 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}" class="govuk-link" target="_blank">filename</a>
-                                            (opens in a new window)
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
+                                               th:text="${model.newAttachmentLinks.get(attachmentId)}"
+                                               class="govuk-link"
+                                               target="_blank"
+                                               aria-describedby="supporting-documentation-hint">filename</a>
+                                            <span id="supporting-documentation-hint">(opens in a new window)</span>
                                             <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button>
                                         </li>
                                     </ul>

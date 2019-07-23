@@ -4,4 +4,25 @@
       font-weight:normal;
     }
   }
+
+  tbody {
+    th {
+      @include media-down(tablet) {
+        min-width: auto;
+
+        .govuk-grid-column-one-half {
+          width: 100%;
+          text-align: left;
+        }
+      }
+
+      min-width: 450px;
+      word-break: normal;
+    }
+    td {
+      word-break: normal;
+    }
+  }
 }
+
+

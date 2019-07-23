@@ -18,7 +18,7 @@ Mark as complete is impossible for empty questions
     And the user should see the element     css = .govuk-error-summary li
 
 Error should not be visible when the text area is not empty
-    [Documentation]    -INFUND-406
+    [Documentation]    INFUND-406
     [Tags]
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question
@@ -39,10 +39,10 @@ the applicant inserts some text again in the "Project Summary" question
     wait for autosave
 
 applicant should be able to mark the question as complete
-    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+    the user clicks the button/link        jQuery = button:contains("Mark")
     the user should not see the element    css = .textarea-wrapped .govuk-error-message
     the user should not see the element    css = .govuk-error-summary li
 
 the applicant can click edit to make the section editable again
     the user clicks the button/link    jQuery = button:contains("Edit")
-    the user should see the element    jQuery = button:contains("Mark as complete")
+    the user should see the element    jQuery = button:contains("Mark")

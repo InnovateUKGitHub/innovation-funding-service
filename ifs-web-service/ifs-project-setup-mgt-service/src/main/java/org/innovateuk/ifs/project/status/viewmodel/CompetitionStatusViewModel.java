@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Interface that defines the minimal information necessary to drive a standard Project page with the standard header information about the project
  */
-public class CompetitionStatusViewModel {
+public class CompetitionStatusViewModel implements CompetitionStatusTableViewModel {
 
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
     private Map<Long, StatusPermission> statusPermissions;
@@ -16,28 +16,41 @@ public class CompetitionStatusViewModel {
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private boolean showTabs;
+    private String applicationSearchString;
 
     public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource,
-                                      boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap,
-                                      long openQueryCount, long pendingSpendProfilesCount, boolean showTabs) {
+                                      boolean hasProjectFinanceRole,
+                                      Map<Long, StatusPermission> projectStatusPermissionsMap,
+                                      long openQueryCount,
+                                      long pendingSpendProfilesCount,
+                                      String applicationSearchString) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
-        this.canExportBankDetails = canExportBankDetails;
+        this.canExportBankDetails = hasProjectFinanceRole;
         this.statusPermissions = projectStatusPermissionsMap;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
-        this.showTabs = showTabs;
+        this.showTabs = hasProjectFinanceRole;
+        this.applicationSearchString = applicationSearchString;
     }
 
+    @Override
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
         return competitionProjectsStatusResource;
     }
 
+    @Override
     public Map<Long, StatusPermission> getStatusPermissions() {
         return statusPermissions;
     }
 
+    @Override
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
+    }
+
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no projects in this competition.";
     }
 
     public long getOpenQueryCount() { return openQueryCount; }
@@ -45,4 +58,8 @@ public class CompetitionStatusViewModel {
     public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
 
     public boolean isShowTabs() { return showTabs; }
+
+    public String getApplicationSearchString() {
+        return applicationSearchString;
+    }
 }

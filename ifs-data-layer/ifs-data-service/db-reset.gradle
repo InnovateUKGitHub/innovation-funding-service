@@ -68,7 +68,6 @@ task dbAnonymisedDumpDockerEnv {
     }
 }
 
-
 task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
     dependsOn "dbAnonymisedDumpDockerEnv"
     tag = 'innovateuk/db-anonymised-data'

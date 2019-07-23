@@ -80,11 +80,12 @@ the user is searching for external users
 
 a collaborator has been invited but he has not yet approved the invitation
     log in as a different user            &{lead_applicant_credentials}
-    the user navigates to the page        ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team/update/existing/${EMPIRE_LTD_ID}
-    the user clicks the button/link       jQuery = .button-clear:contains("Add another contributor")
-    the user enters text to a text field  name = stagedInvite.name  Stuart
-    the user enters text to a text field  name = stagedInvite.email  ${invitedCollaborator}
-    the user clicks the button/link       jQuery = button:contains("Invite")
+    the user navigates to the page        ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    the user clicks the button/link       link = Application team
+    the user clicks the button/link       jQuery = button:contains("Add person to Empire Ltd")
+    the user enters text to a text field  id = name  Stuart
+    the user enters text to a text field  id = email  ${invitedCollaborator}
+    the user clicks the button/link       jQuery = button:contains("Invite to application")
     logout as user
 
 the support user should be able to see him as
@@ -116,7 +117,7 @@ the user enters the application id into the search field
 the user enters the competition name into the search field
     the user enters text to a text field              id = searchQuery  ${openCompetitionResearch_name}
     the user clicks the button/link                   id = searchsubmit
-    the user should see the element                   jQuery = a div:contains("${openCompetitionResearch_name}")
+    the user should see the element                   jQuery = a:contains("${openCompetitionResearch_name}")
 
 Custom suite teardown
     Disconnect from database

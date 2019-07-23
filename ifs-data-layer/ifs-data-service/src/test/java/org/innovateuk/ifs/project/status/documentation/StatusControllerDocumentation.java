@@ -54,6 +54,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withProjectLeadOrganisationName("Hive IT").
                         withNumberOfPartners(3, 3, 3).
                         withProjectDetailStatus(COMPLETE, PENDING, COMPLETE).
+                        withProjectTeamStatus(COMPLETE, PENDING, COMPLETE).
                         withMonitoringOfficerStatus(PENDING, PENDING, COMPLETE).
                         withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
@@ -76,6 +77,42 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         ),
                         responseFields(competitionProjectsStatusResourceFields)
                         .andWithPrefix("projectStatusResources[].", ProjectStatusDocs.projectStatusResourceFields)
+                ));
+    }
+
+    @Test
+    public void getPreviousCompetitionStatus() throws Exception {
+        Long competitionId = 1L;
+
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = newCompetitionProjectsStatusResource().
+                withCompetitionName("ABC").
+                withCompetitionNumber(competitionId).
+                withProjectStatusResources(newProjectStatusResource().
+                        withProjectNumber(1L, 2L, 3L).
+                        withProjectTitles("Project ABC", "Project PMQ", "Project XYZ").
+                        withProjectLeadOrganisationName("Hive IT").
+                        withNumberOfPartners(3, 3, 3).
+                        withProjectDetailStatus(COMPLETE, PENDING, COMPLETE).
+                        withProjectTeamStatus(COMPLETE, PENDING, COMPLETE).
+                        withMonitoringOfficerStatus(PENDING, PENDING, COMPLETE).
+                        withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
+                        withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
+                        withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
+                        withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
+                        withProjectState(LIVE).
+                        build(3)).
+                build();
+
+        when(statusServiceMock.getPreviousCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
+
+        mockMvc.perform(get("/project/previous/competition/{id}", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition for which project status details are being requested")
+                        ),
+                        responseFields(competitionProjectsStatusResourceFields)
+                                .andWithPrefix("projectStatusResources[].", ProjectStatusDocs.projectStatusResourceFields)
                 ));
     }
 
@@ -158,6 +195,11 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(1).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(2).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
+
+        projectLeadStatusResource.setProjectTeamStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(0).setProjectTeamStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(1).setProjectTeamStatus(ProjectActivityStates.COMPLETE);
+        partnerStatuses.get(2).setProjectTeamStatus(ProjectActivityStates.COMPLETE);
 
         projectLeadStatusResource.setFinanceChecksStatus(PENDING);
         partnerStatuses.get(0).setFinanceChecksStatus(PENDING);
