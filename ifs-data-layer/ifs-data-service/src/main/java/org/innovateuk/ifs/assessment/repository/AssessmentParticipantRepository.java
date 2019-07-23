@@ -106,7 +106,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "           WHERE p.id = assessmentParticipant.user.profileId " +
             "           AND ia.category.id = :innovationAreaId" +
             "       )" +
-            ")";
+            ")" +
+            "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
@@ -169,7 +170,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
                                                                    @Param("role") CompetitionParticipantRole role,
                                                                    @Param("status") ParticipantStatus status,
                                                                    @Param("appId") long applicationId,
-                                                                   @Param("innovationAreaId") Long filterInnovationArea,
+                                                                   @Param("assessorNameFilter") String assessorNameFilter,
                                                                    Pageable pageable);
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)

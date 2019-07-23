@@ -38,8 +38,8 @@ public class AssessmentApplicationProgressController {
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam MultiValueMap<String, String> queryParams,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
-        return doProgressView(model, applicationId, filterInnovationArea, queryParams, page);
+                                      @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
+        return doProgressView(model, applicationId, assessorNameFilter, queryParams, page);
     }
 
     @PostMapping(path = "/assign/{assessorId}")
@@ -76,11 +76,11 @@ public class AssessmentApplicationProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, Long filterInnovationArea, MultiValueMap<String, String> queryParams, int page) {
+    private String doProgressView(Model model, Long applicationId, String assessorNameFilter, MultiValueMap<String, String> queryParams, int page) {
         queryParams.add("applicationId", applicationId.toString());
 
         String assessorProfileOrigin = buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams);
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page, assessorProfileOrigin));
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessorNameFilter, page, assessorProfileOrigin));
         model.addAttribute("applicationOriginQuery", buildOriginQueryString(ManagementApplicationOrigin.APPLICATION_PROGRESS, queryParams));
         model.addAttribute("assessorProfileOriginQuery", assessorProfileOrigin);
 

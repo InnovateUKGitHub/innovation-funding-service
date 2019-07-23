@@ -31,12 +31,12 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, Long filterInnovationArea, int page, String assessorOrigin) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page, String assessorOrigin) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccess();
 
         List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccess();
-        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, filterInnovationArea).getSuccess();
+        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, assessorNameFilter).getSuccess();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -51,7 +51,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getPreviouslyAssignedAssessors(notAvailableAssessors),
                 getAvailableAssessors(availableAssessors.getContent()),
                 getInnovationSectors(),
-                filterInnovationArea,
+                assessorNameFilter,
                 new Pagination(availableAssessors, assessorOrigin));
     }
 
