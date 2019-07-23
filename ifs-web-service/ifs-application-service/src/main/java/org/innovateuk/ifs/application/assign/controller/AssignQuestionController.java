@@ -92,7 +92,10 @@ public class AssignQuestionController {
     private String redirectToRelevantPage(long applicationId, long questionId, HttpServletRequest request, HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         String url = encodedCookieService.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {})
-                .map(Deque::peek)
+                .map(queue -> {
+                    queue.pop(); // remove this page from history.
+                    return queue.peek();
+                })
                 .map(PageHistory::getUrl)
                 .orElse(String.format("/application/%d/form/question/%d", applicationId, questionId));
         return "redirect:" + url;

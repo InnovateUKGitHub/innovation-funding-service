@@ -28,7 +28,7 @@
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <div class="alignright-button">
-                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}"
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
                    aria-label="Close Popup" class="button-clear js-close">Cancel</a>
                 <button class="govuk-button" type="submit">Reinstate application</button>
             </div>
