@@ -240,7 +240,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getByNotified() {
 
-        Pageable pageable = new PageRequest(0, 100 , new Sort("contact.id"));
+        Pageable pageable = PageRequest.of(0, 100 , new Sort("contact.id"));
 
         ServiceResult<EuGrantPageResource> resultOne = euGrantService.getEuGrantsByContactNotified(false, pageable);
         ServiceResult<EuGrantPageResource> resultTwo = euGrantService.getEuGrantsByContactNotified(true, pageable);

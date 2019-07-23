@@ -44,7 +44,7 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "JOIN user.roles roles " +
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
-            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorSearchString, '%') " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
             "GROUP BY user.id ";
 
     @Query(ASSESSORS_WITH_COMPETITION)
@@ -52,8 +52,8 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
 
     @Query(ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
     Page<User> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId,
-                                                             @Param("assessorSearchString") String assessorSearchString, Pageable pageable);
+                                                             @Param("assessorNameFilter") String assessorNameFilter, Pageable pageable);
 
     @Query(ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
-    List<User> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorSearchString") String assessorSearchString);
+    List<User> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorNameFilter") String assessorNameFilter);
 }

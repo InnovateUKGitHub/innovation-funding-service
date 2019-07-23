@@ -227,10 +227,11 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
         Optional<Long> innovationArea = of(4L);
+        String assessorFilter = "";
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
 
-        when(assessmentInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
+        when(assessmentInviteServiceMock.getAvailableAssessors(competitionId, pageable, assessorFilter))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", competitionId)
@@ -258,14 +259,14 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, innovationArea);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, assessorFilter);
     }
 
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
@@ -301,7 +302,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         List<AssessorInviteOverviewResource> content = newAssessorInviteOverviewResource().build(2);
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()

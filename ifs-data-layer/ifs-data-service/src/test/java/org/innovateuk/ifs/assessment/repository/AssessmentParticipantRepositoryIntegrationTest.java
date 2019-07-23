@@ -388,7 +388,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         flushAndClearSession();
 
-        Pageable pagination = new PageRequest(0, 1);
+        Pageable pagination = PageRequest.of(0, 1);
 
         Page<AssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, null, pagination);
 
@@ -563,7 +563,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
@@ -662,7 +662,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -701,7 +701,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -755,7 +755,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -833,7 +833,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -912,7 +912,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -985,7 +985,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
@@ -1028,7 +1028,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),

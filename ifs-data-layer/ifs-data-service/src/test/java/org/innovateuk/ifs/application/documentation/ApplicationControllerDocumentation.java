@@ -129,7 +129,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
 
-        PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         when(applicationServiceMock.wildcardSearchById(searchString, pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
 
         mockMvc.perform(get("/application/wildcard-search-by-id?searchString=" + searchString + "&page=" + pageNumber + "&size=" + pageSize)

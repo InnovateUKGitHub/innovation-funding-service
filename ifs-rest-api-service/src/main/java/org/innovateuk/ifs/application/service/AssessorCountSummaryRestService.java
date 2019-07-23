@@ -6,5 +6,5 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 public interface AssessorCountSummaryRestService {
 
     RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(
-            long competitionId, String assessorSearchString, Integer pageIndex, Integer pageSize);
+            long competitionId, String assessorNameFilter, Integer pageIndex, Integer pageSize);
 }

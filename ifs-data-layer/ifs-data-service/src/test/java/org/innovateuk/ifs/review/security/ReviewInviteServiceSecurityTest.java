@@ -57,7 +57,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Test
     public void getCreatedInvites() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);
@@ -71,7 +71,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);
@@ -116,7 +116,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Test
     public void getInvitationOverview() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         List<ParticipantStatus> statuses = asList(ParticipantStatus.PENDING, ParticipantStatus.REJECTED);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, statuses),

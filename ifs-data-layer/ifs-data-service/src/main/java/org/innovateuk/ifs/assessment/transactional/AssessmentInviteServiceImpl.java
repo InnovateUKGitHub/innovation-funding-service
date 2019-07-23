@@ -250,8 +250,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorSearchString) {
-        final Page<User> pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorSearchString), pageable);
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorNameFilter) {
+        final Page<User> pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter), pageable);
 
         return serviceSuccess(new AvailableAssessorPageResource(
                 pagedResult.getTotalElements(),
@@ -263,9 +263,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorSearchString) {
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
 
-        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorSearchString));
+        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
 
         return serviceSuccess(simpleMap(result, User::getId));
     }
@@ -591,7 +591,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyInvitedToThisCompetition(int index, String email, long competitionId) {
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         AssessorCreatedInvitePageResource resource = getInvitePageResource(competitionId, pageable).getSuccess();
 

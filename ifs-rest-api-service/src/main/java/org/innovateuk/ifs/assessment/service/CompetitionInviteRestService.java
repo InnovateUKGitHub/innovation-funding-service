@@ -27,9 +27,9 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, String assessorSearchString);
+    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, String assessorNameFilter);
 
-    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorSearchString);
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter);
 
     RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                             Optional<Long> innovationArea,

@@ -40,11 +40,11 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
                                   @PathVariable("competitionId") long competitionId,
                                   @RequestParam MultiValueMap<String, String> queryParams,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "assessorSearchString", required = false) String assessorSearchString
+                                  @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter
     ) {
         CompetitionResource competitionResource = getCompetition(competitionId);
 
-        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, assessorSearchString, page);
+        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, assessorNameFilter, page);
 
         String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGE_ASSESSORS, queryParams);
 
@@ -54,22 +54,22 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
         return "competition/manage-assessors";
     }
 
-    private AssessorCountSummaryPageResource getCounts(long competitionId, String assessorSearchString, int page) {
+    private AssessorCountSummaryPageResource getCounts(long competitionId, String assessorNameFilter, int page) {
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("assessorSearchString", assessorSearchString);
+        params.add("assessorNameFilter", assessorNameFilter);
 
         String baseUrl = format("%s/find-by-competition-id/%s", "/assessor-count-summary", competitionId);
 
         String uriWithParams =  UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("sort", null)
-                .queryParam("assessorSearchString", assessorSearchString)
+                .queryParam("assessorNameFilter", assessorNameFilter)
                 .build()
                 .encode()
                 .toUriString();
 
         return applicationCountSummaryRestService
-                .getAssessorCountSummariesByCompetitionId(competitionId, StringUtils.trim(assessorSearchString), page, PAGE_SIZE)
+                .getAssessorCountSummariesByCompetitionId(competitionId, StringUtils.trim(assessorNameFilter), page, PAGE_SIZE)
                 .getSuccess();
     }
 }

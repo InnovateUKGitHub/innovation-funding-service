@@ -89,14 +89,14 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(value = "assessorSearchString", required = false) String assessorSearchString,
+                       @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter,
                        @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
-        updateSelectionForm(request, response, competitionId, selectionForm, assessorSearchString);
-        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorSearchString, originQuery);
+        updateSelectionForm(request, response, competitionId, selectionForm, assessorNameFilter);
+        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter, originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
 
@@ -107,10 +107,10 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                                      HttpServletResponse response,
                                      long competitionId,
                                      AssessorSelectionForm selectionForm,
-                                     String assessorSearchString) {
+                                     String assessorNameFilter) {
         AssessorSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
-        AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, assessorSearchString, competitionId);
+        AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, assessorNameFilter, competitionId);
         selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
         selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
 
@@ -118,9 +118,9 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     }
 
     private AssessorSelectionForm trimSelectionByFilteredResult(AssessorSelectionForm selectionForm,
-                                                                String assessorSearchString,
+                                                                String assessorNameFilter,
                                                                 Long competitionId) {
-        List<Long> filteredResults = getAllAssessorIds(competitionId, assessorSearchString);
+        List<Long> filteredResults = getAllAssessorIds(competitionId, assessorNameFilter);
         AssessorSelectionForm updatedSelectionForm = new AssessorSelectionForm();
 
         selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
@@ -141,13 +141,13 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam String assessorSearchString,
+            @RequestParam String assessorNameFilter,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitExceeded = false;
         try {
-            List<Long> assessorIds = getAllAssessorIds(competitionId, assessorSearchString);
+            List<Long> assessorIds = getAllAssessorIds(competitionId, assessorNameFilter);
             AssessorSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
@@ -177,14 +177,14 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam("addAll") boolean addAll,
                                          @RequestParam(defaultValue = "0") int page,
-                                         @RequestParam String assessorSearchString,
+                                         @RequestParam String assessorNameFilter,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         try {
             AssessorSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, assessorSearchString));
+                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, assessorNameFilter));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedAssessorIds().clear();
@@ -201,8 +201,8 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         }
     }
 
-    private List<Long> getAllAssessorIds(long competitionId, String assessorSearchString) {
-        return competitionInviteRestService.getAvailableAssessorIds(competitionId, assessorSearchString).getSuccess();
+    private List<Long> getAllAssessorIds(long competitionId, String assessorNameFilter) {
+        return competitionInviteRestService.getAvailableAssessorIds(competitionId, assessorNameFilter).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")

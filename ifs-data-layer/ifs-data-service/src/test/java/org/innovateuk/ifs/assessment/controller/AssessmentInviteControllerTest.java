@@ -391,6 +391,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
     public void getAvailableAssessors() throws Exception {
         int page = 5;
         int pageSize = 30;
+        String assessorFilter = "";
 
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
@@ -402,10 +403,10 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(30)
                 .build();
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(DESC, "lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(DESC, "lastName"));
         Optional<Long> innovationArea = of(4L);
 
-        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, innovationArea))
+        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID)
@@ -416,7 +417,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, innovationArea);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter);
     }
 
     @Test
@@ -424,8 +425,9 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         List<Long> expectedAvailableAssessorIds = asList(1L, 2L);
 
         Optional<Long> innovationArea = of(4L);
+        String assessorFilter = "";
 
-        when(assessmentInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, innovationArea))
+        when(assessmentInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID, assessorFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorIds));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID)
@@ -434,13 +436,14 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorIds)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, innovationArea);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessorIds(COMPETITION_ID, assessorFilter);
     }
 
     @Test
     public void getAvailableAssessors_defaultParameters() throws Exception {
         int page = 0;
         int pageSize = 20;
+        String assessorFilter = "";
 
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
@@ -452,17 +455,17 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(30)
                 .build();
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName", "lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName", "lastName"));
         Optional<Long> innovationArea = empty();
 
-        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, innovationArea))
+        when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-available-assessors/{competitionId}", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, innovationArea);
+        verify(assessmentInviteServiceMock, only()).getAvailableAssessors(COMPETITION_ID, pageable, assessorFilter);
     }
 
     @Test
@@ -481,7 +484,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "email"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "email"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -511,7 +514,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "name"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -535,7 +538,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
         when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
@@ -562,7 +565,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
-        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
                 .withContent(newAssessorInviteOverviewResource().build(2))

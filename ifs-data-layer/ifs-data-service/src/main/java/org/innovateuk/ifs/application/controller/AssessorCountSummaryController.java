@@ -22,9 +22,9 @@ public class AssessorCountSummaryController {
 
     @GetMapping("/find-by-competition-id/{competitionId}")
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(@PathVariable("competitionId") long competitionId,
-                                                                                                 @RequestParam(value = "assessorSearchString", defaultValue = "") String assessorSearchString,
+                                                                                                 @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
                                                                                                  @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionId(competitionId, trim(assessorSearchString), pageIndex, pageSize).toGetResponse();
+        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionId(competitionId, trim(assessorNameFilter), pageIndex, pageSize).toGetResponse();
     }
 }

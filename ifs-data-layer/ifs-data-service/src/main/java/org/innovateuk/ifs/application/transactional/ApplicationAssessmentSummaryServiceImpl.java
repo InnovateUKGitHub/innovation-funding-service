@@ -56,7 +56,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
 
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
-                    Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
+                    Pageable pageable = PageRequest.of(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
                     Page<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
                             ASSESSOR,

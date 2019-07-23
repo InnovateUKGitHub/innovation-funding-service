@@ -67,13 +67,13 @@ public interface AssessmentInviteService {
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available assessors by competition",
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
-    ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorSearchString);
+    ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorNameFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
             description = "Competition Admins and Project Finance can retrieve available assessor ids by competition",
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
-    ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorSearchString);
+    ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",

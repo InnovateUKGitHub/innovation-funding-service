@@ -39,7 +39,7 @@ public class FlywayPatchNumberHook implements RepositoryMergeRequestCheck {
         final String fromLastCommitId = fromRef.getLatestCommit();
         final Repository fromRepo = fromRef.getRepository();
 
-        final PageRequest pageRequest = new PageRequestImpl(0, PageRequest.MAX_PAGE_LIMIT);
+        final PageRequest pageRequest = PageRequest.ofImpl(0, PageRequest.MAX_PAGE_LIMIT);
         final FlywayToFromVersionCallBack flywayToFromVersionCallBack = new FlywayToFromVersionCallBack(context.getMergeRequest());
 
         final ContentTreeCallback toCallBack = new FlywayVersionContentTreeCallback(new Consumer<List<Pair<String, List<Integer>>>>() {

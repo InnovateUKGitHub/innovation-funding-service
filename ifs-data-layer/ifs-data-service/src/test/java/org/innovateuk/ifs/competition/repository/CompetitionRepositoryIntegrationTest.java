@@ -364,7 +364,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withType(MilestoneType.FEEDBACK_RELEASED).withDate(now().minusDays(1L)).build();
         milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
 
-        Pageable pageable = new PageRequest(0, 40);
+        Pageable pageable = PageRequest.of(0, 40);
 
         Page<Competition> searchResults = repository.search("%o%", pageable);
         List<Competition> filteredSearchResults = searchResults.getContent().stream().filter(r ->
