@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -39,10 +35,7 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.EU_GRANT_TRANSFER;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_PROGRESS;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_SETUP;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
@@ -51,11 +44,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
-import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
-import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -106,7 +95,7 @@ public class ApplicationDashboardServiceImplTest {
     public void getInSetup() {
         ApplicantDashboardResource dashboard = service.getApplicantDashboard(userId).getSuccess();
 
-        assertEquals(2, dashboard.getInSetup().size());
+        assertEquals(1, dashboard.getInSetup().size());
 
         DashboardInSetupRowResource projectFive = dashboard.getInSetup().get(0);
         assertEquals(14L, projectFive.getProjectId());
@@ -115,14 +104,6 @@ public class ApplicationDashboardServiceImplTest {
         assertEquals(8L, projectFive.getApplicationId());
         assertEquals("Open Competition", projectFive.getCompetitionTitle());
         assertEquals(IN_SETUP, projectFive.getDashboardSection());
-
-        DashboardInSetupRowResource projectSix = dashboard.getInSetup().get(1);
-        assertEquals(14L, projectSix.getProjectId());
-        assertEquals("F - Complete", projectSix.getProjectTitle());
-        assertEquals("F - Complete", projectSix.getTitle());
-        assertEquals(9L, projectSix.getApplicationId());
-        assertEquals("Open Competition", projectSix.getCompetitionTitle());
-        assertEquals(IN_SETUP, projectSix.getDashboardSection());
     }
 
     @Test
@@ -194,7 +175,7 @@ public class ApplicationDashboardServiceImplTest {
         ApplicantDashboardResource dashboard = service.getApplicantDashboard(userId).getSuccess();
         int dashboardProjectCount = dashboard.getInSetup().size() + dashboard.getEuGrantTransfer().size() + dashboard.getInProgress().size() + dashboard.getPrevious().size();
 
-        assertEquals(6, dashboardProjectCount);
+        assertEquals(5, dashboardProjectCount);
     }
 
     private void setupDashboard() {
@@ -244,11 +225,11 @@ public class ApplicationDashboardServiceImplTest {
         Project project_Six = newProject().withId(projectSixId).build();
 
         ProjectResource projectResource_One = getProjectResource(competitionOneId, applicationOneId, projectOneId, projectOneName, SETUP);
-        ProjectResource projectResource_Two = getProjectResource(competitionOneId, applicationTwoId, projectTwoId, projectTwoName, LIVE);
+        ProjectResource projectResource_Two = getProjectResource(competitionOneId, applicationTwoId, projectTwoId, projectTwoName, SETUP);
         ProjectResource projectResource_Three = getProjectResource(competitionOneId, applicationThreeId, projectThreeId, projectThreeName, WITHDRAWN);
         ProjectResource projectResource_Four = getProjectResource(competitionOneId, applicationFourId, projectFourId, projectFourName, HANDLED_OFFLINE);
-        ProjectResource projectResource_Five = getProjectResource(competitionTwoId, applicationFiveId, projectFiveId, projectFiveName, COMPLETED_OFFLINE);
-        ProjectResource projectResource_Six = getProjectResource(competitionTwoId, applicationSixId, projectSixId, projectSixName, LIVE);
+        ProjectResource projectResource_Five = getProjectResource(competitionTwoId, applicationFiveId, projectFiveId, projectFiveName, SETUP);
+        ProjectResource projectResource_Six = getProjectResource(competitionTwoId, applicationSixId, projectSixId, projectSixName, WITHDRAWN);
 
         ProjectUser projectUser_One = newProjectUser().withProject(project_One).withUser(user).build();
         ProjectUser projectUser_Two = newProjectUser().withProject(project_Two).withUser(user).build();
