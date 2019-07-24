@@ -81,9 +81,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     @Override
     public String getLinkUrl() {
-        return hasProject() ?
-                String.format("/project-setup/project/%s", projectId) :
-                String.format("/application/%s/summary", getApplicationNumber());
+        return String.format("/application/%s/summary", getApplicationNumber());
     }
 
     @Override
