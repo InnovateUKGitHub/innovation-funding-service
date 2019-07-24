@@ -19,6 +19,9 @@ public class PageHistoryService {
 
     static final String PAGE_HISTORY_COOKIE_NAME = "pageHistory";
 
+    @Autowired
+    private EncodedCookieService encodedCookieService;
+
     public void recordPageHistory(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView, HandlerMethod handler) {
         Deque<PageHistory> history = getPageHistory(request).orElse(new LinkedList<>());
         while (history.contains(new PageHistory(request.getRequestURI()))) {
@@ -37,9 +40,6 @@ public class PageHistoryService {
         history.push(new PageHistory(request.getRequestURI()));
         encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
-
-    @Autowired
-    private EncodedCookieService encodedCookieService;
 
     public Optional<PageHistory> getPreviousPage(HttpServletRequest request) {
         return getPageHistory(request)
