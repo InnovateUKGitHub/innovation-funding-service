@@ -66,13 +66,13 @@ Check existing applicant is emailed and directed to sign in
     [Documentation]  IFS-4288
     [Tags]
     Given the user reads his email and clicks the link    ${applicantEmail}  Invite to view a competition: ${openProgrammeCompetitionName}  Sign in  1
-    Then the user should see the element                  jQuery = h1:contains("Sign in")
+    Then the user should see the element                  jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
 
 Check existing assesor from the list is emailed and directed to sign in
     [Documentation]  IFS-4288
     [Tags]
     Given the user reads his email and clicks the link    ${previousStakeholderEmail}  Invite to view a competition: ${openProgrammeCompetitionName}  Sign in  1
-    Then the user should see the element                  jQuery = h1:contains("Sign in")
+    Then the user should see the element                  jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
 
 Create stakeholders account validations from email
     [Documentation]  IFS-4252

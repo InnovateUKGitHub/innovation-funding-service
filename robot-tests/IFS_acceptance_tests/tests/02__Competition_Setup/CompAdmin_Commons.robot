@@ -64,7 +64,7 @@ the user fills in the CS Initial details
 
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
-    the user clicks the button/link      css = button.govuk-button  #Done
+    the user clicks the button/link      jQuery = button:contains("Done")
     the user clicks the button/link      link = Competition setup
     the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
@@ -184,7 +184,7 @@ the user opts no finances for EOI comp
     the element should be disabled     application-finance-standard
     the element should be disabled     application-finance-standard-with-vat
     the user selects the radio button  applicationFinanceType  NO_FINANCES
-    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     :FOR   ${ELEMENT}   IN    @{programme_questions}
