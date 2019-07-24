@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -43,4 +44,8 @@ public interface CompetitionSetupRestService {
     RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId);
 
     RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId);
+
+    RestResult<FileEntryResource> uploadCompetitionTerms(long competitionId, String contentType, long contentLength, String originalFilename, byte[] file);
+
+    RestResult<Void> deleteCompetitionTerms(long competitionId);
 }
