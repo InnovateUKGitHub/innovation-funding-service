@@ -165,6 +165,7 @@ IFS.core.formValidation = (function () {
         e.preventDefault()
         IFS.core.formValidation.errorSummaryLinksClick(this)
       })
+      IFS.core.formValidation.initDetailsErrors()
     },
     checkPasswordPolicy: function (field, errorStyles) {
       //  clear tooWeakPassword and containsName message as this is validated in the back end.
@@ -1090,6 +1091,18 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.scrollToElement(altTarget.first())
         }
       }
+    },
+    initDetailsErrors: function () {
+      var details = jQuery('.govuk-details')
+      details.each(function () {
+        if (jQuery(this).find('.govuk-form-group--error').length) {
+          var detailsSummary = jQuery(this).find('.govuk-details__summary')
+          var detailsText = jQuery(this).find('.govuk-details__text')
+          details.attr('open', '')
+          detailsSummary.attr('aria-expanded', 'true')
+          detailsText.attr('aria-hidden', 'false')
+        }
+      })
     },
     scrollToElement: function (el) {
       jQuery('html, body').animate({
