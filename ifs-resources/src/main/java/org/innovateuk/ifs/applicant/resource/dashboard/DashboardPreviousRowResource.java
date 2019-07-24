@@ -1,19 +1,24 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
- * Resource representing an application for use in the applicant dashboard.
+ * Resource representing an application or project for use in the previous section of the applicant dashboard.
  */
-public class DashboardApplicationInProgressResource extends DashboardApplicationResource {
+public class DashboardPreviousRowResource extends DashboardRowResource {
 
     private boolean assignedToMe;
     private ApplicationState applicationState;
+    private Optional<ProjectState> projectState;
+    private Long projectId;
     private boolean leadApplicant;
     private ZonedDateTime endDate;
     private long daysLeft;
@@ -22,7 +27,7 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
     private LocalDate startDate;
 
     // Private constructor to enforce immutability
-    private DashboardApplicationInProgressResource() {
+    private DashboardPreviousRowResource() {
     }
 
     public boolean isAssignedToMe() {
@@ -57,11 +62,24 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
         return startDate;
     }
 
+    public Optional<ProjectState> getProjectState() {
+        return projectState;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    @JsonIgnore
+    public boolean activeProject() {
+        return projectState.isPresent() && projectState.get().isActive();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DashboardApplicationInProgressResource that = (DashboardApplicationInProgressResource) o;
+        DashboardPreviousRowResource that = (DashboardPreviousRowResource) o;
         return new EqualsBuilder()
                 .append(assignedToMe, that.assignedToMe)
                 .append(leadApplicant, that.leadApplicant)
@@ -69,6 +87,8 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
                 .append(applicationProgress, that.applicationProgress)
                 .append(assignedToInterview, that.assignedToInterview)
                 .append(applicationState, that.applicationState)
+                .append(projectState, that.projectState)
+                .append(projectId, that.projectId)
                 .append(endDate, that.endDate)
                 .append(title, that.title)
                 .append(applicationId, that.applicationId)
@@ -83,6 +103,8 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
         return new HashCodeBuilder(17, 37)
                 .append(assignedToMe)
                 .append(applicationState)
+                .append(projectState)
+                .append(projectId)
                 .append(leadApplicant)
                 .append(endDate)
                 .append(daysLeft)
@@ -96,7 +118,7 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
                 .toHashCode();
     }
 
-    public static class DashboardApplicationInProgressResourceBuilder {
+    public static class DashboardPreviousApplicationResourceBuilder {
 
         private String title;
         private long applicationId;
@@ -104,6 +126,8 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
         private DashboardSection dashboardSection;
         private boolean assignedToMe;
         private ApplicationState applicationState;
+        private Optional<ProjectState> projectState;
+        private Long projectId;
         private boolean leadApplicant;
         private ZonedDateTime endDate;
         private long daysLeft;
@@ -111,70 +135,82 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
         private boolean assignedToInterview;
         private LocalDate startDate;
 
-        public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
+        public DashboardPreviousApplicationResourceBuilder withTitle(String title) {
             this.title = title;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withApplicationId(long applicationId) {
+        public DashboardPreviousApplicationResourceBuilder withApplicationId(long applicationId) {
             this.applicationId = applicationId;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withCompetitionTitle(String competitionTitle) {
+        public DashboardPreviousApplicationResourceBuilder withCompetitionTitle(String competitionTitle) {
             this.competitionTitle = competitionTitle;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
+        public DashboardPreviousApplicationResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
             this.dashboardSection = dashboardSection;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withAssignedToMe(boolean assignedToMe) {
+        public DashboardPreviousApplicationResourceBuilder withAssignedToMe(boolean assignedToMe) {
             this.assignedToMe = assignedToMe;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withApplicationState(ApplicationState applicationState) {
+        public DashboardPreviousApplicationResourceBuilder withApplicationState(ApplicationState applicationState) {
             this.applicationState = applicationState;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withLeadApplicant(boolean leadApplicant) {
+        public DashboardPreviousApplicationResourceBuilder withProjectState(Optional<ProjectState> projectState) {
+            this.projectState = projectState;
+            return this;
+        }
+
+        public DashboardPreviousApplicationResourceBuilder withProjectId(Long projectId) {
+            this.projectId = projectId;
+            return this;
+        }
+
+        public DashboardPreviousApplicationResourceBuilder withLeadApplicant(boolean leadApplicant) {
             this.leadApplicant = leadApplicant;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withEndDate(ZonedDateTime endDate) {
+        public DashboardPreviousApplicationResourceBuilder withEndDate(ZonedDateTime endDate) {
             this.endDate = endDate;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withDaysLeft(long daysLeft) {
+        public DashboardPreviousApplicationResourceBuilder withDaysLeft(long daysLeft) {
             this.daysLeft = daysLeft;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withApplicationProgress(int applicationProgress) {
+        public DashboardPreviousApplicationResourceBuilder withApplicationProgress(int applicationProgress) {
             this.applicationProgress = applicationProgress;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withAssignedToInterview(boolean assignedToInterview) {
+        public DashboardPreviousApplicationResourceBuilder withAssignedToInterview(boolean assignedToInterview) {
             this.assignedToInterview = assignedToInterview;
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withStartDate(LocalDate startDate) {
+        public DashboardPreviousApplicationResourceBuilder withStartDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public DashboardApplicationInProgressResource build(){
-            DashboardApplicationInProgressResource result = new DashboardApplicationInProgressResource();
+        public DashboardPreviousRowResource build(){
+            DashboardPreviousRowResource result = new DashboardPreviousRowResource();
             result.title = this.title;
             result.applicationId = this.applicationId;
+            result.projectState = this.projectState;
+            result.projectId = this.projectId;
             result.competitionTitle = this.competitionTitle;
             result.dashboardSection = this.dashboardSection;
             result.assignedToMe = this.assignedToMe;
@@ -184,7 +220,7 @@ public class DashboardApplicationInProgressResource extends DashboardApplication
             result.daysLeft = this.daysLeft;
             result.applicationProgress = this.applicationProgress;
             result.assignedToInterview = this.assignedToInterview;
-            result.startDate = this.startDate;
+            result.startDate = startDate;
 
             return result;
         }

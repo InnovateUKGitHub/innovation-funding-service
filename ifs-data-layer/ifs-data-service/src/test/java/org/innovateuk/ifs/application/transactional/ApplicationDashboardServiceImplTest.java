@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -108,7 +108,7 @@ public class ApplicationDashboardServiceImplTest {
 
         assertEquals(2, dashboard.getInSetup().size());
 
-        DashboardApplicationInSetupResource projectFive = dashboard.getInSetup().get(0);
+        DashboardInSetupRowResource projectFive = dashboard.getInSetup().get(0);
         assertEquals(14L, projectFive.getProjectId());
         assertEquals("E - In Progress", projectFive.getProjectTitle());
         assertEquals("E - In Progress", projectFive.getTitle());
@@ -116,7 +116,7 @@ public class ApplicationDashboardServiceImplTest {
         assertEquals("Open Competition", projectFive.getCompetitionTitle());
         assertEquals(IN_SETUP, projectFive.getDashboardSection());
 
-        DashboardApplicationInSetupResource projectSix = dashboard.getInSetup().get(1);
+        DashboardInSetupRowResource projectSix = dashboard.getInSetup().get(1);
         assertEquals(14L, projectSix.getProjectId());
         assertEquals("F - Complete", projectSix.getProjectTitle());
         assertEquals("F - Complete", projectSix.getTitle());
@@ -131,7 +131,7 @@ public class ApplicationDashboardServiceImplTest {
 
         assertEquals(2, dashboard.getEuGrantTransfer().size());
 
-        DashboardApplicationForEuGrantTransferResource projectTwo = dashboard.getEuGrantTransfer().get(0);
+        DashboardEuGrantTransferRowResource projectTwo = dashboard.getEuGrantTransfer().get(0);
         assertEquals(0, projectTwo.getApplicationProgress());
         assertNull(projectTwo.getApplicationState());
         assertEquals(11L, (long) projectTwo.getProjectId());
@@ -140,7 +140,7 @@ public class ApplicationDashboardServiceImplTest {
         assertEquals("Eu Competition", projectTwo.getCompetitionTitle());
         assertEquals(EU_GRANT_TRANSFER, projectTwo.getDashboardSection());
 
-        DashboardApplicationForEuGrantTransferResource projectFour = dashboard.getEuGrantTransfer().get(1);
+        DashboardEuGrantTransferRowResource projectFour = dashboard.getEuGrantTransfer().get(1);
         assertEquals(0, projectFour.getApplicationProgress());
         assertNull(projectFour.getApplicationState());
         assertEquals(13L, (long) projectFour.getProjectId());
@@ -156,7 +156,7 @@ public class ApplicationDashboardServiceImplTest {
 
         assertEquals(1, dashboard.getInProgress().size());
 
-        DashboardApplicationInProgressResource projectFive = dashboard.getInProgress().get(0);
+        DashboardInProgressRowResource projectFive = dashboard.getInProgress().get(0);
         assertEquals(FALSE, projectFive.isAssignedToMe());
         assertEquals(OPENED, projectFive.getApplicationState());
         assertEquals(TRUE, projectFive.isLeadApplicant());
@@ -175,7 +175,7 @@ public class ApplicationDashboardServiceImplTest {
 
         assertEquals(1, dashboard.getPrevious().size());
 
-        DashboardPreviousApplicationResource projectSix = dashboard.getPrevious().get(0);
+        DashboardPreviousRowResource projectSix = dashboard.getPrevious().get(0);
         assertEquals(FALSE, projectSix.isAssignedToMe());
         assertEquals(REJECTED, projectSix.getApplicationState());
         assertEquals(FALSE, projectSix.isLeadApplicant());

@@ -7,16 +7,16 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import java.time.LocalDate;
 
 /**
- * Resource representing an application for use in the applicant dashboard.
+ * Resource representing an application or project for use in the EU grant transfer section of the applicant dashboard.
  */
-public class DashboardApplicationForEuGrantTransferResource extends DashboardApplicationResource {
+public class DashboardEuGrantTransferRowResource extends DashboardRowResource {
 
     private int applicationProgress;
     private ApplicationState applicationState;
     private Long projectId;
     private LocalDate startDate;
 
-    private DashboardApplicationForEuGrantTransferResource() {
+    private DashboardEuGrantTransferRowResource() {
     }
 
     public ApplicationState getApplicationState() {
@@ -39,7 +39,7 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DashboardApplicationForEuGrantTransferResource that = (DashboardApplicationForEuGrantTransferResource) o;
+        DashboardEuGrantTransferRowResource that = (DashboardEuGrantTransferRowResource) o;
         return new EqualsBuilder()
                 .append(applicationProgress, that.applicationProgress)
                 .append(applicationState, that.applicationState)
@@ -117,8 +117,8 @@ public class DashboardApplicationForEuGrantTransferResource extends DashboardApp
             return this;
         }
 
-        public DashboardApplicationForEuGrantTransferResource build(){
-            DashboardApplicationForEuGrantTransferResource result = new DashboardApplicationForEuGrantTransferResource();
+        public DashboardEuGrantTransferRowResource build(){
+            DashboardEuGrantTransferRowResource result = new DashboardEuGrantTransferRowResource();
             result.title = this.title;
             result.applicationId = this.applicationId;
             result.competitionTitle = this.competitionTitle;

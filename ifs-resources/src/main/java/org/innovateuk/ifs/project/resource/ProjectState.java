@@ -75,6 +75,10 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return this == COMPLETED_OFFLINE;
     }
 
+    public boolean isLive() {
+        return this == LIVE;
+    }
+
     public boolean isOnHold() {
         return this == ON_HOLD;
     }

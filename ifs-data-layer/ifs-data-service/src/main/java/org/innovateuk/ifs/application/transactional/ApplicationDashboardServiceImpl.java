@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -14,6 +10,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -23,31 +20,19 @@ import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource.ApplicantDashboardResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.EU_GRANT_TRANSFER;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_PROGRESS;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_SETUP;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.*;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
-import static org.innovateuk.ifs.application.resource.ApplicationState.finishedStates;
-import static org.innovateuk.ifs.application.resource.ApplicationState.inProgressStates;
-import static org.innovateuk.ifs.application.resource.ApplicationState.submittedStates;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.fundingCompleteStatuses;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.fundingNotCompleteStatuses;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
@@ -77,10 +62,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         List<ApplicationResource> applications = findByUserId(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getCompetitionsById(applications, projects);
 
-        List<DashboardApplicationInSetupResource> inSetup = getUserApplicationsInSetup(projects, competitionsById);
-        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(projects, processRoles, applications, competitionsById);
-        List<DashboardApplicationInProgressResource> inProgress = getUserApplicationsInProgress(processRoles, competitionsById, applications);
-        List<DashboardPreviousApplicationResource> previous = getUserPreviousApplications(applications, processRoles, competitionsById);
+        List<DashboardInSetupRowResource> inSetup = getUserApplicationsInSetup(projects, competitionsById);
+        List<DashboardEuGrantTransferRowResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(projects, processRoles, applications, competitionsById);
+        List<DashboardInProgressRowResource> inProgress = getUserApplicationsInProgress(processRoles, competitionsById, applications);
+        List<DashboardPreviousRowResource> previous = getUserPreviousApplications(applications, projects, processRoles, competitionsById);
 
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResourceBuilder()
                 .withInSetup(inSetup)
@@ -92,7 +77,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         return serviceSuccess(applicantDashboardResource);
     }
 
-    private List<DashboardApplicationInSetupResource> getUserApplicationsInSetup(List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardInSetupRowResource> getUserApplicationsInSetup(List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
         return projects
                 .stream()
                 .filter(isNotWithdrawn())
@@ -101,7 +86,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                     if (competition.isH2020()) {
                         return null;
                     }
-                    return new DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder()
+                    return new DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder()
                             .withTitle(project.getName())
                             .withApplicationId(project.getApplication())
                             .withCompetitionTitle(competition.getName())
@@ -116,7 +101,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardApplicationForEuGrantTransferResource> getUserApplicationsForEuGrantTransfers(List<ProjectResource> projects, List<ProcessRoleResource> processRoles, List<ApplicationResource> applications, Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardEuGrantTransferRowResource> getUserApplicationsForEuGrantTransfers(List<ProjectResource> projects, List<ProcessRoleResource> processRoles, List<ApplicationResource> applications, Map<Long, CompetitionResource> competitionsById) {
         List<Long> applicantProcessRoleIds = processRoles
                 .stream()
                 .filter(this::hasAnApplicantRole)
@@ -140,7 +125,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .map(application -> {
                     CompetitionResource competition = competitionsById.get(application.getCompetition());
                     Long projectId = Optional.ofNullable(euGrantTransferProjects.get(application.getId())).map(ProjectResource::getId).orElse(null);
-                    return new DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder()
+                    return new DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder()
                             .withTitle(application.getName())
                             .withApplicationId(application.getId())
                             .withCompetitionTitle(competition.getName())
@@ -155,7 +140,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardApplicationInProgressResource> getUserApplicationsInProgress(List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById, List<ApplicationResource> applications) {
+    private List<DashboardInProgressRowResource> getUserApplicationsInProgress(List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById, List<ApplicationResource> applications) {
         List<ProcessRoleResource> applicantProcessRoles = processRoles
                 .stream()
                 .filter(this::hasAnApplicantRole)
@@ -201,7 +186,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardPreviousApplicationResource> getUserPreviousApplications(List<ApplicationResource> applications, List<ProcessRoleResource> processRoles, Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardPreviousRowResource> getUserPreviousApplications(List<ApplicationResource> applications,
+                                                                           List<ProjectResource> projects,
+                                                                           List<ProcessRoleResource> processRoles,
+                                                                           Map<Long, CompetitionResource> competitionsById) {
         List<Long> usersProcessRolesApplicationIds = processRoles
                 .stream()
                 .filter(this::hasAnApplicantRole)
@@ -217,16 +205,36 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         return nonH2020ApplicationsForUser
                 .stream()
                 .filter(this::applicationFinished)
-                .map(application -> new DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder()
+                .map(application -> new DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder()
                         .withTitle(application.getName())
                         .withApplicationId(application.getId())
                         .withCompetitionTitle(application.getCompetitionName())
                         .withApplicationState(application.getApplicationState())
                         .withDashboardSection(PREVIOUS)
                         .withStartDate(application.getStartDate())
+                        .withProjectId(getProjectId(application, projects))
+                        .withProjectState(getProjectState(application, projects))
                         .build())
                 .sorted()
+                .filter(previousRow -> !previousRow.activeProject())
                 .collect(toList());
+    }
+
+    private Long getProjectId(ApplicationResource application, List<ProjectResource> projects) {
+        return projects
+                .stream()
+                .filter(p -> p.getApplication() == application.getId())
+                .map(ProjectResource::getId)
+                .findAny()
+                .orElse(null);
+    }
+
+    private Optional<ProjectState> getProjectState(ApplicationResource application, List<ProjectResource> projects) {
+        return projects
+                .stream()
+                .filter(p -> p.getApplication() == application.getId())
+                .map(ProjectResource::getProjectState)
+                .findAny();
     }
 
     private boolean isAssigned(ApplicationResource application, Optional<ProcessRoleResource> processRole) {

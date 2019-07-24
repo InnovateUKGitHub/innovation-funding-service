@@ -6,16 +6,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.LocalDate;
 
 /**
- * Resource representing an application for use in the applicant dashboard.
+ * Resource representing a project for use in the setup section of the applicant dashboard.
  */
-public class DashboardApplicationInSetupResource extends DashboardApplicationResource {
+public class DashboardInSetupRowResource extends DashboardRowResource {
 
     private long projectId;
     private String projectTitle;
     private LocalDate targetStartDate;
 
     // Private constructor to enforce immutability
-    private DashboardApplicationInSetupResource() {
+    private DashboardInSetupRowResource() {
     }
 
     public long getProjectId() {
@@ -34,7 +34,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DashboardApplicationInSetupResource that = (DashboardApplicationInSetupResource) o;
+        DashboardInSetupRowResource that = (DashboardInSetupRowResource) o;
         return new EqualsBuilder()
                 .append(projectId, that.projectId)
                 .append(projectTitle, that.projectTitle)
@@ -104,8 +104,8 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
             return this;
         }
 
-        public DashboardApplicationInSetupResource build(){
-            DashboardApplicationInSetupResource result = new DashboardApplicationInSetupResource();
+        public DashboardInSetupRowResource build(){
+            DashboardInSetupRowResource result = new DashboardInSetupRowResource();
             result.applicationId = this.applicationId;
             result.competitionTitle = this.competitionTitle;
             result.projectId = this.projectId;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 
@@ -28,7 +28,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
     @Autowired
     private ApplicationDashboardService applicationDashboardService;
 
-    private static final DashboardPreviousApplicationResource EXAMPLE_EXPECTED_DASHBOARD_RESOURCE = new DashboardPreviousApplicationResourceBuilder()
+    private static final DashboardPreviousRowResource EXAMPLE_EXPECTED_DASHBOARD_RESOURCE = new DashboardPreviousApplicationResourceBuilder()
             .withAssignedToMe(false)
             .withApplicationState(REJECTED)
             .withLeadApplicant(false)
