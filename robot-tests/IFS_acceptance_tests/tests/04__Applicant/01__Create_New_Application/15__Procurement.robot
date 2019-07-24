@@ -27,16 +27,16 @@ Applicant applies to newly created procurement competition
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920
     [Tags]
-    Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
+    Given the user clicks the button/link                       link=Application details
+    When the user fills in Procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
-    When the user navigates to Your-finances page       ${appl_name}
-    And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
+    When the user navigates to Your-finances page                ${appl_name}
+    And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
     And the user accept the competition terms and conditions
-    And the user selects research category              Feasibility studies
+    And the user selects research category                       Feasibility studies
     And the applicant submits the procurement application
-    [Teardown]  update milestone to yesterday  ${competitionId}  SUBMISSION_DATE
+    [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
     [Documentation]  IFS-2376
@@ -104,6 +104,23 @@ the procurement comp moves to Previous tab
     And the user should see the element    JQuery = h1:contains("${comp_name}")
 
 *** Keywords ***
+the user fills in Procurement Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    the user selects the value from the drop-down menu   INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button     START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
+    the user should not see the element   link = Choose your innovation area
+    The user clicks the button/link       css = button[name="mark_as_complete"]
+    the user clicks the button/link       link = Application overview
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
