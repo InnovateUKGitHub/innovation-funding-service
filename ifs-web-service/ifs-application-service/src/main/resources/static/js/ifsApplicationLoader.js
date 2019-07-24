@@ -19,6 +19,7 @@ if (typeof (IFS) === 'undefined') { var IFS = {} } // eslint-disable-line
 IFS.application = {}
 IFS.application.loadOrder = {
   common: {
+    init: function () {},
     finalize: function () {
       IFS.application.progressiveSelect.init()
     }
