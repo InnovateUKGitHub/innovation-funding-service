@@ -2,7 +2,6 @@ package org.innovateuk.ifs.populator;
 
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
@@ -34,8 +33,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
 
     public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, boolean compAdminUser) {
 
-        CompetitionResource competition = competitionId.map(competitionRestService::getCompetitionById)
-                .map(RestResult::getSuccess)
+        CompetitionResource competition = competitionId.map(id -> competitionRestService.getCompetitionById(id).getSuccess())
                 .orElse(null);
 
         AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user, profile);
