@@ -487,8 +487,8 @@ the user should see the response to query server side validation
     the user should not see an error in the page
 
 the user should see the response to query client side validations
-    the user expands the section                  an eligibility query's title
-    the user clicks the button/link               jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
+    the user expands the section                  Open all
+    the user clicks the button/link               jQuery = .govuk-accordion__section:contains("an eligibility query's title") > [id^="accordion-queries-content"] a[id^="post-new-response"]
     the user enters text to a text field          css = .editor  ${empty}
     Set Focus To Element                          jQuery = .govuk-button:contains("Post response")
     the user should see a field error             ${empty_field_warning_message}
