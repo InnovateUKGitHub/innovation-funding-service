@@ -91,13 +91,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                                   Optional<Long> innovationArea,
                                                                    List<ParticipantStatusResource> participantStatuses,
                                                                    Optional<Boolean> compliant) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-assessors-not-accepted-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         builder.queryParam("statuses", simpleJoiner(participantStatuses, ","));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
 
@@ -117,7 +115,6 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
-                                                                                Optional<Long> innovationArea,
                                                                                 List<ParticipantStatusResource> participantStatuses,
                                                                                 Optional<Boolean> compliant) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invitation-overview", competitionId);
@@ -125,7 +122,6 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
 
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         String convertedStatusesList = simpleJoiner(participantStatuses, ",");
         builder.queryParam("statuses", convertedStatusesList);
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));

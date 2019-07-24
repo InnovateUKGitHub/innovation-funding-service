@@ -51,21 +51,12 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status";
 
-    String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT assessmentParticipant " +
+    String BY_STATUS_AND_COMPLIANT = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
-            "AND (:innovationAreaId IS NULL " +
-            "   OR EXISTS(" +
-            "       SELECT profile.id " +
-            "       FROM Profile profile " +
-            "       JOIN profile.innovationAreas innovationAreas " +
-            "       WHERE profile.id = assessmentParticipant.user.profileId " +
-            "       AND innovationAreas.category.id = :innovationAreaId " +
-            "   ) " +
-            "   OR assessmentParticipant.invite.innovationArea.id = :innovationAreaId) " +
             "AND (:isCompliant IS NULL " +
             "   OR (:isCompliant = true AND (" +
             "       EXISTS(" +
@@ -141,19 +132,18 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(long competitionId,
                                                                            List<ParticipantStatus> status);
 
-    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
-                                                                                                        Long innovationAreaId,
+    @Query(BY_STATUS_AND_COMPLIANT)
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndCompliant(long competitionId,
                                                                                                         List<ParticipantStatus> status,
                                                                                                         Boolean isCompliant,
                                                                                                         ZonedDateTime startOfTaxYear,
                                                                                                         Pageable pageable);
-    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    List<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
-                                                                                                        Long innovationAreaId,
-                                                                                                        List<ParticipantStatus> status,
-                                                                                                        Boolean isCompliant,
-                                                                                                        ZonedDateTime startOfTaxYear);
+
+    @Query(BY_STATUS_AND_COMPLIANT)
+    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndCompliant(long competitionId,
+                                                                                       List<ParticipantStatus> status,
+                                                                                       Boolean isCompliant,
+                                                                                       ZonedDateTime startOfTaxYear);
 
     List<AssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

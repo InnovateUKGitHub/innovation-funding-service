@@ -41,7 +41,6 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
 
     public CompetitionInviteAssessorsOverviewViewModel populateModel(long competitionId,
                                                                      int page,
-                                                                     Optional<Long> innovationArea,
                                                                      Optional<ParticipantStatusResource> status,
                                                                      Optional<Boolean> compliant,
                                                                      String originQuery) {
@@ -60,7 +59,6 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                innovationArea,
                 statuses,
                 compliant
         )

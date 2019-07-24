@@ -32,7 +32,6 @@ public interface CompetitionInviteRestService {
     RestResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter);
 
     RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                            Optional<Long> innovationArea,
                                                             List<ParticipantStatusResource> participantStatus,
                                                             Optional<Boolean> compliant);
 
@@ -40,7 +39,6 @@ public interface CompetitionInviteRestService {
 
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
-                                                                         Optional<Long> innovationArea,
                                                                          List<ParticipantStatusResource> participantStatus,
                                                                          Optional<Boolean> compliant);
 

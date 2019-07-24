@@ -81,7 +81,6 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
                 competitionId,
                 page,
-                filterForm.getInnovationArea(),
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
                 originQuery
@@ -107,13 +106,11 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
 
         OverviewSelectionForm trimmedOverviewForm = trimSelectionByFilteredResult(
                 storedSelectionForm,
-                filterForm.getInnovationArea(),
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
                 competitionId);
         selectionForm.setSelectedInviteIds(trimmedOverviewForm.getSelectedInviteIds());
         selectionForm.setAllSelected(trimmedOverviewForm.getAllSelected());
-        selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
         selectionForm.setSelectedStatus(filterForm.getStatus().orElse(null));
         selectionForm.setCompliant(filterForm.getCompliant().orElse(null));
 
@@ -121,9 +118,6 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
     }
 
     private void updateFilterForm(OverviewAssessorsFilterForm filterForm, OverviewSelectionForm storedSelectionForm) {
-        filterForm.setInnovationArea(storedSelectionForm.getSelectedInnovationArea() == null ? empty() :
-                of(storedSelectionForm.getSelectedInnovationArea()));
-
         filterForm.setStatus(storedSelectionForm.getSelectedStatus() == null ? empty() :
                 of(storedSelectionForm.getSelectedStatus()));
 
@@ -132,11 +126,10 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
     }
 
     private OverviewSelectionForm trimSelectionByFilteredResult(OverviewSelectionForm selectionForm,
-                                                                Optional<Long> innovationArea,
                                                                 Optional<ParticipantStatusResource> status,
                                                                 Optional<Boolean> compliant,
                                                                 Long competitionId) {
-        List<Long> filteredResults = getAllInviteIds(competitionId, innovationArea, status, compliant);
+        List<Long> filteredResults = getAllInviteIds(competitionId, status, compliant);
         OverviewSelectionForm updatedSelectionForm = new OverviewSelectionForm();
 
         selectionForm.getSelectedInviteIds().retainAll(filteredResults);
@@ -156,7 +149,6 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam Optional<Long> innovationArea,
             @RequestParam Optional<ParticipantStatusResource> status,
             @RequestParam Optional<Boolean> compliant,
             HttpServletRequest request,
@@ -164,7 +156,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
 
         boolean limitExceeded = false;
         try {
-            List<Long> InviteIds = getAllInviteIds(competitionId, innovationArea, status, compliant);
+            List<Long> InviteIds = getAllInviteIds(competitionId, status, compliant);
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedInviteIds().size() + 1;
@@ -193,7 +185,6 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                                                               @PathVariable("competitionId") long competitionId,
                                                               @RequestParam("addAll") boolean addAll,
                                                               @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam Optional<Long> innovationArea,
                                                               @RequestParam Optional<ParticipantStatusResource> status,
                                                               @RequestParam Optional<Boolean> compliant,
                                                               HttpServletRequest request,
@@ -202,7 +193,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId, innovationArea, status, compliant));
+                selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId, status, compliant));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedInviteIds().clear();
@@ -220,11 +211,10 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
     }
 
     private List<Long> getAllInviteIds(long competitionId,
-                                       Optional<Long> innovationArea,
                                        Optional<ParticipantStatusResource> status,
                                        Optional<Boolean> compliant) {
         List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
                 .orElseGet(() -> asList(REJECTED, PENDING));
-        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).getSuccess();
+        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant).getSuccess();
     }
 }

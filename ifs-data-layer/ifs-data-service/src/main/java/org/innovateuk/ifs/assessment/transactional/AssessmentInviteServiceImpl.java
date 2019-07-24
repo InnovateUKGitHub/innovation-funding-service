@@ -302,16 +302,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
-                                                                                   Optional<Long> innovationArea,
                                                                                    List<ParticipantStatus> statuses,
                                                                                    Optional<Boolean> compliant) {
         Page<AssessmentParticipant> pagedResult;
 
-        if (innovationArea.isPresent() || compliant.isPresent()) {
+        if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliant(
                     competitionId,
-                    innovationArea.orElse(null),
                     statuses,
                     compliant.orElse(null),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault()),
@@ -341,16 +339,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                                      Optional<Long> innovationArea,
                                                                       List<ParticipantStatus> statuses,
                                                                       Optional<Boolean> compliant) {
         List<AssessmentParticipant> participants;
 
-        if (innovationArea.isPresent() || compliant.isPresent()) {
+        if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliant(
                     competitionId,
-                    innovationArea.orElse(null),
                     statuses,
                     compliant.orElse(null),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault())

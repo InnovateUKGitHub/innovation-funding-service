@@ -85,7 +85,6 @@ public interface AssessmentInviteService {
             description = "Competition Admins and Project Finance users can retrieve invitation overview by competition")
     ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                             Pageable pageable,
-                                                                            Optional<Long> innovationArea,
                                                                             List<ParticipantStatus> statuses,
                                                                             Optional<Boolean> compliant);
 
@@ -93,7 +92,6 @@ public interface AssessmentInviteService {
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
     ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                               Optional<Long> innovationArea,
                                                                List<ParticipantStatus> status,
                                                                Optional<Boolean> compliant);
 
