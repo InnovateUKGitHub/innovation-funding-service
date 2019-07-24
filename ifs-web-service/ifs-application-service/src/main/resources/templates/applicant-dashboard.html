@@ -136,9 +136,9 @@
                 </div>
             </section>
 
-            <section class="previous-applications" th:unless="${model.previous.empty}">
+            <section class="previous" th:unless="${model.previous.empty}">
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m">Previous applications</h2>
+                    <h2 class="govuk-heading-m">Previous</h2>
                     <ul>
                         <li th:each="previousView : ${model.previous}"
                             th:class="${previousView.approved} ? 'positive'">
