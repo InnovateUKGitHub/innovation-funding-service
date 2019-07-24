@@ -65,10 +65,11 @@
                 </select>
             </fieldset>
         </div>
-        <div class="govuk-accordion" data-module="accordion" id="accordion-queries"
+        <div class="govuk-accordion queries-filter-list " data-module="accordion" id="accordion-queries"
              th:if="${#lists.size(model.getQueries()) != 0}">
             <div class="govuk-accordion__section"
-                 th:classappend="${model.isSingleQuery() ? 'govuk-accordion__section--expanded' : ''}"
+                 th:classappend="${'query ' + querySection+'-section'}"
+                 th:id="${'title-query-' + query.id}"
                  th:each="query, iteration : ${model.getQueries()}"
                  th:with="querySection=${query.sectionType.name().toLowerCase()}">
                 <div class="govuk-accordion__section-header">
