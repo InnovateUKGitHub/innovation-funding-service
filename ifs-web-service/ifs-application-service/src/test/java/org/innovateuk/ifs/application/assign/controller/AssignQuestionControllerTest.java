@@ -8,10 +8,11 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.navigation.PageHistory;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.EncodedCookieService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,6 +20,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Optional;
 
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
@@ -35,6 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -59,7 +63,8 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
     private CookieFlashMessageFilter cookieFlashMessageFilterMock;
 
     @Mock
-    private EncodedCookieService encodedCookieService;
+    private PageHistoryService pageHistoryService;
+
     @Test
     public void viewAssign() throws Exception {
         QuestionResource question = newQuestionResource().build();
@@ -93,12 +98,15 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
         long assigneeId = 123L;
+        String redirect = "/blah/blah";
         when(userRestServiceMock.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
         when(questionServiceMock.assign(question.getId(), application.getId(), assigneeId, processRole.getId())).thenReturn(serviceSuccess());
+        when(pageHistoryService.getPreviousPage(any())).thenReturn(Optional.of(new PageHistory(redirect)));
 
-        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/assign?origin=OVERVIEW", application.getId(), question.getId())
+        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/assign", application.getId(), question.getId())
                                 .param("assignee", valueOf(assigneeId)))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(redirect));
 
         verify(userRestServiceMock).findProcessRole(user.getId(), application.getId());
         verify(questionServiceMock).assign(question.getId(), application.getId(), assigneeId, processRole.getId());

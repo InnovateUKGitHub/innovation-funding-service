@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.assign.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.assign.form.AssignQuestionForm;
 import org.innovateuk.ifs.application.assign.populator.AssignQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -10,10 +9,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.navigation.PageHistory;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.EncodedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Deque;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -52,7 +50,7 @@ public class AssignQuestionController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private EncodedCookieService encodedCookieService;
+    private PageHistoryService pageHistoryService;
 
     @GetMapping("/question/{questionId}/assign")
     public String getAssignPage(@ModelAttribute(name = "form", binding = false) AssignQuestionForm form,
@@ -68,7 +66,7 @@ public class AssignQuestionController {
                          @SuppressWarnings("unused") BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          @PathVariable("questionId") long questionId,
-                         @PathVariable ("applicationId") long applicationId,
+                         @PathVariable("applicationId") long applicationId,
                          HttpServletRequest request,
                          HttpServletResponse response,
                          Model model,
@@ -91,11 +89,7 @@ public class AssignQuestionController {
 
     private String redirectToRelevantPage(long applicationId, long questionId, HttpServletRequest request, HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        String url = encodedCookieService.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {})
-                .map(queue -> {
-                    queue.pop(); // remove this page from history.
-                    return queue.peek();
-                })
+        String url = pageHistoryService.getPreviousPage(request)
                 .map(PageHistory::getUrl)
                 .orElse(String.format("/application/%d/form/question/%d", applicationId, questionId));
         return "redirect:" + url;
@@ -103,7 +97,7 @@ public class AssignQuestionController {
 
     private void populateAssigneeForm(long questionId, long applicationId, AssignQuestionForm form) {
         List<QuestionStatusResource> statuses = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
-        if(!statuses.isEmpty()) {
+        if (!statuses.isEmpty()) {
             form.setAssignee(statuses.get(0).getAssignee());
         }
     }

@@ -8,13 +8,16 @@ public class PageHistory {
     private String name;
     private String url;
 
-    public PageHistory() {
-    }
+    private PageHistory() {}
 
     public PageHistory(String url) {
         this.url = url;
     }
 
+    public PageHistory(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
     public String getName() {
         return name;

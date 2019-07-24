@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.interceptors;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.navigation.NavigationRoot;
-import org.innovateuk.ifs.navigation.PageHistory;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.EncodedCookieService;
-import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +13,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
@@ -46,7 +40,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     private NavigationUtils navigationUtils;
 
     @Autowired
-    private EncodedCookieService encodedCookieService;
+    private PageHistoryService pageHistoryService;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
@@ -55,7 +49,10 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
             addShowManageUsersAttribute(request, modelAndView);
-            handleBackLink(request, response, modelAndView, handler);
+            Optional.of(handler)
+                    .filter(HandlerMethod.class::isInstance)
+                    .map(HandlerMethod.class::cast)
+                    .ifPresent(handlerMethod -> pageHistoryService.recordPageHistory(request, response, modelAndView, handlerMethod));
         }
     }
 
@@ -93,29 +90,5 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         modelAndView.addObject(USER_LOGOUT_LINK, logoutUrl);
     }
 
-    private void handleBackLink(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView, Object handler) {
-        Optional<Deque<PageHistory>> cookie = encodedCookieService.getCookieAs(request, "pageHistory", new TypeReference<Deque<PageHistory>>() {});
-        Deque<PageHistory> history = cookie.orElse(new LinkedList<>());
-        while (history.contains(new PageHistory(request.getRequestURI()))) {
-            history.pop();
-        }
 
-        if (!history.isEmpty()) {
-            modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
-            modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
-        }
-
-        boolean navigationRoot = Optional.of(handler)
-                .filter(HandlerMethod.class::isInstance)
-                .map(HandlerMethod.class::cast)
-                .filter(method -> method.hasMethodAnnotation(NavigationRoot.class))
-                .isPresent();
-
-        if (navigationRoot) {
-            history.clear();
-        }
-
-        history.push(new PageHistory(request.getRequestURI()));
-        encodedCookieService.saveToCookie(response, "pageHistory", JsonUtil.getSerializedObject(history));
-    }
 }
