@@ -62,10 +62,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         List<ApplicationResource> applications = findByUserId(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getCompetitionsById(applications, projects);
 
-        List<DashboardInSetupRowResource> inSetup = getUserApplicationsInSetup(projects, competitionsById);
+        List<DashboardInSetupRowResource> inSetup = getUserProjectsInSetup(projects, competitionsById);
         List<DashboardEuGrantTransferRowResource> euGrantTransfer = getUserApplicationsForEuGrantTransfers(projects, processRoles, applications, competitionsById);
         List<DashboardInProgressRowResource> inProgress = getUserApplicationsInProgress(processRoles, competitionsById, applications);
-        List<DashboardPreviousRowResource> previous = getUserPreviousApplications(applications, projects, processRoles, competitionsById);
+        List<DashboardPreviousRowResource> previous = getUserPreviousApplicationsAndProjects(applications, projects, processRoles, competitionsById);
 
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResourceBuilder()
                 .withInSetup(inSetup)
@@ -77,10 +77,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         return serviceSuccess(applicantDashboardResource);
     }
 
-    private List<DashboardInSetupRowResource> getUserApplicationsInSetup(List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardInSetupRowResource> getUserProjectsInSetup(List<ProjectResource> projects, Map<Long, CompetitionResource> competitionsById) {
         return projects
                 .stream()
-                .filter(isNotWithdrawn())
+                .filter(project -> !project.isCompleted())
                 .map(project -> {
                     CompetitionResource competition = competitionsById.get(project.getCompetition());
                     if (competition.isH2020()) {
@@ -116,7 +116,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
 
         Map<Long, ProjectResource> euGrantTransferProjects = projects
                 .stream()
-                .filter(isNotWithdrawn())
+                .filter(project -> !project.isCompleted())
                 .filter(projectResource -> projectIsForEuGrantFundingCompetition(projectResource, competitionsById))
                 .collect(toMap(ProjectResource::getApplication, identity()));
 
@@ -186,10 +186,10 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .collect(toList());
     }
 
-    private List<DashboardPreviousRowResource> getUserPreviousApplications(List<ApplicationResource> applications,
-                                                                           List<ProjectResource> projects,
-                                                                           List<ProcessRoleResource> processRoles,
-                                                                           Map<Long, CompetitionResource> competitionsById) {
+    private List<DashboardPreviousRowResource> getUserPreviousApplicationsAndProjects(List<ApplicationResource> applications,
+                                                                                      List<ProjectResource> projects,
+                                                                                      List<ProcessRoleResource> processRoles,
+                                                                                      Map<Long, CompetitionResource> competitionsById) {
         List<Long> usersProcessRolesApplicationIds = processRoles
                 .stream()
                 .filter(this::hasAnApplicantRole)
@@ -245,10 +245,6 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
         } else {
             return false;
         }
-    }
-
-    private Predicate<ProjectResource> isNotWithdrawn() {
-        return projectResource -> !projectResource.isWithdrawn();
     }
 
     private boolean isLead(Optional<ProcessRoleResource> processRole) {
