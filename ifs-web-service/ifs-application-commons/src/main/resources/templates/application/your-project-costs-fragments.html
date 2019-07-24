@@ -511,6 +511,208 @@
 
 <!--/***************************
 
+            PROCUREMENT OVERHEADS
+
+*********************************/-->
+
+<th:block th:fragment="procurement-overheads">
+    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
+        <h3>
+            Overhead costs
+            <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
+            <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                  data-calculation-operations="/,*" data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
+                  th:text="${#ifsUtil.calculatePercentage(form.procurementOverheadRows, form.organisationFinanceTotal) + '%'}"></span>
+        </h3>
+        <div class="collapsible-content">
+            <th:block th:if="${model.isReadOnly(financeRowType)}">
+                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_read_only"/>
+            </th:block>
+            <th:block
+                th:unless="${model.isReadOnly(financeRowType)}">
+                <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the overheads you expect to occur during the
+                    project</p>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="procurement-overheads-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="procurement-overheads-item" scope="col" class="govuk-table__header">Item</th>
+                            <th id="procurement-overheads-quantity" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Quantity
+                            </th>
+                            <th id="procurement-overheads-cost" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Cost per item (&pound;)
+                            </th>
+                            <th id="procurement-overheads-total" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Total
+                            </th>
+                            <th class="govuk-table__header" scope="col">
+                                <span class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry : *{procurementOverheadRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: procurementOverheadRow (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
+
+                    <p class="alignright">
+                        <button type="submit"
+                                data-repeatable-rowcontainer="#procurement-overheads-costs-table tbody"
+                                name="add_cost"
+                                th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}"
+                                class="button-clear">Add another overhead
+                        </button>
+                    </p>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total overheads
+                    <span class="govuk-heading-s"
+                          data-mirror='#section-total-procurement-overheads'
+                          th:text="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".procurement-overheads-totals"
+                       data-calculation-operations="+"
+                       id="section-total-procurement-overheads"
+                       th:attr="data-calculation-rawvalue=${form.totalProcurmentOverheadCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
+        </div>
+    </section>
+</th:block>
+
+<th:block th:fragment="ajax_procurement-overheads_row">
+    <th:block th:object="${form}">
+        <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_row (${id}, ${row})"/>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="procurement-overheads_row (id, row)">
+    <tr th:with="path=${'procurement-overheads_row[__${id}__]'}" class="govuk-table__row form-group-row-validated"
+        th:attr="data-repeatable-row=${path}" th:id="${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.item">
+                <span class="govuk-visually-hidden">Item</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
+            <input type="text"
+                   class="govuk-input"
+                   th:id="__${path}__.item"
+                   th:field="*{__${path}__.item}"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   maxlength="255"/>
+        </td>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.quantity">
+                <span class="govuk-visually-hidden">Quantity</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.quantity)"/>
+            <input type="number"
+                   class="govuk-input"
+                   th:id="__${path}__.quantity"
+                   th:field="*{__${path}__.quantity}"
+                   th:errorclass="govuk-input--error"
+                   placeholder="0"
+                   min="1"
+                   max="999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
+        </td>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.cost">
+                <span class="govuk-visually-hidden">Cost per item</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+            <input type="number"
+                   class="govuk-input"
+                   th:id="__${path}__.cost"
+                   th:field="*{__${path}__.cost}"
+                   th:errorclass="govuk-input--error"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </td>
+        <td class="govuk-table__cell">
+            <label th:for="__${path}__.total">
+                <span class="govuk-visually-hidden">Total</span>
+            </label>
+            <input type="text"
+                   class="alignright govuk-input procurement-overheads-totals"
+                   th:id="__${path}__.total"
+                   th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
+                   th:attr="data-calculation-fields=|[id='__${path}__.quantity'],[id='__${path}__.cost']|,data-calculation-rawvalue=${row.total}"
+                   data-calculation-operations="*"
+                   readonly="readonly"/>
+        </td>
+        <td class="govuk-table__cell alignright buttoncolumn remove">
+            <button type="submit"
+                    th:name="remove_cost"
+                    th:value="${id}"
+                    class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
+            </button>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="procurement-overheads_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="procurement-overhead-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th id="procurement-overhead-item" scope="col" class="govuk-table__header">Item</th>
+                <th id="procurement-overhead-quantity" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Quantity
+                </th>
+                <th id="procurement-overhead-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Cost per
+                    item (&pound;)
+                </th>
+                <th id="procurement-overhead-total" scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{procurementOverheadsRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                        th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}"/>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__foot">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row" colspan="3">Total overheads</th>
+                <td id="section-total-procurement-overhead" th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
+                    class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
+
+<!--/***************************
+
             MATERIALS
 
 *********************************/-->

@@ -12,6 +12,8 @@ public class YourProjectCostsForm {
 
     private OverheadForm overhead = new OverheadForm();
 
+    private Map<String, ProcurementOverheadRowForm> procurementOverheadRows = new LinkedHashMap<>();
+
     private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
     private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
@@ -30,6 +32,14 @@ public class YourProjectCostsForm {
 
     public void setOverhead(OverheadForm overhead) {
         this.overhead = overhead;
+    }
+
+    public Map<String, ProcurementOverheadRowForm> getProcurementOverheadRows() {
+        return procurementOverheadRows;
+    }
+
+    public void setProcurementOverheadRows(Map<String, ProcurementOverheadRowForm> procurementOverheadRows) {
+        this.procurementOverheadRows = procurementOverheadRows;
     }
 
     public Map<String, MaterialRowForm> getMaterialRows() {
@@ -107,6 +117,10 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalMaterialCosts() {
         return calculateTotal(materialRows);
+    }
+
+    public BigDecimal getTotalProcurementOverheadCosts() {
+        return calculateTotal(procurementOverheadRows);
     }
 
     public BigDecimal getTotalCapitalUsageCosts() {

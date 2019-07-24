@@ -48,7 +48,8 @@
                 to one member of your team.</p>
 
             <th:block th:insert="application/your-project-costs-fragments :: labour" />
-            <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+            <th:block th:unless="${model.procurementCompetition}" th:insert="application/your-project-costs-fragments :: overheads" />
+            <th:block th:if="${model.procurementCompetition}" th:insert="application/your-project-costs-fragments :: procurement-overheads" />
             <th:block th:insert="application/your-project-costs-fragments :: materials" />
             <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
             <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
