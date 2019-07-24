@@ -27,7 +27,7 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment summary',subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <h2 class="govuk-heading-m">Review assessment</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Review assessment</h2>
                 <div class="govuk-accordion" data-module="accordion" id="accordion-questions">
                     <th:block th:each="question, iteration : ${model.questionsForReview}">
                         <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count})" />

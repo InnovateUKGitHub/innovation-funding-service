@@ -6,7 +6,7 @@
              th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
         <h2 th:text="${section.name}"
-            class="govuk-heading-m govuk-!-margin-top-6"
+            class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"
             th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
         <!--/* (In e.g. internal view) show the 'report' version of the application details above the accordion sections */-->
@@ -134,7 +134,7 @@
     </section>
 
     <section th:if="${hasFinanceSection}">
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>
         <div class="govuk-accordion" data-module="accordion" id="accordion-finance">
 
             <div class="govuk-accordion__section">
