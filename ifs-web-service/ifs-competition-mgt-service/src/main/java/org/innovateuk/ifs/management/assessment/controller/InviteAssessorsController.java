@@ -177,7 +177,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam("addAll") boolean addAll,
                                          @RequestParam(defaultValue = "0") int page,
-                                         @RequestParam String assessorNameFilter,
+                                         @RequestParam(defaultValue = "") String assessorNameFilter,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         try {

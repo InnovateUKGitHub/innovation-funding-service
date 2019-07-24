@@ -297,7 +297,6 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
-        Optional<Long> innovationArea = of(10L);
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
@@ -308,7 +307,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .withContent(content)
                 .build();
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", 1L)
@@ -316,7 +315,6 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
-                .param("innovationArea", "10")
                 .param("statuses", "PENDING")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
@@ -331,8 +329,6 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                         .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
                                 parameterWithName("sort").optional()
                                         .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
-                                parameterWithName("innovationArea").optional()
-                                        .description("Innovation area ID to filter assessors by."),
                                 parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'ACCEPTED', 'PENDING' or 'REJECTED'"),
                                 parameterWithName("compliant").optional()
@@ -342,24 +338,22 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant);
     }
 
     @Test
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
-        Optional<Long> innovationArea = of(10L);
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = of(TRUE);
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
+        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/get-assessors-not-accepted-invite-ids/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc")
-                .param("innovationArea", "10")
                 .param("statuses", "PENDING,REJECTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
@@ -368,8 +362,6 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
                         requestParameters(
-                                parameterWithName("innovationArea").optional()
-                                        .description("Innovation area ID to filter assessors by."),
                                 parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
@@ -378,7 +370,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                         responseFields(fieldWithPath("[]").description("List of invite ids of Assessors who have not accepted for a competition"))
                 ));
 
-        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant);
     }
 
     @Test

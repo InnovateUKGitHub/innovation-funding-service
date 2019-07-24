@@ -46,7 +46,6 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                empty(),
                 singletonList(ACCEPTED),
                 empty()
         )

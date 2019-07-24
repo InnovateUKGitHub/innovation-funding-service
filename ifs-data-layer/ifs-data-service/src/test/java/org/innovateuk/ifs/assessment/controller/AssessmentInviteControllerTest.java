@@ -528,7 +528,6 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         long competitionId = 1L;
         int page = 2;
         int size = 10;
-        Optional<Long> innovationArea = of(3L);
         List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
@@ -538,7 +537,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
 
         Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", competitionId)
@@ -551,7 +550,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant);
     }
 
     @Test
@@ -559,7 +558,6 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         long competitionId = 1L;
         int page = 0;
         int size = 20;
-        Optional<Long> innovationArea = empty();
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
@@ -569,7 +567,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", competitionId)
@@ -577,19 +575,18 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, statuses, compliant);
     }
 
     @Test
     public void getAssessorsNotAcceptedInviteIds() throws Exception {
         long competitionId = 1L;
-        Optional<Long> innovationArea = empty();
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
+        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/get-assessors-not-accepted-invite-ids/{competitionId}", competitionId)
@@ -597,7 +594,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedInviteIds)));
 
-        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant);
     }
 
     @Test

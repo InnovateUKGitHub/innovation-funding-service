@@ -212,17 +212,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     public void getInvitationOverview() {
         long competitionId = 1L;
         int page = 1;
-        Optional<Long> innovationArea = of(10L);
         List<ParticipantStatusResource> participantStatus = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
 
-        String expectedUrl = format("%s/%s/%s?page=1&innovationArea=10&statuses=ACCEPTED&compliant=true", restUrl, "get-invitation-overview", competitionId);
+        String expectedUrl = format("%s/%s/%s?page=1&statuses=ACCEPTED&compliant=true", restUrl, "get-invitation-overview", competitionId);
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
-        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, innovationArea, participantStatus, compliant)
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, participantStatus, compliant)
                 .getSuccess();
 
         assertEquals(expected, actual);
@@ -239,7 +238,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
-        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, empty(), Arrays.asList(ACCEPTED, PENDING), empty())
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, Arrays.asList(ACCEPTED, PENDING), empty())
                 .getSuccess();
 
         assertEquals(expected, actual);
@@ -255,7 +254,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), expected);
 
-        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), statuses, empty())
+        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, statuses, empty())
                 .getSuccess();
 
         assertEquals(expected, actual);

@@ -1127,10 +1127,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getAssessorsNotAcceptedInviteIds() {
         loginCompAdmin();
 
-        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
-        InnovationArea otherInnovationArea = innovationAreaRepository.findById(10L).get();
-
-        Optional<Long> innovationAreaId = of(innovationArea.getId());
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
 
@@ -1143,17 +1139,14 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         profile1.setSkillsAreas("Skill area 1");
         profile1.setAgreement(agreement);
         profile1.setAgreementSignedDate(now().minusDays(5));
-        profile1.addInnovationArea(innovationArea);
 
         profile2.setBusinessType(BUSINESS);
         profile2.setSkillsAreas("Skill area 2");
         profile2.setAgreement(agreement);
         profile2.setAgreementSignedDate(now().minusDays(10));
-        profile2.addInnovationArea(innovationArea);
 
         List<Long> inviteIds = controller.getAssessorsNotAcceptedInviteIds(
                 competition.getId(),
-                innovationAreaId,
                 status,
                 hasContract
         ).getSuccess();
@@ -1192,7 +1185,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                                 .withId()
                                 .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel", paulPlum.getName(), felixWilson.getName())
                                 .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com", paulPlum.getEmail(), felixWilson.getEmail())
-                                .withInnovationArea(innovationArea, otherInnovationArea, innovationArea, otherInnovationArea, null, null)
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
@@ -1208,7 +1200,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         inviteIds = controller.getAssessorsNotAcceptedInviteIds(
                 competition.getId(),
-                innovationAreaId,
                 status,
                 hasContract
         ).getSuccess();
@@ -1220,9 +1211,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getInvitationOverview() {
         loginCompAdmin();
 
-        InnovationArea innovationArea = innovationAreaRepository.findById(5L).get();
-        InnovationArea otherInnovationArea = innovationAreaRepository.findById(10L).get();
-
         Agreement agreement = agreementRepository.findById(1L).get();
 
         Profile profile1 = profileRepository.findById(paulPlum.getProfileId()).get();
@@ -1232,13 +1220,11 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         profile1.setSkillsAreas("Skill area 1");
         profile1.setAgreement(agreement);
         profile1.setAgreementSignedDate(now().minusDays(5));
-        profile1.addInnovationArea(innovationArea);
 
         profile2.setBusinessType(BUSINESS);
         profile2.setSkillsAreas("Skill area 2");
         profile2.setAgreement(agreement);
         profile2.setAgreementSignedDate(now().minusDays(10));
-        profile2.addInnovationArea(innovationArea);
 
         profileRepository.saveAll(asList(profile1, profile2));
 
@@ -1272,7 +1258,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                                 .withId()
                                 .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel", paulPlum.getName(), felixWilson.getName())
                                 .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com", paulPlum.getEmail(), felixWilson.getEmail())
-                                .withInnovationArea(innovationArea, otherInnovationArea, innovationArea, otherInnovationArea, null, null)
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
@@ -1286,7 +1271,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         assessmentParticipantRepository.saveAll(competitionParticipants);
         flushAndClearSession();
 
-        Optional<Long> innovationAreaId = of(innovationArea.getId());
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
@@ -1294,7 +1278,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         AssessorInviteOverviewPageResource pageResource = controller.getInvitationOverview(
                 competition.getId(),
                 pageable,
-                innovationAreaId,
                 status,
                 hasContract
         )

@@ -2205,7 +2205,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     public void getInvitationOverview_allFilters() {
         long competitionId = 1L;
         Pageable pageable = PageRequest.of(0, 5);
-        Long innovationArea = 2L;
         ParticipantStatus status = ParticipantStatus.PENDING;
         Boolean compliant = true;
 
@@ -2223,9 +2222,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndCompliant(
                 eq(competitionId),
-                eq(innovationArea),
                 eq(singletonList(status)),
                 eq(compliant),
                 any(ZonedDateTime.class),
@@ -2249,14 +2247,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(
                 competitionId,
                 pageable,
-                of(innovationArea),
                 singletonList(status),
                 of(compliant)
         );
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndCompliant(
                 eq(competitionId),
-                eq(innovationArea),
                 eq(singletonList(status)),
                 eq(compliant),
                 any(ZonedDateTime.class),
@@ -2320,7 +2316,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 );
 
 
-        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), singletonList(PENDING), empty());
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING), empty());
 
         verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
         verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(AssessmentParticipant.class));
@@ -2369,7 +2365,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED)))
                 .thenReturn(expectedParticipants);
 
-        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), asList(PENDING, REJECTED), empty());
+        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, asList(PENDING, REJECTED), empty());
 
         verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
 

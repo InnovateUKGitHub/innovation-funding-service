@@ -89,15 +89,6 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   FROM Assessment a " +
             "   WHERE a.participant.user = assessmentParticipant.user " +
             "   AND a.target.id = :appId) " +
-            "   AND (:innovationAreaId is null " +
-            "       OR EXISTS (" +
-            "           SELECT 'area' " +
-            "           FROM Profile p " +
-            "           JOIN p.innovationAreas ia " +
-            "           WHERE p.id = assessmentParticipant.user.profileId " +
-            "           AND ia.category.id = :innovationAreaId" +
-            "       )" +
-            ")" +
             "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +

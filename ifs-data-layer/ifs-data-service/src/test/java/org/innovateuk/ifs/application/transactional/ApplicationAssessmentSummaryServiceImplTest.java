@@ -118,7 +118,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build();
 
         Page<AssessmentParticipant> page = mock(Page.class);
-        Long innovationArea = 4L;
+        String assessorNameFilter = "";
 
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
 
@@ -128,12 +128,12 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 eq(CompetitionParticipantRole.ASSESSOR),
                 eq(ACCEPTED),
                 eq(application.getId()),
-                eq(innovationArea),
+                eq(assessorNameFilter),
                 any(Pageable.class))).thenReturn(page);
 
         when(applicationAssessorPageMapperMock.mapToResource(page)).thenReturn(expected);
 
-        ApplicationAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, innovationArea).getSuccess();
+        ApplicationAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, assessorNameFilter).getSuccess();
         assertEquals(expected, found);
     }
 

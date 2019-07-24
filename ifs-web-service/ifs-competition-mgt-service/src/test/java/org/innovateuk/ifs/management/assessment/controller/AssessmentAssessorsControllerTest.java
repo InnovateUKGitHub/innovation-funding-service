@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentAssessorsController;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -17,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
@@ -74,9 +72,10 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), Optional.empty(), Optional.empty(), pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
 
-        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId()))
+        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId())
+                .param("assessorNameFilter",""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-assessors"))
                 .andExpect(model().attributeExists("model"))
@@ -108,6 +107,6 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=MANAGE_ASSESSORS&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?origin=MANAGE_ASSESSORS&assessorNameFilter=&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }
