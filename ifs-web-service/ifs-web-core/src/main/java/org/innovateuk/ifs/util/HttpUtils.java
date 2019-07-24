@@ -15,7 +15,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 /**
  * A set of utilities for performing commonly used functions related to HTTP.
  *
- * Created by dwatson on 01/10/15.
  */
 public final class HttpUtils {
 

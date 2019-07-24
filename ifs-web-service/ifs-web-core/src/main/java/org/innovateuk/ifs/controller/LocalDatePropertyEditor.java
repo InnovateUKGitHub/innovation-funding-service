@@ -34,11 +34,17 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
 
         try {
             setValue(LocalDate.of(year, month, day));
-
         } catch (Exception ex) {
             LOG.error(ex);
             setValue(LocalDate.MIN);
         }
+    }
+
+    public static LocalDate convertMinLocalDateToNull(LocalDate localDate) {
+        if (LocalDate.MIN.equals(localDate)) {
+            return null;
+        }
+        return localDate;
     }
 
     private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField, int defaultValueIfInvalid) {

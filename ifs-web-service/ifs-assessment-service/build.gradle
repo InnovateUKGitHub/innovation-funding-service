@@ -2,8 +2,6 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
-
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
@@ -15,6 +13,16 @@ buildscript {
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    ext {
+        serverContext = '/assessment'
+    }
+}
+
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 
@@ -40,11 +48,9 @@ def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.pr
 }
 
 prepareDockerBaseInput {
-    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
     dependsOn ":ifs-web-service:ifs-web-core:build"
 }
-
-ext.serverContext = '/assessment'
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

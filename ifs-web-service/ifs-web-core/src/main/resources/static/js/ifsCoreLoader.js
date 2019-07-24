@@ -34,7 +34,6 @@ IFS.core.loadOrder = {
       IFS.core.passwordToggle.init()
       IFS.core.preventInputRegex.init()
       IFS.core.autoComplete.init()
-      IFS.core.timeoutWarning.init()
       IFS.core.exampleDate.init()
     },
     finalize: function () {
@@ -45,6 +44,7 @@ IFS.core.loadOrder = {
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
       IFS.core.sortingErrors.init()
+      IFS.core.tableSorter.init()
     }
   },
   'finance': {

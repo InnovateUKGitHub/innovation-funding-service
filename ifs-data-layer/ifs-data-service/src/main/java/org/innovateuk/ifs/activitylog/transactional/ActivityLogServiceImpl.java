@@ -1,17 +1,27 @@
 package org.innovateuk.ifs.activitylog.transactional;
 
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 @Transactional
@@ -89,4 +99,27 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 });
     }
 
+    @Override
+    public ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId) {
+        return serviceSuccess(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(applicationId)
+                .stream()
+                .map(this::toResource)
+                .collect(toList()));
+    }
+
+    private ActivityLogResource toResource(ActivityLog activityLog) {
+        return new ActivityLogResource(
+                activityLog.getType(),
+                activityLog.getCreatedBy().getId(),
+                activityLog.getCreatedBy().getName(),
+                activityLog.getCreatedBy().getRoles(),
+                activityLog.getCreatedOn(),
+                activityLog.getOrganisation().map(Organisation::getId).orElse(null),
+                activityLog.getOrganisation().map(Organisation::getName).orElse(null),
+                activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
+                activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
+                activityLog.getQuery().map(Query::id).orElse(null),
+                activityLog.getQuery().map(Query::section).orElse(null)
+        );
+    }
 }

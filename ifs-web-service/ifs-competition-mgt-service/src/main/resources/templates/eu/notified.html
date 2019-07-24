@@ -25,10 +25,10 @@
             </h2>
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
-                    <a href="/management/eu-invite-non-notified" aria-selected="false" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
+                    <a href="/management/eu-invite-non-notified" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
                 </li>
                 <li class="govuk-tabs__list-item">
-                    <a href="/management/eu-invite-notified" aria-selected="true" class="govuk-tabs__tab">Sent (<span th:text="${model.totalNotified}"></span>)</a>
+                    <a href="/management/eu-invite-notified" class="govuk-tabs__tab govuk-tabs__tab--selected">Sent (<span th:text="${model.totalNotified}"></span>)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
@@ -97,7 +97,7 @@
                                 <td class="govuk-table__cell" th:text="${grant.organisation.name}">Organisation Name</td>
                                 <td class="govuk-table__cell" th:text="${grant.shortCode}">Reference code</td>
                                 <td class="govuk-table__cell" th:text="${#temporals.format(grant.notifiedOn, 'd MMM yyyy h:mma')}">Timestamp</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${grant.contact.email}">steve.smith@empire.com</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric ifs-table__email" th:text="${grant.contact.email}">steve.smith@empire.com</td>
                             </tr>
                             </tbody>
                         </table>

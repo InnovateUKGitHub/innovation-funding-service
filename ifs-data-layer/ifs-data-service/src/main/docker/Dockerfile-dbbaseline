@@ -1,4 +1,4 @@
-FROM dhoer/flyway:4.1.2
+FROM boxfuse/flyway:5.0.7
 MAINTAINER Ravish Bhagdev <ravish.bhagdev@gmail.com>
 VOLUME /tmp
 RUN apt-get update -y && apt-get install -y mysql-client

@@ -21,9 +21,14 @@ public class StatusController {
     private StatusService statusService;
 
     @GetMapping("/competition/{competitionId}")
-    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final Long competitionId,
+    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final long competitionId,
                                                                               @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
         return statusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
+    }
+
+    @GetMapping("/previous/competition/{competitionId}")
+    public RestResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(@PathVariable final long competitionId) {
+        return statusService.getPreviousCompetitionStatus(competitionId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/team-status")

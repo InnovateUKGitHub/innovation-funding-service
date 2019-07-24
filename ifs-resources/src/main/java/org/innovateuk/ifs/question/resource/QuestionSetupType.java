@@ -2,10 +2,10 @@ package org.innovateuk.ifs.question.resource;
 
 public enum QuestionSetupType {
 
-    ASSESSED_QUESTION(""),
-    SCOPE("Scope"),
-    PROJECT_SUMMARY("Project summary"),
-    PUBLIC_DESCRIPTION("Public description"),
+    ASSESSED_QUESTION("", true),
+    SCOPE("Scope", true),
+    PROJECT_SUMMARY("Project summary", true),
+    PUBLIC_DESCRIPTION("Public description", true),
     APPLICATION_DETAILS("Application details"),
     RESEARCH_CATEGORY("Research category"),
     APPLICATION_TEAM("Application team"),
@@ -15,13 +15,23 @@ public enum QuestionSetupType {
     GRANT_AGREEMENT("Horizon 2020 grant agreement");
 
     private String shortName;
+    private boolean formInputResponses;
 
     QuestionSetupType(String shortName) {
         this.shortName = shortName;
+        this.formInputResponses = false;
+    }
+
+    QuestionSetupType(String shortName, boolean formInputResponses) {
+        this.shortName = shortName;
+        this.formInputResponses = formInputResponses;
     }
 
     public String getShortName() {
         return this.shortName;
     }
 
+    public boolean hasFormInputResponses() {
+        return formInputResponses;
+    }
 }

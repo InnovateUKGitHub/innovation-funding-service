@@ -224,7 +224,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void monitoringOfficerCanSeeApplicationFinanceTotals() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -250,7 +250,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         ApplicationResource applicationResource = newApplicationResource().build();
 

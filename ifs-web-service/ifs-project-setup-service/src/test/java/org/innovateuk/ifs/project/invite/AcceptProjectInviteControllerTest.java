@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel
 import org.innovateuk.ifs.registration.service.AcceptProjectInviteController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.Cookie;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
-import static org.innovateuk.ifs.CookieTestUtil.*;
+import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -50,7 +50,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     private ProjectInviteRestService projectInviteRestServiceMock;
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private Environment env;
@@ -69,7 +69,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
     }
 
     @Test

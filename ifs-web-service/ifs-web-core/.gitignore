@@ -2,6 +2,8 @@ src/main/resources/static/css/*
 src/main/resources/static/js/dest/*
 src/main/resources/static/js/vendor/html5shiv
 src/main/resources/static/js/vendor/html5shiv/*
+src/main/resources/static/js/vendor/tablesorter
+src/main/resources/static/js/vendor/tablesorter/*
 src/main/resources/static/images/*
 !src/main/resources/static/images/ifs-images
 !src/main/resources/static/images/ifs-images/*
