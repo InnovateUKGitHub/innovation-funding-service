@@ -109,16 +109,13 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
             ApplicationInvite invite,
             InviteOrganisation newInviteOrganisation
     ) {
-        unlinkOldInviteOrganisation(invite);
+        deleteOldInviteOrganisation(invite);
 
         invite.setInviteOrganisation(newInviteOrganisation);
     }
 
-    private void unlinkOldInviteOrganisation(ApplicationInvite invite) {
+    private void deleteOldInviteOrganisation(ApplicationInvite invite) {
         InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
-        currentInviteOrganisation.removeInvite(invite);
-        inviteOrganisationRepository.saveAndFlush(currentInviteOrganisation);
-
         if (currentInviteOrganisation.getInvites().isEmpty()) {
             inviteOrganisationRepository.delete(currentInviteOrganisation);
         }
