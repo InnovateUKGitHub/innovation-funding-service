@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * Tests can rollback their changes to the database using the @Rollback annotation.
  *
- * Created by dwatson on 02/10/15.
  */
 @Transactional
 public abstract class BaseRepositoryIntegrationTest<RepositoryType> extends BaseAuthenticationAwareIntegrationTest {

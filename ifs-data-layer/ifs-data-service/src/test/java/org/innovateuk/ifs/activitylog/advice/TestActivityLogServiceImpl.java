@@ -60,4 +60,9 @@ public class TestActivityLogServiceImpl implements TestActivityLogService {
     public void withApplicationIdNotServiceResult(long applicationId) {
 
     }
+
+    @Override
+    public ServiceResult<Void> withNoneType(long applicationId) {
+        return serviceSuccess();
+    }
 }

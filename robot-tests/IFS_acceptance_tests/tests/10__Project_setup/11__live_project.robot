@@ -231,6 +231,7 @@ MO sould see project tab on dashboard once GOL is approved
 grant offer letter is sent to users
     the user logs-in in new browser    &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
     the user clicks the button/link    id = send-gol
     the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")

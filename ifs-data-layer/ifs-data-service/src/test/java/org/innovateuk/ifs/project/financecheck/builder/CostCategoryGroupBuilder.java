@@ -31,7 +31,8 @@ public class CostCategoryGroupBuilder extends BaseBuilder<CostCategoryGroup, Cos
         return new CostCategoryGroup();
     }
 
-    public CostCategoryGroupBuilder withCostCategories(List<CostCategory>... costCategories) {
+    @SafeVarargs
+    public final CostCategoryGroupBuilder withCostCategories(List<CostCategory>... costCategories) {
         return withArray((name, costCategory) -> setField("costCategories", name, costCategory), costCategories);
     }
 
