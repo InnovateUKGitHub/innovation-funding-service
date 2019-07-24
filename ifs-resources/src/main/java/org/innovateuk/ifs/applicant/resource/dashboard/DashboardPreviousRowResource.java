@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 /**
  * Resource representing an application or project for use in the previous section of the applicant dashboard.
@@ -17,7 +16,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
 
     private boolean assignedToMe;
     private ApplicationState applicationState;
-    private Optional<ProjectState> projectState;
+    private ProjectState projectState;
     private Long projectId;
     private boolean leadApplicant;
     private ZonedDateTime endDate;
@@ -62,7 +61,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         return startDate;
     }
 
-    public Optional<ProjectState> getProjectState() {
+    public ProjectState getProjectState() {
         return projectState;
     }
 
@@ -72,7 +71,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
 
     @JsonIgnore
     public boolean activeProject() {
-        return projectState.isPresent() && projectState.get().isActive();
+        return projectState != null && projectState.isActive();
     }
 
     @Override
@@ -126,7 +125,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         private DashboardSection dashboardSection;
         private boolean assignedToMe;
         private ApplicationState applicationState;
-        private Optional<ProjectState> projectState;
+        private ProjectState projectState;
         private Long projectId;
         private boolean leadApplicant;
         private ZonedDateTime endDate;
@@ -165,7 +164,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardPreviousApplicationResourceBuilder withProjectState(Optional<ProjectState> projectState) {
+        public DashboardPreviousApplicationResourceBuilder withProjectState(ProjectState projectState) {
             this.projectState = projectState;
             return this;
         }

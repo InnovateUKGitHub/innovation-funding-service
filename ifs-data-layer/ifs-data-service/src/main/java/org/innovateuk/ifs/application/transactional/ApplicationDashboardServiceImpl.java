@@ -229,12 +229,13 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .orElse(null);
     }
 
-    private Optional<ProjectState> getProjectState(ApplicationResource application, List<ProjectResource> projects) {
+    private ProjectState getProjectState(ApplicationResource application, List<ProjectResource> projects) {
         return projects
                 .stream()
                 .filter(p -> p.getApplication() == application.getId())
                 .map(ProjectResource::getProjectState)
-                .findAny();
+                .findAny()
+                .orElse(null);
     }
 
     private boolean isAssigned(ApplicationResource application, Optional<ProcessRoleResource> processRole) {

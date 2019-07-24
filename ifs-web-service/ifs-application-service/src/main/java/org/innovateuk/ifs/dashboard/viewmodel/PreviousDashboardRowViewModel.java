@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
@@ -17,7 +16,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private final ApplicationState applicationState;
     private final LocalDate startDate;
-    private final Optional<ProjectState> projectState;
+    private final ProjectState projectState;
     private final Long projectId;
 
     public PreviousDashboardRowViewModel(String title,
@@ -25,7 +24,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                                          Long projectId,
                                          String competitionTitle,
                                          ApplicationState applicationState,
-                                         Optional<ProjectState> projectState,
+                                         ProjectState projectState,
                                          LocalDate startDate) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
@@ -51,7 +50,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     private boolean hasProject() {
-        return projectState.isPresent();
+        return projectState != null;
     }
 
     /* View logic */
@@ -73,11 +72,11 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     public boolean isWithdrawn() {
-        return hasProject() && projectState.get().isWithdrawn();
+        return hasProject() && projectState.isWithdrawn();
     }
 
     public boolean isLive() {
-        return hasProject() && (projectState.get().isLive() || projectState.get().isCompletedOffline());
+        return hasProject() && (projectState.isLive() || projectState.isCompletedOffline());
     }
 
     @Override
