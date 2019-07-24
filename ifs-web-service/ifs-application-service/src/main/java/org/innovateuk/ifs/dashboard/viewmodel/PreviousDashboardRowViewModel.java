@@ -59,7 +59,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     public boolean isApproved() {
-        return APPROVED.equals(applicationState);
+        return APPROVED.equals(applicationState) && !hasProject();
     }
 
     public boolean isCreatedOrOpen() {
