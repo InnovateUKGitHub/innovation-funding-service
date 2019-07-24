@@ -38,6 +38,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-1445 Assessor management- 'Accepted' tab on invite assessors dashboard
 ...
 ...               IFS-3943 Assessor profile view - Internal
+...
+...               IFS-5915 Assessor Filter Option
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -57,9 +59,9 @@ Check the initial key statistics
     And the user clicks the button/link    link = Pending and declined
 
 Filtering in the Invite Pending and declined page
-    [Documentation]    INFUND-6453
+    [Documentation]    INFUND-6453  IFS-5915
     [Tags]
-    Given the user filter assessors by innovation area, status, contract and DOI
+    Given the user filter assessors by status and DOI
     Then the user should not see the element   jQuery = td:contains("No")
     When the user clicks the button/link       jQuery = a:contains("Clear filters")
     Then the user should see the element       jQuery = td:contains("David")
@@ -218,8 +220,7 @@ the user should see the client and server side validation for subject
     the user clicks the button/link             css = button[type = "submit"]    #Send invite
     the user should see a field and summary error  Please enter a subject for the email.
 
-the user filter assessors by innovation area, status, contract and DOI
-    the user selects the option from the drop-down menu    Assembly / disassembly / joining  id = filterInnovationArea
+the user filter assessors by status and DOI
     the user selects the option from the drop-down menu    Invite declined  id = filterStatus
     the user selects the option from the drop-down menu    Yes  id = filterContract
     the user clicks the button/link                        jQuery = button:contains(Filter)
