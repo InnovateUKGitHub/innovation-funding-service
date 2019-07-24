@@ -38,7 +38,7 @@ public class AssessmentApplicationProgressController {
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam MultiValueMap<String, String> queryParams,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
+                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter) {
         return doProgressView(model, applicationId, assessorNameFilter, queryParams, page);
     }
 
