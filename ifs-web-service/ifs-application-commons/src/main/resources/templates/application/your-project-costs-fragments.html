@@ -30,7 +30,7 @@
                             <span class="govuk-details__summary-text">Labour costs guidance</span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
+                            <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs<span th:if="${!model.isProcurementCompetition()}"> as they occur</span>. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
                             <p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>gross salary</li>
@@ -52,7 +52,8 @@
                                 <li>non-productive time</li>
                             </ul>
                             <p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>
-                            <p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
+                            <p class="govuk-body">We <span th:if="${!model.isProcurementCompetition()}"> will</span><span th:if="${model.isProcurementCompetition()}"> may</span> review the total amount of time and cost of labour before we approve your application.
+                                <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span></p>
                         </div>
                     </details>
                 </th:block>
@@ -280,6 +281,24 @@
                   th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
 
         </h3>
+        <details th:if="${model.isProcurementCompetition()}" class="govuk-details" role="group">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">Overheads costs guidance</span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">Overhead costs should be charged in proportion to the amount of effort deployed on the project. Calculate them using your own cost rates. They can include:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>general office and basic laboratory consumables</li>
+                    <li>library services or learning resources</li>
+                    <li>administrative tasks</li>
+                    <li>finance, personnel, public relations and departmental services</li>
+                    <li>central and distributed computing</li>
+                    <li>cost of capital employed</li>
+                </ul>
+                <p class="govuk-body">An element of overheads can be included in your project costs but this must be realistic. Costs that are considered unreasonable may be rejected.</p>
+                <p class="govuk-body">You could be asked to provide an itemisation of costs and methods of calculation to support your application.</p>
+            </div>
+        </details>
         <div class="collapsible-content">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: overheads_read_only"/>
@@ -1091,20 +1110,12 @@
                             <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
                         </summary>
                         <div class="govuk-details__text wysiwyg-styles"
-                             id="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-hidden="true"><p>Subcontracting
-                            costs relate to work carried out by third party organisations. These organisations are not part
-                            of
-                            your project.</p>
-                            <p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by
-                                a
-                                project partner.</p>
+                             id="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-hidden="true">
+                            <p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project.</p>
+                            <p>Subcontracting is eligible providing it’s justified<span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.</p>
                             <p>Subcontracting associate companies should be charged at cost.</p>
-                            <p>Where possible you should select a UK based contractor. You should name the subcontractor
-                                (where
-                                known) and describe what they will be doing. You should also state where the work will be
-                                undertaken. We will look at the size of this contribution when assessing your eligibility
-                                and
-                                level of support.</p></div>
+                            <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You should name the subcontractor (where known) and describe what they will be doing. You should also state where the work will be undertaken.<span th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span></p>
+                        </div>
                     </details>
                 </th:block>
             </th:block>
