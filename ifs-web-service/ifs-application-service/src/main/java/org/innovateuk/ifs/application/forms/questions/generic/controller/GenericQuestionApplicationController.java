@@ -111,7 +111,7 @@ public class GenericQuestionApplicationController {
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
-        questionStatusRestService.assign(questionId, applicationId, getLeadProcessRole(applicationId).getId(), user.getId()).getSuccess();
+        questionStatusRestService.assign(questionId, applicationId, getLeadProcessRole(applicationId).getId(), getUsersProcessRole(applicationId, user).getId()).getSuccess();
         return redirectToQuestion(applicationId, questionId);
     }
 
