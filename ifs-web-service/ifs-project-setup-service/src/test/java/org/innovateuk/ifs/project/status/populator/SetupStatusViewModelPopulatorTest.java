@@ -1200,7 +1200,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser, "origin").get();
+        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser).get();
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -1527,7 +1527,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
-        return populator.populateViewModel(projectId, loggedInUser, "origin").get();
+        return populator.populateViewModel(projectId, loggedInUser).get();
     }
 
     private void setupLookupProjectDetailsExpectations(RestResult<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

@@ -12,7 +12,6 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/horizon-2020-costs/organisation/{organisationId}/section/{sectionId}")
@@ -62,16 +59,10 @@ public class Horizon2020CostsController extends AsyncAdaptor {
                                        UserResource user,
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
-                                       @PathVariable long sectionId,
-                                       @RequestParam(value = "origin", required = false) String origin,
-                                       @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = "";
-        if (origin != null) {
-            originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-        }
+                                       @PathVariable long sectionId) {
         Horizon2020CostsForm form = formPopulator.populate(applicationId, organisationId);
         model.addAttribute("form", form);
-        return viewHorizon2020Costs(user, model, applicationId, sectionId, organisationId, originQuery);
+        return viewHorizon2020Costs(user, model, applicationId, sectionId, organisationId);
     }
 
     @PostMapping
@@ -97,7 +88,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewHorizon2020Costs(user, model, applicationId, sectionId, organisationId, "");
+        Supplier<String> failureView = () -> viewHorizon2020Costs(user, model, applicationId, sectionId, organisationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -121,8 +112,8 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
-    private String viewHorizon2020Costs(UserResource user, Model model, long applicationId, long sectionId, long organisationId, String originQuery) {
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser(), originQuery);
+    private String viewHorizon2020Costs(UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser());
         model.addAttribute("model", viewModel);
         return VIEW;
     }

@@ -36,8 +36,7 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
 
     public CompetitionInviteAssessorsFindViewModel populateModel(long competitionId,
                                                                  int page,
-                                                                 String assessorNameFilter,
-                                                                 String originQuery) {
+                                                                 String assessorNameFilter) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -53,9 +52,8 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
 
         model.setInnovationSectorOptions(innovationSectors);
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
-        model.setOriginQuery(originQuery);
 
         return model;
     }

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,9 +31,6 @@ public class ApplicationFeedbackViewModel {
     private final long applicationTermsQuestionId;
     private final boolean projectWithdrawn;
     private final boolean collaborativeProject;
-    private final ApplicationSummaryOrigin origin;
-    private final String originQuery;
-    private final String backUrl;
 
     public ApplicationFeedbackViewModel(ApplicationResource application,
                                         CompetitionResource competition,
@@ -51,10 +47,7 @@ public class ApplicationFeedbackViewModel {
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         long applicationTermsQuestionId,
                                         boolean projectWithdrawn,
-                                        boolean collaborativeProject,
-                                        ApplicationSummaryOrigin origin,
-                                        String originQuery,
-                                        String backUrl) {
+                                        boolean collaborativeProject) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -71,9 +64,6 @@ public class ApplicationFeedbackViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
-        this.origin = origin;
-        this.originQuery = originQuery;
-        this.backUrl = backUrl;
     }
 
     public ApplicationResource getApplication() {
@@ -140,20 +130,4 @@ public class ApplicationFeedbackViewModel {
         return collaborativeProject;
     }
 
-    public ApplicationSummaryOrigin getOrigin() {
-        return origin;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
-    }
-
-    public String getBackUrl() {
-        return backUrl;
-    }
-
-    /* View logic */
-    public String getBackLinkTitle() {
-        return origin.getTitle();
-    }
 }

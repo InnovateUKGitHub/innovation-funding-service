@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.assessor.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.form.OverviewSelectionForm;
 import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsOverviewModelPopulator;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +29,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller handles the Overview tab for inviting assessors to a Competition.
@@ -71,11 +68,9 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(value = "filterChanged", required = false) boolean filterChanged,
-                           @RequestParam MultiValueMap<String, String> queryParams,
                            HttpServletRequest request,
                            HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
         updateOverviewSelectionForm(request, response, competitionId, selectionForm, filterForm, filterChanged);
 
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
@@ -83,8 +78,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                 page,
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
-                filterForm.getAssessorName(),
-                originQuery
+                filterForm.getAssessorName()
         ));
 
         return "assessors/overview";

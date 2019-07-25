@@ -12,7 +12,6 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.assessor.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,7 +36,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -89,11 +87,9 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter,
-                       @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm, assessorNameFilter);
         CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter, originQuery);
 
@@ -243,14 +239,12 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
                          @ModelAttribute(name = FORM_ATTR_NAME, binding = false) InviteNewAssessorsForm form,
-                         @RequestParam(defaultValue = "0") int page,
-                         @RequestParam MultiValueMap<String, String> queryParams) {
+                         @RequestParam(defaultValue = "0") int page) {
         if (form.getInvites().isEmpty()) {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page));
 
         return "assessors/invite";
     }
@@ -278,12 +272,11 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     public String addNewUserToInviteView(Model model,
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam(defaultValue = "0") int page,
-                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                         @RequestParam MultiValueMap<String, String> queryParams) {
+                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         form.getInvites().add(new InviteNewAssessorsRowForm());
         form.setVisible(true);
 
-        return invite(model, competitionId, form, page, queryParams);
+        return invite(model, competitionId, form, page);
     }
 
     @PostMapping(value = "/invite", params = {"removeNewUser"})
@@ -291,26 +284,24 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                                               @PathVariable("competitionId") long competitionId,
                                               @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                               @RequestParam(name = "removeNewUser") int position,
-                                              @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam MultiValueMap<String, String> queryParams) {
+                                              @RequestParam(defaultValue = "0") int page) {
         form.getInvites().remove(position);
         form.setVisible(true);
 
-        return invite(model, competitionId, form, page, queryParams);
+        return invite(model, competitionId, form, page);
     }
 
     @PostMapping(value = "/invite", params = {"inviteNewUsers"})
     public String inviteNewUsersFromInviteView(Model model,
                                                @PathVariable("competitionId") long competitionId,
                                                @RequestParam(defaultValue = "0") int page,
-                                               @RequestParam MultiValueMap<String, String> queryParams,
                                                @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                ValidationHandler validationHandler) {
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(
-                () -> invite(model, competitionId, form, page, queryParams),
+                () -> invite(model, competitionId, form, page),
                 () -> {
                     RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
                             newInviteFormToResource(form, competitionId), competitionId
@@ -318,7 +309,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
 
                     return validationHandler.addAnyErrors(restResult)
                             .failNowOrSucceedWith(
-                                    () -> invite(model, competitionId, form, page, queryParams),
+                                    () -> invite(model, competitionId, form, page),
                                     () -> redirectToInvite(competitionId, page)
                             );
                 }
@@ -335,14 +326,11 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     @GetMapping("/accepted")
     public String accepted(Model model,
                            @PathVariable("competitionId") long competitionId,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_ACCEPTED, queryParams);
+                           @RequestParam(defaultValue = "0") int page) {
 
         model.addAttribute("model", inviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
-                page,
-                originQuery
+                page
         ));
 
         return "assessors/accepted";

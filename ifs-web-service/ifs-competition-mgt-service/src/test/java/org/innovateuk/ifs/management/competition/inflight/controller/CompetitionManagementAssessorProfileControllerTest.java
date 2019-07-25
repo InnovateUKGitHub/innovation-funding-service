@@ -13,7 +13,6 @@ import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
@@ -99,7 +97,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}?tab=skills", competition.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("profile/skills"));
@@ -128,76 +126,13 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
         when(affiliationRestService.getUserAffiliations(anyLong())).thenReturn(restSuccess(affiliationListResource));
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}?tab=declaration", competition.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("profile/declaration-of-interest"));
 
         verify(assessorRestService).getAssessorProfile(assessorId);
         verify(affiliationRestService).getUserAffiliations(anyLong());
-    }
-
-    @Test
-    public void displayAssessorProfile_backUrlPreservesQueryParams() throws Exception {
-        Long assessorId = 1L;
-
-        AddressResource expectedAddress = getExpectedAddress();
-        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
-        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
-
-        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find?param1=abc&param2=def%26ghi";
-
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
-                .param("param1", "abc")
-                .param("param2", "def&ghi")
-                .param("applicationId", "2"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/skills"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
-    }
-
-    @Test
-    public void displayAssessorProfileAsCompAdmin_AssessorFindOrigin() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-
-        Long assessorId = 1L;
-
-        AddressResource expectedAddress = getExpectedAddress();
-        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
-        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
-
-        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find";
-
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
-                .param("origin", "ASSESSOR_FIND"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/skills"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
-    }
-
-    @Test
-    public void displayAssessorProfileAsProjectFinance_AssessorFindOrigin() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
-
-        Long assessorId = 1L;
-
-        AddressResource expectedAddress = getExpectedAddress();
-        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
-        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
-
-        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find";
-
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
-                .param("origin", "ASSESSOR_FIND"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/skills"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
     private AddressResource getExpectedAddress() {

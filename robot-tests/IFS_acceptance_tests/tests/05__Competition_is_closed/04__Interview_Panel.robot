@@ -462,7 +462,7 @@ an assessor can view feedback overview of an application
     the user clicks the button/link     link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     the user should see the element     jQuery = h1:contains("Feedback overview")
     the user should see the element     jQuery = .message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
-    assessor should see the competition terms and conditions     Interview
+    assessor should see the competition terms and conditions     Back to feedback overview
 
 Custom suite teardown
     Disconnect from database

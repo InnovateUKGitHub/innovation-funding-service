@@ -31,7 +31,7 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page, String assessorOrigin) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccess();
 
@@ -52,7 +52,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getAvailableAssessors(availableAssessors.getContent()),
                 getInnovationSectors(),
                 assessorNameFilter,
-                new Pagination(availableAssessors, assessorOrigin));
+                new Pagination(availableAssessors));
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
