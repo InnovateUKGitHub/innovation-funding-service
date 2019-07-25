@@ -43,8 +43,7 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                                                                      int page,
                                                                      Optional<Long> innovationArea,
                                                                      Optional<ParticipantStatusResource> status,
-                                                                     Optional<Boolean> compliant,
-                                                                     String originQuery) {
+                                                                     Optional<Boolean> compliant) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -63,17 +62,14 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                 innovationArea,
                 statuses,
                 compliant
-        )
-                .getSuccess();
+        ).getSuccess();
 
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setInnovationAreaOptions(innovationAreasOptions);
-        model.setPagination(new Pagination(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
-        model.setOriginQuery(originQuery);
-
         return model;
     }
 

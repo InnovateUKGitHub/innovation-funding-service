@@ -29,7 +29,6 @@ public class IneligibleApplicationsModelPopulator {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     public IneligibleApplicationsViewModel populateModel(long competitionId,
-                                                         String origin,
                                                          int page,
                                                          String sorting,
                                                          IneligibleApplicationsForm filterForm,
@@ -53,7 +52,7 @@ public class IneligibleApplicationsModelPopulator {
                 sorting,
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
-                new Pagination(summaryPageResource, origin),
+                new Pagination(summaryPageResource),
                 user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)|| user.hasRole(SUPPORT)
         );
     }

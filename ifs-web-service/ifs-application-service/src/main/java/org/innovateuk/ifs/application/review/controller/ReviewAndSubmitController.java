@@ -16,7 +16,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -24,7 +23,6 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,9 +32,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
-import static java.lang.String.*;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Controller
@@ -74,10 +71,7 @@ public class ReviewAndSubmitController {
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
                                   Model model,
-                                  UserResource user,
-                                  @RequestParam MultiValueMap<String, String> queryParams) {
-
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationSummaryOrigin.REVIEW_AND_SUBMIT, queryParams));
+                                  UserResource user) {
         model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
 
         return "application/review-and-submit";

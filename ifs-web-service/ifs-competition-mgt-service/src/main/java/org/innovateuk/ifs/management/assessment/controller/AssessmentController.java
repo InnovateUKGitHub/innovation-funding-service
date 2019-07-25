@@ -2,18 +2,13 @@ package org.innovateuk.ifs.management.assessment.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Controller for the Manage Assessments dashboard.
@@ -28,11 +23,8 @@ public class AssessmentController {
     private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
 
     @GetMapping
-    public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model,
-                                    @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGE_ASSESSMENTS, queryParams);
+    public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model) {
         model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
-        model.addAttribute("originQuery", originQuery);
 
         return "competition/manage-assessments";
     }

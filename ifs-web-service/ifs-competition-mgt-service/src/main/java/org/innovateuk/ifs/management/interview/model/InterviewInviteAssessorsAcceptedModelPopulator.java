@@ -34,8 +34,7 @@ public class InterviewInviteAssessorsAcceptedModelPopulator extends InterviewInv
     }
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          String originQuery) {
+                                                          int page) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -51,8 +50,7 @@ public class InterviewInviteAssessorsAcceptedModelPopulator extends InterviewInv
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
-        model.setOriginQuery(originQuery);
+        model.setPagination(new Pagination(pageResource));
 
         return model;
     }

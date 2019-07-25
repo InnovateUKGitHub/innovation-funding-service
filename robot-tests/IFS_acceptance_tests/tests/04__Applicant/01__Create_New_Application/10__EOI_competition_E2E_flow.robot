@@ -156,7 +156,7 @@ the applicant checks for competition terms and conditions
     the user clicks the button/link       link = Award terms and conditions
     the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
 
 the user should see the competition details and sucessful application
     the user clicks the button/link    link = ${comp_name}

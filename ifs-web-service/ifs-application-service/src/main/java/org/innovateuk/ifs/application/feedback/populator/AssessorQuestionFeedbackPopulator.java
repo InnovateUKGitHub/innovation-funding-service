@@ -32,7 +32,7 @@ public class AssessorQuestionFeedbackPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
-    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId, String originQuery ) {
+    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId) {
 
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         long applicationId = applicationResource.getId();
@@ -49,7 +49,6 @@ public class AssessorQuestionFeedbackPopulator {
               questionResource,
               responseResource,
               aggregateResource,
-              navigationViewModel,
-              originQuery);
+              navigationViewModel);
     }
 }
