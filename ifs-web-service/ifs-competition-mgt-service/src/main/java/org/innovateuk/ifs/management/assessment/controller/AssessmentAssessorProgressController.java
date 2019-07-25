@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/assessors")
@@ -41,10 +39,7 @@ public class AssessmentAssessorProgressController {
                                    @RequestParam(value = "filterSearch", required = false) Optional<String> filter,
                                    @RequestParam MultiValueMap<String, String> params,
                                    Model model) {
-        params.add("assessorId", String.valueOf(assessorId));
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.ASSESSOR_PROGRESS, params);
-        model.addAttribute("originQuery", originQuery);
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, filter.map(String::trim).orElse(""), originQuery));
+        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, filter.map(String::trim).orElse("")));
 
         return "competition/assessor-progress";
     }

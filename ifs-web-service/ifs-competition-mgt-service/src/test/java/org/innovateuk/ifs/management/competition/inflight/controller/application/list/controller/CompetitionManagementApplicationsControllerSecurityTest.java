@@ -22,21 +22,21 @@ public class CompetitionManagementApplicationsControllerSecurityTest extends Bas
 
     @Test
     public void testAllApplications() {
-        assertAccessDenied(() -> classUnderTest.allApplications(null, competitionId, null, 0, null, null, null),
+        assertAccessDenied(() -> classUnderTest.allApplications(null, competitionId, 0, null, null, null),
                 () -> {
                 });
     }
 
     @Test
     public void testSubmittedApplications() {
-        assertAccessDenied(() -> classUnderTest.submittedApplications(null, competitionId, null, 0, null, null),
+        assertAccessDenied(() -> classUnderTest.submittedApplications(null, competitionId, 0, null, null),
                 () -> {
                 });
     }
 
     @Test
     public void testIneligibleApplications() {
-        assertAccessDenied(() -> classUnderTest.ineligibleApplications(null, null, competitionId, null, 0, null, null),
+        assertAccessDenied(() -> classUnderTest.ineligibleApplications(null, null, competitionId, 0, null, null),
                 () -> {
                 });
     }

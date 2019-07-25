@@ -288,8 +288,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                                 "App 1", "Org 1", "file1"),
                         new InterviewAssignmentApplicationInviteSendRowViewModel(2L, 4L,
                                 "App 2", "Org 2", "file2")),
-                newInterviewAssignmentKeyStatisticsResource().build(), new Pagination(invites, ""),
-                "?origin=INTERVIEW_PANEL_SEND", "Some content"
+                newInterviewAssignmentKeyStatisticsResource().build(), new Pagination(invites, "")
+                , "Some content"
         );
     }
 

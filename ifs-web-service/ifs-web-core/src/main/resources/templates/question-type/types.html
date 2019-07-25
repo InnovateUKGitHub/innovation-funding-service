@@ -38,7 +38,7 @@
                 <p class="govuk-body">This question is assigned to
                     <th:block th:text="${assignee}"/>.
                     <a th:if="${model.assignButtonsViewModel.currentUserIsLead and !model.assignButtonsViewModel.hideAssignButtons}"
-                       th:href="@{/application/{applicationId}/form/question/{questionId}/assign?origin=QUESTION(applicationId=${model.application.id},questionId=${question.id})}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${question.id})}"
                        class="govuk-link">Assign to someone else.</a>
                 </p>
             </div>

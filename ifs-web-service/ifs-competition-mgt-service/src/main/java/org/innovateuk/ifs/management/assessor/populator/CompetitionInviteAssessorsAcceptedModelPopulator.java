@@ -35,8 +35,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
     private CompetitionRestService competitionRestService;
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          String originQuery) {
+                                                          int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -55,8 +54,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
-        model.setOriginQuery(originQuery);
+        model.setPagination(new Pagination(pageResource));
 
         return model;
     }

@@ -627,7 +627,7 @@
 
 <!-- Remove organisation from application -->
 <th:block th:fragment="modal-application-team-remove-organisation (organisation, user) ">
-    <div class="warning-modal" th:classappend="${'modal-application-team-remove-organisation-' + organisation.id}" role="dialog" aria-hidden="true">
+    <div class="alignleft warning-modal" th:classappend="${'modal-application-team-remove-organisation-' + organisation.id}" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m">Remove organisation</h2>

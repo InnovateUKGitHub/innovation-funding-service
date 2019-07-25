@@ -34,8 +34,7 @@ public class InterviewApplicationsFindModelPopulator extends InterviewApplicatio
     }
 
     public InterviewAssignmentApplicationsFindViewModel populateModel(long competitionId,
-                                                                      int page,
-                                                                      String originQuery) {
+                                                                      int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -54,7 +53,7 @@ public class InterviewApplicationsFindModelPopulator extends InterviewApplicatio
                 competition.getInnovationSectorName(),
                 applications,
                 super.getKeyStatistics(competitionId),
-                new Pagination(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
+                new Pagination(pageResource), pageResource.getTotalElements() > SELECTION_LIMIT);
     }
 
     private InterviewAssignmentApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {

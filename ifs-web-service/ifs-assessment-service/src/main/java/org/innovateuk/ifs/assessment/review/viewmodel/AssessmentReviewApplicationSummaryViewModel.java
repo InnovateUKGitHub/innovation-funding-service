@@ -17,20 +17,16 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     private final long applicationTermsQuestionId;
 
-    private final String originQuery;
-
     public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel,
                                                        CompetitionResource currentCompetition,
                                                        AssessmentReviewFeedbackViewModel feedbackViewModel,
-                                                       long termsAndConditionsId,
-                                                       String originQuery) {
+                                                       long termsAndConditionsId) {
         this.summaryViewModel = summaryViewModel;
         this.currentCompetition = currentCompetition;
         this.feedbackViewModel = feedbackViewModel;
         this.collaborativeProject = summaryViewModel.getCurrentApplication().isCollaborativeProject();
         this.applicationId = summaryViewModel.getCurrentApplication().getId();
         this.applicationTermsQuestionId = termsAndConditionsId;
-        this.originQuery = originQuery;
     }
 
     public SummaryViewModel getSummaryViewModel() {
@@ -55,9 +51,5 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     public long getApplicationTermsQuestionId() {
         return applicationTermsQuestionId;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 }
