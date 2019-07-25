@@ -292,7 +292,7 @@
 </th:block>
 
 <th:block th:fragment="updateTimeDetails">
-      <span class="update-details">
+      <span class="update-details" data-update-date="" th:attr="data-application-id=${applicationId}">
           <th:block th:insert="fragments/elements :: pretty-date (date=${updateDate})"/>
           <th:block th:text="${lastUpdatedText}"></th:block>
       </span>

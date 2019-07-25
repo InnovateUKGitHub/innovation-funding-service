@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit application details", securedType = ApplicationDetailsController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant')")
 public class ApplicationDetailsController {
 
     private ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator;

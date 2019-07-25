@@ -261,6 +261,9 @@ public class ApplicationQuestionController {
                             .toUriString();
                     return format("redirect:/application/%d/form/question/%d/terms-and-conditions%s", applicationId, questionId, originQuery);
             }
+            if (questionType.hasFormInputResponses()) {
+                return format("redirect:/application/%d/form/question/%d/generic", applicationId, questionId);
+            }
         }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
