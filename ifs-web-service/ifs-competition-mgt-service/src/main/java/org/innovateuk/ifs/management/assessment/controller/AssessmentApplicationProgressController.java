@@ -6,17 +6,13 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
@@ -36,10 +32,9 @@ public class AssessmentApplicationProgressController {
     @GetMapping
     public String applicationProgress(Model model,
                                       @PathVariable("applicationId") Long applicationId,
-                                      @RequestParam MultiValueMap<String, String> queryParams,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
-        return doProgressView(model, applicationId, filterInnovationArea, queryParams, page);
+        return doProgressView(model, applicationId, filterInnovationArea, page);
     }
 
     @PostMapping(path = "/assign/{assessorId}")
@@ -76,13 +71,8 @@ public class AssessmentApplicationProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, Long filterInnovationArea, MultiValueMap<String, String> queryParams, int page) {
-        queryParams.add("applicationId", applicationId.toString());
-
-        String assessorProfileOrigin = buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams);
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page, assessorProfileOrigin));
-        model.addAttribute("applicationOriginQuery", buildOriginQueryString(ManagementApplicationOrigin.APPLICATION_PROGRESS, queryParams));
-        model.addAttribute("assessorProfileOriginQuery", assessorProfileOrigin);
+    private String doProgressView(Model model, Long applicationId, Long filterInnovationArea, int page) {
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page));
 
         return "competition/application-progress";
     }

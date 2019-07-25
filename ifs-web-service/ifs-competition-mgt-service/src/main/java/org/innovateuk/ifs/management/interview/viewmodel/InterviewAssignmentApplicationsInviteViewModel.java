@@ -17,9 +17,8 @@ public class InterviewAssignmentApplicationsInviteViewModel extends InterviewAss
             String innovationSector,
             List<InterviewAssignmentApplicationInviteRowViewModel> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
-            Pagination pagination,
-            String originQuery) {
+            Pagination pagination) {
         super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource,
-                pagination, originQuery);
+                pagination);
     }
 }

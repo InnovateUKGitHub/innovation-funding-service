@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessment.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -166,5 +167,26 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(filterInnovationArea)
                 .append(pagination)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("applicationId", applicationId)
+                .append("applicationName", applicationName)
+                .append("applicationInnovationArea", applicationInnovationArea)
+                .append("competitionId", competitionId)
+                .append("competitionName", competitionName)
+                .append("inAssessment", inAssessment)
+                .append("leadOrganisation", leadOrganisation)
+                .append("partnerOrganisations", partnerOrganisations)
+                .append("assigned", assigned)
+                .append("available", available)
+                .append("rejected", rejected)
+                .append("previouslyAssigned", previouslyAssigned)
+                .append("innovationSectors", innovationSectors)
+                .append("filterInnovationArea", filterInnovationArea)
+                .append("pagination", pagination)
+                .toString();
     }
 }

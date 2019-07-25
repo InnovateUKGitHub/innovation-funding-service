@@ -20,13 +20,13 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, String origin) {
+    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts) {
         return new ManageAssessorsViewModel(
                 competition.getId(), competition.getName(),
                 simpleMap(assessorCounts.getContent(), this::getRowViewModel),
                 competition.getCompetitionStatus() == IN_ASSESSMENT,
                 categoryRestService.getInnovationSectors().getSuccess(),
-                new Pagination(assessorCounts, origin));
+                new Pagination(assessorCounts));
     }
 
     private ManageAssessorsRowViewModel getRowViewModel(AssessorCountSummaryResource assessorCount) {

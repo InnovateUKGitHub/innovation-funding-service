@@ -11,7 +11,6 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentAssessorProgressController;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
@@ -145,7 +144,6 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(model().attribute("originQuery", "?origin=ASSESSOR_PROGRESS&assessorId=2"))
                 .andExpect(view().name("competition/assessor-progress"))
                 .andReturn();
 

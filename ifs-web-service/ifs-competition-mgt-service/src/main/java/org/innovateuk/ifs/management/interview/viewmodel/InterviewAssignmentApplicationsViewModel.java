@@ -18,7 +18,6 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
     private final String innovationSector;
     private final String innovationArea;
     private final Pagination pagination;
-    private final String originQuery;
     private final InterviewAssignmentKeyStatisticsResource keyStatisticsResource;
 
     protected InterviewAssignmentApplicationsViewModel(
@@ -28,15 +27,13 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
             String innovationSector,
             List<T> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
-            Pagination pagination,
-            String originQuery) {
+            Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.innovationArea = innovationArea;
         this.innovationSector = innovationSector;
         this.applications = applications;
         this.pagination = pagination;
-        this.originQuery = originQuery;
         this.keyStatisticsResource = keyStatisticsResource;
     }
 
@@ -50,10 +47,6 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
 
     public Pagination getPagination() {
         return pagination;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     public List<T> getApplications() {
@@ -91,7 +84,6 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
                 .append(innovationSector, that.innovationSector)
                 .append(innovationArea, that.innovationArea)
                 .append(pagination, that.pagination)
-                .append(originQuery, that.originQuery)
                 .append(keyStatisticsResource, that.keyStatisticsResource)
                 .isEquals();
     }
@@ -105,7 +97,6 @@ public abstract class InterviewAssignmentApplicationsViewModel<T> {
                 .append(innovationSector)
                 .append(innovationArea)
                 .append(pagination)
-                .append(originQuery)
                 .append(keyStatisticsResource)
                 .toHashCode();
     }

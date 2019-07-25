@@ -11,8 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle=${model.backLinkTitle},linkClass='link-back',
-                       linkUrl=@{${model.originQuery}}"/>
+              th:with="linkTitle='Back',linkUrl='/', dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
@@ -60,8 +59,7 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group">
-                <input type="hidden" name="origin" th:value="${model.fromOverview ? 'OVERVIEW' : 'QUESTION'}" />
-                <button class="govuk-button" type="submit">Save and return to <th:block th:text="${model.fromOverview ? 'application overview' : model.question.shortName}"></th:block></button>
+                <button class="govuk-button" type="submit">Save and return<th:block th:if="${cookieBackLinkText != null}"> to <th:block th:text="${cookieBackLinkText.toLowerCase()}"></th:block></th:block></button>
             </div>
         </form>
 

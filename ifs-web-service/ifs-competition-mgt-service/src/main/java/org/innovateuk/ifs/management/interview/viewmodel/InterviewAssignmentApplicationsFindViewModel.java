@@ -20,10 +20,9 @@ public class InterviewAssignmentApplicationsFindViewModel extends InterviewAssig
             List<InterviewAssignmentApplicationRowViewModel> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             Pagination pagination,
-            String originQuery,
             boolean selectAllDisabled) {
         super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource,
-                pagination, originQuery);
+                pagination);
         this.selectAllDisabled = selectAllDisabled;
     }
 

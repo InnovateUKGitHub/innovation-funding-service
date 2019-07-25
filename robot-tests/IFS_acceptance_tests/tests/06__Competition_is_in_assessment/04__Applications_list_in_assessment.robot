@@ -53,7 +53,7 @@ Submitted applications View completed applications
     [Tags]
     Given the user clicks the button/link          link = ${Park_living}
     And the user should see the element            jQuery = h1:contains("Application overview")
-    When the user clicks the button/link           link = Back
+    When the user clicks the button/link           link = Back to submitted applications
     Then the user should see the element           jQuery = h1:contains("Submitted applications")
 
 Sort by Lead
