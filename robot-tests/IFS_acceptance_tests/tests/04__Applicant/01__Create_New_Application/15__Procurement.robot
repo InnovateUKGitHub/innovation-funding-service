@@ -113,9 +113,6 @@ the user fills in Procurement Application details
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
-    the user selects the value from the drop-down menu   INNOVATE_UK_WEBSITE   id = competitionReferralSource
-    the user selects the radio button     START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
-    the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
     the user should not see the element   link = Choose your innovation area
     The user clicks the button/link       css = button[name="mark_as_complete"]
     the user clicks the button/link       link = Application overview
