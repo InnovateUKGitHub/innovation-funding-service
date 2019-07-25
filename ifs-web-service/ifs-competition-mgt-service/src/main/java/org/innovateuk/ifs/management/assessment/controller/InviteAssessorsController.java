@@ -36,7 +36,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -91,7 +90,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                        HttpServletResponse response) {
 
         updateSelectionForm(request, response, competitionId, selectionForm, assessorNameFilter);
-        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter, originQuery);
+        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
 
