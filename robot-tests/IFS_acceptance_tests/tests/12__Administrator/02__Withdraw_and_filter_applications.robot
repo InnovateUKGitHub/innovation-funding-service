@@ -69,10 +69,10 @@ The IFS admin checks for compeleted projects on previous tab
 All project sections should be read only
     the user clicks the button/link      css = #table-project-status td:nth-child(3).status.ok a
     the user should not see the element  link = Add team member
-    the user clicks the button/link      link = Projects in setup
+    the user clicks the button/link      link = Back to project setup
     the user clicks the button/link      css = #table-project-status td:nth-child(5).status.ok a
     the user should not see the element  link = Change Monitoring Officer
-    the user clicks the button/link      link = Projects in setup
+    the user clicks the button/link      link = Back to project setup
     finance checks are RO
 
 finance checks are RO
@@ -106,7 +106,7 @@ The project should be withdrawn
      the user should see the element      jQuery = p:contains("This project has been withdrawn.")
      the user clicks the button/link      link = Return to project details
      the user should see the element      jQuery = h1:contains("Project details")
-     the user clicks the button/link      link = Projects in setup
+     the user clicks the button/link      link = Back to project setup
      the user should see the element      jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") strong:contains("Withdrawn")
 
 The user navigates to the Manage Project status page

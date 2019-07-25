@@ -35,6 +35,7 @@ IFS.core.loadOrder = {
       IFS.core.preventInputRegex.init()
       IFS.core.autoComplete.init()
       IFS.core.exampleDate.init()
+      IFS.core.pageHistory.init()
     },
     finalize: function () {
       IFS.core.modal.init()

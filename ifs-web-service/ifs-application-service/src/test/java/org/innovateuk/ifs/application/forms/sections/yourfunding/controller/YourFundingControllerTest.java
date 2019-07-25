@@ -82,10 +82,10 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         long organisationId = 5L;
         ManagementYourFundingViewModel viewModel = mock(ManagementYourFundingViewModel.class);
 
-        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?origin=PROJECT_SETUP_MANAGEMENT_STATUS"))
+        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/{organisationId}?origin=PROJECT_SETUP_MANAGEMENT_STATUS",
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/{organisationId}",
                 APPLICATION_ID, SECTION_ID, organisationId))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))

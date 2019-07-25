@@ -18,7 +18,6 @@ import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligi
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -52,7 +51,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,10 +83,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         long competitionId = 1L;
         long applicationId = 2L;
         ManagementApplicationViewModel viewModel = mock(ManagementApplicationViewModel.class);
-        when(managementApplicationPopulator.populate(eq(applicationId), eq(getLoggedInUser()), eq(ManagementApplicationOrigin.ALL_APPLICATIONS.name()), any())).thenReturn(viewModel);
+        when(managementApplicationPopulator.populate(eq(applicationId), eq(getLoggedInUser()))).thenReturn(viewModel);
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionId, applicationId)
-                .param("origin", ManagementApplicationOrigin.ALL_APPLICATIONS.name()))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
                 .andExpect(model().attribute("model", viewModel))
@@ -195,7 +192,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         long competitionId = 2L;
 
         ManagementApplicationViewModel viewModel = mock(ManagementApplicationViewModel.class);
-        when(managementApplicationPopulator.populate(eq(applicationId), eq(getLoggedInUser()), eq(ManagementApplicationOrigin.ALL_APPLICATIONS.name()), any())).thenReturn(viewModel);
+        when(managementApplicationPopulator.populate(eq(applicationId), eq(getLoggedInUser()))).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionId, applicationId)
                 .param("markAsIneligible", ""))

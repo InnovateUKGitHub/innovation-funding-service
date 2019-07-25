@@ -18,7 +18,6 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -44,7 +43,6 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
@@ -100,12 +98,8 @@ public class ApplicationSectionController {
     @GetMapping("/{sectionType}/{applicantOrganisationId}")
     public String redirectToSectionManagement(@PathVariable("sectionType") SectionType type,
                                               @PathVariable(APPLICATION_ID) Long applicationId,
-                                              @PathVariable long applicantOrganisationId,
-                                              @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                              @RequestParam MultiValueMap<String, String> queryParams) {
-
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId + originQuery;
+                                              @PathVariable long applicantOrganisationId) {
+        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId;
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -149,7 +143,7 @@ public class ApplicationSectionController {
                 return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId);
             default:
-                populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
+                populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
                 return APPLICATION_FORM;
         }
     }
@@ -167,21 +161,20 @@ public class ApplicationSectionController {
                                                                 @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                                                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         SectionResource section = sectionService.getById(sectionId);
 
         switch (section.getType()) {
             case FUNDING_FINANCES:
-                return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId,
-                        applicantOrganisationId, originQuery);
+                return String.format("redirect:/application/%d/form/your-funding/%d/%d", applicationId, sectionId,
+                        applicantOrganisationId);
             case PROJECT_COST_FINANCES: {
 
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
 
                 if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
+                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantOrganisationId, sectionId);
                 } else {
-                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantOrganisationId, sectionId);
                 }
             }
             case PROJECT_LOCATION: {
@@ -203,7 +196,7 @@ public class ApplicationSectionController {
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
 
                 return populateGenericApplicationFormSectionForInternalUser(
-                        form, bindingResult, model, applicantOrganisationId, user, originQuery, applicantSection);
+                        form, bindingResult, model, applicantOrganisationId, applicantSection, user);
         }
     }
 
@@ -251,7 +244,7 @@ public class ApplicationSectionController {
 
         if (!isSaveAndReturnRequest(params) && saveApplicationErrors.hasErrors()) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
+            populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
             return APPLICATION_FORM;
         } else {
             return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
@@ -265,10 +258,9 @@ public class ApplicationSectionController {
                                                        boolean readOnly,
                                                        Optional<Long> applicantOrganisationId,
                                                        boolean readOnlyAllApplicantApplicationFinances,
-                                                       Optional<String> originQuery,
                                                        boolean isSupport) {
         AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, originQuery, isSupport);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, isSupport);
         model.addAttribute("model", sectionViewModel);
         model.addAttribute("form", form);
     }
@@ -283,17 +275,12 @@ public class ApplicationSectionController {
             BindingResult bindingResult,
             Model model,
             Long applicantOrganisationId,
-            UserResource user,
-            String originQuery,
-            ApplicantSectionResource applicantSection) {
-
-        model.addAttribute("originQuery", originQuery);
+            ApplicantSectionResource applicantSection,
+            UserResource user) {
 
         boolean isSupport = user.hasRole(SUPPORT);
-
         populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, true,
-                Optional.of(applicantOrganisationId), true,
-                Optional.of(originQuery), isSupport);
+                Optional.of(applicantOrganisationId), true, isSupport);
 
         return APPLICATION_FORM;
     }
