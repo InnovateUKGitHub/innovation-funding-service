@@ -6,7 +6,6 @@ ALTER TABLE form_input ADD CONSTRAINT fk_form_input_file_entry FOREIGN KEY (file
 
 -- This column is no longer used.
 ALTER TABLE form_input DROP COLUMN allowed_file_types;
--- check with mark b above
 
 -- Insert new form input type for template document.
 INSERT INTO form_input_type (id, name) VALUES ('29', 'TEMPLATE_DOCUMENT');

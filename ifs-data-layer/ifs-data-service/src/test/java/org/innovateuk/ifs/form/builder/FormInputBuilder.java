@@ -105,7 +105,7 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return withArraySetFieldByReflection("allowedFileTypes", allowedFileTypes);
     }
 
-    public FormInputBuilder withFile(FileEntry... file) {
-        return withArraySetFieldByReflection("file", file);
+    public FormInputBuilder withFile(FileEntry... files) {
+        return withArray((file, input) -> input.setFile(file), files);
     }
 }
