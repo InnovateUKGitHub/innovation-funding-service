@@ -11,8 +11,8 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle=${backLabel},linkClass='link-back',
-                       linkUrl=@{${backUrl}}"/>
+              th:with="linkTitle='Back',linkClass='link-back',
+                       linkUrl='/', dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 

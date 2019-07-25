@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-
 /**
  * Build the model for the 'Manage applications' assessment panel page
  */
@@ -22,8 +20,7 @@ public class ManageReviewApplicationsModelPopulator {
                                                           ApplicationSummaryPageResource applications,
                                                           List<ApplicationSummaryResource> assignedApplications,
                                                           String filter,
-                                                          String sort,
-                                                          String origin) {
+                                                          String sort) {
         ManagePanelApplicationsViewModel model = new ManagePanelApplicationsViewModel(
                 competition.getId(),
                 competition.getName(),
@@ -32,7 +29,7 @@ public class ManageReviewApplicationsModelPopulator {
                 CollectionFunctions.simpleMap(assignedApplications, ManageReviewApplicationsModelPopulator::getRowViewModel),
                 filter,
                 sort,
-                new Pagination(applications, origin));
+                new Pagination(applications));
         return model;
     }
 

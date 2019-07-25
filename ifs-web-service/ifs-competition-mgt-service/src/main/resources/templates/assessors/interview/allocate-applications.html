@@ -43,7 +43,7 @@
                     <tr class="govuk-table__row" th:each="applicationInterview : ${model.applications}">
                         <td class="govuk-table__cell">
                             <a th:text="${applicationInterview.id}"
-                               th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}"
+                               th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})}"
                                class="govuk-link">114</a>
                         </td>
                         <td class="govuk-table__cell" th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>

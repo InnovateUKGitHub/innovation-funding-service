@@ -7,14 +7,12 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.management.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Controller for the 'Manage Applications' assessment panel page.
@@ -52,18 +49,15 @@ public class ReviewManageApplicationsController {
     @GetMapping("/manage-applications")
     public String manageApplications(Model model,
                                      @PathVariable("competitionId") long competitionId,
-                                     @RequestParam MultiValueMap<String, String> queryParams,
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                      @RequestParam(value = "sort", defaultValue = "") String sortBy) {
         CompetitionResource competitionResource = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
         ApplicationSummaryPageResource applications = getSummaries(competitionResource.getId(), page, filter, sortBy);
         List<ApplicationSummaryResource> assignedApplications = getAssignedSummaries(competitionId);
-        model.addAttribute("model", manageReviewApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy, originQuery));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", manageReviewApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy));
 
         return "competition/manage-applications-panel";
     }

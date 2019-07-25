@@ -148,7 +148,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withCompetition(competitionId)
                 .build()));
 
-        ManagementYourFundingViewModel viewModel = service.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?query");
+        ManagementYourFundingViewModel viewModel = service.populateManagement(APPLICATION_ID, SECTION_ID, organisationId);
 
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
@@ -157,8 +157,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         assertEquals(viewModel.isFundingSectionLocked(), false);
         assertEquals(viewModel.isFundingSectionLocked(), false);
-        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE/%d%s", APPLICATION_ID, organisationId, "?query"));
-
-
+        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId));
     }
 }

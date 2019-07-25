@@ -41,8 +41,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              int page,
                                                              Optional<Long> innovationArea,
                                                              String sortField,
-                                                             String filter,
-                                                             String origin) {
+                                                             String filter) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccess();
@@ -73,7 +72,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 competitionId,
                 innovationArea,
                 sortField,
-                origin);
+                filter);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
 
@@ -171,7 +170,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                                                      long competitionId,
                                                                                      Optional<Long> innovationArea,
                                                                                      String sortField,
-                                                                                     String origin) {
+                                                                                     String filterSearch) {
         CompetitionResource competition  = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(
@@ -179,7 +178,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 IN_ASSESSMENT == competition.getCompetitionStatus(),
                 innovationArea,
                 sortField,
-                new Pagination(applicationCounts, origin),
+                new Pagination(applicationCounts),
                 applicationCounts.getTotalElements());
     }
 
