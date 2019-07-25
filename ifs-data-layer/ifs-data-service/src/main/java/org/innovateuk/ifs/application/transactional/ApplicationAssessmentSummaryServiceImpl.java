@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.util.EncodingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +63,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                             ASSESSOR,
                             ParticipantStatus.ACCEPTED,
                             applicationId,
-                            assessorNameFilter,
+                            EncodingUtils.urlDecode(assessorNameFilter),
                             pageable);
                     return applicationAssessorPageMapper.mapToResource(competitionParticipants);
                 }

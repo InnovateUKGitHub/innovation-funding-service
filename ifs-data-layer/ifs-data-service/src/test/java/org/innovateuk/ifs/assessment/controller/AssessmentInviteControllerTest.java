@@ -530,6 +530,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         int size = 10;
         List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("");
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
                 .withContent(newAssessorInviteOverviewResource().build(2))
@@ -537,20 +538,20 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
 
         Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", competitionId)
                 .param("page", "2")
                 .param("size", "10")
                 .param("sort", "invite.email")
-                .param("innovationArea", "3")
+                .param("assessorName", assessorName.get())
                 .param("statuses", "ACCEPTED")
                 .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant, assessorName);
     }
 
     @Test
@@ -560,6 +561,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         int size = 20;
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
+        Optional<String> assessorName = of("");
 
         Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
 
@@ -567,15 +569,16 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, statuses, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, statuses, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", competitionId)
-                .param("statuses", "PENDING, REJECTED"))
+                .param("statuses", "PENDING, REJECTED")
+                .param("assessorName", assessorName.get()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, statuses, compliant, assessorName);
     }
 
     @Test
@@ -583,18 +586,20 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         long competitionId = 1L;
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = empty();
+        Optional<String> assessorName = of("");
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant))
+        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/get-assessors-not-accepted-invite-ids/{competitionId}", competitionId)
-                .param("statuses", "PENDING, REJECTED"))
+                .param("statuses", "PENDING, REJECTED")
+                .param("assessorName", assessorName.get()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedInviteIds)));
 
-        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName);
     }
 
     @Test

@@ -795,7 +795,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, status, empty()))
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, status, empty(), empty()))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/accepted", competition.getId())
@@ -810,7 +810,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
 
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, status, empty());
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, status, empty(), empty());
         inOrder.verifyNoMoreInteractions();
     }
 

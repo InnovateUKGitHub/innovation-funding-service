@@ -57,8 +57,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorName, '%') " +
             "AND assessmentParticipant.status IN :status " +
-            "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorName, '%')" +
             "AND (:isCompliant IS NULL " +
             "   OR (:isCompliant = true AND (" +
             "       EXISTS(" +
@@ -79,7 +79,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
             "   )" +
-            "))";
+            ")) ";
 
     String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +

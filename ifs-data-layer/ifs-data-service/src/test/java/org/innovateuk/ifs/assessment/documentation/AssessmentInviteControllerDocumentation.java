@@ -144,7 +144,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("hash").description("hash of the invite being requested")
                         ),
                         responseFields(competitionInviteFields)
-                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
+                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -163,7 +163,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("hash").description("hash of the invite being opened")
                         ),
                         responseFields(competitionInviteFields)
-                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
+                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -299,6 +299,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         long competitionId = 1L;
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
@@ -307,7 +308,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .withContent(content)
                 .build();
 
-        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant))
+        when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/get-invitation-overview/{competitionId}", 1L)
@@ -316,7 +317,8 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
                 .param("statuses", "PENDING")
-                .param("compliant", "1"))
+                .param("compliant", "1")
+                .param("assessorName", assessorName.get()))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
@@ -332,13 +334,15 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'ACCEPTED', 'PENDING' or 'REJECTED'"),
                                 parameterWithName("compliant").optional()
-                                        .description("Flag to filter assessors by their compliance.")
+                                        .description("Flag to filter assessors by their compliance."),
+                                parameterWithName("assessorName").optional()
+                                        .description("Filter assessors by their name.")
                         ),
                         responseFields(assessorInviteOverviewPageResourceFields)
                                 .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
-        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant);
+        verify(assessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status, compliant, assessorName);
     }
 
     @Test
@@ -346,16 +350,18 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         long competitionId = 1L;
         List<ParticipantStatus> statuses = Arrays.asList(PENDING, REJECTED);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant))
+        when(assessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/get-assessors-not-accepted-invite-ids/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("statuses", "PENDING,REJECTED")
-                .param("compliant", "1"))
+                .param("compliant", "1")
+                .param("assessorName", assessorName.get()))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
@@ -365,12 +371,14 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("statuses")
                                         .description("Participant statuses to filter assessors by. Can only be 'REJECTED', 'PENDING' or both."),
                                 parameterWithName("compliant").optional()
-                                        .description("Flag to filter assessors by their compliance.")
+                                        .description("Flag to filter assessors by their compliance."),
+                                parameterWithName("assessorName").optional()
+                                        .description("Filter assessors by their name.")
                         ),
                         responseFields(fieldWithPath("[]").description("List of invite ids of Assessors who have not accepted for a competition"))
                 ));
 
-        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant);
+        verify(assessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName);
     }
 
     @Test
@@ -405,7 +413,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .andDo(document("competitioninvite/{method-name}",
                         requestFields(existingUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
-                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
+                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
 
                 ));
 
@@ -426,7 +434,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .andDo(document("competitioninvite/{method-name}",
                         requestFields(newUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
-                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
+                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
 
         verify(assessmentInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);

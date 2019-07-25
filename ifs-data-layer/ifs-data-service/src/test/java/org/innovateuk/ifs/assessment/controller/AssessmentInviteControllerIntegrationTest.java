@@ -1129,6 +1129,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
+        Optional<String> assessorName = of("");
 
         Agreement agreement = agreementRepository.findById(1L).get();
 
@@ -1148,7 +1149,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         List<Long> inviteIds = controller.getAssessorsNotAcceptedInviteIds(
                 competition.getId(),
                 status,
-                hasContract
+                hasContract,
+                assessorName
         ).getSuccess();
 
         assertTrue(inviteIds.isEmpty());
@@ -1201,7 +1203,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         inviteIds = controller.getAssessorsNotAcceptedInviteIds(
                 competition.getId(),
                 status,
-                hasContract
+                hasContract,
+                assessorName
         ).getSuccess();
 
         assertEquals(2, inviteIds.size());
@@ -1273,14 +1276,16 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
+        Optional<String> assessorName = of("");
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         AssessorInviteOverviewPageResource pageResource = controller.getInvitationOverview(
                 competition.getId(),
                 pageable,
                 status,
-                hasContract
-        )
+                hasContract,
+                assessorName
+                )
                 .getSuccess();
 
         assertEquals(0, pageResource.getNumber());

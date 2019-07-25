@@ -313,7 +313,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                     competitionId,
                     statuses,
                     compliant.orElse(null),
-                    assessorName.orElse(""),
+                    EncodingUtils.urlDecode(assessorName.orElse("")),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault()),
                     pageable
             );
@@ -321,7 +321,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
             pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                     competitionId,
                     statuses,
-                    assessorName.orElse(""),
+                    EncodingUtils.urlDecode(assessorName.orElse("")),
                     pageable
             );
         }

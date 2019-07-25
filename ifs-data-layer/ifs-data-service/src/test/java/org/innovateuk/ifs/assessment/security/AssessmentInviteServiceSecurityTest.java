@@ -150,16 +150,18 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         Pageable pageable = PageRequest.of(0, 20);
         List<ParticipantStatus> status = singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, status, compliant, assessorName), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getAssessorInviteIds() {
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, status, compliant, assessorName), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test

@@ -2207,6 +2207,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Pageable pageable = PageRequest.of(0, 5);
         ParticipantStatus status = ParticipantStatus.PENDING;
         Boolean compliant = true;
+        String assessorName = "";
 
         List<AssessmentParticipant> expectedParticipants = newAssessmentParticipant()
                 .withInvite(
@@ -2222,10 +2223,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndCompliant(
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 eq(competitionId),
                 eq(singletonList(status)),
                 eq(compliant),
+                eq(assessorName),
                 any(ZonedDateTime.class),
                 eq(pageable)
         ))
@@ -2248,13 +2250,15 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 competitionId,
                 pageable,
                 singletonList(status),
-                of(compliant)
+                of(compliant),
+                of(assessorName)
         );
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndCompliant(
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 eq(competitionId),
                 eq(singletonList(status)),
                 eq(compliant),
+                eq(assessorName),
                 any(ZonedDateTime.class),
                 eq(pageable)
         );
@@ -2299,7 +2303,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, singletonList(PENDING), "", pageable))
                 .thenReturn(pageResult);
 
         List<AssessorInviteOverviewResource> overviewResources = newAssessorInviteOverviewResource()
@@ -2316,9 +2320,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 );
 
 
-        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING), empty());
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING), empty(), empty());
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, singletonList(PENDING), "", pageable);
         verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(AssessmentParticipant.class));
 
         assertTrue(result.isSuccess());
@@ -2362,12 +2366,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED)))
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, asList(PENDING, REJECTED), ""))
                 .thenReturn(expectedParticipants);
 
-        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, asList(PENDING, REJECTED), empty());
+        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, asList(PENDING, REJECTED), empty(), empty());
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, asList(PENDING, REJECTED), "");
 
         assertTrue(result.isSuccess());
         List<Long> returnedInviteIds = result.getSuccess();

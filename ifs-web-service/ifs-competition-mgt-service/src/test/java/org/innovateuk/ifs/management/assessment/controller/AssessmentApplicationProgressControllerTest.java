@@ -101,8 +101,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 expectedPaginationModel
         );
 
-        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&filterInnovationArea=2", competitionId, applicationId)
-        .param("assessorNameFilter", ""))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&assessorNameFilter=", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
