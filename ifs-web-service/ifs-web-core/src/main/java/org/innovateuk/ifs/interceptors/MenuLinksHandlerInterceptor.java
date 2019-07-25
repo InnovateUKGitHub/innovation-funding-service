@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
@@ -37,6 +39,9 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private NavigationUtils navigationUtils;
 
+    @Autowired
+    private PageHistoryService pageHistoryService;
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
@@ -44,6 +49,10 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
             addShowManageUsersAttribute(request, modelAndView);
+            Optional.of(handler)
+                    .filter(HandlerMethod.class::isInstance)
+                    .map(HandlerMethod.class::cast)
+                    .ifPresent(handlerMethod -> pageHistoryService.recordPageHistory(request, response, modelAndView, handlerMethod));
         }
     }
 
@@ -61,13 +70,17 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         String contextPath = request.getContextPath();
 
         switch (contextPath) {
-            case "/assessment": return Optional.of(ASSESSOR_PROFILE_URL);
-            case "": return Optional.of(USER_PROFILE_URL);
-            case "/project-setup": return Optional.of(USER_PROFILE_URL);
-            default: return Optional.empty();
+            case "/assessment":
+                return Optional.of(ASSESSOR_PROFILE_URL);
+            case "":
+                return Optional.of(USER_PROFILE_URL);
+            case "/project-setup":
+                return Optional.of(USER_PROFILE_URL);
+            default:
+                return Optional.empty();
         }
     }
-    
+
     private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(IFS_ADMINISTRATOR));
@@ -76,4 +89,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
         modelAndView.addObject(USER_LOGOUT_LINK, logoutUrl);
     }
+
+
 }

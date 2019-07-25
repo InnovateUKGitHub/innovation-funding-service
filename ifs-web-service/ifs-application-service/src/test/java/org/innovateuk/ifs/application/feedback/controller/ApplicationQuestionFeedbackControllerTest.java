@@ -16,15 +16,12 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +38,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.mockito.ArgumentMatchers.*;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -112,11 +108,9 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
         expectedNavigation.setPreviousText("previous");
         expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf("APPLICANT_DASHBOARD"), params);
 
         AssessQuestionFeedbackViewModel expectedModel =
-                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation, originQuery);
+                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));

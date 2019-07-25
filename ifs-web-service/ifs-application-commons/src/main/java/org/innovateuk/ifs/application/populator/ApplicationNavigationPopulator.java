@@ -109,16 +109,11 @@ public class ApplicationNavigationPopulator {
      * This method creates a URL looking at referrer in request.  Because 'back' will be different depending on
      * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892 & IFS-401)
      */
-    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, Optional<String> originQuery, boolean isSupport) {
+    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, boolean isSupport) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute(BACK_TITLE, "Your finances");
             if (applicantOrganisationId.isPresent()) {
-                if (originQuery.isPresent()) {
-                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get() + originQuery.get());
-                }
-                else {
-                    model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
-                }
+                model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
             } else {
                 model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/" + SectionType.FINANCE.name());
             }
@@ -129,29 +124,14 @@ public class ApplicationNavigationPopulator {
             if (applicantOrganisationId.isPresent() && section != null) {
                 if (isSupport && application.getCompetitionStatus().equals(OPEN)) {
                     model.addAttribute(BACK_TITLE, "Application summary");
-                    if (originQuery.isPresent()) {
-                        backURL = (backURL + "/summary" + originQuery.get());
-                        model.addAttribute("originQuery", originQuery.get());
-                    } else {
-                        backURL = (backURL + "/summary");
-                    }
+                    backURL = (backURL + "/summary");
                 } else {
                     if (application.isSubmitted()) {
                         model.addAttribute(BACK_TITLE, "Application overview");
-                        if (originQuery.isPresent()) {
-                            backURL = ("/management/competition/" + section.getCompetition() + backURL + originQuery.get());
-                            model.addAttribute("originQuery", originQuery.get());
-                        } else {
-                            backURL = ("/management/competition/" + section.getCompetition() + backURL);
-                        }
+                        backURL = ("/management/competition/" + section.getCompetition() + backURL);
                     } else {
                         model.addAttribute(BACK_TITLE, "Application summary");
-                        if (originQuery.isPresent()) {
-                            backURL = (backURL + "/summary" + originQuery.get());
-                            model.addAttribute("originQuery", originQuery.get());
-                        } else {
-                            backURL = (backURL + "/summary");
-                        }
+                        backURL = (backURL + "/summary");
                     }
 
                 }

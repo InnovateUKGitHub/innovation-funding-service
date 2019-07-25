@@ -18,7 +18,6 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private String innovationArea;
     private List<ViewModelRowType> assessors;
     private Pagination pagination;
-    private String originQuery;
 
     protected InviteAssessorsViewModel() {
     }
@@ -93,13 +92,5 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
-    }
-
-    public void setOriginQuery(String originQuery) {
-        this.originQuery = originQuery;
     }
 }

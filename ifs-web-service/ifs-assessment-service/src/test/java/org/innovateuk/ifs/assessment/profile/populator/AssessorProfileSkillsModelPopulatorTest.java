@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
@@ -98,7 +99,7 @@ public class AssessorProfileSkillsModelPopulatorTest {
         when(assessorProfileDetailsModelPopulator.populateModel(userResource, profileResource)).thenReturn(assessorProfileDetailsViewModel);
 
         AssessorProfileSkillsViewModel viewModel =
-                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, null, false);
+                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), Optional.empty(), false);
         AssessorProfileDetailsViewModel assessorDetails = viewModel.getAssessorProfileDetailsViewModel();
 
         assertNull(viewModel.getCompetition());

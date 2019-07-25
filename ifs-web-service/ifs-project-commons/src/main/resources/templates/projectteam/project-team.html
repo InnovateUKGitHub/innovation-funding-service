@@ -19,7 +19,7 @@
 
     <th:block th:if="${model.isInternalUserView()}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"/>
+                  th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}, dynamicBackLink=${true}"/>
     </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">

@@ -60,7 +60,7 @@ Assessor link goes to the assessor profile
     [Tags]
     Given the user clicks the button/link        link = Madeleine Martin
     Then the user should see the element         jQuery = dt:contains("Name") ~ dd:contains("Madeleine Martin")
-    [Teardown]  the user clicks the button/link  link = Back
+    [Teardown]  the user clicks the button/link  link = Back to allocate assessors
 
 Assessor Progress page
     [Documentation]  IFS-156

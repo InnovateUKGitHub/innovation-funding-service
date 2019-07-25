@@ -115,12 +115,6 @@
     </div>
 </div>
 
-<!-- ======== Comp admin - sub header with back link ======= -->
-<div th:fragment="comp-setup-header-sub (linkTitle, linkUrl)">
-    <a th:if="${linkTitle != null and linkUrl != null}" class="govuk-back-link" th:href="${linkUrl}" th:text="${linkTitle}" />
-</div>
-
-
 <!-- ======== Comp admin - remove assigned assessor modal ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-modal">
     <div class="remove-assigned-assessor-modal" role="dialog" aria-hidden="true">
