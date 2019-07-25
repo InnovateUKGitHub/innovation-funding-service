@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
@@ -66,5 +67,11 @@ public class CompetitionController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         GrantTermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
         return "competition/info/" + termsAndConditions.getTemplate();
+    }
+
+    @GetMapping("info/terms-and-conditions/full")
+    public @ResponseBody ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return getFileResponseEntity(competitionRestService.downloadTerms(competitionId).getSuccess(), competition.getCompetitionTerms());
     }
 }
