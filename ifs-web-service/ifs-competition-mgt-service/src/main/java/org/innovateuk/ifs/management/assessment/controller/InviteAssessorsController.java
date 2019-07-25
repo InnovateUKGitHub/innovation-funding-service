@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -209,7 +208,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     public String addSelectedAssessorsToInviteList(Model model,
                                                    @PathVariable("competitionId") long competitionId,
                                                    @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam Optional<Long> innovationArea,
+                                                   @RequestParam(defaultValue = "") String assessorNameFilter,
                                                    @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
@@ -218,7 +217,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         AssessorSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedAssessorIds().isEmpty())
                 .orElse(selectionForm);
-        Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
+        Supplier<String> failureView = () -> redirectToFind(competitionId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> restResult = competitionInviteRestService.inviteUsers(
@@ -232,11 +231,9 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         });
     }
 
-    private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
+    private String redirectToFind(long competitionId, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")
                 .queryParam("page", page);
-
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();

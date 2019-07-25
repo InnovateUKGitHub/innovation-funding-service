@@ -92,12 +92,14 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                    List<ParticipantStatusResource> participantStatuses,
-                                                                   Optional<Boolean> compliant) {
+                                                                   Optional<Boolean> compliant,
+                                                                   Optional<String> assessorName) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-assessors-not-accepted-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
         builder.queryParam("statuses", simpleJoiner(participantStatuses, ","));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
+        assessorName.ifPresent(hasContract -> builder.queryParam("assessorName", hasContract));
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
     }
@@ -116,7 +118,8 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
                                                                                 List<ParticipantStatusResource> participantStatuses,
-                                                                                Optional<Boolean> compliant) {
+                                                                                Optional<Boolean> compliant,
+                                                                                Optional<String> assessorName) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invitation-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
@@ -125,6 +128,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
         String convertedStatusesList = simpleJoiner(participantStatuses, ",");
         builder.queryParam("statuses", convertedStatusesList);
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
+        assessorName.ifPresent(hasContract -> builder.queryParam("assessorName", hasContract));
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }

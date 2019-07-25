@@ -92,8 +92,9 @@ public class CompetitionInviteController {
     public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(
             @PathVariable long competitionId,
             @RequestParam List<ParticipantStatus> statuses,
-            @RequestParam Optional<Boolean> compliant) {
-        return assessmentInviteService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant).toGetResponse();
+            @RequestParam Optional<Boolean> compliant,
+            @RequestParam Optional<String> assessorName) {
+        return assessmentInviteService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName).toGetResponse();
     }
 
     @GetMapping("/get-created-invites/{competitionId}")
@@ -109,9 +110,10 @@ public class CompetitionInviteController {
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam List<ParticipantStatus> statuses,
-            @RequestParam Optional<Boolean> compliant
+            @RequestParam Optional<Boolean> compliant,
+            @RequestParam Optional<String> assessorName
     ) {
-        return assessmentInviteService.getInvitationOverview(competitionId, pageable, statuses, compliant).toGetResponse();
+        return assessmentInviteService.getInvitationOverview(competitionId, pageable, statuses, compliant, assessorName).toGetResponse();
     }
 
     @GetMapping("/get-invite-statistics/{competitionId}")

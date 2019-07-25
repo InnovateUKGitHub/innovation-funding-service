@@ -12,6 +12,7 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
 
     private Optional<ParticipantStatusResource> status = Optional.empty();
     private Optional<Boolean> compliant = Optional.empty();
+    private Optional<String> assessorName = Optional.empty();
 
     public Optional<ParticipantStatusResource> getStatus() {
         return status;
@@ -29,7 +30,15 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
         this.compliant = compliant;
     }
 
+    public Optional<String> getAssessorName() {
+        return assessorName;
+    }
+
+    public void setAssessorName(Optional<String> assessorName) {
+        this.assessorName = assessorName;
+    }
+
     public boolean anyFilterIsActive() {
-        return this.status.isPresent() || this.compliant.isPresent();
+        return this.status.isPresent() || this.compliant.isPresent() || this.assessorName.isPresent();
     }
 }

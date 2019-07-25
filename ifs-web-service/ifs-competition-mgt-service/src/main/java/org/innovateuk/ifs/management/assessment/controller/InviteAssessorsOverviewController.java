@@ -83,6 +83,7 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                 page,
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
+                filterForm.getAssessorName(),
                 originQuery
         ));
 
@@ -108,11 +109,13 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                 storedSelectionForm,
                 filterForm.getStatus(),
                 filterForm.getCompliant(),
+                filterForm.getAssessorName(),
                 competitionId);
         selectionForm.setSelectedInviteIds(trimmedOverviewForm.getSelectedInviteIds());
         selectionForm.setAllSelected(trimmedOverviewForm.getAllSelected());
         selectionForm.setSelectedStatus(filterForm.getStatus().orElse(null));
         selectionForm.setCompliant(filterForm.getCompliant().orElse(null));
+        selectionForm.setAssessorName(filterForm.getAssessorName().orElse(null));
 
         saveFormToCookie(response, competitionId, selectionForm);
     }
@@ -123,13 +126,17 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
 
         filterForm.setCompliant(storedSelectionForm.getCompliant() == null ? empty() :
                 of(storedSelectionForm.getCompliant()));
+
+        filterForm.setAssessorName(storedSelectionForm.getAssessorName() == null ? empty() :
+                of(storedSelectionForm.getAssessorName()));
     }
 
     private OverviewSelectionForm trimSelectionByFilteredResult(OverviewSelectionForm selectionForm,
                                                                 Optional<ParticipantStatusResource> status,
                                                                 Optional<Boolean> compliant,
+                                                                Optional<String> assessorName,
                                                                 Long competitionId) {
-        List<Long> filteredResults = getAllInviteIds(competitionId, status, compliant);
+        List<Long> filteredResults = getAllInviteIds(competitionId, status, compliant, assessorName);
         OverviewSelectionForm updatedSelectionForm = new OverviewSelectionForm();
 
         selectionForm.getSelectedInviteIds().retainAll(filteredResults);
@@ -151,12 +158,13 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam Optional<ParticipantStatusResource> status,
             @RequestParam Optional<Boolean> compliant,
+            @RequestParam Optional<String> assessorName,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitExceeded = false;
         try {
-            List<Long> InviteIds = getAllInviteIds(competitionId, status, compliant);
+            List<Long> InviteIds = getAllInviteIds(competitionId, status, compliant, assessorName);
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedInviteIds().size() + 1;
@@ -187,13 +195,14 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam Optional<ParticipantStatusResource> status,
                                                               @RequestParam Optional<Boolean> compliant,
+                                                              @RequestParam Optional<String> assessorName,
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
             OverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new OverviewSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId, status, compliant));
+                selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId, status, compliant, assessorName));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedInviteIds().clear();
@@ -212,9 +221,10 @@ public class InviteAssessorsOverviewController extends CompetitionManagementCook
 
     private List<Long> getAllInviteIds(long competitionId,
                                        Optional<ParticipantStatusResource> status,
-                                       Optional<Boolean> compliant) {
+                                       Optional<Boolean> compliant,
+                                       Optional<String> assessorName) {
         List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
                 .orElseGet(() -> asList(REJECTED, PENDING));
-        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant).getSuccess();
+        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName).getSuccess();
     }
 }

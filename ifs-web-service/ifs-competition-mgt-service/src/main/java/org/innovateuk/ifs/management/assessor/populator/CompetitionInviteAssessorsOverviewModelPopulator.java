@@ -43,6 +43,7 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                                                                      int page,
                                                                      Optional<ParticipantStatusResource> status,
                                                                      Optional<Boolean> compliant,
+                                                                     Optional<String> assessorName,
                                                                      String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
@@ -60,7 +61,8 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                 competition.getId(),
                 page,
                 statuses,
-                compliant
+                compliant,
+                assessorName
         )
                 .getSuccess();
 

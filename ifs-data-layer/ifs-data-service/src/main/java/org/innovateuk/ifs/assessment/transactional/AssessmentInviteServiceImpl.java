@@ -303,22 +303,25 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses,
-                                                                                   Optional<Boolean> compliant) {
+                                                                                   Optional<Boolean> compliant,
+                                                                                   Optional<String> assessorName) {
         Page<AssessmentParticipant> pagedResult;
 
         if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliant(
+            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                     competitionId,
                     statuses,
                     compliant.orElse(null),
+                    assessorName.orElse(""),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault()),
                     pageable
             );
         } else {
-            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContains(
+            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                     competitionId,
                     statuses,
+                    assessorName.orElse(""),
                     pageable
             );
         }
@@ -340,21 +343,24 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                       List<ParticipantStatus> statuses,
-                                                                      Optional<Boolean> compliant) {
+                                                                      Optional<Boolean> compliant,
+                                                                      Optional<String> assessorName) {
         List<AssessmentParticipant> participants;
 
         if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliant(
+            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                     competitionId,
                     statuses,
                     compliant.orElse(null),
+                    assessorName.orElse(""),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault())
             );
         } else {
-            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContains(
+            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                     competitionId,
-                    statuses);
+                    statuses,
+                    assessorName.orElse(""));
         }
 
         return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));

@@ -86,14 +86,16 @@ public interface AssessmentInviteService {
     ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                             Pageable pageable,
                                                                             List<ParticipantStatus> statuses,
-                                                                            Optional<Boolean> compliant);
+                                                                            Optional<Boolean> compliant,
+                                                                            Optional<String> assessorName);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
     ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                                List<ParticipantStatus> status,
-                                                               Optional<Boolean> compliant);
+                                                               Optional<Boolean> compliant,
+                                                               Optional<String> assessorName);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",

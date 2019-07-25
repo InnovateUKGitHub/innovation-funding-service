@@ -33,14 +33,16 @@ public interface CompetitionInviteRestService {
 
     RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
                                                             List<ParticipantStatusResource> participantStatus,
-                                                            Optional<Boolean> compliant);
+                                                            Optional<Boolean> compliant,
+                                                            Optional<String> assessorName);
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
                                                                          List<ParticipantStatusResource> participantStatus,
-                                                                         Optional<Boolean> compliant);
+                                                                         Optional<Boolean> compliant,
+                                                                         Optional<String> assessorName);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
