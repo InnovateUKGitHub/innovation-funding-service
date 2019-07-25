@@ -135,7 +135,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam String assessorNameFilter,
+            @RequestParam(defaultValue = "", required = false) String assessorNameFilter,
             HttpServletRequest request,
             HttpServletResponse response) {
 
@@ -203,7 +203,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     public String addSelectedAssessorsToInviteList(Model model,
                                                    @PathVariable("competitionId") long competitionId,
                                                    @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam(defaultValue = "") String assessorNameFilter,
+                                                   @RequestParam(defaultValue = "", required = false) String assessorNameFilter,
                                                    @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,

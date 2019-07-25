@@ -185,7 +185,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append("rejected", rejected)
                 .append("previouslyAssigned", previouslyAssigned)
                 .append("innovationSectors", innovationSectors)
-                .append("filterInnovationArea", filterInnovationArea)
+                .append("assessorNameFilter", assessorNameFilter)
                 .append("pagination", pagination)
                 .toString();
     }
