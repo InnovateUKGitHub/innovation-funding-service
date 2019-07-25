@@ -8,20 +8,16 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 
 /**
@@ -79,15 +75,12 @@ public class CompetitionManagementApplicationsController {
     @GetMapping("/all")
     public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
-                                  @RequestParam MultiValueMap<String, String> queryParams,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
                                   @RequestParam(value = "filterSearch") Optional<String> filter,
                                   UserResource user) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.ALL_APPLICATIONS, queryParams);
-        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, page, sort, filter, user));
 
         return "competition/all-applications";
     }
@@ -97,14 +90,11 @@ public class CompetitionManagementApplicationsController {
     @GetMapping("/submitted")
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
-                                        @RequestParam MultiValueMap<String, String> queryParams,
                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "sort", defaultValue = "") String sort,
                                         @RequestParam(value = "filterSearch") Optional<String> filter) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.SUBMITTED_APPLICATIONS, queryParams);
-        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, page, sort, filter));
 
         return "competition/submitted-applications";
     }
@@ -115,14 +105,11 @@ public class CompetitionManagementApplicationsController {
     public String ineligibleApplications(Model model,
                                          @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) IneligibleApplicationsForm filterForm,
                                          @PathVariable("competitionId") long competitionId,
-                                         @RequestParam MultiValueMap<String, String> queryParams,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "sort", defaultValue = "") String sort,
                                          UserResource user) {
         checkCompetitionIsOpen(competitionId);
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.INELIGIBLE_APPLICATIONS, queryParams);
-        model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filterForm, user));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, page, sort, filterForm, user));
 
         return "competition/ineligible-applications";
     }

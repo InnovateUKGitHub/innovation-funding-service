@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentAssessorsController;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -108,6 +107,6 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?origin=MANAGE_ASSESSORS&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }

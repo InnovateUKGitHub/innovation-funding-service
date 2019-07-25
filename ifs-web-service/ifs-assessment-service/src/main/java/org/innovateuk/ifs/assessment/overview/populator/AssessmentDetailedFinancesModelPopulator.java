@@ -102,7 +102,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     }
 
     private void addIndustrialFinance(Model model, long applicationId, long sectionId, long organisationId) {
-        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisationId, true,"");
+        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisationId, true);
         YourProjectCostsForm form = yourProjectCostsFormPopulator.populateForm(applicationId, organisationId);
         model.addAttribute("costsViewModel", viewModel);
         model.addAttribute("form", form);

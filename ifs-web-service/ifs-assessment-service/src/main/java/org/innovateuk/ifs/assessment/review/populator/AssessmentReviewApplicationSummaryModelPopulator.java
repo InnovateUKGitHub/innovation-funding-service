@@ -47,7 +47,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     @Autowired
     private SectionService sectionService;
 
-    public AssessmentReviewApplicationSummaryViewModel populateModel(ApplicationForm form, UserResource user, long applicationId, String originQuery) {
+    public AssessmentReviewApplicationSummaryViewModel populateModel(ApplicationForm form, UserResource user, long applicationId) {
         form.setAdminMode(true);
         SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
         CompetitionResource competition = competitionRestService.getCompetitionById(summaryViewModel.getCurrentApplication().getCompetition()).getSuccess();
@@ -55,8 +55,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         return new AssessmentReviewApplicationSummaryViewModel(summaryViewModel,
                                                                competition,
                                                                assessmentDetails(applicationId, user, summaryViewModel),
-                                                               termsAndConditionsId,
-                                                               originQuery);
+                                                               termsAndConditionsId);
     }
 
     private AssessmentReviewFeedbackViewModel assessmentDetails(long applicationId, UserResource user, SummaryViewModel viewModel) {
