@@ -3,18 +3,17 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.finance.resource.cost.ProcurementOverhead;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
-public class ProcurementOverheadRowForm extends AbstractCostRowForm<Materials> {
+public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementOverhead> {
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
@@ -22,22 +21,21 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<Materials> {
     private String item;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
-    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
-    private Integer quantity;
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
+    private BigDecimal companyCost;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal cost;
+    private BigDecimal projectCost;
 
     public ProcurementOverheadRowForm() { }
 
-    public ProcurementOverheadRowForm(Materials cost) {
+    public ProcurementOverheadRowForm(ProcurementOverhead cost) {
         super(cost);
-        this.item = cost.getItem();
-        this.quantity = cost.getQuantity();
-        this.cost = cost.getCost();
+        this.projectCost = cost.getProjectCost();
+        this.companyCost = cost.getCompanyCost();
     }
 
     public String getItem() {
@@ -48,25 +46,25 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<Materials> {
         this.item = item;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public BigDecimal getCompanyCost() {
+        return companyCost;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setCompanyCost(BigDecimal companyCost) {
+        this.companyCost = companyCost;
     }
 
-    public BigDecimal getCost() {
-        return cost;
+    public BigDecimal getProjectCost() {
+        return projectCost;
     }
 
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
+    public void setProjectCost(BigDecimal projectCost) {
+        this.projectCost = projectCost;
     }
 
     @Override
     public boolean isBlank() {
-        return isNullOrEmpty(item) && quantity == null && cost == null;
+        return isNullOrEmpty(item) && projectCost == null && companyCost == null;
     }
 
     @Override
@@ -75,8 +73,8 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<Materials> {
     }
 
     @Override
-    public Materials toCost() {
-        return new Materials(getCostId(), item, cost, quantity);
+    public ProcurementOverhead toCost() {
+        return new ProcurementOverhead(getCostId(), projectCost, companyCost, item);
     }
 
 }

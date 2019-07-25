@@ -578,7 +578,7 @@
                        data-calculation-fields=".procurement-overheads-totals"
                        data-calculation-operations="+"
                        id="section-total-procurement-overheads"
-                       th:attr="data-calculation-rawvalue=${form.totalProcurmentOverheadCosts}"
+                       th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
