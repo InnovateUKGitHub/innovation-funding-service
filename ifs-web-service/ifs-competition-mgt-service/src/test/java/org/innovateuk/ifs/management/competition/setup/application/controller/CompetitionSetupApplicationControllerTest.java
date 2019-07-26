@@ -374,6 +374,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
+        question.setTemplateFilename("templateFile");
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));

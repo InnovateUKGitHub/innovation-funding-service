@@ -16,7 +16,6 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 /**
  * Translates file upload errors from the into specific error keys depending on the media types that are valid to be uploaded.
  */
-@Component
 public class ValidMediaTypeErrorHelper {
 
     public static final String UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_ONLY";

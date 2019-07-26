@@ -2,10 +2,10 @@ package org.innovateuk.ifs.file.resource;
 
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.junit.Assert.assertEquals;
@@ -14,13 +14,13 @@ public class FileTypeCategoryTest {
 
     @Test
     public void testGetMediaTypesPdf() {
-        assertEquals(PDF.getMimeTypes(), singletonList("application/pdf"));
+        assertEquals(PDF.getMimeTypes(), singleton("application/pdf"));
     }
 
     @Test
     public void testGetMediaTypesSpreadsheet() {
 
-        List<String> expectedTypes = asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
+        Set<String> expectedTypes = asSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
 
         assertEquals(SPREADSHEET.getMimeTypes(), expectedTypes);
     }

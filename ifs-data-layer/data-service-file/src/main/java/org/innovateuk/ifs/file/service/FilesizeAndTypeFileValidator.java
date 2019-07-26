@@ -27,11 +27,10 @@ import static org.innovateuk.ifs.util.ParsingFunctions.validLongResult;
 public class FilesizeAndTypeFileValidator<MediaTypeContext> {
 
     private MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator;
-    private ValidMediaTypeErrorHelper validMediaTypeErrorHelper;
+    private ValidMediaTypeErrorHelper validMediaTypeErrorHelper = new ValidMediaTypeErrorHelper();
 
-    public FilesizeAndTypeFileValidator(MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator, ValidMediaTypeErrorHelper validMediaTypeErrorHelper) {
+    public FilesizeAndTypeFileValidator(MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator) {
         this.validMediaTypesGenerator = validMediaTypesGenerator;
-        this.validMediaTypeErrorHelper = validMediaTypeErrorHelper;
     }
 
     public ServiceResult<FileHeaderAttributes> validateFileHeaders(String contentTypeHeaderValue, String contentLengthValue, String originalFilenameValue, MediaTypeContext validMediaTypesContext, long maxFilesizeBytes) {
