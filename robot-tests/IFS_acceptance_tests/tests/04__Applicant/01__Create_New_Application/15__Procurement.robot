@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -25,7 +26,7 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096
     [Tags]
     Given the user clicks the button/link                       link=Application details
     When the user fills in Procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
@@ -125,6 +126,10 @@ Custom Suite Setup
 
 the user marks the procurement finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    the user clicks the button/link                 link = Your project costs
+    the user clicks the button/link                 jQuery = button:contains("Overhead costs")
+    the user should see the element                 jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    the user clicks the button/link                 link = Your finances
     the user fills in the project costs             ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
