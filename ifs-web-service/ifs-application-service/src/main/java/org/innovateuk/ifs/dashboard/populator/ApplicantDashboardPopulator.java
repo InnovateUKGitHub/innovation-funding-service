@@ -33,18 +33,18 @@ public class ApplicantDashboardPopulator {
         this.applicantRestService = applicantRestService;
     }
 
-    public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
+    public ApplicantDashboardViewModel populate(Long userId) {
         ApplicantDashboardResource applicantDashboardResource = applicantRestService.getApplicantDashboard(userId);
-        return getApplicantDashboardViewModel(originQuery, applicantDashboardResource);
+        return getApplicantDashboardViewModel(applicantDashboardResource);
     }
 
-    private ApplicantDashboardViewModel getApplicantDashboardViewModel(String originQuery, ApplicantDashboardResource applicantDashboardResource) {
+    private ApplicantDashboardViewModel getApplicantDashboardViewModel(ApplicantDashboardResource applicantDashboardResource) {
         List<InSetupDashboardRowViewModel> applicationsInSetUp = getViewModelForInSetup(applicantDashboardResource.getInSetup());
         List<EuGrantTransferDashboardRowViewModel> applicationsForEuGrantTransfers = getViewModelForEuGrantTransfers(applicantDashboardResource.getEuGrantTransfer());
         List<InProgressDashboardRowViewModel> applicationsInProgress = getViewModelForInProgress(applicantDashboardResource.getInProgress());
         List<PreviousDashboardRowViewModel> applicationsPreviouslySubmitted = getViewModelForPrevious(applicantDashboardResource.getPrevious());
 
-        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted, originQuery);
+        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted);
     }
 
     private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardInSetupRowResource> inSetupResources){

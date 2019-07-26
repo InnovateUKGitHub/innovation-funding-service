@@ -28,7 +28,7 @@
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a th:href="${projectView.linkUrl} + ${model.originQuery}"
+                                    <a th:href="${projectView.linkUrl}"
                                        th:text="${projectView.title}"
                                        class="govuk-link">PROJECT NAME</a>
                                 </h3>
@@ -144,7 +144,7 @@
                             th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a th:href="${previousView.linkUrl} + ${model.originQuery}" th:text="${previousView.title}" class="govuk-link" />
+                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" class="govuk-link" />
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>

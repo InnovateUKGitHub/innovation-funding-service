@@ -37,7 +37,6 @@ public class ManageFundingApplicationsModelPopulator {
 
     public ManageFundingApplicationViewModel populate(FundingNotificationFilterForm queryForm,
                                                       long competitionId,
-                                                      String queryString,
                                                       long totalSubmittableApplications) {
         ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(
                 competitionId, queryForm.getSortField(), queryForm.getPage(),
@@ -47,7 +46,7 @@ public class ManageFundingApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         boolean selectAllDisabled = totalSubmittableApplications > CompetitionManagementCookieController.SELECTION_LIMIT;
-        Pagination pagination = new Pagination(results, queryString);
+        Pagination pagination = new Pagination(results);
 
         return new ManageFundingApplicationViewModel(
                 results,

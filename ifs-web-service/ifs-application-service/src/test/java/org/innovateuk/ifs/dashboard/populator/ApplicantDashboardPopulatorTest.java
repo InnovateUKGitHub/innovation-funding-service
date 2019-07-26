@@ -66,7 +66,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         List<DashboardInSetupRowResource> inSetUp = singletonList(inSetup);
         setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getProjects().size());
         InSetupDashboardRowViewModel inSetupViewModel = viewModel.getProjects().get(0);
@@ -93,7 +93,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         List<DashboardInSetupRowResource> inSetUp = asList(startsYesterday, startsToday, startsTomorrow);
         setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<InSetupDashboardRowViewModel> result = viewModel.getProjects();
         assertEquals(3, result.size());
@@ -113,7 +113,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .build();
         List<DashboardEuGrantTransferRowResource> euGrantTransfers = singletonList(euGrantTransfer);
         setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertFalse(viewModel.getEuGrantTransfers().isEmpty());
         EuGrantTransferDashboardRowViewModel euGrantViewModel = viewModel.getEuGrantTransfers().get(0);
@@ -151,7 +151,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         List<DashboardEuGrantTransferRowResource> euGrantTransfers = asList(approvedOne, openOne, openTwo, approvedTwo);
         setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<EuGrantTransferDashboardRowViewModel> result = viewModel.getEuGrantTransfers();
         assertEquals(4, result.size());
@@ -175,7 +175,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .build();
         List<DashboardInProgressRowResource> dashboardApplicationInProgressResources = singletonList(inProgress);
         setupDashboard(emptyList(), emptyList(), dashboardApplicationInProgressResources, emptyList());
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getInProgress().size());
         InProgressDashboardRowViewModel inProgressViewModel = viewModel.getInProgress().get(0);
@@ -222,7 +222,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                                                                  startedOneWeekAgoAndEndsToday, startedTodayAndEndsToday, endsTomorrow);
         setupDashboard(emptyList(), emptyList(), inProgress, emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<InProgressDashboardRowViewModel> result = viewModel.getInProgress();
         assertEquals(5, result.size());
@@ -248,7 +248,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .build();
         List<DashboardPreviousRowResource> dashboardPreviousApplicationResources = singletonList(previous);
         setupDashboard(emptyList(), emptyList(), emptyList(), dashboardPreviousApplicationResources);
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getPrevious().size());
         PreviousDashboardRowViewModel previousViewModel = viewModel.getPrevious().get(0);
@@ -277,7 +277,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         List<DashboardPreviousRowResource> previous = asList(startsYesterday, startsToday, startsTomorrow);
         setupDashboard(emptyList(), emptyList(), emptyList(), previous);
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<PreviousDashboardRowViewModel> result = viewModel.getPrevious();
         assertEquals(3, result.size());

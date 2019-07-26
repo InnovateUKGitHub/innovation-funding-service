@@ -10,7 +10,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentApplicationProgressController;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -21,7 +20,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
@@ -81,7 +79,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn)));
         when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, 2L)).thenReturn(restSuccess(available));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
-        String assessorOrigin = "?origin=APPLICATION_PROGRESS&page=0&filterInnovationArea=2&applicationId=" + applicationId;
+        String assessorOrigin = "?page=0&filterInnovationArea=2";
 
         Pagination expectedPaginationModel = new Pagination(available, assessorOrigin);
 
@@ -105,8 +103,6 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
 
         mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&filterInnovationArea=2", competitionId, applicationId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("applicationOriginQuery", assessorOrigin))
-                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&page=0&filterInnovationArea=2&applicationId=" + applicationId))
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
 
@@ -116,46 +112,6 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         inOrder.verify(applicationAssessmentSummaryRestService).getAvailableAssessors(applicationId, 0, 20, 2L);
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void applicationProgress_preservesQueryParams() throws Exception {
-        Long competitionId = 1L;
-        Long applicationId = 2L;
-
-        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
-
-        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
-        when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(emptyList()));
-        ApplicationAssessorPageResource pageResource = new ApplicationAssessorPageResource(0,0,emptyList(),0,20);
-        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId,0,20,null)).thenReturn(restSuccess(pageResource));
-        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
-
-        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
-                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
-                .andExpect(view().name("competition/application-progress"));
-    }
-
-    @Test
-    public void applicationProgress_originCannotAppearTwice() throws Exception {
-        Long competitionId = 1L;
-        Long applicationId = 2L;
-
-        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
-
-        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
-        when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(emptyList()));
-        ApplicationAssessorPageResource pageResource = new ApplicationAssessorPageResource(0,0,emptyList(),0,20);
-        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId,0,20,null)).thenReturn(restSuccess(pageResource));
-        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
-
-        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&origin=ANOTHER_ORIGIN&param2=def", competitionId, applicationId))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
-                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
-                .andExpect(view().name("competition/application-progress"));
     }
 
     @Test
