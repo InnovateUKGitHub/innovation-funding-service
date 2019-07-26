@@ -43,12 +43,12 @@ public final class CommonErrors {
                 PAYLOAD_TOO_LARGE);
     }
 
-    public static Error unsupportedMediaTypeByNameError(List<String> validMediaTypes) {
-        return new Error(UNSUPPORTED_MEDIA_TYPE, singletonList(simpleJoiner(validMediaTypes, ", ")), UNSUPPORTED_MEDIA_TYPE);
+    public static Error unsupportedMediaTypeByNameError(String errorKey, List<String> validMediaTypes) {
+        return new Error(errorKey, singletonList(simpleJoiner(validMediaTypes, ", ")), UNSUPPORTED_MEDIA_TYPE);
     }
 
-    public static Error unsupportedMediaTypeError(List<MediaType> validMediaTypes) {
-        return unsupportedMediaTypeByNameError(simpleMap(validMediaTypes, Object::toString));
+    public static Error unsupportedMediaTypeError(String errorKey, List<MediaType> validMediaTypes) {
+        return unsupportedMediaTypeByNameError(errorKey, simpleMap(validMediaTypes, Object::toString));
     }
 
     public static Error badRequestError(String errorKey) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.config;
 
+import org.innovateuk.ifs.file.controller.ValidMediaTypeErrorHelper;
 import org.innovateuk.ifs.file.service.ByFormInputMediaTypesGenerator;
 import org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
@@ -17,12 +18,13 @@ import java.util.List;
 public class FileValidationConfig {
 
     @Bean(name = "formInputFileValidator")
-    public FilesizeAndTypeFileValidator<Long> formInputFileValidator(ByFormInputMediaTypesGenerator mediaTypesGenerator) {
-        return new FilesizeAndTypeFileValidator<>(mediaTypesGenerator);
+    public FilesizeAndTypeFileValidator<Long> formInputFileValidator(ByFormInputMediaTypesGenerator mediaTypesGenerator,
+                                                                     ValidMediaTypeErrorHelper validMediaTypeErrorHelper) {
+        return new FilesizeAndTypeFileValidator<>(mediaTypesGenerator, validMediaTypeErrorHelper);
     }
 
     @Bean(name = "mediaTypeStringsFileValidator")
-    public FilesizeAndTypeFileValidator<List<String>> mediaTypeStringsFileValidator() {
-        return new FilesizeAndTypeFileValidator<>(new ByMediaTypeStringsMediaTypesGenerator());
+    public FilesizeAndTypeFileValidator<List<String>> mediaTypeStringsFileValidator(ValidMediaTypeErrorHelper validMediaTypeErrorHelper) {
+        return new FilesizeAndTypeFileValidator<>(new ByMediaTypeStringsMediaTypesGenerator(), validMediaTypeErrorHelper);
     }
 }
