@@ -14,11 +14,11 @@ public class YourOrganisationWithoutGrowthTableForm {
     private OrganisationSize organisationSize;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    @Max(value = 2147483647, message = "{validation.standard.integer.max.value.format}")
+    @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long turnover;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    @Max(value = 2147483647, message = "{validation.standard.integer.max.value.format}")
+    @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
 
     private Boolean stateAidAgreed;
