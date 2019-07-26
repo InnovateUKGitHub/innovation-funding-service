@@ -75,7 +75,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         return hasProject() && projectState.isWithdrawn();
     }
 
-    public boolean isLive() {
+    public boolean isLiveOrCompletedOffline() {
         return hasProject() && (projectState.isLive() || projectState.isCompletedOffline());
     }
 
