@@ -8,9 +8,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
@@ -26,7 +31,6 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.form.Initia
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,14 +47,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
-import static org.innovateuk.ifs.management.competition.setup.projectdocument.controller.CompetitionSetupDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static org.innovateuk.ifs.management.competition.setup.projectdocument.controller.CompetitionSetupDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 
 /**
  * Controller for showing and handling the different competition setup sections
@@ -83,6 +86,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
+    @Autowired
+    private TermsAndConditionsRestService termsAndConditionsRestService;
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
@@ -305,9 +311,21 @@ public class CompetitionSetupController {
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        if(isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
+            if(competition.getCompetitionTerms() != null) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "TODO: Validation error not uploading file"));
+            }
+        } else {
+            competitionSetupRestService.deleteCompetitionTerms(competitionId);
+        }
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
     }
+
+    private boolean isProcurement(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurement();
+    }
+
 
     @PostMapping("/{competitionId}/ready-to-open")
     public String setAsReadyToOpen(Model model,

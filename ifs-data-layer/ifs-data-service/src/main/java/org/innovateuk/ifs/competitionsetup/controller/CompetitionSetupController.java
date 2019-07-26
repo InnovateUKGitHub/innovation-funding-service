@@ -129,7 +129,7 @@ public class CompetitionSetupController {
     }
 
     @DeleteMapping("{id}")
-    public RestResult<Void> delete(@PathVariable("id") long competitionId) {
+    public RestResult<Void> deleteIfExists(@PathVariable("id") long competitionId) {
         return competitionSetupService.deleteCompetition(competitionId).toDeleteResponse();
     }
 
