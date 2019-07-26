@@ -24,9 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.util.LinkedMultiValueMap;
 
-import static java.lang.String.format;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -37,7 +35,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin.ALL_APPLICATIONS;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -84,7 +81,6 @@ public class ManagementApplicationPopulatorTest {
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.COMP_ADMIN)
                 .build();
-        String origin = ALL_APPLICATIONS.name();
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
@@ -103,12 +99,10 @@ public class ManagementApplicationPopulatorTest {
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
         when(fileEntryRestService.findOne(file.getId())).thenReturn(restSuccess(file));
 
-        ManagementApplicationViewModel actual = target.populate(application.getId(), user, origin, new LinkedMultiValueMap<>());
+        ManagementApplicationViewModel actual = target.populate(application.getId(), user);
 
         assertEquals(application, actual.getApplication());
         assertEquals(competition, actual.getCompetition());
-        assertEquals(format("/competition/%d/applications/all", competition.getId()), actual.getBackUrl());
-        assertEquals(format("?origin=MANAGEMENT_APPLICATION&competitionId=%d&applicationId=%d", competition.getId(), application.getId()), actual.getOriginQuery());
         assertEquals(1, actual.getAppendices().size());
         assertEquals("My file", actual.getAppendices().get(0).getName());
 

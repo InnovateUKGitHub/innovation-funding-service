@@ -12,6 +12,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
 
     String PROJECT_STATES =
             "(org.innovateuk.ifs.project.resource.ProjectState.SETUP," +
+                    "org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD," +
                     "org.innovateuk.ifs.project.resource.ProjectState.LIVE)";
 
 

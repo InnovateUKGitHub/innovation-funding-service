@@ -7,17 +7,16 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.interview.form.InterviewSelectionForm;
 import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewInviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.management.interview.viewmodel.InterviewInviteAssessorsFindViewModel;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +33,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -90,16 +88,13 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
-        InterviewInviteAssessorsFindViewModel interviewInviteAssessorsFindViewModel = interviewInviteAssessorsFindModelPopulator.populateModel(competitionId, page, originQuery);
+        InterviewInviteAssessorsFindViewModel interviewInviteAssessorsFindViewModel = interviewInviteAssessorsFindModelPopulator.populateModel(competitionId, page);
 
         model.addAttribute("model", interviewInviteAssessorsFindViewModel);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview/assessor-find";
     }
@@ -241,10 +236,7 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_INVITE, queryParams);
-
-        model.addAttribute("model", interviewInviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", interviewInviteAssessorsInviteModelPopulator.populateModel(competitionId, page));
 
         return "assessors/interview/assessor-invite";
     }
@@ -271,14 +263,11 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
     @GetMapping("/accepted")
     public String accepted(Model model,
                            @PathVariable("competitionId") long competitionId,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
+                           @RequestParam(defaultValue = "0") int page) {
 
         model.addAttribute("model", interviewInviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
-                page,
-                originQuery
+                page
         ));
 
         return "assessors/interview/assessor-accepted";

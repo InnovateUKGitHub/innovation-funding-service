@@ -96,7 +96,7 @@ Project Finance user can see the finance check summary page
     And the user should see the element          jQuery = h1:contains("Finance checks")
     And the user should see the element          jQuery = dd:contains("${funders_panel_application_1_title}")
     And the table row has expected values
-    And the user should see the element          link = Projects in setup
+    And the user should see the element          link = Back to all competitions
 
 Validation on duration of Project
     [Documentation]  IFS-2313
