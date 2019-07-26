@@ -66,7 +66,7 @@ the user sees the application he was invited for on his dashboard
 the user verifies account and starts his application
     [Arguments]  ${email}
     the user reads his email and clicks the link  ${email}  Please verify your email address  you can sign into your account.
-    the user clicks the button/link               jQuery=.govuk-button:contains("Sign in")
+    the user clicks the button/link               jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     logging in and error checking                 ${email}  ${correct_password}
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link               link=Application details
