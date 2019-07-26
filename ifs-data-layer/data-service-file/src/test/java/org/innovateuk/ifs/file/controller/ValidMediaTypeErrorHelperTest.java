@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 public class ValidMediaTypeErrorHelperTest {
-    
+
     @Test
     public void testPdfOnlyMessage() {
         assertSpecialisedMessageProduced(
