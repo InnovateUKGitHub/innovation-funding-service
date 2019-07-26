@@ -25,7 +25,8 @@ public class ProfileResourceBuilder extends BaseBuilder<ProfileResource, Profile
         super(newActions);
     }
 
-    public ProfileResourceBuilder withInnovationAreas(List<InnovationAreaResource>... innovationAreas) {
+    @SafeVarargs
+    public final ProfileResourceBuilder withInnovationAreas(List<InnovationAreaResource>... innovationAreas) {
         return withArraySetFieldByReflection("innovationAreas", innovationAreas);
     }
 
@@ -37,7 +38,8 @@ public class ProfileResourceBuilder extends BaseBuilder<ProfileResource, Profile
         return withArraySetFieldByReflection("skillsAreas", skillsAreas);
     }
 
-    public ProfileResourceBuilder withAffiliations(List<AffiliationResource>... affiliations) {
+    @SafeVarargs
+    public final ProfileResourceBuilder withAffiliations(List<AffiliationResource>... affiliations) {
         return withArraySetFieldByReflection("affiliations", affiliations);
     }
 

@@ -132,7 +132,7 @@ public class ActivityLogViewModelPopulatorTest {
         assertEquals("Adam Applicant, Project manager for My organisation", applicationSubmitted.getUserText());
         assertEquals(now.minusDays(3), applicationSubmitted.getCreatedOn());
         assertEquals("APPLICATION_SUBMITTED", applicationSubmitted.getLinkText());
-        assertEquals(format("/management/competition/%d/application/%d?origin=PROJECT_SETUP_MANAGEMENT_ACTIVITY_LOG&projectId=%d", project.getCompetition(), project.getApplication(), project.getId()), applicationSubmitted.getLinkUrl());
+        assertEquals(format("/management/competition/%d/application/%d", project.getCompetition(), project.getApplication()), applicationSubmitted.getLinkUrl());
         assertTrue(applicationSubmitted.isDisplayLink());
 
         ActivityLogEntryViewModel bankDetailsApproved = viewModel.getActivities().get(1);

@@ -34,7 +34,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean competitionDocuments;
     private boolean projectManager;
     private boolean pendingQuery;
-    private String originQuery;
     private ProjectState projectState;
     private boolean monitoringOfficer;
 
@@ -51,7 +50,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean competitionDocuments,
                                 boolean projectManager,
                                 boolean pendingQuery,
-                                String originQuery,
                                 boolean monitoringOfficer) {
 
         this.projectId = project.getId();
@@ -71,7 +69,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionDocuments = competitionDocuments;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
-        this.originQuery = originQuery;
         this.projectState = project.getProjectState();
         this.monitoringOfficer = monitoringOfficer;
     }
@@ -202,10 +199,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowFinanceChecksPendingQueryWarning() {
         return pendingQuery;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     public ProjectState getProjectState() {

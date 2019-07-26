@@ -26,7 +26,7 @@ public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessme
         this.interviewAllocationRestService = interviewAllocationRestService;
     }
 
-    public InterviewAcceptedAssessorsViewModel populateModel(CompetitionResource competition, String origin) {
+    public InterviewAcceptedAssessorsViewModel populateModel(CompetitionResource competition) {
 
         InterviewAcceptedAssessorsPageResource pageResource = interviewAllocationRestService.getInterviewAcceptedAssessors(
                 competition.getId(),
@@ -37,7 +37,7 @@ public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessme
                 competition.getId(),
                 competition.getName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                new Pagination(pageResource, origin)
+                new Pagination(pageResource)
 
         );
 

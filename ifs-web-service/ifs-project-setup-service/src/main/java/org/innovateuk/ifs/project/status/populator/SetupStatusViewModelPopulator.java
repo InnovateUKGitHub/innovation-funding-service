@@ -57,8 +57,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private CompetitionRestService competitionRestService;
     
     public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
-                                                                     UserResource loggedInUser,
-                                                                     String originQuery) {
+                                                                     UserResource loggedInUser) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
 
@@ -94,7 +93,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     monitoringOfficer,
                     isProjectManager,
                     partnerOrganisations,
-                    originQuery,
                     loggedInUser.getId().equals(projectRequest.get().getMonitoringOfficerUser()));
         });
     }
@@ -104,7 +102,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          Optional<MonitoringOfficerResource> monitoringOfficer,
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
-                                                         String originQuery,
                                                          boolean isMonitoringOfficer) {
 
         boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
@@ -129,7 +126,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 projectDocuments,
                 isProjectManager,
                 pendingQueries,
-                originQuery,
                 isMonitoringOfficer);
     }
 
