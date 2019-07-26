@@ -67,40 +67,39 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea) {
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, String assessorNameFilter) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("page", page);
-
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+                .queryParam("page", page)
+                .queryParam("assessorNameFilter", assessorNameFilter);
 
         return getWithRestResult(builder.toUriString(), AvailableAssessorPageResource.class);
     }
 
     @Override
-    public RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
+    public RestResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl)
-                .queryParam("all");
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+                .queryParam("all")
+                .queryParam("assessorNameFilter", assessorNameFilter);
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
     }
 
     @Override
     public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                                   Optional<Long> innovationArea,
                                                                    List<ParticipantStatusResource> participantStatuses,
-                                                                   Optional<Boolean> compliant) {
+                                                                   Optional<Boolean> compliant,
+                                                                   Optional<String> assessorName) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-assessors-not-accepted-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         builder.queryParam("statuses", simpleJoiner(participantStatuses, ","));
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
+        assessorName.ifPresent(hasContract -> builder.queryParam("assessorName", hasContract));
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
     }
@@ -118,18 +117,18 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
-                                                                                Optional<Long> innovationArea,
                                                                                 List<ParticipantStatusResource> participantStatuses,
-                                                                                Optional<Boolean> compliant) {
+                                                                                Optional<Boolean> compliant,
+                                                                                Optional<String> assessorName) {
         String baseUrl = format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "get-invitation-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
 
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         String convertedStatusesList = simpleJoiner(participantStatuses, ",");
         builder.queryParam("statuses", convertedStatusesList);
         compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
+        assessorName.ifPresent(hasContract -> builder.queryParam("assessorName", hasContract));
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }

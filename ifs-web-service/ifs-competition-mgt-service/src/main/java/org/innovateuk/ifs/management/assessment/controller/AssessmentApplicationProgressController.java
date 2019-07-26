@@ -33,8 +33,8 @@ public class AssessmentApplicationProgressController {
     public String applicationProgress(Model model,
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
-        return doProgressView(model, applicationId, filterInnovationArea, page);
+                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter) {
+        return doProgressView(model, applicationId, assessorNameFilter, page);
     }
 
     @PostMapping(path = "/assign/{assessorId}")
@@ -71,8 +71,8 @@ public class AssessmentApplicationProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, Long filterInnovationArea, int page) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page));
+    private String doProgressView(Model model, Long applicationId, String assessorNameFilter, int page) {
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessorNameFilter, page));
 
         return "competition/application-progress";
     }

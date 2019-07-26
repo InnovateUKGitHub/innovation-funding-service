@@ -31,8 +31,8 @@ public class ApplicationAssessmentSummaryController {
     public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
                                                                              @RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                             @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
-        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, filterInnovationArea).toGetResponse();
+                                                                             @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
+        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter).toGetResponse();
     }
 
     @GetMapping("/{applicationId}")

@@ -81,13 +81,13 @@ public class UserController {
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return userService.findActiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+        return userService.findActiveByRoles(Role.internalRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/internal/inactive")
     public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findInactiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+        return userService.findInactiveByRoles(Role.internalRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @PostMapping("/internal/create/{inviteHash}")

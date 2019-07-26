@@ -93,7 +93,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         loginCompAdmin();
         Organisation leadOrganisation = newOrganisation().withName("lead org").build();
 
-        pageable = new PageRequest(1, 20);
+        pageable = PageRequest.of(1, 20);
 
         competition = newCompetition()
                 .with(id(null))
