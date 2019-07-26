@@ -420,7 +420,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
 
-        assertEquals("?origin=FUNDING_APPLICATIONS&page=0", viewModel.getPagination().getPageNames().get(0).getPath());
+        assertEquals("?page=0", viewModel.getPagination().getPageNames().get(0).getPath());
     }
 
     @Test

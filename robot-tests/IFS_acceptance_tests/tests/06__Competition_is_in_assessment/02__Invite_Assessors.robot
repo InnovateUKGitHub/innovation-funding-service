@@ -100,7 +100,7 @@ Assessor link goes to the assessor profile
     [Tags]
     Given the user click on assessor name link
     Then the user should see the assessor details and DOI
-    [Teardown]  The user clicks the button/link  link = Back
+    [Teardown]  The user clicks the button/link  link = Back to invite assessors
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389

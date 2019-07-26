@@ -67,7 +67,8 @@
     <th:block th:insert="fragments/elements :: skiplink-container" />
     <th:block th:insert="fragments/elements :: global-cookie-message" />
     <th:block th:insert="fragments/elements :: global-alert-message" />
-
+    <th:block th:insert="fragments/modals :: modal-session-timeout-warning" />
+    <th:block th:insert="fragments/modals :: modal-inactivity-timeout-warning" />
 </th:block>
 
 <!-- ===========================Place: <body> end =========================== -->
@@ -204,16 +205,31 @@
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
     <div class="sub-header">
-        <a th:if="${linkTitle != null and linkUrl != null}"
-           class="govuk-back-link"
-           th:href="${linkUrl}"
-           th:text="${linkTitle}" />
+
+        <th:block th:unless="${dynamicBackLink}"
+                  th:insert="fragments/layout :: back-link"/>
+
+        <th:block th:if="${dynamicBackLink}">
+            <a th:if="${cookieBackLinkUrl}"
+               class="govuk-back-link"
+               th:href="${cookieBackLinkUrl}"
+               th:text="${cookieBackLinkText == null ? 'Back' : 'Back to ' + cookieBackLinkText.toLowerCase()}">Back</a>
+            <th:block th:unless="${cookieBackLinkUrl}"
+                      th:insert="fragments/layout :: back-link" />
+        </th:block>
+
         <div class="deadline"
              th:if="${currentCompetition != null && currentCompetition.open}">
             <th:block th:text="${currentCompetition.getDaysLeft()}" />
             days left to submit
         </div>
     </div>
+</th:block>
+<th:block th:fragment="back-link">
+    <a th:if="${linkTitle != null and linkUrl != null}"
+       class="govuk-back-link"
+       th:href="${linkUrl}"
+       th:text="${linkTitle}">Back</a>
 </th:block>
 
 </html>

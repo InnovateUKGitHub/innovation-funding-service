@@ -119,10 +119,6 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         assertEquals(true, viewModel.isIfsAdmin());
         assertEquals(statusResource, viewModel.getCompetitionProjectsStatusResource());
         assertNotNull(viewModel.getStatusPermissions());
-
-        String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
-
-        assertEquals("?origin=PREVIOUS_APPLICATIONS", originQuery);
     }
 
     @Test
