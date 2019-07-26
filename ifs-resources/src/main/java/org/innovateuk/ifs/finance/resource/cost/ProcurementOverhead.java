@@ -9,19 +9,26 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
     public interface RateNotZero{}
     public interface TotalCost{}
     private Long id;
-    private BigDecimal companyCost;
+    private Integer companyCost;
     private BigDecimal projectCost;
     private String item;
     private String name;
 
-    public ProcurementOverhead(Long id, BigDecimal companyCost, BigDecimal projectCost) {
+    public ProcurementOverhead(Long id, Integer companyCost, BigDecimal projectCost) {
         this.id = id;
         this.companyCost = companyCost;
         this.projectCost = projectCost;
         this.name = getCostType().getType();
     }
 
-    public ProcurementOverhead(Long id, BigDecimal companyCost, BigDecimal projectCost, String item) {
+    public ProcurementOverhead(Long id, Integer companyCost, BigDecimal projectCost, String item) {
+        this.id = id;
+        this.companyCost = companyCost;
+        this.projectCost = projectCost;
+        this.item = item;
+    }
+
+    public ProcurementOverhead(Long id, String item, Integer companyCost, BigDecimal projectCost) {
         this.id = id;
         this.companyCost = companyCost;
         this.projectCost = projectCost;
@@ -62,11 +69,11 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
         this.id = id;
     }
 
-    public BigDecimal getCompanyCost() {
+    public Integer getCompanyCost() {
         return companyCost;
     }
 
-    public void setCompanyCost(BigDecimal companyCost) {
+    public void setCompanyCost(Integer companyCost) {
         this.companyCost = companyCost;
     }
 

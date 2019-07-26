@@ -23,7 +23,7 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal companyCost;
+    private Integer companyCost;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
@@ -46,11 +46,11 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
         this.item = item;
     }
 
-    public BigDecimal getCompanyCost() {
+    public Integer getCompanyCost() {
         return companyCost;
     }
 
-    public void setCompanyCost(BigDecimal companyCost) {
+    public void setCompanyCost(Integer companyCost) {
         this.companyCost = companyCost;
     }
 
@@ -74,7 +74,7 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
 
     @Override
     public ProcurementOverhead toCost() {
-        return new ProcurementOverhead(getCostId(), projectCost, companyCost, item);
+        return new ProcurementOverhead(getCostId(), item, companyCost, projectCost);
     }
 
 }

@@ -516,7 +516,7 @@
 *********************************/-->
 
 <th:block th:fragment="procurement-overheads">
-    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
+    <section class="collapsible" th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
         <h3>
             Overhead costs
             <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
@@ -538,13 +538,13 @@
                         <tr class="govuk-table__row">
                             <th id="procurement-overheads-item" scope="col" class="govuk-table__header">Item</th>
                             <th id="procurement-overheads-quantity" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-150">Quantity
+                                class="govuk-table__header govuk-table__header--numeric width-150">Total company cost (&pound;)
                             </th>
                             <th id="procurement-overheads-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-150">Cost per item (&pound;)
+                                class="govuk-table__header govuk-table__header--numeric width-150">Cost to project (%)
                             </th>
                             <th id="procurement-overheads-total" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-150">Total
+                                class="govuk-table__header govuk-table__header--numeric width-150">Total claimed
                             </th>
                             <th class="govuk-table__header" scope="col">
                                 <span class="govuk-visually-hidden">Actions</span>
@@ -552,9 +552,10 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        <th:block th:each="entry : *{procurementOverheadRows}">
+                        <th:block
+                            th:each="entry : *{procurementOverheadRows}">
                             <th:block
-                                th:insert="application/your-project-costs-fragments :: procurementOverheadRow (${entry.key}, ${entry.value})"/>
+                                th:insert="application/your-project-costs-fragments :: procurement-overheads_row (${entry.key}, ${entry.value})"/>
                         </th:block>
                         </tbody>
                     </table>
@@ -586,14 +587,14 @@
     </section>
 </th:block>
 
-<th:block th:fragment="ajax_procurement-overheads_row">
+<th:block th:fragment="ajax_procurement_overheads_row">
     <th:block th:object="${form}">
         <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="procurement-overheads_row (id, row)">
-    <tr th:with="path=${'procurement-overheads_row[__${id}__]'}" class="govuk-table__row form-group-row-validated"
+    <tr th:with="path=${'procurementOverheadRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
         th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
@@ -611,15 +612,15 @@
                    maxlength="255"/>
         </td>
         <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.quantity">
-                <span class="govuk-visually-hidden">Quantity</span>
+            <label th:for="__${path}__.totalCompanyCost">
+                <span class="govuk-visually-hidden">Total company cost (£)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.quantity)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.totalCompanyCost)"/>
             <input type="number"
                    class="govuk-input"
-                   th:id="__${path}__.quantity"
-                   th:field="*{__${path}__.quantity}"
+                   th:id="__${path}__.totalCompanyCost"
+                   th:field="*{__${path}__.totalCompanyCost}"
                    th:errorclass="govuk-input--error"
                    placeholder="0"
                    min="1"
@@ -629,15 +630,15 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
         </td>
         <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Cost per item</span>
+            <label th:for="__${path}__.costToProject">
+                <span class="govuk-visually-hidden">Cost to project (%)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.costToProject)"/>
             <input type="number"
                    class="govuk-input"
-                   th:id="__${path}__.cost"
-                   th:field="*{__${path}__.cost}"
+                   th:id="__${path}__.costToProject"
+                   th:field="*{__${path}__.costToProject}"
                    th:errorclass="govuk-input--error"
                    placeholder="0"
                    min="1"
@@ -648,7 +649,7 @@
         </td>
         <td class="govuk-table__cell">
             <label th:for="__${path}__.total">
-                <span class="govuk-visually-hidden">Total</span>
+                <span class="govuk-visually-hidden">Total claimed</span>
             </label>
             <input type="text"
                    class="alignright govuk-input procurement-overheads-totals"

@@ -34,6 +34,8 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
     private MaterialsHandler materialsHandler;
 
+    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
+
     private OtherCostHandler otherCostHandler;
 
     private OverheadsHandler overheadsHandler;
@@ -119,6 +121,9 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
                 break;
             case MATERIALS:
                 handler = materialsHandler;
+                break;
+            case PROCUREMENT_OVERHEADS:
+                handler = procurementsOverheadsHandler;
                 break;
             case OTHER_COSTS:
                 handler = otherCostHandler;
@@ -246,9 +251,9 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
-            if(cost.getApplicationRowId() != null) {
+            if (cost.getApplicationRowId() != null) {
                 applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
-            } else{
+            } else {
                 applicationFinanceRow = Optional.empty();
             }
             return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));
