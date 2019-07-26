@@ -159,7 +159,7 @@
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="competitionReferralQuestion">
                             <h2 class="govuk-fieldset__heading">Who made you aware of the competition?</h2>
                         </legend>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Select a category from the list below to state who made you aware of the competition. You cannot choose more that one.')" />
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Select a category from the list below to state who made you aware of the competition. You cannot choose more than one.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='competitionReferralSource')" />
                         <select name="competitionReferralSource"
                             id="competitionReferralSource"
@@ -178,7 +178,7 @@
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__companyAge__}')} ? 'govuk-form-group--error'">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="companyAgeQuestion">
-                            <h2 class="govuk-fieldset__heading">How long has the company been established for?</h2>
+                            <h2 class="govuk-fieldset__heading">How long has your company been established for?</h2>
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='companyAge')" />
                         <fieldset class="govuk-fieldset" name="companyAge" id="companyAge">
@@ -219,7 +219,7 @@
                                            required="required"/>
                                     <label th:for="company-age-one-to-five"
                                            class="govuk-label govuk-radios__label">
-                                        Established one to five years
+                                        Established 1 to 5 years
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="company-age">
@@ -232,7 +232,7 @@
                                            required="required"/>
                                     <label th:for="company-age-five-to-ten"
                                            class="govuk-label govuk-radios__label">
-                                        Established five to ten years
+                                        Established 5 to 10 years
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="company-age">
@@ -245,7 +245,7 @@
                                            required="required"/>
                                     <label th:for="company-age-more-than-ten"
                                            class="govuk-label govuk-radios__label">
-                                        Established more than ten years
+                                        Established more than 10 years
                                     </label>
                                 </div>
                             </div>
