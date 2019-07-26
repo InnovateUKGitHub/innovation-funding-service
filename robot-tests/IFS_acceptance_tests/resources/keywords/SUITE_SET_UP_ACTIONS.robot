@@ -99,7 +99,7 @@ Invite and accept the invitation
     the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
+    And the user clicks the button/link                 jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 the user fills in the inviting steps no edit
@@ -181,7 +181,7 @@ the user verifies email
     The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
+    The user clicks the button/link                            jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.question.transactional;
+package org.innovateuk.ifs.question.transactional.template;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;

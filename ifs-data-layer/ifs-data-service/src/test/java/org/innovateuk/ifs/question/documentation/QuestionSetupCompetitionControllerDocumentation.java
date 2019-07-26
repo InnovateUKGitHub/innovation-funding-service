@@ -1,31 +1,52 @@
 package org.innovateuk.ifs.question.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.question.controller.QuestionSetupCompetitionController;
+import org.innovateuk.ifs.question.transactional.QuestionFileSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.function.Function;
+
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceFields;
+import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionSetupCompetitionControllerDocumentation extends BaseControllerMockMVCTest<QuestionSetupCompetitionController> {
+public class QuestionSetupCompetitionControllerDocumentation extends BaseFileControllerMockMVCTest<QuestionSetupCompetitionController> {
 
     private static String baseUrl = "/question-setup";
 
     @Mock
-    protected QuestionSetupCompetitionService questionSetupCompetitionServiceMock;
+    private QuestionSetupCompetitionService questionSetupCompetitionServiceMock;
+
+    @Mock
+    private QuestionFileSetupCompetitionService questionFileSetupCompetitionService;
 
     @Override
     protected QuestionSetupCompetitionController supplyControllerUnderTest() {
@@ -111,4 +132,81 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
                         )
                 ));
     }
+
+    @Test
+    public void findTemplateFile() throws Exception {
+        final long questionId = 22L;
+        FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
+        when(questionFileSetupCompetitionService.findTemplateFile(questionId)).thenReturn(serviceSuccess(fileEntryResource));
+
+        mockMvc.perform(get(baseUrl + "/template-file-details/{questionId}", questionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntryResource)))
+                .andDo(document("question-setup-competition/{method-name}",
+                        pathParameters(parameterWithName("questionId").description("Id of the question to get template file of")),
+                        responseFields(fileEntryResourceFields)));
+
+        verify(questionFileSetupCompetitionService).findTemplateFile(questionId);
+    }
+
+    @Test
+    public void downloadTemplateFile() throws Exception {
+        final long questionId = 22L;
+
+        Function<QuestionFileSetupCompetitionService, ServiceResult<FileAndContents>> serviceCallToDownload =
+                (service) -> service.downloadTemplateFile(questionId);
+
+        assertGetFileContents(baseUrl + "/template-file/{questionId}", new Object[]{questionId},
+                emptyMap(), questionFileSetupCompetitionService, serviceCallToDownload)
+                .andExpect(status().isOk())
+                .andDo(documentFileGetContentsMethod("question-setup-competition/{method-name}"));
+    }
+
+    @Test
+    public void deleteTemplateFile() throws Exception {
+        final long questionId = 22L;
+        when(questionFileSetupCompetitionService.deleteTemplateFile(questionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.delete(baseUrl + "/template-file/{questionId}", questionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
+                .andDo(document("question-setup-competition/{method-name}",
+                        pathParameters(parameterWithName("questionId").description("Id of the question to have template file deleted")))
+                );
+
+        verify(questionFileSetupCompetitionService).deleteTemplateFile(questionId);
+    }
+
+    @Test
+    public void uploadTemplateFile() throws Exception {
+        final long questionId = 77L;
+        when(questionFileSetupCompetitionService.uploadTemplateFile(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(questionId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(baseUrl + "/template-file/{questionId}", questionId)
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .param("filename", "randomFile.pdf")
+                .headers(createFileUploadHeader("application/pdf", 1234)))
+                .andExpect(status().isCreated())
+                .andDo(document("question-setup-competition/{method-name}",
+                        pathParameters(parameterWithName("questionId").description("The question in which the template file will be attached.")),
+                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
+                        requestHeaders(
+                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
+                        )
+                ));
+
+        verify(questionFileSetupCompetitionService).uploadTemplateFile(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
+                eq(questionId), any(HttpServletRequest.class));
+    }
+
+    private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(contentLength);
+        headers.setAccept(singletonList(MediaType.parseMediaType("application/json")));
+        return headers;
+    }
+
 }
