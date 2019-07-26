@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.origin.AssignQuestionOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static java.lang.String.valueOf;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 
 @Component
 public class AssignQuestionModelPopulator {
@@ -31,7 +29,7 @@ public class AssignQuestionModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
-    public AssignQuestionViewModel populateModel(long questionId, long applicationId, String origin) {
+    public AssignQuestionViewModel populateModel(long questionId, long applicationId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
@@ -39,12 +37,8 @@ public class AssignQuestionModelPopulator {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("applicationId", singletonList(valueOf(applicationId)));
         params.put("questionId", singletonList(valueOf(questionId)));
-        AssignQuestionOrigin originType = AssignQuestionOrigin.valueOf(origin);
-        String originQuery = buildBackUrl(originType, params, "applicationId", "questionId");
         return new AssignQuestionViewModel(application,
                                            processRoles,
-                                           question,
-                                           originQuery,
-                                           originType);
+                                           question);
     }
 }

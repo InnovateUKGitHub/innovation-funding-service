@@ -13,7 +13,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkUrl=@{(${model.backUrl.contains(T(org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+model.backUrl} : ${model.backUrl})})" />
+    <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark this application as ineligible.</h2>
@@ -89,7 +89,7 @@
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}+${model.originQuery}" class="govuk-link">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}" class="govuk-link">
                             view contributors and collaborators
                         </a>
                     </li>

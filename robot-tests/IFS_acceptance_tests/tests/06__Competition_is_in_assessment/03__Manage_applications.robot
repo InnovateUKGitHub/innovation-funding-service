@@ -121,7 +121,7 @@ Application number navigates to Overview
     Given the user clicks the button/link           link = ${Intelligent_water}
     Then The user should see the element           jQuery = .govuk-caption-l:contains("Intelligent water system")
     And the user should see the element            jQuery = h1:contains("Application overview")
-    [Teardown]    the user clicks the button/link  link = Back
+    [Teardown]    the user clicks the button/link  link = Back to manage applications
 
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046

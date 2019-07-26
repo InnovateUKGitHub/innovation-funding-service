@@ -6,9 +6,6 @@ import org.thymeleaf.postprocessor.IPostProcessor;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by dwatson on 06/02/17.
- */
 public class IfsThymeleafPostProcessorDialect implements IPostProcessorDialect {
 
     @Override

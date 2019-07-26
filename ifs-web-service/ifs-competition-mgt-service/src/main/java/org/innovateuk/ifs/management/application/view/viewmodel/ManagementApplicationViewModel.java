@@ -11,8 +11,6 @@ public class ManagementApplicationViewModel {
 
     private final ApplicationResource application;
     private final CompetitionResource competition;
-    private final String backUrl;
-    private final String originQuery;
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final List<AppendixViewModel> appendices;
@@ -33,8 +31,6 @@ public class ManagementApplicationViewModel {
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
-                                          String backUrl,
-                                          String originQuery,
                                           ApplicationOverviewIneligibilityViewModel ineligibility,
                                           ApplicationReadOnlyViewModel applicationReadOnlyViewModel,
                                           List<AppendixViewModel> appendices,
@@ -43,8 +39,6 @@ public class ManagementApplicationViewModel {
                                           Long projectId) {
         this.application = application;
         this.competition = competition;
-        this.backUrl = backUrl;
-        this.originQuery = originQuery;
         this.ineligibility = ineligibility;
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.appendices = appendices;
@@ -69,14 +63,6 @@ public class ManagementApplicationViewModel {
 
     public CompetitionResource getCompetition() {
         return competition;
-    }
-
-    public String getBackUrl() {
-        return backUrl;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     public ApplicationOverviewIneligibilityViewModel getIneligibility() {
