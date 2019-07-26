@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub (linkTitle=${model.backLinkTitle},linkUrl=@{${model.backUrl}})" />
+            <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />
@@ -124,7 +124,7 @@
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-two-thirds">
                                             <h3 class="govuk-heading-s">
-                                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
+                                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
                                                    th:text="${question.shortName}"
                                                    class="govuk-link">Project summary</a>
                                             </h3>
@@ -155,7 +155,7 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds">
                                     <h3 class="govuk-heading-s">
-                                        <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
+                                        <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
                                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"
                                            class="govuk-link">1. Business opportunity</a>
                                     </h3>
@@ -214,7 +214,7 @@
                     <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
                     <p class="govuk-body">
                         <a class="govuk-link"
-                           th:href="@{/application/{apId}/form/question/{qId}(apId=${model.application.id},qId=${model.applicationTermsQuestionId})} + ${model.originQuery}">
+                           th:href="@{/application/{apId}/form/question/{qId}(apId=${model.application.id},qId=${model.applicationTermsQuestionId})}">
                             View award terms and conditions</a>
                     </p>
                 </section>

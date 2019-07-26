@@ -19,7 +19,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.getId;
 /**
  * A base class from which concrete builders can extend
  *
- * Created by dwatson on 09/10/15.
  */
 public abstract class BaseBuilder<T, S> implements Builder<T, S> {
 

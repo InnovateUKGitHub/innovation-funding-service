@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.navigation;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class PaginationLink {
@@ -42,5 +43,13 @@ public class PaginationLink {
                 .append(path)
                 .append(title)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("path", path)
+                .append("title", title)
+                .toString();
     }
 }

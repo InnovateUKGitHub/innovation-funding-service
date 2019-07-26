@@ -106,13 +106,13 @@
                             <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
                                 <th:block th:unless="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
                                     <td class="govuk-table__cell">
-                                        <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                        <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})}"
                                            th:text="${row.id}" class="govuk-link">194731</a>
                                     </td>
                                 </th:block>
                                 <th:block th:if="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
                                     <td class="govuk-table__cell">
-                                        <a th:href="'/application/' + ${row.id} + '/summary' + ${originQuery}"
+                                        <a th:href="'/application/' + ${row.id} + '/summary'"
                                            th:text="${row.id}" class="govuk-link">194731</a>
                                     </td>
                                 </th:block>

@@ -22,9 +22,8 @@ public class InterviewAssignmentApplicationsSendViewModel extends InterviewAssig
             List<InterviewAssignmentApplicationInviteSendRowViewModel> applications,
             InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             Pagination pagination,
-            String originQuery,
             String content) {
-        super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource, pagination, originQuery);
+        super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource, pagination);
         this.content = content;
     }
 

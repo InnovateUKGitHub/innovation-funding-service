@@ -149,7 +149,7 @@ The finance details are shown
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Dashboard")
+    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Back to applications")
     Then the user should see the element     jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***

@@ -144,8 +144,7 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
-# ZDD IFS-3195 remove companyhouse path
-  <Location ~ "/(companyhouse|companies-house)/.*">
+  <Location ~ "/companies-house/.*">
     AuthType shibboleth
     ShibRequireSession Off
     ShibRequestSetting isPassive On

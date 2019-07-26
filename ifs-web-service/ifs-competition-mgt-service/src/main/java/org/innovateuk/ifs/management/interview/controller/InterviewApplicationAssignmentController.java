@@ -6,17 +6,15 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationsFindModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationsInviteModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationsStatusModelPopulator;
-import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,8 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin.INTERVIEW_PANEL_INVITE;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -79,18 +75,15 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
         InterviewAssignmentApplicationsFindViewModel interviewPanelApplicationsFindModel =
-                interviewApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
+                interviewApplicationsFindModelPopulator.populateModel(competitionId, page);
 
         model.addAttribute("model", interviewPanelApplicationsFindModel);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview/application-find";
     }
@@ -235,12 +228,9 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                          @ModelAttribute(name = "form", binding = false) InterviewAssignmentSelectionForm selectionForm,
                          @SuppressWarnings("unused") BindingResult bindingResult) {
 
-        String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
-
         model.addAttribute("model", interviewApplicationsInviteModelPopulator
-                .populateModel(competitionId, page, originQuery));
+                .populateModel(competitionId, page));
         model.addAttribute("form", selectionForm);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview/application-invite";
     }
@@ -282,14 +272,10 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
     @GetMapping("/view-status")
     public String viewStatus(Model model,
                              @PathVariable("competitionId") long competitionId,
-                             @RequestParam(defaultValue = "0") int page,
-                             @RequestParam MultiValueMap<String, String> queryParams) {
-
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.COMP_EXEC_INTERVIEW, queryParams);
+                             @RequestParam(defaultValue = "0") int page) {
 
         model.addAttribute("model", interviewApplicationsStatusModelPopulator
-                .populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
+                .populateModel(competitionId, page));
 
         return "assessors/interview/application-view-status";
     }

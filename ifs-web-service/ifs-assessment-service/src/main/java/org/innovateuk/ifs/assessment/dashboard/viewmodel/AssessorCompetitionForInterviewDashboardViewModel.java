@@ -11,18 +11,15 @@ public class AssessorCompetitionForInterviewDashboardViewModel {
     private String competitionTitle;
     private String leadTechnologist;
     private List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications;
-    private final String originQuery;
 
     public AssessorCompetitionForInterviewDashboardViewModel(long competitionId,
                                                              String competitionTitle,
                                                              String leadTechnologist,
-                                                             List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications,
-                                                             String originQuery) {
+                                                             List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.leadTechnologist = leadTechnologist;
         this.applications = applications;
-        this.originQuery = originQuery;
     }
 
     public long getCompetitionId() {
@@ -39,9 +36,5 @@ public class AssessorCompetitionForInterviewDashboardViewModel {
 
     public List<AssessorCompetitionForInterviewDashboardApplicationViewModel> getApplications() {
         return applications;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 }

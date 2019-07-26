@@ -20,7 +20,6 @@ public class InterviewAssessorApplicationsViewModel {
     private final long unallocatedApplications;
     private final long allocatedApplications;
     private final boolean selectAllDisabled;
-    private final String originQuery;
 
     public InterviewAssessorApplicationsViewModel(long competitionId,
                                                   String competitionName,
@@ -31,8 +30,7 @@ public class InterviewAssessorApplicationsViewModel {
                                                   Pagination pagination,
                                                   long unallocatedApplications,
                                                   long allocatedApplications,
-                                                  boolean selectAllDisabled,
-                                                  String originQuery) {
+                                                  boolean selectAllDisabled) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.user = user;
@@ -43,7 +41,6 @@ public class InterviewAssessorApplicationsViewModel {
         this.unallocatedApplications = unallocatedApplications;
         this.allocatedApplications = allocatedApplications;
         this.selectAllDisabled = selectAllDisabled;
-        this.originQuery = originQuery;
     }
 
     public long getCompetitionId() {
@@ -84,9 +81,5 @@ public class InterviewAssessorApplicationsViewModel {
 
     public boolean isSelectAllDisabled() {
         return selectAllDisabled;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 }
