@@ -25,7 +25,18 @@
                    th:href="${isApplicant ? applicantUrl : internalUrl}"
                    th:text="${model.appendixFilename}"
                    target="_blank"
-                   aria-describedby="file-hint">file</a> <span id="file-hint">(opens in a new window)</span>.
+                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
+            </p>
+        </div>
+        <div class="govuk-!-margin-top-6" th:if="${model.templateDocumentFilename != null}">
+            <p class="uploaded-file govuk-body"
+               th:with="applicantUrl=@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentId})},
+                         internalUrl=@{/competition/{competitionId}/application/{applicationId}/forminput/{formInputId}/download(competitionId=${model.competitionId}, applicationId=${model.applicationId}, formInputId=${model.templateDocumentId})}">
+                <a class="govuk-link"
+                   th:href="${isApplicant ? applicantUrl : internalUrl}"
+                   th:text="${model.templateDocumentFilename}"
+                   target="_blank"
+                   aria-describedby="template-document-hint">file</a><span id="template-document-hint">(opens in a new window)</span>.
             </p>
         </div>
 
