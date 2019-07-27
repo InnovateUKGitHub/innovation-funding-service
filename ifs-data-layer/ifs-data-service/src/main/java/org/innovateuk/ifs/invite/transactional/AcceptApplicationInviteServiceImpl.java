@@ -99,25 +99,9 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
                 );
 
         if (existingCollaboratorInviteOrganisation.isPresent()) {
-            replaceInviteOrganisationOnInvite(invite, existingCollaboratorInviteOrganisation.get());
+            invite.setInviteOrganisation(existingCollaboratorInviteOrganisation.get());
         } else {
             invite.getInviteOrganisation().setOrganisation(organisation);
-        }
-    }
-
-    private void replaceInviteOrganisationOnInvite(
-            ApplicationInvite invite,
-            InviteOrganisation newInviteOrganisation
-    ) {
-        deleteOldInviteOrganisation(invite);
-
-        invite.setInviteOrganisation(newInviteOrganisation);
-    }
-
-    private void deleteOldInviteOrganisation(ApplicationInvite invite) {
-        InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
-        if (currentInviteOrganisation.getInvites().isEmpty()) {
-            inviteOrganisationRepository.delete(currentInviteOrganisation);
         }
     }
 
