@@ -250,7 +250,7 @@ public class GenericQuestionApplicationController {
         return formInputRestService.getByQuestionId(questionId)
                 .getSuccess()
                 .stream()
-                .filter(input -> input.getType().equals(FormInputType.TEMPLATE_DOCUMENT))
+                .filter(input -> input.getType().equals(type))
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);
     }

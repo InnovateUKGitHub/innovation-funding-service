@@ -48,6 +48,22 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
+    public void testPdfOrDocumentOnlyMessage() {
+        assertSpecialisedMessageProduced(
+                mediaTypeFromCategories(PDF, DOCUMENT),
+                ValidMediaTypeErrorHelper.UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY_MESSAGE_KEY
+        );
+    }
+
+    @Test
+    public void testPdfDocumentOrSpreadsheetOnlyMessage() {
+        assertSpecialisedMessageProduced(
+                mediaTypeFromCategories(PDF, DOCUMENT, SPREADSHEET),
+                ValidMediaTypeErrorHelper.UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY
+        );
+    }
+
+    @Test
     public void testNoDirectMatchWithValidMediaTypes() {
         assertSpecialisedMessageProduced(singletonList(MediaType.APPLICATION_JSON), UNSUPPORTED_MEDIA_TYPE.name());
     }

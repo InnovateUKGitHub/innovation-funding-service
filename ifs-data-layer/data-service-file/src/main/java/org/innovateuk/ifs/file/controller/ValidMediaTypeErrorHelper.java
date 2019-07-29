@@ -4,7 +4,6 @@ import org.apache.commons.collections.SetUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +20,8 @@ public class ValidMediaTypeErrorHelper {
     public static final String UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_ONLY";
     public static final String UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY";
     public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_SPREADSHEET_ONLY";
+    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_DOCUMENT_ONLY";
+    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_DOCUMENT_AND_SPREADSHEET_ONLY";
     public static final String UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_AND_SPREADSHEET_ONLY";
 
 
@@ -28,6 +29,8 @@ public class ValidMediaTypeErrorHelper {
             Pair.of(EnumSet.of(PDF), UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY),
             Pair.of(EnumSet.of(SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY),
             Pair.of(EnumSet.of(PDF, SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY),
+            Pair.of(EnumSet.of(PDF, DOCUMENT), UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY_MESSAGE_KEY),
+            Pair.of(EnumSet.of(PDF, DOCUMENT, SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY),
             Pair.of(EnumSet.of(OPEN_DOCUMENT, OPEN_SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY)
     );
 
