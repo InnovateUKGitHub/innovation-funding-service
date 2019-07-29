@@ -42,7 +42,12 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        return BigDecimal.ZERO;
+        // calculated, no validation
+        BigDecimal total = BigDecimal.ZERO;
+        if (companyCost != null && projectCost != null) {
+            total = projectCost.multiply(new BigDecimal(companyCost));
+        }
+        return total;
     }
 
     @Override
