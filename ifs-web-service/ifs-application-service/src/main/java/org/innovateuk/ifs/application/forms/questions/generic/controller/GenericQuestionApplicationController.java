@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.questions.applicationdetails.controller.ApplicationDetailsController;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
@@ -50,7 +49,7 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic")
-@SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = ApplicationDetailsController.class)
+@SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
 
@@ -99,7 +98,7 @@ public class GenericQuestionApplicationController {
         return "application/questions/generic";
     }
 
-    @GetMapping(params = "mark_as_complete")
+    @GetMapping(params = "show-errors")
     public String completeFromReviewPage(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
                                          BindingResult bindingResult,
                                          Model model,

@@ -106,7 +106,7 @@ public class ApplicationDetailsController {
         return new ObjectMapper().createObjectNode();
     }
 
-    @GetMapping(params = "mark_as_complete")
+    @GetMapping(params = "show-errors")
     public String markAsCompleteAsGetRequest(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
                                              BindingResult bindingResult,
                                              Model model,

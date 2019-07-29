@@ -218,7 +218,7 @@ public class ApplicationQuestionController {
         QuestionSetupType questionType = questionResource.getQuestionSetupType();
         Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId);
         if (questionUrl.isPresent()) {
-            return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
+            return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?show-errors=true" : "");
         }
 
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
