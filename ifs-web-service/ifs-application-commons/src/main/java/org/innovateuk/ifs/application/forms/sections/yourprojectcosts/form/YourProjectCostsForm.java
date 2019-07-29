@@ -104,6 +104,11 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalOverheadCosts() {
+
+        if (overhead.getRateType() == null) {
+            return BigDecimal.ZERO;
+        }
+
         switch (overhead.getRateType()) {
             case NONE:
                 return BigDecimal.ZERO;
@@ -143,6 +148,7 @@ public class YourProjectCostsForm {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
                 .add(getTotalMaterialCosts())
+                .add(getTotalProcurementOverheadCosts())
                 .add(getTotalCapitalUsageCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())

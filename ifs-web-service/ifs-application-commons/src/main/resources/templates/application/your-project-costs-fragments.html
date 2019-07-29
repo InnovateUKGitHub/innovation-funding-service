@@ -689,7 +689,7 @@
                    class="alignright govuk-input procurement-overheads-totals"
                    th:id="__${path}__.total"
                    th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
-                   th:attr="data-calculation-fields=|[id='__${path}__.quantity'],[id='__${path}__.cost']|,data-calculation-rawvalue=${row.total}"
+                   th:attr="data-calculation-fields=|[id='__${path}__.companyCost'],[id='__${path}__.projectCost']|,data-calculation-rawvalue=${row.total}"
                    data-calculation-operations="*"
                    readonly="readonly"/>
         </td>
@@ -723,9 +723,9 @@
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.item}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
+                        th:text="${cost.companyCost != null ? cost.companyCost : 0}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
+                        th:text="${cost.projectCost != null ? #numbers.formatInteger(cost.projectCost,0,'DEFAULT') : '0'}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
                         th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}"/>
                     </td>

@@ -135,14 +135,14 @@ public class YourProjectCostsAutosaver {
             case "item":
                 cost.setItem(value);
                 break;
-            case "quantity":
+            case "companyCost":
                 cost.setCompanyCost(Integer.parseInt(value));
                 break;
-            case "cost":
+            case "projectCost":
                 cost.setProjectCost(new BigDecimal(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save material field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(String.format("Auto save procurement overhead field not handled %s", rowField), Collections.emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());

@@ -30,10 +30,17 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal projectCost;
 
-    public ProcurementOverheadRowForm() { }
+    public ProcurementOverheadRowForm() {}
+
+    public ProcurementOverheadRowForm(Long targetId, String item, BigDecimal projectCost, Integer companyCost) {
+        this.item = item;
+        this.projectCost = projectCost;
+        this.companyCost = companyCost;
+    }
 
     public ProcurementOverheadRowForm(ProcurementOverhead cost) {
         super(cost);
+        this.item = cost.getItem();
         this.projectCost = cost.getProjectCost();
         this.companyCost = cost.getCompanyCost();
     }
@@ -69,12 +76,11 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
 
     @Override
     public FinanceRowType getRowType() {
-        return FinanceRowType.MATERIALS;
+        return FinanceRowType.PROCUREMENT_OVERHEADS;
     }
 
     @Override
-    public ProcurementOverhead toCost() {
-        return new ProcurementOverhead(getCostId(), item, companyCost, projectCost);
+    public ProcurementOverhead toCost(Long financeId) {
+        return new ProcurementOverhead(getCostId(), item, projectCost, companyCost, financeId);
     }
-
 }

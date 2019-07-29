@@ -5,6 +5,7 @@
 ALTER TABLE finance_row ADD COLUMN type enum (
     'LABOUR',
     'OVERHEADS',
+    'PROCUREMENT_OVERHEADS',
     'MATERIALS',
     'CAPITAL_USAGE',
     'SUBCONTRACTING_COSTS',
@@ -26,6 +27,7 @@ update finance_row fr
       where fit.name in (
           'LABOUR',
           'OVERHEADS',
+          'PROCUREMENT_OVERHEADS',
           'MATERIALS',
           'CAPITAL_USAGE',
           'TRAVEL',

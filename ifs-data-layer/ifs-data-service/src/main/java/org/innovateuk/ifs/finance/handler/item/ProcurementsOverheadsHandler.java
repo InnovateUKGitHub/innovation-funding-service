@@ -24,21 +24,21 @@ public class ProcurementsOverheadsHandler extends FinanceRowHandler<ProcurementO
     }
 
     @Override
-    public ApplicationFinanceRow toCost(ProcurementOverhead procurementOverhead) {
-        return new ApplicationFinanceRow(procurementOverhead.getId(), COST_KEY, procurementOverhead.getItem(), "", procurementOverhead.getCompanyCost(), procurementOverhead.getProjectCost(),null, null);
+    public ApplicationFinanceRow toApplicationDomain(ProcurementOverhead procurementOverhead) {
+        return new ApplicationFinanceRow(procurementOverhead.getId(), COST_KEY, procurementOverhead.getItem(), "", procurementOverhead.getCompanyCost(), procurementOverhead.getProjectCost(),null, procurementOverhead.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(ProcurementOverhead procurementOverhead) {
-        return new ProjectFinanceRow(procurementOverhead.getId(), COST_KEY, procurementOverhead.getItem(), "", procurementOverhead.getCompanyCost(), procurementOverhead.getProjectCost(),null, null);
+    public ProjectFinanceRow toProjectDomain(ProcurementOverhead procurementOverhead) {
+        return new ProjectFinanceRow(procurementOverhead.getId(), COST_KEY, procurementOverhead.getItem(), "", procurementOverhead.getCompanyCost(), procurementOverhead.getProjectCost(),null, procurementOverhead.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new ProcurementOverhead(cost.getId(),cost.getItem(), cost.getQuantity(), cost.getCost());
+        return new ProcurementOverhead(cost.getTarget().getId(), cost.getId(),cost.getQuantity(), cost.getCost(), cost.getItem(), cost.getName());
     }
 }

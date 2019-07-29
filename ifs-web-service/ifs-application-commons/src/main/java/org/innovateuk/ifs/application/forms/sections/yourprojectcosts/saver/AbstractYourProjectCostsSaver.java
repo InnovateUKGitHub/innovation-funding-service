@@ -75,8 +75,14 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
-        futures.add(saveOverheads(form.getOverhead(), finance));
-        futures.add(saveRows(form.getProcurementOverheadRows(), finance));
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OVERHEADS)) {
+            futures.add(saveOverheads(form.getOverhead(), finance));
+        }
+
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PROCUREMENT_OVERHEADS)) {
+            futures.add(saveRows(form.getProcurementOverheadRows(), finance));
+        }
+
         futures.add(saveLabourCosts(form.getLabour(), finance));
         futures.add(saveRows(form.getMaterialRows(), finance));
         futures.add(saveRows(form.getCapitalUsageRows(), finance));
