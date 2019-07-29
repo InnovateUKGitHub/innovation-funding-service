@@ -104,20 +104,6 @@ the procurement comp moves to Previous tab
     And the user should see the element    JQuery = h1:contains("${comp_name}")
 
 *** Keywords ***
-the user fills in Procurement Application details
-    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="name"]  ${appTitle}
-    the user enters text to a text field  id = startDate  ${tomorrowday}
-    the user enters text to a text field  css = #application_details-startdate_month  ${month}
-    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css = [id="durationInMonths"]  24
-    the user clicks the button twice      css = label[for="resubmission-no"]
-    the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       css = button[name="mark_as_complete"]
-    the user clicks the button/link       link = Application overview
-    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
-
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
