@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.util.EncodingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,16 +54,16 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private ApplicationAssessorPageMapper applicationAssessorPageMapper;
 
     @Override
-    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
+    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter) {
 
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
-                    Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
+                    Pageable pageable = PageRequest.of(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
                     Page<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
                             ASSESSOR,
                             ParticipantStatus.ACCEPTED,
                             applicationId,
-                            filterInnovationArea,
+                            EncodingUtils.urlDecode(assessorNameFilter),
                             pageable);
                     return applicationAssessorPageMapper.mapToResource(competitionParticipants);
                 }

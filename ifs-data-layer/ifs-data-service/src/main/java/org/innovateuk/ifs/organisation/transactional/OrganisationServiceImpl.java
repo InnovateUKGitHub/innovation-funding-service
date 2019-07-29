@@ -153,7 +153,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName, int maxItems) {
         List<OrganisationSearchResult> organisations;
-        organisations = academicRepository.findByNameContainingIgnoreCase(organisationName, new PageRequest(0, 10))
+        organisations = academicRepository.findByNameContainingIgnoreCase(organisationName, PageRequest.of(0, 10))
                 .stream()
                 .map(a -> new OrganisationSearchResult(a.getId().toString(), a.getName()))
                 .collect(Collectors.toList());

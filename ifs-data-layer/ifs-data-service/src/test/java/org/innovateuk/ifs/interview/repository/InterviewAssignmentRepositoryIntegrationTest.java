@@ -57,7 +57,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void findByTargetCompetitionIdAndActivityStateState() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         Application application = newApplication()
                 .with(id(null))

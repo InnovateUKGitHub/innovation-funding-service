@@ -3,8 +3,8 @@ package org.innovateuk.ifs.question.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateServiceImpl;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;

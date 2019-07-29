@@ -232,7 +232,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
@@ -262,7 +262,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         int page = 0;
         int pageSize = 20;
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -411,7 +411,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         long totalElements = 100L;
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         Page<InterviewInvite> page = new PageImpl<>(existingUserInvites, pageable, totalElements);
 
         when(interviewInviteRepositoryMock.getByCompetitionIdAndStatus(
@@ -589,7 +589,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
         List<InterviewParticipant> expectedParticipants = newInterviewParticipant()
                 .withInvite(
                         newInterviewInvite()

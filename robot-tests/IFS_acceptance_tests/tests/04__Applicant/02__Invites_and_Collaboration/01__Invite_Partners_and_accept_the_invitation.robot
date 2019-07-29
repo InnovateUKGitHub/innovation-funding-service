@@ -239,7 +239,7 @@ Registered partner should not create new org but should follow the create accoun
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = a:contains("Sign in")
+    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking           &{lead_applicant_credentials}
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
@@ -297,7 +297,7 @@ the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery = .govuk-button:contains("Sign in")
+    The user clicks the button/link                            jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
