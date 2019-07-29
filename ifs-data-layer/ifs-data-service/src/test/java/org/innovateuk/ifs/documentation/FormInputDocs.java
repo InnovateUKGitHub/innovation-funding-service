@@ -21,5 +21,6 @@ public class FormInputDocs {
             fieldWithPath("scope").description("scope of the form input"),
             fieldWithPath("allowedFileTypes").description("allowed file types of the form input"),
             fieldWithPath("formValidators").description("form validators of the form input"),
+            fieldWithPath("file").description("Details of the file associated with the form input.")
     };
 }

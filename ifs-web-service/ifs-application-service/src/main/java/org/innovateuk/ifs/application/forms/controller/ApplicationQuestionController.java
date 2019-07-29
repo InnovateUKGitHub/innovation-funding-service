@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -20,16 +21,17 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +51,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
-import static java.lang.String.format;
+import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
@@ -65,53 +67,30 @@ public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
+    @Autowired
     private QuestionModelPopulator questionModelPopulator;
-
+    @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryPopulator;
-
+    @Autowired
     private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
-
+    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
-
+    @Autowired
     private ApplicationService applicationService;
-
+    @Autowired
     private UserRestService userRestService;
-
+    @Autowired
     private QuestionService questionService;
-
+    @Autowired
+    private QuestionRestService questionRestService;
+    @Autowired
     private ApplicantRestService applicantRestService;
-
+    @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
-
+    @Autowired
     private ApplicationQuestionSaver applicationSaver;
-
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    public ApplicationQuestionController(
-            ApplicationResearchCategoryModelPopulator researchCategoryPopulator,
-            QuestionModelPopulator questionModelPopulator,
-            ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator,
-            ApplicationNavigationPopulator applicationNavigationPopulator,
-            ApplicationService applicationService,
-            UserRestService userRestService,
-            QuestionService questionService,
-            ApplicantRestService applicantRestService,
-            ApplicationRedirectionService applicationRedirectionService,
-            ApplicationQuestionSaver applicationSaver,
-            CookieFlashMessageFilter cookieFlashMessageFilter
-    ) {
-        this.researchCategoryPopulator = researchCategoryPopulator;
-        this.questionModelPopulator = questionModelPopulator;
-        this.researchCategoryFormPopulator = researchCategoryFormPopulator;
-        this.applicationNavigationPopulator = applicationNavigationPopulator;
-        this.applicationService = applicationService;
-        this.userRestService = userRestService;
-        this.questionService = questionService;
-        this.applicantRestService = applicantRestService;
-        this.applicationRedirectionService = applicationRedirectionService;
-        this.applicationSaver = applicationSaver;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-    }
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -129,8 +108,7 @@ public class ApplicationQuestionController {
             @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam MultiValueMap<String, String> queryParams
+            HttpServletResponse response
     ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
             if (markAsCompleteSet) {
@@ -147,7 +125,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete, queryParams);
+        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete);
     }
 
     @ZeroDowntime(description = "remove references to assign", reference = "IFS-6123")
@@ -164,14 +142,13 @@ public class ApplicationQuestionController {
             @PathVariable(QUESTION_ID) final Long questionId,
             UserResource user,
             HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam MultiValueMap<String, String> queryParams
+            HttpServletResponse response
     ) {
         Map<String, String[]> params = request.getParameterMap();
 
         // Check if the request is to just open edit view or to save
         if (params.containsKey(EDIT_QUESTION)) {
-            return handleEditQuestion(form, model, applicationId, questionId, user, queryParams);
+            return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
             handleAssignedQuestions(applicationId, user, request, response);
             // First check if any errors already exist in bindingResult
@@ -183,7 +160,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty(), queryParams);
+                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -235,32 +212,16 @@ public class ApplicationQuestionController {
             Long questionId,
             Model model,
             ApplicationForm form,
-            Optional<Boolean> markAsComplete,
-            MultiValueMap<String, String> queryParams) {
+            Optional<Boolean> markAsComplete) {
 
-        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
-
-        if (questionType != null) {
-            switch (questionType) {
-                case APPLICATION_DETAILS:
-                    return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId) +
-                            (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
-                case GRANT_AGREEMENT:
-                    return format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
-                case GRANT_TRANSFER_DETAILS:
-                    return format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
-                case APPLICATION_TEAM:
-                    return format("redirect:/application/%d/form/question/%d/team", applicationId, questionId) +
-                            (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
-                case TERMS_AND_CONDITIONS:
-                    return format("redirect:/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId);
-            }
-            if (questionType.hasFormInputResponses()) {
-                return format("redirect:/application/%d/form/question/%d/generic", applicationId, questionId);
-            }
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+        QuestionSetupType questionType = questionResource.getQuestionSetupType();
+        Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId);
+        if (questionUrl.isPresent()) {
+            return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?mark_as_complete=true" : "");
         }
 
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
         boolean isSupport = user.hasRole(SUPPORT);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), isSupport);
@@ -291,8 +252,7 @@ public class ApplicationQuestionController {
             Model model,
             Long applicationId,
             Long questionId,
-            UserResource user,
-            MultiValueMap<String, String> queryParams
+            UserResource user
     ) {
         ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         if (processRole != null) {
@@ -301,7 +261,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id {}", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty(), queryParams);
+        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
