@@ -25,7 +25,6 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("templateFormInput").description("The id of the form input for template document"),
             fieldWithPath("templateFilename").description("filename of the template document"),
             fieldWithPath("allowedTemplateResponseFileTypes").description("Specifies types of files that will be allowed to be uploaded for a template"),
-            fieldWithPath("templateName").description("Name of the template upload section"),
             fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
             fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),
