@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head"
               th:with="pageTitle=${model.questionName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
-<body class="govuk-template__body team">
+<body class="govuk-template__body">
 <th:block th:insert="fragments/modals :: modal-overlay"/>
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
@@ -70,7 +70,11 @@
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
               method="post">
 
-            <div class="govuk-form-group" th:if="${model.textAreaActive}">
+            <div id="answer" class="govuk-form-group" th:if="${model.textAreaActive}"
+                 th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
+                <th:block th:if="${#fields.hasErrors('answer')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                </th:block>
                 <div class="textarea-wrapped word-count"
                      th:classappend="|${model.complete ?: 'marked-as-complete'}  ${model.assignButtonsViewModel.assignedToCurrentUser ?: 'assigned-to-me'}|">
 

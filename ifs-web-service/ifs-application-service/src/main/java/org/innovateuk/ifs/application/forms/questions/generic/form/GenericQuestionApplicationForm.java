@@ -2,8 +2,11 @@ package org.innovateuk.ifs.application.forms.questions.generic.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
+
 public class GenericQuestionApplicationForm {
 
+    @NotBlank(message = "{validation.field.please.enter.some.text}")
     private String answer;
 
     private MultipartFile appendix;

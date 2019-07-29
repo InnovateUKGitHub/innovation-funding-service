@@ -52,6 +52,10 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withType(FormInputType.FILEUPLOAD)
                 .withQuestion(question.getId())
                 .build();
+        FormInputResource templateDocument = newFormInputResource()
+                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .withQuestion(question.getId())
+                .build();
         FormInputResponseResource textareaResponse = newFormInputResponseResource()
                 .withFormInputs(textarea.getId())
                 .withValue("Some text")
@@ -60,6 +64,11 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withFormInputs(appendix.getId())
                 .withFileName("Appendix.pdf")
                 .build();
+        FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
+                .withFormInputs(templateDocument.getId())
+                .withFileName("template.pdf")
+                .build();
+
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix), asList(textareaResponse, appendixResponse), emptyList());
 
@@ -68,6 +77,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertEquals("Some text", viewModel.getAnswer());
         assertEquals("Appendix.pdf", viewModel.getAppendixFilename());
         assertEquals("Question text?", viewModel.getQuestion());
+        assertEquals(appendix.getId(), viewModel.getAppendixId());
+        assertEquals("template.pdf", viewModel.getTemplateDocumentFilename());
+        assertEquals(templateDocument.getId(), viewModel.getTemplateDocumentId());
 
         assertEquals("1. Question", viewModel.getName());
         assertEquals(application.getId(), (Long) viewModel.getApplicationId());

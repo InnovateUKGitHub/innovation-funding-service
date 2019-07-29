@@ -25,15 +25,18 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -75,6 +78,10 @@ public class GenericQuestionApplicationController {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
+    @Qualifier("mvcValidator")
+    private Validator validator;
+
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) GenericQuestionApplicationForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -95,12 +102,14 @@ public class GenericQuestionApplicationController {
     @GetMapping(params = "mark_as_complete")
     public String completeFromReviewPage(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
                                          BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return markAsComplete(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+        formPopulator.populate(form, question);
+        validator.validate(form, bindingResult);
+        return getView(model, question);
     }
 
     @PostMapping(params = "assign")
@@ -116,7 +125,7 @@ public class GenericQuestionApplicationController {
     }
 
     @PostMapping(params = "complete")
-    public String markAsComplete(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
+    public String markAsComplete(@Valid @ModelAttribute(value = "form") GenericQuestionApplicationForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
@@ -128,13 +137,15 @@ public class GenericQuestionApplicationController {
             return getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
         };
 
-        ValidationMessages message = save(form, applicationId, questionId, user).getSuccess();
-        validationHandler.addAnyErrors(message);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<ValidationMessages> validationMessages = questionStatusRestService.markAsComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
-            validationMessages.forEach(validationHandler::addAnyErrors);
-            return validationHandler.failNowOrSucceedWith(failureView,
-                    () -> redirectToQuestion(applicationId, questionId));
+            ValidationMessages message = save(form, applicationId, questionId, user).getSuccess();
+            validationHandler.addAnyErrors(message);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                List<ValidationMessages> validationMessages = questionStatusRestService.markAsComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
+                validationMessages.forEach(validationHandler::addAnyErrors);
+                return validationHandler.failNowOrSucceedWith(failureView,
+                        () -> redirectToQuestion(applicationId, questionId));
+            });
         });
     }
 
