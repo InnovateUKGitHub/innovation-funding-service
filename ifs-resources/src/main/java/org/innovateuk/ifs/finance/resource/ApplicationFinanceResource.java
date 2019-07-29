@@ -8,6 +8,7 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     private Long financeFileEntry;
     private Integer maximumFundingLevel;
 
+
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
         super(applicationFinance);

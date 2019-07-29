@@ -612,15 +612,15 @@
                    maxlength="255"/>
         </td>
         <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.totalCompanyCost">
+            <label th:for="__${path}__.companyCost">
                 <span class="govuk-visually-hidden">Total company cost (£)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.totalCompanyCost)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.companyCost)"/>
             <input type="number"
                    class="govuk-input"
-                   th:id="__${path}__.totalCompanyCost"
-                   th:field="*{__${path}__.totalCompanyCost}"
+                   th:id="__${path}__.companyCost"
+                   th:field="*{__${path}__.companyCost}"
                    th:errorclass="govuk-input--error"
                    placeholder="0"
                    min="1"
@@ -630,15 +630,15 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
         </td>
         <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.costToProject">
+            <label th:for="__${path}__.projectCost">
                 <span class="govuk-visually-hidden">Cost to project (%)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.costToProject)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.projectCost)"/>
             <input type="number"
                    class="govuk-input"
-                   th:id="__${path}__.costToProject"
-                   th:field="*{__${path}__.costToProject}"
+                   th:id="__${path}__.projectCost"
+                   th:field="*{__${path}__.projectCost}"
                    th:errorclass="govuk-input--error"
                    placeholder="0"
                    min="1"

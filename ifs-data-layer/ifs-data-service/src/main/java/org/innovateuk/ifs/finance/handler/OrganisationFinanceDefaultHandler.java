@@ -59,7 +59,8 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
                                              OverheadsHandler overheadsHandler,
                                              SubContractingCostHandler subContractingCostHandler,
                                              TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                             OtherFundingHandler otherFundingHandler) {
+                                             OtherFundingHandler otherFundingHandler,
+                                             ProcurementsOverheadsHandler procurementsOverheadsHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
         this.projectFinanceRepository = projectFinanceRepository;
         this.labourCostHandler = labourCostHandler;
@@ -71,6 +72,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
         this.travelCostHandler = travelCostHandler;
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
+        this.procurementsOverheadsHandler = procurementsOverheadsHandler;
     }
 
     @Override

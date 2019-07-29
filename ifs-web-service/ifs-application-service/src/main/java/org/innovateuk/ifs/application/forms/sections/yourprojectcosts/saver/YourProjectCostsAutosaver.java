@@ -60,6 +60,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveTravelCost(field, value, finance);
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
+            } else if (field.startsWith("procurementOverheadRows")) {
+                return autosaveProcurementOverheadCost(field, value, finance);
             } else {
                 throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
             }
@@ -116,6 +118,27 @@ public class YourProjectCostsAutosaver {
                 break;
             case "cost":
                 cost.setCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(String.format("Auto save material field not handled %s", rowField), Collections.emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        ProcurementOverhead cost = getCost(id, finance, ProcurementOverhead.class);
+        switch (rowField) {
+            case "item":
+                cost.setItem(value);
+                break;
+            case "quantity":
+                cost.setCompanyCost(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setProjectCost(new BigDecimal(value));
                 break;
             default:
                 throw new IFSRuntimeException(String.format("Auto save material field not handled %s", rowField), Collections.emptyList());

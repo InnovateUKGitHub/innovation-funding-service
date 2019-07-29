@@ -14,6 +14,10 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
     private String item;
     private String name;
 
+    public ProcurementOverhead() {
+        this.name = getCostType().getType();
+    }
+
     public ProcurementOverhead(Long id, Integer companyCost, BigDecimal projectCost) {
         this.id = id;
         this.companyCost = companyCost;
@@ -42,7 +46,7 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
 
     @Override
     public FinanceRowType getCostType() {
-        return  FinanceRowType.OVERHEADS;
+        return FinanceRowType.PROCUREMENT_OVERHEADS;
     }
 
     @Override
