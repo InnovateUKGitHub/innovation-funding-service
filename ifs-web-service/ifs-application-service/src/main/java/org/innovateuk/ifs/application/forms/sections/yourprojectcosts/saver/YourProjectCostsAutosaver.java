@@ -130,7 +130,7 @@ public class YourProjectCostsAutosaver {
     private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        ProcurementOverhead cost = getCost(id, finance, ProcurementOverhead.class);
+        ProcurementOverhead cost = getCost(id, () -> new ProcurementOverhead(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setItem(value);
