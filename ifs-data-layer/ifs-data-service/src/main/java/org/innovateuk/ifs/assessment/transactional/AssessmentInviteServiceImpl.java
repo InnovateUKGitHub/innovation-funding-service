@@ -35,6 +35,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.EncodingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -249,9 +250,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        final Page<User> pagedResult = innovationArea.map(i -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
-                .orElse(assessmentInviteRepository.findAssessorsByCompetition(competitionId, pageable));
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorNameFilter) {
+        final Page<User> pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter), pageable);
 
         return serviceSuccess(new AvailableAssessorPageResource(
                 pagedResult.getTotalElements(),
@@ -263,11 +263,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
 
-        List<User> result = innovationArea.map(innovationAreaId -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(
-                competitionId, innovationAreaId
-        )).orElseGet(() -> assessmentInviteRepository.findAssessorsByCompetition(competitionId));
+        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
 
         return serviceSuccess(simpleMap(result, User::getId));
     }
@@ -304,25 +302,26 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
-                                                                                   Optional<Long> innovationArea,
                                                                                    List<ParticipantStatus> statuses,
-                                                                                   Optional<Boolean> compliant) {
+                                                                                   Optional<Boolean> compliant,
+                                                                                   Optional<String> assessorName) {
         Page<AssessmentParticipant> pagedResult;
 
-        if (innovationArea.isPresent() || compliant.isPresent()) {
+        if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                     competitionId,
-                    innovationArea.orElse(null),
                     statuses,
                     compliant.orElse(null),
+                    EncodingUtils.urlDecode(assessorName.orElse("")),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault()),
                     pageable
             );
         } else {
-            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContains(
+            pagedResult = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                     competitionId,
                     statuses,
+                    EncodingUtils.urlDecode(assessorName.orElse("")),
                     pageable
             );
         }
@@ -343,24 +342,25 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                                      Optional<Long> innovationArea,
                                                                       List<ParticipantStatus> statuses,
-                                                                      Optional<Boolean> compliant) {
+                                                                      Optional<Boolean> compliant,
+                                                                      Optional<String> assessorName) {
         List<AssessmentParticipant> participants;
 
-        if (innovationArea.isPresent() || compliant.isPresent()) {
+        if (compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
-            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                     competitionId,
-                    innovationArea.orElse(null),
                     statuses,
                     compliant.orElse(null),
+                    assessorName.orElse(""),
                     startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault())
             );
         } else {
-            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContains(
+            participants = assessmentParticipantRepository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                     competitionId,
-                    statuses);
+                    statuses,
+                    assessorName.orElse(""));
         }
 
         return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));
@@ -593,7 +593,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyInvitedToThisCompetition(int index, String email, long competitionId) {
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         AssessorCreatedInvitePageResource resource = getInvitePageResource(competitionId, pageable).getSuccess();
 

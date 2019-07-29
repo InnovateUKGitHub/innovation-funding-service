@@ -36,7 +36,7 @@ public class ApplicationSummaryPageMapperTest {
 		Application app2 = mock(Application.class);
 		List<Application> content = Arrays.asList(app1, app2);
 
-		Pageable pageable = new PageRequest(3, 20);
+		Pageable pageable = PageRequest.of(3, 20);
 		Page<Application> source = new PageImpl<Application>(content, pageable, 62L);
 		
 		ApplicationSummaryResource conv1 = mock(ApplicationSummaryResource.class);

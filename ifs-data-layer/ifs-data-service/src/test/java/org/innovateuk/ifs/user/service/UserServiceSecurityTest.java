@@ -138,7 +138,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findActiveByProcessRoles() {
-        when(classUnderTestMock.findActiveByRoles(internalRoles(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findActiveByRoles(internalRoles(), PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findActiveByRoles(internalRoles(), new
@@ -150,7 +150,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findInactiveByProcessRoles() {
-        when(classUnderTestMock.findInactiveByRoles(internalRoles(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findInactiveByRoles(internalRoles(), PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findInactiveByRoles(internalRoles(), new

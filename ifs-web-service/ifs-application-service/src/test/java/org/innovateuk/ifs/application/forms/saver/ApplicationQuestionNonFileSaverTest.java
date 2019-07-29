@@ -53,7 +53,7 @@ public class ApplicationQuestionNonFileSaverTest {
         final List<FormInputResource> formInputList = asList(
                 newFormInputResource().withType(FormInputType.FILEUPLOAD).build(),
                 newFormInputResource().withId(1000L)
-                        .withType(FormInputType.DATE).build());
+                        .withType(FormInputType.TEXTAREA).build());
         when(formInputRestService.getByQuestionIdAndScope(anyLong(), eq(FormInputScope.APPLICATION))).thenReturn(RestResult.restSuccess(formInputList));
         when(formInputResponseRestService.saveQuestionResponse(userId, applicationId, 1000L, value, true)).thenReturn(RestResult.restSuccess(new ValidationMessages()));
 

@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
@@ -73,9 +72,10 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), Optional.empty(), Optional.empty(), pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
 
-        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId()))
+        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId())
+                .param("assessorNameFilter",""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-assessors"))
                 .andExpect(model().attributeExists("model"))

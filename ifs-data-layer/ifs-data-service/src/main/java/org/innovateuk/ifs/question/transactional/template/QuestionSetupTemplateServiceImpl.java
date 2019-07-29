@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.question.transactional;
+package org.innovateuk.ifs.question.transactional.template;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -7,10 +7,6 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
-import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
-import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
-import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
-import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -45,27 +45,20 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
             "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
 
-    String BY_COMP_AND_STATUS = "SELECT assessmentParticipant " +
+    String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
-            "AND assessmentParticipant.status IN :status";
+            "AND assessmentParticipant.status IN :status " +
+            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')";
 
-    String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT assessmentParticipant " +
+    String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%') " +
             "AND assessmentParticipant.status IN :status " +
-            "AND (:innovationAreaId IS NULL " +
-            "   OR EXISTS(" +
-            "       SELECT profile.id " +
-            "       FROM Profile profile " +
-            "       JOIN profile.innovationAreas innovationAreas " +
-            "       WHERE profile.id = assessmentParticipant.user.profileId " +
-            "       AND innovationAreas.category.id = :innovationAreaId " +
-            "   ) " +
-            "   OR assessmentParticipant.invite.innovationArea.id = :innovationAreaId) " +
             "AND (:isCompliant IS NULL " +
             "   OR (:isCompliant = true AND (" +
             "       EXISTS(" +
@@ -86,7 +79,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
             "   )" +
-            "))";
+            ")) ";
 
     String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
@@ -98,15 +91,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   FROM Assessment a " +
             "   WHERE a.participant.user = assessmentParticipant.user " +
             "   AND a.target.id = :appId) " +
-            "   AND (:innovationAreaId is null " +
-            "       OR EXISTS (" +
-            "           SELECT 'area' " +
-            "           FROM Profile p " +
-            "           JOIN p.innovationAreas ia " +
-            "           WHERE p.id = assessmentParticipant.user.profileId " +
-            "           AND ia.category.id = :innovationAreaId" +
-            "       )" +
-            ")";
+            "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
@@ -131,28 +116,31 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
-    @Query(BY_COMP_AND_STATUS)
-    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(long competitionId,
-                                                                           List<ParticipantStatus> status,
-                                                                           Pageable pageable);
+    @Query(BY_COMP_AND_STATUS_AND_NAME)
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(long competitionId,
+                                                                                              List<ParticipantStatus> status,
+                                                                                              String assessorName,
+                                                                                              Pageable pageable);
 
-    @Query(BY_COMP_AND_STATUS)
-    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(long competitionId,
-                                                                           List<ParticipantStatus> status);
+    @Query(BY_COMP_AND_STATUS_AND_NAME)
+    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(long competitionId,
+                                                                                              List<ParticipantStatus> status,
+                                                                                              String assessorName);
 
-    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
-                                                                                                        Long innovationAreaId,
-                                                                                                        List<ParticipantStatus> status,
-                                                                                                        Boolean isCompliant,
-                                                                                                        ZonedDateTime startOfTaxYear,
-                                                                                                        Pageable pageable);
-    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    List<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(long competitionId,
-                                                                                                        Long innovationAreaId,
-                                                                                                        List<ParticipantStatus> status,
-                                                                                                        Boolean isCompliant,
-                                                                                                        ZonedDateTime startOfTaxYear);
+    @Query(BY_STATUS_AND_COMPLIANT_AND_NAME)
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(long competitionId,
+                                                                                                          List<ParticipantStatus> status,
+                                                                                                          Boolean isCompliant,
+                                                                                                          String assessorName,
+                                                                                                          ZonedDateTime startOfTaxYear,
+                                                                                                          Pageable pageable);
+
+    @Query(BY_STATUS_AND_COMPLIANT_AND_NAME)
+    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(long competitionId,
+                                                                                                          List<ParticipantStatus> status,
+                                                                                                          Boolean isCompliant,
+                                                                                                          String assessorName,
+                                                                                                          ZonedDateTime startOfTaxYear);
 
     List<AssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
@@ -169,7 +157,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
                                                                    @Param("role") CompetitionParticipantRole role,
                                                                    @Param("status") ParticipantStatus status,
                                                                    @Param("appId") long applicationId,
-                                                                   @Param("innovationAreaId") Long filterInnovationArea,
+                                                                   @Param("assessorNameFilter") String assessorNameFilter,
                                                                    Pageable pageable);
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
