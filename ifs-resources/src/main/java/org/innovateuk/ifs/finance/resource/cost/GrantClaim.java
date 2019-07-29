@@ -15,12 +15,17 @@ public class GrantClaim extends AbstractFinanceRowItem {
 
     private String name;
 
-    public GrantClaim() {
+    private GrantClaim() {
+        super(null);
+    }
+
+    public GrantClaim(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
-    public GrantClaim(Long id, Integer grantClaimPercentage) {
-        this();
+    public GrantClaim(Long id, Integer grantClaimPercentage, Long targetId) {
+        this(targetId);
         this.id = id;
         this.grantClaimPercentage = grantClaimPercentage;
     }

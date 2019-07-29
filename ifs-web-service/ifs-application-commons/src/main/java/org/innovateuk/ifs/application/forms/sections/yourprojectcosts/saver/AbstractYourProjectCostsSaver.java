@@ -12,7 +12,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
-import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +75,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
-//        Change to if procurement
-//        futures.add(saveOverheads(form.getOverhead(), finance));
+        futures.add(saveOverheads(form.getOverhead(), finance));
         futures.add(saveRows(form.getProcurementOverheadRows(), finance));
-
         futures.add(saveLabourCosts(form.getLabour(), finance));
         futures.add(saveRows(form.getMaterialRows(), finance));
         futures.add(saveRows(form.getCapitalUsageRows(), finance));
@@ -134,11 +132,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             rows.forEach((id, row) -> {
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     if (!row.isBlank()) {
-                        FinanceRowItem result = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess();
+                        FinanceRowItem result = getFinanceRowService().create(row.toCost(finance.getId())).getSuccess();
                         messages.addAll(getFinanceRowService().update(result)); //TODO these two rest calls really could be a single one if the response contained the validation messages.
                     }
                 } else {
-                    messages.addAll(getFinanceRowService().update(row.toCost()).getSuccess());
+                    messages.addAll(getFinanceRowService().update(row.toCost(finance.getId())).getSuccess());
                 }
             });
 
@@ -235,5 +233,5 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);
 
-    protected abstract FinanceRowRestService getFinanceRowService();
+    protected abstract BaseFinanceRowRestService getFinanceRowService();
 }

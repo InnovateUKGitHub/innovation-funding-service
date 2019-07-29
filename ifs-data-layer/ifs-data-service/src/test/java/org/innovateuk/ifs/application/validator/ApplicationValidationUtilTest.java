@@ -31,7 +31,7 @@ public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
 
     @Test
     public void validateProjectCostItem(){
-        Materials material = new Materials();
+        Materials material = new Materials(1L);
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("");
         material.setQuantity(5);

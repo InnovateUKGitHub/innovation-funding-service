@@ -15,12 +15,16 @@ public class AcademicCost extends AbstractFinanceRowItem {
 
     private FinanceRowType costType;
 
-    public AcademicCost() {
-    	// no-arg constructor
+    private AcademicCost() {
+        super(null);
     }
 
-    public AcademicCost(Long id, String name, BigDecimal cost, String item, FinanceRowType costType) {
-        this();
+    public AcademicCost(Long targetId) {
+        super(targetId);
+    }
+
+    public AcademicCost(Long id, String name, BigDecimal cost, String item, FinanceRowType costType, Long targetId) {
+        super(targetId);
         this.id = id;
         this.name = name;
         this.cost = cost;

@@ -22,7 +22,7 @@ public class SubContractingCostTest {
         country = "England";
         name = "Factory";
         role = "Production";
-        subContractingCost = new SubContractingCost(id, cost, country, name, role);
+        subContractingCost = new SubContractingCost(id, cost, country, name, role, 1L);
     }
 
     @Test

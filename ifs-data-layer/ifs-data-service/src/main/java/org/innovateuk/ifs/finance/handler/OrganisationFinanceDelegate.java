@@ -13,15 +13,15 @@ public class OrganisationFinanceDelegate {
     private CompetitionService competitionService;
 
     @Autowired
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandler;
 
     @Autowired
-    private OrganisationJESFinance organisationJESFinance;
+    private JesFinanceHandler organisationJESFinance;
 
     @Autowired
     private FinanceUtil financeUtil;
 
-    public OrganisationFinanceHandler getOrganisationFinanceHandler(Long competitionId, Long organisationType) {
+    public OrganisationTypeFinanceHandler getOrganisationFinanceHandler(Long competitionId, Long organisationType) {
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
         if (financeUtil.isUsingJesFinances(competition, organisationType)) {
             return organisationJESFinance;

@@ -78,7 +78,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
-            costItem = new AcademicCost(cost.getId(), "", ZERO, "", FinanceRowType.LABOUR);
+            costItem = new AcademicCost(cost.getId(), "", ZERO, "", FinanceRowType.LABOUR, 1L);
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();

@@ -60,7 +60,7 @@ public class OtherFundingRowForm extends AbstractCostRowForm<OtherFunding> {
     }
 
     @Override
-    public OtherFunding toCost() {
-        return new OtherFunding(getCostId(), null, getSource(), getDate(), getFundingAmount());
+    public OtherFunding toCost(Long financeId) {
+        return new OtherFunding(getCostId(), null, getSource(), getDate(), getFundingAmount(), financeId);
     }
 }

@@ -245,7 +245,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     private void recalculateTotals(YourProjectCostsForm form) {
         form.getLabour().getRows().forEach((id, row) -> {
-            LabourCost cost = row.toCost();
+            LabourCost cost = row.toCost(null);
             row.setTotal(cost.getTotal(form.getLabour().getWorkingDaysPerYear()));
             row.setRate(cost.getRate(form.getLabour().getWorkingDaysPerYear()));
         });
@@ -258,7 +258,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     private void recalculateTotal(Map<String, ? extends AbstractCostRowForm> rows) {
         rows.forEach((id, row) -> {
-            FinanceRowItem cost = row.toCost();
+            FinanceRowItem cost = row.toCost(null);
             row.setTotal(cost.getTotal());
         });
     }

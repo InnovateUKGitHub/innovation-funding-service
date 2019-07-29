@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.finance.validator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -23,7 +20,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
-import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 
 /**
@@ -33,7 +29,6 @@ import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCateg
 public class OtherFundingValidator implements Validator {
 
     private ApplicationFinanceRowRepository financeRowRepository;
-    private QuestionService questionService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -41,9 +36,8 @@ public class OtherFundingValidator implements Validator {
     }
 
     @Autowired
-    public OtherFundingValidator(ApplicationFinanceRowRepository financeRowRepository, QuestionService questionService) {
+    public OtherFundingValidator(ApplicationFinanceRowRepository financeRowRepository) {
         this.financeRowRepository = financeRowRepository;
-        this.questionService = questionService;
     }
 
     @Override
@@ -99,9 +93,7 @@ public class OtherFundingValidator implements Validator {
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {
         FinanceRow cost = financeRowRepository.findById(otherFunding.getId()).get();
         ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
-        Long competitionId = applicationFinance.getApplication().getCompetition().getId();
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());
-        List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccess().getId());
+        List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndType(applicationFinance.getId(), FinanceRowType.OTHER_FUNDING);
         return !otherFundingRows.isEmpty() && "Yes".equals(otherFundingRows.get(0).getItem());
     }
 

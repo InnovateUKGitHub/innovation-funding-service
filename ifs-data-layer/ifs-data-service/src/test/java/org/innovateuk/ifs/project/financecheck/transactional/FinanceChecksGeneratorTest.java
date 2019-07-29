@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -249,7 +250,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withDescription("Desc 1", "Desc 2").
                 withName("Name 1", "Name 2").
                 withQuantity(222, 333).
-                withQuestion(financeQuestions.get(0), financeQuestions.get(1)).
+                withType(FinanceRowType.FINANCE, FinanceRowType.FINANCE).
                 withFinanceRowMetadata(
                         newFinanceRowMetaValue().
                                 withFinanceRowMetaField(financeRowMetaField1, financeRowMetaField2).
@@ -272,7 +273,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withDescription("Desc 1", "Desc 2").
                 withName("Name 1", "Name 2").
                 withQuantity(222, 333).
-                withQuestion(financeQuestions.get(0), financeQuestions.get(1)).
+                withType(FinanceRowType.FINANCE, FinanceRowType.FINANCE).
                 withFinanceRowMetadata(
                         newFinanceRowMetaValue().
                                 withFinanceRowMetaField(financeRowMetaField1, financeRowMetaField2).
@@ -305,7 +306,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
             assertEquals(expected.getItem(), actual.getItem());
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getQuantity(), actual.getQuantity());
-            assertEquals(expected.getQuestion(), actual.getQuestion());
+            assertEquals(expected.getType(), actual.getType());
         });
     }
 

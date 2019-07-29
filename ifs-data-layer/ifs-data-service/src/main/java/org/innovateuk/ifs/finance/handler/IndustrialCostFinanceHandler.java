@@ -3,13 +3,13 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +23,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * an organisation's perspective and calculates the totals
  */
 @Component
-public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
-
-    private ProjectFinanceRepository projectFinanceRepository;
+public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
+    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
     private LabourCostHandler labourCostHandler;
 
@@ -48,7 +46,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
     private OtherFundingHandler otherFundingHandler;
 
-    public OrganisationFinanceDefaultHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+    public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                                              ProjectFinanceRowRepository projectFinanceRowRepository,
                                              FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
                                              QuestionService questionService,
@@ -61,8 +59,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
                                              TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
                                              OtherFundingHandler otherFundingHandler,
                                              ProcurementsOverheadsHandler procurementsOverheadsHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
-        this.projectFinanceRepository = projectFinanceRepository;
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
         this.materialsHandler = materialsHandler;
@@ -88,9 +85,9 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
     }
 
     @Override
-    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
-        for (FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : competition.getFinanceRowTypes()) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
         }
@@ -207,10 +204,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
         FinanceRowType costType = OTHER_COSTS;
         if (availableRow != null) {
-            List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
-            if (!formInputs.isEmpty()) {
-                costType = FinanceRowType.fromType(formInputs.get(0).getType());
-            }
+            costType = availableRow.getType();
         }
         return costType;
     }
@@ -281,14 +275,14 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
                                                          ApplicationFinance applicationFinance) {
         return optionalCost.map(cost -> {
             ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(),
-                    cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+                    cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getType());
             applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
             return applicationFinanceRow;
         });
     }
 
     private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost) {
-        return getCostHandler(financeRowType).toCostItem(applicationCost);
+        return getCostHandler(financeRowType).toResource(applicationCost);
     }
 
     private List<ProjectFinanceRow> getProjectCosts(Long projectFinanceId) {
@@ -298,13 +292,5 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
     private List<ApplicationFinanceRow> getApplicationCosts(Long applicationId, Long organisationId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         return applicationFinanceRowRepository.findByTargetId(applicationFinance.getId());
-    }
-
-    public ApplicationFinanceRow updateCost(ApplicationFinanceRow newCostItem) {
-        return applicationFinanceRowRepository.save(newCostItem);
-    }
-
-    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
-        return applicationFinanceRowRepository.save(newCostItem);
     }
 }

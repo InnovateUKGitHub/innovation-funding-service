@@ -33,7 +33,7 @@ public class LabourCostTest {
         rate = new BigDecimal(1000);
         description = "description";
         total = BigDecimal.ZERO;
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
         rate = labourCost.getRate(labourDays);
         total = labourCost.getTotal(labourDays);
     }
@@ -42,7 +42,7 @@ public class LabourCostTest {
     public void getRatePerDayShouldNotFailOnInfiniteDivisions(){
         grossEmployeeCost = new BigDecimal(10);
         labourDays = 3;
-        LabourCost labour = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
+        LabourCost labour = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
         BigDecimal result = grossEmployeeCost.divide(new BigDecimal(labourDays), 5, RoundingMode.HALF_EVEN);
 
         Assert.assertEquals(result, labour.getRate(labourDays));
@@ -74,7 +74,7 @@ public class LabourCostTest {
 
     @Test
     public void getTotalShouldReturnZeroWhenRateIsNull(){
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
 
         Assert.assertNull(labourCost.getRate());
         Assert.assertEquals(BigDecimal.ZERO, labourCost.getTotal(0));

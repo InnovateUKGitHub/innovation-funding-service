@@ -125,8 +125,8 @@ public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
     }
 
     @Override
-    public CapitalUsage toCost() {
-        return new CapitalUsage(getCostId(), deprecation, item, Boolean.TRUE.equals(newItem) ? "New" : "Existing", netValue, residualValue, utilisation);
+    public CapitalUsage toCost(Long financeId) {
+        return new CapitalUsage(getCostId(), deprecation, item, Boolean.TRUE.equals(newItem) ? "New" : "Existing", netValue, residualValue, utilisation, financeId);
     }
 
 }

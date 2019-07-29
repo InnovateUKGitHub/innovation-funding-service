@@ -48,6 +48,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("resubmission").description("indicates if the competition has the ability to do a resubmission").optional(),
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams").optional(),
             fieldWithPath("streamName").description("the name of the stream"),
+            fieldWithPath("financeRowTypes").description("The finance types supported by this competition").optional(),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)").optional(),
             fieldWithPath("leadApplicantTypes").description("permitted organisation types of lead applicant (business, research...)").optional(),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup").optional(),

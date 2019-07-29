@@ -49,14 +49,15 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setWorkPostcode(v), value);
     }
 
-    public S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
+    @SafeVarargs
+    public final S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }
 
     public S withGrantClaimPercentage(Integer percentage) {
         return with(finance -> {
             GrantClaimCategory costCategory = new GrantClaimCategory();
-            costCategory.addCost(new GrantClaim(null, percentage));
+            costCategory.addCost(new GrantClaim(null, percentage, finance.getId()));
             costCategory.calculateTotal();
             finance.getFinanceOrganisationDetails().put(FINANCE, costCategory);
         });

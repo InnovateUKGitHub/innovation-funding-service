@@ -11,7 +11,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
+import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
@@ -21,7 +21,10 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.*;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +32,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -47,9 +52,6 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
-
-    @Autowired
-    private MinRowCountValidator minRowCountValidator;
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
@@ -108,9 +110,9 @@ public class ApplicationValidationUtil {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
 
-        } else if(question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
+        } else if (question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
             validationMessages.addAll(isApplicationTeamValid(application, question));
-        } else if(question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
+        } else if (question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
             validationMessages.addAll(isResearchCategoryValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
@@ -173,24 +175,15 @@ public class ApplicationValidationUtil {
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
-            FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
-            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
+            FinanceRowType type = FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
+            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
             LOG.trace("input type not a cost type", e);
         }
     }
 
-    private ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<FinanceRowItem> costItems, Question question) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
-        invokeEmptyRowValidator(costItems, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return new ValidationMessages(question.getId(), bindingResult);
-        }
-        return null;
-    }
-
-    public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems, Question question) {
+    public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems) {
         if (costItems.isEmpty()) {
             return Collections.emptyList();
         }
@@ -200,7 +193,7 @@ public class ApplicationValidationUtil {
                 .filter(this::nonEmpty)
                 .collect(Collectors.toList());
 
-        ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(costItems);
         if (emptyRowMessages != null) {
             results.add(emptyRowMessages);
         }
@@ -224,7 +217,7 @@ public class ApplicationValidationUtil {
         return buildValidationMessages(costItem, bindingResult);
     }
 
-    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult){
+    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");
@@ -247,10 +240,34 @@ public class ApplicationValidationUtil {
         financeRowHandler.validate(costItem, bindingResult);
     }
 
-    private void invokeEmptyRowValidator(List<FinanceRowItem> costItems, BeanPropertyBindingResult bindingResult) {
-        ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
+    private ValidationMessages invokeEmptyRowValidator(List<FinanceRowItem> costItems) {
+        ValidationMessages validationMessages = new ValidationMessages();
+        int rowCount = 0;
+        if (costItems.size() > 1) {
+            for (final FinanceRowItem row : costItems) {
+                boolean exclude = row.excludeInRowCount();
+                if (!exclude) {
+                    rowCount++;
+                }
+            }
+        }
+
+        if (rowCount < costItems.get(0).getMinRows()) {
+            switch (costItems.get(0).getCostType()) {
+                case OTHER_FUNDING:
+                    if ("Yes".equals(((OtherFunding) costItems.get(0)).getOtherPublicFunding())) {
+                        if (costItems.get(0).getMinRows() == 1) {
+                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
+                        } else {
+                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.multiple", singletonList(costItems.get(0).getMinRows())));
+                        }
+                    }
+                    break;
+                default:
+                    validationMessages.addError(globalError("validation.finance.min.row", singletonList(costItems.get(0).getMinRows())));
+                    break;
+            }
+        }
+        return validationMessages;
     }
-
-
-
 }

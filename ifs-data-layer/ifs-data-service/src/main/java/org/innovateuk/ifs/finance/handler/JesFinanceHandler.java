@@ -2,14 +2,12 @@ package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
 import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
@@ -25,8 +23,8 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
 
 @Component
-public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(OrganisationJESFinance.class);
+public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
+    private static final Log LOG = LogFactory.getLog(JesFinanceHandler.class);
 
     private GrantClaimHandler grantClaimHandler;
 
@@ -34,14 +32,15 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
 
     private JESCostHandler jesCostHandler;
 
-    public OrganisationJESFinance(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                  ProjectFinanceRowRepository projectFinanceRowRepository,
-                                  FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                  QuestionService questionService,
-                                  ApplicationFinanceRepository applicationFinanceRepository,
-                                  GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
-                                  JESCostHandler jesCostHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
+    public JesFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                             ProjectFinanceRowRepository projectFinanceRowRepository,
+                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                             QuestionService questionService,
+                             ApplicationFinanceRepository applicationFinanceRepository,
+                             ProjectFinanceRepository projectFinanceRepository,
+                             GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
+                             JESCostHandler jesCostHandler) {
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
         this.jesCostHandler = jesCostHandler;
@@ -53,7 +52,7 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
     }
 
     @Override
-    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
 
         for (FinanceRowType costType : FinanceRowType.values()) {
