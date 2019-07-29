@@ -43,7 +43,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
-import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}")
@@ -175,13 +174,9 @@ public class YourProjectCostsController extends AsyncAdaptor {
         MultipartFile file = form.getOverhead().getFile();
         RestResult<FileEntryResource> fileEntryResult = overheadFileRestService.updateOverheadCalculationFile(form.getOverhead().getCostId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
         if (fileEntryResult.isFailure()) {
-            fileEntryResult.getErrors().forEach(error -> {
-                if (UNSUPPORTED_MEDIA_TYPE.name().equals(error.getErrorKey())) {
-                    bindingResult.rejectValue("overhead.file", "validation.finance.overhead.file.type");
-                } else {
-                    bindingResult.rejectValue("overhead.file", error.getErrorKey(), error.getArguments().toArray(), "");
-                }
-            });
+            fileEntryResult.getErrors().forEach(error ->
+                bindingResult.rejectValue("overhead.file", error.getErrorKey(), error.getArguments().toArray(), "")
+            );
         } else {
             form.getOverhead().setFilename(fileEntryResult.getSuccess().getName());
         }

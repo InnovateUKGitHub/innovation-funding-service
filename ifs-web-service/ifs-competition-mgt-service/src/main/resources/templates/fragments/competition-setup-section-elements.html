@@ -411,7 +411,7 @@
                             Accepted file types (.ods, odt)
                             </span>
                         </label>
-                        <div class="upload-section">
+                        <div class="upload-section" id="templateDocumentFile">
                             <th:block th:unless="${model.templateFileUploaded}">
                                 <th:block th:if="${#fields.hasErrors('templateDocumentFile')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('templateDocumentFile')}" th:text="${err}" />

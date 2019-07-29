@@ -321,7 +321,7 @@ the invited user signs in
     [Arguments]  ${email}  ${name}  ${famName}
     the user reads his email and clicks the link    ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element                 jQuery = h1:contains("Account verified")
-    the user clicks the button/link                 jQuery = .govuk-button:contains("Sign in")
+    the user clicks the button/link                 jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
     Logging in and Error Checking                   ${email}  ${correct_password}
 
 The user resends and clicks the button
