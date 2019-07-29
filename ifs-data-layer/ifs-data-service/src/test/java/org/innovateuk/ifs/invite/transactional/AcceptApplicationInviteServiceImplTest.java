@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -71,7 +72,7 @@ public class AcceptApplicationInviteServiceImplTest {
     }
 
     @Test
-    public void acceptInvite_replaceInviteOrganisation() {
+    public void acceptInvite_replaceWithExistingCollaboratorInviteOrganisation() {
         InviteOrganisation inviteOrganisationToBeReplaced = newInviteOrganisation().build();
 
         ApplicationInvite invite = createAndExpectInvite(inviteOrganisationToBeReplaced);
@@ -89,6 +90,10 @@ public class AcceptApplicationInviteServiceImplTest {
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
+
+        InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, applicationInviteRepositoryMock);
+        inOrder.verify(inviteOrganisationRepositoryMock).saveAndFlush(inviteOrganisationToBeReplaced);
+        inOrder.verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation())
