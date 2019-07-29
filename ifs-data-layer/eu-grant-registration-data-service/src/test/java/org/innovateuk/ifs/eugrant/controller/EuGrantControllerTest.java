@@ -74,7 +74,7 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
     public void getByNotified() throws Exception {
 
         EuGrantPageResource euGrantPageResource = new EuGrantPageResource();
-        Pageable pageable = new PageRequest(PAGE_INDEX, PAGE_SIZE, new Sort("contact.id"));
+        Pageable pageable = PageRequest.of(PAGE_INDEX, PAGE_SIZE, new Sort("contact.id"));
 
 
         when(euGrantService.getEuGrantsByContactNotified(NOTIFIED, pageable))

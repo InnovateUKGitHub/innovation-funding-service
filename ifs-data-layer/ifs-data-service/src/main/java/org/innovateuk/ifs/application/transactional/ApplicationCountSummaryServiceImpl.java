@@ -52,7 +52,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
                                                                                                           Optional<String> filter) {
 
         String filterStr = filter.map(String::trim).orElse("");
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
         Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES, filterStr, pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
@@ -68,7 +68,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
                                                                                         String filter,
                                                                                         String sortField) {
         Sort sort = getApplicationSummarySortField(sortField);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         Page<ApplicationStatistics> applicationStatistics =
         applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATES, filter, innovationArea.orElse(null), pageable);

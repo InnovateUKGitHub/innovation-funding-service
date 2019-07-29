@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Optional;
-
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryPageResourceBuilder.newAssessorCountSummaryPageResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -31,15 +29,16 @@ public class AssessorCountSummaryControllerTest extends BaseControllerMockMVCTes
         final long competitionId = 1L;
         final int pageNumber = 0;
         final int pageSize = 20;
+        final String assessorFilter = "";
 
         AssessorCountSummaryPageResource pageResource = newAssessorCountSummaryPageResource().build();
 
-        when(assessorCountSummaryServiceMock.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), pageNumber, pageSize)).thenReturn(serviceSuccess(pageResource));
+        when(assessorCountSummaryServiceMock.getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize)).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(get("/assessor-count-summary/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
-        verify(assessorCountSummaryServiceMock, only()).getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), pageNumber, pageSize);
+        verify(assessorCountSummaryServiceMock, only()).getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize);
     }
 }

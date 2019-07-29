@@ -4,6 +4,9 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -20,7 +23,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
@@ -117,5 +122,17 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withInAssessmentReviewPanel(Boolean... inPanels) {
         return withArray((inPanel, application) -> application.setInAssessmentReviewPanel(inPanel), inPanels);
+    }
+
+    public ApplicationBuilder withCompetitionReferralSource(CompetitionReferralSource... competitionReferralSources) {
+        return withArray((competitionReferralSource, application) -> application.setCompetitionReferralSource(competitionReferralSource), competitionReferralSources);
+    }
+
+    public ApplicationBuilder withCompetitionPrimaryFocus(CompanyPrimaryFocus... companyPrimaryFocuses) {
+        return withArray((companyPrimaryFocus, application) -> application.setCompanyPrimaryFocus(companyPrimaryFocus), companyPrimaryFocuses);
+    }
+
+    public ApplicationBuilder withCompanyAge(CompanyAge... companyAges) {
+        return withArray((companyAge, application) -> application.setCompanyAge(companyAge), companyAges);
     }
 }

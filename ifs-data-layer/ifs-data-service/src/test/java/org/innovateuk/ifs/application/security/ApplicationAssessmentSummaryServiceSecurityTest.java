@@ -14,7 +14,7 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends
     @Test
     public void testGetAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAvailableAssessors(1L, 0, 20, 0L), COMP_ADMIN, PROJECT_FINANCE
+                () -> classUnderTest.getAvailableAssessors(1L, 0, 20, ""), COMP_ADMIN, PROJECT_FINANCE
         );
     }
 

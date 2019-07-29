@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
 public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<InterviewAssignmentServiceImpl> {
 
     private static final long COMPETITION_ID = 1L;
-    private static final Pageable PAGE_REQUEST = new PageRequest(0, 20);
+    private static final Pageable PAGE_REQUEST = PageRequest.of(0, 20);
     private static final int TOTAL_APPLICATIONS = 2;
     private static final Organisation LEAD_ORGANISATION = newOrganisation().withName("lead org").build();
     private static final List<Application> EXPECTED_AVAILABLE_APPLICATIONS =

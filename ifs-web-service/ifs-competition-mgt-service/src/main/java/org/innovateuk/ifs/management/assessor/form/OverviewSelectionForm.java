@@ -15,9 +15,9 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
     private List<Long> selectedInviteIds;
-    private Long selectedInnovationArea;
     private ParticipantStatusResource selectedStatus;
     private Boolean compliant;
+    private String assessorName;
 
     public OverviewSelectionForm() {
         this.selectedInviteIds = new ArrayList<>();
@@ -39,14 +39,6 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
         this.selectedInviteIds = selectedInviteIds;
     }
 
-    public Long getSelectedInnovationArea() {
-        return selectedInnovationArea;
-    }
-
-    public void setSelectedInnovationArea(Long selectedInnovationArea) {
-        this.selectedInnovationArea = selectedInnovationArea;
-    }
-
     public ParticipantStatusResource getSelectedStatus() {
         return selectedStatus;
     }
@@ -63,8 +55,16 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
         this.compliant = compliant;
     }
 
+    public String getAssessorName() {
+        return assessorName;
+    }
+
+    public void setAssessorName(String assessorName) {
+        this.assessorName = assessorName;
+    }
+
     public boolean anyFilterIsActive() {
-        return selectedInnovationArea != null || selectedStatus != null || compliant != null;
+        return assessorName != null || selectedStatus != null || compliant != null;
     }
 
     public boolean anySelectionIsMade() {
@@ -82,9 +82,9 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
                 .append(selectedInviteIds, that.selectedInviteIds)
-                .append(selectedInnovationArea, that.selectedInnovationArea)
                 .append(selectedStatus, that.selectedStatus)
                 .append(compliant, that.compliant)
+                .append(assessorName, that.assessorName)
                 .isEquals();
     }
 
@@ -93,9 +93,9 @@ public class OverviewSelectionForm extends BaseBindingResultTarget {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
                 .append(selectedInviteIds)
-                .append(selectedInnovationArea)
                 .append(selectedStatus)
                 .append(compliant)
+                .append(assessorName)
                 .toHashCode();
     }
 }
