@@ -127,6 +127,7 @@ Applicant chooses Calculate overheads option
     Then the user fills in the project costs                Calculate  185,997
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link = Your project costs
+    And the user expands the section                        Overhead costs
     Then the user should see the element                    link = ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
     And the user clicks the button/link                     css = button[name="removeOverheadFile"]
@@ -143,9 +144,9 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
     ${pagination} =   Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css = table[id=material-costs-table] tr:nth-of-type(2)
     run keyword if    ${pagination} == 'PASS'  click element  jQuery = table[id=material-costs-table] tr:nth-of-type(2) .button-clear:contains("Remove")
-    the user clicks the button/link       css = #collapsible-2 > div > div.govuk-form-group.table-overflow > p > button
+    the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
-    the user clicks the button/link       css = #collapsible-2 > div > div.govuk-form-group.table-overflow > p > button
+    the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
 

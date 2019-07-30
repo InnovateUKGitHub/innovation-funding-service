@@ -27,22 +27,22 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
+    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, String assessorNameFilter);
 
-    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea);
+    RestResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter);
 
     RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                            Optional<Long> innovationArea,
                                                             List<ParticipantStatusResource> participantStatus,
-                                                            Optional<Boolean> compliant);
+                                                            Optional<Boolean> compliant,
+                                                            Optional<String> assessorName);
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
-                                                                         Optional<Long> innovationArea,
                                                                          List<ParticipantStatusResource> participantStatus,
-                                                                         Optional<Boolean> compliant);
+                                                                         Optional<Boolean> compliant,
+                                                                         Optional<String> assessorName);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 

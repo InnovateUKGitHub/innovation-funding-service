@@ -25,7 +25,7 @@ public class InviteOrganisation {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL)
     private List<ApplicationInvite> invites = new ArrayList<>();
 
     public InviteOrganisation() {

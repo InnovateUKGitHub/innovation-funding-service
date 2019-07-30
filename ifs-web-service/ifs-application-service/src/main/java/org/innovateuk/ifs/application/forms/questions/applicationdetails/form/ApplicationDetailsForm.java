@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
@@ -18,6 +19,9 @@ import static java.lang.Boolean.TRUE;
 @FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 @FieldRequiredIf(required = "innovationAreaName", argument = "canSelectInnovationArea", predicate = true, message = "{validation.application.innovationarea.category.required}")
+@FieldRequiredIf(required = "competitionReferralSource", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.competitionreferralsource.required}")
+@FieldRequiredIf(required = "companyAge", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyage.required}")
+@FieldRequiredIf(required = "companyPrimaryFocus", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyprimaryfocus.required}")
 public class ApplicationDetailsForm {
 
     @NotBlank(message = "{validation.project.name.must.not.be.empty}")
@@ -44,6 +48,14 @@ public class ApplicationDetailsForm {
 
     private String innovationAreaName;
 
+    private boolean isProcurementCompetition;
+
+    private String competitionReferralSource;
+
+    private String companyAge;
+
+    private String companyPrimaryFocus;
+
     public void populateForm(ApplicationDetailsViewModel viewModel) {
         this.name = viewModel.getApplication().getName();
         this.durationInMonths = viewModel.getApplication().getDurationInMonths();
@@ -54,6 +66,13 @@ public class ApplicationDetailsForm {
         this.canSelectInnovationArea = viewModel.getFormInputViewModel().isCanSelectInnovationArea() == TRUE;
         this.innovationArea = viewModel.getFormInputViewModel().getInnovationAreaText();
         this.innovationAreaName = viewModel.getFormInputViewModel().getSelectedInnovationAreaName();
+        this.isProcurementCompetition = viewModel.getFormInputViewModel().getIsProcurementCompetition() == TRUE;
+        if (viewModel.getFormInputViewModel().getIsProcurementCompetition()){
+            ApplicationResource application = viewModel.getApplication();
+            this.competitionReferralSource = (null != application.getCompetitionReferralSource()) ?  application.getCompetitionReferralSource().toString() : null;
+            this.companyAge = (null != application.getCompanyAge()) ? application.getCompanyAge().toString() : null;
+            this.companyPrimaryFocus = (null != application.getCompanyPrimaryFocus()) ? application.getCompanyPrimaryFocus().toString() : null;
+        }
     }
 
     public String getName() {
@@ -126,5 +145,37 @@ public class ApplicationDetailsForm {
 
     public void setInnovationAreaName(String innovationAreaName) {
         this.innovationAreaName = innovationAreaName;
+    }
+
+    public boolean getIsProcurementCompetition() {
+        return isProcurementCompetition;
+    }
+
+    public void setIsProcurementCompetition(boolean procurementCompetition) {
+        isProcurementCompetition = procurementCompetition;
+    }
+
+    public String getCompetitionReferralSource() {
+        return competitionReferralSource;
+    }
+
+    public void setCompetitionReferralSource(String competitionReferralSource) {
+        this.competitionReferralSource = competitionReferralSource;
+    }
+
+    public String getCompanyAge() {
+        return companyAge;
+    }
+
+    public void setCompanyAge(String companyAge) {
+        this.companyAge = companyAge;
+    }
+
+    public String getCompanyPrimaryFocus() {
+        return companyPrimaryFocus;
+    }
+
+    public void setCompanyPrimaryFocus(String companyPrimaryFocus) {
+        this.companyPrimaryFocus = companyPrimaryFocus;
     }
 }

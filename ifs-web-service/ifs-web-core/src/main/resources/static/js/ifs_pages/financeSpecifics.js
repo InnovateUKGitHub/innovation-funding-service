@@ -52,7 +52,7 @@ IFS.core.financeSpecifics = (function () {
       }
     },
     setOverheadSectionElementValue: function () {
-      var totalElements = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('[data-mirror]')
+      var totalElements = jQuery(s.adminSupportCostsSelect).closest('.govuk-accordion').find('[data-mirror]')
       totalElements.each(function () {
         var totalEl = jQuery(this)
         if (totalEl.is('[data-calculation-format="percentage"]')) {

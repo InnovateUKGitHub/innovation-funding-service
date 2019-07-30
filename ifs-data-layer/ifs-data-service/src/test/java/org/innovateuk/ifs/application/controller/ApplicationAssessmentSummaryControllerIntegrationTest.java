@@ -38,7 +38,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     public void getAvailableAssessors() {
         loginCompAdmin();
         ApplicationAssessorPageResource applicationAssessorResources = controller
-                .getAvailableAssessors(1L, 0, 20, null)
+                .getAvailableAssessors(1L, 0, 20, "Name")
                 .getSuccess();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());

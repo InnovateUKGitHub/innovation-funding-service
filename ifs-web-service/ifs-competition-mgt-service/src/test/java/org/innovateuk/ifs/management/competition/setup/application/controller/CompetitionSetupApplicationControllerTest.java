@@ -386,7 +386,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
-                .param("question.allowedFileTypes", "PDF")
+                .param("question.allowedAppendixResponseFileTypes", "PDF")
                 .param("question.appendixGuidance", "Only PDFs allowed")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
@@ -443,7 +443,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+ CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
@@ -626,7 +626,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
-                .param("question.allowedFileTypes", "SPREADSHEET")
+                .param("question.allowedAppendixResponseFileTypes", "SPREADSHEET")
                 .param("question.appendixGuidance", "Spreadsheet only")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")

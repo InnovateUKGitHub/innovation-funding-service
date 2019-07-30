@@ -18,19 +18,6 @@
     overflow: hidden;
     margin: 20px 0;
   }
-
-  .collapsible {
-    table {
-      th,
-      td {
-        @include govuk-font(16);
-      }
-
-      th {
-        font-weight: 700;
-      }
-    }
-  }
 }
 
 .no-js {
@@ -64,65 +51,6 @@
       display: none;
       min-height: 0;
       resize: none;
-    }
-  }
-}
-
-// This is specifically for the eligibility toggle which might get replaced in
-// the future to bring inline with a better GDS pattern
-.collapsible-eligibility {
-
-  .form-group {
-
-    .textarea-footer {
-      display: block;
-      min-height: auto;
-      resize: inherit;
-    }
-  }
-
-  h2 {
-    border: 0;
-
-    button {
-      &[aria-expanded] {
-        @include govuk-font(19);
-        background-color: govuk-colour("grey-3");
-        border: 0;
-        border-radius: 0;
-        box-shadow: 0 2px 0 #b5babe;
-        box-sizing: border-box;
-        color: govuk-colour("black");
-        cursor: pointer;
-        display: inline-block;
-        font-weight: 400;
-        line-height: 1.25;
-        padding: .526315em .789473em .263157em;
-        position: relative;
-        text-decoration: none;
-        vertical-align: top;
-        width: auto;
-
-        &::after {
-          display: none;
-        }
-      }
-    }
-  }
-
-  form {
-    margin-top: 1em;
-  }
-}
-
-.collapsible-finances-summary{
-  section{
-    &:last-child{
-      .collapsible{
-        >div{
-          padding: 0;
-        }
-      }
     }
   }
 }
