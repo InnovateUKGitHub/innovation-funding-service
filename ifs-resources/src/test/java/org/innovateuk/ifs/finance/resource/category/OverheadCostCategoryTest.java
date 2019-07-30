@@ -11,6 +11,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
 import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.DEFAULT_PERCENTAGE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -22,7 +23,10 @@ public class OverheadCostCategoryTest {
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem overHead = newOverhead().withRate(20).build();
+        FinanceRowItem overHead = newOverhead()
+                .withRate(20)
+                .withRateType(DEFAULT_PERCENTAGE)
+                .build();
         costs.add(overHead);
 
         overheadCostCategory = newOverheadCostCategory()
@@ -38,7 +42,6 @@ public class OverheadCostCategoryTest {
 
     @Test
     public void getTotal() {
-
         BigDecimal labourCostTotal = new BigDecimal(1000);
         overheadCostCategory.setLabourCostTotal(labourCostTotal);
         overheadCostCategory.calculateTotal();
