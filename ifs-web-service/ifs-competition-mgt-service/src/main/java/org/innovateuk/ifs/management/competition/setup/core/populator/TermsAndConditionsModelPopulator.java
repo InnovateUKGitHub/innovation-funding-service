@@ -37,9 +37,7 @@ public class TermsAndConditionsModelPopulator implements CompetitionSetupSection
         GrantTermsAndConditionsResource termsAndConditions = termsAndConditionsRestService.getById(
                 competitionResource.getTermsAndConditions().getId()).getSuccess();
 
-        // TODO failing due to mapstruct populating the field?
-//        boolean termsAndConditionsDocUploaded = competitionResource.getCompetitionTerms() != null;
-        boolean termsAndConditionsDocUploaded = false;
+        boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
                 termsAndConditions, termsAndConditionsDocUploaded);

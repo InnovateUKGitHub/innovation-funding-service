@@ -770,6 +770,11 @@ public class CompetitionResource {
         this.competitionTerms = competitionTerms;
     }
 
+    @JsonIgnore
+    public boolean isCompetitionTermsUploaded() {
+        return competitionTerms != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
