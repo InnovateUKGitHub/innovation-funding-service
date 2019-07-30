@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 
 import java.util.List;
@@ -72,10 +71,6 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     protected abstract Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition);
 
     protected abstract Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories);
-
-    private Question getQuestionByCostType(long competitionId, FinanceRowType costType) {
-        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccess();
-    }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
