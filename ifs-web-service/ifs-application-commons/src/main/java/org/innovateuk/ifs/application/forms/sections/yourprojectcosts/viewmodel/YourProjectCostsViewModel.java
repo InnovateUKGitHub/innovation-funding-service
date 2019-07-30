@@ -44,35 +44,34 @@ public class YourProjectCostsViewModel {
                                      boolean procurementCompetition,
                                      Set<FinanceRowType> financeRowTypes) {
         this.internal = false;
-
         this.organisationId = organisationId;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
         this.open = open;
+        this.includeVat = includeVat;
         this.applicationName = applicationName;
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
-        this.includeVat = includeVat;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
         this.open = open;
-        this.complete = false;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
 
+        this.applicationId = null;
+        this.sectionId = null;
+        this.competitionId = null;
+        this.organisationId = null;
+        this.complete = false;
         this.applicationName = null;
         this.organisationName = null;
         this.financesUrl = null;
-        this.applicationId = null;
-        this.organisationId = null;
-        this.sectionId = null;
-        this.competitionId = null;
         this.includeVat = false;
     }
 

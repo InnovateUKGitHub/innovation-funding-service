@@ -299,7 +299,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Function<Pageable, Page<Application>> paginatedApplicationsSupplier,
             Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
         Sort sortField = getApplicationSummarySortField(sortBy);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sortField);
 
         if (canUseSpringDataPaginationForSummaryResults(sortBy)) {
             Page<Application> applicationResults = paginatedApplicationsSupplier.apply(pageable);

@@ -12,7 +12,7 @@
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:if="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='All Applications',linkUrl=@{/management/competition/{competitionId}/applications/all(competitionId=${model.competition.id})}"/>
-            <th:block th:unless="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}"/>
+            <th:block th:unless="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block>
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${model.application.name},size='govuk-heading-xl'" />
@@ -51,6 +51,18 @@
                                     <dt>Previous application title</dt>
                                     <dd th:text="${model.previousApplicationTitle}"></dd>
                                 </th:block>
+                            </th:block>
+                            <th:block th:if="${model.application.competitionReferralSource != null}">
+                                <dt>Who made you aware of the competition?</dt>
+                                <dd th:text="${model.application.competitionReferralSource.name} ?: 'None Selected'"></dd>
+                            </th:block>
+                            <th:block th:if="${model.application.companyAge != null}">
+                                <dt>How long has the company been established for?</dt>
+                                <dd th:text="${model.application.companyAge.name} ?: 'None Selected'"></dd>
+                            </th:block>
+                            <th:block th:if="${model.application.companyPrimaryFocus != null}">
+                                <dt>What is your organisation's primary area of focus?</dt>
+                                <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                             </th:block>
                         </dl>
                     </div>

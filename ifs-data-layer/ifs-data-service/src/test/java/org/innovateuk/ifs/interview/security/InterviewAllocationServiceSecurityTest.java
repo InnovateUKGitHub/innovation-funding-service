@@ -39,7 +39,7 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void getAllocateApplicationsOverview() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInterviewAcceptedAssessors(1L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);
@@ -47,7 +47,7 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void getAllocatedApplications() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplications(1L, 2L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);
@@ -61,7 +61,7 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void getUnallocatedApplications() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getUnallocatedApplications(1L,  2L, pageable),
                 COMP_ADMIN, PROJECT_FINANCE);

@@ -21,6 +21,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -179,7 +180,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), QuestionSetupType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
-        assertEquals(resource.getAllowedFileTypes(), asSet(PDF, SPREADSHEET));
+        assertEquals(resource.getAllowedAppendixResponseFileTypes(), asSet(PDF, SPREADSHEET));
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
 
@@ -262,7 +263,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
 
@@ -298,7 +299,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("PDF");
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
@@ -328,7 +329,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -355,7 +356,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();

@@ -360,9 +360,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
         assertEquals(format("Applications for interview panel for '%s'", competition.getName()), form.getSubject());
 
-        String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
-        assertEquals(format("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=%d", user.getId()), originQuery);
-
         InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionRestService);
         inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
         inOrder.verify(interviewAllocationRestService).getUnallocatedApplicationsById(competition.getId(), selectedApplicationIds);

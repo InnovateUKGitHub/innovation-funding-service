@@ -26,23 +26,23 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
 
         Long applicationId = 1L;
         int page = 2;
         int size = 3;
-        long filterInnovationArea = 4L;
+        String assessorNameFilter = "Name";
 
-        setupGetWithRestResultExpectations(format("%s/%s/available-assessors?page=%s&size=%s&filterInnovationArea=%s",
+        setupGetWithRestResultExpectations(format("%s/%s/available-assessors?page=%s&size=%s&assessorNameFilter=%s",
                 applicationAssessmentSummaryRestUrl, applicationId, page,
-                size, filterInnovationArea), ApplicationAssessorPageResource.class, expected);
+                size, assessorNameFilter), ApplicationAssessorPageResource.class, expected);
 
-        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, filterInnovationArea).getSuccess());
+        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, assessorNameFilter).getSuccess());
     }
 
     @Test
-    public void getAssignedAssessors() throws Exception {
+    public void getAssignedAssessors() {
         List<ApplicationAssessorResource> expected = newApplicationAssessorResource().build(2);
 
         Long applicationId = 1L;
@@ -55,7 +55,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
     }
 
     @Test
-    public void getApplicationAssessmentSummary() throws Exception {
+    public void getApplicationAssessmentSummary() {
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource().build();
 
         Long applicationId = 1L;

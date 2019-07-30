@@ -259,7 +259,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         int page = 1;
         int size = 20;
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;

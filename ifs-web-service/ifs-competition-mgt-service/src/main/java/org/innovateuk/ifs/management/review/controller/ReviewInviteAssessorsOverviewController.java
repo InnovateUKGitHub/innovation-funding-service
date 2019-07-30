@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.review.form.ReviewOverviewSelectionForm;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsOverviewModelPopulator;
@@ -13,15 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller handles the Overview tab for inviting assessors to an Assessor Panel.
@@ -59,17 +55,14 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
                            @SuppressWarnings("unused") BindingResult bindingResult,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams,
                            HttpServletRequest request,
                            HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_OVERVIEW, queryParams);
         updateOverviewSelectionForm(request, response, competitionId, selectionForm);
 
         model.addAttribute("model", panelInviteAssessorsOverviewModelPopulator.populateModel(
                 competitionId,
-                page,
-                originQuery
+                page
         ));
 
         return "assessors/panel-overview";

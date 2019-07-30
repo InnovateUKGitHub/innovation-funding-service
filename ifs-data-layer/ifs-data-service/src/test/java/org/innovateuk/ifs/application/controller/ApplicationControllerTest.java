@@ -115,7 +115,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
 
-        PageRequest pageRequest = new PageRequest(0, 40);
+        PageRequest pageRequest = PageRequest.of(0, 40);
         when(applicationServiceMock.wildcardSearchById("", pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
 
         mockMvc.perform(get("/application/wildcard-search-by-id"))

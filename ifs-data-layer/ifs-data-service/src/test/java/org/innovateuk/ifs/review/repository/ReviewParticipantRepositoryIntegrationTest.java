@@ -191,7 +191,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<ReviewParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
                 competition.getId(),

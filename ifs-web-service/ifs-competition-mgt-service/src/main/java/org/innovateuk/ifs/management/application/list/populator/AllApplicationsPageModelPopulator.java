@@ -27,7 +27,7 @@ public class AllApplicationsPageModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter, UserResource user) {
+    public AllApplicationsViewModel populateModel(long competitionId, int page, String sorting, Optional<String> filter, UserResource user) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccess();
@@ -46,7 +46,7 @@ public class AllApplicationsPageModelPopulator {
                 sorting,
                 filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
-                new Pagination(applicationSummaryPageResource, origin),
+                new Pagination(applicationSummaryPageResource),
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "Dashboard" : "Applications",
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "/dashboard/live" : "/competition/" + competitionId + "/applications",
                 user.hasRole(SUPPORT)

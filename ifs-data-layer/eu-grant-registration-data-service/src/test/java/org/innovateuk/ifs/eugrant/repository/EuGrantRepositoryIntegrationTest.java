@@ -44,7 +44,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     @Test
     @Rollback
     public void findByNotifiedForNotifiedUsers() {
-        Pageable pageable = new PageRequest(0, 20, new Sort("id"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort("id"));
         EuContact euContact = newEuContact()
                 .withName("Horatio Nelson")
                 .withEmail("horatio@nelson.com")
@@ -95,7 +95,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     @Test
     @Rollback
     public void findByNotifiedForNonNotifiedUsers() {
-        Pageable pageable = new PageRequest(0, 20, new Sort("id"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort("id"));
         EuContact euContact = newEuContact()
                 .withName("Willie Nelson")
                 .withEmail("willie@nelson.com")
