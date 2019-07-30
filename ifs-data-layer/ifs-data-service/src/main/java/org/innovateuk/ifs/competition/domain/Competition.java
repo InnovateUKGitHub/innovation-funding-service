@@ -155,7 +155,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
     private FileEntry competitionTerms;
 
