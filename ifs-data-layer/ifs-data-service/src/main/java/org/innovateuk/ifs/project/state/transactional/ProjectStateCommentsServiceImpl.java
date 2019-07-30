@@ -18,6 +18,7 @@ import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,12 +45,14 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
     }
 
     @Override
+    @Transactional
     public ServiceResult<Long> create(long projectId, ProjectState state) {
         return service.create(commentsFromState(projectId, state))
                 .andOnSuccess(threadId -> closeAllOtherComments(threadId, projectId));
     }
 
     @Override
+    @Transactional
     public ServiceResult<Long> create(long projectId, ProjectState state, OnHoldReasonResource reason) {
         return service.create(commentsFromStateAndReason(projectId, state, reason))
                 .andOnSuccess(threadId -> closeAllOtherComments(threadId, projectId));
@@ -72,6 +75,7 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(post, threadId);
     }

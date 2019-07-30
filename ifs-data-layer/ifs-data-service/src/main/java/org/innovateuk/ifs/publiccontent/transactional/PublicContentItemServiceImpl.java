@@ -160,7 +160,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             pageNumberUsing = pageNumber.get();
         }
 
-        return new PageRequest(pageNumberUsing, pageSize);
+        return PageRequest.of(pageNumberUsing, pageSize);
     }
 
     private PublicContentItemResource mapPublicContentToPublicContentItemResource(PublicContent publicContent, Competition competition) {

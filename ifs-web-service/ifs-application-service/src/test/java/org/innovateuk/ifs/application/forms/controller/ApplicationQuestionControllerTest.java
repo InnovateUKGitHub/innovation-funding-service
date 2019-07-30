@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOvervi
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -43,11 +45,11 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
@@ -124,6 +126,12 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
+    @Mock
+    private ApplicationResearchCategoryModelPopulator applicationResearchCategoryModelPopulator;
+
+    @Mock
+    private ApplicationResearchCategoryFormPopulator applicationResearchCategoryFormPopulator;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -134,7 +142,20 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Override
     protected ApplicationQuestionController supplyControllerUnderTest() {
-        return new ApplicationQuestionController();
+
+        return new ApplicationQuestionController(applicationResearchCategoryModelPopulator,
+                                                 questionModelPopulator,
+                                                 applicationResearchCategoryFormPopulator,
+                                                 applicationNavigationPopulator,
+                                                 applicationService,
+                                                 userRestService,
+                                                 questionService,
+                                                 applicantRestService,
+                                                 applicationRedirectionService,
+                                                 applicationSaver,
+                                                 cookieFlashMessageFilter
+                                                 );
+
     }
 
     @Before
@@ -164,8 +185,8 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
         sectionBuilder =  newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
+        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
         when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
@@ -226,7 +247,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                         .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Optional.class), any(Boolean.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Boolean.class));
     }
 
     @Test

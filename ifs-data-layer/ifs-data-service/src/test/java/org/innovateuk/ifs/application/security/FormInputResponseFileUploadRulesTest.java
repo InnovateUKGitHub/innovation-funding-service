@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -151,7 +151,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         long applicationId = 3L;

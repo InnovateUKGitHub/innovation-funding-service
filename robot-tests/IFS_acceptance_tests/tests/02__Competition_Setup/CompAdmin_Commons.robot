@@ -64,12 +64,13 @@ the user fills in the CS Initial details
 
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
-    the user clicks the button/link      css = button.govuk-button  #Done
+    the user clicks the button/link      jQuery = button:contains("Done")
     the user clicks the button/link      link = Competition setup
     the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link = Funding information
+    the user clicks the button/link       jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field  id = funders[0].funder    Aerospace Technology Institute (ATI)
     the user clicks the button/link       id = funders[0].funder
     click element                         id = funders[0].funder__option--0
@@ -77,8 +78,6 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    the user clicks the button/link       jQuery = button:contains("Generate code")
-    sleep  2s  #This sleeps is intended as the competition Code needs some time
     textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
@@ -185,7 +184,7 @@ the user opts no finances for EOI comp
     the element should be disabled     application-finance-standard
     the element should be disabled     application-finance-standard-with-vat
     the user selects the radio button  applicationFinanceType  NO_FINANCES
-    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -331,8 +330,8 @@ the user is able to configure the new question
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
     the user selects the radio button     question.appendix  1
-    click element                         css = label[for="question.allowedFileTypes1"]
-    the user clicks the button/link       css = label[for="question.allowedFileTypes2"]
+    click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
+    the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10

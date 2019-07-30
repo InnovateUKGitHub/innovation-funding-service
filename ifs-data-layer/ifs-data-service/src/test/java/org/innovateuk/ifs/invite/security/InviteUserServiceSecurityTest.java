@@ -41,7 +41,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
 
     @Test
     public void testFindPendingInternalUserInvites() {
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         when(classUnderTestMock.findPendingInternalUserInvites(pageable))
                 .thenReturn(serviceSuccess(new RoleInvitePageResource()));

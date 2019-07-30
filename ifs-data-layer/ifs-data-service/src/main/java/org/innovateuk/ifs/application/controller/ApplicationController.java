@@ -72,7 +72,7 @@ public class ApplicationController {
     public RestResult<ApplicationPageResource> wildcardSearchById(@RequestParam(value = "searchString", defaultValue = "") String searchString,
                                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return applicationService.wildcardSearchById(searchString, new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return applicationService.wildcardSearchById(searchString, PageRequest.of(pageIndex, pageSize)).toGetResponse();
     }
 
     @PostMapping("/save-application-details/{id}")
@@ -149,15 +149,6 @@ public class ApplicationController {
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                                    @PathVariable("userId") final Long userId) {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
-    }
-
-    @GetMapping("/{competitionId}/previous-applications")
-    public RestResult<PreviousApplicationPageResource> findPreviousApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                                @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField,
-                                                                                @RequestParam(value = "filter", defaultValue = PREVIOUS_APP_DEFAULT_FILTER) String filter) {
-        return applicationService.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter).toGetResponse();
     }
 
     @GetMapping("/get-latest-email-funding-date/{competitionId}")

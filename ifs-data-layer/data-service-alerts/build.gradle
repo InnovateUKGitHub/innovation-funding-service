@@ -12,8 +12,6 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-
-
 processResources.dependsOn applyProfiles
 
 project.version = alertServiceVersion
@@ -22,8 +20,13 @@ osStageRemote.tag = alertServiceVersion
 tagDockerLocal.tag = alertServiceVersion
 osStageLocal.tag = alertServiceVersion
 
-ext.dockerDir = "$project.parent.projectDir/docker/"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
+
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
+    }
+}
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
@@ -70,7 +73,6 @@ task stopAlerts(type: Exec) {
 }
 
 createContainer.networkAliases = ["data-service-alerts"]
-
 
 test.finalizedBy asciidoctor
 

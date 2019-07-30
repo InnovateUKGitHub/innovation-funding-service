@@ -10,17 +10,9 @@ import java.util.Optional;
  */
 public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
 
-    private Optional<Long> innovationArea = Optional.empty();
     private Optional<ParticipantStatusResource> status = Optional.empty();
     private Optional<Boolean> compliant = Optional.empty();
-
-    public Optional<Long> getInnovationArea() {
-        return innovationArea;
-    }
-
-    public void setInnovationArea(Optional<Long> innovationArea) {
-        this.innovationArea = innovationArea;
-    }
+    private Optional<String> assessorName = Optional.empty();
 
     public Optional<ParticipantStatusResource> getStatus() {
         return status;
@@ -38,8 +30,15 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
         this.compliant = compliant;
     }
 
+    public Optional<String> getAssessorName() {
+        return assessorName;
+    }
+
+    public void setAssessorName(Optional<String> assessorName) {
+        this.assessorName = assessorName;
+    }
+
     public boolean anyFilterIsActive() {
-        return (this.innovationArea.isPresent() && !this.innovationArea.get().equals(0L)) ||
-                this.status.isPresent() || this.compliant.isPresent();
+        return this.status.isPresent() || this.compliant.isPresent() || this.assessorName.isPresent();
     }
 }

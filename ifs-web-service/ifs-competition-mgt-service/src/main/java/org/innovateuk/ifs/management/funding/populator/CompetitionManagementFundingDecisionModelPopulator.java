@@ -4,11 +4,10 @@ package org.innovateuk.ifs.management.funding.populator;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.competition.form.FundingDecisionPaginationForm;
-import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionPaginationForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Populator for the manage funding decisions view model
@@ -41,7 +39,6 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                                                        FundingDecisionSelectionForm selectionForm) {
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
@@ -52,12 +49,11 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
 
         return new ManageFundingApplicationsViewModel(
-                new Pagination(results, originQuery),
+                new Pagination(results),
                 results,
                 selectionForm,
                 fundingDecisionFilterForm,
                 competitionSummary,
-                originQuery,
                 selectAllDisabled,
                 selectionLimitWarning
         );

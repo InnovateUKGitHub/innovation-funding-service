@@ -182,7 +182,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
     When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
-    And the user clicks the button/link      css = button.govuk-button  #Done
+    And the user clicks the button/link      jQuery = button:contains("Done")
     Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -587,7 +587,7 @@ Moving competition to Ready to Open state
     [Tags]  HappyPath
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link    css = #compCTA
-    Then the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link    jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -621,11 +621,11 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    And the user clicks the button/link      css = button.govuk-button
+    And the user clicks the button/link      jQuery = button:contains("Done")
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
     And the user should see the element      jQuery = li:contains("Application") .task-status-complete
     When the user clicks the button/link     css = #compCTA
-    Then the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link     jQuery = button:contains("Done")
     When the user clicks the button/link     link = Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
@@ -667,7 +667,7 @@ Assessor: Should have a Green Check
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css = #compCTA
-    And the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    And the user clicks the button/link     jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -882,7 +882,7 @@ the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
+    the user should see the element                        jQuery = #innovation-row-2 option:disabled:contains("Space technology")
     the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again

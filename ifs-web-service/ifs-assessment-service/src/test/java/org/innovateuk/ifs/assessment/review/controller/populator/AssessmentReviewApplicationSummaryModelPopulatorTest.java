@@ -118,12 +118,11 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
         when(summary.getCurrentApplication()).thenReturn(applicationResource);
         when(summary.getFeedbackSummary()).thenReturn(assessmentResources);
 
-        AssessmentReviewApplicationSummaryViewModel viewModel = populator.populateModel(applicationForm, userResource, applicationResource.getId(), "originQuery");
+        AssessmentReviewApplicationSummaryViewModel viewModel = populator.populateModel(applicationForm, userResource, applicationResource.getId());
 
         assertEquals(viewModel.getFeedbackViewModel().getFeedback(), emptyList());
         assertEquals(viewModel.getFeedbackViewModel().getScore(), emptyList());
         assertEquals(viewModel.getCurrentCompetition(), competitionResource);
         assertEquals(viewModel.getSummaryViewModel(), summary);
-        assertEquals(viewModel.getOriginQuery(), "originQuery");
     }
 }

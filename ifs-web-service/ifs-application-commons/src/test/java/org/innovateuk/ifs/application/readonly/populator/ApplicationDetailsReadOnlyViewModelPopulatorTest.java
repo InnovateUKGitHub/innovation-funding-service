@@ -18,9 +18,12 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
@@ -43,6 +46,7 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withName("Competition name")
                 .withInnovationAreas(asSet(1L, 2L))
+                .withFundingType(PROCUREMENT)
                 .build();
         QuestionResource question = newQuestionResource()
                 .withShortName("Application details")
@@ -67,5 +71,6 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
         assertEquals(question.getId(), (Long) viewModel.getQuestionId());
         assertFalse(viewModel.isComplete());
         assertFalse(viewModel.isLead());
+        assertTrue(viewModel.isProcurementCompetition());
     }
 }

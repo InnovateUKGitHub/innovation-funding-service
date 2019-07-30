@@ -13,7 +13,6 @@ import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +20,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -82,12 +80,17 @@ public class GrantServiceImpl implements GrantService {
         liveProjectAccessUsers.forEach(projectUser -> {
 
             User user = projectUser.getUser();
-
-            if (!user.hasRole(LIVE_PROJECTS_USER)) {
-                user.addRole(LIVE_PROJECTS_USER);
-            }
+            addLiveRole(user);
         });
 
+        project.getProjectMonitoringOfficer().ifPresent(mo -> addLiveRole(mo.getUser()));
+
         return serviceSuccess();
+    }
+
+    private void addLiveRole(User user) {
+        if(!user.hasRole(LIVE_PROJECTS_USER)) {
+            user.addRole(LIVE_PROJECTS_USER);
+        }
     }
 }

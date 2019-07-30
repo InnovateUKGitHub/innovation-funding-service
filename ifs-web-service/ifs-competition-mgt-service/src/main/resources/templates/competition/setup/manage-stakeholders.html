@@ -124,12 +124,12 @@
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
                     <a href="?tab=add"
-                       th:attr="aria-selected=${param.tab == null or param.tab[0] == 'add' ? true : false}"
+                       th:classappaend="${param.tab == null or param.tab[0] == 'add' ? 'govuk-tabs__tab--selected' : ''}"
                        class="govuk-tabs__tab">Add</a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a href="?tab=added"
-                       th:attr="aria-selected=${param.tab != null and param.tab[0] == 'added' ? true : false}"
+                       th:classappend="${param.tab != null and param.tab[0] == 'added' ? 'govuk-tabs__tab--selected' : ''}"
                        class="govuk-tabs__tab">Added to competition (<span th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}"></span>)</a>
                 </li>
             </ul>
@@ -150,7 +150,7 @@
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="stakeholder : ${model.availableStakeholders}">
                             <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
-                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell ifs-table__email" th:text="${stakeholder.email}">alexis@kinney.com</td>
                             <td class="govuk-table__cell alignright">
                                 <form method="POST"
                                       th:action="@{/competition/setup/{competitionId}/manage-stakeholders?addStakeholder=addStakeholder&stakeholderUserId={stakeholderUserId}(competitionId=${model.competitionId},stakeholderUserId=${stakeholder.id})}">
@@ -186,7 +186,7 @@
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="stakeholder : ${model.pendingStakeholderInvitesForCompetition}">
                             <td class="govuk-table__cell" th:text="${stakeholder.name}">Alexis Kinney</td>
-                            <td class="govuk-table__cell" th:text="${stakeholder.email}">alexis@kinney.com</td>
+                            <td class="govuk-table__cell ifs-table__email" th:text="${stakeholder.email}">alexis@kinney.com</td>
                             <td class="govuk-table__cell">Invite pending</td>
                             <td class="govuk-table__cell alignright"></td>
                         </tr>

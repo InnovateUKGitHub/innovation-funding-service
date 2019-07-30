@@ -6,7 +6,7 @@ asciidoctor {
     dependsOn test
     attributes 'snippets': file('build/generated-snippets')
     backends 'html5'
-    inputs.dir "$project.buildDir/generated-snippets"
+    inputs.dir file("$project.buildDir/generated-snippets")
     outputs.dir file("$project.buildDir/static/docs")
 
     doLast {

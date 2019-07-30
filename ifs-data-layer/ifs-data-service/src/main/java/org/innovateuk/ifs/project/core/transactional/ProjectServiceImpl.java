@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
@@ -85,6 +87,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectUserMapper projectUserMapper;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
@@ -194,15 +199,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
-
-        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
-                failure -> createProjectFromApplicationId(applicationId),
-                success -> serviceSuccess(success)
-        );
-    }
-
-    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId);
+        Optional<ProjectResource> existingProject = getByApplicationId(applicationId).getOptionalSuccessObject();
+        if (existingProject.isPresent()) {
+            return serviceSuccess(existingProject.get());
+        }
+        return createProjectFromApplicationId(applicationId).andOnSuccessReturn(project -> {
+            activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+            return project;
+        });
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {

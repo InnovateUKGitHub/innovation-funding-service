@@ -147,7 +147,7 @@ the user navigates to the competition overview
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link              link = ${Application_details}
-    the user enters text to a text field         css = [id="application.name"]  ${Application_name_business}
+    the user enters text to a text field         css = [id="name"]  ${Application_name_business}
     the user clicks the button/link              jQuery = button:contains("Choose your innovation area")
     the user clicks the button twice             jQuery = label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery = button:contains(Save)
@@ -156,15 +156,15 @@ the applicant completes the application details
 the applicant completes the application details for RTO lead appln
     [Arguments]   ${Application_details}
     the user clicks the button/link             link = ${Application_details}
-    the user enters text to a text field        css = [id="application.name"]  ${Application_name_RTO}
+    the user enters text to a text field        css = [id="name"]  ${Application_name_RTO}
     the user fills the other application details questions
 
 the user fills the other application details questions
-    the user clicks the button twice      css = label[for="application.resubmission-no"]
-    The user enters text to a text field  id = application.startDate  18
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    The user enters text to a text field  id = startDate  18
     The user enters text to a text field  id = application_details-startdate_year  2018
     The user enters text to a text field  id = application_details-startdate_month  11
-    The user enters text to a text field  css = [id="application.durationInMonths"]  20
+    The user enters text to a text field  css = [id="durationInMonths"]  20
     the user clicks the button/link       jQuery = button:contains("Mark")
     the user clicks the button/link       link = Application overview
 

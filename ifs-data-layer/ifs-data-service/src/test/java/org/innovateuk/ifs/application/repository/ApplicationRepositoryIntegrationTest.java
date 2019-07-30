@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -15,10 +16,15 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +38,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -40,7 +47,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 
@@ -70,6 +79,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     @Override
@@ -103,7 +118,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         applicationRepository.saveAll(applications);
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
                 .getId(), pageable);
@@ -116,7 +131,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
         Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         Page<Application> applications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(),
                 pageable);
@@ -145,7 +160,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         interviewAssignmentRepository.save(interviewPanel);
 
-        Pageable pageable = new PageRequest(1, 20);
+        Pageable pageable = PageRequest.of(1, 20);
 
         Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
                 .getId(), pageable);
@@ -174,7 +189,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         interviewAssignmentRepository.save(interviewAssignment);
 
-        Pageable pageable = new PageRequest(1, 20);
+        Pageable pageable = PageRequest.of(1, 20);
 
         Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
                 .getId(), pageable);
@@ -268,7 +283,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         InnovationLead innovationLead = new InnovationLead(competitions.get(0), user);
 
-        Pageable pageable = new PageRequest(1, 40);
+        Pageable pageable = PageRequest.of(1, 40);
 
         userRepository.save(user);
         competitionRepository.saveAll(competitions);
@@ -299,18 +314,81 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Stakeholder stakeholder = new Stakeholder(competitions.get(0), user);
 
-        Pageable pageable = new PageRequest(1, 40);
+        Pageable pageable = PageRequest.of(1, 40);
 
         userRepository.save(user);
         competitionRepository.saveAll(competitions);
         stakeholderRepository.save(stakeholder);
         applicationRepository.saveAll(applications);
 
-
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(0).getId().toString(), pageable);
         Page<Application> notFoundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(1).getId().toString(), pageable);
 
         assertEquals(1, foundApplication.getTotalElements());
         assertEquals(0, notFoundApplication.getTotalElements());
+    }
+
+    @Test
+    public void previous() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition().with(id(null)).build();
+
+        //Previous
+        Application withoutProject = newApplication()
+                .withCompetition(competition)
+                .with(id(null))
+                .withName("applicationWithoutProject")
+                .withActivityState(APPROVED)
+                .build();
+        Organisation lead = newOrganisation()
+                .with(id(null))
+                .withName("Lead")
+                .build();
+        organisationRepository.save(lead);
+
+        ProcessRole pr = newProcessRole()
+                .with(id(null))
+                .withUser(userRepository.findById(getSteveSmith().getId()).get())
+                .withOrganisationId(lead.getId())
+                .withRole(Role.LEADAPPLICANT)
+                .build();
+
+        // Not previous
+        Application withProject = newApplication()
+                .withCompetition(competition)
+                .with(id(null))
+                .withName("applicationWithProject")
+                .withActivityState(APPROVED)
+                .build();
+        Project project = newProject()
+                .withApplication(withProject)
+                .withName(withProject.getName())
+                .build();
+
+        Application unsubmitted = newApplication()
+                .withCompetition(competition)
+                .with(id(null))
+                .withName("unsubmitted")
+                .withActivityState(OPENED)
+                .build();
+
+        competitionRepository.save(competition);
+        applicationRepository.saveAll(asList(withProject, withoutProject, unsubmitted));
+        projectRepository.save(project);
+        pr.setApplicationId(withoutProject.getId());
+        processRoleRepository.save(pr);
+
+        assertEquals(1, repository.countPrevious(competition.getId()));
+
+        List<PreviousApplicationResource> previous = repository.findPrevious(competition.getId());
+
+        assertEquals(1, previous.size());
+        assertEquals(APPROVED, previous.get(0).getApplicationState());
+        assertEquals("applicationWithoutProject", previous.get(0).getName());
+        assertEquals((long) competition.getId(), previous.get(0).getCompetition());
+        assertEquals((long) withoutProject.getId(), previous.get(0).getId());
+        assertEquals("Lead", previous.get(0).getLeadOrganisationName());
+
     }
 }

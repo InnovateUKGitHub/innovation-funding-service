@@ -101,6 +101,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
+import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
@@ -329,6 +330,43 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long competitionId = 123L;
         String applicationSearchString = "1";
 
+        List<Project> projects = setupCompetitionStatusMocks(competitionId);
+
+        when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)).thenReturn(projects);
+
+        ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
+
+        assertTrue(result.isSuccess());
+
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
+        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
+        assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+    }
+
+    @Test
+    public void getPreviousCompetitionStatus() {
+        long competitionId = 123L;
+
+        List<Project> projects = setupCompetitionStatusMocks(competitionId);
+
+        when(projectRepositoryMock.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES)).thenReturn(projects);
+
+        ServiceResult<CompetitionProjectsStatusResource> result = service.getPreviousCompetitionStatus(competitionId);
+
+        assertTrue(result.isSuccess());
+
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
+        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
+        assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
+        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+    }
+
+    private List<Project> setupCompetitionStatusMocks(long competitionId) {
         Competition competition = newCompetition().withId(competitionId).build();
 
         OrganisationType businessOrganisationType = newOrganisationType()
@@ -384,8 +422,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectRepositoryMock.findById(projects.get(0).getId())).thenReturn(Optional.of(projects.get(0)));
         when(projectRepositoryMock.findById(projects.get(1).getId())).thenReturn(Optional.of(projects.get(1)));
         when(projectRepositoryMock.findById(projects.get(2).getId())).thenReturn(Optional.of(projects.get(2)));
-
-        when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)).thenReturn(projects);
 
         when(projectUserRepositoryMock.findByProjectId(projects.get(0).getId())).thenReturn(projectUsers);
         when(projectUserRepositoryMock.findByProjectId(projects.get(1).getId())).thenReturn(projectUsers);
@@ -460,16 +496,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
 
-        ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
-
-        assertTrue(result.isSuccess());
-
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
-        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
-        assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+        return projects;
     }
 
     private boolean projectsGetSortedByApplicationId(List<ProjectStatusResource> after) {

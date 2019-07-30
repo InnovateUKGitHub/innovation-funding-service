@@ -393,7 +393,7 @@ The lead applicant checks for terms and conditions partners status
 The lead applicant checks for terms and conditions validations
     [Documentation]
     [Tags]
-    Given the user clicks the button/link         link = Application overview
+    Given the user clicks the button/link         link = Back to application overview
     And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete
     When the user clicks the button/link          link = Review and submit
     And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")
@@ -524,7 +524,7 @@ the user logs in and apply to a competition
     Log in as a different user                        &{lead_applicant_credentials}
     logged in user applies to competition             ${compWithGrowth}  1
     the user clicks the button/link                   link = Application details
-    the user enters text to a text field              css = [id="application.name"]  Application With GrowthTable
+    the user enters text to a text field              css = [id="name"]  Application With GrowthTable
     the user clicks the button/link                   link = Application overview
 
 Custom suite setup

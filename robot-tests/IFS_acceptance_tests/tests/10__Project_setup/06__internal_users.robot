@@ -37,6 +37,12 @@ Project Finance can visit an application and navigate back
     When the user clicks the button/link  link = ${PS_IU_Application_No}
     Then the user navigates back successfully
 
+Project Finance can visit link to the competition from application overview
+    [Documentation]  IFS-6060
+    Given The user clicks the button/link  link = ${PS_IU_Application_No}
+    When the user clicks the button/link   link = ${PS_Competition_Name}
+    Then The user should be redirected to the correct page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
@@ -77,7 +83,7 @@ The user is able to see project status in PS
 
 the user navigates back successfully
     the user should see the element                     jQuery = h1:contains("Application overview")
-    the user clicks the button/link                     link = Back
+    the user clicks the button/link                     link = Back to project setup
     the user should be redirected to the correct page   ${server}/project-setup-management/competition/${PS_Competition_Id}/status
 
 Navigate to an application in PS

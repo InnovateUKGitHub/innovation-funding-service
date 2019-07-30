@@ -2,8 +2,8 @@ package org.innovateuk.ifs.management.funding.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class ManageFundingApplicationsViewModel {
@@ -13,7 +13,6 @@ public class ManageFundingApplicationsViewModel {
     private FundingDecisionSelectionForm selectionForm;
     private FundingDecisionFilterForm fundingDecisionFilterForm;
     private CompetitionSummaryResource competitionSummary;
-    private String originQuery;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
 
@@ -22,7 +21,6 @@ public class ManageFundingApplicationsViewModel {
                                               FundingDecisionSelectionForm selectionForm,
                                               FundingDecisionFilterForm fundingDecisionFilterForm,
                                               CompetitionSummaryResource competitionSummary,
-                                              String originQuery,
                                               boolean selectAllDisabled,
                                               boolean selectionLimitWarning) {
         this.pagination = pagination;
@@ -30,7 +28,6 @@ public class ManageFundingApplicationsViewModel {
         this.selectionForm = selectionForm;
         this.fundingDecisionFilterForm = fundingDecisionFilterForm;
         this.competitionSummary = competitionSummary;
-        this.originQuery = originQuery;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
     }
@@ -53,10 +50,6 @@ public class ManageFundingApplicationsViewModel {
 
     public CompetitionSummaryResource getCompetitionSummary() {
         return competitionSummary;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     public boolean isSelectAllDisabled() {

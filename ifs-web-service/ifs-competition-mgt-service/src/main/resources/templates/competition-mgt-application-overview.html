@@ -13,7 +13,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkUrl=@{(${model.backUrl.contains(T(org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+model.backUrl} : ${model.backUrl})})" />
+    <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark this application as ineligible.</h2>
@@ -55,7 +55,11 @@
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Competition name</dt>
-                    <dd th:text="${model.competitionName}"></dd>
+                    <dd>
+                        <a th:href="@{/competition/{competitionId}(competitionId=${model.application.competition})}"
+                           class="govuk-link"
+                           th:text="${model.competitionName}"></a>
+                    </dd>
                     <dt>Application name</dt>
                     <dd th:text="${model.applicationName}"></dd>
                     <dt>When do you wish to start your project?</dt>
@@ -80,13 +84,30 @@
                             <dd th:text="${model.previousApplicationTitle}"></dd>
                         </th:block>
                     </th:block>
+                    <th:block th:if="${model.application.competitionReferralSource != null}">
+                        <dt>Who made you aware of the competition?</dt>
+                        <dd th:text="${model.application.competitionReferralSource.name} ?: 'None Selected'"></dd>
+                    </th:block>
+                    <th:block th:if="${model.application.companyAge != null}">
+                        <dt>How long has the company been established for?</dt>
+                        <dd th:text="${model.application.companyAge.name} ?: 'None Selected'"></dd>
+                    </th:block>
+                    <th:block th:if="${model.application.companyPrimaryFocus != null}">
+                        <dt>What is your organisation's primary area of focus?</dt>
+                        <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
+                    </th:block>
                 </dl>
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}+${model.originQuery}" class="govuk-link">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}" class="govuk-link">
                             view contributors and collaborators
+                        </a>
+                    </li>
+                    <li th:if="${model.hasProject()}">
+                        <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competition.id},projectId=${model.projectId})}" class="govuk-link">
+                            view activity log
                         </a>
                     </li>
                 </ul>

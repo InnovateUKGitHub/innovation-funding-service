@@ -11,6 +11,8 @@ public interface StatusRestService {
 
     RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId, String applicationSearchString);
 
+    RestResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(final Long competitionId);
+
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     RestResult<ProjectStatusResource> getProjectStatus(Long projectId);

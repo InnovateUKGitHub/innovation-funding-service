@@ -32,6 +32,8 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
+...
+...               IFS-6053 Amend competition table in the previous tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -39,8 +41,9 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
-${proj_electric_drive}  ${application_ids['Electric Drive']}
-${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
+${electric_application_titile}   Electric Drive
+${proj_electric_drive}           ${application_ids['${electric_application_titile}']}
+${proj_app_with_ineligible}      ${application_ids['Application with ineligible']}
 
 *** Test Cases ***
 Competition Dashboard
@@ -54,7 +57,7 @@ Filtering on the Manage funding applications page
     [Tags]  HappyPath
     Given the user search for successful applications
     When the user clicks the button/link                 jQuery = a:contains("Clear all filters")
-    Then the user should see the element                 jQuery = td:nth-child(2):contains("${application_ids['Electric Drive']}")
+    Then the user should see the element                 jQuery = td:nth-child(2):contains("${application_ids['${electric_application_titile}']}")
     [Teardown]    The user clicks the button/link        link = Competition
 
 Checking release feedback button state is correct
@@ -81,8 +84,15 @@ Unsuccessful applicant sees unsuccessful alert
     [Tags]  HappyPath
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery = .status:contains("Unsuccessful")
-    When the user clicks the button/link     jQuery = a:contains("Electric Drive")
+    When the user clicks the button/link     jQuery = a:contains("${electric_application_titile}")
     And the user should see the element      jQuery = .warning-alert:contains("Your application has not been successful in this competition")
+
+Internal user should see competition on previous tab
+    [Documentation]  IFS-6053
+    [Tags]
+    [Setup]  Log in as a different user      &{internal_finance_credentials}
+    Given the user clicks the button/link    jQuery = a:contains("Previous")
+    Then the user should see the competition details in previous tab
 
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
@@ -139,7 +149,7 @@ The finance details are shown
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Dashboard")
+    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Back to applications")
     Then the user should see the element     jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
@@ -173,7 +183,7 @@ User sends the notification to enable release feedback
     the user clicks the button/link                                          jQuery = button:contains("Unsuccessful")
     the user clicks the button/link                                          jQuery = .govuk-back-link:contains("Competition")
     the user clicks the button/link                                          jQuery = a:contains("Manage funding notifications")
-    the user selects the checkbox                                            app-row-${application_ids['Electric Drive']}
+    the user selects the checkbox                                            app-row-${proj_electric_drive}
     the user clicks the button/link                                          jQuery = button:contains("Write and send email")
     the internal sends the descision notification email to all applicants    EmailTextBody
     the user clicks the button/link                                          jQuery = .govuk-back-link:contains("Competition")
@@ -202,9 +212,10 @@ The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
     log in as a different user         ${email}  ${password}
     the user clicks the button/link    jQuery = a:contains("Previous")
+    the user clicks the button/link    jQuery = button:contains("Next")
     the user clicks the button/link    link = ${NOT_EDITABLE_COMPETITION_NAME}
-    the user should see the element    jQuery = td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
-    the user should see the element    jQuery = td:contains("${INFORM_COMPETITION_NAME_1}") ~ td:contains("Successful")
+    the user expands the section       Applications
+    the user should see the element    jQuery = td:contains("${electric_application_titile}") ~ td:contains("Unsuccessful")
 
 the user should see milestones for the In inform competition
     the user should see the element    jQuery = .govuk-button:contains("Manage funding notifications")
@@ -219,4 +230,9 @@ the user search for successful applications
     the user selects the option from the drop-down menu    Successful    id = fundingFilter
     the user clicks the button/link                        jQuery = button:contains("Filter")
     the user should see the element                        jQuery = td:nth-child(2):contains("${application_ids['Climate control solution']}")
-    the user should not see the element                    jQuery = td:nth-child(2):contains("${application_ids['Electric Drive']}")
+    the user should not see the element                    jQuery = td:nth-child(2):contains("${proj_electric_drive}")
+
+the user should see the competition details in previous tab
+    the user should see the element    jQuery = th:contains("ID") + th:contains("Title")
+    the user should see the element    jQuery = th:contains("Number of submitted applications") + th:contains("Number of completed projects")
+    the user should see the element    jQuery = tr td:contains("Project Setup Comp 20") ~ td:contains("0 of 1")
