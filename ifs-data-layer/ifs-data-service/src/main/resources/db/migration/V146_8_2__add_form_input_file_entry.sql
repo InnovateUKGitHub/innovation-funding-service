@@ -8,13 +8,13 @@ ALTER TABLE form_input ADD CONSTRAINT fk_form_input_file_entry FOREIGN KEY (file
 ALTER TABLE form_input DROP COLUMN allowed_file_types;
 
 -- Insert new form input type for template document.
-INSERT INTO form_input_type (id, name) VALUES ('29', 'TEMPLATE_DOCUMENT');
+INSERT INTO form_input_type (id, name) VALUES ('30', 'TEMPLATE_DOCUMENT');
 
 -- Insert inactive template document form inputs wherever there is an appendix form input.
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
 
 SELECT NULL                 as word_count,
-       29                   as form_input_type_id,
+       30                   as form_input_type_id,
        fi.competition_id    as competition_id,
        0                    as included_in_application_summary,
        'Template'           as description,
