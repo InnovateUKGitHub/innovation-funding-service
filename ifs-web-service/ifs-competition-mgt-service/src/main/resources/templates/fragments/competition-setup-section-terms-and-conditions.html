@@ -48,7 +48,7 @@
                     <button name="uploadTermsAndConditionsDoc" class="button-secondary" type="submit" data-for-file-upload="terms-and-conditions-doc"></button>
                 </div>
                 <div th:if="${model.termsAndConditionsDocUploaded}">
-                    <p><a href=""#>FileName.pdf</a> (opens in a new window).</p>
+                    <p class="govuk-body"><a target="_blank" th:text="${model.general.competition.competitionTerms.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})}">FileName.pdf</a> (opens in a new window).</p>
                     <button name="deleteTermsAndConditionsDoc" class="button-secondary" type="submit">Remove</button>
                 </div>
             </div>
