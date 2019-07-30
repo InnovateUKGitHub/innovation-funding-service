@@ -453,6 +453,19 @@ public class CompetitionSetupController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
+    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
+    public String deleteTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
+                                           @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                           Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        Supplier<String> failureAndSuccessView = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+        RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
+        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
+                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
+    }
+
     /* AJAX Function */
     @GetMapping("/{competitionId}/generateCompetitionCode")
     @ResponseBody

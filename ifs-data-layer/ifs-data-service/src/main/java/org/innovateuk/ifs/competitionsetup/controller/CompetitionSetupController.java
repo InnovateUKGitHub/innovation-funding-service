@@ -148,7 +148,7 @@ public class CompetitionSetupController {
     }
 
     @DeleteMapping(value = "/competition-terms", produces = "application/json")
-    public RestResult<Void> deleteCompetitionTerms(@RequestParam(value = "id") long competitionId) {
+    public RestResult<Void> deleteCompetitionTerms(@RequestParam(value = "competitionId") long competitionId) {
         return competitionSetupService.deleteCompetitionTerms(competitionId).toDeleteResponse();
     }
 }

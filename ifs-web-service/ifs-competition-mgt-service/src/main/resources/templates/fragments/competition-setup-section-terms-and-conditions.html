@@ -47,6 +47,10 @@
                     <label for="terms-and-conditions-doc" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                     <button name="uploadTermsAndConditionsDoc" class="button-secondary" type="submit" data-for-file-upload="terms-and-conditions-doc"></button>
                 </div>
+                <div th:if="${model.termsAndConditionsDocUploaded}">
+                    <p><a href=""#>FileName.pdf</a> (opens in a new window).</p>
+                    <button name="deleteTermsAndConditionsDoc" class="button-secondary" type="submit">Remove</button>
+                </div>
             </div>
 
             <button class="govuk-button">Done</button>
