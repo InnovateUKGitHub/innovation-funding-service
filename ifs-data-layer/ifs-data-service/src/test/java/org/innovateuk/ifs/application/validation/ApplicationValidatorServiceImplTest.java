@@ -19,6 +19,7 @@ import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -67,6 +68,9 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private ApplicationValidationUtil applicationValidationUtil;
+
+    @Mock
+    private FinanceValidationUtil financeValidationUtil;
 
     @Mock
     private FormInputRepository formInputRepository;
@@ -267,7 +271,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
         when(financeRowCostsService.getCostItems(1L, FinanceRowType.TRAVEL)).thenReturn(serviceSuccess(costItems));
-        when(applicationValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
 
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
@@ -279,7 +283,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
         verify(financeRowCostsService, times(1)).getCostItems(1L, FinanceRowType.TRAVEL);
-        verify(applicationValidationUtil).validateCostItem(costItems);
+        verify(financeValidationUtil).validateCostItem(costItems);
 
     }
 
@@ -311,7 +315,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
         when(financeRowCostsService.getCostItems(applicationFinanceId, FinanceRowType.TRAVEL)).thenReturn(serviceSuccess(costItems));
-        when(applicationValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
@@ -320,7 +324,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
         verify(financeRowCostsService).getCostItems(applicationFinanceId, FinanceRowType.TRAVEL);
-        verify(applicationValidationUtil).validateCostItem(costItems);
+        verify(financeValidationUtil).validateCostItem(costItems);
     }
 
     @Test

@@ -16,7 +16,7 @@ public class AcademicCost extends AbstractFinanceRowItem {
     private FinanceRowType costType;
 
     private AcademicCost() {
-        super(null);
+        this(null);
     }
 
     public AcademicCost(Long targetId) {

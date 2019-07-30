@@ -97,7 +97,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         } else if (isMarkSectionAsIncompleteRequest(params) || isMarkSectionAsCompleteRequest(params)) {
             ValidationMessages financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), params);
 
-            if (financeErrorsMark.hasErrors()) {
+            if (financeErrorsMark != null && financeErrorsMark.hasErrors()) {
                 messages.addError(fieldError("formInput[cost]", "", MARKED_AS_COMPLETE_KEY));
                 messages.addAll(financeErrorsMark);
             }

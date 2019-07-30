@@ -33,7 +33,7 @@ public class SubContractingCost extends AbstractFinanceRowItem {
     private String role;
 
     private SubContractingCost() {
-        super(null);
+        this(null);
     }
 
     public SubContractingCost(Long targetId) {

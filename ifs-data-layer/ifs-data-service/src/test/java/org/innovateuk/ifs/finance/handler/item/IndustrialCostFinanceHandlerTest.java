@@ -12,7 +12,6 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
@@ -29,19 +28,15 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -101,11 +96,6 @@ public class IndustrialCostFinanceHandlerTest {
         applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<>();
 
-        for (FinanceRowType costType : FinanceRowType.values()) {
-            if (ACADEMIC != costType) {
-                setUpCostTypeQuestions(competition, costType);
-            }
-        }
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;
@@ -158,17 +148,6 @@ public class IndustrialCostFinanceHandlerTest {
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
-    }
-
-    private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
-        FormInput formInput = newFormInput()
-                .withType(costType.getFormInputType())
-                .build();
-        Question question = newQuestion().withFormInputs(asList(formInput)).build();
-
-        costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType())))
-                .thenReturn(serviceSuccess(question));
     }
 
     @Test

@@ -23,7 +23,7 @@ public class OtherCost extends AbstractFinanceRowItem {
     private String name;
 
     private OtherCost() {
-        super(null);
+        this(null);
     }
 
     public OtherCost(Long targetId) {

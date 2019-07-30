@@ -44,7 +44,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     private BigDecimal total; // calculated field, no validation
 
     private LabourCost() {
-        super(null);
+        this(null);
     }
 
     public LabourCost(Long targetId) {

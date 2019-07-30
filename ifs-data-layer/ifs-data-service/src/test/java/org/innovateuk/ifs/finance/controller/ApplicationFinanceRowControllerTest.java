@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationFinanceRowControllerTest extends BaseControllerMockMVCTest<ApplicationFinanceRowController> {
 
     @Mock
-    private ApplicationValidationUtil validationUtil;
+    private FinanceValidationUtil validationUtil;
 
     @Mock
     private ApplicationFinanceRowService financeRowCostsServiceMock;
@@ -32,7 +32,7 @@ public class ApplicationFinanceRowControllerTest extends BaseControllerMockMVCTe
     private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
     
     @Test
-    public void create() throws Exception{
+    public void create() throws Exception {
         FinanceRowItem financeRowItem = new GrantClaim(1L);
 
         when(financeRowCostsServiceMock.create(1L, financeRowItem)).thenReturn(serviceSuccess(new GrantClaim(1L)));
