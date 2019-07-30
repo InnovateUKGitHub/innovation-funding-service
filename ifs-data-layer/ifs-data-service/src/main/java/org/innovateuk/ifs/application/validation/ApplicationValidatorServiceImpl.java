@@ -13,6 +13,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -60,6 +61,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     private ApplicationValidationUtil applicationValidationUtil;
 
     @Autowired
+    private FinanceValidationUtil financeValidationUtil;
+
+    @Autowired
     private OrganisationService organisationService;
 
     @Override
@@ -100,7 +104,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
                         financeRowCostsService.getCostItems(financeDetails.getId(), type).andOnSuccessReturn(costItems ->
-                                applicationValidationUtil.validateCostItem(costItems)
+                                financeValidationUtil.validateCostItem(costItems)
                         )
                 )
         ).getSuccess();

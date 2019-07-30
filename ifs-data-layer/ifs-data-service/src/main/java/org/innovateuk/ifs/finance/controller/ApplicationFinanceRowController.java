@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.finance.controller;
 
-import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class ApplicationFinanceRowController {
     private ApplicationFinanceRowService applicationFinanceRowService;
 
     @Autowired
-    private ApplicationValidationUtil validationUtil;
+    private FinanceValidationUtil validationUtil;
 
     @GetMapping("/{id}")
     public RestResult<FinanceRowItem> get(@PathVariable final long id) {

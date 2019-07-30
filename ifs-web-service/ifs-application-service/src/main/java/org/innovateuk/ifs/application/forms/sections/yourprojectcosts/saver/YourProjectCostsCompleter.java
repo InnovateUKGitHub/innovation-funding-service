@@ -40,8 +40,7 @@ public class YourProjectCostsCompleter {
     }
 
     public ValidationMessages markAsComplete(long sectionId, long applicationId, ProcessRoleResource role) {
-        ValidationMessages messages = new ValidationMessages();
-        sectionService.markAsComplete(sectionId, applicationId, role.getId()).forEach(messages::addAll);
+        ValidationMessages messages = sectionService.markAsComplete(sectionId, applicationId, role.getId());
         if (!messages.hasErrors()) {
             handleMarkProjectCostsAsComplete(role);
         }

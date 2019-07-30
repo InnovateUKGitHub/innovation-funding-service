@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -18,15 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
-import static org.springframework.util.StringUtils.hasText;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 
 /**
  * This Saver will handle save all sections that are related to the application.
@@ -100,53 +95,18 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         if (errorsSoFar.hasErrors()) {
             messages.addError(fieldError("formInput[cost]", "", MARKED_AS_COMPLETE_KEY));
         } else if (isMarkSectionAsIncompleteRequest(params) || isMarkSectionAsCompleteRequest(params)) {
-            List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), params);
+            ValidationMessages financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), params);
 
-            if (collectValidationMessages(financeErrorsMark).hasErrors()) {
+            if (financeErrorsMark.hasErrors()) {
                 messages.addError(fieldError("formInput[cost]", "", MARKED_AS_COMPLETE_KEY));
-                messages.addAll(handleMarkSectionValidationMessages(financeErrorsMark));
+                messages.addAll(financeErrorsMark);
             }
         }
 
         return messages;
     }
 
-    private ValidationMessages handleMarkSectionValidationMessages(List<ValidationMessages> financeErrorsMark) {
-
-        ValidationMessages toFieldErrors = new ValidationMessages();
-
-        financeErrorsMark.forEach(validationMessage ->
-                validationMessage.getErrors().stream()
-                        .filter(Objects::nonNull)
-                        .filter(e -> hasText(e.getErrorKey()))
-                        .forEach(mapToApplicationFormErrors(validationMessage, toFieldErrors))
-        );
-
-        return toFieldErrors;
-    }
-
-    /* We are converting the error messages from the data service to our target ApplicationForm. File uploads cannot be handled as a formInput[id...]. */
-    private Consumer<Error> mapToApplicationFormErrors(ValidationMessages dataServiceMessage, ValidationMessages applicationFormErrors) {
-        return dataServiceError -> {
-            if ("costItem".equals(dataServiceMessage.getObjectName())) {
-                if (dataServiceError.isFieldError() && dataServiceError.getFieldName().equals("calculationFile")) {
-                    applicationFormErrors.addError(fieldError("overheadfile", dataServiceError));
-                } else if (hasText(dataServiceError.getErrorKey())) {
-                    applicationFormErrors.addError(fieldError("formInput[cost-" + dataServiceMessage.getObjectId() + "-" + dataServiceError.getFieldName() + "]", dataServiceError));
-                } else {
-                    applicationFormErrors.addError(fieldError(getFormCostInputKey(dataServiceMessage.getObjectId()), dataServiceError));
-                }
-            } else {
-                if(dataServiceError.isFieldError() && dataServiceError.getFieldName().equals("jesFileUpload")) {
-                    applicationFormErrors.addError(dataServiceError);
-                } else {
-                    applicationFormErrors.addError(fieldError(getFormInputKey(dataServiceMessage.getObjectId()), dataServiceError));
-                }
-            }
-        };
-    }
-
-    private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
+    private ValidationMessages markAllQuestionsInSection(ApplicationResource application,
                                                                SectionResource selectedSection,
                                                                Long processRoleId,
                                                                Map<String, String[]> params) {
@@ -156,6 +116,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             sectionService.markAsInComplete(selectedSection.getId(), application.getId(), processRoleId);
         }
 
-        return emptyList();
+        return noErrors();
     }
 }

@@ -48,7 +48,7 @@ public class GrantClaimCategoryTest {
     @Test
     public void addCost() {
 
-        FinanceRowItem grantClaim3 = new GrantClaim(3L, 30);
+        FinanceRowItem grantClaim3 = new GrantClaim(3L, 30, 1L);
         costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 

@@ -13,9 +13,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.List;
-import java.util.Optional;
-
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
@@ -69,15 +66,13 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     @Test
     @Rollback
     public void testMarkAsComplete(){
-        RestResult<List<ValidationMessages>> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
+        RestResult<ValidationMessages> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
-        List<ValidationMessages> validationMessages = result.getSuccess();
-        Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> !m.getErrors().isEmpty()).findFirst();
-        assertTrue("Could not find ValidationMessage object", findMessage.isPresent());
-        ValidationMessages messages = findMessage.get();
-        assertEquals(1, messages.getErrors().size());
+        ValidationMessages validationMessages = result.getSuccess();
+        assertTrue("Could not find ValidationMessage object", validationMessages.hasErrors());
+        assertEquals(1, validationMessages.getErrors().size());
 
-        assertThat(messages.getErrors(),
+        assertThat(validationMessages.getErrors(),
                 contains(
                         allOf(
                                 hasProperty("errorKey", is("validation.finance.min.row.other.funding.single"))
