@@ -177,6 +177,7 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
+${ods_file}      file_example_ODS.ods
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}

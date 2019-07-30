@@ -54,8 +54,8 @@ the applicant completes the application details
     the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
-     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = .button-clear[name="mark_as_incomplete"]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = .button-clear[name="mark_as_incomplete"]  # the Edit link
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = .button-clear[name="edit"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = .button-clear[name="edit"]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -67,7 +67,7 @@ the user fills in the Application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       css = button[name="mark_as_complete"]
+    The user clicks the button/link       css = button[name="complete"]
     the user clicks the button/link       link = Application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
@@ -325,12 +325,12 @@ the user completes the new account creation
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
     Input Text    css = .textarea-wrapped .editor    This is some random text
-    the user clicks the button/link    name = mark_as_complete
-    the user should see the element    name = mark_as_incomplete
+    the user clicks the button/link    name = complete
+    the user should see the element    name = edit
 
 the applicant edits the "economic benefit" question
-    the user clicks the button/link    name = mark_as_incomplete
-    the user should see the element    name = mark_as_complete
+    the user clicks the button/link    name = edit
+    the user should see the element    name = complete
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}

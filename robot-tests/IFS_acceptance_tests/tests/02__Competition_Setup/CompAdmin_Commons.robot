@@ -16,7 +16,8 @@ The competition admin creates competition
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
-    the user marks the application as done      ${projectGrowth}  ${compType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}  ${fundingType}
+    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}  ${fundingType}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
@@ -133,8 +134,14 @@ the user fills in the CS Documents in other projects
     the user should see the element          jQuery = span:contains("Test document type")
     the user clicks the button/link          link = Competition setup
 
+the user marks the procurement application as done
+    [Arguments]  ${growthTable}  ${comp_type}  ${fundingType}
+    the user clicks the button/link                               link = Application
+    the user marks the Application details section as complete    ${comp_type}
+    the assessed questions are marked as complete(procurement)    ${growthTable}
+
 the user marks the Application as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${fundingType}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
@@ -213,6 +220,25 @@ the user marks each question as complete
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
     the user clicks the button/link  css = button[type="submit"]
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
+
+the assessed questions are marked as complete(procurement)
+    [Arguments]   ${growthTable}
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+     \    the user marks each procurement question as complete    ${ELEMENT}
+     the user should see the element           jQuery = button:contains("Add question")
+     the user fills in the Finances questions  ${growthTable}  false  true
+     the user clicks the button/link           jQuery = button:contains("Done")
+     the user clicks the button/link           link = Competition setup
+
+the user marks each procurement question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
+    the user selects the radio button      question.templateDocument  1
+    the user enters text to a text field   id = question.templateTitle   ${question_link}
+    then the user uploads the file         id = template-document-file   ${ods_file}
+    the user selects the checkbox          question.allowedTemplateResponseFileTypes1
+    the user clicks the button/link        css = button[type="submit"]
+    the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
