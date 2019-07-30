@@ -450,7 +450,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testFindActiveByProcessRoles(){
         Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
@@ -469,7 +469,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testFindInactiveByProcessRoles(){
         Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 

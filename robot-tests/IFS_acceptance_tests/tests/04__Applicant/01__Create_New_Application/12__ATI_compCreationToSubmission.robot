@@ -73,11 +73,12 @@ Applicant completes Project Details
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]
-    Given Log in as a different user       &{internal_finance_credentials}
-    When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
-    And the user expands the section       Overhead costs
-    Then the user should see the element   jQuery = a:contains("${excel_file}")
+    Given Log in as a different user            &{internal_finance_credentials}
+    When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
+    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user expands the section            Overhead costs
+    Then the user should see the element        jQuery = a:contains("${excel_file}")
+    And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22
     # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
 

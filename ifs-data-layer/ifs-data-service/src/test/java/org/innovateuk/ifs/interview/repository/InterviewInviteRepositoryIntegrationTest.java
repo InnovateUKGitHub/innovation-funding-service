@@ -81,7 +81,7 @@ public class InterviewInviteRepositoryIntegrationTest extends BaseRepositoryInte
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         Page<InterviewInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 

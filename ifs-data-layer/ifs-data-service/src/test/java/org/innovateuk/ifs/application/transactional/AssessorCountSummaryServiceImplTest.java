@@ -40,6 +40,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         final int pageNumber = 0;
         final int pageSize = 20;
         final Optional<Long> innovationSectorId = Optional.of(5L);
+        final String assessorFilter = "";
         final Optional<BusinessType> businessType = Optional.of(BusinessType.ACADEMIC);
 
         List<AssessorCountSummaryResource> assessorCountSummaryResources = newAssessorCountSummaryResource().build(2);
@@ -52,15 +53,15 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getNumber()).thenReturn(pageNumber);
         when(page.getSize()).thenReturn(pageSize);
 
-        when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetition(
-                eq(competitionId), eq(innovationSectorId), eq(businessType), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("user.firstName", Sort.Direction.ASC))))
+        when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetitionAndAssessorNameLike(
+                eq(competitionId), eq(assessorFilter), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("user.firstName", Sort.Direction.ASC))))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =
                 new AssessorCountSummaryPageResource(2, 1, assessorCountSummaryResources, pageNumber, pageSize);
 
         AssessorCountSummaryPageResource result =
-                service.getAssessorCountSummariesByCompetitionId(competitionId, innovationSectorId, businessType, pageNumber, pageSize)
+                service.getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize)
                         .getSuccess();
 
         assertEquals(expectedPageResource, result);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -102,5 +103,9 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withAllowedFileTypes(Set<FileTypeCategory>... allowedFileTypes) {
         return withArraySetFieldByReflection("allowedFileTypes", allowedFileTypes);
+    }
+
+    public FormInputBuilder withFile(FileEntry... files) {
+        return withArray((file, input) -> input.setFile(file), files);
     }
 }

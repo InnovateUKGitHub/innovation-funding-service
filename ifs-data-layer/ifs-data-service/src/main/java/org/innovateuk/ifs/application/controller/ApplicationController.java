@@ -72,7 +72,7 @@ public class ApplicationController {
     public RestResult<ApplicationPageResource> wildcardSearchById(@RequestParam(value = "searchString", defaultValue = "") String searchString,
                                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return applicationService.wildcardSearchById(searchString, new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return applicationService.wildcardSearchById(searchString, PageRequest.of(pageIndex, pageSize)).toGetResponse();
     }
 
     @PostMapping("/save-application-details/{id}")

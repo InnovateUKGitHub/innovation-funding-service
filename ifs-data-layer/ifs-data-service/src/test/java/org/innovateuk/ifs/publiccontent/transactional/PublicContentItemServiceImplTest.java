@@ -74,7 +74,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void findFilteredItems_withNoParameters() {
         Page<Competition> competitionPage = getCompetitionPage();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
-        when(publicContentRepository.findAllPublishedForOpenCompetition(new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentRepository.findAllPublishedForOpenCompetition(PageRequest.of(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
@@ -95,7 +95,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Page<Competition> competitionPage = getCompetitionPage();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
-        when(publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(expectedCompetitionIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(expectedCompetitionIds, PageRequest.of(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
         List<Competition> competitions  = newCompetition()
@@ -123,7 +123,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Page<Competition> competitionPage = getCompetitionPage();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
-        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, PageRequest.of(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
         List<Competition> competitions = newCompetition()
@@ -164,7 +164,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                 .build();
 
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
-        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(expectedPublicContentIds, expectedCompetitionIds, new PageRequest(1, 10))).thenReturn(competitionPage);
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(expectedPublicContentIds, expectedCompetitionIds, PageRequest.of(1, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
         when(innovationAreaRepository.findById(INNOVATION_AREA_ID)).thenReturn(Optional.of(innovationArea));
         when(competitionRepository.findByInnovationSectorCategoryId(innovationSectorId)).thenReturn(competitions);
@@ -187,7 +187,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Page<Competition> competitionPage = getCompetitionPage();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
-        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, PageRequest.of(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
         List<Competition> competitions = newCompetition()
