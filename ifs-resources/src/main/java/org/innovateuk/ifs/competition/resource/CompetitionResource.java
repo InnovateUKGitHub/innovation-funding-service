@@ -105,7 +105,6 @@ public class CompetitionResource {
     private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
-        // no-arg constructor
     }
 
     public CompetitionResource(long id,
