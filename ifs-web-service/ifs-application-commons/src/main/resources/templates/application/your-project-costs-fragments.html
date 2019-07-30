@@ -284,24 +284,6 @@
                   th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
 
         </h3>
-        <details th:if="${model.isProcurementCompetition()}" class="govuk-details" role="group">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Overheads costs guidance</span>
-            </summary>
-            <div class="govuk-details__text">
-                <p class="govuk-body">Overhead costs should be charged in proportion to the amount of effort deployed on the project. Calculate them using your own cost rates. They can include:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>general office and basic laboratory consumables</li>
-                    <li>library services or learning resources</li>
-                    <li>administrative tasks</li>
-                    <li>finance, personnel, public relations and departmental services</li>
-                    <li>central and distributed computing</li>
-                    <li>cost of capital employed</li>
-                </ul>
-                <p class="govuk-body">An element of overheads can be included in your project costs but this must be realistic. Costs that are considered unreasonable may be rejected.</p>
-                <p class="govuk-body">You could be asked to provide an itemisation of costs and methods of calculation to support your application.</p>
-            </div>
-        </details>
         <div class="collapsible-content">
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: overheads_read_only"/>
@@ -548,6 +530,24 @@
                   th:text="${#ifsUtil.calculatePercentage(form.procurementOverheadRows, form.organisationFinanceTotal) + '%'}"></span>
         </h3>
         <div class="collapsible-content">
+            <details class="govuk-details" role="group">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Overheads costs guidance</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">Overhead costs should be charged in proportion to the amount of effort deployed on the project. Calculate them using your own cost rates. They can include:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>general office and basic laboratory consumables</li>
+                        <li>library services or learning resources</li>
+                        <li>administrative tasks</li>
+                        <li>finance, personnel, public relations and departmental services</li>
+                        <li>central and distributed computing</li>
+                        <li>cost of capital employed</li>
+                    </ul>
+                    <p class="govuk-body">An element of overheads can be included in your project costs but this must be realistic. Costs that are considered unreasonable may be rejected.</p>
+                    <p class="govuk-body">You could be asked to provide an itemisation of costs and methods of calculation to support your application.</p>
+                </div>
+            </details>
             <th:block th:if="${model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_read_only"/>
             </th:block>
