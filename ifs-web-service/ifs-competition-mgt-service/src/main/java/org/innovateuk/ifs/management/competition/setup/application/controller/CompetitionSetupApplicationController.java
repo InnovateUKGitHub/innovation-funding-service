@@ -433,7 +433,7 @@ public class CompetitionSetupApplicationController {
         if (Boolean.TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
             CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
             if (question.getTemplateFilename() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "templateDocumentFile", "This field cannot be left blank."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "templateDocumentFile", "You must upload a file."));
             }
         }
     }

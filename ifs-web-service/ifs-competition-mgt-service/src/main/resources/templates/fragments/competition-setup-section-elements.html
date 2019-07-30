@@ -56,10 +56,7 @@
                         <dd class="govuk-grid-column-two-thirds">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})}"
                                th:text="${model.templateFilename}"
-                               target="_blank"
-                               class="govuk-link"
-                               aria-describedby="file-hint">File</a>
-                            <span>(opens in a new window)</span>.
+                               class="govuk-link">File</a>
                         </dd>
                         <dt class="govuk-grid-column-one-third">Accepted upload file types</dt>
                         <dd class="govuk-grid-column-two-thirds">
@@ -386,7 +383,7 @@
                                for="question.templateTitle">
                             Template title
                             <span class="govuk-hint">
-                            For example. 'Methodology'. This would display as 'Download methodology template'
+                            Give a title for example 'methodology'. This would appear to the applicant as 'Download methodology template.'
                             </span>
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.templateTitle')}">
@@ -425,10 +422,7 @@
                                 <p class="govuk-body uploaded-file">
                                     <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})}"
                                        th:text="${model.templateFilename}"
-                                       target="_blank"
-                                       class="govuk-link"
-                                       aria-describedby="file-hint">File</a>
-                                    <span>(opens in a new window)</span>.</p>
+                                       class="govuk-link">File</a></p>
                                 <button name="removeTemplateDocumentFile" class="button-secondary">Remove</button>
                             </th:block>
                         </div>
