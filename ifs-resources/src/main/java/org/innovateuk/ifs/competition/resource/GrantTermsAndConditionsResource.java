@@ -16,6 +16,6 @@ public class GrantTermsAndConditionsResource extends TermsAndConditionsResource 
 
     @JsonIgnore
     public boolean isProcurement() {
-        return name.equals("SBRI");
+        return name.equals("Procurement");
     }
 }

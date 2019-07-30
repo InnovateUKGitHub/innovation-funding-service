@@ -137,7 +137,7 @@ public class CompetitionSetupController {
     public RestResult<FileEntryResource> uploadCompetitionTerms(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "id") long competitionId,
+            @RequestParam(value = "competitionId") long competitionId,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
