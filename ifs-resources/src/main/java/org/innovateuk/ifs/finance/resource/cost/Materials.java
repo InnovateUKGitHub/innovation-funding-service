@@ -33,7 +33,7 @@ public class Materials extends AbstractFinanceRowItem {
     private Integer quantity;
 
     private Materials() {
-        super(null);
+        this(null);
     }
 
     public Materials(Long targetId) {

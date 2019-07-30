@@ -22,7 +22,7 @@ public class OtherFunding extends AbstractFinanceRowItem {
     private String name;
 
     private OtherFunding() {
-        super(null);
+        this(null);
     }
 
     public OtherFunding(Long targetId) {

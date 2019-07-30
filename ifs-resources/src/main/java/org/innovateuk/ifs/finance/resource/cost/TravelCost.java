@@ -30,7 +30,7 @@ public class TravelCost extends AbstractFinanceRowItem {
     private String name;
 
     private TravelCost() {
-        super(null);
+        this(null);
     }
 
     public TravelCost(Long targetId) {

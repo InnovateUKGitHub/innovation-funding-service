@@ -29,7 +29,7 @@ public class Overhead extends AbstractFinanceRowItem {
     private String name;
 
     private Overhead() {
-        super(null);
+        this(null);
     }
 
     public Overhead(Long targetId) {

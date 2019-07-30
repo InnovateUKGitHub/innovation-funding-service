@@ -16,7 +16,7 @@ public class GrantClaim extends AbstractFinanceRowItem {
     private String name;
 
     private GrantClaim() {
-        super(null);
+        this(null);
     }
 
     public GrantClaim(Long targetId) {

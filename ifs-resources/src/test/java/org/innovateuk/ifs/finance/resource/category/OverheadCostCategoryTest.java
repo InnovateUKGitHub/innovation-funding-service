@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,10 +24,7 @@ public class OverheadCostCategoryTest {
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem overHead = newOverhead()
-                .withRate(20)
-                .withRateType(DEFAULT_PERCENTAGE)
-                .build();
+        FinanceRowItem overHead = newOverhead().withRateType(OverheadRateType.DEFAULT_PERCENTAGE).withRate(20).build();
         costs.add(overHead);
 
         overheadCostCategory = newOverheadCostCategory()

@@ -12,7 +12,7 @@ import java.util.Set;
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionStatusRestService {
-    RestResult<List<ValidationMessages>> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
+    RestResult<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
     RestResult<Void> markAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById);
     RestResult<Void> markAsInComplete(long sectionId, long applicationId, long markedAsInCompleteById);
     RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(long applicationId);

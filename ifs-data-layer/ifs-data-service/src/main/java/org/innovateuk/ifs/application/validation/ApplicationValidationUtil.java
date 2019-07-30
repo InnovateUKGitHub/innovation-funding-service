@@ -8,32 +8,27 @@ import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsComplet
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.Error.globalError;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -92,12 +87,24 @@ public class ApplicationValidationUtil {
         return binder.getBindingResult();
     }
 
-    public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
-        List<ValidationMessages> validationMessages = new ArrayList<>();
+    public ValidationMessages isSectionValid(Long markedAsCompleteById, Section section, Application application) {
+        ValidationMessages validationMessages = new ValidationMessages();
         for (Question question : section.fetchAllQuestionsAndChildQuestions()) {
             if (question.getMarkAsCompletedEnabled()) {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
             }
+        }
+        Set<FinanceRowType> competitionFinanceTypes = section.getCompetition().getFinanceRowTypes();
+        if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
+             asSet(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+                    .stream()
+                    .filter(competitionFinanceTypes::contains)
+                    .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+        } else if (SectionType.FUNDING_FINANCES == section.getType()) {
+            asSet(FINANCE, OTHER_FUNDING)
+                    .stream()
+                    .filter(competitionFinanceTypes::contains)
+                    .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
         }
         return validationMessages;
     }
@@ -107,16 +114,15 @@ public class ApplicationValidationUtil {
         List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> formInput.getActive() && APPLICATION.equals(formInput.getScope()));
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : formInputs) {
-                validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
+                validationMessages.addAll(isMultipleStatusFormInputValid(application, markedAsCompleteById, formInput));
             }
-
         } else if (question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
             validationMessages.addAll(isApplicationTeamValid(application, question));
         } else if (question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
             validationMessages.addAll(isResearchCategoryValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
-                validationMessages.addAll(isFormInputValid(application, formInput));
+                validationMessages.addAll(isSingleStatusFormInputValid(application, formInput));
             }
         }
         return validationMessages;
@@ -142,7 +148,7 @@ public class ApplicationValidationUtil {
         return validationMessages;
     }
 
-    private List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
+    private List<ValidationMessages> isSingleStatusFormInputValid(Application application, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         List<BindingResult> bindingResults = applicationValidatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
@@ -153,7 +159,7 @@ public class ApplicationValidationUtil {
         return validationMessages;
     }
 
-    private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
+    private List<ValidationMessages> isMultipleStatusFormInputValid(Application application, Long markedAsCompleteById, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
@@ -164,8 +170,6 @@ public class ApplicationValidationUtil {
                 validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));
             }
         }
-
-        validationCostItem(question, application, markedAsCompleteById, formInput, validationMessages);
         return validationMessages;
     }
 
@@ -173,101 +177,4 @@ public class ApplicationValidationUtil {
         return formInput.getType().equals(FormInputType.FINANCE_UPLOAD);
     }
 
-    private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
-        try {
-            FinanceRowType type = FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
-            validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById));
-        } catch (IllegalArgumentException e) {
-            // not a costtype, which is fine...
-            LOG.trace("input type not a cost type", e);
-        }
-    }
-
-    public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems) {
-        if (costItems.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<ValidationMessages> results = costItems.stream()
-                .map(this::validateCostItem)
-                .filter(this::nonEmpty)
-                .collect(Collectors.toList());
-
-        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(costItems);
-        if (emptyRowMessages != null) {
-            results.add(emptyRowMessages);
-        }
-
-        return results;
-    }
-
-    private boolean nonEmpty(ValidationMessages validationMessages) {
-        return validationMessages != null && validationMessages.hasErrors();
-    }
-
-    public ValidationMessages validateCostItem(FinanceRowItem costItem) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
-        invokeValidator(costItem, bindingResult);
-        return buildValidationMessages(costItem, bindingResult);
-    }
-
-    public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
-        invokeProjectCostValidator(costItem, bindingResult);
-        return buildValidationMessages(costItem, bindingResult);
-    }
-
-    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("validated, with messages: ");
-                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
-            }
-            return new ValidationMessages(costItem.getId(), bindingResult);
-        } else {
-            return ValidationMessages.noErrors(costItem.getId());
-        }
-    }
-
-    private void invokeProjectCostValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
-        FinanceRowHandler financeRowHandler = applicationValidatorService.getProjectCostHandler(costItem);
-        financeRowHandler.validate(costItem, bindingResult);
-    }
-
-    private void invokeValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
-        FinanceRowHandler financeRowHandler = applicationValidatorService.getCostHandler(costItem);
-        financeRowHandler.validate(costItem, bindingResult);
-    }
-
-    private ValidationMessages invokeEmptyRowValidator(List<FinanceRowItem> costItems) {
-        ValidationMessages validationMessages = new ValidationMessages();
-        int rowCount = 0;
-        if (costItems.size() > 1) {
-            for (final FinanceRowItem row : costItems) {
-                boolean exclude = row.excludeInRowCount();
-                if (!exclude) {
-                    rowCount++;
-                }
-            }
-        }
-
-        if (rowCount < costItems.get(0).getMinRows()) {
-            switch (costItems.get(0).getCostType()) {
-                case OTHER_FUNDING:
-                    if ("Yes".equals(((OtherFunding) costItems.get(0)).getOtherPublicFunding())) {
-                        if (costItems.get(0).getMinRows() == 1) {
-                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
-                        } else {
-                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.multiple", singletonList(costItems.get(0).getMinRows())));
-                        }
-                    }
-                    break;
-                default:
-                    validationMessages.addError(globalError("validation.finance.min.row", singletonList(costItems.get(0).getMinRows())));
-                    break;
-            }
-        }
-        return validationMessages;
-    }
 }

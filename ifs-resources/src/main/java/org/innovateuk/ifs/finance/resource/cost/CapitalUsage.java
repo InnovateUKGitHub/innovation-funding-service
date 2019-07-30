@@ -45,7 +45,7 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     private Integer utilisation;
 
     private CapitalUsage() {
-        super(null);
+        this(null);
     }
 
     public CapitalUsage(Long targetId) {
