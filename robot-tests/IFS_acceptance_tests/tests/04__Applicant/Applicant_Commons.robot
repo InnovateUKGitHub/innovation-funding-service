@@ -110,7 +110,7 @@ the user has read only view once section is marked complete
     the user clicks the button/link       jQuery = a:contains("Return to finances")
 
 the user fills in Labour
-    the user clicks the button/link            jQuery = button:contains("Labour")
+    the user expands the section               Labour
     the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       id = working-days-per-year   230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
@@ -155,7 +155,7 @@ the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
-    the user clicks the button/link       css = #main-content > form > section:nth-child(9) > h3 > button
+    the user expands the section          Capital usage
     the user enters text to a text field  css = textarea.govuk-textarea[name^=capitalUsageRows]  some description
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
@@ -163,7 +163,7 @@ the user fills in Capital usage
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
     textfield should contain              css = #capital-usage .form-row:nth-of-type(1) [readonly="readonly"]  £4,975
-    the user clicks the button/link       css = #main-content > form > section:nth-child(9) > h3 > button
+    the user expands the section          Capital usage
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")

@@ -69,7 +69,7 @@
                 </div>
 
                 <th:block th:with="supportUserAndSummaryPage = ${model.support}">
-                    <th:block th:insert="application/readonly/application-read-only :: collapsible-list (${model.applicationReadOnlyViewModel})" />
+                    <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
                 </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
