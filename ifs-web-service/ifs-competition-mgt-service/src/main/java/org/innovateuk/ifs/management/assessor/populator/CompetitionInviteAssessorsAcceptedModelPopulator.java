@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.assessor.populator;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
@@ -29,9 +28,6 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private CategoryRestService categoryRestService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
@@ -45,8 +41,8 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                empty(),
                 singletonList(ACCEPTED),
+                empty(),
                 empty()
         )
                 .getSuccess();

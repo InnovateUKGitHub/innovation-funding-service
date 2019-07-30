@@ -73,6 +73,18 @@
                         <dd th:text="${model.previousApplicationTitle}"></dd>
                     </th:block>
                 </th:block>
+                <th:block th:if="${model.competitionReferralSource != null}">
+                    <dt>Who made you aware of the competition?</dt>
+                    <dd th:text="${model.competitionReferralSource.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.companyAge != null}">
+                    <dt>How long has the company been established for?</dt>
+                    <dd th:text="${model.companyAge.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.companyPrimaryFocus != null}">
+                    <dt>What is your organisation's primary area of focus?</dt>
+                    <dd th:text="${model.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
+                </th:block>
             </dl>
         </div>
     </div>

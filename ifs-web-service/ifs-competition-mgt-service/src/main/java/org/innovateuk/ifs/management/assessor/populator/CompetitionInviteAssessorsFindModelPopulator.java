@@ -36,7 +36,7 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
 
     public CompetitionInviteAssessorsFindViewModel populateModel(long competitionId,
                                                                  int page,
-                                                                 Optional<Long> innovationArea) {
+                                                                 String assessorNameFilter) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -45,7 +45,7 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
 
         List<InnovationSectorResource> innovationSectors = categoryRestService.getInnovationSectors().getSuccess();
 
-        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)
+        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, assessorNameFilter)
                 .getSuccess();
 
         List<CompetitionAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);

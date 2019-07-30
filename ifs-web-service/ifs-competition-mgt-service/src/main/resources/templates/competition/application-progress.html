@@ -90,11 +90,11 @@
                                        th:href="${removeActionNonJs}"
                                        th:attr="data-modal-form-action=${removeAction}"
                                        th:with="
-                                       removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
-                                       removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
+                                       removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId})},
+                                       removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId})}"
                                        th:unless="${assessor.submitted}">Remove</a>
                                     <form th:unless="${assessor.notified}" method="post"
-                                          th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}">
+                                          th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId})}">
                                         <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
                                     </form>
                                 </td>
@@ -184,34 +184,30 @@
                 <h2 class="govuk-heading-m">Available assessors</h2>
 
                 <div class="search-filters govuk-!-margin-top-6">
-                    <form action="#" method="GET">
-                        <fieldset class="govuk-fieldset">
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-two-thirds">
-                                    <div class="govuk-form-group">
+                    <form method="GET">
+                        <div class="search-filters govuk-!-margin-top-6">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                                    <h2 class="govuk-fieldset__heading">Filter assessors</h2>
+                                </legend>
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-two-thirds">
                                         <label class="govuk-label"
-                                               for="filterInnovationArea">Innovation area</label>
-                                        <select th:field="${model.filterInnovationArea}"
-                                                class="govuk-select"
-                                                aria-labelledby="innovation-area"
-                                                id="filterInnovationArea">
-                                            <option th:selected="${model.filterInnovationArea} == null" value="">--</option>
-                                            <optgroup th:each="innovationSector : ${model.innovationSectors}" th:label="${innovationSector.name}">
-                                                <option th:each="innovationArea : ${innovationSector.children}"
-                                                        th:value="${innovationArea.id}"
-                                                        th:text="${innovationArea.name}"
-                                                        th:selected="${model.filterInnovationArea} == ${innovationArea.id}">
-                                                </option>
-                                            </optgroup>
-                                        </select>
+                                               for="assessorNameFilter">Search for an assessor by first or last name.</label>
+                                        <input class="govuk-input"
+                                               id="assessorNameFilter"
+                                               name="assessorNameFilter"
+                                               value="">
                                     </div>
-                                    <a href="?" class="govuk-body govuk-link">Clear all filters</a>
+                                    <div class="govuk-grid-column-one-third">
+                                        <button class="govuk-button" >Filter</button>
+                                    </div>
                                 </div>
-                                <div class="govuk-grid-column-one-third">
-                                    <button class="govuk-button">Filter</button>
-                                </div>
+                            </fieldset>
+                            <div class="govuk-!-margin-top-6">
+                                <a href="?" class="govuk-link govuk-body">Clear filter</a>
                             </div>
-                        </fieldset>
+                        </div>
                     </form>
                 </div>
 
@@ -245,7 +241,7 @@
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.submittedApplications}">1</td>
                                 <td class="govuk-table__cell">
                                     <form method="post"
-                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
+                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
                                         <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
                                     </form>
                                 </td>

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -13,9 +14,11 @@ public class YourOrganisationWithoutGrowthTableForm {
     private OrganisationSize organisationSize;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
+    @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long turnover;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
+    @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
 
     private Boolean stateAidAgreed;

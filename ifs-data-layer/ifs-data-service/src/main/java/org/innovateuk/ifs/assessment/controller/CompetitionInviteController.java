@@ -75,26 +75,26 @@ public class CompetitionInviteController {
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam Optional<Long> innovationArea
+            @RequestParam String assessorNameFilter
     ) {
-        return assessmentInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
+        return assessmentInviteService.getAvailableAssessors(competitionId, pageable, assessorNameFilter).toGetResponse();
     }
 
     @GetMapping(value = "/get-available-assessors/{competitionId}", params = "all")
     public RestResult<List<Long>> getAvailableAssessorIds(
             @PathVariable long competitionId,
-            @RequestParam Optional<Long> innovationArea
+            @RequestParam String assessorNameFilter
     ) {
-        return assessmentInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
+        return assessmentInviteService.getAvailableAssessorIds(competitionId, assessorNameFilter).toGetResponse();
     }
 
     @GetMapping(value = "/get-assessors-not-accepted-invite-ids/{competitionId}")
     public RestResult<List<Long>> getAssessorsNotAcceptedInviteIds(
             @PathVariable long competitionId,
-            @RequestParam Optional<Long> innovationArea,
             @RequestParam List<ParticipantStatus> statuses,
-            @RequestParam Optional<Boolean> compliant) {
-        return assessmentInviteService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).toGetResponse();
+            @RequestParam Optional<Boolean> compliant,
+            @RequestParam Optional<String> assessorName) {
+        return assessmentInviteService.getAssessorsNotAcceptedInviteIds(competitionId, statuses, compliant, assessorName).toGetResponse();
     }
 
     @GetMapping("/get-created-invites/{competitionId}")
@@ -109,11 +109,11 @@ public class CompetitionInviteController {
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam Optional<Long> innovationArea,
             @RequestParam List<ParticipantStatus> statuses,
-            @RequestParam Optional<Boolean> compliant
+            @RequestParam Optional<Boolean> compliant,
+            @RequestParam Optional<String> assessorName
     ) {
-        return assessmentInviteService.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant).toGetResponse();
+        return assessmentInviteService.getInvitationOverview(competitionId, pageable, statuses, compliant, assessorName).toGetResponse();
     }
 
     @GetMapping("/get-invite-statistics/{competitionId}")

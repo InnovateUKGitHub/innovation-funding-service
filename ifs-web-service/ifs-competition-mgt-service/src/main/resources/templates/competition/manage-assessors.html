@@ -17,54 +17,28 @@
 
                 <p class="govuk-body govuk-!-margin-top-6">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
 
-                <form method="GET" th:object="${filterForm}">
-                    <div class="search-filters">
+                <form method="GET">
+                    <div class="search-filters govuk-!-margin-top-6">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
                                 <h2 class="govuk-fieldset__heading">Filter assessors</h2>
                             </legend>
                             <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-one-half">
-                                    <div class="govuk-form-group">
-                                        <label for="innovationSector" class="govuk-label">Innovation sector</label>
-                                        <select class="govuk-select"
-                                                name="innovationSector"
-                                                id="innovationSector">
-                                            <option th:selected="${filterForm.innovationSector} == null" value="">---</option>
-                                            <option th:each="innovationSector : ${model.innovationSectors}"
-                                                    th:value="${innovationSector.id}"
-                                                    th:text="${innovationSector.name}"
-                                                    th:selected="${(innovationSector.id == filterForm.innovationSector)}"
-                                                    value="1">Not available</option>
-                                        </select>
-                                    </div>
+                                <div class="govuk-grid-column-two-thirds">
+                                    <label class="govuk-label"
+                                           for="assessorNameFilter">Search for an assessor by first or last name.</label>
+                                    <input class="govuk-input"
+                                           id="assessorNameFilter"
+                                           name="assessorNameFilter"
+                                           value="">
                                 </div>
-                                <div class="govuk-grid-column-one-half">
-                                    <div class="govuk-form-group">
-                                        <label for="businessType" class="govuk-label">Type</label>
-                                        <select class="govuk-select"
-                                                name="businessType"
-                                                id="businessType">
-                                            <option th:selected="${filterForm.businessType} == null" value="">---</option>
-                                            <option th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}"
-                                                    th:value="${type}"
-                                                    th:text="${type.displayName}"
-                                                    th:selected="${type == filterForm.businessType}"
-                                                    value="1">Not available</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    <div class="column-one alignright">
-                                        <button class="govuk-button govuk-!-margin-0">Filter</button>
-                                    </div>
+                                <div class="govuk-grid-column-one-third">
+                                    <button class="govuk-button" >Filter</button>
                                 </div>
                             </div>
                         </fieldset>
-                        <div class="clear-search-filters">
-                            <a href="?sort" class="govuk-body govuk-link">Clear all filters</a>
+                        <div class="govuk-!-margin-top-6">
+                            <a href="?" class="govuk-link govuk-body">Clear filter</a>
                         </div>
                     </div>
                 </form>

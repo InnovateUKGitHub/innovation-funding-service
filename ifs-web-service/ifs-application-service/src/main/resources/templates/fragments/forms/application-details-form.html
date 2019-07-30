@@ -148,6 +148,132 @@
                         </div>
                     </fieldset>
                 </div>
+
+                <!--/* procurement competition only questions */-->
+
+                <!--/* Input is used here to easily check if a competition is of type procurement */-->
+                <input type="hidden" th:if="${model.formInputViewModel.isProcurementCompetition == true}" th:field="*{__isProcurementCompetition__}" value="true"/>
+
+                <th:block th:if="${model.formInputViewModel.isProcurementCompetition}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__competitionReferralSource__}')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="competitionReferralQuestion">
+                            <h2 class="govuk-fieldset__heading">Who made you aware of the competition?</h2>
+                        </legend>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Select a category from the list below to state who made you aware of the competition. You cannot choose more than one.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='competitionReferralSource')" />
+                        <select name="competitionReferralSource"
+                            id="competitionReferralSource"
+                            th:field="*{__competitionReferralSource__}"
+                            th:attr="data-required-errormessage=#{validation.application.procurement.competitionreferralsource.required}"
+                            required="required"
+                            th:errorclass="govuk-input--error"
+                            class="govuk-select govuk-!-margin-bottom-6">
+                            <option value="" selected="selected">Please select...</option>
+                            <option th:each="enum : ${T(org.innovateuk.ifs.application.resource.CompetitionReferralSource).values()}"
+                                    th:value="${enum}"
+                                    th:text="${enum.name}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__companyAge__}')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="companyAgeQuestion">
+                            <h2 class="govuk-fieldset__heading">How long has your company been established for?</h2>
+                        </legend>
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='companyAge')" />
+                        <fieldset class="govuk-fieldset" name="companyAge" id="companyAge">
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="company-age">
+                                    <input id="company-age-zero"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           th:field="*{__companyAge__}"
+                                           th:attr="data-required-errormessage=#{validation.application.procurement.companyage.required}"
+                                           value="PRE_START_UP"
+                                           required="required"/>
+                                    <label th:for="company-age-zero"
+                                           class="govuk-label govuk-radios__label">
+                                        Pre-start-up
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="company-age">
+                                    <input id="company-age-less-than-one"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           th:field="*{__companyAge__}"
+                                           th:attr="data-required-errormessage=#{validation.application.procurement.companyage.required}"
+                                           value="START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR"
+                                           required="required"/>
+                                    <label th:for="company-age-less-than-one"
+                                           class="govuk-label govuk-radios__label">
+                                        Start-up, established for less than a year
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="company-age">
+                                    <input id="company-age-one-to-five"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           th:field="*{__companyAge__}"
+                                           th:attr="data-required-errormessage=#{validation.application.procurement.companyage.required}"
+                                           value="ESTABLISHED_1_TO_5_YEARS"
+                                           required="required"/>
+                                    <label th:for="company-age-one-to-five"
+                                           class="govuk-label govuk-radios__label">
+                                        Established 1 to 5 years
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="company-age">
+                                    <input id="company-age-five-to-ten"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           th:field="*{__companyAge__}"
+                                           th:attr="data-required-errormessage=#{validation.application.procurement.companyage.required}"
+                                           value="ESTABLISHED_5_TO_10_YEARS"
+                                           required="required"/>
+                                    <label th:for="company-age-five-to-ten"
+                                           class="govuk-label govuk-radios__label">
+                                        Established 5 to 10 years
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="company-age">
+                                    <input id="company-age-more-than-ten"
+                                           class="govuk-radios__input"
+                                           type="radio"
+                                           th:field="*{__companyAge__}"
+                                           th:attr="data-required-errormessage=#{validation.application.procurement.companyage.required}"
+                                           value="ESTABLISHED_MORE_THAN_10_YEARS"
+                                           required="required"/>
+                                    <label th:for="company-age-more-than-ten"
+                                           class="govuk-label govuk-radios__label">
+                                        Established more than 10 years
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__companyPrimaryFocus__}')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="companyPrimaryFocusQuestion">
+                            <h2 class="govuk-fieldset__heading">What is your organisation's primary area of focus?</h2>
+                        </legend>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Select a category from the list below to indicate your organisation\'s primary area of focus. You cannot choose more than one.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='companyPrimaryFocus')" />
+                        <select name="companyPrimaryFocus"
+                            id="companyPrimaryFocus"
+                            th:field="*{__companyPrimaryFocus__}"
+                            th:attr="data-required-errormessage=#{validation.application.procurement.companyprimaryfocus.required}"
+                            required="required"
+                            th:errorclass="govuk-input--error"
+                            class="govuk-select govuk-!-margin-bottom-6">
+                            <option value="" selected="selected">Please select...</option>
+                            <option th:each="enum : ${T(org.innovateuk.ifs.application.resource.CompanyPrimaryFocus).values()}"
+                                    th:value="${enum}"
+                                    th:text="${enum.name}">
+                            </option>
+                        </select>
+                    </div>
+                </th:block>
+
             </th:block>
 
             <!--/* Read only template */-->

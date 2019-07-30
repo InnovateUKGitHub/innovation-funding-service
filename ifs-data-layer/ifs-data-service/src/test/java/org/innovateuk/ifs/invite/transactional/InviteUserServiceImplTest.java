@@ -325,7 +325,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void findPendingInternalUsers() {
 
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         Role role = Role.IFS_ADMINISTRATOR;
 

@@ -91,7 +91,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     @Test
     public void getAllocateApplicationsOverview() {
         long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         List<InterviewAcceptedAssessorsResource> expectedParticipants = newInterviewAcceptedAssessorsResource()
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
@@ -145,7 +145,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     public void getAllocatedApplications() {
         long competitionId = 1L;
         long userId = 2L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         long allocatedApplications = 3L;
         long unallocatedApplications = 4L;
@@ -249,7 +249,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
     public void getUnallocatedApplications() {
         long competitionId = 1L;
         long userId = 2L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
 
         long allocatedApplications = 3L;
         long unallocatedApplications = 4L;
