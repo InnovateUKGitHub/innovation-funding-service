@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_SETUP;
+
 /**
  * Resource representing a project for use in the setup section of the applicant dashboard.
  */
@@ -16,6 +18,7 @@ public class DashboardInSetupRowResource extends DashboardRowResource {
 
     // Private constructor to enforce immutability
     private DashboardInSetupRowResource() {
+        this.dashboardSection = IN_SETUP;
     }
 
     public long getProjectId() {
@@ -66,7 +69,6 @@ public class DashboardInSetupRowResource extends DashboardRowResource {
         private String competitionTitle;
         private long projectId;
         private String projectTitle;
-        private DashboardSection dashboardSection;
         private LocalDate targetStartDate;
 
         public DashboardApplicationInSetupResourceBuilder withTitle(String title) {
@@ -94,24 +96,18 @@ public class DashboardInSetupRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardApplicationInSetupResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
-            this.dashboardSection = dashboardSection;
-            return this;
-        }
-
         public DashboardApplicationInSetupResourceBuilder withTargetStartDate(LocalDate targetStartDate) {
             this.targetStartDate = targetStartDate;
             return this;
         }
 
-        public DashboardInSetupRowResource build(){
+        public DashboardInSetupRowResource build() {
             DashboardInSetupRowResource result = new DashboardInSetupRowResource();
             result.applicationId = this.applicationId;
             result.competitionTitle = this.competitionTitle;
             result.projectId = this.projectId;
             result.projectTitle = this.projectTitle;
             result.title = this.title;
-            result.dashboardSection = this.dashboardSection;
             result.targetStartDate = this.targetStartDate;
 
             return result;

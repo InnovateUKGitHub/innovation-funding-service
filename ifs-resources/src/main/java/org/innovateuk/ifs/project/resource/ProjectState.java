@@ -63,6 +63,10 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return this == SETUP || this == ON_HOLD;
     }
 
+    public boolean isComplete() {
+        return COMPLETED_STATES.contains(this);
+    }
+
     public boolean isWithdrawn() {
         return this == WITHDRAWN;
     }

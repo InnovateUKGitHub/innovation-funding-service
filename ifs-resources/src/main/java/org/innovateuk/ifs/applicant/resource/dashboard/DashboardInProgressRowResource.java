@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_PROGRESS;
+
 /**
  * Resource representing an application for use in the in progress section of the applicant dashboard.
  */
@@ -23,6 +25,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
+        this.dashboardSection = IN_PROGRESS;
     }
 
     public boolean isAssignedToMe() {
@@ -101,7 +104,6 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private String title;
         private long applicationId;
         private String competitionTitle;
-        private DashboardSection dashboardSection;
         private boolean assignedToMe;
         private ApplicationState applicationState;
         private boolean leadApplicant;
@@ -123,11 +125,6 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
 
         public DashboardApplicationInProgressResourceBuilder withCompetitionTitle(String competitionTitle) {
             this.competitionTitle = competitionTitle;
-            return this;
-        }
-
-        public DashboardApplicationInProgressResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
-            this.dashboardSection = dashboardSection;
             return this;
         }
 
@@ -176,7 +173,6 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.title = this.title;
             result.applicationId = this.applicationId;
             result.competitionTitle = this.competitionTitle;
-            result.dashboardSection = this.dashboardSection;
             result.assignedToMe = this.assignedToMe;
             result.applicationState = this.applicationState;
             result.leadApplicant = this.leadApplicant;

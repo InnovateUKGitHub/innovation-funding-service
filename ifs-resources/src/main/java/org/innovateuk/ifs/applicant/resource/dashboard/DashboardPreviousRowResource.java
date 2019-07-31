@@ -9,6 +9,8 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
+
 /**
  * Resource representing an application or project for use in the previous section of the applicant dashboard.
  */
@@ -27,6 +29,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
 
     // Private constructor to enforce immutability
     private DashboardPreviousRowResource() {
+        this.dashboardSection = PREVIOUS;
     }
 
     public boolean isAssignedToMe() {
@@ -122,7 +125,6 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         private String title;
         private long applicationId;
         private String competitionTitle;
-        private DashboardSection dashboardSection;
         private boolean assignedToMe;
         private ApplicationState applicationState;
         private ProjectState projectState;
@@ -146,11 +148,6 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
 
         public DashboardPreviousApplicationResourceBuilder withCompetitionTitle(String competitionTitle) {
             this.competitionTitle = competitionTitle;
-            return this;
-        }
-
-        public DashboardPreviousApplicationResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
-            this.dashboardSection = dashboardSection;
             return this;
         }
 
@@ -211,7 +208,6 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             result.projectState = this.projectState;
             result.projectId = this.projectId;
             result.competitionTitle = this.competitionTitle;
-            result.dashboardSection = this.dashboardSection;
             result.assignedToMe = this.assignedToMe;
             result.applicationState = this.applicationState;
             result.leadApplicant = this.leadApplicant;

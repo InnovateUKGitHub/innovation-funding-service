@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -204,4 +206,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "   ON project.application.id = app.id " +
             PREVIOUS_WHERE_CLAUSE)
     int countPrevious(long competitionId);
+
+    @Query(" SELECT app FROM ProcessRole pr" +
+           " JOIN Application app" +
+           "    ON app.id = pr.applicationId " +
+           " WHERE pr.role in :roles " +
+           " AND pr.user.id = :userId ")
+    List<Application> findApplicationByUserAndRole(Set<Role> roles, long userId);
 }
