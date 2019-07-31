@@ -17,7 +17,6 @@
 
         <th:block th:fragment="terms-and-conditions-content">
 
-
             <th:block th:if="${model?.competitionId}">
                 <p class="govuk-body"><a th:href="@{/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">View full terms and conditions</a></p>
             </th:block>
@@ -54,7 +53,7 @@
                 which may include additional details agreed between you and the funding authority.
             </p>
 
-            <p class="govuk-body">If there is anything you do not understand, please contact us.</p>
+            <p class="govuk-body">If there is anything you do not understand, please <a href="/info/contact">contact us</a>.</p>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
