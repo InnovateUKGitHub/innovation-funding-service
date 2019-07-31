@@ -140,7 +140,7 @@ Alert shows If the academic research participation is too high
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Review and submit
-    And the user clicks the button/link            jQuery = button:contains("Finances summary")
+    And the user expands the section               Finances summary
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
 
 Alert should not show If research participation is below the maximum level
@@ -152,7 +152,7 @@ Alert should not show If research participation is below the maximum level
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Review and submit
-    And the user clicks the button/link            jquery = button:contains("Finances summary")
+    And the user expands the section               Finances summary
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
 
 Support User can see the read only finance summary
@@ -383,8 +383,8 @@ User verifies labour, overhead costs and materials for innovation lead
     the user should see the element  jQuery = .labour-costs-table td:contains("Role 1") ~ td:contains("200") ~ td:contains("325")
     the user collapses the section   Labour
     the user expands the section     Overhead costs
-    the user should see the element  jQuery = #collapsible-1 div:contains("No overhead costs")
-    the user clicks the button/link  jQuery = button:contains("Overhead costs")
+    the user should see the element  jQuery = #accordion-finances-content-2 span:contains("No overhead costs")
+    the user expands the section     Overhead costs
     the user collapses the section   Overhead costs
     the user expands the section     Materials
     the user should see the element  jQuery = #material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("100,200")
@@ -409,7 +409,7 @@ The user verifies labour, overhead costs and materials
     the user should see the element  jQuery = dt:contains("Working days per year") ~ dd:contains("123")
     the user should see the element  jQuery = .labour-costs-table td:contains("Role 1") ~ td:contains("200") ~ td:contains("2")
     the user collapses the section   Labour
-    the user should see the element  jQuery = .collapsible:contains("Overhead"):contains("0")
+    the user should see the element  jQuery = #accordion-finances-heading-2 span:contains("£0")
     the user expands the section     Materials
     the user should see the element  jQuery = #material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("£100,200")
     the user collapses the section   Materials

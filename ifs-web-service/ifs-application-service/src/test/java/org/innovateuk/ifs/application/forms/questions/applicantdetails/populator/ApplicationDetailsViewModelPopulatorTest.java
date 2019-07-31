@@ -14,6 +14,8 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -21,14 +23,18 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -68,8 +74,14 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
                 .withCurrentUser(newUserResource().build())
                 .build();
         ApplicationForm form = mock(ApplicationForm.class);
-        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
-        when(applicationDetailsInputViewModel.isReadonly()).thenReturn(true);
+        CompetitionResource competitionResource = CompetitionResourceBuilder
+                .newCompetitionResource()
+                .withCompetitionStatus(CLOSED)
+                .withFundingType(PROCUREMENT)
+                .build();
+        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = new ApplicationDetailsInputViewModel();
+        applicationDetailsInputViewModel.setCompetition(competitionResource);
+        applicationDetailsInputViewModel.setReadonly(TRUE);
         QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
         List<QuestionStatusResource> notifications = newQuestionStatusResource().build(1);
         NavigationViewModel navigationViewModel = new NavigationViewModel();
@@ -86,7 +98,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(question.getQuestion().getId(), question.getApplication().getId(), question.getCurrentApplicant().getOrganisation().getId())).thenReturn(questionStatusResource);
         when(questionService.getNotificationsForUser(singletonList(questionStatusResource), question.getCurrentUser().getId())).thenReturn(notifications);
 
-        ApplicationDetailsViewModel viewModel = populator.populate(question);
+        ApplicationDetailsViewModel viewModel = populator.populate(question, competitionResource);
 
         assertThat(viewModel.isAllReadOnly(), equalTo(true));
         assertThat(viewModel.getCurrentApplicant(), equalTo(question.getCurrentApplicant()));
@@ -94,6 +106,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         assertThat(viewModel.isSection(), equalTo(false));
         assertThat(viewModel.getNavigation(), equalTo(navigationViewModel));
         assertThat(viewModel.isLeadApplicant(), equalTo(true));
+        assertTrue(viewModel.getFormInputViewModel().getIsProcurementCompetition());
 
         verify(questionService).removeNotifications(notifications);
     }

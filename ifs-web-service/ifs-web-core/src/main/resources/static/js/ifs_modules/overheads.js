@@ -48,7 +48,7 @@ IFS.core.overheads = (function () {
       }
     },
     setOverheadSectionElementValue: function () {
-      var totalElements = jQuery(s.radios).closest('section.collapsible').find('[data-mirror], [data-calculation-format="percentage"]')
+      var totalElements = jQuery(s.radios).closest('.govuk-accordion__section').find('[data-mirror], [data-calculation-format="percentage"]')
       totalElements.each(function () {
         var totalEl = jQuery(this)
         if (totalEl.is('[data-calculation-format="percentage"]')) {

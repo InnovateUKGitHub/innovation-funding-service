@@ -10,9 +10,14 @@ import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.A
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -31,6 +36,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.EnumUtils.isValidEnum;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_MODEL;
@@ -49,19 +56,22 @@ public class ApplicationDetailsController {
     private ApplicantRestService applicantRestService;
     private ApplicationNavigationPopulator applicationNavigationPopulator;
     private ApplicationService applicationService;
+    private CompetitionRestService competitionRestService;
 
     public ApplicationDetailsController(ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator,
                                         QuestionStatusRestService questionStatusRestService,
                                         UserRestService userRestService,
                                         ApplicantRestService applicantRestService,
                                         ApplicationNavigationPopulator applicationNavigationPopulator,
-                                        ApplicationService applicationService) {
+                                        ApplicationService applicationService,
+                                        CompetitionRestService competitionRestService) {
         this.applicationDetailsViewModelPopulator = applicationDetailsViewModelPopulator;
         this.questionStatusRestService = questionStatusRestService;
         this.userRestService = userRestService;
         this.applicantRestService = applicantRestService;
         this.applicationNavigationPopulator = applicationNavigationPopulator;
         this.applicationService = applicationService;
+        this.competitionRestService = competitionRestService;
     }
 
     @GetMapping
@@ -71,9 +81,13 @@ public class ApplicationDetailsController {
                               @PathVariable long applicationId,
                               @PathVariable long questionId,
                               UserResource user) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        Long competitionId = application.getCompetition();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), user.hasRole(SUPPORT));
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question);
+        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question, competition);
         form.populateForm(viewModel);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -91,7 +105,7 @@ public class ApplicationDetailsController {
                                 UserResource user) {
         saveDetails(form, applicationId);
 
-        return String.format("redirect:/application/%d", applicationId);
+        return format("redirect:/application/%d", applicationId);
     }
 
     @PostMapping("/auto-save")
@@ -131,7 +145,7 @@ public class ApplicationDetailsController {
         ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
 
-        return String.format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+        return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
     }
 
     @PostMapping(params = "change_innovation_area")
@@ -167,6 +181,15 @@ public class ApplicationDetailsController {
         application.setResubmission(form.getResubmission());
         application.setPreviousApplicationNumber(form.getResubmission() == TRUE ? form.getPreviousApplicationNumber() : null);
         application.setPreviousApplicationTitle(form.getResubmission() == TRUE ? form.getPreviousApplicationTitle() : null);
+        if (isValidEnum(CompetitionReferralSource.class, form.getCompetitionReferralSource())) {
+            application.setCompetitionReferralSource(CompetitionReferralSource.valueOf(form.getCompetitionReferralSource()));
+        }
+        if (isValidEnum(CompanyAge.class, form.getCompanyAge())) {
+            application.setCompanyAge(CompanyAge.valueOf(form.getCompanyAge()));
+        }
+        if (isValidEnum(CompanyPrimaryFocus.class, form.getCompanyPrimaryFocus())) {
+            application.setCompanyPrimaryFocus(CompanyPrimaryFocus.valueOf(form.getCompanyPrimaryFocus()));
+        }
         applicationService.save(application);
     }
 

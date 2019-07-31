@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -80,6 +83,15 @@ public class Application implements ProcessActivity {
     private Boolean stateAidAgreed;
 
     private boolean inAssessmentReviewPanel;
+
+    @Enumerated(EnumType.STRING)
+    private CompetitionReferralSource competitionReferralSource;
+
+    @Enumerated(EnumType.STRING)
+    private CompanyAge companyAge;
+
+    @Enumerated(EnumType.STRING)
+    private CompanyPrimaryFocus companyPrimaryFocus;
 
     public Application() {
     }
@@ -394,5 +406,29 @@ public class Application implements ProcessActivity {
             default:
                 throw new IllegalArgumentException("Unexpected enum constant: " + collaborationLevel);
         }
+    }
+
+    public CompetitionReferralSource getCompetitionReferralSource() {
+        return competitionReferralSource;
+    }
+
+    public void setCompetitionReferralSource(CompetitionReferralSource competitionReferralSource) {
+        this.competitionReferralSource = competitionReferralSource;
+    }
+
+    public CompanyAge getCompanyAge() {
+        return companyAge;
+    }
+
+    public void setCompanyAge(CompanyAge companyAge) {
+        this.companyAge = companyAge;
+    }
+
+    public CompanyPrimaryFocus getCompanyPrimaryFocus() {
+        return companyPrimaryFocus;
+    }
+
+    public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
+        this.companyPrimaryFocus = companyPrimaryFocus;
     }
 }

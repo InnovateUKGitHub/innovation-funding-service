@@ -257,18 +257,18 @@ hr,
   text-align: right;
 }
 
-.govuk-accordion {
-  .govuk-table {
-    &:not(.icon-table) {
-      .govuk-table__body {
-        .govuk-table__row {
-          &:last-child {
-            .govuk-table__cell {
-              border-bottom: none;
-            }
-          }
-        }
-      }
-    }
+.section-score {
+  @include media-down(mobile){
+    margin-right: 0;
+    width: auto;
+    float: none;
   }
+
+  @include govuk-font(16);
+  float: right;
+  font-weight: normal;
+  margin-right: 190px;
+  width: 144px;
+  text-align: left;
+  color: $govuk-text-colour;
 }
