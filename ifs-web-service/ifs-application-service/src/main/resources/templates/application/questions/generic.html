@@ -70,6 +70,10 @@
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
               method="post">
 
+            <th:block th:unless="${model.readOnly}">
+                <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            </th:block>
+
             <div id="answer" class="govuk-form-group" th:if="${model.textAreaActive}"
                  th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('answer')}">
@@ -100,7 +104,7 @@
 
             <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
-                    <h3 class="govuk-heading-s" th:text="|Download ${model.templateDocumentTitle} template|">Download</h3>
+                    <h3 class="govuk-heading-s" th:text="|Download the ${model.templateDocumentTitle} template|">Download</h3>
                     <p class="govuk-body">
                         <a th:href="@{/application/{applicationId}/form/question/{questionId}/generic/form-input/{formInputId}/download-template-file(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId})}"
                            class="govuk-link"
@@ -179,9 +183,11 @@
                 </div>
 
             <div class="govuk-!-margin-top-6">
-                <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+
+                <a th:if="${model.readOnly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                    class="button-secondary">Return to application overview
                 </a>
+                <button class="govuk-button" th:unless="${model.readOnly}" type="submit">Save and return to application overview</button>
             </div>
         </form>
 

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuesti
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
 import org.innovateuk.ifs.application.readonly.populator.GenericQuestionReadOnlyViewModelPopulator;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -35,14 +36,15 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 /**
  * This controller handles application questions which are built up of form inputs.
@@ -107,8 +109,20 @@ public class GenericQuestionApplicationController {
                                          UserResource user) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         formPopulator.populate(form, question);
-        validator.validate(form, bindingResult);
+        validate(form, bindingResult, applicationId, questionId);
         return getView(model, question);
+    }
+
+    @PostMapping
+    public String saveAndReturn(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable long applicationId,
+                                 @PathVariable long questionId,
+                                 UserResource user) {
+        save(form, applicationId, questionId, user);
+        return redirectToApplicationOverview(applicationId);
     }
 
     @PostMapping(params = "assign")
@@ -124,7 +138,7 @@ public class GenericQuestionApplicationController {
     }
 
     @PostMapping(params = "complete")
-    public String markAsComplete(@Valid @ModelAttribute(value = "form") GenericQuestionApplicationForm form,
+    public String markAsComplete(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
@@ -135,6 +149,8 @@ public class GenericQuestionApplicationController {
             questionStatusRestService.markAsInComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
             return getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
         };
+
+        validate(form, bindingResult, applicationId, questionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages message = save(form, applicationId, questionId, user).getSuccess();
@@ -164,13 +180,6 @@ public class GenericQuestionApplicationController {
                        UserResource user) {
         save(form, applicationId, questionId, user);
         return new ObjectMapper().createObjectNode();
-    }
-
-    private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
-        FormInputResource formInput = getByType(questionId, FormInputType.TEXTAREA);
-        return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
-                formInput.getId(), form.getAnswer(), false);
-
     }
 
     @PostMapping(params = "uploadTemplateDocument")
@@ -217,6 +226,21 @@ public class GenericQuestionApplicationController {
         return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, user, validationHandler, model);
     }
 
+    @GetMapping("/form-input/{formInputId}/download-template-file")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFile(Model model,
+                                                   @PathVariable long formInputId) {
+        return getFileResponseEntity(formInputRestService.downloadFile(formInputId).getSuccess(),
+                formInputRestService.findFile(formInputId).getSuccess());
+    }
+
+    private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
+        FormInputResource formInput = getByType(questionId, FormInputType.TEXTAREA);
+        return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
+                formInput.getId(), form.getAnswer(), false);
+
+    }
+
     private String handleFileUpload(String field, FormInputType type, MultipartFile file, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {
         FormInputResource formInput = getByType(questionId, type);
         ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
@@ -247,22 +271,32 @@ public class GenericQuestionApplicationController {
         return validationHandler.performActionOrBindErrorsToField(field, view, view, () -> result);
     }
 
-
-    @GetMapping("/form-input/{formInputId}/download-template-file")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadFile(Model model,
-                                                   @PathVariable long formInputId) {
-        return getFileResponseEntity(formInputRestService.downloadFile(formInputId).getSuccess(),
-                formInputRestService.findFile(formInputId).getSuccess());
+    private void validate(GenericQuestionApplicationForm form, BindingResult bindingResult, long applicationId, long questionId) {
+        validator.validate(form, bindingResult);
+        Optional<FormInputResource> templateDocument = findByType(questionId, FormInputType.TEMPLATE_DOCUMENT);
+        if (templateDocument.isPresent()) {
+            Optional<FormInputResponseResource> response = formInputResponseRestService
+                    .getByFormInputIdAndApplication(templateDocument.get().getId(), applicationId).getOptionalSuccessObject()
+                    .filter(negate(List::isEmpty))
+                    .map(responses -> responses.get(0));
+            boolean filePresent = response.map(FormInputResponseResource::getFilename).isPresent();
+            if (!filePresent) {
+                bindingResult.rejectValue("templateDocument", "validation.file.required");
+            }
+        }
     }
 
     private FormInputResource getByType(long questionId, FormInputType type) {
+        return findByType(questionId, type)
+                .orElseThrow(ObjectNotFoundException::new);
+    }
+
+    private Optional<FormInputResource> findByType(long questionId, FormInputType type) {
         return formInputRestService.getByQuestionId(questionId)
                 .getSuccess()
                 .stream()
                 .filter(input -> input.getType().equals(type))
-                .findAny()
-                .orElseThrow(ObjectNotFoundException::new);
+                .findAny();
     }
 
     private ProcessRoleResource getUsersProcessRole(long applicationId, UserResource user) {
@@ -282,4 +316,7 @@ public class GenericQuestionApplicationController {
         return String.format("redirect:/application/%d/form/question/%d/generic", applicationId, questionId);
     }
 
+    private String redirectToApplicationOverview(long applicationId) {
+        return String.format("redirect:/application/%d", applicationId);
+    }
 }

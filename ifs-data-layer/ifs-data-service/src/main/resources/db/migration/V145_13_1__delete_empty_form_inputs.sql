@@ -1,4 +1,4 @@
--- IFS-4551 Template form input type
+-- IFS-4551 Empty form input type
 
 DELETE FROM form_input WHERE form_input_type_id = 6;
 

@@ -21,16 +21,14 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -38,9 +36,7 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.EnumUtils.isValidEnum;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_MODEL;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
@@ -50,29 +46,23 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class ApplicationDetailsController {
 
+    @Autowired
     private ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator;
+    @Autowired
     private QuestionStatusRestService questionStatusRestService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private ApplicantRestService applicantRestService;
+    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+    @Autowired
     private ApplicationService applicationService;
+    @Autowired
     private CompetitionRestService competitionRestService;
-
-    public ApplicationDetailsController(ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator,
-                                        QuestionStatusRestService questionStatusRestService,
-                                        UserRestService userRestService,
-                                        ApplicantRestService applicantRestService,
-                                        ApplicationNavigationPopulator applicationNavigationPopulator,
-                                        ApplicationService applicationService,
-                                        CompetitionRestService competitionRestService) {
-        this.applicationDetailsViewModelPopulator = applicationDetailsViewModelPopulator;
-        this.questionStatusRestService = questionStatusRestService;
-        this.userRestService = userRestService;
-        this.applicantRestService = applicantRestService;
-        this.applicationNavigationPopulator = applicationNavigationPopulator;
-        this.applicationService = applicationService;
-        this.competitionRestService = competitionRestService;
-    }
+    @Autowired
+    @Qualifier("mvcValidator")
+    private Validator validator;
 
     @GetMapping
     public String viewDetails(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationDetailsForm form,
@@ -82,15 +72,13 @@ public class ApplicationDetailsController {
                               @PathVariable long questionId,
                               UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
-        Long competitionId = application.getCompetition();
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), user.hasRole(SUPPORT));
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question, competition);
         form.populateForm(viewModel);
 
-        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
 
         return "application/questions/application-details";
@@ -121,13 +109,16 @@ public class ApplicationDetailsController {
     }
 
     @GetMapping(params = "show-errors")
-    public String markAsCompleteAsGetRequest(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
+    public String showErrors(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
                                              BindingResult bindingResult,
                                              Model model,
                                              @PathVariable long applicationId,
                                              @PathVariable long questionId,
                                              UserResource user) {
-        return markAsComplete(form, bindingResult, model, applicationId, questionId, user);
+        String view = viewDetails(form, bindingResult, model, applicationId, questionId, user);
+        validator.validate(form, bindingResult);
+        return view;
+
     }
 
     @PostMapping(params = "mark_as_complete")
