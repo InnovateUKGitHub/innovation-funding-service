@@ -43,6 +43,6 @@ public class TravelCostBuilder extends BaseBuilder<TravelCost, TravelCostBuilder
 
     @Override
     protected TravelCost createInitial() {
-        return new TravelCost();
+        return newInstance(TravelCost.class);
     }
 }

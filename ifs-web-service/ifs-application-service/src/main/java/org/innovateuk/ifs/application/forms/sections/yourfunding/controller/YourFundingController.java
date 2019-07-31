@@ -121,8 +121,8 @@ public class YourFundingController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(applicationId, form, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
-                        .getSuccess().forEach(validationHandler::addAnyErrors);
+                validationHandler.addAnyErrors(sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
+                        .getSuccess());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

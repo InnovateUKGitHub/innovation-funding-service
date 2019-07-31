@@ -21,12 +21,17 @@ public class OtherFunding extends AbstractFinanceRowItem {
 
     private String name;
 
-    public OtherFunding() {
+    private OtherFunding() {
+        this(null);
+    }
+
+    public OtherFunding(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
-    public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
-        this();
+    public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount, Long targetId) {
+        this(targetId);
         this.id = id;
         this.otherPublicFunding = otherPublicFunding;
         this.fundingSource = fundingSource;

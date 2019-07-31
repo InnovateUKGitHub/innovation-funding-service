@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourP
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
-import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -21,7 +21,7 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     public ServiceResult<Void> save(YourProjectCostsForm form, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
@@ -34,7 +34,7 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
     }
 
     @Override
-    protected FinanceRowRestService getFinanceRowService() {
+    protected BaseFinanceRowRestService getFinanceRowService() {
         return financeRowRestService;
     }
 }

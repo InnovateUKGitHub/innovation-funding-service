@@ -44,6 +44,6 @@ public class MaterialsCostBuilder extends BaseBuilder<Materials, MaterialsCostBu
 
     @Override
     protected Materials createInitial() {
-        return new Materials();
+        return newInstance(Materials.class);
     }
 }

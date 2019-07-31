@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -154,6 +155,12 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @Column(name = "funding_type")
     private FundingType fundingType;
 
+    @ElementCollection(targetClass = FinanceRowType.class)
+    @JoinTable(name = "competition_finance_row_types", joinColumns = @JoinColumn(name = "competition_id"))
+    @Column(name = "finance_row_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<FinanceRowType> financeRowTypes = new HashSet<>();
+
     public Competition() {
         setupComplete = false;
     }
@@ -205,6 +212,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         } else {
             return COMPETITION_SETUP;
         }
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+        this.financeRowTypes = financeRowTypes;
     }
 
     public List<Section> getSections() {

@@ -44,6 +44,6 @@ public class OtherCostBuilder extends BaseBuilder<OtherCost, OtherCostBuilder> {
 
     @Override
     protected OtherCost createInitial() {
-        return new OtherCost();
+        return newInstance(OtherCost.class);
     }
 }

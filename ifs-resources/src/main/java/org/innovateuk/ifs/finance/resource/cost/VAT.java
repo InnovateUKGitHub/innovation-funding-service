@@ -11,7 +11,8 @@ public class VAT extends AbstractFinanceRowItem {
     private String name;
     private Boolean registered;
 
-    public VAT() {
+    public VAT(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 

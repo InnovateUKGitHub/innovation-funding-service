@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 
@@ -33,7 +34,7 @@ public class YourProjectCostsAutosaver {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     public Optional<Long> autoSave(String field, String value, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
@@ -72,10 +73,10 @@ public class YourProjectCostsAutosaver {
         return Optional.empty();
     }
 
-    private Optional<Long> autosaveLabourCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveLabourCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        LabourCost cost = getCost(id, finance, LabourCost.class);
+        LabourCost cost = getCost(id, () -> new LabourCost(finance.getId()));
 
         switch (rowField) {
             case "role":
@@ -105,10 +106,10 @@ public class YourProjectCostsAutosaver {
         return Optional.empty();
     }
 
-    private Optional<Long> autosaveMaterialCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveMaterialCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        Materials cost = getCost(id, finance, Materials.class);
+        Materials cost = getCost(id, () -> new Materials(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setItem(value);
@@ -126,10 +127,10 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveCapitalUsageCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveCapitalUsageCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        CapitalUsage cost = getCost(id, finance, CapitalUsage.class);
+        CapitalUsage cost = getCost(id, () -> new CapitalUsage(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setDescription(value);
@@ -156,10 +157,10 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveSubcontractingCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveSubcontractingCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        SubContractingCost cost = getCost(id, finance, SubContractingCost.class);
+        SubContractingCost cost = getCost(id, () -> new SubContractingCost(finance.getId()));
         switch (rowField) {
             case "name":
                 cost.setName(value);
@@ -180,10 +181,10 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveTravelCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveTravelCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        TravelCost cost = getCost(id, finance, TravelCost.class);
+        TravelCost cost = getCost(id, () -> new TravelCost(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setItem(value);
@@ -201,10 +202,10 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveOtherCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveOtherCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        OtherCost cost = getCost(id, finance, OtherCost.class);
+        OtherCost cost = getCost(id, () -> new OtherCost(finance.getId()));
         switch (rowField) {
             case "description":
                 cost.setDescription(value);
@@ -222,7 +223,7 @@ public class YourProjectCostsAutosaver {
     private Optional<Long> autosaveVAT(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        VAT vat = getCost(id, finance, VAT.class);
+        VAT vat = getCost(id, () -> new VAT(finance.getId()));
         switch (rowField) {
             case "description":
 //                vat.setDescription(value);
@@ -237,11 +238,11 @@ public class YourProjectCostsAutosaver {
         return Optional.of(vat.getId());
     }
 
-    private <R extends FinanceRowItem> R getCost(String id, ApplicationFinanceResource finance, Class<R> clazz) throws IllegalAccessException, InstantiationException {
+    private <R extends FinanceRowItem> R getCost(String id, Supplier<R> creator) {
         if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-            return (R) financeRowRestService.addWithResponse(finance.getId(), clazz.newInstance()).getSuccess();
+            return (R) financeRowRestService.create(creator.get()).getSuccess();
         } else {
-            return (R) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();
+            return (R) financeRowRestService.get(Long.valueOf(id)).getSuccess();
         }
     }
 

@@ -11,6 +11,6 @@ public class ProjectFinanceRowRestServiceImpl extends BaseFinanceRowRestServiceI
         ProjectFinanceRowRestService {
 
     public ProjectFinanceRowRestServiceImpl() {
-        super("/cost/project");
+        super("/project-finance-row");
     }
 }
