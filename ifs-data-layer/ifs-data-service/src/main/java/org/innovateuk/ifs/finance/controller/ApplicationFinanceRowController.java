@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * to manage {@link FinanceRow} related data.
  */
 @RestController
-@ZeroDowntime(reference = "TODO", description = "Delete old request mappings")
+@ZeroDowntime(reference = "IFS-6274", description = "Delete old request mappings")
 @RequestMapping({"/cost", "/application-finance-row"})
 public class ApplicationFinanceRowController {
 
