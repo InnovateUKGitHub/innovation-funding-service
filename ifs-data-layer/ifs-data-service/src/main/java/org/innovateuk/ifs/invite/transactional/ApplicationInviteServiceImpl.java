@@ -211,6 +211,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             inviteOrganisationRepository.delete(inviteOrganisation);
         } else {
             inviteOrganisation.getInvites().remove(applicationInvite);
+            applicationInviteRepository.delete(applicationInvite);
         }
     }
 

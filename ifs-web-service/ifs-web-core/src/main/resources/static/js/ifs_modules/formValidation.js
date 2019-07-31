@@ -165,6 +165,7 @@ IFS.core.formValidation = (function () {
         e.preventDefault()
         IFS.core.formValidation.errorSummaryLinksClick(this)
       })
+      IFS.core.formValidation.initDetailsErrors()
     },
     checkPasswordPolicy: function (field, errorStyles) {
       //  clear tooWeakPassword and containsName message as this is validated in the back end.
@@ -1061,17 +1062,25 @@ IFS.core.formValidation = (function () {
       var id = IFS.core.formValidation.removeHash(jQuery(el).attr('href'))
       var target = jQuery('[id="' + id + '"]')
       var targetVisible = IFS.core.formValidation.isVisible(target)
-      var closedCollapsible = target.closest(IFS.core.collapsible.settings.collapsibleEl).not('.' + IFS.core.collapsible.settings.expandedClass)
+      var closedAccordion = target.closest('.govuk-accordion__section').not('.govuk-accordion__section--expanded')
+      var closedDetails = target.closest('.govuk-details__text').not('[aria-hidden="false"]')
       var formGroupRow = target.closest('.form-group-row')
       if (targetVisible && formGroupRow.length) {
         // it is part a date group so don't put focus on the time select
         IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
       } else if (targetVisible) {
         IFS.core.formValidation.scrollToElement(target.first())
-      } else if (closedCollapsible.length) {
-        // it is within a collapsible element and we open it and then put focus on it
-        var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
-        IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
+      } else if (closedAccordion.length) {
+        // it is within an accordion element and we open it and then put focus on it
+        closedAccordion.addClass('govuk-accordion__section--expanded')
+        IFS.core.formValidation.scrollToElement(target.first())
+      } else if (closedDetails.length) {
+        // it is within a detail element and we open it and then put focus on it
+        var detailsWrapper = closedDetails.closest('.govuk-details')
+        var summary = closedDetails.closest('.govuk-details__summary')
+        detailsWrapper.attr('open', '')
+        summary.attr('aria-expanded', 'true')
+        closedDetails.attr('aria-hidden', 'false')
         IFS.core.formValidation.scrollToElement(target.first())
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target
@@ -1082,6 +1091,18 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.scrollToElement(altTarget.first())
         }
       }
+    },
+    initDetailsErrors: function () {
+      var details = jQuery('.govuk-details')
+      details.each(function () {
+        if (jQuery(this).find('.govuk-form-group--error').length) {
+          var detailsSummary = jQuery(this).find('.govuk-details__summary')
+          var detailsText = jQuery(this).find('.govuk-details__text')
+          details.attr('open', '')
+          detailsSummary.attr('aria-expanded', 'true')
+          detailsText.attr('aria-hidden', 'false')
+        }
+      })
     },
     scrollToElement: function (el) {
       jQuery('html, body').animate({

@@ -31,18 +31,6 @@ small {
   padding-left: 20px;
 }
 
-.blue-block {
-  @include media-down(mobile){
-    display:block;
-  }
-
-  display: inline-block;
-  background: govuk-colour("blue");
-  color:#fff;
-  text-align: center;
-  padding:20px;
-}
-
 .bordered {
   border:1px solid $govuk-border-colour;
 }

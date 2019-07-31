@@ -226,8 +226,8 @@ The question is disabled on the summary page for other collaborators
     ...    This test case is still using the old application
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
-    When the user clicks the button/link     jQuery = button:contains("Public description")
-    Then the user should see the element     css = #collapsible-4 .question .readonly
+    When the user expands the section        Public description
+    Then the user should see the element     jQuery = label:contains("Public description") ~ .textarea-wrapped .readonly
     And the user should not see the element  jQuery = button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation

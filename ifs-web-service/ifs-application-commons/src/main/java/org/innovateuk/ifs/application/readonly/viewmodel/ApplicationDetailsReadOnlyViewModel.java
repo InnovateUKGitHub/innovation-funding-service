@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.time.LocalDate;
@@ -16,6 +19,10 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
+    private final boolean isProcurementCompetition;
+    private final CompetitionReferralSource competitionReferralSource;
+    private final CompanyAge companyAge;
+    private final CompanyPrimaryFocus companyPrimaryFocus;
 
     public ApplicationDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         super(data, question);
@@ -28,6 +35,10 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.innovationAreaName = data.getApplication().getInnovationArea().getName();
         this.previousApplicationNumber = data.getApplication().getPreviousApplicationNumber();
         this.previousApplicationTitle = data.getApplication().getPreviousApplicationTitle();
+        this.isProcurementCompetition = data.getCompetition().isProcurement();
+        this.competitionReferralSource = data.getApplication().getCompetitionReferralSource();
+        this.companyAge = data.getApplication().getCompanyAge();
+        this.companyPrimaryFocus = data.getApplication().getCompanyPrimaryFocus();
     }
 
     public String getCompetitionName() {
@@ -64,6 +75,22 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
+    }
+
+    public boolean isProcurementCompetition() {
+        return isProcurementCompetition;
+    }
+
+    public CompetitionReferralSource getCompetitionReferralSource() {
+        return competitionReferralSource;
+    }
+
+    public CompanyAge getCompanyAge() {
+        return companyAge;
+    }
+
+    public CompanyPrimaryFocus getCompanyPrimaryFocus() {
+        return companyPrimaryFocus;
     }
 
     @Override

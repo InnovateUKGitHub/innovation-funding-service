@@ -125,6 +125,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                             openApplication.setResubmission(application.getResubmission());
                             openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
                             openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+                            openApplication.setCompetitionReferralSource(application.getCompetitionReferralSource());
+                            openApplication.setCompanyAge(application.getCompanyAge());
+                            openApplication.setCompanyPrimaryFocus(application.getCompanyPrimaryFocus());
 
                             Application savedApplication = applicationRepository.save(openApplication);
                             return applicationMapper.mapToResource(savedApplication);
