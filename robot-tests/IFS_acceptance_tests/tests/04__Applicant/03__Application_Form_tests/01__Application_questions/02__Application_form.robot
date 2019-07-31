@@ -138,7 +138,7 @@ Mark research section as complete
 
 Mark research section as incomplete
     [Documentation]  IFS-2123
-    Given the user clicks the button/link    css = button[name = "mark_as_incomplete"]
+    Given the user clicks the button/link    css = button[name = "edit"]
     When the user clicks the button/link     id = application-question-save
     Then The user should see the element     jQuery = li:contains("Research category") .task-status-incomplete
 
@@ -155,7 +155,7 @@ Collaborator: read only view of Application details
 Collaborator: read only view of research
     [Documentation]  IFS-2321
     Given the user clicks the button/link       link = Research category
-    Then the user should not see the element    css = button[name = "mark_as_incomplete"]
+    Then the user should not see the element    css = button[name = "edit"]
     And the user should not see the element     id = application-question-save
     And the user should see the element         jQuery = a:contains("Return to application overview")
 

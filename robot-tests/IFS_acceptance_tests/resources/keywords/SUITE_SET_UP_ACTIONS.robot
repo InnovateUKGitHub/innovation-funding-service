@@ -41,6 +41,11 @@ the lead applicant fills all the questions and marks as complete(programme)
     :FOR  ${ELEMENT}    IN    @{programme_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(procurement)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{programme_questions}
+     \     the lead applicant marks every question as complete procurement    ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(sector)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{sector_questions}
@@ -54,15 +59,24 @@ the lead applicant marks every question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
     the user marks the section as complete
-    the user clicks the button/link             link=Application overview
+    the user clicks the button/link             link=Back to application overview
+
+the lead applicant marks every question as complete procurement
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete procurement
+    the user clicks the button/link             link=Back to application overview
 
 the user marks the section as complete
-    Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor
-    Input Text    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
-    Mouse Out    css=.textarea-wrapped .editor
-    wait for autosave
-    the user clicks the button/link    name=mark_as_complete
-    #the user clicks the button/link    css=.next
+    the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    the user clicks the button/link         name=complete
+
+
+the user marks the section as complete procurement
+    the user enters text to a text field  css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    the user uploads the file             css = input[name="templateDocument"]    ${valid_pdf}
+    the user clicks the button/link       name=complete
+
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}
