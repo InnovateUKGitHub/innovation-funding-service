@@ -55,6 +55,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         FormInputResource templateDocument = newFormInputResource()
                 .withType(FormInputType.TEMPLATE_DOCUMENT)
                 .withQuestion(question.getId())
+                .withDescription("Document Title")
                 .build();
         FormInputResponseResource textareaResponse = newFormInputResponseResource()
                 .withFormInputs(textarea.getId())
@@ -80,6 +81,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertEquals(appendix.getId(), viewModel.getAppendixId());
         assertEquals("template.pdf", viewModel.getTemplateDocumentFilename());
         assertEquals(templateDocument.getId(), viewModel.getTemplateDocumentId());
+        assertEquals("Document Title", viewModel.getTemplateDocumentTitle());
 
         assertEquals("1. Question", viewModel.getName());
         assertEquals(application.getId(), (Long) viewModel.getApplicationId());

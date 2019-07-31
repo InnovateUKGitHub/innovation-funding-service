@@ -11,10 +11,11 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String appendixFilename;
     private final Long appendixId;
     private final String templateDocumentFilename;
+    private final String templateDocumentTitle;
     private final Long templateDocumentId;
     private final long competitionId;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId, String templateDocumentFilename, Long templateDocumentId) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, String appendixFilename, Long appendixId, String templateDocumentFilename, String templateDocumentTitle, Long templateDocumentId) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
@@ -22,6 +23,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.appendixFilename = appendixFilename;
         this.appendixId = appendixId;
         this.templateDocumentFilename = templateDocumentFilename;
+        this.templateDocumentTitle = templateDocumentTitle;
         this.templateDocumentId = templateDocumentId;
         this.competitionId = data.getCompetition().getId();
     }
@@ -48,6 +50,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public String getTemplateDocumentFilename() {
         return templateDocumentFilename;
+    }
+
+    public String getTemplateDocumentTitle() {
+        return templateDocumentTitle;
     }
 
     public Long getTemplateDocumentId() {

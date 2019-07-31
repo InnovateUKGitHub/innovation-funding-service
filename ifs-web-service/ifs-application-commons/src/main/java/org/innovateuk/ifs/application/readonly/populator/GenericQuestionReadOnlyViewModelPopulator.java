@@ -48,6 +48,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),
                 templateDocumentResponse.map(FormInputResponseResource::getFilename).orElse(null),
+                templateDocument.map(FormInputResource::getDescription).orElse(null),
                 templateDocumentResponse.map(FormInputResponseResource::getFormInput).orElse(null)
             );
     }
