@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.form.resource.FormInputType.EMPTY;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -55,7 +55,7 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
         competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withCompetition(competition.getId()).build();
         childSection1 = newSectionResource().withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
-        formInputResource1 = newFormInputResource().withType(EMPTY).build();
+        formInputResource1 = newFormInputResource().withType(FILEUPLOAD).build();
         formInputResource2 = newFormInputResource().withType(TEXTAREA).build();
 
         parentSection.setChildSections(asList(childSection1.getId()));
@@ -115,7 +115,7 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     @Test
     public void testRemoveSectionsQuestionsWithType() throws Exception {
         assertEquals(2, childSection1.getQuestions().size());
-        service.removeSectionsQuestionsWithType(parentSection, EMPTY);
+        service.removeSectionsQuestionsWithType(parentSection, FILEUPLOAD);
         assertEquals(1, childSection1.getQuestions().size());
     }
 
