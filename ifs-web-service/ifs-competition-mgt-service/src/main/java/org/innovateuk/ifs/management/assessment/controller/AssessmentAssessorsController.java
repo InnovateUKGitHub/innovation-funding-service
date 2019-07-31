@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,11 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.bind.annotation.*;
 
 import static java.lang.String.format;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
@@ -60,7 +56,7 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
         String baseUrl = format("%s/find-by-competition-id/%s", "/assessor-count-summary", competitionId);
 
         String uriWithParams =  UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("sort", null)
+                .queryParam("sort", (Object) null)
                 .queryParam("assessorNameFilter", assessorNameFilter)
                 .build()
                 .encode()
