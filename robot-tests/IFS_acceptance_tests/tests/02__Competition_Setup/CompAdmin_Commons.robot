@@ -16,8 +16,8 @@ The competition admin creates competition
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
-    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}  ${fundingType}
-    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}  ${fundingType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
@@ -135,13 +135,13 @@ the user fills in the CS Documents in other projects
     the user clicks the button/link          link = Competition setup
 
 the user marks the procurement application as done
-    [Arguments]  ${growthTable}  ${comp_type}  ${fundingType}
+    [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
     the assessed questions are marked as complete(procurement)    ${growthTable}
 
 the user marks the Application as done
-    [Arguments]  ${growthTable}  ${comp_type}  ${fundingType}
+    [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
