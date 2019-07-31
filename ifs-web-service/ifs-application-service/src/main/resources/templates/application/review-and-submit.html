@@ -46,7 +46,7 @@
             Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
         </p>
 
-        <th:block th:insert="application/readonly/application-read-only :: collapsible-list  (${model.applicationReadOnlyViewModel})" />
+        <th:block th:insert="application/readonly/application-read-only :: accordion  (${model.applicationReadOnlyViewModel})" />
 
         <div th:if="${!model.competition.isOpen() and !model.application.isSubmitted()}">
             <div class="warning-alert">

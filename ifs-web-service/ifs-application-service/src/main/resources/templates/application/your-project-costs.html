@@ -47,14 +47,16 @@
                 organisation can access and edit your finances. We recommend assigning completion of your finances
                 to one member of your team.</p>
 
-            <th:block th:insert="application/your-project-costs-fragments :: labour" />
-            <th:block th:insert="application/your-project-costs-fragments :: overheads" />
-            <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads" />
-            <th:block th:insert="application/your-project-costs-fragments :: materials" />
-            <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
-            <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
-            <th:block th:insert="application/your-project-costs-fragments :: travel" />
-            <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+            <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+                <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads" />
+                <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+            </div>
 
             <div class="govuk-grid-row total-cost">
                 <div class="govuk-grid-column-one-half">

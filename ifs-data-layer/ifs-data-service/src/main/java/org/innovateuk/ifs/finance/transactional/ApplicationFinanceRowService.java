@@ -29,13 +29,11 @@ public interface ApplicationFinanceRowService {
     @PreAuthorize("hasPermission(#financeRowId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'DELETE')")
     ServiceResult<Void> delete(long financeRowId);
 
-
-
-    //Move?
+    //Move IFS-6275
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_COST')")
     ServiceResult<ApplicationFinanceResource> updateApplicationFinance(@P("applicationFinanceId")Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
 
-    //Move
+    //Move IFS-6275
     @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<ApplicationFinanceResource> createApplicationFinance(@P("applicationFinanceResourceId") final ApplicationFinanceResourceId applicationFinanceResourceId);
 

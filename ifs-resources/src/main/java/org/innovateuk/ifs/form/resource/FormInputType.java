@@ -19,7 +19,6 @@ public enum FormInputType implements IdentifiableEnum {
     TEXTAREA(2),
     FILEUPLOAD(4),
     APPLICATION_DETAILS(5), //TODO Remove IFS-6216
-    EMPTY(6), // TODO remove IFS-4551
     FINANCE(7), // TODO remove all finance types IFS-6217
     LABOUR(8), // TODO remove all finance types IFS-6217
     OVERHEADS(9), // TODO remove all finance types IFS-6217

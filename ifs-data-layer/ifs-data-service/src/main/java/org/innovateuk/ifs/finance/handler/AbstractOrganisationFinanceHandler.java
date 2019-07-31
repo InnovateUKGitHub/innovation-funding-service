@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
+    private static final Log LOG = LogFactory.getLog(AbstractOrganisationFinanceHandler.class);
 
     protected QuestionService questionService;
 

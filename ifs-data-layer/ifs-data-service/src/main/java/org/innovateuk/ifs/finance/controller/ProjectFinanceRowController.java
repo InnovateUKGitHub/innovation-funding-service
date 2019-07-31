@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -16,6 +17,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
  * This RestController exposes CRUD operations to manage {@link ProjectFinanceRow} related data.
  */
 @RestController
+@ZeroDowntime(reference = "IFS-6274", description = "Delete old request mappings")
 @RequestMapping({"/cost/project", "project-finance-row"})
 public class ProjectFinanceRowController {
 

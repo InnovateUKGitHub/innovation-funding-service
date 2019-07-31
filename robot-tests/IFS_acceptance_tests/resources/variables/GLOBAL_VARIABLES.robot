@@ -39,6 +39,7 @@ ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 ${openCompetitionBusinessRTOCloseDate}  ${getSimpleMilestoneDate(${openCompetitionBusinessRTO}, "SUBMISSION_DATE")}
+${openCompetitionBusinessRTOOpenDate}   ${getPrettyMilestoneDate(${openCompetitionBusinessRTO}, "OPEN_DATE")}
 
 ${openCompetitionPublicSector_name}  Photonics for Public
 ${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}

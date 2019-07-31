@@ -46,7 +46,7 @@ A non submitted application cannot be marked as ineligible
     Given the user navigates to the page           ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/all
     Then the user should see the element           jQuery = td:contains("Rainfall") ~ td:contains("Started")
     When the user clicks the button/link           link = ${application_ids["Rainfall"]}
-    Then the user should not see the element       jQuery = h2 button:contains("Mark application as ineligible")
+    Then the user should not see the element       jQuery = .govuk-details__summary:contains("Mark application as ineligible")
     [Teardown]    the user clicks the button/link  jQuery = .govuk-back-link:contains("Back")
 
 Ineligigle button is shown on submitted applications
@@ -54,7 +54,7 @@ Ineligigle button is shown on submitted applications
     [Tags]
     Given the user should see the element  jQuery = td:contains("${ineligibleApplication}") ~ td:contains("Submitted")
     When the user clicks the button/link   link = ${application_ids["${ineligibleApplication}"]}
-    Then the user should see the element   jQuery = h2 button:contains("Mark application as ineligible")
+    Then the user should see the element   jQuery = .govuk-details__summary:contains("Mark application as ineligible")
 
 Clicking the ineligible button
     [Documentation]  INFUND-7370 IFS-986
@@ -72,11 +72,11 @@ Cancel marking the application as ineligible
 Client side validation - mark an application as ineligible
     [Documentation]  IFS-159
     [Tags]  InnovationLead
-    Given the user clicks the button/link                   jQuery = h2 button:contains("Mark application as ineligible")
+    Given the user clicks the button/link                   jQuery = .govuk-details__summary:contains("Mark application as ineligible")
     And the user enters multiple strings into a text field  id = ineligibleReason  a${SPACE}  402
     Then the user should see a field error                  Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field               id = ineligibleReason  This is the reason of ineligibility.
-    [Teardown]  the user clicks the button/link             jQuery = h2 button:contains("Mark application as ineligible")
+    [Teardown]  the user clicks the button/link             jQuery = .govuk-details__summary:contains("Mark application as ineligible")
 
 Marking an application as ineligible moves it to the ineligible view
     [Documentation]  INFUND-7370 IFS-986
@@ -146,7 +146,7 @@ Stakeholders cannot mark applications as ineligible
     Given Log in as a different user            &{stakeholder_user}
     When the user navigates to the page         ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${submittedApplicationNumber}?origin = SUBMITTED_APPLICATIONS
     Then the user should see the element        jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And the user should not see the element     jQuery = button:contains("Mark application as ineligible")
+    And the user should not see the element     jQuery = .govuk-details__summary:contains("Mark application as ineligible")
 
 Stakeholders cannot reinstate an application
     [Documentation]  IFS-2994
@@ -177,7 +177,7 @@ the user is required to enter a subject/message
     the user enters text to a text field    id = ${field}  ${fieldContent}
 
 the user checks for server side validation
-    the user clicks the button/link                jQuery = h2 button:contains("Mark application as ineligible")
+    the user clicks the button/link                jQuery = .govuk-details__summary:contains("Mark application as ineligible")
     #There are 2 buttons with the same name so we need to be careful
     the user should see the element                css = [aria-hidden = "false"] [id = "ineligibleReason"]
     browser validations have been disabled
@@ -185,9 +185,9 @@ the user checks for server side validation
     the user should see a field and summary error  ${empty_field_warning_message}
 
 the user marks an application as ineligible
-    the user clicks the button/link        jQuery = h2 button:contains("Mark application as ineligible")
+    the user clicks the button/link        jQuery = .govuk-details__summary:contains("Mark application as ineligible")
     the user enters text to a text field   id = ineligibleReason  This is the reason of why this application is ineligible
-    the user clicks the button/link        jQuery = .govuk-button:contains("Mark application as ineligible")
+    the user clicks the button/link        jQuery = button:contains("Mark application as ineligible")
 
 the user filters ineligible applications
     the user selects the option from the drop-down menu  No  id = filterInform
