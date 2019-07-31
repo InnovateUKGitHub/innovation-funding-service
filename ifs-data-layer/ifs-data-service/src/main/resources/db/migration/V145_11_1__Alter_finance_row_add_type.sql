@@ -12,7 +12,8 @@ ALTER TABLE finance_row ADD COLUMN type enum (
     'OTHER_COSTS',
     'FINANCE',
     'OTHER_FUNDING',
-    'YOUR_FINANCE'
+    'YOUR_FINANCE',
+    'VAT'
 );
 
 update finance_row fr
@@ -32,7 +33,8 @@ update finance_row fr
           'OTHER_COSTS',
           'FINANCE',
           'OTHER_FUNDING',
-          'YOUR_FINANCE'
+          'YOUR_FINANCE',
+          'VAT'
   );
 
 update finance_row fr

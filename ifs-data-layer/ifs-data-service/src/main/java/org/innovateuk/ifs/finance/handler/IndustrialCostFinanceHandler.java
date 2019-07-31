@@ -44,6 +44,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     private OtherFundingHandler otherFundingHandler;
 
+    private VATHandler vatHandler;
+
     public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                                         ProjectFinanceRowRepository projectFinanceRowRepository,
                                         FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
@@ -55,7 +57,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                                         OverheadsHandler overheadsHandler,
                                         SubContractingCostHandler subContractingCostHandler,
                                         TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                        OtherFundingHandler otherFundingHandler) {
+                                        OtherFundingHandler otherFundingHandler,
+                                        VATHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
@@ -66,6 +69,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         this.travelCostHandler = travelCostHandler;
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
+        this.vatHandler = vatHandler;
     }
 
     @Override
@@ -135,6 +139,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
                 break;
+            case VAT:
+                handler = vatHandler;
+                break;
         }
         if (handler != null) {
             return handler;
@@ -153,6 +160,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 return new OverheadCostCategory();
             case FINANCE:
                 return new GrantClaimCategory();
+            case VAT:
+                return new VATCategory();
             default:
                 return new DefaultCostCategory();
         }
@@ -240,9 +249,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
-            if(cost.getApplicationRowId() != null) {
+            if (cost.getApplicationRowId() != null) {
                 applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
-            } else{
+            } else {
                 applicationFinanceRow = Optional.empty();
             }
             return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));

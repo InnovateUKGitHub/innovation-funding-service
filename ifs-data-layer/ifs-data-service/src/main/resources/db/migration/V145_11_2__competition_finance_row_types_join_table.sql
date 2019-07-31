@@ -13,7 +13,8 @@ CREATE TABLE competition_finance_row_types (
     'OTHER_COSTS',
     'FINANCE',
     'OTHER_FUNDING',
-    'YOUR_FINANCE'
+    'YOUR_FINANCE',
+    'VAT'
   ),
   PRIMARY KEY (competition_id,finance_row_type),
   CONSTRAINT fk_competition_finance_row_types_competition_id FOREIGN KEY (competition_id) REFERENCES competition(id)
@@ -57,4 +58,8 @@ FROM competition;
 
 INSERT INTO competition_finance_row_types (competition_id, finance_row_type)
 SELECT id as competition_id, 'YOUR_FINANCE' as finance_row_type
+FROM competition;
+
+INSERT INTO competition_finance_row_types (competition_id, finance_row_type)
+SELECT id as competition_id, 'VAT' as finance_row_type
 FROM competition;
