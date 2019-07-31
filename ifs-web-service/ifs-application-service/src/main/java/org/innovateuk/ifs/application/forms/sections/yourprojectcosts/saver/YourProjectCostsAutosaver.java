@@ -60,6 +60,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveTravelCost(field, value, finance);
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
+            } else if (field.startsWith("vat")) {
+                return autosaveVAT(field, value, finance);
             } else {
                 throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
             }
@@ -215,6 +217,24 @@ public class YourProjectCostsAutosaver {
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveVAT(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        VAT vat = getCost(id, finance, VAT.class);
+        switch (rowField) {
+            case "description":
+//                vat.setDescription(value);
+                break;
+            case "estimate":
+//                vat.setCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(String.format("Auto save VAT field not handled %s", rowField), Collections.emptyList());
+        }
+//        financeRowRestService.update(cost);
+        return Optional.of(vat.getId());
     }
 
     private <R extends FinanceRowItem> R getCost(String id, ApplicationFinanceResource finance, Class<R> clazz) throws IllegalAccessException, InstantiationException {

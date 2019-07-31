@@ -24,6 +24,8 @@ public class YourProjectCostsForm {
 
     private Boolean eligibleAgreement;
 
+    private Boolean vatRegistered;
+
     public OverheadForm getOverhead() {
         return overhead;
     }
@@ -78,6 +80,14 @@ public class YourProjectCostsForm {
 
     public void setEligibleAgreement(Boolean eligibleAgreement) {
         this.eligibleAgreement = eligibleAgreement;
+    }
+
+    public Boolean getVatRegistered() {
+        return vatRegistered;
+    }
+
+    public void setVatRegistered(Boolean vatRegistered) {
+        this.vatRegistered = vatRegistered;
     }
 
     public LabourForm getLabour() {
