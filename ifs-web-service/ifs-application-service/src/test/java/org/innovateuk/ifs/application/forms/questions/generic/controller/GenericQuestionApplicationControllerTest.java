@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQ
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.readonly.populator.GenericQuestionReadOnlyViewModelPopulator;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -24,6 +25,7 @@ import org.springframework.validation.Validator;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -85,10 +87,20 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void completeFromReviewPage() throws Exception {
+    public void showErrors() throws Exception {
         long applicationId = 1L;
         long questionId = 2L;
 
+        FormInputResource formInput = newFormInputResource()
+                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .build();
+
+        FormInputResponseResource response = newFormInputResponseResource()
+                .withFileName(null)
+                .build();
+
+        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputResponseRestService.getByFormInputIdAndApplication(formInput.getId(), applicationId)).thenReturn(restSuccess(singletonList(response)));
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
@@ -96,7 +108,8 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/generic?show-errors=true", applicationId, questionId))
                 .andExpect(view().name("application/questions/generic"))
-                .andExpect(model().attribute("model", viewModel));
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attributeHasFieldErrorCode("form", "templateDocument", "validation.file.required"));
 
         verify(formPopulator).populate(any(), eq(applicantQuestion));
         verify(validator).validate(any(), any());

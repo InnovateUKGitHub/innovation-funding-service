@@ -61,7 +61,7 @@ public class ApplicationTeamController {
     }
 
     @GetMapping(params = "show-errors")
-    public String completeFromReviewPage(@ModelAttribute(value = "form") ApplicationTeamForm form,
+    public String showErrors(@ModelAttribute(value = "form") ApplicationTeamForm form,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          Model model,
