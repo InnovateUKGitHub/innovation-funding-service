@@ -24,7 +24,7 @@
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="govuk-radios">
-                <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}">
+                <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}" th:attr="data-target=${item.procurement ? 'procurement-upload' : null}">
                     <input type="radio"
                            class="govuk-radios__input"
                            th:field="*{termsAndConditionsId}"
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div>
+            <div id="procurement-upload" class="upload-section">
                 <div th:unless="${model.termsAndConditionsDocUploaded}">
                     <th:block th:if="${#fields.hasErrors('termsAndConditionsDoc')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('termsAndConditionsDoc')}" th:text="${err}" />
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <button class="govuk-button">Done</button>
+            <button class="govuk-button govuk-!-margin-top-5">Done</button>
         </div>
 
         <th:block th:unless="${model.general.editable}">
