@@ -1199,6 +1199,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         long competitionId = 1L;
         int page = 1;
         int pageSize = 1;
+        String assessorFilter = "";
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withName("Emerging Tech and Industries")
@@ -1246,22 +1247,20 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        Optional<Long> innovationAreaId = of(innovationArea.getId());
-
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);
 
-        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable))
+        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable))
                 .thenReturn(expectedPage);
         when(profileRepositoryMock.findById(assessors.get(0).getProfileId())).thenReturn(Optional.of(profile.get(0)));
         when(profileRepositoryMock.findById(assessors.get(1).getProfileId())).thenReturn(Optional.of(profile.get(1)));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable, innovationAreaId)
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable, assessorFilter)
                 .getSuccess();
 
-        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable);
+        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
         verify(profileRepositoryMock).findById(assessors.get(0).getProfileId());
         verify(profileRepositoryMock).findById(assessors.get(1).getProfileId());
         verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
@@ -1279,18 +1278,19 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         int page = 0;
         int pageSize = 20;
         long innovationAreaId = 10L;
+        String assessorFilter = "";
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable))
+        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable))
                 .thenReturn(assessorPage);
 
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, of(innovationAreaId))
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, assessorFilter)
                 .getSuccess();
 
-        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable);
+        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -1300,21 +1300,22 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors_noInnovationArea() {
+    public void getAvailableAssessors_noAssessorFilter() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
+        String assessorFilter = "";
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(assessmentInviteRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
+        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable)).thenReturn(assessorPage);
 
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, empty())
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, assessorFilter)
                 .getSuccess();
 
-        verify(assessmentInviteRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
+        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -1367,15 +1368,16 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .build(2);
 
         Optional<Long> innovationAreaId = of(innovationArea.getId());
+        String assessorFilter = "";
 
 
-        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId()))
+        when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter))
                 .thenReturn(assessorUsers);
 
-        List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId, innovationAreaId)
+        List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId, assessorFilter)
                 .getSuccess();
 
-        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId());
+        verify(assessmentInviteRepositoryMock).findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter);
 
         assertEquals(expectedAssessorIds, actualAssessorIds);
     }
@@ -1470,7 +1472,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         long totalElements = 100L;
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         Page<AssessmentInvite> page = new PageImpl<>(combineLists(existingUserInvites, newUserInvite), pageable, totalElements);
 
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED, pageable)).thenReturn(page);
@@ -1787,7 +1789,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 
@@ -1843,7 +1845,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withCompetitionId(competition.getId())
                 .build(2);
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         List<AssessmentInvite> pagedResult = newAssessmentInvite()
                 .withId(1L,2L)
@@ -1965,7 +1967,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 
@@ -2202,10 +2204,10 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     @Test
     public void getInvitationOverview_allFilters() {
         long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
-        Long innovationArea = 2L;
+        Pageable pageable = PageRequest.of(0, 5);
         ParticipantStatus status = ParticipantStatus.PENDING;
         Boolean compliant = true;
+        String assessorName = "";
 
         List<AssessmentParticipant> expectedParticipants = newAssessmentParticipant()
                 .withInvite(
@@ -2221,11 +2223,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 eq(competitionId),
-                eq(innovationArea),
                 eq(singletonList(status)),
                 eq(compliant),
+                eq(assessorName),
                 any(ZonedDateTime.class),
                 eq(pageable)
         ))
@@ -2247,16 +2249,16 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(
                 competitionId,
                 pageable,
-                of(innovationArea),
                 singletonList(status),
-                of(compliant)
+                of(compliant),
+                of(assessorName)
         );
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 eq(competitionId),
-                eq(innovationArea),
                 eq(singletonList(status)),
                 eq(compliant),
+                eq(assessorName),
                 any(ZonedDateTime.class),
                 eq(pageable)
         );
@@ -2286,7 +2288,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     @Test
     public void getInvitationOverview_noFilters() {
         long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
         List<AssessmentParticipant> expectedParticipants = newAssessmentParticipant()
                 .withInvite(
                         newAssessmentInvite()
@@ -2301,7 +2303,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Page<AssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, singletonList(PENDING), "", pageable))
                 .thenReturn(pageResult);
 
         List<AssessorInviteOverviewResource> overviewResources = newAssessorInviteOverviewResource()
@@ -2318,9 +2320,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 );
 
 
-        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), singletonList(PENDING), empty());
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING), empty(), empty());
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, singletonList(PENDING), "", pageable);
         verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(AssessmentParticipant.class));
 
         assertTrue(result.isSuccess());
@@ -2364,12 +2366,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);
 
-        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED)))
+        when(assessmentParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, asList(PENDING, REJECTED), ""))
                 .thenReturn(expectedParticipants);
 
-        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), asList(PENDING, REJECTED), empty());
+        ServiceResult<List<Long>> result = service.getAssessorsNotAcceptedInviteIds(competitionId, asList(PENDING, REJECTED), empty(), empty());
 
-        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
+        verify(assessmentParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(competitionId, asList(PENDING, REJECTED), "");
 
         assertTrue(result.isSuccess());
         List<Long> returnedInviteIds = result.getSuccess();

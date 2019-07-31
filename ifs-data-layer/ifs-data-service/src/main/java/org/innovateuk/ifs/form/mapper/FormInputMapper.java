@@ -22,7 +22,8 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
 
     @Mappings({
             @Mapping(target = "guidanceRows", ignore = true),
-            @Mapping(target = "active", ignore = true)
+            @Mapping(target = "active", ignore = true),
+            @Mapping(target = "file", ignore = true)
     })
     @Override
     public abstract FormInput mapToDomain(FormInputResource resource);

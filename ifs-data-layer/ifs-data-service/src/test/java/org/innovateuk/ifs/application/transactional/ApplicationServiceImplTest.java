@@ -359,7 +359,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
-        Pageable pageable = new PageRequest(0, pageSize);
+        Pageable pageable = PageRequest.of(0, pageSize);
         Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
 
         when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);

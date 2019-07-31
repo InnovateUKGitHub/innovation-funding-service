@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.assessor.form.AssessorSelectionForm;
-import org.innovateuk.ifs.management.assessor.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsAcceptedModelPopulator;
@@ -33,12 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -84,16 +81,16 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
 
     @GetMapping("/find")
     public String find(Model model,
-                       @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) FindAssessorsFilterForm filterForm,
                        @ModelAttribute(name = SELECTION_FORM, binding = false) AssessorSelectionForm selectionForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(value = "filterChanged", required = false) boolean filterChanged,
+                       @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter,
                        HttpServletRequest request,
                        HttpServletResponse response) {
-        updateSelectionForm(request, response, competitionId, selectionForm, filterForm, filterChanged);
-        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea());
+
+        updateSelectionForm(request, response, competitionId, selectionForm, assessorNameFilter);
+        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
 
@@ -104,35 +101,26 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                                      HttpServletResponse response,
                                      long competitionId,
                                      AssessorSelectionForm selectionForm,
-                                     FindAssessorsFilterForm filterForm,
-                                     boolean filterChanged) {
+                                     String assessorNameFilter) {
         AssessorSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
-        if (storedSelectionForm.anyFilterIsActive()
-                && !filterForm.anyFilterIsActive()
-                && !filterChanged
-                && storedSelectionForm.anySelectionIsMade()) {
-            filterForm.setInnovationArea(of(storedSelectionForm.getSelectedInnovationArea()));
-        }
-
-        AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filterForm.getInnovationArea(), competitionId);
+        AssessorSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, assessorNameFilter, competitionId);
         selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
         selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
-        selectionForm.setSelectedInnovationArea(filterForm.getInnovationArea().orElse(null));
 
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
     private AssessorSelectionForm trimSelectionByFilteredResult(AssessorSelectionForm selectionForm,
-                                                                       Optional<Long> innovationArea,
-                                                                       Long competitionId) {
-        List<Long> filteredResults = getAllAssessorIds(competitionId, innovationArea);
+                                                                String assessorNameFilter,
+                                                                Long competitionId) {
+        List<Long> filteredResults = getAllAssessorIds(competitionId, assessorNameFilter);
         AssessorSelectionForm updatedSelectionForm = new AssessorSelectionForm();
 
         selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
         updatedSelectionForm.setSelectedAssessorIds(selectionForm.getSelectedAssessorIds());
 
-        if (updatedSelectionForm.getSelectedAssessorIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedAssessorIds().isEmpty()) {
+        if (updatedSelectionForm.getSelectedAssessorIds().equals(filteredResults) && !updatedSelectionForm.getSelectedAssessorIds().isEmpty()) {
             updatedSelectionForm.setAllSelected(true);
         } else {
             updatedSelectionForm.setAllSelected(false);
@@ -142,21 +130,22 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})
-    public @ResponseBody JsonNode selectAssessorForInviteList(
+    public @ResponseBody
+    JsonNode selectAssessorForInviteList(
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam Optional<Long> innovationArea,
+            @RequestParam(defaultValue = "", required = false) String assessorNameFilter,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitExceeded = false;
         try {
-            List<Long> assessorIds = getAllAssessorIds(competitionId, innovationArea);
+            List<Long> assessorIds = getAllAssessorIds(competitionId, assessorNameFilter);
             AssessorSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
-                if(limitIsExceeded(predictedSize)){
+                if (limitIsExceeded(predictedSize)) {
                     limitExceeded = true;
                 } else {
                     selectionForm.getSelectedAssessorIds().add(assessorId);
@@ -177,18 +166,19 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
     }
 
     @PostMapping(value = "/find", params = {"addAll"})
-    public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
-                                              @PathVariable("competitionId") long competitionId,
-                                              @RequestParam("addAll") boolean addAll,
-                                              @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam Optional<Long> innovationArea,
-                                              HttpServletRequest request,
-                                              HttpServletResponse response) {
+    public @ResponseBody
+    JsonNode addAllAssessorsToInviteList(Model model,
+                                         @PathVariable("competitionId") long competitionId,
+                                         @RequestParam("addAll") boolean addAll,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "") String assessorNameFilter,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
         try {
             AssessorSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, innovationArea));
+                selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId, assessorNameFilter));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedAssessorIds().clear();
@@ -205,15 +195,15 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         }
     }
 
-    private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        return competitionInviteRestService.getAvailableAssessorIds(competitionId, innovationArea).getSuccess();
+    private List<Long> getAllAssessorIds(long competitionId, String assessorNameFilter) {
+        return competitionInviteRestService.getAvailableAssessorIds(competitionId, assessorNameFilter).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
     public String addSelectedAssessorsToInviteList(Model model,
                                                    @PathVariable("competitionId") long competitionId,
                                                    @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam Optional<Long> innovationArea,
+                                                   @RequestParam(defaultValue = "", required = false) String assessorNameFilter,
                                                    @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
@@ -222,7 +212,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         AssessorSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedAssessorIds().isEmpty())
                 .orElse(selectionForm);
-        Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
+        Supplier<String> failureView = () -> redirectToFind(competitionId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> restResult = competitionInviteRestService.inviteUsers(
@@ -236,11 +226,9 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
         });
     }
 
-    private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
+    private String redirectToFind(long competitionId, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")
                 .queryParam("page", page);
-
-        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();

@@ -37,8 +37,7 @@ import org.mapstruct.Mappings;
                 CompetitionDocumentMapper.class,
                 FileTypeMapper.class,
                 FileEntryMapper.class
-        }
-)
+        })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
     @Mappings({

@@ -105,7 +105,6 @@ public class CompetitionResource {
     private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
-        // no-arg constructor
     }
 
     public CompetitionResource(long id,
@@ -768,6 +767,11 @@ public class CompetitionResource {
 
     public void setCompetitionTerms(FileEntryResource competitionTerms) {
         this.competitionTerms = competitionTerms;
+    }
+
+    @JsonIgnore
+    public boolean isCompetitionTermsUploaded() {
+        return competitionTerms != null;
     }
 
     @Override

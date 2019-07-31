@@ -77,9 +77,9 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
 
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
         when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn)));
-        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, 2L)).thenReturn(restSuccess(available));
+        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, "")).thenReturn(restSuccess(available));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
-        String assessorOrigin = "?page=0&filterInnovationArea=2";
+        String assessorOrigin = "?page=0&assessorNameFilter=";
 
         Pagination expectedPaginationModel = new Pagination(available, assessorOrigin);
 
@@ -97,11 +97,11 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 setupExpectedPreviouslyAssignedRows(),
                 setupExpectedAvailableAssessors(),
                 innovationSectors,
-                2L,
+                "",
                 expectedPaginationModel
         );
 
-        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&filterInnovationArea=2", competitionId, applicationId))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&assessorNameFilter=", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
@@ -109,7 +109,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService, categoryRestServiceMock);
         inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
         inOrder.verify(applicationAssessmentSummaryRestService).getAssignedAssessors(applicationId);
-        inOrder.verify(applicationAssessmentSummaryRestService).getAvailableAssessors(applicationId, 0, 20, 2L);
+        inOrder.verify(applicationAssessmentSummaryRestService).getAvailableAssessors(applicationId, 0, 20, "");
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }

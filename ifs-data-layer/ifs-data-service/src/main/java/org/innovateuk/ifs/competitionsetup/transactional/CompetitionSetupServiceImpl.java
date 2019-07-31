@@ -375,6 +375,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> uploadCompetitionTerms(String contentType, String contentLength, String originalFilename, long competitionId, HttpServletRequest request) {
         return findCompetition(competitionId)
                 .andOnSuccess(competition -> fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
@@ -389,6 +390,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteCompetitionTerms(long competitionId) {
         return findCompetition(competitionId)
                 .andOnSuccess(competition -> fileService.deleteFileIgnoreNotFound(competition.getCompetitionTerms().getId())

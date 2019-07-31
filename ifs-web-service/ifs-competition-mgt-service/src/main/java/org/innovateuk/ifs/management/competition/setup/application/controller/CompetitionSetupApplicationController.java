@@ -91,9 +91,7 @@ public class CompetitionSetupApplicationController {
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
-        Supplier<String> successView = () -> successViewFunction.apply(result.getSuccess());
-
-        return successView.get();
+        return successViewFunction.apply(result.getSuccess());
     }
 
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
