@@ -110,7 +110,6 @@
 //finances
 .total-cost {
   padding: 15px 0;
-  border-top: 1px solid $govuk-border-colour;
   margin: 25px 0 0;
 
   .govuk-grid-column-one-half {
@@ -212,12 +211,11 @@ table {
   margin-bottom: 30px;
 }
 
-.eligibility-form {
-  h3 {
-    .finance-total {
-      text-align: right;
-      float: right;
-      padding-left: 20px;
-    }
-  }
+
+.finance-total {
+  text-align: right;
+  float: right;
+  padding-left: 20px;
 }
+
+

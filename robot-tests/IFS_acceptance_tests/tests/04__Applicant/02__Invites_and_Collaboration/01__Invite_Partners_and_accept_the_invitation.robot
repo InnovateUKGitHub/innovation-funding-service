@@ -58,12 +58,12 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]  HappyPath
     [Setup]    The user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link          link = Invite robot test application
-    When the user clicks the button/link           link = Application team
-    And The user clicks the button/link       jquery = button:contains("Add person to ${organisation}")
-    And The user should not see the element   jQuery = .modal-delete-organisation button:contains('Delete organisation')
-    Then The user should see the element      jQuery = table:contains(empire) + table td:contains(Remove)
-    And The user clicks the button/link       jQuery = table:contains(empire) + table button:contains(Remove)
+    Given the user clicks the button/link         link = Invite robot test application
+    When the user clicks the button/link          link = Application team
+    And The user clicks the button/link           jquery = button:contains("Add person to ${organisation}")
+    And The user should not see the element       jQuery = .modal-delete-organisation button:contains('Delete organisation')
+    Then The user should see the element          jQuery = .govuk-table button:contains(Remove)
+    And The user clicks the button/link           jQuery = .govuk-table button:contains(Remove)
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
