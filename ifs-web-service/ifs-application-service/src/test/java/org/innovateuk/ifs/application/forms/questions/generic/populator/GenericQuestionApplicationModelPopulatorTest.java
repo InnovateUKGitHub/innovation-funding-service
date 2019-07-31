@@ -32,6 +32,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -158,7 +159,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals("template.odt", viewModel.getTemplateDocumentFilename());
         assertEquals("templateresponse.pdf", viewModel.getTemplateDocumentResponseFilename());
 
-        assertEquals(now, viewModel.getLastUpdated());
+        assertEquals(now, toUkTimeZone(viewModel.getLastUpdated()));
         assertEquals("Bob", viewModel.getLastUpdatedByName());
         assertEquals((Long) 2L, viewModel.getLastUpdatedBy());
 
