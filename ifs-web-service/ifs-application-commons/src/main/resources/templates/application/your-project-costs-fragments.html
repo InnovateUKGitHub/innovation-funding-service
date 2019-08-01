@@ -551,19 +551,25 @@
 
 *********************************/-->
 
-<th:block th:fragment="procurement-overheads">
-    <section class="collapsible"
-             th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
+<th:block th:fragment="procurement-overheads"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
+
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-            <h3>
+            <div class="govuk-accordion__section-header">
+                <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
                 Overhead costs
                 <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
                       th:text="${#ifsUtil.calculatePercentage(form.procurementOverheadRows, form.organisationFinanceTotal) + '%'}"></span>
-            </h3>
-            <div class="collapsible-content">
+                </span>
+                </h3>
+            </div>
+            <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
+                 aria-labelledby="accordion-finances-heading-10">
                 <details class="govuk-details" role="group">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">Overheads costs guidance</span>
@@ -650,7 +656,7 @@
                           th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
             </div>
         </div>
-    </section>
+    </div>
 </th:block>
 
 <th:block th:fragment="ajax_procurement_overheads_row">
