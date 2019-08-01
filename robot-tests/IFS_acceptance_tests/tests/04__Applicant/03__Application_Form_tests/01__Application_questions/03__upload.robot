@@ -91,7 +91,7 @@ Collaborators can view a file
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
     [Tags]
-    When the user should see the element               jQuery = h2:contains("Appendix")
+    When the user should see the element               jQuery = h3:contains("Appendix")
     Then the user should not see the element           jQuery = label:contains("Upload")
 
 Collaborators cannot remove a file if not assigned

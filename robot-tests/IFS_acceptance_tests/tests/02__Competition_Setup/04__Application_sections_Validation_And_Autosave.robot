@@ -11,10 +11,10 @@ Resource         CompAdmin_Commons.robot
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]
-    Given The user clicks the button/link  link = Application
-    And The user clicks the button/link    jQuery = a:contains("Business opportunity")
-    When the user leaves all the question field empty
-    And The user clicks the button/link    css = button[type="submit"]
+    Given the user clicks the button/link  link = Application
+    And the user clicks the button/link    jQuery = a:contains("Business opportunity")
+    When the user leaves all the question fields empty
+    Then the user should see the correct error messages
     Then the user should see the element   jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-label:contains("Question guidance title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
@@ -35,15 +35,12 @@ Business opportunity Sever-side validations assessment questions
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]
-    Given the user fills the empty question fields
-    And the user enters text to a text field                            id = question.shortTitle    Test Heading
-    And the user selects the radio button                               question.appendix  0
-    And the user fills the empty assessment fields
+    Given the user fills the empty fields
     Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.title"]                 ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.guidanceTitle"]         ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.maxWords"]              ${empty_field_warning_message}
-    And the validation error above the question should not be visible   id = question.allowedAppendixResponseFileTypes                    ${empty_field_warning_message}
+    And the validation error above the question should not be visible   id = question.allowedAppendixResponseFileTypes    ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreFrom"]      ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreTo"]        ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].justification"]  ${empty_field_warning_message}

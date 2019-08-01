@@ -29,7 +29,7 @@ Custom Suite Setup
 the Applicant edits the Project summary
     Clear Element Text                    css = .textarea-wrapped .editor
     The user enters text to a text field  css = .textarea-wrapped .editor    Check last updated date@#$
-    Set Focus To Element                                   css = .app-submit-btn
+    Set Focus To Element                                   id = application-question-complete
     wait for autosave
 
 the assign status should be correct for the Project Summary

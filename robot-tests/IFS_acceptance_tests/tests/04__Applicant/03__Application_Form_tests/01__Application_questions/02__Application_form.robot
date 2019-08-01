@@ -182,7 +182,7 @@ the text box should turn to green
     Element Should Be Disabled    css = textarea
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link = Application overview
+    The user clicks the button/link    link = Back to application overview
     The user should see the element    jQuery = li:nth-child(4) span:contains("Complete")
 
 the text box should be editable
