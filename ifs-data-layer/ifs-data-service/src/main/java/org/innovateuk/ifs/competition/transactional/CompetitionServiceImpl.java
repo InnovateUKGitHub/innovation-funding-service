@@ -212,7 +212,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<FileAndContents> downloadTerms(long competitionId) {
         return findCompetitionById(competitionId)
-                .andOnSuccess(c -> fileEntryService.findOne(c.getCompetitionTerms().getId()))
+                .andOnSuccess(c -> fileEntryService.findOne(c.getCompetitionTerms().get().getId()))
                 .andOnSuccess(fe ->
                         fileService.getFileByFileEntryId(fe.getId())
                                 .andOnSuccessReturn(is -> new BasicFileAndContents(fe, is))

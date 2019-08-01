@@ -8,8 +8,10 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.mapper.FileTypeMapper;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
@@ -18,6 +20,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+
+import java.util.Optional;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -67,4 +71,10 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
         }
         return object.getId();
     }
+
+    public FileEntryResource mapToResource(Optional<FileEntry> competitionTerms) {
+        return competitionTerms.map(this::mapToResource).orElse(null);
+    }
+
+    public abstract FileEntryResource mapToResource(FileEntry competitionTerms);
 }
