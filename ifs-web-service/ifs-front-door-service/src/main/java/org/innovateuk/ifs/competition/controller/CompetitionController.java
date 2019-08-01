@@ -70,8 +70,7 @@ public class CompetitionController {
     }
 
     @GetMapping("info/terms-and-conditions/full")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         return getFileResponseEntity(competitionRestService.downloadTerms(competitionId).getSuccess(), competition.getCompetitionTerms());
     }
