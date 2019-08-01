@@ -34,7 +34,7 @@ public class ValidMediaTypeErrorHelperTest {
     @Test
     public void tesDocumentOnlyMessage() {
         assertSpecialisedMessageProduced(
-                mediaTypeFromCategories(SPREADSHEET),
+                mediaTypeFromCategories(DOCUMENT),
                 "UNSUPPORTED_MEDIA_TYPE_DOCUMENT_ONLY"
         );
     }
