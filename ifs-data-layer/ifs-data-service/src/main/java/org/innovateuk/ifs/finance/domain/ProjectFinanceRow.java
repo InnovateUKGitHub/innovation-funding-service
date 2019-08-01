@@ -21,7 +21,6 @@ public class ProjectFinanceRow extends FinanceRow<ProjectFinance> {
 
     private Long applicationRowId;
 
-    // Required for ORM - don't remove
     public ProjectFinanceRow() {
     }
 

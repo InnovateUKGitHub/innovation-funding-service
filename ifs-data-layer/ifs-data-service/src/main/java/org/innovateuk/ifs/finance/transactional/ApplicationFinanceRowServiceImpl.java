@@ -202,7 +202,7 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
      * Get the cost handler by costItemId. This FinanceRowHandler can be used for validation or conversion of the FinanceRowItem.
      */
     @Override
-    public FinanceRowHandler getCostHandler(Long financeRowId) {
+    public FinanceRowHandler getCostHandler(long financeRowId) {
         return find(financeRowRepository.findById(financeRowId), notFoundError(ApplicationFinanceRow.class, financeRowId))
                 .andOnSuccessReturn(row -> {
                     OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(row.getTarget().getApplication().getCompetition().getId(), row.getTarget().getOrganisation().getOrganisationType().getId());

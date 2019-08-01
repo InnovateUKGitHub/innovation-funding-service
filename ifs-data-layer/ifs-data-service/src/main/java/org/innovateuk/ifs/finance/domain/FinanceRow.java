@@ -43,7 +43,6 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     private FinanceRowType type;
 
     public FinanceRow() {
-    	// no-arg constructor
     }
 
     /**

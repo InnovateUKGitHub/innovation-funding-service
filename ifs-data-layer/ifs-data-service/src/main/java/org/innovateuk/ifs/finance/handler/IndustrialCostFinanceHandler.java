@@ -96,14 +96,12 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     @Override
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-
-        if (costCategories.containsKey(FinanceRowType.OVERHEADS)) {
-            FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
-            OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(FinanceRowType.OVERHEADS);
+        FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
+        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(FinanceRowType.OVERHEADS);
+        if (overheadCategory != null && labourFinanceRowCostCategory != null) {
             overheadCategory.setLabourCostTotal(labourFinanceRowCostCategory.getTotal());
             overheadCategory.calculateTotal();
         }
-
         return costCategories;
     }
 

@@ -100,22 +100,19 @@ public class YourProjectCostsForm {
 
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
-        return calculateTotal(labour.getRows());
+        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
     }
 
     public BigDecimal getTotalOverheadCosts() {
-
-        if (overhead.getRateType() == null) {
-            return BigDecimal.ZERO;
-        }
-
-        switch (overhead.getRateType()) {
-            case NONE:
-                return BigDecimal.ZERO;
-            case DEFAULT_PERCENTAGE:
-                return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
-            case TOTAL:
-                return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+        if (overhead != null && overhead.getRateType() != null) {
+            switch (overhead.getRateType()) {
+                case NONE:
+                    return BigDecimal.ZERO;
+                case DEFAULT_PERCENTAGE:
+                    return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
+                case TOTAL:
+                    return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+            }
         }
         return BigDecimal.ZERO;
     }
