@@ -223,19 +223,10 @@ public class YourProjectCostsAutosaver {
     private Optional<Long> autosaveVAT(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
-        VAT vat = getCost(id, () -> new VAT(finance.getId()));
-        switch (rowField) {
-            case "description":
-//                vat.setDescription(value);
-                break;
-            case "estimate":
-//                vat.setCost(new BigDecimal(value));
-                break;
-            default:
-                throw new IFSRuntimeException(String.format("Auto save VAT field not handled %s", rowField), Collections.emptyList());
-        }
-//        financeRowRestService.update(cost);
-        return Optional.of(vat.getId());
+        VAT cost = getCost(id, () -> new VAT(finance.getId()));
+        cost.setRegistered(Boolean.valueOf(value));
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
     }
 
     private <R extends FinanceRowItem> R getCost(String id, Supplier<R> creator) {

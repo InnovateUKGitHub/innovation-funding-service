@@ -139,9 +139,16 @@
                         <div id="vatRegistered-totals" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('vatRegistered')} ? 'govuk-form-group--error'">
+                                <div class="govuk-grid-column-one-half alignright">
                                 <label for="total-cost" class="govuk-heading-m"
                                        th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
                                     costs</label>
+                                </div><div class="govuk-grid-column-one-half alignright">
+                                <label for="total-cost" class="govuk-heading-m"
+                                       th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
+                                    costs</label>
+                            </div>
+
                                 <label for="total-cost" class="govuk-heading-m"
                                        th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
                                     Total project

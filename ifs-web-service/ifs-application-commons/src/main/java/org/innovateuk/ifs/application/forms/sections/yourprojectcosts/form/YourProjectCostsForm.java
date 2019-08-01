@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public class YourProjectCostsForm {
 
+    public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
+
     private LabourForm labour = new LabourForm();
 
     private OverheadForm overhead = new OverheadForm();
@@ -101,6 +103,13 @@ public class YourProjectCostsForm {
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
         return calculateTotal(labour.getRows());
+    }
+
+    public BigDecimal getVatTotal() {
+        if (vatRegistered == null || vatRegistered == false) {
+            return BigDecimal.ZERO;
+        }
+        return getOrganisationFinanceTotal().divide(VAT_RATE);
     }
 
     public BigDecimal getTotalOverheadCosts() {
