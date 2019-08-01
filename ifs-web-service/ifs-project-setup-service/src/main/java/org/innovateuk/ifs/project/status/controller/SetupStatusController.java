@@ -28,7 +28,6 @@ public class SetupStatusController {
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
     @AsyncMethod
     public String viewProjectSetupStatus(@PathVariable("projectId") long projectId,

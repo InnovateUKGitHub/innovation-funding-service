@@ -55,11 +55,6 @@ public class SetupSectionsPermissionRules {
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
-    @PermissionRule(value = "ACCESS_PROJECT_SETUP_STATUS", description = "A partner can access the Project Setup Status page when the project is in a correct state to do so")
-    public boolean partnerCanAccessProjectSetupStatus(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectInViewableState(projectCompositeId.id());
-    }
-
     @PermissionRule(value = "ACCESS_PROJECT_TEAM_STATUS", description = "A partner can access the Project Team Status page when the project is in a correct state to do so")
     public boolean partnerCanAccessProjectTeamStatus(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectInViewableState(projectCompositeId.id());
@@ -247,12 +242,8 @@ public class SetupSectionsPermissionRules {
     }
 
     private boolean isProjectInViewableState(long projectId) {
-        return !isProjectWithdrawn(projectId);
-    }
-
-    private boolean isProjectWithdrawn(long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        return ProjectState.WITHDRAWN.equals(project.getProjectState());
+        return project.getProjectState().isActive();
     }
 
     public class SetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
