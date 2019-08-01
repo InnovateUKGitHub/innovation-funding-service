@@ -394,9 +394,10 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     }
 
-
     @Test
     public void findApplicationByUserAndRole() {
+        loginCompAdmin();
+
         Competition competition = newCompetition().with(id(null)).build();
         User user = new User("Person", "Applicant", "person@gmail.com", "", "123abc");
 
@@ -417,6 +418,11 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCompetition(competition)
                 .withName("assessorApps")
                 .build();
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp));
+
 
         ProcessRole leadRole = newProcessRole()
                 .with(id(null))
@@ -439,9 +445,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withUser(user)
                 .build();
 
-        userRepository.save(user);
-        competitionRepository.save(competition);
-        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp));
+
         processRoleRepository.saveAll(asList(leadRole, collaboratorRole, assessorRole));
 
         List<Application> applications = repository.findApplicationByUserAndRole(asSet(Role.LEADAPPLICANT, Role.COLLABORATOR), user.getId());
