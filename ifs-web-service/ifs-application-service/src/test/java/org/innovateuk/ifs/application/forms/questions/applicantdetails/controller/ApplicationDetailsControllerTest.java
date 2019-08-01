@@ -12,6 +12,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,9 +22,13 @@ import java.time.LocalDate;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.lang.String.*;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.resource.CompanyAge.ESTABLISHED_1_TO_5_YEARS;
+import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.AEROSPACE_AND_DEFENCE;
+import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.BUSINESS_CONTACT;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,15 +61,19 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private ApplicationService applicationService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Override
     protected ApplicationDetailsController supplyControllerUnderTest() {
         return new ApplicationDetailsController(
-            applicationDetailsViewModelPopulator,
-            questionStatusRestService,
-            userRestService,
-            applicantRestService,
-            applicationNavigationPopulator,
-            applicationService
+                applicationDetailsViewModelPopulator,
+                questionStatusRestService,
+                userRestService,
+                applicantRestService,
+                applicationNavigationPopulator,
+                applicationService,
+                competitionRestService
         );
     }
 
@@ -71,18 +81,21 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     public void viewApplicationDetails() throws Exception {
         long questionId = 1L;
         long applicationId = 2L;
+        long competitionId = 3L;
 
         ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
         when(applicationDetailsInputViewModel.getSelectedInnovationAreaName()).thenReturn(null);
         when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
         when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
         when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().withCompetition(competitionId).build());
+        CompetitionResource competitionResource = mock(CompetitionResource.class);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(
                 get("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId))
@@ -100,12 +113,15 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setResubmission(FALSE);
         applicationDetailsForm.setStartDate(LocalDate.now().plusYears(1));
         applicationDetailsForm.setDurationInMonths(3L);
+        applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT.toString());
+        applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS.toString());
+        applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE.toString());
 
         ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
 
@@ -118,6 +134,9 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                         .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
                         .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
                         .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("competitionReferralSource", valueOf(applicationDetailsForm.getCompetitionReferralSource()))
+                        .param("companyAge", valueOf(applicationDetailsForm.getCompanyAge()))
+                        .param("companyPrimaryFocus", valueOf(applicationDetailsForm.getCompanyPrimaryFocus()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%d", applicationId)))
@@ -138,7 +157,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
 
@@ -168,7 +187,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
         when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
@@ -191,9 +210,49 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void saveAndReturnWithInvalidEnums() throws Exception {
+        long questionId = 1L;
+        long applicationId = 2L;
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setName("name");
+        applicationDetailsForm.setResubmission(FALSE);
+        applicationDetailsForm.setStartDate(LocalDate.now().plusYears(1));
+        applicationDetailsForm.setDurationInMonths(3L);
+        applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT.toString() + "_invalid");
+        applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS.toString() + "_invalid");
+        applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE.toString() + "_invalid");
+
+        ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);
+        ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
+        when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
+        when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
+        when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
+
+        mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
+                        .param("name", valueOf(applicationDetailsForm.getName()))
+                        .param("startDate", "startDate")
+                        .param("startDate.year",  valueOf(applicationDetailsForm.getStartDate().getYear()))
+                        .param("startDate.monthValue",  valueOf(applicationDetailsForm.getStartDate().getMonthValue()))
+                        .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("competitionReferralSource", valueOf(applicationDetailsForm.getCompetitionReferralSource()))
+                        .param("companyAge", valueOf(applicationDetailsForm.getCompanyAge()))
+                        .param("companyPrimaryFocus", valueOf(applicationDetailsForm.getCompanyPrimaryFocus()))
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(format("redirect:/application/%d", applicationId)))
+                .andReturn();
+    }
+
+    @Test
     public void markAsCompleteInvalidForm() throws Exception {
         long questionId = 1L;
         long applicationId = 2L;
+        long competitionId = 3L;
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setName("");
         applicationDetailsForm.setResubmission(FALSE);
@@ -209,7 +268,10 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
         when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
         when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
+        when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().withCompetition(competitionId).build());
+        CompetitionResource competitionResource = mock(CompetitionResource.class);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
@@ -231,6 +293,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     public void markAsIncomplete() throws Exception {
         long questionId = 1L;
         long applicationId = 2L;
+        long competitionId = 3L;
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setName("name");
         applicationDetailsForm.setResubmission(FALSE);
@@ -241,7 +304,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(applicantQuestionResource);
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
-        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class))).thenReturn(viewModel);
+        when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
         when(questionStatusRestService.markAsInComplete(anyLong(), anyLong(), anyLong())).thenReturn(restSuccess());
         ApplicationDetailsInputViewModel applicationDetailsInputViewModel = mock(ApplicationDetailsInputViewModel.class);
@@ -249,6 +312,9 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationDetailsInputViewModel.isCanSelectInnovationArea()).thenReturn(false);
         when(applicationDetailsInputViewModel.getInnovationAreaText()).thenReturn(null);
         when(viewModel.getFormInputViewModel()).thenReturn(applicationDetailsInputViewModel);
+        when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().withCompetition(competitionId).build());
+        CompetitionResource competitionResource = mock(CompetitionResource.class);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)

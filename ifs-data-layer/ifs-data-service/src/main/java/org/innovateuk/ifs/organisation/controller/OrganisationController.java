@@ -64,11 +64,6 @@ public class OrganisationController {
         return organisationCreationService.createAndLinkByInvite(organisation, inviteHash).toPostCreateResponse();
     }
 
-    @PostMapping("/create")
-    public RestResult<OrganisationResource> create(@RequestBody OrganisationResource organisation) {
-        return organisationService.create(organisation).toPostCreateResponse();
-    }
-
     @PutMapping("/update")
     public RestResult<OrganisationResource> saveResource(@RequestBody OrganisationResource organisationResource) {
         return organisationService.update(organisationResource).toPutWithBodyResponse();

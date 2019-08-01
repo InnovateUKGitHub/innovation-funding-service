@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-
-<!--/* competition status with blue block */-->
-<th:block th:fragment="competition-status(competition)">
-    <th:block th:unless="${competition == 'setup'}">
-        <h2 th:switch="${competition.competitionStatus.name()}" class="govuk-heading-s govuk-!-margin-0 blue-block">
-            <th:block th:case="'NOT_STARTED'">Competition not yet started</th:block>
-            <th:block th:case="'OPEN'">Competition open</th:block>
-            <th:block th:case="'IN_ASSESSMENT'">In assessment</th:block>
-            <th:block th:case="'FUNDERS_PANEL'">Funders Panel</th:block>
-            <th:block th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</th:block>
-            <th:block th:case="'PROJECT_SETUP'">Project setup</th:block>
-        </h2>
-    </th:block>
-    <h2 th:if="${competition == 'setup'}" class="govuk-heading-s govuk-!-margin-0 blue-block">Competition Setup</h2>
-</th:block>
-
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">
     <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">

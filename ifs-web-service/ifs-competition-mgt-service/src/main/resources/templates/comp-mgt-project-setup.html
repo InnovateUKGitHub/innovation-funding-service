@@ -18,9 +18,6 @@
                         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                     </th:block>
                 </div>
-                <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
-                    <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
-                </div>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
