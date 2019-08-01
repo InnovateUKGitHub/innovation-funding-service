@@ -3,14 +3,17 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
-import org.innovateuk.ifs.applicant.transactional.ApplicantService;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -18,7 +21,7 @@ import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousR
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 
 /**
- * Testing {@link ApplicantService}
+ * Testing {@link ApplicationDashboardService}
  */
 @Rollback
 @Transactional
@@ -26,6 +29,9 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
 
     @Autowired
     private ApplicationDashboardService applicationDashboardService;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     private static final DashboardPreviousRowResource EXAMPLE_EXPECTED_DASHBOARD_RESOURCE = new DashboardPreviousApplicationResourceBuilder()
             .withAssignedToMe(false)
@@ -46,13 +52,18 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         loginSteveSmith();
         Long userId = getSteveSmith().getId();
 
+        Application application = applicationRepository.findById(4L).get();
+        application.setManageFundingEmailDate(ZonedDateTime.now());
+        application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
+        applicationRepository.save(application);
+
         ServiceResult<ApplicantDashboardResource> result = applicationDashboardService.getApplicantDashboard(userId);
         ApplicantDashboardResource dashboard = result.getSuccess();
 
         assertEquals(0, dashboard.getInSetup().size());
         assertEquals(0, dashboard.getEuGrantTransfer().size());
-        assertEquals(4, dashboard.getInProgress().size());
-        assertEquals(2, dashboard.getPrevious().size());
+        assertEquals(5, dashboard.getInProgress().size());
+        assertEquals(1, dashboard.getPrevious().size());
 
         assertTrue(dashboard.getPrevious().contains(EXAMPLE_EXPECTED_DASHBOARD_RESOURCE));
     }
