@@ -750,15 +750,14 @@
                 <th id="procurement-overhead-item" scope="col" class="govuk-table__header">Item</th>
                 <th id="procurement-overhead-quantity" scope="col"
                     class="govuk-table__header govuk-table__header--numeric">
-                    Quantity
+                    Total company cost (&pound;)
                 </th>
                 <th id="procurement-overhead-cost" scope="col"
                     class="govuk-table__header govuk-table__header--numeric">
-                    Cost per
-                    item (&pound;)
+                    Cost to Project (&percnt;)
                 </th>
                 <th id="procurement-overhead-total" scope="col"
-                    class="govuk-table__header govuk-table__header--numeric">Total
+                    class="govuk-table__header govuk-table__header--numeric">Total claimed
                 </th>
             </tr>
             </thead>
@@ -779,7 +778,7 @@
             <tfoot class="govuk-table__foot">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="row" colspan="3">Total overheads</th>
-                <td id="section-total-procurement-overhead"
+                <td id="section-total-procurement-overheads"
                     th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
                     class="govuk-table__cell govuk-table__cell--numeric">
                     &pound;<th:block
