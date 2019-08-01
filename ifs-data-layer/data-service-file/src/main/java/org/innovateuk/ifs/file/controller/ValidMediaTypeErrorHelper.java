@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.file.controller;
 
 import org.apache.commons.collections.SetUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.http.MediaType;
 
@@ -17,32 +16,30 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
  */
 public class ValidMediaTypeErrorHelper {
 
-    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_ONLY";
-    public static final String UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY";
-    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_SPREADSHEET_ONLY";
-    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_DOCUMENT_ONLY";
-    public static final String UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_AND_DOCUMENT_AND_SPREADSHEET_ONLY";
-    public static final String UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_AND_SPREADSHEET_ONLY";
-
-
-    private static final Set<Pair<EnumSet<FileTypeCategory>, String>> TYPE_TO_ERROR_KEY_SET = asSet(
-            Pair.of(EnumSet.of(PDF), UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY),
-            Pair.of(EnumSet.of(SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY),
-            Pair.of(EnumSet.of(PDF, SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY),
-            Pair.of(EnumSet.of(PDF, DOCUMENT), UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY_MESSAGE_KEY),
-            Pair.of(EnumSet.of(PDF, DOCUMENT, SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY),
-            Pair.of(EnumSet.of(OPEN_DOCUMENT, OPEN_SPREADSHEET), UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_OR_SPREADSHEET_ONLY_MESSAGE_KEY)
+    /* Groups of FileTypeCategory that are supported as upload validation types. .*/
+    private static final Set<EnumSet<FileTypeCategory>> UPLOAD_TYPES = asSet(
+            EnumSet.of(PDF),
+            EnumSet.of(SPREADSHEET),
+            EnumSet.of(DOCUMENT),
+            EnumSet.of(PDF, SPREADSHEET),
+            EnumSet.of(PDF, DOCUMENT),
+            EnumSet.of(PDF, DOCUMENT, SPREADSHEET),
+            EnumSet.of(OPEN_DOCUMENT, OPEN_SPREADSHEET)
     );
 
     public String findErrorKey(List<MediaType> validMediaTypesList) {
         Set<MediaType> validMediaTypes = new HashSet<>(validMediaTypesList);
 
-        Optional<String> errorMessage = TYPE_TO_ERROR_KEY_SET.stream()
-                .filter(typeToErrorKey -> SetUtils.isEqualSet(validMediaTypes, collectMediaTypes(typeToErrorKey.getKey())))
-                .map(Pair::getRight)
+        Optional<EnumSet<FileTypeCategory>> fileTypeCategories = UPLOAD_TYPES.stream()
+                .filter(types -> SetUtils.isEqualSet(validMediaTypes, collectMediaTypes(types)))
                 .findFirst();
 
-        return errorMessage.orElse(UNSUPPORTED_MEDIA_TYPE.name());
+        Optional<String> errorKey = fileTypeCategories
+                .map(types -> types.stream().map(FileTypeCategory::name).collect(Collectors.joining("_OR_")));
+
+        return errorKey
+                .map(message -> String.format("%s_%s_%s", UNSUPPORTED_MEDIA_TYPE.name(), message, "ONLY"))
+                .orElse(UNSUPPORTED_MEDIA_TYPE.name());
     }
 
     private Set<MediaType> collectMediaTypes(EnumSet<FileTypeCategory> types) {

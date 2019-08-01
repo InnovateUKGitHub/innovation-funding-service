@@ -16,7 +16,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -242,20 +241,19 @@ public class GenericQuestionApplicationController {
     }
 
     private String handleFileUpload(String field, FormInputType type, MultipartFile file, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {
-        FormInputResource formInput = getByType(questionId, type);
-        ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
-
-        RestResult<FileEntryResource> result = formInputResponseRestService.createFileEntry(formInput.getId(),
-                applicationId,
-                processRole.getId(),
-                file.getContentType(),
-                file.getSize(),
-                file.getOriginalFilename(),
-                getMultipartFileBytes(file));
-
         Supplier<String> view = () -> getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
 
-        return validationHandler.performActionOrBindErrorsToField(field, view, view, () -> result);
+        return validationHandler.performFileUpload(field, view, () -> {
+            FormInputResource formInput = getByType(questionId, type);
+            ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
+            return formInputResponseRestService.createFileEntry(formInput.getId(),
+                    applicationId,
+                    processRole.getId(),
+                    file.getContentType(),
+                    file.getSize(),
+                    file.getOriginalFilename(),
+                    getMultipartFileBytes(file));
+        });
     }
 
     private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {

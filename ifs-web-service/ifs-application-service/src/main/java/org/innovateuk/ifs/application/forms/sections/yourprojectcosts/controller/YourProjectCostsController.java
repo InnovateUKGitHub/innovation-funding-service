@@ -16,10 +16,8 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
@@ -37,12 +35,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}")
@@ -169,18 +167,12 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                             @PathVariable long sectionId,
                                             @ModelAttribute("form") YourProjectCostsForm form,
                                             BindingResult bindingResult,
-                                            ValidationHandler validationHandler) throws IOException {
-
+                                            ValidationHandler validationHandler) {
+        Supplier<String> view = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
         MultipartFile file = form.getOverhead().getFile();
-        RestResult<FileEntryResource> fileEntryResult = overheadFileRestService.updateOverheadCalculationFile(form.getOverhead().getCostId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-        if (fileEntryResult.isFailure()) {
-            fileEntryResult.getErrors().forEach(error ->
-                bindingResult.rejectValue("overhead.file", error.getErrorKey(), error.getArguments().toArray(), "")
-            );
-        } else {
-            form.getOverhead().setFilename(fileEntryResult.getSuccess().getName());
-        }
-        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        return validationHandler.performFileUpload("overhead.file", view, () -> overheadFileRestService
+                .updateOverheadCalculationFile(form.getOverhead().getCostId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file))
+                .andOnSuccessDo(result -> form.getOverhead().setFilename(result.getName())));
     }
 
     @PostMapping(params = "removeOverheadFile")
