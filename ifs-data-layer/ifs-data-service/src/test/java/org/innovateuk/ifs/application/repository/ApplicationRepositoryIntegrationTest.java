@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
@@ -390,5 +392,62 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals((long) withoutProject.getId(), previous.get(0).getId());
         assertEquals("Lead", previous.get(0).getLeadOrganisationName());
 
+    }
+
+
+    @Test
+    public void findApplicationByUserAndRole() {
+        Competition competition = newCompetition().with(id(null)).build();
+        User user = new User("Person", "Applicant", "person@gmail.com", "", "123abc");
+
+        Application leadApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("leadApp")
+                .build();
+
+        Application collabApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("collabApp")
+                .build();
+
+        Application assessorApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("assessorApps")
+                .build();
+
+        ProcessRole leadRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(leadApp)
+                .withUser(user)
+                .build();
+
+        ProcessRole collaboratorRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(collabApp)
+                .withUser(user)
+                .build();
+
+        ProcessRole assessorRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.ASSESSOR)
+                .withApplication(assessorApp)
+                .withUser(user)
+                .build();
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp));
+        processRoleRepository.saveAll(asList(leadRole, collaboratorRole, assessorRole));
+
+        List<Application> applications = repository.findApplicationByUserAndRole(asSet(Role.LEADAPPLICANT, Role.COLLABORATOR), user.getId());
+
+        assertEquals(2, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(leadApp.getId())));
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(collabApp.getId())));
     }
 }

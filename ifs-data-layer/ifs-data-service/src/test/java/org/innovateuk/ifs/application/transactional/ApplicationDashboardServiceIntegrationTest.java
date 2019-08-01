@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 
 /**
@@ -40,7 +39,6 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withTitle("Using natural gas to heat homes")
             .withApplicationId(4)
             .withCompetitionTitle("Connected digital additive manufacturing")
-            .withDashboardSection(PREVIOUS)
             .build();
 
     @Test
