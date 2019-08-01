@@ -321,7 +321,7 @@ the invited user signs in
     [Arguments]  ${email}  ${name}  ${famName}
     the user reads his email and clicks the link    ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element                 jQuery = h1:contains("Account verified")
-    the user clicks the button/link                 jQuery = .govuk-button:contains("Sign in")
+    the user clicks the button/link                 jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
     Logging in and Error Checking                   ${email}  ${correct_password}
 
 The user resends and clicks the button
@@ -368,7 +368,7 @@ the competition admin should see that their Project details aren't completed
 Internal user can view project details via the clickable 'hour glass' for Project details
     the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
     the user should see the element    jQuery = h1:contains("Project details")
-    the user clicks the button/link    link = Projects in setup
+    the user clicks the button/link    link = Back to project setup
     the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
 
 the user should see the grant award terms and conditions

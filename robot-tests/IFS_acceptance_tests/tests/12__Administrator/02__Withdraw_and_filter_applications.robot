@@ -18,6 +18,8 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-6053 Amend competition table in the previous tab
 ...
 ...             IFS-6054 Display completed projects in the previous tab
+...
+...             IFS-6187 Remove competitions from Project Setup once all projects are completed
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -56,6 +58,11 @@ Withdrawn project should contain RO links only
     Given the user navigates to the page  ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     Then all project sections should be read only
 
+Competition with completed projects no longer appears on Project set up tab
+    [Documentation]  IFS-6187
+    Given the user navigates to the page        ${server}/management/dashboard/project-setup
+    Then the user should not see the element    jQuery = a:contains(${WITHDRAWN_PROJECT_COMPETITION_NAME})
+
 The IFS admin checks for compeleted projects on previous tab
 #withdrawn projects count as competed projects
     [Documentation]  IFS-6053
@@ -69,10 +76,10 @@ The IFS admin checks for compeleted projects on previous tab
 All project sections should be read only
     the user clicks the button/link      css = #table-project-status td:nth-child(3).status.ok a
     the user should not see the element  link = Add team member
-    the user clicks the button/link      link = Projects in setup
+    the user clicks the button/link      link = Back to project setup
     the user clicks the button/link      css = #table-project-status td:nth-child(5).status.ok a
     the user should not see the element  link = Change Monitoring Officer
-    the user clicks the button/link      link = Projects in setup
+    the user clicks the button/link      link = Back to project setup
     finance checks are RO
 
 finance checks are RO
@@ -106,7 +113,7 @@ The project should be withdrawn
      the user should see the element      jQuery = p:contains("This project has been withdrawn.")
      the user clicks the button/link      link = Return to project details
      the user should see the element      jQuery = h1:contains("Project details")
-     the user clicks the button/link      link = Projects in setup
+     the user clicks the button/link      link = Back to project setup
      the user should see the element      jQuery = tr:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME_1}") strong:contains("Withdrawn")
 
 The user navigates to the Manage Project status page

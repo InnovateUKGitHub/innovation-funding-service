@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 
 @Component
 public class ApplicationDetailsViewModelPopulator {
@@ -29,8 +31,10 @@ public class ApplicationDetailsViewModelPopulator {
     @Autowired
     private QuestionService questionService;
 
-    public ApplicationDetailsViewModel populate(ApplicantQuestionResource question) {
+    public ApplicationDetailsViewModel populate(ApplicantQuestionResource question, CompetitionResource competition) {
         ApplicationDetailsInputViewModel viewModel = getViewModel(question);
+        viewModel.setIsProcurementCompetition(PROCUREMENT.equals(competition.getFundingType()));
+
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
         if (!isApplicationInViewMode(question.getApplication(), question.getCurrentApplicant().getOrganisation())) {
             removeNotifications(question);

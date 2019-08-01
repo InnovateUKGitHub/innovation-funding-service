@@ -50,7 +50,7 @@ public class EuGrantController {
                                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
 
         Sort sort = notified ? new Sort("organisation.name", "contact.name") : new Sort("contact.id");
-        return euGrantService.getEuGrantsByContactNotified(notified, new PageRequest(pageIndex, pageSize, sort)).toGetResponse();
+        return euGrantService.getEuGrantsByContactNotified(notified, PageRequest.of(pageIndex, pageSize, sort)).toGetResponse();
     }
 
     @GetMapping("/eu-grants/total-submitted")

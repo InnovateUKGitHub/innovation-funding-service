@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -25,18 +26,18 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096
     [Tags]
     Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
+    When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
-    When the user navigates to Your-finances page       ${appl_name}
-    And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
+    When the user navigates to Your-finances page                ${appl_name}
+    And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
     And the user accept the competition terms and conditions
-    And the user selects research category              Feasibility studies
+    And the user selects research category                       Feasibility studies
     And the applicant submits the procurement application
-    [Teardown]  update milestone to yesterday  ${competitionId}  SUBMISSION_DATE
+    [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
     [Documentation]  IFS-2376
@@ -44,7 +45,7 @@ Invite a registered assessor
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link = ${comp_name}
     And the user clicks the button/link                       link = Invite assessors to assess the competition
-    And the user selects the option from the drop-down menu   Smart infrastructure  id = filterInnovationArea
+    And the user enters text to a text field                  id = assessorNameFilter   Paul Plum
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
     Then the user clicks the button/link                      jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Add selected to invite list")
@@ -109,8 +110,29 @@ Custom Suite Setup
     The guest user opens the browser
     Connect to database  @{database}
 
+the user fills in procurement Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user selects the value from the drop-down menu   INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button     START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    the user should not see the element   link = Choose your innovation area
+    The user clicks the button/link       css = button[name="mark_as_complete"]
+    the user clicks the button/link       link = Application overview
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
 the user marks the procurement finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    the user clicks the button/link                 link = Your project costs
+    the user clicks the button/link                 jQuery = button:contains("Overhead costs")
+    the user should see the element                 jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    the user clicks the button/link                 link = Your finances
     the user fills in the project costs             ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}

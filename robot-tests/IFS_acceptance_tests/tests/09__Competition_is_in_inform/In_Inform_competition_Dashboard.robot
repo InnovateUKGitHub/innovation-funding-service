@@ -142,14 +142,14 @@ User can see feedback to individual questions
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]
-    When the user clicks the button/link       css = .collapsible button
-    Then the user should see the element       css = .collapsible div[aria-hidden="false"]
-    And the user should not see the element    css = .collapsible div[aria-hidden="true"]
+    When the user clicks the button/link       css = .govuk-accordion__open-all
+    Then the user should see the element       css = .govuk-accordion__section-heading [aria-hidden="false"]
+    And the user should not see the element    css = .govuk-accordion__section-heading [aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Dashboard")
+    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Back to applications")
     Then the user should see the element     jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***

@@ -23,7 +23,7 @@ public class SubmittedApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public SubmittedApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter) {
+    public SubmittedApplicationsViewModel populateModel(long competitionId, int page, String sorting, Optional<String> filter) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccess();
@@ -40,7 +40,7 @@ public class SubmittedApplicationsModelPopulator {
                 sorting,
                 filter.orElse(null),
                 getApplications(summaryPageResource),
-                new Pagination(summaryPageResource, origin)
+                new Pagination(summaryPageResource)
         );
     }
 

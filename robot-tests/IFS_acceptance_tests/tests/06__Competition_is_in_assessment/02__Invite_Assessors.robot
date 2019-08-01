@@ -38,6 +38,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-1445 Assessor management- 'Accepted' tab on invite assessors dashboard
 ...
 ...               IFS-3943 Assessor profile view - Internal
+...
+...               IFS-5915 Assessor Filter Option
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -57,9 +59,9 @@ Check the initial key statistics
     And the user clicks the button/link    link = Pending and declined
 
 Filtering in the Invite Pending and declined page
-    [Documentation]    INFUND-6453
+    [Documentation]    INFUND-6453  IFS-5915
     [Tags]
-    Given the user filter assessors by innovation area, status, contract and DOI
+    Given the user filter assessors by name status and DOI
     Then the user should not see the element   jQuery = td:contains("No")
     When the user clicks the button/link       jQuery = a:contains("Clear filters")
     Then the user should see the element       jQuery = td:contains("David")
@@ -80,14 +82,6 @@ The user can remove all people from the list
     Then the user should not see the element       jQuery = td:contains("${assessor_to_add}")
     [Teardown]    The user clicks the button/link  link = Find
 
-Filter on innovation area
-    [Documentation]    INFUND-6403
-    [Tags]
-    Given the user filter assessors by innovation area
-    When the user clicks the button/link      jQuery = a:contains("Clear all filters")
-    Then the user should not see the element  jQuery = td:contains("Laura Weaver")
-    And the user should see the element       jQuery = td:contains("Addison Shannon")
-
 Next/Previous pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
@@ -100,7 +94,7 @@ Assessor link goes to the assessor profile
     [Tags]
     Given the user click on assessor name link
     Then the user should see the assessor details and DOI
-    [Teardown]  The user clicks the button/link  link = Back
+    [Teardown]  The user clicks the button/link  link = Back to invite assessors
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
@@ -218,8 +212,8 @@ the user should see the client and server side validation for subject
     the user clicks the button/link             css = button[type = "submit"]    #Send invite
     the user should see a field and summary error  Please enter a subject for the email.
 
-the user filter assessors by innovation area, status, contract and DOI
-    the user selects the option from the drop-down menu    Assembly / disassembly / joining  id = filterInnovationArea
+the user filter assessors by name status and DOI
+    the user enters text to a text field                   id = assessorName  Josephine
     the user selects the option from the drop-down menu    Invite declined  id = filterStatus
     the user selects the option from the drop-down menu    Yes  id = filterContract
     the user clicks the button/link                        jQuery = button:contains(Filter)
@@ -244,12 +238,6 @@ the user can remove an assessor from the invite list
     the user clicks the button/link         link = Invite
     the user clicks the button/link         jQuery = td:contains("Will Smith") ~ td .button-clear:contains("Remove")
     the user should not see the element     link = Will Smith
-
-the user filter assessors by innovation area
-    the user selects the option from the drop-down menu  Offshore wind  id = filterInnovationArea
-    the user clicks the button/link                      jQuery = button:contains(Filter)
-    the user should see the element                      jQuery = td:contains("Laura Weaver")
-    the user should not see the element                  jQuery = td:contains("${assessor_to_add}")
 
 the user click on assessor name link
     the user clicks the button/link   jQuery = a:contains("41 to")

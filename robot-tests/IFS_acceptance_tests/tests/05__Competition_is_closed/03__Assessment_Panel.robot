@@ -239,10 +239,10 @@ Assessor can attend Panel and see applications that he has assessed
     [Tags]  HappyPath
     Given the assessor accept the application
     When the user clicks the button/link        link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
-    And the user clicks the button/link         jQuery = button:contains("Business opportunity")
+    And the user expands the section            Business opportunity
     Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery = div:contains("Score") span:contains(8)
-    And assessor should see the competition terms and conditions     Application summary
+    And assessor should see the competition terms and conditions     Back to application summary
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138

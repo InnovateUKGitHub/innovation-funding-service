@@ -57,7 +57,7 @@ Invite a registered assessor
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link = ${comp_name}
     And the user clicks the button/link                       link = Invite assessors to assess the competition
-    And the user selects the option from the drop-down menu   Smart infrastructure  id = filterInnovationArea
+    And the user enters text to a text field                  id = assessorNameFilter   Paul Plum
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
     Then the user clicks the button/link                      jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Add selected to invite list")
@@ -156,7 +156,7 @@ the applicant checks for competition terms and conditions
     the user clicks the button/link       link = Award terms and conditions
     the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
 
 the user should see the competition details and sucessful application
     the user clicks the button/link    link = ${comp_name}

@@ -32,7 +32,7 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public CompetitionInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
+    public CompetitionInviteAssessorsInviteViewModel populateModel(long competitionId, int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -45,9 +45,8 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource));
         model.setInnovationSectorOptions(getInnovationSectors());
-        model.setOriginQuery(originQuery);
 
         return model;
     }

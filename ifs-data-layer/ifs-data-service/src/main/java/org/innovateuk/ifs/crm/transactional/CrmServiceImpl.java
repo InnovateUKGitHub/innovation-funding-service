@@ -108,7 +108,7 @@ public class CrmServiceImpl implements CrmService {
         SilOrganisation moSilOrganisation = new SilOrganisation();
         moSilOrganisation.setName("IFS MO Company");
         moSilOrganisation.setRegistrationNumber("");
-        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFSMO01"));
+        moSilOrganisation.setSrcSysOrgId("IFSMO01");
 
         silContact.setOrganisation(moSilOrganisation);
 

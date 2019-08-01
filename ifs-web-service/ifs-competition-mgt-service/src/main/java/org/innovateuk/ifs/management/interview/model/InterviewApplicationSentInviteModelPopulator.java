@@ -29,7 +29,7 @@ public class InterviewApplicationSentInviteModelPopulator {
         this.applicationService = applicationService;
     }
 
-    public InterviewAssignmentApplicationsSentInviteViewModel populate(long competitionId, long applicationId, String originQuery) {
+    public InterviewAssignmentApplicationsSentInviteViewModel populate(long competitionId, long applicationId) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         InterviewApplicationSentInviteResource invite = assignmentRestService.getSentInvite(applicationId).getSuccess();
@@ -47,8 +47,7 @@ public class InterviewApplicationSentInviteModelPopulator {
                 ofNullable(feedback).map(FileEntryResource::getName).orElse(null),
                 invite.getSubject(),
                 emailTemplate.getContent(),
-                invite.getContent(),
-                originQuery);
+                invite.getContent());
 
     }
 }

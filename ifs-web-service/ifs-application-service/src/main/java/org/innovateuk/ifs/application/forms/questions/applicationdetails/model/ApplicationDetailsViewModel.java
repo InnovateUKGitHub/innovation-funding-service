@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
+import static java.lang.Boolean.TRUE;
+
 /**
  * View model for application details.
  */
@@ -35,7 +37,7 @@ public class ApplicationDetailsViewModel {
     }
 
     public Boolean isShowReturnButtons() {
-        return Boolean.TRUE;
+        return TRUE;
     }
 
     public String getTitle() {

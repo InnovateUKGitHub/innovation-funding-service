@@ -391,7 +391,7 @@ Comp Admin can download the Spend Profile csv
     [Documentation]    INFUND-3973, INFUND-5875
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    And the user should see the element     jQuery = h2:contains("Spend profile")
+    And the user should see the element     jQuery = h1:contains("Spend profile")
     Then the comp admin can download the SP CSV files
 
 Status updates correctly for internal user's table
@@ -778,7 +778,6 @@ the project finance user should see the spend profile details
     the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(6) > td.govuk-table__cell.status.action > a  # Review Spend profile
     the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    the user should see the element              jQuery = #main-content div.govuk-grid-row div.govuk-grid-column-one-third.alignright h2:contains("Spend profile")
     the user should not see the element          jQuery = h2:contains("The spend profile has been approved")
     the user should not see the element          jQuery = h2:contains("The spend profile has been rejected")
     the user should see the element              jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
@@ -793,7 +792,6 @@ the project finance user should see the spend profile details
     the user should see the element              jQuery = #main-content .button-warning:contains("Reject")
 
 the comp admin should see the spend profile details
-    the user should see the element      jQuery = #main-content div.govuk-grid-row div.govuk-grid-column-one-third.alignright h2:contains("Spend profile")
     the element should be disabled       css = #accept-profile
     the user should see the element      jQuery = #main-content .button-warning:contains("Reject")
     the user should see the element      jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")

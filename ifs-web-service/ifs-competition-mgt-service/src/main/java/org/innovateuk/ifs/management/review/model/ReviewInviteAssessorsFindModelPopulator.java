@@ -29,8 +29,7 @@ public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssesso
     private CompetitionRestService competitionRestService;
 
     public ReviewInviteAssessorsFindViewModel populateModel(long competitionId,
-                                                            int page,
-                                                            String originQuery) {
+                                                            int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -45,7 +44,7 @@ public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssesso
         List<ReviewAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource));
         model.setSelectAllDisabled(pageResource.getTotalElements() > SELECTION_LIMIT);
 
         return model;

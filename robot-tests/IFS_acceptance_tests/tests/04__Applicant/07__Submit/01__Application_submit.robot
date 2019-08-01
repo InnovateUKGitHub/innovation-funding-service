@@ -41,7 +41,7 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link                jQuery = .govuk-button:contains("Review and submit")
     Then the submit button should be disabled
     When the user clicks the button/link               jQuery = button:contains("Application details")
-    Then the user should see the element               jQuery = div[id="collapsible-1"] button:contains("Mark as complete")+button:contains("Return and edit")
+    Then the user should see the element               jQuery = #accordion-questions-content-2 button:contains("Mark as complete")+button:contains("Return and edit")
     When the user clicks the button/link               jQuery = button:contains("Mark as complete")
     Then the user should see the element               jQuery = h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
@@ -137,11 +137,11 @@ The user can check that the sections are read only
     the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
-    the user clicks the button/link        css = section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user expands the section           Scope
     the user should not see the element    jQuery = button:contains("Edit")
-    the user clicks the button/link        css = section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user expands the section           Adding value
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
-    the user clicks the button/link        css = section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user expands the section           Finances summary
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
 
 the submit button should be disabled

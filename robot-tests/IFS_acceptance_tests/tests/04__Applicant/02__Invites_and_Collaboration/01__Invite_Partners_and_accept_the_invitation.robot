@@ -58,12 +58,12 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]  HappyPath
     [Setup]    The user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link          link = Invite robot test application
-    When the user clicks the button/link           link = Application team
-    And The user clicks the button/link       jquery = button:contains("Add person to ${organisation}")
-    And The user should not see the element   jQuery = .modal-delete-organisation button:contains('Delete organisation')
-    Then The user should see the element      jQuery = table:contains(empire) + table td:contains(Remove)
-    And The user clicks the button/link       jQuery = table:contains(empire) + table button:contains(Remove)
+    Given the user clicks the button/link         link = Invite robot test application
+    When the user clicks the button/link          link = Application team
+    And The user clicks the button/link           jquery = button:contains("Add person to ${organisation}")
+    And The user should not see the element       jQuery = .modal-delete-organisation button:contains('Delete organisation')
+    Then The user should see the element          jQuery = .govuk-table button:contains(Remove)
+    And The user clicks the button/link           jQuery = .govuk-table button:contains(Remove)
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
@@ -239,7 +239,7 @@ Registered partner should not create new org but should follow the create accoun
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = a:contains("Sign in")
+    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking           &{lead_applicant_credentials}
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
@@ -297,7 +297,7 @@ the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery = .govuk-button:contains("Sign in")
+    The user clicks the button/link                            jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}

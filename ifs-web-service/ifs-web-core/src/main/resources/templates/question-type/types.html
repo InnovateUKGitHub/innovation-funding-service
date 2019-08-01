@@ -38,7 +38,7 @@
                 <p class="govuk-body">This question is assigned to
                     <th:block th:text="${assignee}"/>.
                     <a th:if="${model.assignButtonsViewModel.currentUserIsLead and !model.assignButtonsViewModel.hideAssignButtons}"
-                       th:href="@{/application/{applicationId}/form/question/{questionId}/assign?origin=QUESTION(applicationId=${model.application.id},questionId=${question.id})}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${question.id})}"
                        class="govuk-link">Assign to someone else.</a>
                 </p>
             </div>
@@ -168,7 +168,6 @@
     </th:block>
 
     <!-- ===========================Form: Percentage =========================== -->
-
     <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
         <label th:if="${question.getName()}"
                th:text="${question.name}"
@@ -181,11 +180,5 @@
         <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
         <span>&percnt;</span>
     </div>
-
-    <!-- ===========================Form: empty / no question =========================== -->
-    <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
-        <div class="govuk-body" ifs:utext="${question.description}" />
-        <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-    </th:block>
 
 </html>

@@ -393,7 +393,7 @@ The lead applicant checks for terms and conditions partners status
 The lead applicant checks for terms and conditions validations
     [Documentation]
     [Tags]
-    Given the user clicks the button/link         link = Application overview
+    Given the user clicks the button/link         link = Back to application overview
     And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete
     When the user clicks the button/link          link = Review and submit
     And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")

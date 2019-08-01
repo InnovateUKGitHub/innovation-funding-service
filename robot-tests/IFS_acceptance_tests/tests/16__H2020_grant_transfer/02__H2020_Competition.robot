@@ -230,8 +230,8 @@ The user completes the application proccess details
     the user selects the radio button       includeJesForm  false
     the user selects the radio button       includeYourOrganisationSection  false
     the user enters text to a text field    css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
 
 The user completes grant transfer setup
     the user clicks the button/link         jQuery = a:contains("Complete")

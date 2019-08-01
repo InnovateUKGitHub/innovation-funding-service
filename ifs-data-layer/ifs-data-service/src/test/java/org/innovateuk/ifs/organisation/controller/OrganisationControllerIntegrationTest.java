@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     private static final String companiesHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
@@ -78,7 +82,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     private OrganisationResource createOrganisation(){
         OrganisationResource organisation = newOrganisationResource().
                 withName(companyName).withCompaniesHouseNumber(companiesHouseId).build();
-        return controller.create(organisation).getSuccess();
+        return organisationService.create(organisation).getSuccess();
     }
 
     @Rollback
@@ -88,28 +92,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         loginSystemRegistrationUser();
 
         OrganisationResource organisationResource = createOrganisation();
-
-        assertEquals(companiesHouseId, organisationResource.getCompaniesHouseNumber());
-        assertEquals(companyName, organisationResource.getName());
-
-        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccess();
-        assertEquals(companiesHouseId, org.getCompaniesHouseNumber());
-        assertEquals(companyName, org.getName());
-    }
-
-    @Rollback
-    @Test
-    public void testCreateSecondConstructor() throws Exception {
-
-        loginSystemRegistrationUser();
-
-        OrganisationResource organisation = newOrganisationResource().
-                withName(companyName).withCompaniesHouseNumber(companiesHouseId).
-                build();
-
-        OrganisationResource organisationResource = controller.create(organisation).getSuccess();
-
-        flushAndClearSession();
 
         assertEquals(companiesHouseId, organisationResource.getCompaniesHouseNumber());
         assertEquals(companyName, organisationResource.getName());
