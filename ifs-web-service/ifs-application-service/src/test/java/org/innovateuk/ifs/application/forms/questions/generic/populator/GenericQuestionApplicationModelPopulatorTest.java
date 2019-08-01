@@ -159,7 +159,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals("template.odt", viewModel.getTemplateDocumentFilename());
         assertEquals("templateresponse.pdf", viewModel.getTemplateDocumentResponseFilename());
 
-        assertEquals(now, toUkTimeZone(viewModel.getLastUpdated()));
+        assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
         assertEquals("Bob", viewModel.getLastUpdatedByName());
         assertEquals((Long) 2L, viewModel.getLastUpdatedBy());
 
