@@ -18,7 +18,7 @@ public interface ProjectFinanceRowService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users can access cost items from project finance")
-    ServiceResult<FinanceRowItem> get(Long costItemId);
+    ServiceResult<FinanceRowItem> get(long costItemId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can add new costs to project finance")
@@ -26,17 +26,17 @@ public interface ProjectFinanceRowService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
-    ServiceResult<FinanceRowItem> update(Long costId, FinanceRowItem newCostItem);
+    ServiceResult<FinanceRowItem> update(long costId, FinanceRowItem newCostItem);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
-    ServiceResult<Void> delete(Long costId);
+    ServiceResult<Void> delete(long costId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
-    ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
+    ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
+    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(long projectId);
 
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(FinanceRowItem costItemId);

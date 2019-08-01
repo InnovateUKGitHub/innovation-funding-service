@@ -10,6 +10,6 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface FinanceRowRepository<T> {
-    List<T> findByTargetId(Long targetId);
-    List<T> findByTargetIdAndType(Long targetId, FinanceRowType type);
+    List<T> findByTargetId(long targetId);
+    List<T> findByTargetIdAndType(long targetId, FinanceRowType type);
 }

@@ -14,7 +14,7 @@ CREATE TABLE competition_finance_row_types (
     'FINANCE',
     'OTHER_FUNDING',
     'YOUR_FINANCE'
-  ),
+  ) NOT NULL,
   PRIMARY KEY (competition_id,finance_row_type),
   CONSTRAINT fk_competition_finance_row_types_competition_id FOREIGN KEY (competition_id) REFERENCES competition(id)
 );
