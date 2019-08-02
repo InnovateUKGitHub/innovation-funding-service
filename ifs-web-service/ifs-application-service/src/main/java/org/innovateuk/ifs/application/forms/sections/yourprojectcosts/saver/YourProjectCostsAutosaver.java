@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VATCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -62,7 +63,7 @@ public class YourProjectCostsAutosaver {
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
             } else if (field.startsWith("vat")) {
-                return autosaveVAT(field, value, finance);
+                return autosaveVAT(value, finance, applicationId, organisation.getId());
             } else {
                 throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
             }
@@ -103,6 +104,15 @@ public class YourProjectCostsAutosaver {
             overheadCost.setRate(Integer.valueOf(value));
             financeRowRestService.update(overheadCost);
         }
+        return Optional.empty();
+    }
+
+    private Optional<Long> autosaveVAT(String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+        VATCategory category = (VATCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+        VAT vat = (VAT) category.getCosts().get(0);
+        vat.setRegistered(Boolean.valueOf(value));
+        financeRowRestService.update(vat);
         return Optional.empty();
     }
 
@@ -220,14 +230,6 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveVAT(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
-        String id = idFromRowPath(field);
-        String rowField = fieldFromRowPath(field);
-        VAT cost = getCost(id, () -> new VAT(finance.getId()));
-        cost.setRegistered(Boolean.valueOf(value));
-        financeRowRestService.update(cost);
-        return Optional.of(cost.getId());
-    }
 
     private <R extends FinanceRowItem> R getCost(String id, Supplier<R> creator) {
         if (id.startsWith(UNSAVED_ROW_PREFIX)) {

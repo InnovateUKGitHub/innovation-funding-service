@@ -52,6 +52,8 @@
                             class="govuk-table__header govuk-table__header--numeric width-80">Travel and subsistence (&pound;)</th>
                         <th scope="col"
                             class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
+                        <th scope="col" th:if="${procurementCompetition}"
+                            class="govuk-table__header govuk-table__header--numeric width-80">VAT total (&pound;)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -120,6 +122,9 @@
                                     th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                                 </td>
+                                <td th:if="${procurementCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
+                                    th:text="${#numbers.formatInteger(model.applicationFundingBreakdownViewModel.getVatTotal(), 0, 'DEFAULT')}">
+                                </td>
                             </th:block>
                             <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><span>&pound;0</span></td>
@@ -179,6 +184,10 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
+                            th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
+                        </td>
+                        <td th:if="${procurementCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
+                            th:with="financeTotal = ${model.getVatTotal()}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
                     </tr>

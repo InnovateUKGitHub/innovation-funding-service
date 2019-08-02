@@ -29,17 +29,17 @@ public class VATHandler extends FinanceRowHandler<VAT> {
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new VAT(cost.getId(), "VAT",null, cost.getTarget().getId());
+        return new VAT(cost.getId(), "VAT", Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
     }
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(VAT vat) {
-        return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
+        return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : "false", vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(VAT vat) {
-        return new ProjectFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
+        return new ProjectFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : "false", vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
     }
 
     @Override

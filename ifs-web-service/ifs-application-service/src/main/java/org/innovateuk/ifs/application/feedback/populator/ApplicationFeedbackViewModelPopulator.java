@@ -105,7 +105,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user, competition);
 
         long applicationTermsQuestion = sectionService.getTermsAndConditionsSection(application.getCompetition()).getQuestions().get(0);
 

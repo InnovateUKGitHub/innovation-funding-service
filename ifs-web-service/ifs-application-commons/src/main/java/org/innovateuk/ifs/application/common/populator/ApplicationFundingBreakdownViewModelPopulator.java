@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -66,7 +67,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.userRestService = userRestService;
     }
 
-    public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
+    public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user, CompetitionResource competition) {
 
         ApplicationResource application = applicationService.getById(applicationId);
 
@@ -116,7 +117,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     pendingOrganisationNames,
                     application,
                     userOrganisation,
-                    showDetailedFinanceLink);
+                    showDetailedFinanceLink,
+                    competition.isProcurement());
         } else {
             return new ApplicationFundingBreakdownViewModel(
                     organisationFinanceOverview.getTotalPerType(),
@@ -127,7 +129,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     pendingOrganisationNames,
                     application,
                     userOrganisation,
-                    showDetailedFinanceLink);
+                    showDetailedFinanceLink,
+                    competition.isProcurement());
         }
 
     }
