@@ -189,7 +189,7 @@ the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css = textarea
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link        link = Back to pplication overview
+    The user clicks the button/link        link = Back to application overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 

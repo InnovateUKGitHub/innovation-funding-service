@@ -13,7 +13,7 @@ Mark as complete is impossible for empty questions
     And the user clicks the button/link     link = Robot test application
     And the user clicks the button/link     link = Public description
     When the "Project Summary" question is empty
-    And The user clicks the button/link     css = .textarea-wrapped .button-clear[name="complete"]
+    And The user clicks the button/link     css = .button-clear[name="complete"]
     Then the user should see the element    css = .question .govuk-error-message
     And the user should see the element     css = .govuk-error-summary li
 

@@ -110,7 +110,7 @@ Questions can be assigned with appendices
     And the user should see the element                     link = ${5mb_pdf}
     When the user assigns the question to the collaborator  Arsene Wenger
     Then the user should not see the element                jQuery = button:contains("Remove")
-    And the user clicks the button/link                     link = Application overview
+    And the user clicks the button/link                     link = Back to application overview
     Then the user clicks the button/link                    link = 6. Innovation
     And the user assigns the question to the collaborator   Arsene Wenger
 
@@ -130,7 +130,7 @@ Collaborator can remove a file when the question is assigned
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
     And the user should see the element           link = ${5mb_pdf}
-    When the user can remove the uploaded file    remove_uploaded_file  ${5mb_pdf}
+    When the user can remove the uploaded file    removeAppendix  ${5mb_pdf}
     Then the user can re-assign the question back to the lead applicant
 
 Collaborators can upload a file when the question is assigned
