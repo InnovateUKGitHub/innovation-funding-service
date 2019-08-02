@@ -138,7 +138,7 @@ Mark research section as complete
 
 Mark research section as incomplete
     [Documentation]  IFS-2123
-    Given the user clicks the button/link    css = button[name = "edit"]
+    Given the user clicks the button/link    css = button[name = "mark_as_incomplete"]
     When the user clicks the button/link     id = application-question-save
     Then The user should see the element     jQuery = li:contains("Research category") .task-status-incomplete
 
@@ -189,7 +189,7 @@ the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css = textarea
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link        link = Application overview
+    The user clicks the button/link        link = Back to pplication overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 
