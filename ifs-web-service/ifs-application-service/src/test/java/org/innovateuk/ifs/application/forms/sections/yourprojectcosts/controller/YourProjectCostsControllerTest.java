@@ -139,7 +139,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         doAnswer((invocationOnMock) -> {
             ((ValidationHandler) invocationOnMock.getArguments()[1]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
             return Void.class;
-        }).when(yourFundingFormValidator).validate(any(), any());
+        }).when(yourFundingFormValidator).validate(eq(APPLICATION_ID), any(), any());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
