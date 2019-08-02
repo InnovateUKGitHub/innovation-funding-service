@@ -71,7 +71,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
 
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix), asList(textareaResponse, appendixResponse), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data);
 
