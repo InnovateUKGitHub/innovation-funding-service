@@ -85,7 +85,7 @@ then
     shibInit
 fi
 
-if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" ]]
+if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" ]]
 then
     # We only scale up data-services once started up and performed the Flyway migrations on one thread
     scaleDataService
