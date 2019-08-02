@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.readonly.populator.GenericQuestionReadOnly
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -21,6 +22,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.Validator;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -60,6 +63,9 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
     @Mock
     private QuestionStatusRestService questionStatusRestService;
+
+    @Mock
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
     private Validator validator;
@@ -138,6 +144,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
         verify(questionStatusRestService).assign(questionId, applicationId, leadProcessRole.getId(), userProcessRole.getId());
+        verify(cookieFlashMessageFilter).setFlashMessage(any(HttpServletResponse.class), eq("assignedQuestion"));
     }
 
     @Test

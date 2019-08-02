@@ -16,6 +16,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -35,6 +36,7 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -77,6 +79,9 @@ public class GenericQuestionApplicationController {
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -126,12 +131,14 @@ public class GenericQuestionApplicationController {
 
     @PostMapping(params = "assign")
     public String assignToLeadForReview(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 Model model,
-                                 @PathVariable long applicationId,
-                                 @PathVariable long questionId,
-                                 UserResource user) {
+                                        BindingResult bindingResult,
+                                        ValidationHandler validationHandler,
+                                        Model model,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long questionId,
+                                        UserResource user,
+                                        HttpServletResponse response) {
+        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         questionStatusRestService.assign(questionId, applicationId, getLeadProcessRole(applicationId).getId(), getUsersProcessRole(applicationId, user).getId()).getSuccess();
         return redirectToQuestion(applicationId, questionId);
     }
