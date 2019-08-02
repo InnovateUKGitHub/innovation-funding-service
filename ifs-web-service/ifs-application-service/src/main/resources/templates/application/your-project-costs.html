@@ -139,35 +139,43 @@
                         <div id="vatRegistered-totals" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('vatRegistered')} ? 'govuk-form-group--error'">
+                                <div class="govuk-grid-column-one-half alignleft">
+                                    <label for="total-cost" class="govuk-heading-m"
+                                           th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
+                                        costs</label>
+                                </div>
+
                                 <div class="govuk-grid-column-one-half alignright">
-                                <label for="total-cost" class="govuk-heading-m"
-                                       th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
-                                    costs</label>
-                                </div><div class="govuk-grid-column-one-half alignright">
-                                <label for="total-cost" class="govuk-heading-m"
-                                       th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
-                                    costs</label>
+                                    <label for="total-cost" class="govuk-heading-m"
+                                           th:text="'£' + ${form.getVatTotal()}">£120</label>
+                                </div>
+                                <div class="govuk-grid-column-one-half alignleft">
+                                    <label for="total-cost" class="govuk-heading-m"
+                                           th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
+                                        Total project
+                                        costs</label>
+                                </div>
+
+                                <div class="govuk-grid-column-one-half alignright">
+                                    <label for="total-cost" class="govuk-heading-m"
+                                           th:text="'£' + ${form.getProjectVatTotal()}">£120</label>
+                                </div>
                             </div>
 
-                                <label for="total-cost" class="govuk-heading-m"
-                                       th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
-                                    Total project
-                                    costs</label></div>
-                        </div>
-
-                        <div class="govuk-radios__item"
-                             data-target-clear-validation="true" data-target-clear-form="true">
-                            <input type="radio"
-                                   class="govuk-radios__input"
-                                   id="vatRegistered-no"
-                                   th:field="*{vatRegistered}"
-                                   value="false"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
-                            <label class="govuk-radios__label"
-                                   for="vatRegistered-no">
-                                No
-                            </label>
+                            <div class="govuk-radios__item"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="vatRegistered-no"
+                                       th:field="*{vatRegistered}"
+                                       value="false"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
+                                <label class="govuk-radios__label"
+                                       for="vatRegistered-no">
+                                    No
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

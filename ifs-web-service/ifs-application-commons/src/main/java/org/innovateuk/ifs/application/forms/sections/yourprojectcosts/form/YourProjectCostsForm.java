@@ -112,6 +112,13 @@ public class YourProjectCostsForm {
         return getOrganisationFinanceTotal().divide(VAT_RATE);
     }
 
+    public BigDecimal getProjectVatTotal() {
+        if (vatRegistered == null || vatRegistered == false) {
+            return BigDecimal.ZERO;
+        }
+        return getOrganisationFinanceTotal().add(getVatTotal());
+    }
+
     public BigDecimal getTotalOverheadCosts() {
         switch (overhead.getRateType()) {
             case NONE:
