@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VATCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setOtherRows(otherRows(finance));
         form.setSubcontractingRows(subcontractingRows(finance));
         form.setTravelRows(travelRows(finance));
+        form.setVat(VAT(finance));
         return form;
     }
 
@@ -119,6 +121,11 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             rows.put(generateUnsavedRowId(), new TravelRowForm());
         }
         return rows;
+    }
+
+     private VAT VAT(BaseFinanceResource finance) {
+        VATCategory vatCategory = (VATCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+        return (VAT) vatCategory.getCosts().stream().findFirst().get();
     }
 
 

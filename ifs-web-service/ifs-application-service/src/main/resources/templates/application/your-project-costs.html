@@ -110,23 +110,19 @@
 
             <div class="govuk-grid-row">
                 <label class="govuk-heading-m">Are you VAT registered?</label>
-                <span class="govuk-hint">If you are VAT registered, VAT will be calculated at 20%</span>
+                <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
+                <span class="govuk-hint" th:if="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
             </div>
 
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('vatRegistered')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:unless="${model.readOnly}">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="vatRegistered">
-                    </legend>
-                    <span th:if="${#fields.hasErrors('vatRegistered')}" class="govuk-error-message"
-                          th:each="err : ${#fields.errors('vatRegistered')}" th:text="${err}"/>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" data-target="vatRegistered-totals"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="vatRegistered-yes"
-                                   th:field="*{vatRegistered}"
+                                   th:field="*{vat.registered}"
                                    value="true"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
@@ -137,8 +133,7 @@
                         </div>
 
                         <div id="vatRegistered-totals" class="panel">
-                            <div class="govuk-form-group"
-                                 th:classappend="${#fields.hasErrors('vatRegistered')} ? 'govuk-form-group--error'">
+                            <div class="govuk-form-group">
                                 <div class="govuk-grid-column-one-half alignleft">
                                     <label for="total-cost" class="govuk-heading-m"
                                            th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
@@ -161,21 +156,21 @@
                                            th:text="'£' + ${form.getProjectVatTotal()}">£120</label>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="govuk-radios__item"
-                                 data-target-clear-validation="true" data-target-clear-form="true">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       id="vatRegistered-no"
-                                       th:field="*{vatRegistered}"
-                                       value="false"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
-                                <label class="govuk-radios__label"
-                                       for="vatRegistered-no">
-                                    No
-                                </label>
-                            </div>
+                        <div class="govuk-radios__item"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="vatRegistered-no"
+                                   th:field="*{vat.registered}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="vatRegistered-no">
+                                No
+                            </label>
                         </div>
                     </div>
                 </fieldset>

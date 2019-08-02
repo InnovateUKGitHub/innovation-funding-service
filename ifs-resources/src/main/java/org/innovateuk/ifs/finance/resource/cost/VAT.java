@@ -11,7 +11,7 @@ public class VAT extends AbstractFinanceRowItem {
     private String name;
     private Boolean registered;
 
-    private VAT() {
+    public VAT() {
         this(null);
     }
 
