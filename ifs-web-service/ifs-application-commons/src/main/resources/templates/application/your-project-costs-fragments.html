@@ -564,7 +564,7 @@
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
-                      th:text="${#ifsUtil.calculatePercentage(form.procurementOverheadRows, form.organisationFinanceTotal) + '%'}"></span>
+                      th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
                 </h3>
             </div>
