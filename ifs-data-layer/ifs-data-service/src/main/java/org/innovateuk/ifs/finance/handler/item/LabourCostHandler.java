@@ -33,7 +33,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(LabourCost labourCostItem) {
+    public ApplicationFinanceRow toApplicationDomain(LabourCost labourCostItem) {
         return labourCostItem != null ? new ApplicationFinanceRow(
                                             labourCostItem.getId(),
                                             labourCostItem.getName(),
@@ -41,11 +41,11 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                                             labourCostItem.getDescription(),
                                             labourCostItem.getLabourDays(),
                                             labourCostItem.getGrossEmployeeCost(),
-                                            null, null) : null;
+                                            null, labourCostItem.getCostType()) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(LabourCost costItem) {
+    public ProjectFinanceRow toProjectDomain(LabourCost costItem) {
         return new ProjectFinanceRow(
                     costItem.getId(),
                     costItem.getName(),
@@ -53,29 +53,29 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                     costItem.getDescription(),
                     costItem.getLabourDays(),
                     costItem.getGrossEmployeeCost(),
-                    null, null);
+                    null, costItem.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
+        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription(), cost.getTarget().getId());
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeWorkingDays());
+        costs.add(initializeWorkingDays(applicationFinance));
         return costs;
     }
 
-    private ApplicationFinanceRow initializeWorkingDays() {
+    private ApplicationFinanceRow initializeWorkingDays(ApplicationFinance applicationFinance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description);
-        return toCost(costItem);
+        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, applicationFinance.getId());
+        return toApplicationDomain(costItem);
     }
 }

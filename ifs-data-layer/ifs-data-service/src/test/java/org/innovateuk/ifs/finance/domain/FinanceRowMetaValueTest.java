@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,15 +13,13 @@ public class FinanceRowMetaValueTest {
     FinanceRowMetaField financeRowMetaField;
     String value;
     ApplicationFinance applicationFinance;
-    Question question;
     BigDecimal price;
 
     @Before
     public void setUp() throws Exception {
         price  = new BigDecimal(1000);
         applicationFinance = new ApplicationFinance();
-        question = new Question();
-        cost = new ApplicationFinanceRow(1L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
+        cost = new ApplicationFinanceRow(1L, "cost key", "cost item", "cost description", 10, price, applicationFinance, FinanceRowType.FINANCE);
         financeRowMetaField = new FinanceRowMetaField(1L, "NVP", "String");
         value = "19000";
         costValue = new FinanceRowMetaValue(cost, financeRowMetaField, value);
@@ -43,7 +41,7 @@ public class FinanceRowMetaValueTest {
 
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
-        FinanceRow newCost = new ApplicationFinanceRow(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
+        FinanceRow newCost = new ApplicationFinanceRow(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, FinanceRowType.FINANCE);
         FinanceRowMetaField newFinanceRowMetaField = new FinanceRowMetaField(2L, "title","type");
 
         costValue.setFinanceRowId(newCost.getId());

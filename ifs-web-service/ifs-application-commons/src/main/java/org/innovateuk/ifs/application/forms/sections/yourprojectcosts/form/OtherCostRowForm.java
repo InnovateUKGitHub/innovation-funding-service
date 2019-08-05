@@ -59,7 +59,7 @@ public class OtherCostRowForm extends AbstractCostRowForm<OtherCost> {
     }
 
     @Override
-    public OtherCost toCost() {
-        return new OtherCost(getCostId(), description, estimate);
+    public OtherCost toCost(Long financeId) {
+        return new OtherCost(getCostId(), description, estimate, financeId);
     }
 }

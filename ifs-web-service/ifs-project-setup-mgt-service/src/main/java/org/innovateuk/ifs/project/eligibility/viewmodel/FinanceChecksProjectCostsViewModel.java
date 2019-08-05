@@ -3,12 +3,14 @@ package org.innovateuk.ifs.project.eligibility.viewmodel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import java.util.Set;
+
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
     private final FinanceRowType editableRowType;
 
-    public FinanceChecksProjectCostsViewModel(boolean open, FinanceRowType editableRowType) {
-        super(open, true, false);
+    public FinanceChecksProjectCostsViewModel(boolean open, FinanceRowType editableRowType, Set<FinanceRowType> financeRowTypes) {
+        super(open, true, false, financeRowTypes);
         this.editableRowType = editableRowType;
     }
 

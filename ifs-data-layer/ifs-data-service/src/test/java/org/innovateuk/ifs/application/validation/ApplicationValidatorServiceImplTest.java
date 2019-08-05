@@ -13,11 +13,13 @@ import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -65,7 +67,10 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     private FormInputResponseRepository formInputResponseRepository;
 
     @Mock
-    private  ApplicationValidationUtil applicationValidationUtil;
+    private ApplicationValidationUtil applicationValidationUtil;
+
+    @Mock
+    private FinanceValidationUtil financeValidationUtil;
 
     @Mock
     private FormInputRepository formInputRepository;
@@ -74,7 +79,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     private ApplicationRepository applicationRepository;
 
     @Mock
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
 
     @Mock
     private FinanceService financeService;
@@ -249,8 +254,6 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         List<ValidationMessages> validationMessages = emptyList();
 
-        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(), new TravelCost());
-
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
                 .withId(1L)
@@ -261,17 +264,17 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
                 .withApplication(1L)
                 .withFinanceFileEntry(1L)
                 .build();
+        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
 
         List<ValidationMessages> expected = emptyList();
 
-
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeRowCostsService.getCostItems(1L, questionId)).thenReturn(serviceSuccess(costItems));
-        when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
+        when(financeRowCostsService.getCostItems(1L, FinanceRowType.TRAVEL)).thenReturn(serviceSuccess(costItems));
+        when(financeValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
 
 
-        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById);
+        List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
 
         assertEquals(expected, result);
@@ -279,8 +282,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeRowCostsService, times(1)).getCostItems(1L, questionId);
-        verify(applicationValidationUtil).validateCostItem(costItems, question);
+        verify(financeRowCostsService, times(1)).getCostItems(1L, FinanceRowType.TRAVEL);
+        verify(financeValidationUtil).validateCostItem(costItems);
 
     }
 
@@ -296,8 +299,6 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         List<ValidationMessages> validationMessages = emptyList();
 
-        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(), new TravelCost());
-
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
                 .withId(1L)
@@ -309,24 +310,26 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
                 .withFinanceFileEntry(1L)
                 .build();
 
+        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
+
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeRowCostsService.getCostItems(applicationFinanceId, questionId)).thenReturn(serviceSuccess(costItems));
-        when(applicationValidationUtil.validateCostItem(costItems, question)).thenReturn(validationMessages);
+        when(financeRowCostsService.getCostItems(applicationFinanceId, FinanceRowType.TRAVEL)).thenReturn(serviceSuccess(costItems));
+        when(financeValidationUtil.validateCostItem(costItems)).thenReturn(validationMessages);
 
-        List<ValidationMessages> result = service.validateCostItem(applicationId, question, markedAsCompleteById);
+        List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
         assertEquals(validationMessages, result);
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeRowCostsService).getCostItems(applicationFinanceId, questionId);
-        verify(applicationValidationUtil).validateCostItem(costItems, question);
+        verify(financeRowCostsService).getCostItems(applicationFinanceId, FinanceRowType.TRAVEL);
+        verify(financeValidationUtil).validateCostItem(costItems);
     }
 
     @Test
     public void getCostHandler() {
-        TravelCost travelCost = new TravelCost(1L, "transport", new BigDecimal("25.00"), 5);
+        TravelCost travelCost = new TravelCost(1L, "transport", new BigDecimal("25.00"), 5, 1L);
         FinanceRowHandler expected = new TravelCostHandler();
 
         when(financeRowCostsService.getCostHandler(1L)).thenReturn(expected);
@@ -340,7 +343,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void getProjectCostHandler() {
-        GrantClaim grantClaim = new GrantClaim(1L, 20);
+        GrantClaim grantClaim = new GrantClaim(1L, 20, 1L);
         FinanceRowHandler expected = new GrantClaimHandler();
 
         when(projectFinanceRowService.getCostHandler(grantClaim)).thenReturn(expected);

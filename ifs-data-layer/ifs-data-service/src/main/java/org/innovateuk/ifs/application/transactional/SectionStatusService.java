@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ public interface SectionStatusService {
     ServiceResult<Map<Long, Set<Long>>> getCompletedSections(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION')")
-    ServiceResult<List<ValidationMessages>> markSectionAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
+    ServiceResult<ValidationMessages> markSectionAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION')")
     ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsNotRequiredById);

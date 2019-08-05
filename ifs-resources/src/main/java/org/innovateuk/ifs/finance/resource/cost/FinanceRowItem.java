@@ -35,6 +35,7 @@ public interface FinanceRowItem {
     String VALUE_MUST_BE_LOWER_MESSAGE = "{validation.field.max.value.or.lower}";
     String NO_DECIMAL_VALUES = "{validation.field.non.decimal.format}";
 
+    Long getTargetId();
     Long getId();
     BigDecimal getTotal();
     FinanceRowType getCostType();

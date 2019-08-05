@@ -40,7 +40,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
 
     @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;

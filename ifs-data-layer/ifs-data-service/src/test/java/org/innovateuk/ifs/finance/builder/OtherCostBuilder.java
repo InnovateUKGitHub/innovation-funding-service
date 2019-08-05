@@ -43,6 +43,6 @@ public class OtherCostBuilder extends AbstractCostBuilder<OtherCost, OtherCostBu
 
     @Override
     protected OtherCost createInitial() {
-        return new OtherCost();
+        return newInstance(OtherCost.class);
     }
 }

@@ -27,7 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
@@ -152,8 +151,8 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
             updateYourOrganisationWithoutGrowthTable(applicationId, competitionId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-            List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-            validationMessages.forEach(validationHandler::addAnyErrors);
+            ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
+            validationHandler.addAnyErrors(validationMessages);
 
             return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToYourFinances(applicationId));
         };

@@ -5,13 +5,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
@@ -24,31 +24,25 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class OrganisationFinanceHandlerTest {
+public class IndustrialCostFinanceHandlerTest {
     @InjectMocks
-    private OrganisationFinanceDefaultHandler handler;
+    private IndustrialCostFinanceHandler handler;
     @Mock
     private ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock
@@ -73,6 +67,8 @@ public class OrganisationFinanceHandlerTest {
     private GrantClaimHandler grantClaimHandler;
     @Spy
     private OtherFundingHandler otherFundingHandler;
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepository;
     private Competition competition;
     private Application application;
     private ApplicationFinance applicationFinance;
@@ -94,16 +90,12 @@ public class OrganisationFinanceHandlerTest {
         competition = newCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
+                .withFinanceRowTypes(EnumSet.allOf(FinanceRowType.class))
                 .build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<>();
 
-        for (FinanceRowType costType : FinanceRowType.values()) {
-            if (ACADEMIC != costType) {
-                setUpCostTypeQuestions(competition, costType);
-            }
-        }
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;
@@ -115,57 +107,47 @@ public class OrganisationFinanceHandlerTest {
         }
 
 
-        capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20);
-        capitalUsageCost = handler.costItemToCost(capitalUsage);
+        capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20, applicationFinance.getId());
+        capitalUsageCost = handler.toApplicationDomain(capitalUsage);
+        capitalUsageCost.setTarget(applicationFinance);
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3l, "existing", "String"), "Yes"));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(5l, "utilisation", "Integer"), String.valueOf(20)));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
-        capitalUsageCost.setQuestion(costTypeQuestion.get(FinanceRowType.CAPITAL_USAGE));
         costs.add((ApplicationFinanceRow) capitalUsageCost);
 
-        subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role");
-        subContractingCost = handler.costItemToCost(subContracting);
+        subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role", applicationFinance.getId());
+        subContractingCost = handler.toApplicationDomain(subContracting);
+        subContractingCost.setTarget(applicationFinance);
         subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
-        subContractingCost.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
         costs.add((ApplicationFinanceRow)subContractingCost);
-        SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role");
-        FinanceRow subContractingCost2 = handler.costItemToCost(subContracting2);
+        SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role", applicationFinance.getId());
+        FinanceRow subContractingCost2 = handler.toApplicationDomain(subContracting2);
         subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
-        subContractingCost2.setQuestion(costTypeQuestion.get(FinanceRowType.SUBCONTRACTING_COSTS));
+        subContractingCost2.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)subContractingCost2);
 
-        labour = new LabourCost();
+        labour = new LabourCost(applicationFinance.getId());
         labour.setLabourDays(300);
         labour.setGrossEmployeeCost(BigDecimal.valueOf(50000));
         labour.setRole("Developer");
         labour.setDescription("");
-        labourCost = handler.costItemToCost(labour);
-        labourCost.setQuestion(costTypeQuestion.get(FinanceRowType.LABOUR));
+        labourCost = handler.toApplicationDomain(labour);
+        labourCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)labourCost);
 
-        material = new Materials();
+        material = new Materials(applicationFinance.getId());
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("Screws");
         material.setQuantity(5);
-        materialCost = handler.costItemToCost(material);
-        materialCost.setQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS));
+        materialCost = handler.toApplicationDomain(material);
+        materialCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)materialCost);
 
+        when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
-    }
-
-    private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
-        FormInput formInput = newFormInput()
-                .withType(costType.getFormInputType())
-                .build();
-        Question question = newQuestion().withFormInputs(asList(formInput)).build();
-
-        costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType())))
-                .thenReturn(serviceSuccess(question));
     }
 
     @Test
@@ -206,7 +188,7 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void costItemToCost() {
-        FinanceRow materialCostTmp = handler.costItemToCost(material);
+        FinanceRow materialCostTmp = handler.toApplicationDomain(material);
         assertEquals(new BigDecimal(100), materialCostTmp.getCost());
         assertEquals("", materialCostTmp.getDescription());
         assertEquals("Screws", materialCostTmp.getItem());
@@ -215,7 +197,7 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void costItemToProjectCost() {
-        FinanceRow materialCostTmp = handler.costItemToProjectCost(material);
+        FinanceRow materialCostTmp = handler.toProjectDomain(material);
         assertEquals(new BigDecimal(100), materialCostTmp.getCost());
         assertEquals("", materialCostTmp.getDescription());
         assertEquals("Screws", materialCostTmp.getItem());
@@ -241,7 +223,7 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void costToCostItem() {
-        final FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
+        final FinanceRowItem costItem = handler.toResource(materialCost);
         assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
         assertEquals(costItem.getName(), materialCost.getName());
         assertEquals(costItem.getId(), materialCost.getId());

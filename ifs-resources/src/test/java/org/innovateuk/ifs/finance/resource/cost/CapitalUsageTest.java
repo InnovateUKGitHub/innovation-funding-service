@@ -23,7 +23,7 @@ public class CapitalUsageTest {
         BigDecimal residualValue = new BigDecimal(15000);
         Integer utilisation = 25;
 
-        capitalUsage = new CapitalUsage(id, deprecation, description, existing, npv, residualValue, utilisation);
+        capitalUsage = new CapitalUsage(id, deprecation, description, existing, npv, residualValue, utilisation, 1L);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class CapitalUsageTest {
 
     @Test
     public void totalMustBeZeroWhenDataIsNotAvailableTest() {
-        CapitalUsage emptyCapitalUsage = new CapitalUsage();
+        CapitalUsage emptyCapitalUsage = new CapitalUsage(1L);
         assertEquals(BigDecimal.ZERO, emptyCapitalUsage.getTotal());
     }
 

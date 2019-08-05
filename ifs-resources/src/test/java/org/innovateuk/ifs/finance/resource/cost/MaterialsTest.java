@@ -20,7 +20,7 @@ public class MaterialsTest {
         item = "Valves";
         cost = new BigDecimal(2000);
         quantity = 12;
-        materials = new Materials(id, item, cost, quantity);
+        materials = new Materials(id, item, cost, quantity, 1L);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class MaterialsTest {
 
     @Test
     public void calculatedTotalMustBeZeroWhenQuantityOrCostAreNotSetTest() throws Exception {
-        Materials materialWithoutValues = new Materials();
+        Materials materialWithoutValues = new Materials(1L);
         assertEquals(BigDecimal.ZERO, materialWithoutValues.getTotal());
     }
 }
