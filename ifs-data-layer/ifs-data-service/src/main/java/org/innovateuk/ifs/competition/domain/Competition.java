@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -153,6 +154,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @Enumerated(EnumType.STRING)
     @Column(name = "funding_type")
     private FundingType fundingType;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
+    private FileEntry competitionTerms;
 
     public Competition() {
         setupComplete = false;
@@ -821,5 +826,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setFundingType(FundingType fundingType) {
         this.fundingType = fundingType;
+    }
+
+    public void setCompetitionTerms(FileEntry competitionTerms) {
+        this.competitionTerms = competitionTerms;
+    }
+
+    // TODO make optional -- ?
+    public FileEntry getCompetitionTerms() {
+        return competitionTerms;
     }
 }

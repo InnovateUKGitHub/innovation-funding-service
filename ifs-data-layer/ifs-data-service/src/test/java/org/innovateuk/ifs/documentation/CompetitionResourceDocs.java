@@ -76,6 +76,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table").optional(),
             fieldWithPath("includeYourOrganisationSection").description("Indicates if the competition has a your organisation section").optional(),
             fieldWithPath("fundingType").description("The FundingType of the competition").optional(),
+            fieldWithPath("competitionTerms").description("Any competition-specific terms").optional(),
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
@@ -118,5 +119,6 @@ public class CompetitionResourceDocs {
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
             .withStateAid(true)
             .withIncludeJesForm(true)
-            .withFundingType(FundingType.PROCUREMENT);
+            .withFundingType(FundingType.PROCUREMENT)
+            .withCompetitionTerms(null);
 }

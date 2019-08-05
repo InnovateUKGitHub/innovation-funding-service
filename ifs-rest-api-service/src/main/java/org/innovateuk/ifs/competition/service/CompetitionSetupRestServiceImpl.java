@@ -5,12 +5,14 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSubsectionStatusMap;
 
@@ -45,42 +47,42 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
 
     @Override
     public RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section) {
-        return putWithRestResult(String.format("%s/section-status/complete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class);
+        return putWithRestResult(format("%s/section-status/complete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class);
     }
 
     @Override
     public RestResult<Void> markSectionIncomplete(long competitionId, CompetitionSetupSection section) {
-        return putWithRestResult(String.format("%s/section-status/incomplete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class);
+        return putWithRestResult(format("%s/section-status/incomplete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class);
     }
 
     @Override
     public RestResult<Void> markSubSectionComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
-        return putWithRestResult(String.format("%s/subsection-status/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
+        return putWithRestResult(format("%s/subsection-status/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
     }
 
     @Override
     public RestResult<Void> markSubSectionIncomplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
-        return putWithRestResult(String.format("%s/subsection-status/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
+        return putWithRestResult(format("%s/subsection-status/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
     }
 
     @Override
     public RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate) {
-        return postWithRestResult(String.format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), openingDate, String.class);
+        return postWithRestResult(format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), openingDate, String.class);
     }
 
     @Override
     public RestResult<Void> initApplicationForm(long competitionId, long competitionTypeId) {
-        return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionSetupRestURL, competitionId, competitionTypeId), Void.class);
+        return postWithRestResult(format("%s/%s/initialise-form/%s", competitionSetupRestURL, competitionId, competitionTypeId), Void.class);
     }
 
     @Override
     public RestResult<Void> markAsSetup(long competitionId) {
-        return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionSetupRestURL, competitionId), Void.class);
+        return postWithRestResult(format("%s/%s/mark-as-setup", competitionSetupRestURL, competitionId), Void.class);
     }
 
     @Override
     public RestResult<Void> returnToSetup(long competitionId) {
-        return postWithRestResult(String.format("%s/%s/return-to-setup", competitionSetupRestURL, competitionId), Void.class);
+        return postWithRestResult(format("%s/%s/return-to-setup", competitionSetupRestURL, competitionId), Void.class);
     }
 
     @Override
@@ -90,11 +92,26 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
 
     @Override
     public RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId) {
-        return getWithRestResult(String.format("%s/section-status/%s", competitionSetupRestURL, competitionId), competitionSetupSectionStatusMap());
+        return getWithRestResult(format("%s/section-status/%s", competitionSetupRestURL, competitionId), competitionSetupSectionStatusMap());
     }
 
     @Override
     public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId) {
-        return getWithRestResult(String.format("%s/subsection-status/%s", competitionSetupRestURL, competitionId), competitionSetupSubsectionStatusMap());
+        return getWithRestResult(format("%s/subsection-status/%s", competitionSetupRestURL, competitionId), competitionSetupSubsectionStatusMap());
+    }
+
+    @Override
+    public RestResult<FileEntryResource> uploadCompetitionTerms(long competitionId, String contentType, long contentLength, String originalFilename, byte[] file) {
+        return postWithRestResult(
+                format("%s/competition-terms?competitionId=%d&filename=%s", competitionSetupRestURL, competitionId, originalFilename),
+                file,
+                createFileUploadHeader(contentType,  contentLength),
+                FileEntryResource.class
+        );
+    }
+
+    @Override
+    public RestResult<Void> deleteCompetitionTerms(long competitionId) {
+        return deleteWithRestResult(format("%s/competition-terms?competitionId=%d", competitionSetupRestURL, competitionId));
     }
 }

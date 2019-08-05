@@ -12,6 +12,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.file.service.BasicFileAndContents;
+import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -62,13 +66,23 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
 
+    @Autowired
+    private FileEntryService fileEntryService;
+
+    @Autowired
+    private FileService fileService;
+
     @Override
-    public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
-        return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    public ServiceResult<CompetitionResource> getCompetitionById(long id) {
+        return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    private ServiceResult<Competition> findCompetitionById(long id) {
+        return find(competitionRepository.findById(id), notFoundError(Competition.class, id));
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
+    public ServiceResult<List<UserResource>> findInnovationLeads(long competitionId) {
 
         List<InnovationLead> innovationLeads = innovationLeadRepository.findInnovationsLeads(competitionId);
         List<UserResource> innovationLeadUsers = simpleMap(innovationLeads, competitionParticipant -> userMapper
@@ -79,10 +93,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+    public ServiceResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
 
-        return find(competitionRepository.findById(competitionId),
-                notFoundError(Competition.class, competitionId))
+        return findCompetitionById(competitionId)
                 .andOnSuccessReturnVoid(competition ->
                         find(userRepository.findById(innovationLeadUserId),
                                 notFoundError(User.class, innovationLeadUserId))
@@ -95,7 +108,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+    public ServiceResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
         return find(innovationLeadRepository.findInnovationLead(competitionId, innovationLeadUserId),
                 notFoundError(InnovationLead.class, competitionId, innovationLeadUserId))
                 .andOnSuccessReturnVoid(innovationLead -> innovationLeadRepository.delete(innovationLead));
@@ -158,17 +171,17 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
+    public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(long competitionId) {
         return serviceSuccess(competitionRepository.getOpenQueryByCompetitionAndProjectStateNotIn(competitionId, asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE)));
     }
 
     @Override
-    public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
+    public ServiceResult<Long> countAllOpenQueries(long competitionId) {
         return serviceSuccess(competitionRepository.countOpenQueriesByCompetitionAndProjectStateNotIn(competitionId, asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE)));
     }
 
     @Override
-    public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
+    public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(long competitionId) {
 
         List<Object[]> pendingSpendProfiles = competitionRepository.getPendingSpendProfiles(competitionId);
         return serviceSuccess(simpleMap(pendingSpendProfiles, object ->
@@ -176,7 +189,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
+    public ServiceResult<Long> countPendingSpendProfiles(long competitionId) {
 
         return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId).longValue());
     }
@@ -194,5 +207,15 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     });
         }
         return serviceFailure(notFoundError(GrantTermsAndConditions.class, termsAndConditionsId));
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> downloadTerms(long competitionId) {
+        return findCompetitionById(competitionId)
+                .andOnSuccess(c -> fileEntryService.findOne(c.getCompetitionTerms().getId()))
+                .andOnSuccess(fe ->
+                        fileService.getFileByFileEntryId(fe.getId())
+                                .andOnSuccessReturn(is -> new BasicFileAndContents(fe, is))
+                );
     }
 }
