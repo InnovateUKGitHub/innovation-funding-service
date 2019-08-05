@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -18,16 +20,16 @@ import java.util.List;
  */
 public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<CompetitionResource> getCompetitionById(final Long id);
+    ServiceResult<CompetitionResource> getCompetitionById(final long id);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<List<UserResource>> findInnovationLeads(final Long competitionId);
+    ServiceResult<List<UserResource>> findInnovationLeads(final long competitionId);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> addInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+    ServiceResult<Void> addInnovationLead(final long competitionId, final long innovationLeadUserId);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> removeInnovationLead(final Long competitionId, final Long innovationLeadUserId);
+    ServiceResult<Void> removeInnovationLead(final long competitionId, final long innovationLeadUserId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
@@ -54,22 +56,25 @@ public interface CompetitionService {
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can see all open queries for a competition")
-    ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId);
+    ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can count open queries for a competition")
-    ServiceResult<Long> countAllOpenQueries(Long competitionId);
+    ServiceResult<Long> countAllOpenQueries(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILES", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
-    ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId);
+    ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
-    ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
+    ServiceResult<Long> countPendingSpendProfiles(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE_TERMS_AND_CONDITIONS", securedType = CompetitionResource.class,
             description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
     ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
+
+    @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
+    ServiceResult<FileAndContents> downloadTerms(long competitionId);
 }
