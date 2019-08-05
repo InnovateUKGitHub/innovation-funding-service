@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
-import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -34,7 +34,7 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
     }
 
     @Override
-    protected BaseFinanceRowRestService getFinanceRowService() {
+    protected FinanceRowRestService getFinanceRowService() {
         return financeRowRestService;
     }
 }

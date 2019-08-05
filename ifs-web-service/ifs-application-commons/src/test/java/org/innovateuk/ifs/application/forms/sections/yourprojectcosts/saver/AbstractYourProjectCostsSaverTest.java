@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 public class AbstractYourProjectCostsSaverTest {
     private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withIndustrialCosts().build();
     @Mock
-    private BaseFinanceRowRestService financeRowRestService;
+    private FinanceRowRestService financeRowRestService;
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
@@ -50,7 +50,7 @@ public class AbstractYourProjectCostsSaverTest {
         }
 
         @Override
-        protected BaseFinanceRowRestService getFinanceRowService() {
+        protected FinanceRowRestService getFinanceRowService() {
             return financeRowRestService;
         }
     };
