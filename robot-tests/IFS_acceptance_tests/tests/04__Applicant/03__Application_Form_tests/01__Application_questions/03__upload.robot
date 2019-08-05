@@ -163,7 +163,7 @@ Custom Suite Setup
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
-    the user clicks the button/link  name = assign_question
+    the user clicks the button/link  name = assign
     the user reloads the page
 
 the user cannot see the option to upload a file on the question
