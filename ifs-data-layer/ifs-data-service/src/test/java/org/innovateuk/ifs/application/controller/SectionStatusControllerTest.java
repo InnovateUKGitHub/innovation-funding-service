@@ -17,10 +17,12 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -70,11 +72,11 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         Long processRoleId = 1L;
         Long applicationId = 1L;
 
-        when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(noErrors()));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[]"))
+                .andExpect(content().string(toJson(noErrors())))
                 .andDo(
                         document(
                                 "section/mark-as-complete",
@@ -143,17 +145,15 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         Long processRoleId = 1L;
         Long applicationId = 1L;
 
-        ArrayList<ValidationMessages> validationMessages = new ArrayList<>();
         bindingResult = new BeanPropertyBindingResult(section, "costItem");
         reject(bindingResult, "validation.finance.min.row");
         ValidationMessages messages = new ValidationMessages(1L, bindingResult);
-        validationMessages.add(messages);
-        when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
+        when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(messages));
 
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"validation.finance.min.row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[]}]}]"))
+                .andExpect(content().string(toJson(messages)))
                 .andDo(
                         document(
                                 "section/mark-as-complete-invalid",
@@ -165,13 +165,13 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
                                         parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
                                 ),
                                 responseFields(
-                                        fieldWithPath("[0].objectName").description("name of the object type"),
-                                        fieldWithPath("[0].objectId").description("identifier of the object, for example the FinanceRow.id"),
-                                        fieldWithPath("[0].errors").description("list of Error objects, containing the validation messages"),
-                                        fieldWithPath("[0].errors[0].fieldName").description("the name of the field that is invalid"),
-                                        fieldWithPath("[0].errors[0].fieldRejectedValue").description("the value of the field that is invalid"),
-                                        fieldWithPath("[0].errors[0].errorKey").description("the key to identity the type of validation message"),
-                                        fieldWithPath("[0].errors[0].arguments").description("array of arguments used to validate this object")
+                                        fieldWithPath("objectName").description("name of the object type"),
+                                        fieldWithPath("objectId").description("identifier of the object, for example the FinanceRow.id"),
+                                        fieldWithPath("errors").description("list of Error objects, containing the validation messages"),
+                                        fieldWithPath("errors[0].fieldName").description("the name of the field that is invalid"),
+                                        fieldWithPath("errors[0].fieldRejectedValue").description("the value of the field that is invalid"),
+                                        fieldWithPath("errors[0].errorKey").description("the key to identity the type of validation message"),
+                                        fieldWithPath("errors[0].arguments").description("array of arguments used to validate this object")
                                 )
                         )
                 );

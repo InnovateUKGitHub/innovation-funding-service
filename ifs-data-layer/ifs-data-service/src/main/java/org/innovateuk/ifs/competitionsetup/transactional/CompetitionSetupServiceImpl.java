@@ -393,7 +393,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> deleteCompetitionTerms(long competitionId) {
         return findCompetition(competitionId)
-                .andOnSuccess(competition -> fileService.deleteFileIgnoreNotFound(competition.getCompetitionTerms().getId())
+                .andOnSuccess(competition -> fileService.deleteFileIgnoreNotFound(competition.getCompetitionTerms().get().getId())
                         .andOnSuccessReturnVoid(() -> competition.setCompetitionTerms(null)));
     }
 

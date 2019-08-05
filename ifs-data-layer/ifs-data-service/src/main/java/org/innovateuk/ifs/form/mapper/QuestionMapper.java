@@ -3,7 +3,6 @@ package org.innovateuk.ifs.form.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.mapstruct.*;
@@ -13,8 +12,7 @@ import org.mapstruct.*;
     uses = {
         SectionMapper.class,
         CompetitionMapper.class,
-        FormInputMapper.class,
-        ApplicationFinanceRowMapper.class
+        FormInputMapper.class
     }
 )
 public abstract class QuestionMapper extends BaseMapper<Question, QuestionResource, Long> {
@@ -25,10 +23,6 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
 
     public abstract QuestionResource mapToResource(Question domain);
 
-    @Override
-    @Mappings({
-            @Mapping(target = "costs", ignore = true)
-    })
     public abstract Question mapToDomain(QuestionResource resource);
 
     @AfterMapping

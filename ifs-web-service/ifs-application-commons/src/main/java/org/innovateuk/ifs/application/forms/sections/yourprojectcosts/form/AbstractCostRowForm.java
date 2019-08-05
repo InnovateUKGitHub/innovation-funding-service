@@ -46,5 +46,5 @@ public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
 
     public abstract FinanceRowType getRowType();
 
-    public abstract F toCost();
+    public abstract F toCost(Long financeId);
 }

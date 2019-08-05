@@ -32,12 +32,17 @@ public class Materials extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer quantity;
 
-    public Materials() {
+    private Materials() {
+        this(null);
+    }
+
+    public Materials(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
-    public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
-        this();
+    public Materials(Long id, String item, BigDecimal cost, Integer quantity, Long targetId) {
+        this(targetId);
         this.id = id;
         this.item = item;
         this.cost = cost;

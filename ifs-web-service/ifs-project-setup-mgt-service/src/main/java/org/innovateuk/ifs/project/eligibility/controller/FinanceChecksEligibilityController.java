@@ -132,7 +132,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             FileDetailsViewModel jesFileDetailsViewModel = null;
             boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
             if (!isUsingJesFinances) {
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType, competition.get().getFinanceRowTypes()));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisationId)));
                 }

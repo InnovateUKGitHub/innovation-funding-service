@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,9 +19,9 @@ import java.util.Optional;
 public class Horizon2020CostsSaver {
 
     private final ApplicationFinanceRestService applicationFinanceRestService;
-    private final DefaultFinanceRowRestService financeRowRestService;
+    private final ApplicationFinanceRowRestService financeRowRestService;
 
-    public Horizon2020CostsSaver(ApplicationFinanceRestService applicationFinanceRestService, DefaultFinanceRowRestService financeRowRestService) {
+    public Horizon2020CostsSaver(ApplicationFinanceRestService applicationFinanceRestService, ApplicationFinanceRowRestService financeRowRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.financeRowRestService = financeRowRestService;
     }
@@ -51,7 +51,7 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getLabour())) {
             cost.map(LabourCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            LabourCost labour = cost.orElseGet(() -> newCost(applicationFinance, new LabourCost()));
+            LabourCost labour = cost.orElseGet(() -> newCost(new LabourCost(applicationFinance.getId())));
             labour.setLabourDays(1);
             labour.setGrossEmployeeCost(new BigDecimal(form.getLabour()));
             labour.setRole("Total Labour costs");
@@ -81,7 +81,7 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getMaterial())) {
             cost.map(Materials::getId).ifPresent(financeRowRestService::delete);
         } else {
-            Materials materials = cost.orElseGet(() -> newCost(applicationFinance, new Materials()));
+            Materials materials = cost.orElseGet(() -> newCost(new Materials(applicationFinance.getId())));
             materials.setCost(new BigDecimal(form.getMaterial()));
             materials.setQuantity(1);
             materials.setItem("Total material costs");
@@ -96,7 +96,7 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getMaterial())) {
             cost.map(CapitalUsage::getId).ifPresent(financeRowRestService::delete);
         } else {
-            CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(applicationFinance, new CapitalUsage()));
+            CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(new CapitalUsage(applicationFinance.getId())));
             capitalUsage.setUtilisation(100);
             //Add one and leave residual value as 1.
             capitalUsage.setNpv(new BigDecimal(form.getCapital()).add(BigDecimal.ONE));
@@ -115,7 +115,7 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getSubcontracting())) {
             cost.map(SubContractingCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            SubContractingCost subContractingCost = cost.orElseGet(() -> newCost(applicationFinance, new SubContractingCost()));
+            SubContractingCost subContractingCost = cost.orElseGet(() -> newCost(new SubContractingCost(applicationFinance.getId())));
             subContractingCost.setCost(new BigDecimal(form.getSubcontracting()));
             subContractingCost.setRole("Not specified");
             subContractingCost.setCountry("Not specified");
@@ -131,7 +131,7 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getTravel())) {
             cost.map(TravelCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            TravelCost travelCost = cost.orElseGet(() -> newCost(applicationFinance, new TravelCost()));
+            TravelCost travelCost = cost.orElseGet(() -> newCost(new TravelCost(applicationFinance.getId())));
             travelCost.setCost(new BigDecimal(form.getTravel()));
             travelCost.setQuantity(1);
             travelCost.setItem("Total travel costs");
@@ -146,15 +146,15 @@ public class Horizon2020CostsSaver {
         if (nullOrZero(form.getOther())) {
             cost.map(OtherCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            OtherCost other = cost.orElseGet(() -> newCost(applicationFinance, new OtherCost()));
+            OtherCost other = cost.orElseGet(() -> newCost(new OtherCost(applicationFinance.getId())));
             other.setCost(new BigDecimal(form.getOther()));
             other.setDescription("Total other costs");
             financeRowRestService.update(other);
         }
     }
 
-    private <C extends FinanceRowItem> C newCost(ApplicationFinanceResource applicationFinance, C cost) {
-        return (C) financeRowRestService.addWithResponse(applicationFinance.getId(), cost).getSuccess();
+    private <C extends FinanceRowItem> C newCost(C cost) {
+        return (C) financeRowRestService.create(cost).getSuccess();
     }
 
     private boolean nullOrZero(BigInteger value) {

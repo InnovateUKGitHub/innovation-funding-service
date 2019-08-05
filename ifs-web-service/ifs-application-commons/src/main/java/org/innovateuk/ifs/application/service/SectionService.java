@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionService {
-    List<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
+    ValidationMessages markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
     void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
     void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById);
     SectionResource getById(Long sectionId);

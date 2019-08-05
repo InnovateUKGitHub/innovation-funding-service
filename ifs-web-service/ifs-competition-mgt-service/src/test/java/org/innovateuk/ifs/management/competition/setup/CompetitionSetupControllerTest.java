@@ -9,9 +9,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
+import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -23,10 +25,12 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -37,6 +41,7 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -52,6 +57,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -61,8 +68,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -1248,5 +1254,42 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
         assertEquals("COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED", bindingResult.getGlobalErrors().get(0).getCode());
+    }
+
+    @Test
+    public void uploadTermsAndConditions() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        String fileName = "termsAndConditionsDoc";
+        String originalFileName = "original filename";
+        String contentType = "application/json";
+        String content = "content";
+
+        MockMultipartFile file = new MockMultipartFile(fileName, originalFileName, contentType, content.getBytes());
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+
+        TermsAndConditionsForm form = new TermsAndConditionsForm();
+        form.setTermsAndConditionsDoc(file);
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
+                file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), any(CompetitionResource.class), eq(CompetitionSetupSection.TERMS_AND_CONDITIONS)))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
+                .file(file)
+                .param("uploadTermsAndConditionsDoc", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID)));
+
+        InOrder inOrder = inOrder(competitionRestService, competitionSetupRestService, competitionSetupService);
+        inOrder.verify(competitionRestService).getCompetitionById(COMPETITION_ID);
+        inOrder.verify(competitionSetupRestService)
+                .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+        inOrder.verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), any(CompetitionResource.class), eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
+        inOrder.verifyNoMoreInteractions();
     }
 }
