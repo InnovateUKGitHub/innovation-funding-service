@@ -23,14 +23,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         YourProjectCostsForm form = new YourProjectCostsForm();
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
-        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OVERHEADS)) {
-            form.setOverhead(overhead(finance));
-        }
-
-        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PROCUREMENT_OVERHEADS)) {
-            form.setProcurementOverheadRows(procurementOverheadRows(finance));
-        }
-
+        form.setOverhead(overhead(finance));
+        form.setProcurementOverheadRows(procurementOverheadRows(finance));
         form.setLabour(labour(finance));
         form.setCapitalUsageRows(capitalUsageRows(finance));
         form.setMaterialRows(materialRows(finance));
@@ -76,14 +70,17 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
     private Map<String, ProcurementOverheadRowForm> procurementOverheadRows(BaseFinanceResource finance) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.PROCUREMENT_OVERHEADS);
-        Map<String, ProcurementOverheadRowForm> rows = costCategory.getCosts().stream()
-                .map(ProcurementOverhead.class::cast)
-                .map(ProcurementOverheadRowForm::new)
-                .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        if (shouldAddEmptyRow()) {
-            rows.put(generateUnsavedRowId(), new ProcurementOverheadRowForm());
+        if (costCategory != null) {
+            Map<String, ProcurementOverheadRowForm> rows = costCategory.getCosts().stream()
+                    .map(ProcurementOverhead.class::cast)
+                    .map(ProcurementOverheadRowForm::new)
+                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            if (shouldAddEmptyRow()) {
+                rows.put(generateUnsavedRowId(), new ProcurementOverheadRowForm());
+            }
+            return rows;
         }
-        return rows;
+        return new HashMap<>();
     }
 
     private Map<String, MaterialRowForm> materialRows(BaseFinanceResource finance) {
