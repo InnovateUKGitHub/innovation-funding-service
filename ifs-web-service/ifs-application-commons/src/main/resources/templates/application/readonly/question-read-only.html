@@ -18,7 +18,7 @@
             </textarea>
         </div>
 
-        <div class="govuk-inset-text govuk-!-margin-bottom-6">
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
             <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
                 Uploaded project plan and methodology
             </h1>
@@ -29,7 +29,7 @@
                    th:href="${isApplicant ? applicantUrl : internalUrl}"
                    th:text="${model.templateDocumentFilename}"
                    target="_blank"
-                   aria-describedby="template-document-hint">file</a><span id="template-document-hint">(opens in a new window)</span>.
+                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
             </p>
         </div>
 
