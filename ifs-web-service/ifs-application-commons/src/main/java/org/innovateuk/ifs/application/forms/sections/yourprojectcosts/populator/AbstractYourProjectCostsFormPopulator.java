@@ -147,8 +147,11 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     }
 
      private VAT VAT(BaseFinanceResource finance) {
-        VATCategory vatCategory = (VATCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
-        return (VAT) vatCategory.getCosts().stream().findFirst().get();
+        VATCategory costCategory = (VATCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+         if (costCategory != null) {
+             return (VAT) costCategory.getCosts().stream().findFirst().get();
+         }
+         return new VAT();
     }
 
 

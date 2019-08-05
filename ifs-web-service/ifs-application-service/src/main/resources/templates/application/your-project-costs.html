@@ -74,13 +74,13 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-row">
+            <div class="govuk-grid-row" th:if="${model.procurementCompetition}">
                 <label class="govuk-heading-m">Are you VAT registered?</label>
                 <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
                 <span class="govuk-hint" th:if="${model.readOnly}" th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
             </div>
 
-            <div class="govuk-form-group" th:unless="${model.readOnly}">
+            <div class="govuk-form-group" th:unless="${model.readOnly}" th:if="${model.procurementCompetition}">
                 <fieldset class="govuk-fieldset">
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" data-target="vatRegistered-totals"
