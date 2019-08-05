@@ -6,8 +6,8 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ "$TARGET" == "production" ]]; then
-    echo "Cannot reset the database on production"
+if [[ "$TARGET" == "ifs-prod" ]]; then
+    echo "Cannot reset the database on ifs-prod"
     exit 1
 fi
 
