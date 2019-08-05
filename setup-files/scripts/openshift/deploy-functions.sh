@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
+    if [[ ${TARGET} != "ifs-prod" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -20,7 +20,7 @@ function isProductionEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" ]]; then
+    if [[ ${TARGET} != "ifs-prod" ]]; then
         exit 1
     else
         exit 0
@@ -91,7 +91,7 @@ function getHost() {
 
     if [[ (${TARGET} == "local") ]]; then
       echo "ifs-local"
-    elif [[ ${TARGET} == "production" ]]; then
+    elif [[ ${TARGET} == "ifs-prod" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
       echo $(getClusterAddress)
@@ -103,7 +103,7 @@ function getRouteDomain() {
     TARGET=$1
     HOST=$2
 
-    if [[ ${TARGET} == "production" ]]; then
+    if [[ ${TARGET} == "ifs-prod" ]]; then
       echo "$HOST"
     else
       echo "apps.$HOST"
@@ -193,7 +193,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
+    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml

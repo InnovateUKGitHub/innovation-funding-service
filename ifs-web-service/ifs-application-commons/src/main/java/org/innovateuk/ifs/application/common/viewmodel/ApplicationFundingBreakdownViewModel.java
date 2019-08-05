@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -25,6 +26,7 @@ public class ApplicationFundingBreakdownViewModel {
     private final ApplicationResource currentApplication;
     private final OrganisationResource userOrganisation;
     private final Map<Long, Boolean> showDetailedFinanceLink;
+    private final CompetitionResource currentCompetition;
 
     public ApplicationFundingBreakdownViewModel(
             Map<FinanceRowType, BigDecimal> financeTotalPerType,
@@ -36,7 +38,8 @@ public class ApplicationFundingBreakdownViewModel {
             List<String> pendingOrganisationNames,
             ApplicationResource currentApplication,
             OrganisationResource userOrganisation,
-            Map<Long, Boolean> showDetailedFinanceLink) {
+            Map<Long, Boolean> showDetailedFinanceLink,
+            CompetitionResource currentCompetition) {
         this.financeTotalPerType = financeTotalPerType;
         this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
@@ -47,6 +50,7 @@ public class ApplicationFundingBreakdownViewModel {
         this.currentApplication = currentApplication;
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
+        this.currentCompetition = currentCompetition;
     }
 
     //For EOI Competitions
@@ -58,7 +62,8 @@ public class ApplicationFundingBreakdownViewModel {
                                                 List<String> pendingOrganisationNames,
                                                 ApplicationResource currentApplication,
                                                 OrganisationResource userOrganisation,
-                                                Map<Long, Boolean> showDetailedFinanceLink) {
+                                                Map<Long, Boolean> showDetailedFinanceLink,
+                                                CompetitionResource currentCompetition) {
         this.financeTotalPerType = financeTotalPerType;
         this.applicationOrganisations = applicationOrganisations;
         this.financeSection = financeSection;
@@ -68,6 +73,7 @@ public class ApplicationFundingBreakdownViewModel {
         this.currentApplication = currentApplication;
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
+        this.currentCompetition = currentCompetition;
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -108,5 +114,9 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<Long, Boolean> getShowDetailedFinanceLink() {
         return showDetailedFinanceLink;
+    }
+
+    public CompetitionResource getCurrentCompetition() {
+        return currentCompetition;
     }
 }

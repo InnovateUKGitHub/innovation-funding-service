@@ -8,7 +8,7 @@
 
 OC="oc"
 DIRECTORY="/var/log/containers"
-PROJECT="production"
+PROJECT="ifs-prod"
 TOKEN=""
 INTERVAL="5m"
 MAX_DAYS=30
@@ -36,7 +36,7 @@ while getopts ":c: :p: :d: :t: :i: :m:" opt ; do
             ;;
         \?)
             echo '-c oc_command    : path to the oc executable'
-            echo '-p project       : project name (production, ifs-demo, ifs-uat, ifs-sysint)'
+            echo '-p project       : project name (ifs-prod, ifs-demo, ifs-uat, ifs-sysint)'
             echo '-d log_directory : root path in which to store the logs'
             echo '-t access_token  : access token for the OpenShift service account'
             echo '-i interval      : fetch logs newer than this interval; cron job must run with the same interval'
