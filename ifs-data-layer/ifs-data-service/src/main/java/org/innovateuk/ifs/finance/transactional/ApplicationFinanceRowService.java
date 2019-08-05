@@ -43,8 +43,5 @@ public interface ApplicationFinanceRowService {
 
     //Internal
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler", mustBeSecuredByOtherServices = false)
-    FinanceRowHandler getCostHandler(Long costItemId);
-
-
-
+    FinanceRowHandler getCostHandler(long costItemId);
 }

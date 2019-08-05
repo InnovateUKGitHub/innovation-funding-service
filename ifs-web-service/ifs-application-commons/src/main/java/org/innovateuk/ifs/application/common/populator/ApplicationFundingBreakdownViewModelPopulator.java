@@ -118,7 +118,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     application,
                     userOrganisation,
                     showDetailedFinanceLink,
-                    competition.isProcurement());
+                    competition);
         } else {
             return new ApplicationFundingBreakdownViewModel(
                     organisationFinanceOverview.getTotalPerType(),
@@ -130,7 +130,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     application,
                     userOrganisation,
                     showDetailedFinanceLink,
-                    competition.isProcurement());
+                    competition);
         }
 
     }

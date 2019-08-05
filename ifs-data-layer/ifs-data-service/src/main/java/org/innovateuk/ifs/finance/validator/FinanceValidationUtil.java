@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 
 @Component
@@ -27,13 +27,13 @@ public class FinanceValidationUtil {
 
     public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems) {
         if (costItems.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
                 .filter(this::nonEmpty)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         ValidationMessages emptyRowMessages = invokeEmptyRowValidator(costItems);
         if (emptyRowMessages != null) {
