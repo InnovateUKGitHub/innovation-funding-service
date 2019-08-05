@@ -14,6 +14,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
@@ -331,9 +332,10 @@ public class OrganisationFinanceController {
     }
 
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
-        if (applicationFinance.getGrantClaim() != null) {
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
-            financeRowCostsService.update(applicationFinance.getGrantClaim().getId(), applicationFinance.getGrantClaim()).getSuccess();
+        GrantClaim grantClaim = applicationFinance.getGrantClaim();
+        if (grantClaim != null) {
+            grantClaim.reset();
+            financeRowCostsService.update(grantClaim.getId(), grantClaim).getSuccess();
         }
     }
 

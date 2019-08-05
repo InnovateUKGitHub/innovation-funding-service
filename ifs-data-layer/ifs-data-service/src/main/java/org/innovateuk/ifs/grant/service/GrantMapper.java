@@ -175,7 +175,7 @@ class GrantMapper {
 
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
         ProjectFinanceRow awardRow = simpleFindFirstMandatory(projectFinanceRows, row -> "grant-claim".equals(row.getName()));
-        BigDecimal awardPercentage = awardRow.getQuantity() == null ? BigDecimal.ZERO : BigDecimal.valueOf(awardRow.getQuantity());
+        BigDecimal awardPercentage = awardRow.getQuantity() == null ? BigDecimal.ZERO : awardRow.getCost();
 
         List<Forecast> forecasts = contactUser.isFinanceContact() ? spendProfile.get()
                 .getSpendProfileFigures()

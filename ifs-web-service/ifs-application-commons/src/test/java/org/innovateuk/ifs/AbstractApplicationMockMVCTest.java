@@ -16,9 +16,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
@@ -576,8 +576,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
                 .getId(), SMALL, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
-        FinanceRowCostCategory costCategory = new GrantClaimCategory();
-        costCategory.addCost(new GrantClaim(1L, 50, applicationFinanceResource.getId()));
+        FinanceRowCostCategory costCategory = new ExcludedCostCategory();
+        costCategory.addCost(new GrantClaimPercentage(1L, 50, applicationFinanceResource.getId()));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
         applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn

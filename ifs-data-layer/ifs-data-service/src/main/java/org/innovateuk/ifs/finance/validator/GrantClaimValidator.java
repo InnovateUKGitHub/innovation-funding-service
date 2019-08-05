@@ -4,7 +4,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -23,12 +23,12 @@ public class GrantClaimValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return GrantClaim.class.equals(clazz);
+        return GrantClaimPercentage.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        GrantClaim response = (GrantClaim) target;
+        GrantClaimPercentage response = (GrantClaimPercentage) target;
 
         if(response.getGrantClaimPercentage() == null) {
             rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");

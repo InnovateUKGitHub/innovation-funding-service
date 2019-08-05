@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 @Rollback
 public class ApplicationFinanceRowControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationFinanceRowController> {
 
-    private GrantClaim grantClaim;
+    private GrantClaimPercentage grantClaim;
     private Materials materials;
     private LabourCost labourCost;
     private LabourCost labourCostDaysPerYear;
@@ -79,7 +79,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
-        grantClaim = (GrantClaim) controller.get(48L).getSuccess();
+        grantClaim = (GrantClaimPercentage) controller.get(48L).getSuccess();
         materials = (Materials) controller.get(12L).getSuccess();
         labourCost = (LabourCost) controller.get(4L).getSuccess();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccess();

@@ -9,12 +9,12 @@ import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
+import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
@@ -343,8 +343,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void getProjectCostHandler() {
-        GrantClaim grantClaim = new GrantClaim(1L, 20, 1L);
-        FinanceRowHandler expected = new GrantClaimHandler();
+        GrantClaimPercentage grantClaim = new GrantClaimPercentage(1L, 20, 1L);
+        FinanceRowHandler expected = new GrantClaimPercentageHandler();
 
         when(projectFinanceRowService.getCostHandler(grantClaim)).thenReturn(expected);
 

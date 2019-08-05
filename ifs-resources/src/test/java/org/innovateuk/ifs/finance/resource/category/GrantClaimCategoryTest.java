@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class GrantClaimCategoryTest {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private GrantClaimCategory grantClaimCategory;
+    private ExcludedCostCategory grantClaimCategory;
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +48,7 @@ public class GrantClaimCategoryTest {
     @Test
     public void addCost() {
 
-        FinanceRowItem grantClaim3 = new GrantClaim(3L, 30, 1L);
+        FinanceRowItem grantClaim3 = new GrantClaimPercentage(3L, 30, 1L);
         costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 

@@ -69,6 +69,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         return financeViewModel;
     }
 
+    //TODO Grant Claim Percentage.
     private void addGrantClaim(FinanceViewModel financeViewModel, ApplicationFinanceResource applicationFinanceResource) {
         if (applicationFinanceResource.getGrantClaim() != null) {
             financeViewModel.setOrganisationGrantClaimPercentage(ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));

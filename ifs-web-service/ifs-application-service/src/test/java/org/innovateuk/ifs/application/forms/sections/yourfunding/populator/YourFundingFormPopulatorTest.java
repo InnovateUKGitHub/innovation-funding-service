@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -62,10 +62,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private UserResource user = newUserResource().build();
     private OrganisationResource organisation =  newOrganisationResource().build();
 
-    private GrantClaim grantClaim;
+    private GrantClaimPercentage grantClaim;
     private OtherFunding otherFunding;
     private List<OtherFunding> otherFundingRows;
-    private GrantClaimCategory grantClaimCategory;
+    private ExcludedCostCategory grantClaimCategory;
     private OtherFundingCostCategory otherFundingCategory;
     private ApplicationFinanceResource finance;
     private ApplicationResource application;

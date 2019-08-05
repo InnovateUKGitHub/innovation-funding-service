@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -80,6 +80,7 @@ public class YourFundingSaver {
         }
     }
 
+    //TODO
     public Optional<Long> autoSave(String field, String value, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
@@ -87,7 +88,7 @@ public class YourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
-                GrantClaim grantClaim = finance.getGrantClaim();
+                GrantClaimPercentage grantClaim = finance.getGrantClaim();
                 grantClaim.setGrantClaimPercentage(Integer.valueOf(value));
                 financeRowRestService.update(grantClaim).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
@@ -123,7 +124,7 @@ public class YourFundingSaver {
     }
 
     private void saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {
-        GrantClaim claim = finance.getGrantClaim();
+        GrantClaimPercentage claim = finance.getGrantClaim();
         if (form.getRequestingFunding()) {
             claim.setGrantClaimPercentage(form.getGrantClaimPercentage());
         } else {

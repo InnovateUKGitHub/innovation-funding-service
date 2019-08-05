@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.validator;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +30,12 @@ public class GrantClaimValidatorTest {
 	@Mock
 	private ApplicationFinanceRowRepository financeRowRepository;
 	
-	private GrantClaim claim;
+	private GrantClaimPercentage claim;
 	private BindingResult bindingResult;
 	
 	@Before
 	public void setUp() {
-        claim = new GrantClaim(CLAIM_ID, 100, 1L);
+        claim = new GrantClaimPercentage(CLAIM_ID, 100, 1L);
         bindingResult = ValidatorTestUtil.getBindingResult(claim);
     }
 

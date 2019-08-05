@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -126,16 +128,25 @@ public abstract class BaseFinanceResource {
     }
 
     public GrantClaim getGrantClaim() {
-        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.FINANCE)) {
-            FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
-            return financeRowCostCategory.getCosts().stream()
-                    .findAny()
-                    .filter(c -> c instanceof GrantClaim)
-                    .map(c -> (GrantClaim) c)
-                    .orElse(null);
-        } else {
-            return null;
+        if (financeOrganisationDetails != null) {
+            FinanceRowCostCategory grantClaimPercentageCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
+            if (grantClaimPercentageCostCategory != null) {
+                return grantClaimPercentageCostCategory.getCosts().stream()
+                        .findAny()
+                        .filter(c -> c instanceof GrantClaimPercentage)
+                        .map(c -> (GrantClaimPercentage) c)
+                        .orElse(null);
+            }
+            FinanceRowCostCategory grantClaimAmountCostCategory = financeOrganisationDetails.get(FinanceRowType.GRANT_CLAIM_AMOUNT);
+            if (grantClaimAmountCostCategory != null) {
+                return grantClaimAmountCostCategory.getCosts().stream()
+                        .findAny()
+                        .filter(c -> c instanceof GrantClaimAmount)
+                        .map(c -> (GrantClaimAmount) c)
+                        .orElse(null);
+            }
         }
+        return null;
     }
 
     public Integer getGrantClaimPercentage() {

@@ -7,12 +7,15 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 
 /**
  * Handles the labour costs, i.e. converts the costs to be stored into the database
@@ -61,6 +64,11 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         return buildRowItem(cost);
     }
 
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return LABOUR;
+    }
+
     private FinanceRowItem buildRowItem(FinanceRow cost){
         return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription(), cost.getTarget().getId());
     }
@@ -78,4 +86,5 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, applicationFinance.getId());
         return toApplicationDomain(costItem);
     }
+
 }

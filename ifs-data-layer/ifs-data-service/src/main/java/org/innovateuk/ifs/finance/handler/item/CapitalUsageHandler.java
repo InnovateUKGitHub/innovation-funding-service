@@ -6,10 +6,13 @@ import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_USAGE;
 
 /**
  * Handles the capital usage costs, i.e. converts the costs to be stored into the database
@@ -35,6 +38,11 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     @Override
     public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
+    }
+
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return CAPITAL_USAGE;
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){

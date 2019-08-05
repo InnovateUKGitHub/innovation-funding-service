@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -65,7 +65,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withFinanceOrganisationDetails(asMap(
                 FinanceRowType.FINANCE,  newGrantClaimCostCategory()
-                    .withCosts(asList(new GrantClaim(1L)))
+                    .withCosts(asList(new GrantClaimPercentage(1L)))
                     .build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory()
                     .withCosts(asList(otherFunding))
@@ -95,7 +95,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         service.save(APPLICATION_ID, form, user);
 
-        GrantClaim expectedGrantClaim = new GrantClaim(finance.getGrantClaim().getId(), 100, finance.getId());
+        GrantClaimPercentage expectedGrantClaim = new GrantClaimPercentage(finance.getGrantClaim().getId(), 100, finance.getId());
         verify(financeRowRestService).update(expectedGrantClaim);
 
         OtherFunding expectedOtherFundingSet = new OtherFunding(finance.getId());

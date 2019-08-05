@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OVERHEADS;
 
 /**
  * Handles the overheads, i.e. converts the costs to be stored into the database
@@ -72,6 +74,11 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     @Override
     public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
+    }
+
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return OVERHEADS;
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost) {

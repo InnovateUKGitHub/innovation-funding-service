@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -44,6 +44,7 @@ public class YourFundingFormPopulator {
     @Autowired
     private ApplicationService applicationService;
 
+    //TODO your funding form.
     public void populateForm(YourFundingForm form, long applicationId, UserResource user, Optional<Long> organisationId) {
 
         OrganisationResource organisation = organisationId.map(organisationRestService::getOrganisationById).map(RestResult::getSuccess)
@@ -52,7 +53,7 @@ public class YourFundingFormPopulator {
         ApplicationResource application = applicationService.getById(applicationId);
         QuestionResource otherFundingQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING).getSuccess();
 
-        Optional<Integer> claimPercentage = ofNullable(finance.getGrantClaim()).map(GrantClaim::getGrantClaimPercentage);
+        Optional<Integer> claimPercentage = ofNullable(finance.getGrantClaim()).map(GrantClaimPercentage::getGrantClaimPercentage);
 
         Boolean requestingFunding = isRequestingFunding(claimPercentage);
         Integer fundingLevel = Boolean.TRUE.equals(requestingFunding) ? claimPercentage.get() : null;

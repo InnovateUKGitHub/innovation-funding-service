@@ -5,15 +5,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -26,46 +27,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
-    private LabourCostHandler labourCostHandler;
 
-    private CapitalUsageHandler capitalUsageHandler;
+    private Map<FinanceRowType, FinanceRowHandler<?>> financeRowHandlers;
 
-    private MaterialsHandler materialsHandler;
-
-    private OtherCostHandler otherCostHandler;
-
-    private OverheadsHandler overheadsHandler;
-
-    private SubContractingCostHandler subContractingCostHandler;
-
-    private TravelCostHandler travelCostHandler;
-
-    private GrantClaimHandler grantClaimHandler;
-
-    private OtherFundingHandler otherFundingHandler;
-
-    public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                        ProjectFinanceRowRepository projectFinanceRowRepository,
-                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                        QuestionService questionService,
-                                        ApplicationFinanceRepository applicationFinanceRepository,
-                                        ProjectFinanceRepository projectFinanceRepository,
-                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                        OverheadsHandler overheadsHandler,
-                                        SubContractingCostHandler subContractingCostHandler,
-                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                        OtherFundingHandler otherFundingHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
-        this.labourCostHandler = labourCostHandler;
-        this.capitalUsageHandler = capitalUsageHandler;
-        this.materialsHandler = materialsHandler;
-        this.otherCostHandler = otherCostHandler;
-        this.overheadsHandler = overheadsHandler;
-        this.subContractingCostHandler = subContractingCostHandler;
-        this.travelCostHandler = travelCostHandler;
-        this.grantClaimHandler = grantClaimHandler;
-        this.otherFundingHandler = otherFundingHandler;
+    @Autowired
+    public void setFinanceRowHandlers(Collection<FinanceRowHandler<?>> autowiredFinanceRowHandlers) {
+        this.financeRowHandlers = autowiredFinanceRowHandlers.stream().collect(Collectors.toMap(FinanceRowHandler::getFinanceRowType, Function.identity()));
     }
 
     @Override
@@ -108,36 +75,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
-        FinanceRowHandler handler = null;
-        switch (costType) {
-            case LABOUR:
-                handler = labourCostHandler;
-                break;
-            case CAPITAL_USAGE:
-                handler = capitalUsageHandler;
-                break;
-            case MATERIALS:
-                handler = materialsHandler;
-                break;
-            case OTHER_COSTS:
-                handler = otherCostHandler;
-                break;
-            case OVERHEADS:
-                handler = overheadsHandler;
-                break;
-            case SUBCONTRACTING_COSTS:
-                handler = subContractingCostHandler;
-                break;
-            case TRAVEL:
-                handler = travelCostHandler;
-                break;
-            case FINANCE:
-                handler = grantClaimHandler;
-                break;
-            case OTHER_FUNDING:
-                handler = otherFundingHandler;
-                break;
-        }
+        FinanceRowHandler handler = financeRowHandlers.get(costType);
         if (handler != null) {
             return handler;
         }
@@ -154,7 +92,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case OVERHEADS:
                 return new OverheadCostCategory();
             case FINANCE:
-                return new GrantClaimCategory();
+            case GRANT_CLAIM_AMOUNT:
+                return new ExcludedCostCategory();
             default:
                 return new DefaultCostCategory();
         }

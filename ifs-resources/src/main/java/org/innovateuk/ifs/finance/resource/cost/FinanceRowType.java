@@ -19,11 +19,12 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     TRAVEL("travel", "Travel and subsistence", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     OTHER_COSTS("other_costs", "Other costs", singletonList(INCLUDE_IN_SPEND_PROFILE)),
-    YOUR_FINANCE("your_finance"),
-    FINANCE("finance", "Finance"),
+    YOUR_FINANCE("your_finance"),// Should this be a finance row type? its TSB reference for academics.
+    FINANCE("finance", "Finance"), // Grant claim percentage I WANT TO RENAME THIS
+    GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
     OTHER_FUNDING("other_funding", "Other Funding"),
-    ACADEMIC("academic");
-    
+    ACADEMIC("academic"); // Should this be a finance row type?
+
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE
     }
@@ -69,13 +70,6 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return simpleFindFirst(
                 FinanceRowType.values(),
                 frt -> frt.getName().equals(name)
-        );
-    }
-
-    public static Optional<FinanceRowType> getByTypeName(String typeName) {
-        return simpleFindFirst(
-                FinanceRowType.values(),
-                frt -> frt.getType().equals(typeName)
         );
     }
 }

@@ -64,7 +64,7 @@ public class IndustrialCostFinanceHandlerTest {
     @Spy
     private TravelCostHandler travelCostHandler;
     @Spy
-    private GrantClaimHandler grantClaimHandler;
+    private GrantClaimPercentageHandler grantClaimHandler;
     @Spy
     private OtherFundingHandler otherFundingHandler;
     @Mock

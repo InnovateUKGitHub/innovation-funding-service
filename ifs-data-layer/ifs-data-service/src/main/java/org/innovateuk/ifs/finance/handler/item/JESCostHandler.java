@@ -44,4 +44,9 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
     private FinanceRowItem buildRowItem(FinanceRow cost){
         return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem(), FinanceRowType.valueOf(cost.getDescription()), cost.getTarget().getId());
     }
+
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return FinanceRowType.ACADEMIC;
+    }
 }

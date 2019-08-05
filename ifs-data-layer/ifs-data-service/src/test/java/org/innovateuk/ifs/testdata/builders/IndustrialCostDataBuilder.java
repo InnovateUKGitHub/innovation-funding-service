@@ -61,7 +61,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withGrantClaim(Integer grantClaim) {
-        return updateCostItem(GrantClaim.class, FinanceRowType.FINANCE, existingCost -> {
+        return updateCostItem(GrantClaimPercentage.class, FinanceRowType.FINANCE, existingCost -> {
             existingCost.setGrantClaimPercentage(grantClaim);
             financeRowCostsService.update(existingCost.getId(), existingCost);
         });
