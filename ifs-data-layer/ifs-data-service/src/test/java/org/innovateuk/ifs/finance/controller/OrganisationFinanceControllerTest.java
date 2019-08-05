@@ -14,7 +14,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -44,19 +44,14 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION;
+import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.*;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -79,7 +74,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
     @Mock
     private FinanceService financeService;
     @Mock
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
     @Mock
     private OrganisationService organisationService;
     @Mock

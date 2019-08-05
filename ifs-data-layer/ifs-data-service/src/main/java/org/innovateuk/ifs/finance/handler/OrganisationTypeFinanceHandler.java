@@ -16,16 +16,21 @@ import java.util.Map;
 /**
  * Action to retrieve the finances of the organisations
  */
-public interface OrganisationFinanceHandler {
+public interface OrganisationTypeFinanceHandler {
+    //actions
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
-    Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId);
-    ApplicationFinanceRow costItemToCost(FinanceRowItem costItem);
-    ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem);
-    FinanceRowItem costToCostItem(FinanceRow cost);
-    FinanceRowHandler getCostHandler(FinanceRowType costType);
-    List<FinanceRowItem> costsToCostItems(List<? extends FinanceRow> costs);
     ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);
-    ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow financeRow);
+    ApplicationFinanceRow addCost(ApplicationFinanceRow financeRow);
+
+    //mapping
+    ApplicationFinanceRow toApplicationDomain(FinanceRowItem costItem);
+    ProjectFinanceRow toProjectDomain(FinanceRowItem costItem);
+    FinanceRowItem toResource(FinanceRow cost);
+    List<FinanceRowItem> toResources(List<? extends FinanceRow> costs);
+
+    //getting
+    FinanceRowHandler getCostHandler(FinanceRowType costType);
+    Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId);
     Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId);
     Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId);
 }

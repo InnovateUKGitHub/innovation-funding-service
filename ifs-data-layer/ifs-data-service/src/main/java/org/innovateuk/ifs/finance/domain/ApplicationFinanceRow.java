@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,13 +30,13 @@ public class ApplicationFinanceRow extends FinanceRow<ApplicationFinance> {
     }
 
     public ApplicationFinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
-                                 ApplicationFinance applicationFinance, Question question) {
-        super(id, name, item, description, quantity, cost, question);
+                                 ApplicationFinance applicationFinance, FinanceRowType type) {
+        super(id, name, item, description, quantity, cost, type);
         this.target = applicationFinance;
     }
 
-    public ApplicationFinanceRow(ApplicationFinance applicationFinance, Question question) {
-        super(question);
+    public ApplicationFinanceRow(ApplicationFinance applicationFinance, FinanceRowType type) {
+        super(type);
         this.target = applicationFinance;
     }
 

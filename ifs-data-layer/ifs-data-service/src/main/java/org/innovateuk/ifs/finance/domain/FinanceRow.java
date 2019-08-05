@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.hibernate.validator.constraints.Length;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -39,37 +39,35 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     @OneToMany(mappedBy="financeRowId")
     private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="questionId", referencedColumnName="id")
-    private Question question;
+    @Enumerated(EnumType.STRING)
+    private FinanceRowType type;
 
     public FinanceRow() {
-    	// no-arg constructor
     }
 
     /**
      * Constructor used to add a new and empty cost object.
      */
-    public FinanceRow(Question question) {
+    public FinanceRow(FinanceRowType type) {
         this.name = "";
         this.item = "";
         this.description = "";
         this.quantity = null;
         this.cost = null;
-        this.question = question;
+        this.type = type;
     }
 
-    public FinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost, Question question) {
+    public FinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost, FinanceRowType financeRowType) {
         this.name = name;
         this.item = item;
         this.description = description;
         this.quantity = quantity;
         this.cost = cost;
-        this.question = question;
+        this.type = financeRowType;
     }
 
-    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost, Question question) {
-        this(name, item ,description, quantity, cost, question);
+    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost, FinanceRowType financeRowType) {
+        this(name, item ,description, quantity, cost, financeRowType);
         this.id = id;
     }
 
@@ -112,12 +110,16 @@ public abstract class FinanceRow<FinanceType extends Finance> {
         Collections.addAll(this.financeRowMetadata, c);
     }
 
-    public Question getQuestion() {
-        return question;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public FinanceRowType getType() {
+        return type;
+    }
+
+    public void setType(FinanceRowType type) {
+        this.type = type;
     }
 
     public void setItem(String item) {
@@ -134,10 +136,6 @@ public abstract class FinanceRow<FinanceType extends Finance> {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 
     public abstract void setTarget(FinanceType target);

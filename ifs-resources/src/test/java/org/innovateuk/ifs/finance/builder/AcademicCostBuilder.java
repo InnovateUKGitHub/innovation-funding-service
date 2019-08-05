@@ -49,6 +49,6 @@ public class AcademicCostBuilder extends BaseBuilder<AcademicCost, AcademicCostB
 
     @Override
     protected AcademicCost createInitial() {
-        return new AcademicCost();
+        return newInstance(AcademicCost.class);
     }
 }

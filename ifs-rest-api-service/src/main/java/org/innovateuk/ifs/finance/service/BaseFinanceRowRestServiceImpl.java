@@ -5,55 +5,35 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
-import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.costItemListType;
-
 /**
  * FinanceRowRestServiceImpl is a utility for CRUD operations on
  * {@link org.innovateuk.ifs.finance.resource.FinanceRowResource}.
  */
 public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService implements FinanceRowRestService {
 
-    private String costRestUrl;
+    private String financeRowRestUrl;
 
-    protected BaseFinanceRowRestServiceImpl(String costRestUrl) {
-        this.costRestUrl = costRestUrl;
+    protected BaseFinanceRowRestServiceImpl(String financeRowRestUrl) {
+        this.financeRowRestUrl = financeRowRestUrl;
     }
 
     @Override
-    public RestResult<ValidationMessages> add(Long financeId, Long questionId, FinanceRowItem costItem) {
-        return postWithRestResult(costRestUrl + "/add/" + financeId + "/" + questionId, costItem,
-                ValidationMessages.class);
-    }
-
-    @Override
-    public RestResult<FinanceRowItem> addWithResponse(long financeId, FinanceRowItem costItem) {
-        return postWithRestResult(costRestUrl + "/add-with-response/" + financeId, costItem,
+    public RestResult<FinanceRowItem> create(FinanceRowItem financeRowItem) {
+        return postWithRestResult(financeRowRestUrl, financeRowItem,
                 FinanceRowItem.class);
     }
 
     @Override
-    public RestResult<List<FinanceRowItem>> getCosts(Long financeId) {
-        return getWithRestResult(costRestUrl + "/get/" + financeId, costItemListType());
+    public RestResult<ValidationMessages> update(FinanceRowItem financeRowItem) {
+        return putWithRestResult(financeRowRestUrl + "/" + financeRowItem.getId(), financeRowItem, ValidationMessages.class);
     }
 
     @Override
-    public RestResult<ValidationMessages> update(FinanceRowItem costItem) {
-        return putWithRestResult(costRestUrl + "/update/" + costItem.getId(), costItem, ValidationMessages.class);
+    public RestResult<Void> delete(long financeRowId) {
+        return deleteWithRestResult(financeRowRestUrl + "/" + financeRowId);
     }
 
-    @Override
-    public RestResult<FinanceRowItem> findById(Long id) {
-        return getWithRestResult(costRestUrl + "/" + id, FinanceRowItem.class);
-    }
-
-    @Override
-    public RestResult<Void> delete(long costId) {
-        return deleteWithRestResult(costRestUrl + "/delete/" + costId);
-    }
-
-    protected String getCostRestUrl() {
-        return costRestUrl;
+    protected String getFinanceRowRestUrl() {
+        return financeRowRestUrl;
     }
 }

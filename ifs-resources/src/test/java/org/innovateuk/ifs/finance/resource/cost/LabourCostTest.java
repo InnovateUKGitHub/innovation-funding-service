@@ -27,7 +27,7 @@ public class LabourCostTest {
         labourDays = new Integer(168);
         description = "";
 
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays,  description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays,  description, 1L);
     }
 
     @Test

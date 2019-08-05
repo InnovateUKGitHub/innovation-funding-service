@@ -75,7 +75,7 @@ public class MaterialRowForm extends AbstractCostRowForm<Materials> {
     }
 
     @Override
-    public Materials toCost() {
-        return new Materials(getCostId(), item, cost, quantity);
+    public Materials toCost(Long financeId) {
+        return new Materials(getCostId(), item, cost, quantity, financeId);
     }
 }

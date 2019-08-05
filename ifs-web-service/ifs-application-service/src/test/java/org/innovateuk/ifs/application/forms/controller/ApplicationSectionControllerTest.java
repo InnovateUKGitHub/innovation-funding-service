@@ -61,8 +61,11 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.anyList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -159,7 +162,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
-        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
         Map<SectionType, AbstractSectionPopulator> sectionPopulators = mock(Map.class);
         when(sectionPopulators.get(any())).thenReturn(yourFinancesSectionPopulator);
         ReflectionTestUtils.setField(controller, "sectionPopulators", sectionPopulators);

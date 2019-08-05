@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.validator;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +28,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,98 +40,95 @@ public class OtherFundingValidatorTest {
 
     @Mock
     private ApplicationFinanceRowRepository financeRowRepository;
-    
-    @Mock
-    private QuestionService questionService;
-    
+
 	
 	@Before
 	public void setUp() {
-        validator = new OtherFundingValidator(financeRowRepository, questionService);
+        validator = new OtherFundingValidator(financeRowRepository);
     }
 	
     @Test
     public void invalidSecuredDateYear() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "2342", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "2342", new BigDecimal(100), 1L);
         expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateMonth() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(2L, "Yes", "Source1", "15-2014", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(2L, "Yes", "Source1", "15-2014", new BigDecimal(100), 1L);
         expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateNoMonth() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "2014", new BigDecimal(100), 1L);
         expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidMinimum() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0));
+        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", new BigDecimal(0), 1L);
         expectError(otherFunding, "validation.finance.funding.amount");
     }
     @Test
     public void invalidFundingAmountNull() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", null);
+        OtherFunding otherFunding = new OtherFunding(3L, "Yes", "Source1", "12-2014", null, 1L);
         expectError(otherFunding, "validation.finance.funding.amount");
     }
     @Test
     public void invalidSecuredDate() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "12-2014hvhvh", new BigDecimal(100), 1L);
         expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidSecuredDateNoSource() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(4L, "Yes", null, "12-2014hvhvh", new BigDecimal(100), 1L);
         expectError(otherFunding, "validation.finance.funding.date.invalid");
     }
     @Test
     public void invalidOtherPublicFunding() {
         mockWithRadio("Bobbins");
-        OtherFunding otherFunding = new OtherFunding(4L, "Bobbins", OTHER_FUNDING, null, null);
+        OtherFunding otherFunding = new OtherFunding(4L, "Bobbins", OTHER_FUNDING, null, null, 1L);
         expectError(otherFunding, "validation.finance.other.funding.required");
     }
     @Test
     public void validFullAmount() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "10-2014", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(1L, "Yes", "Source1", "10-2014", new BigDecimal(100), 1L);
         expectNoErrors(otherFunding);
     }
     @Test
     public void validWithoutDate() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(2L, "Yes", OTHER_FUNDING, null, null);
+        OtherFunding otherFunding = new OtherFunding(2L, "Yes", OTHER_FUNDING, null, null, 1L);
         expectNoErrors(otherFunding);
     }
     @Test
     public void validNoOtherPublicFunding() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(3L, null, "Source1", "11-1999", new BigDecimal(5));
+        OtherFunding otherFunding = new OtherFunding(3L, null, "Source1", "11-1999", new BigDecimal(5), 1L);
         expectNoErrors(otherFunding);
     }
     @Test
     public void valid() {
         mockWithRadio("Yes");
-        OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "09-1999",  new BigDecimal(5));
+        OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "09-1999",  new BigDecimal(5), 1L);
         expectNoErrors(otherFunding);
     }
     @Test
     public void validNoSource() {
         mockWithRadio("No");
-        OtherFunding otherFunding = new OtherFunding(5L, "No", "", "ertt", new BigDecimal(5));
+        OtherFunding otherFunding = new OtherFunding(5L, "No", "", "ertt", new BigDecimal(5), 1L);
         expectNoErrors(otherFunding);
     }
     @Test
     public void validFullFunding() {
         mockWithRadio("No");
-        OtherFunding otherFunding = new OtherFunding(6L, "Yes", "Source1", "2014", new BigDecimal(100));
+        OtherFunding otherFunding = new OtherFunding(6L, "Yes", "Source1", "2014", new BigDecimal(100), 1L);
         expectNoErrors(otherFunding);
     }
 
@@ -168,9 +162,8 @@ public class OtherFundingValidatorTest {
         ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newApplicationFinanceRow().withOwningFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findById(any(Long.class))).thenReturn(Optional.of(cost));
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getFormInputType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);
-        when(financeRowRepository.findByTargetIdAndNameAndQuestionId(anyLong(), eq(COST_KEY), anyLong())).thenReturn(listOfCostWithYes);
+        when(financeRowRepository.findByTargetIdAndType(anyLong(), eq(FinanceRowType.OTHER_FUNDING))).thenReturn(listOfCostWithYes);
     }
 }

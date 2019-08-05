@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.math.BigDecimal;
@@ -14,7 +13,6 @@ import java.util.Map;
  */
 public class FinanceViewModel extends BaseFinanceViewModel {
     protected Map<FinanceRowType, FinanceRowCostCategory> organisationFinance;
-    protected Map<FinanceRowType, QuestionResource> financeQuestions;
     protected OrganisationSize organisationFinanceSize;
     protected OrganisationTypeResource organisationType;
     protected Long organisationFinanceId;
@@ -23,14 +21,6 @@ public class FinanceViewModel extends BaseFinanceViewModel {
     protected Integer organisationGrantClaimPercentage;
     protected Integer maximumGrantClaimPercentage;
     protected Long organisationGrantClaimPercentageId;
-
-    public Map<FinanceRowType, QuestionResource> getFinanceQuestions() {
-        return financeQuestions;
-    }
-
-    public void setFinanceQuestions(Map<FinanceRowType, QuestionResource> financeQuestions) {
-        this.financeQuestions = financeQuestions;
-    }
 
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinance() {
         return organisationFinance;

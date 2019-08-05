@@ -12,7 +12,7 @@ public class GrantClaimTest {
     public void setUp() throws Exception {
         id = 0L;
         grantClaimPercentage = 30;
-        grantClaim = new GrantClaim(id, grantClaimPercentage);
+        grantClaim = new GrantClaim(id, grantClaimPercentage, 1L);
     }
 
     @Test
