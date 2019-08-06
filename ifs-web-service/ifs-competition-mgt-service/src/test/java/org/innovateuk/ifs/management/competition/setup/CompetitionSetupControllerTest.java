@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -56,6 +57,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -103,6 +105,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
@@ -1291,5 +1296,102 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
         inOrder.verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), any(CompetitionResource.class), eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitTermsAndConditionsSectionDetails() throws Exception {
+        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
+                .withName("Non procurement terms")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(TermsAndConditionsForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(nonProcurementTerms.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
+        inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(competitionSetupService).saveCompetitionSetupSection(
+                any(TermsAndConditionsForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitTermsAndConditionsSectionDetails_procurement() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
+        CompetitionResource competitionWithTermsDoc = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
+        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(TermsAndConditionsForm.class),
+                eq(competitionWithTermsDoc),
+                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
+
+        verify(competitionSetupService).saveCompetitionSetupSection(
+                any(TermsAndConditionsForm.class),
+                eq(competitionWithTermsDoc),
+                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
+    }
+
+    @Test
+    public void submitTermsAndConditionsSectionDetails_procurementNoFileUploaded() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
+        CompetitionResource competitionWithoutTermsDoc = newCompetitionResource().withId(COMPETITION_ID).build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithoutTermsDoc));
+        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(TermsAndConditionsForm.class),
+                eq(competitionWithoutTermsDoc),
+                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "termsAndConditionsDoc"));
+    }
+
+    @Test
+    public void deleteTermsAndConditions() throws Exception {
+        CompetitionResource competitionWithTermsDoc = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
+        when(competitionSetupRestService.deleteCompetitionTerms(COMPETITION_ID)).thenReturn(restSuccess());
+
+        mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
+                .param("deleteTermsAndConditionsDoc", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID)));
+
+        verify(competitionRestService).getCompetitionById(COMPETITION_ID);
+        verify(competitionSetupRestService).deleteCompetitionTerms(COMPETITION_ID);
     }
 }
