@@ -207,10 +207,17 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             PREVIOUS_WHERE_CLAUSE)
     int countPrevious(long competitionId);
 
-    @Query(" SELECT app FROM ProcessRole pr" +
+    @Query(" SELECT DISTINCT app FROM ProcessRole pr" +
            " JOIN Application app" +
            "    ON app.id = pr.applicationId " +
+           " LEFT JOIN Project proj " +
+           " ON proj.application.id = app.id " +
+           " LEFT JOIN ProjectUser pu " +
+           " ON pu.project.id = proj.id and pu.user.id=:userId " +
            " WHERE pr.role in :roles " +
-           " AND pr.user.id = :userId ")
+           " AND pr.user.id = :userId " +
+           " AND " +
+            "   (proj.id IS NULL " +
+            "    OR pu.id IS NOT NULL)")
     List<Application> findApplicationByUserAndRole(Set<Role> roles, long userId);
 }
