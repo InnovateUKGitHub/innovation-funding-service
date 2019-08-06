@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 public class ValidMediaTypeErrorHelperTest {
 
     @Test
-    public void testPdfOnlyMessage() {
+    public void pdfOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(PDF),
                 "UNSUPPORTED_MEDIA_TYPE_PDF_ONLY"
@@ -24,7 +24,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testSpreadsheetOnlyMessage() {
+    public void spreadsheetOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(SPREADSHEET),
                 "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY"
@@ -32,7 +32,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void tesDocumentOnlyMessage() {
+    public void documentOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(DOCUMENT),
                 "UNSUPPORTED_MEDIA_TYPE_DOCUMENT_ONLY"
@@ -40,7 +40,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testPdfAndSpreadsheetOnlyMessage() {
+    public void pdfAndSpreadsheetOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(PDF, SPREADSHEET),
                 "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_OR_PDF_ONLY"
@@ -48,7 +48,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testOpenDocumentOnlyMessage() {
+    public void openDocumentOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(OPEN_DOCUMENT, OPEN_SPREADSHEET),
                 "UNSUPPORTED_MEDIA_TYPE_OPEN_DOCUMENT_OR_OPEN_SPREADSHEET_ONLY"
@@ -56,7 +56,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testPdfOrDocumentOnlyMessage() {
+    public void pdfOrDocumentOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(PDF, DOCUMENT),
                 "UNSUPPORTED_MEDIA_TYPE_PDF_OR_DOCUMENT_ONLY"
@@ -64,7 +64,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testPdfDocumentOrSpreadsheetOnlyMessage() {
+    public void pdfDocumentOrSpreadsheetOnlyMessage() {
         assertSpecialisedMessageProduced(
                 mediaTypeFromCategories(PDF, DOCUMENT, SPREADSHEET),
                 "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_OR_PDF_OR_DOCUMENT_ONLY"
@@ -72,7 +72,7 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
-    public void testNoDirectMatchWithValidMediaTypes() {
+    public void noDirectMatchWithValidMediaTypes() {
         assertSpecialisedMessageProduced(singletonList(MediaType.APPLICATION_JSON), UNSUPPORTED_MEDIA_TYPE.name());
     }
 

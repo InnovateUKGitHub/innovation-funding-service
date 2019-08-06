@@ -45,7 +45,5 @@ public class AssessmentFeedbackViewModelTest {
         assertEquals("View template document", assessmentFeedbackViewModel.getTemplateDocumentFileDescription());
         assertFalse(assessmentFeedbackViewModel.isAppendixExists());
         assertFalse(assessmentFeedbackViewModel.isTemplateDocumentExists());
-
-
     }
 }

@@ -41,6 +41,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
@@ -430,7 +431,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private void validateFileUploaded(QuestionForm questionForm, BindingResult bindingResult, long questionId) {
-        if (Boolean.TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
+        if (TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
             CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
             if (question.getTemplateFilename() == null) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "templateDocumentFile", "You must upload a file."));

@@ -91,7 +91,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                 ofNullable(formInput.getFile())
                         .map(FileEntry::getId)
                         .map(fileEntryService::findOne)
-                        .orElse(ServiceResult.serviceSuccess(null)));
+                        .orElse(serviceSuccess(null)));
     }
 
 

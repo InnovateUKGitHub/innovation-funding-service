@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
@@ -95,9 +96,9 @@ public class ManagementApplicationPopulator {
                 collect(Collectors.toList());
     }
 
-    private String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
+    private static String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
         if (TEMPLATE_DOCUMENT.equals(formInputResource.getType())) {
-            return String.format("Uploaded %s", formInputResource.getDescription());
+            return format("Uploaded %s", formInputResource.getDescription());
         } else if (FILEUPLOAD.equals(formInputResource.getType())) {
             return "Appendix";
         }

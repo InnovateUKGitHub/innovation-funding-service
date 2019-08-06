@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toSet;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
@@ -46,6 +47,6 @@ public class ValidMediaTypeErrorHelper {
         return types.stream()
                 .flatMap(type -> type.getMimeTypes().stream())
                 .map(MediaType::valueOf)
-                .collect(Collectors.toSet());
+                .collect(toSet());
     }
 }
