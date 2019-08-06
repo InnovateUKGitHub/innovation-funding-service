@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation   IFS-6096 SBRI - Project Cost Guidance Review
+...
+...             IFS-5097 Update to overhead costs in procurement application
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -26,7 +28,7 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
