@@ -70,7 +70,7 @@ public class ApplicationQuestionFeedbackController {
             return "application/questions/application-team";
         }
 
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, user, model));
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionResource, user, model));
         return "application-assessor-feedback";
 
     }

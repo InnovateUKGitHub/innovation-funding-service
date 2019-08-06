@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.feedback.populator;
 import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -26,9 +25,6 @@ import static java.util.Collections.singletonList;
 public class AssessorQuestionFeedbackPopulator {
 
     @Autowired
-    private QuestionRestService questionRestService;
-
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
@@ -37,11 +33,9 @@ public class AssessorQuestionFeedbackPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
-    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId, UserResource user, Model model) {
+    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, QuestionResource questionResource, UserResource user, Model model) {
 
-        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         long applicationId = applicationResource.getId();
-
 
         List<FormInputResponseResource> responseResource =
                 questionResource.getQuestionSetupType().equals(QuestionSetupType.RESEARCH_CATEGORY) ? singletonList(
@@ -49,7 +43,7 @@ public class AssessorQuestionFeedbackPopulator {
                 ) : formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionResource.getId()).getSuccess();
 
         AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
-                .getAssessmentAggregateFeedback(applicationId, questionId)
+                .getAssessmentAggregateFeedback(applicationId, questionResource.getId())
                 .getSuccess();
         NavigationViewModel navigationViewModel = feedbackNavigationPopulator.addNavigation(questionResource, applicationId);
 
