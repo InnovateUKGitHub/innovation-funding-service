@@ -131,7 +131,7 @@ Collaborator can remove a file when the question is assigned
     And the user clicks the button/link           link = 5. Technical approach
     And the user should see the element           link = ${5mb_pdf}
     When the user can remove the uploaded file    removeAppendix  ${5mb_pdf}
-    Then the user can re-assign the question back to the lead applicant
+    Then the user clicks the button/link          name = assign
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
@@ -141,7 +141,7 @@ Collaborators can upload a file when the question is assigned
     And the user clicks the button/link            link = 6. Innovation
     When the user should see the element           jQuery = label:contains("+ Upload")
     Then the user uploads the file                 css = .inputfile     ${5mb_pdf}
-    And the user can re-assign the question back to the lead applicant
+    And the user clicks the button/link            name = assign
 
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
