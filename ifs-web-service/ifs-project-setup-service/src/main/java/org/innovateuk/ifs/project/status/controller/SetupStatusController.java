@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/project")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class SetupStatusController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class SetupStatusController {
     @AsyncMethod
     public String viewProjectSetupStatus(@PathVariable("projectId") long projectId,
                                          Model model,
-                                         UserResource loggedInUser,
+                                          UserResource loggedInUser,
                                          HttpServletRequest request,
                                          @RequestParam MultiValueMap<String, String> queryParams) {
         queryParams.add("projectId", String.valueOf(projectId));

@@ -243,7 +243,8 @@ public class SetupSectionsPermissionRules {
 
     private boolean isProjectInViewableState(long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        return project.getProjectState().isActive();
+        return !project.getProjectState().isOffline()
+                && !project.getProjectState().isWithdrawn();
     }
 
     public class SetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
