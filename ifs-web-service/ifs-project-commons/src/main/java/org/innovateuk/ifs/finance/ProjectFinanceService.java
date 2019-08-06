@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance;
 
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.*;
@@ -26,11 +25,5 @@ public interface ProjectFinanceService {
 
     ServiceResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
 
-    List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId);
-
-    ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId);
-
     ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);
-
-    ValidationMessages addCost(Long applicationFinanceId , Long questionId);
 }

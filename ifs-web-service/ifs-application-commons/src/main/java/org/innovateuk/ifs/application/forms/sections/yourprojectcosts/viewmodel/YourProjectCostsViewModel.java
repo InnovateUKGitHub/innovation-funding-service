@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import java.util.Set;
+
 public class YourProjectCostsViewModel {
     private final Long applicationId;
 
@@ -27,6 +29,8 @@ public class YourProjectCostsViewModel {
 
     private final boolean procurementCompetition;
 
+    private final Set<FinanceRowType> financeRowTypes;
+
     public YourProjectCostsViewModel(long applicationId,
                                      long sectionId,
                                      long competitionId,
@@ -37,11 +41,13 @@ public class YourProjectCostsViewModel {
                                      String applicationName,
                                      String organisationName,
                                      String financesUrl,
-                                     boolean procurementCompetition) {
+                                     boolean procurementCompetition,
+                                     Set<FinanceRowType> financeRowTypes) {
+        this.internal = false;
+        this.organisationId = organisationId;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
-        this.organisationId = organisationId;
         this.complete = complete;
         this.open = open;
         this.includeVat = includeVat;
@@ -49,14 +55,14 @@ public class YourProjectCostsViewModel {
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
         this.procurementCompetition = procurementCompetition;
-
-        this.internal = false;
+        this.financeRowTypes = financeRowTypes;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
+        this.financeRowTypes = financeRowTypes;
 
         this.applicationId = null;
         this.sectionId = null;
@@ -111,6 +117,10 @@ public class YourProjectCostsViewModel {
 
     public boolean isIncludeVat() {
         return includeVat;
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
     }
 
     /* view logic */

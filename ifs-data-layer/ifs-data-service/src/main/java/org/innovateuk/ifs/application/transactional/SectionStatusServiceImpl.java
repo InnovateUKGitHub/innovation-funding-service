@@ -28,6 +28,7 @@ import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -108,15 +109,15 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final long sectionId,
+    public ServiceResult<ValidationMessages> markSectionAsComplete(final long sectionId,
                                                                          final long applicationId,
                                                                          final long markedAsCompleteById) {
 
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
 
-            List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
+            ValidationMessages sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
-            if (sectionIsValid.isEmpty()) {
+            if (!sectionIsValid.hasErrors()) {
                 markSectionAsComplete(section, application, markedAsCompleteById);
             }
 

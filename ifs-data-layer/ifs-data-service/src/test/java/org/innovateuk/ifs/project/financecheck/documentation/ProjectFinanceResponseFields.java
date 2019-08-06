@@ -27,6 +27,7 @@ public class ProjectFinanceResponseFields {
             fieldWithPath("empty").description("Flag indicating if cost item is empty"),
             fieldWithPath("minRows").description("Minimum rows required"),
             fieldWithPath("type").description("Type of cost item"),
-            fieldWithPath("grantClaimPercentage").description("Percentage grant claim being requested.")
+            fieldWithPath("grantClaimPercentage").description("Percentage grant claim being requested."),
+            fieldWithPath("targetId").description("Id of the organisation finance that this row targets.")
     };
 }

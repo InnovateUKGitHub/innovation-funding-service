@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
 @Rollback
-public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrationTest<FinanceRowController> {
+public class ApplicationFinanceRowControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationFinanceRowController> {
 
     private GrantClaim grantClaim;
     private Materials materials;
@@ -69,7 +69,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
     @Override
     @Autowired
-    protected void setControllerUnderTest(FinanceRowController controller) {
+    protected void setControllerUnderTest(ApplicationFinanceRowController controller) {
         this.controller = controller;
     }
 
@@ -87,16 +87,16 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         otherFunding = (OtherFunding) controller.get(54L).getSuccess();
 
         overhead =  (Overhead) controller.get(51L).getSuccess();
-        ValidationMessages capitalUsageResult = controller.add(applicationFinance.getId(), 31L, null).getSuccess();
-        capitalUsage = (CapitalUsage) controller.get(capitalUsageResult.getObjectId()).getSuccess();
-        ValidationMessages subConstractingCostResult = controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccess();
-        subContractingCost = (SubContractingCost) controller.get(subConstractingCostResult.getObjectId()).getSuccess();
-        ValidationMessages travelCostResult = controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccess();
-        travelCost = (TravelCost) controller.get(travelCostResult.getObjectId()).getSuccess();
-        ValidationMessages otherCostResult = controller.add(applicationFinance.getId(), 34L, null).getSuccess();
-        otherCost = (OtherCost) controller.get(otherCostResult.getObjectId()).getSuccess();
-        ValidationMessages otherFundingResult = controller.add(applicationFinance.getId(), 35L, null).getSuccess();
-        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getObjectId()).getSuccess();
+        CapitalUsage capitalUsageResult = (CapitalUsage) controller.create(new CapitalUsage(applicationFinance.getId())).getSuccess();
+        capitalUsage = (CapitalUsage) controller.get(capitalUsageResult.getId()).getSuccess();
+        SubContractingCost subContractingCostResult = (SubContractingCost) controller.create(new SubContractingCost(applicationFinance.getId())).getSuccess();
+        subContractingCost = (SubContractingCost) controller.get(subContractingCostResult.getId()).getSuccess();
+        TravelCost travelCostResult = (TravelCost) controller.create(new TravelCost(applicationFinance.getId())).getSuccess();
+        travelCost = (TravelCost) controller.get(travelCostResult.getId()).getSuccess();
+        OtherCost otherCostResult = (OtherCost) controller.create(new OtherCost(applicationFinance.getId())).getSuccess();
+        otherCost = (OtherCost) controller.get(otherCostResult.getId()).getSuccess();
+        OtherFunding otherFundingResult = (OtherFunding) controller.create(new OtherFunding(applicationFinance.getId())).getSuccess();
+        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getId()).getSuccess();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;

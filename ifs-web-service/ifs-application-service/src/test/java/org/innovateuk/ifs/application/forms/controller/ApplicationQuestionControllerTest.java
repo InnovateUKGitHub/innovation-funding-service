@@ -65,7 +65,6 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
@@ -182,7 +181,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
-        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
         when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
                 .thenReturn(new ValidationMessages());
     }

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.form.resource.FormInputType;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -48,23 +46,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         this.financeRowOptionsList = financeRowOptionsList;
     }
 
-    public static FinanceRowType fromType(FormInputType formInputType) {
-        if (formInputType != null) {
-            for (FinanceRowType costType : values()) {
-                if (formInputType == FormInputType.findByName(costType.getType())) {
-                    return costType;
-                }
-            }
-        }
-        throw new IllegalArgumentException("No valid FinanceRowType found for FormInputType: " + formInputType);
-    }
-
     public String getType() {
         return type;
-    }
-
-    public FormInputType getFormInputType() {
-        return FormInputType.findByName(getType());
     }
 
     @Override

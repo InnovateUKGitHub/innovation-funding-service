@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
-import org.innovateuk.ifs.form.domain.Question;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -48,8 +47,8 @@ public abstract class BaseFinanceRowBuilder<FinanceType extends Finance, Finance
         return withArray((finance, financeRow) -> financeRow.setTarget(finance), owningFinance);
     }
 
-    public S withQuestion(Question... value){
-        return withArray((v, financeRow) -> financeRow.setQuestion(v), value);
+    public S withType(org.innovateuk.ifs.finance.resource.cost.FinanceRowType... value){
+        return withArray((v, financeRow) -> financeRow.setType(v), value);
     }
 
     @Override

@@ -36,39 +36,39 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(GrantClaim grantClaim) {
-        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+    public ApplicationFinanceRow toApplicationDomain(GrantClaim grantClaim) {
+        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,grantClaim.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(GrantClaim costItem) {
-        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
+    public ProjectFinanceRow toProjectDomain(GrantClaim costItem) {
+        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,costItem.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new GrantClaim(cost.getId(), cost.getQuantity());
+        return new GrantClaim(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        Competition competition = applicationFinance.getApplication().getCompetition();
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeFundingLevel(competition));
+        costs.add(initializeFundingLevel(applicationFinance));
         return costs;
     }
 
-    private ApplicationFinanceRow initializeFundingLevel(Competition competition) {
-        GrantClaim costItem = new GrantClaim();
+    private ApplicationFinanceRow initializeFundingLevel(ApplicationFinance applicationFinance) {
+        Competition competition = applicationFinance.getApplication().getCompetition();
+        GrantClaim costItem = new GrantClaim(applicationFinance.getId());
         if (competition.isFullyFunded()) {
             costItem.setGrantClaimPercentage(100);
         } else {
             costItem.setGrantClaimPercentage(null);
         }
-        return toCost(costItem);
+        return toApplicationDomain(costItem);
     }
 }

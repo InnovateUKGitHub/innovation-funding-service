@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
@@ -19,6 +20,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -179,8 +181,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
-    public CompetitionBuilder withGrantClaimMaximums(List<GrantClaimMaximum>... grantClaimMaximums) {
+    @SafeVarargs
+    public final CompetitionBuilder withGrantClaimMaximums(List<GrantClaimMaximum>... grantClaimMaximums) {
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
+    }
+
+    @SafeVarargs
+    public final CompetitionBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+        return withArraySetFieldByReflection("financeRowTypes", financeRowTypes);
     }
 
     public CompetitionBuilder withTermsAndConditions(GrantTermsAndConditions... termsAndConditions) {

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +38,7 @@ public class ApplicationFinanceController {
     private List<String> validMediaTypesForApplicationFinance;
 
     @Autowired
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
 
     @Autowired
     private FinanceService financeService;
@@ -73,11 +73,11 @@ public class ApplicationFinanceController {
     }
 
     @PostMapping("/add/{applicationId}/{organisationId}")
-    public RestResult<ApplicationFinanceResource> add(
+    public RestResult<ApplicationFinanceResource> createApplicationFinance(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return financeRowCostsService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
+        return financeRowCostsService.createApplicationFinance(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
     }
 
     @GetMapping("/get-by-id/{applicationFinanceId}")
