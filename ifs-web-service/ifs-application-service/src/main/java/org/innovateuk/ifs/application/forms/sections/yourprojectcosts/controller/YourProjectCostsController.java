@@ -50,8 +50,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController extends AsyncAdaptor {
-
-    private static final String VIEW = "application/your-project-costs";
+    private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
 
     @Autowired
     private ApplicationYourProjectCostsFormPopulator formPopulator;

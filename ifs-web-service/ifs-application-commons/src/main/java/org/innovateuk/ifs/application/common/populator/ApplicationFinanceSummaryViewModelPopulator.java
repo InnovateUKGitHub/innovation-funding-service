@@ -17,6 +17,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,33 +28,23 @@ import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
-
+    @Autowired
     private FinanceService financeService;
+    @Autowired
     private FileEntryRestService fileEntryRestService;
+    @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
     private ApplicationService applicationService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private OrganisationService organisationService;
+    @Autowired
     private CompetitionRestService competitionRestService;
 
-    public ApplicationFinanceSummaryViewModelPopulator(ApplicationService applicationService,
-                                                       SectionService sectionService,
-                                                       FinanceService financeService,
-                                                       FileEntryRestService fileEntryRestService,
-                                                       OrganisationRestService organisationRestService,
-                                                       UserRestService userRestService,
-                                                       OrganisationService organisationService,
-                                                       CompetitionRestService competitionRestService) {
-        this.applicationService = applicationService;
-        this.sectionService = sectionService;
-        this.financeService = financeService;
-        this.fileEntryRestService = fileEntryRestService;
-        this.organisationRestService = organisationRestService;
-        this.userRestService = userRestService;
-        this.organisationService = organisationService;
-        this.competitionRestService = competitionRestService;
-    }
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
@@ -85,6 +76,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
 
+
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -102,7 +94,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
-                yourFinancesCompleteForAllOrganisations
+                yourFinancesCompleteForAllOrganisations,
+                application.isCollaborativeProject()
         );
     }
 

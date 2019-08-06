@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finances overview'"/>
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Application overview',linkClass='link-back',
+                       linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+
+        <h2 class="govuk-heading-m">Funding rules for this competition</h2>
+
+        <div class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
+             th:classappend="${model.researchParticipationPercentage &gt; model.maxResearchRatio} ? 'eligibility warning' : 'eligibility'">
+            <dl class="list-eligibility">
+                <dt>Maximum research participation</dt>
+                <dd th:text="${model.maxResearchRatio}+' %'"></dd>
+                <dt>Current research participation</dt>
+                <dd th:class="${model.researchParticipationPercentage &gt; model.maxResearchRatio} ? 'warning'" th:text="(${model.researchParticipationPercentage} % 1 == 0 ? ${#numbers.formatDecimal(model.researchParticipationPercentage,0,0)} : ${model.researchParticipationPercentage}) +' %'"></dd>
+            </dl>
+
+            <div th:if="${model.researchParticipationPercentage &gt; model.maxResearchRatio}" class="warning-alert">
+                <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
+                <p class="govuk-body">The research participation costs must be <span th:text="${model.maxResearchRatio}"></span>% or less of the total project costs.</p>
+            </div>
+        </div>
+
+        <th:block th:unless="${model.procurement}">
+            <h2 class="govuk-heading-m">Finances summary</h2>
+            <th:block th:insert="finance/finance-summary :: application_finances_summary"
+                      ifs:global="${model.applicationFundingBreakdownViewModel}"/>
+        </th:block>
+        <h2 class="govuk-heading-m">Project cost breakdown</h2>
+        <th:block th:insert="finance/finance-summary :: financial_summary_table"
+                  ifs:global="${model.applicationFinanceSummaryViewModel}" />
+        <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
+
+
+
+        <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return
+            to application overview</a>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

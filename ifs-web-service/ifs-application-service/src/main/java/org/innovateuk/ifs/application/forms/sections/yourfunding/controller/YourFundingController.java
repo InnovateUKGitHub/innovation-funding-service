@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_FUNDING_APPLICANT", description = "Applicants can all fill out the Your Funding section of the application.")
 public class YourFundingController {
-    private static final String VIEW = "application/your-funding";
+    private static final String VIEW = "application/sections/your-funding/your-funding";
 
     @Autowired
     private YourFundingFormPopulator formPopulator;

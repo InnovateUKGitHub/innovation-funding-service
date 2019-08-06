@@ -30,101 +30,6 @@
 
 </th:block>
 
-
-<!-- =========================== Your organisation =========================== -->
-<th:block th:fragment="organisation_finances (model, internalView)">
-    <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-        <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
-    </div>
-
-    <th:block th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}">
-        <div class="question" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
-        </div>
-    </th:block>
-
-    <fieldset th:unless="${model.financeOverviewRows.isEmpty()}" class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
-            <h2 class="govuk-fieldset__heading">Financial overview</h2>
-        </legend>
-        <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <table class="govuk-table govuk-!-margin-bottom-6">
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Section</th>
-                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="last-year">Last
-                                financial year (&pound;)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}"
-                            th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''"
-                            class="govuk-table__row govuk-form-group">
-                            <td class="govuk-table__cell">
-                                <label th:for="${'input-'+formInput.id}">
-                                    <span th:text="${formInput.description}"></span>
-                                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                                </label>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <input class="govuk-input govuk-input--width-10" th:disabled="${formInputViewModel.readonly}"
-                                    th:id="${'input-'+formInput.id}" th:name="'formInput['+${formInput.id}+']'"
-                                    th:value="*{formInput[__${formInput.id}__]}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-input--error'"
-                                    required="required" type="number" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </fieldset>
-
-    <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
-        <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})" />
-        </div>
-    </th:block>
-
-    <th:block th:if="${model.stateAidEligibility and model.businessOrganisation}">
-        <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
-
-        <div class="message-alert">
-            <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
-        </div>
-    </th:block>
-
-    <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
-</th:block>
-
-<!-- ===========================Subsection buttons =========================== -->
-<th:block th:fragment="subsection_buttons (model)">
-    <th:block th:unless="${model.readOnlyAllApplicantApplicationFinances}">
-        <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
-            <div class="form-footer__actions">
-                <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="mark_section_as_complete"
-                    class="button-clear">Mark as complete
-                </button>
-                <button th:if="${model.complete}" type="submit" name="mark_section_as_incomplete" class="button-clear"
-                    th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
-                </button>
-            </div>
-        </div>
-        <div>
-            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-                th:if="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
-                class="govuk-!-margin-top-6 button-secondary">Return to finances
-            </a>
-            <button name="save-and-return" type="submit"
-                    th:unless="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
-                    class="govuk-!-margin-top-6 govuk-button">
-                Save and return to finances
-            </button>
-        </div>
-    </th:block>
-</th:block>
-
 <th:block th:fragment="finance_sub_section_row (model, childSection)">
     <li>
         <div class="task">
@@ -180,31 +85,6 @@
             </tbody>
         </table>
     </div>
-</th:block>
-
-<th:block th:fragment="overview_finances(model, internalView)">
-    <h2 class="govuk-heading-m">Funding rules for this competition</h2>
-    <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
-              th:with="formInput=${formInputViewModel.formInput}">
-        <th:block th:if="${formInput.type.displayableFinancialSummaryType}"
-                  th:with="model=${model.openSectionViewModel}">
-            <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
-                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
-                                eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId}), currentCompetition=(${model.application.currentCompetition}),
-                                currentApplication=(${model.application.currentApplication}), hasFinanceSection=(${model.hasFinanceSection}),
-                                userOrganisation=(${model.application.userOrganisation})">
-                <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-            </th:block>
-        </th:block>
-        <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-            <div class="govuk-body wysiwyg-styles">
-                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"></th:block>
-            </div>
-        </th:block>
-    </th:block>
-    <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return
-        to application overview</a>
 </th:block>
 
 </html>

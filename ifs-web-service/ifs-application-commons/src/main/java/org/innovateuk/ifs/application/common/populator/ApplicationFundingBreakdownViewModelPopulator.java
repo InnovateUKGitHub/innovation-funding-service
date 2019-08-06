@@ -25,11 +25,11 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -104,32 +104,54 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     return isApplicationVisibleToUser(application, user) && financesExist;
                 });
 
-        // Finance Section will be null for EOI Competitions
-        if (section != null) {
-            return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
-                    organisationFinanceOverview.getTotal(),
-                    applicationOrganisations,
-                    section,
-                    leadOrganisation,
-                    organisationFinanceOverview.getFinancesByOrganisation(),
-                    pendingOrganisationNames,
-                    application,
-                    userOrganisation,
-                    showDetailedFinanceLink);
-        } else {
-            return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
-                    applicationOrganisations,
-                    section,
-                    leadOrganisation,
-                    organisationFinanceOverview.getFinancesByOrganisation(),
-                    pendingOrganisationNames,
-                    application,
-                    userOrganisation,
-                    showDetailedFinanceLink);
+        boolean isApplicant = false;
+        if (user.hasRole(APPLICANT)) {
+            isApplicant = userRestService.findProcessRole(user.getId(), applicationId).isSuccess();
         }
 
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
+
+        boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
+                completedSectionsByOrganisation, application.getCompetition());
+
+        return new ApplicationFundingBreakdownViewModel(
+                organisationFinanceOverview.getTotalPerType(),
+                section != null ? organisationFinanceOverview.getTotal() : null,
+                applicationOrganisations,
+                section,
+                leadOrganisation,
+                organisationFinanceOverview.getFinancesByOrganisation(),
+                pendingOrganisationNames,
+                application,
+                userOrganisation,
+                showDetailedFinanceLink,
+                application.isCollaborativeProject(),
+                isApplicant,
+                sectionsMarkedAsComplete,
+                completedSectionsByOrganisation,
+                yourFinancesCompleteForAllOrganisations);
+
+    }
+    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                              OrganisationResource userOrganisation) {
+        return completedSectionsByOrganisation.getOrDefault(
+                userOrganisation.getId(),
+                new HashSet<>()
+        );
+    }
+
+    private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                                   Long competitionId) {
+        Optional<Long> optionalFinanceOverviewSectionId =
+                getOnlyElementOrEmpty(sectionService.getSectionsForCompetitionByType(competitionId,
+                        OVERVIEW_FINANCES)).map(SectionResource::getId);
+
+        return optionalFinanceOverviewSectionId
+                .map(financeOverviewSectionId -> completedSectionsByOrganisation.values()
+                        .stream()
+                        .allMatch(completedSections -> completedSections.contains(financeOverviewSectionId)))
+                .orElse(false);
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {

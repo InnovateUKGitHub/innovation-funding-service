@@ -70,7 +70,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     @Override
     public boolean isComplete() {
-        return getApplicationFinanceSummaryViewModel().getYourFinancesCompleteForAllOrganisations() ;
+        return getApplicationFinanceSummaryViewModel().isYourFinancesCompleteForAllOrganisations() ;
     }
 
     @Override

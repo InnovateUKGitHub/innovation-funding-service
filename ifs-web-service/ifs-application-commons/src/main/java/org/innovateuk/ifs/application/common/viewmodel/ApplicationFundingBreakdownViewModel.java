@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * View model for finance/finance-summary :: financial_summary_table.
@@ -25,6 +26,12 @@ public class ApplicationFundingBreakdownViewModel {
     private final ApplicationResource currentApplication;
     private final OrganisationResource userOrganisation;
     private final Map<Long, Boolean> showDetailedFinanceLink;
+    private final boolean collaborativeProject;
+    private final boolean applicant;
+    private final boolean hasFinanceSection;
+    private final Set<Long> sectionsMarkedAsComplete;
+    private final Map<Long, Set<Long>> completedSectionsByOrganisation;
+    private final boolean yourFinancesCompleteForAllOrganisations;
 
     public ApplicationFundingBreakdownViewModel(
             Map<FinanceRowType, BigDecimal> financeTotalPerType,
@@ -36,7 +43,12 @@ public class ApplicationFundingBreakdownViewModel {
             List<String> pendingOrganisationNames,
             ApplicationResource currentApplication,
             OrganisationResource userOrganisation,
-            Map<Long, Boolean> showDetailedFinanceLink) {
+            Map<Long, Boolean> showDetailedFinanceLink,
+            boolean collaborativeProject,
+            boolean applicant,
+            Set<Long> sectionsMarkedAsComplete,
+            Map<Long, Set<Long>> completedSectionsByOrganisation,
+            boolean yourFinancesCompleteForAllOrganisations) {
         this.financeTotalPerType = financeTotalPerType;
         this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
@@ -47,27 +59,12 @@ public class ApplicationFundingBreakdownViewModel {
         this.currentApplication = currentApplication;
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
-    }
-
-    //For EOI Competitions
-    public ApplicationFundingBreakdownViewModel(Map<FinanceRowType, BigDecimal> financeTotalPerType,
-                                                List<OrganisationResource> applicationOrganisations,
-                                                SectionResource financeSection,
-                                                OrganisationResource leadOrganisation,
-                                                Map<Long, BaseFinanceResource> organisationFinances,
-                                                List<String> pendingOrganisationNames,
-                                                ApplicationResource currentApplication,
-                                                OrganisationResource userOrganisation,
-                                                Map<Long, Boolean> showDetailedFinanceLink) {
-        this.financeTotalPerType = financeTotalPerType;
-        this.applicationOrganisations = applicationOrganisations;
-        this.financeSection = financeSection;
-        this.leadOrganisation = leadOrganisation;
-        this.organisationFinances = organisationFinances;
-        this.pendingOrganisationNames = pendingOrganisationNames;
-        this.currentApplication = currentApplication;
-        this.userOrganisation = userOrganisation;
-        this.showDetailedFinanceLink = showDetailedFinanceLink;
+        this.collaborativeProject = collaborativeProject;
+        this.applicant = applicant;
+        this.hasFinanceSection = financeSection != null;
+        this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
+        this.completedSectionsByOrganisation = completedSectionsByOrganisation;
+        this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -108,5 +105,29 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<Long, Boolean> getShowDetailedFinanceLink() {
         return showDetailedFinanceLink;
+}
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public boolean isApplicant() {
+        return applicant;
+    }
+
+    public boolean isHasFinanceSection() {
+        return hasFinanceSection;
+    }
+
+    public Set<Long> getSectionsMarkedAsComplete() {
+        return sectionsMarkedAsComplete;
+    }
+
+    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation() {
+        return completedSectionsByOrganisation;
+    }
+
+    public boolean isYourFinancesCompleteForAllOrganisations() {
+        return yourFinancesCompleteForAllOrganisations;
     }
 }

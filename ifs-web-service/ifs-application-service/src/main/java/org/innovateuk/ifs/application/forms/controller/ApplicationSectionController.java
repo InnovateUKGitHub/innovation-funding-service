@@ -142,6 +142,9 @@ public class ApplicationSectionController {
             case ORGANISATION_FINANCES:
                 return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId);
+            case OVERVIEW_FINANCES:
+                return String.format("redirect:/application/%d/form/finances-overview/section/%d",
+                        applicationId, sectionId);
             default:
                 populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
                 return APPLICATION_FORM;

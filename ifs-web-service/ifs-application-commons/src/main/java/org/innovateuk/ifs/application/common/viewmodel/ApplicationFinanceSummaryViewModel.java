@@ -33,24 +33,9 @@ public class ApplicationFinanceSummaryViewModel {
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final Long eachCollaboratorFinanceSectionId;
     private final boolean yourFinancesCompleteForAllOrganisations;
+    private final boolean collaborativeProject;
 
-    public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
-                                              Boolean hasFinanceSection,
-                                              Map<FinanceRowType, BigDecimal> financeTotalPerType,
-                                              List<OrganisationResource> applicationOrganisations,
-                                              Set<Long> sectionsMarkedAsComplete,
-                                              Long financeSectionId,
-                                              OrganisationResource leadOrganisation,
-                                              CompetitionResource currentCompetition,
-                                              OrganisationResource userOrganisation,
-                                              Map<Long, BaseFinanceResource> organisationFinances,
-                                              BigDecimal totalFundingSought,
-                                              BigDecimal totalOtherFunding,
-                                              BigDecimal totalContribution,
-                                              BigDecimal financeTotal,
-                                              Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                              Long eachCollaboratorFinanceSectionId,
-                                              boolean yourFinancesCompleteForAllOrganisations) {
+    public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication, Boolean hasFinanceSection, Map<FinanceRowType, BigDecimal> financeTotalPerType, List<OrganisationResource> applicationOrganisations, Set<Long> sectionsMarkedAsComplete, Long financeSectionId, OrganisationResource leadOrganisation, CompetitionResource currentCompetition, OrganisationResource userOrganisation, Map<Long, BaseFinanceResource> organisationFinances, BigDecimal totalFundingSought, BigDecimal totalOtherFunding, BigDecimal totalContribution, BigDecimal financeTotal, Map<Long, Set<Long>> completedSectionsByOrganisation, Long eachCollaboratorFinanceSectionId, boolean yourFinancesCompleteForAllOrganisations, boolean collaborativeProject) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -68,6 +53,7 @@ public class ApplicationFinanceSummaryViewModel {
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
         this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
+        this.collaborativeProject = collaborativeProject;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -138,7 +124,11 @@ public class ApplicationFinanceSummaryViewModel {
         return eachCollaboratorFinanceSectionId;
     }
 
-    public boolean getYourFinancesCompleteForAllOrganisations() {
+    public boolean isYourFinancesCompleteForAllOrganisations() {
         return yourFinancesCompleteForAllOrganisations;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }
