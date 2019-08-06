@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 public class ProcurementOverhead extends AbstractFinanceRowItem {
 
+    private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
     private Long id;
     private Integer companyCost;
     private BigDecimal projectCost;
@@ -42,7 +44,7 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
         // calculated, no validation
         BigDecimal total = BigDecimal.ZERO;
         if (companyCost != null && projectCost != null) {
-            total = projectCost.multiply(new BigDecimal(companyCost));
+            total = projectCost.multiply(new BigDecimal(companyCost).divide(ONE_HUNDRED));
         }
         return total;
     }
