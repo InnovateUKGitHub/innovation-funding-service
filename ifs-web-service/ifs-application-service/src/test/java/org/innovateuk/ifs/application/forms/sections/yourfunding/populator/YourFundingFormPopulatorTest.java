@@ -88,7 +88,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .withCosts(asList(grantClaim))
                 .build();
 
-        otherFunding = new OtherFunding();
+        otherFunding = new OtherFunding(1L);
         otherFunding.setFundingSource(OtherFundingCostCategory.OTHER_FUNDING);
         otherFunding.setOtherPublicFunding("Yes");
 

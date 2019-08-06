@@ -76,6 +76,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setMinProjectDuration(template.getMinProjectDuration());
         competition.setMaxProjectDuration(template.getMaxProjectDuration());
         competition.setApplicationFinanceType(template.getApplicationFinanceType());
+        competition.getFinanceRowTypes().addAll(template.getFinanceRowTypes());
         return competition;
     }
 

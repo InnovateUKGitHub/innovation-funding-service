@@ -144,8 +144,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
             updatePostcode(applicationId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-            List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-            validationMessages.forEach(validationHandler::addAnyErrors);
+            ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
+            validationHandler.addAnyErrors(validationMessages);
 
             return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToYourFinances(applicationId));
         };

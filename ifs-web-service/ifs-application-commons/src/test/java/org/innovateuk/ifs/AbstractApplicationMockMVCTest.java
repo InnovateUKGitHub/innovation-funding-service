@@ -577,7 +577,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .getId(), SMALL, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
-        costCategory.addCost(new GrantClaim(1L, 50));
+        costCategory.addCost(new GrantClaim(1L, 50, applicationFinanceResource.getId()));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
         applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn

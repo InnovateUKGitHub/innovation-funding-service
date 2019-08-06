@@ -8,24 +8,15 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.Form;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 
 /**
  * Managing all the view attributes for the finances
@@ -60,9 +51,9 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private CompetitionRestService competitionRestService;
 
     @Override
-    public FinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+    public FinanceViewModel getFinanceViewModel(Long applicationId, Long userId, Form form, Long organisationId) {
         FinanceViewModel financeViewModel = new FinanceViewModel();
-        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId, organisationId);
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
@@ -73,7 +64,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
             financeViewModel.setMaximumGrantClaimPercentage(applicationFinanceResource.getMaximumFundingLevel());
             financeViewModel.setFinanceView("finance");
-            financeViewModel.setFinanceQuestions(CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
             addGrantClaim(financeViewModel, applicationFinanceResource);
         }
         return financeViewModel;
@@ -86,7 +76,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         }
     }
 
-    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
+    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId, Long organisationId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId, organisationId);
         if (applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
@@ -94,25 +84,5 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
         return applicationFinanceResource;
-    }
-
-    private FinanceRowType costTypeForQuestion(QuestionResource question) {
-        List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess();
-        if (formInputs.isEmpty()) {
-            return null;
-        }
-        for (FormInputResource formInput : formInputs) {
-            FormInputType formInputType = formInput.getType();
-            if (StringUtils.isEmpty(formInputType)) {
-                continue;
-            }
-            try {
-                return FinanceRowType.fromType(formInputType);
-            } catch (IllegalArgumentException e) {
-                LOG.trace("no finance row type for form input type", e);
-                continue;
-            }
-        }
-        return null;
     }
 }

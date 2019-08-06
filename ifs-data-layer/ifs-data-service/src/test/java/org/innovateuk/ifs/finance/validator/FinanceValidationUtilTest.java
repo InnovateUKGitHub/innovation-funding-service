@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.application.validator;
+package org.innovateuk.ifs.finance.validator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
@@ -18,20 +17,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for {@link ApplicationValidationUtil}
+ * Unit test for {@link FinanceValidationUtil}
  */
-
-public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
+public class FinanceValidationUtilTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationValidatorService applicationValidatorServiceMock;
 
     @InjectMocks
-    private ApplicationValidationUtil validationUtil;
+    private FinanceValidationUtil validationUtil;
 
     @Test
     public void validateProjectCostItem(){
-        Materials material = new Materials();
+        Materials material = new Materials(1L);
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("");
         material.setQuantity(5);

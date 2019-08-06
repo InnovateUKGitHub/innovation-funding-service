@@ -35,7 +35,7 @@ public class GrantClaimValidatorTest {
 	
 	@Before
 	public void setUp() {
-        claim = new GrantClaim(CLAIM_ID, 100);
+        claim = new GrantClaim(CLAIM_ID, 100, 1L);
         bindingResult = ValidatorTestUtil.getBindingResult(claim);
     }
 

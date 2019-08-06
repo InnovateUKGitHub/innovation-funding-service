@@ -60,6 +60,6 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
 
     @Override
     protected LabourCost createInitial() {
-        return new LabourCost();
+        return newInstance(LabourCost.class);
     }
 }

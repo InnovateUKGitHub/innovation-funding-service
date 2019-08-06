@@ -63,7 +63,8 @@ public class YourProjectCostsViewModelPopulator {
                 application.getName(),
                 organisation.getName(),
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
-                procurementCompetition);
+                procurementCompetition,
+                competition.getFinanceRowTypes());
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

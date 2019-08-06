@@ -7,7 +7,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -56,7 +56,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private SectionStatusService sectionStatusService;
 
     @Autowired
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
 
     @Autowired
     private FinanceService financeService;
@@ -137,7 +137,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
                         applicationFinanceResources.forEach(applicationFinance -> {
                             if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
                                 applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
-                                financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
+                                financeRowCostsService.update(applicationFinance.getGrantClaim().getId(), applicationFinance.getGrantClaim());
                             }
                         })
                 );

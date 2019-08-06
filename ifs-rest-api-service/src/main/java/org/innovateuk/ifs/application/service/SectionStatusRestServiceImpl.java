@@ -23,8 +23,8 @@ public class SectionStatusRestServiceImpl extends BaseRestService implements Sec
     private String sectionRestURL = "/section-status";
 
     @Override
-    public RestResult<List<ValidationMessages>> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
+    public RestResult<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
+        return postWithRestResult(sectionRestURL + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, ValidationMessages.class);
     }
 
     @Override
