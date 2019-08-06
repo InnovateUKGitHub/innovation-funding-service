@@ -729,7 +729,7 @@
                    th:id="__${path}__.total"
                    th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
                    th:attr="data-calculation-fields=|[id='__${path}__.companyCost'],[id='__${path}__.projectCost']|,data-calculation-rawvalue=${row.total}"
-                   data-calculation-operations="*"
+                   data-calculation-operations="/"
                    readonly="readonly"/>
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
