@@ -1,13 +1,10 @@
+
 package org.innovateuk.ifs.finance.resource.cost;
 
 import java.math.BigDecimal;
 
 public class ProcurementOverhead extends AbstractFinanceRowItem {
 
-    public final static String FINANCE_OVERHEAD_FILE_REQUIRED = "{validation.finance.overhead.file.required}";
-
-    public interface RateNotZero{}
-    public interface TotalCost{}
     private Long id;
     private Integer companyCost;
     private BigDecimal projectCost;

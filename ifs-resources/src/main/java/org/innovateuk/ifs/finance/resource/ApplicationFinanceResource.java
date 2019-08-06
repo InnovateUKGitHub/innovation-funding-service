@@ -18,7 +18,6 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         }
     }
 
-    // for mapstruct
     public ApplicationFinanceResource() {
     }
 
