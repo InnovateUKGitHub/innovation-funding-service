@@ -3,10 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
-import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
-import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
+import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -32,6 +29,8 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     private JESCostHandler jesCostHandler;
 
+    private VATHandler vatHandler;
+
     public JesFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                              ProjectFinanceRowRepository projectFinanceRowRepository,
                              FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
@@ -39,11 +38,13 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                              ApplicationFinanceRepository applicationFinanceRepository,
                              ProjectFinanceRepository projectFinanceRepository,
                              GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
-                             JESCostHandler jesCostHandler) {
+                             JESCostHandler jesCostHandler,
+                             VATHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
         this.jesCostHandler = jesCostHandler;
+        this.vatHandler = vatHandler;
     }
 
     @Override
@@ -98,6 +99,9 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                 break;
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
+                break;
+            case VAT:
+                handler = vatHandler;
                 break;
         }
         if (handler != null) {
