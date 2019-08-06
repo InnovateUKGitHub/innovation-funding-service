@@ -125,6 +125,11 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
+    public boolean isInProjectSetup() {
+        return CompetitionStatus.PROJECT_SETUP.equals(competitionStatus);
+    }
+
+    @JsonIgnore
     public boolean isH2020() {
         return H2020_TYPE_NAME.equals(competitionTypeName);
     }

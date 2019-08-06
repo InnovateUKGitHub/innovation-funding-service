@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,11 +64,10 @@ public class ApplicationQuestionFeedbackController {
 
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
 
-        switch(questionResource.getQuestionSetupType()) {
-            case APPLICATION_TEAM:
-                model.addAttribute("form", new ApplicationTeamForm());
-                model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, user));
-                return "application/questions/application-team";
+        if (questionResource.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
+            model.addAttribute("form", new ApplicationTeamForm());
+            model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, user));
+            return "application/questions/application-team";
         }
 
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, user, model));
