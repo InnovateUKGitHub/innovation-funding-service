@@ -37,11 +37,11 @@
 
         <th:block th:unless="${model.procurement}">
             <h2 class="govuk-heading-m">Finances summary</h2>
-            <th:block th:insert="finance/finance-summary :: application_finances_summary"
+            <th:block th:insert="finance/finance-summary :: application-finances-summary"
                       ifs:global="${model.applicationFundingBreakdownViewModel}"/>
         </th:block>
         <h2 class="govuk-heading-m">Project cost breakdown</h2>
-        <th:block th:insert="finance/finance-summary :: financial_summary_table"
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table"
                   ifs:global="${model.applicationFinanceSummaryViewModel}" />
         <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
 

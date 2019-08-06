@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <!-- ===========================Form: financial summary/breakdown table =========================== -->
-    <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
+    <!-- ===========================Form: finance breakdown table =========================== -->
+    <th:block th:fragment="finance-breakdown-table" th:if="${financeTotalPerType}">
         <div class="project-cost-breakdown">
             <div class="table-overflow">
                 <th:block th:unless="${applicationOrganisations != null}">
@@ -165,8 +165,8 @@
         </div>
     </th:block>
 
-    <!-- ===========================Form: funding breakdown =========================== -->
-    <th:block th:fragment="application_finances_summary"
+    <!-- ===========================Form: finance summary =========================== -->
+    <th:block th:fragment="application-finances-summary"
               th:if="${financeTotalPerType}">
 
         <th:block

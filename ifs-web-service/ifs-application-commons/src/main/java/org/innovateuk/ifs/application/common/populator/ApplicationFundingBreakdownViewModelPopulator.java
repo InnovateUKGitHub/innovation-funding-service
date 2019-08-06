@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -106,7 +107,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         boolean isApplicant = false;
         if (user.hasRole(APPLICANT)) {
-            isApplicant = userRestService.findProcessRole(user.getId(), applicationId).isSuccess();
+            RestResult<ProcessRoleResource> role = userRestService.findProcessRole(user.getId(), applicationId);
+            isApplicant = role.isSuccess() && applicantProcessRoles().contains(role.getSuccess().getRole());
         }
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());

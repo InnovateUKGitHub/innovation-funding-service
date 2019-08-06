@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * View model for finance/finance-summary :: financial_summary_table.
+ * View model for finance/finance-summary :: finance-breakdown-table.
  */
 public class ApplicationFundingBreakdownViewModel {
 

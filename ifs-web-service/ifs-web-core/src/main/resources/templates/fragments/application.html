@@ -170,7 +170,7 @@
                         <div>
                             <th:block th:unless="${model.currentCompetition.fullyFunded}">
                                 <th:block ifs:global="${applicationFinanceSummaryViewModel}"
-                                          th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null})"></th:block>
+                                          th:replace="finance/finance-summary :: application-finances-summary (isApplicant = ${isApplicant || isApplicant == null})"></th:block>
                                 <th:block ifs:global="${applicationResearchParticipationViewModel}"
                                           th:replace="finance/finance-summary :: research_participation_alert"
                                           th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
@@ -178,7 +178,7 @@
 
                             <h2 class="govuk-heading-s" th:unless="${model.currentCompetition.fullyFunded}">Funding breakdown</h2>
                             <th:block ifs:global="${applicationFundingBreakdownViewModel}"
-                                      th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
+                                      th:insert="finance/finance-summary :: finance-breakdown-table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
                         </div>
                     </div>
                 </div>

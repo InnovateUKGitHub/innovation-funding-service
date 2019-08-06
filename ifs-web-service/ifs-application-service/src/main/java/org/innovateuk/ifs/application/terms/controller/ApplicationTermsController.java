@@ -67,7 +67,7 @@ public class ApplicationTermsController {
         ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId, readOnly);
         model.addAttribute("model", viewModel);
 
-        return "application/terms-and-conditions";
+        return "application/sections/terms-and-conditions/terms-and-conditions";
     }
 
 
@@ -104,6 +104,6 @@ public class ApplicationTermsController {
         }
 
         model.addAttribute("model", applicationTermsPartnerModelPopulator.populate(application, questionId));
-        return "application/terms-and-conditions-partner-status";
+        return "application/sections/terms-and-conditions/terms-and-conditions-partner-status";
     }
 }
