@@ -518,7 +518,7 @@ Application: Finances
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
     When the user should see the element           jQuery = h1:contains("Finances")
-    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
+    And the user selects the radio button          applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
