@@ -9,9 +9,8 @@ import org.mockito.Mock;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;
@@ -88,7 +87,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         final long applicationId = 2L;
         final long markedAsCompleteById = 3L;
 
-        when(sectionStatusServiceMock.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(emptyList()));
+        when(sectionStatusServiceMock.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(noErrors()));
 
         mockMvc.perform(post(baseURI + "/mark-as-complete/{sectionId}/{applicationId}/{markedAsCompleteById}",
                 sectionId, applicationId, markedAsCompleteById)

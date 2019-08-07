@@ -79,7 +79,7 @@ COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
-  a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout remoteip && \
+  a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2disconf other-vhosts-access-log && \
   sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \

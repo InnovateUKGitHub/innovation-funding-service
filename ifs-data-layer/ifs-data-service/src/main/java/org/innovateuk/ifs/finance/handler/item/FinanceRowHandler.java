@@ -17,11 +17,11 @@ public abstract class FinanceRowHandler<T> {
 
     Map<String, FinanceRowMetaField> costFields = new HashMap<>();
 
-    public abstract ApplicationFinanceRow toCost(T costItem);
+    public abstract ApplicationFinanceRow toApplicationDomain(T costItem);
 
-    public abstract ProjectFinanceRow toProjectCost(T costItem);
+    public abstract ProjectFinanceRow toProjectDomain(T costItem);
 
-    public abstract FinanceRowItem toCostItem(FinanceRow cost);
+    public abstract FinanceRowItem toResource(FinanceRow cost);
 
     public void validate(@NotNull T costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);

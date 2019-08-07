@@ -9,7 +9,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class AcademicCostSaver extends AsyncAdaptor {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     private static final Map<String, String> formFieldToCostName = asMap(
             "incurredStaff", "incurred_staff",

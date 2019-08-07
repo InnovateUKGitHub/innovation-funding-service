@@ -22,7 +22,7 @@ public class OtherFundingTest {
         fundingSource = "University";
         securedDate = "12-2016";
         fundingAmount = new BigDecimal(100243);
-        otherFunding = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
+        otherFunding = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, 1L);
     }
 
     @Test

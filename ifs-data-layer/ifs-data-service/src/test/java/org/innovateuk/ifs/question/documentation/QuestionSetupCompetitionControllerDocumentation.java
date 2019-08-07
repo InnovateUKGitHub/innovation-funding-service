@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.question.documentation;
 
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.question.controller.QuestionSetupCompetitionController;
 import org.innovateuk.ifs.question.transactional.QuestionFileSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
@@ -15,15 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.function.Function;
 
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceFields;
-import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -35,7 +28,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class QuestionSetupCompetitionControllerDocumentation extends BaseFileControllerMockMVCTest<QuestionSetupCompetitionController> {
@@ -131,36 +123,6 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
                                         "research category question will be added")
                         )
                 ));
-    }
-
-    @Test
-    public void findTemplateFile() throws Exception {
-        final long questionId = 22L;
-        FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
-        when(questionFileSetupCompetitionService.findTemplateFile(questionId)).thenReturn(serviceSuccess(fileEntryResource));
-
-        mockMvc.perform(get(baseUrl + "/template-file-details/{questionId}", questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(parameterWithName("questionId").description("Id of the question to get template file of")),
-                        responseFields(fileEntryResourceFields)));
-
-        verify(questionFileSetupCompetitionService).findTemplateFile(questionId);
-    }
-
-    @Test
-    public void downloadTemplateFile() throws Exception {
-        final long questionId = 22L;
-
-        Function<QuestionFileSetupCompetitionService, ServiceResult<FileAndContents>> serviceCallToDownload =
-                (service) -> service.downloadTemplateFile(questionId);
-
-        assertGetFileContents(baseUrl + "/template-file/{questionId}", new Object[]{questionId},
-                emptyMap(), questionFileSetupCompetitionService, serviceCallToDownload)
-                .andExpect(status().isOk())
-                .andDo(documentFileGetContentsMethod("question-setup-competition/{method-name}"));
     }
 
     @Test

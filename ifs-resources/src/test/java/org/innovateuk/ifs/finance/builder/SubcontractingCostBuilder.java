@@ -47,6 +47,6 @@ public class SubcontractingCostBuilder extends BaseBuilder<SubContractingCost, S
 
     @Override
     protected SubContractingCost createInitial() {
-        return new SubContractingCost();
+        return newInstance(SubContractingCost.class);
     }
 }

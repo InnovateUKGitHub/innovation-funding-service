@@ -21,6 +21,10 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
         return withArraySetFieldByReflection("id", value);
     }
 
+    public LabourCostBuilder withTargetId(Long... value) {
+        return withArraySetFieldByReflection("targetId", value);
+    }
+
     public LabourCostBuilder withName(String... value) {
         return withArraySetFieldByReflection("name", value);
     }
@@ -60,6 +64,6 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
 
     @Override
     protected LabourCost createInitial() {
-        return new LabourCost();
+        return newInstance(LabourCost.class);
     }
 }

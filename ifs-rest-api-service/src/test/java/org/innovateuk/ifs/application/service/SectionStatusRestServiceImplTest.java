@@ -31,10 +31,10 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         long applicationId = 234L;
         long markedAsCompleteById = 345L;
         String expectedUrl = sectionRestUrl + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
-        List<ValidationMessages> messages = new ArrayList<>();
-        setupPostWithRestResultExpectations(expectedUrl, validationMessagesListType(), null, messages);
+        ValidationMessages messages = new ValidationMessages();
+        setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, null, messages, HttpStatus.OK);
 
-        RestResult<List<ValidationMessages>> result = service.markAsComplete(sectionId, applicationId, markedAsCompleteById);
+        RestResult<ValidationMessages> result = service.markAsComplete(sectionId, applicationId, markedAsCompleteById);
 
         assertEquals(messages, result.getSuccess());
     }

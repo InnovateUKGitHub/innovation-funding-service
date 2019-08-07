@@ -18,7 +18,7 @@ public class OtherCostTest {
         id = 0L;
         description = "Other cost item";
         cost = new BigDecimal(1000);
-        otherCost = new OtherCost(id, description, cost);
+        otherCost = new OtherCost(id, description, cost, 1L);
     }
 
     @Test

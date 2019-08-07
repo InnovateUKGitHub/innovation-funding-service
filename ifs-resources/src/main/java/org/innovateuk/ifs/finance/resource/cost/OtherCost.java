@@ -22,12 +22,17 @@ public class OtherCost extends AbstractFinanceRowItem {
 
     private String name;
 
-    public OtherCost() {
+    private OtherCost() {
+        this(null);
+    }
+
+    public OtherCost(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
-    public OtherCost(Long id, String description, BigDecimal cost) {
-        this();
+    public OtherCost(Long id, String description, BigDecimal cost, Long targetId) {
+        this(targetId);
         this.id = id;
         this.description = description;
         this.cost = cost;

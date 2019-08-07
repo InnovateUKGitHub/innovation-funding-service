@@ -70,7 +70,6 @@ public class ApplicationTermsController {
         return "application/sections/terms-and-conditions/terms-and-conditions";
     }
 
-
     @PostMapping
     public String acceptTerms(@PathVariable long applicationId,
                               @PathVariable long questionId,

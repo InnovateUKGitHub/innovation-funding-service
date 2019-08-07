@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -32,27 +33,13 @@ public class ApplicationFundingBreakdownViewModel {
     private final Set<Long> sectionsMarkedAsComplete;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final boolean yourFinancesCompleteForAllOrganisations;
+    private final CompetitionResource currentCompetition;
 
-    public ApplicationFundingBreakdownViewModel(
-            Map<FinanceRowType, BigDecimal> financeTotalPerType,
-            BigDecimal financeTotal,
-            List<OrganisationResource> applicationOrganisations,
-            SectionResource financeSection,
-            OrganisationResource leadOrganisation,
-            Map<Long, BaseFinanceResource> organisationFinances,
-            List<String> pendingOrganisationNames,
-            ApplicationResource currentApplication,
-            OrganisationResource userOrganisation,
-            Map<Long, Boolean> showDetailedFinanceLink,
-            boolean collaborativeProject,
-            boolean applicant,
-            Set<Long> sectionsMarkedAsComplete,
-            Map<Long, Set<Long>> completedSectionsByOrganisation,
-            boolean yourFinancesCompleteForAllOrganisations) {
+    public ApplicationFundingBreakdownViewModel(Map<FinanceRowType, BigDecimal> financeTotalPerType, List<OrganisationResource> applicationOrganisations, SectionResource financeSection, BigDecimal financeTotal, OrganisationResource leadOrganisation, Map<Long, BaseFinanceResource> organisationFinances, List<String> pendingOrganisationNames, ApplicationResource currentApplication, OrganisationResource userOrganisation, Map<Long, Boolean> showDetailedFinanceLink, boolean collaborativeProject, boolean applicant, Set<Long> sectionsMarkedAsComplete, Map<Long, Set<Long>> completedSectionsByOrganisation, boolean yourFinancesCompleteForAllOrganisations, CompetitionResource currentCompetition) {
         this.financeTotalPerType = financeTotalPerType;
-        this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
         this.financeSection = financeSection;
+        this.financeTotal = financeTotal;
         this.leadOrganisation = leadOrganisation;
         this.organisationFinances = organisationFinances;
         this.pendingOrganisationNames = pendingOrganisationNames;
@@ -65,14 +52,11 @@ public class ApplicationFundingBreakdownViewModel {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
+        this.currentCompetition = currentCompetition;
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
         return financeTotalPerType;
-    }
-
-    public BigDecimal getFinanceTotal() {
-        return financeTotal;
     }
 
     public List<OrganisationResource> getApplicationOrganisations() {
@@ -83,16 +67,20 @@ public class ApplicationFundingBreakdownViewModel {
         return financeSection;
     }
 
+    public BigDecimal getFinanceTotal() {
+        return financeTotal;
+    }
+
     public OrganisationResource getLeadOrganisation() {
         return leadOrganisation;
     }
 
-    public List<String> getPendingOrganisationNames() {
-        return pendingOrganisationNames;
-    }
-
     public Map<Long, BaseFinanceResource> getOrganisationFinances() {
         return organisationFinances;
+    }
+
+    public List<String> getPendingOrganisationNames() {
+        return pendingOrganisationNames;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -105,7 +93,7 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<Long, Boolean> getShowDetailedFinanceLink() {
         return showDetailedFinanceLink;
-}
+    }
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
@@ -129,5 +117,9 @@ public class ApplicationFundingBreakdownViewModel {
 
     public boolean isYourFinancesCompleteForAllOrganisations() {
         return yourFinancesCompleteForAllOrganisations;
+    }
+
+    public CompetitionResource getCurrentCompetition() {
+        return currentCompetition;
     }
 }

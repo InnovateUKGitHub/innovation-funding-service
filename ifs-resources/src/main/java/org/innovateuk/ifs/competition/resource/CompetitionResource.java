@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
@@ -102,6 +103,7 @@ public class CompetitionResource {
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
+    private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
@@ -178,6 +180,14 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+        this.financeRowTypes = financeRowTypes;
     }
 
     public boolean isNonFinanceType() {

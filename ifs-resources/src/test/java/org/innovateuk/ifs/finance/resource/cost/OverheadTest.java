@@ -18,7 +18,7 @@ public class OverheadTest {
         rateType = OverheadRateType.NONE;
         id = 0L;
         rate = 200;
-        overhead = new Overhead(id, rateType, rate);
+        overhead = new Overhead(id, rateType, rate, 1L);
     }
 
     @Test
