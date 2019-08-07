@@ -215,7 +215,7 @@
                                class="govuk-link">Spend profile</a>
                             <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                         </h2>
-                        <p class="govuk-body govuk-!-margin-0">Once we have approved your finances you can change your project spend profile.</p>
+                        <p class="govuk-body govuk-!-margin-0">Once we have approved your project finances you can change your project spend profile.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
                               th:if="${model.spendProfileSection.accessible}"/>

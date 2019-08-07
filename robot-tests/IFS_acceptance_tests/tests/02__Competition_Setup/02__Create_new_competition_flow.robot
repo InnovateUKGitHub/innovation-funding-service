@@ -735,7 +735,7 @@ The Applicant see the correct Questions
 The user can see the VAT text in Your project costs
     [Documentation]  IFS-4345
     [Tags]
-    Given the user clicks the button/link      link = Your finances
+    Given the user clicks the button/link      link = Your project finances
     When the user clicks the button/link       link = Your project costs
     Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 

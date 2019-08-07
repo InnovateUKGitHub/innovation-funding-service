@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 
 /**
- * A view model that captures attributes common to all of the Your finances sections.
+ * A view model that captures attributes common to all of the Your project finances sections.
  */
 public class CommonYourFinancesViewModel {
 

@@ -218,7 +218,7 @@ public abstract class BaseSectionViewModel {
     }
 
     public Boolean getIsYourFinances() {
-        return null != currentSection && "Your finances".equals(currentSection.getName());
+        return null != currentSection && "Your project finances".equals(currentSection.getName());
     }
 
     public Boolean getIsFinanceOverview() {
