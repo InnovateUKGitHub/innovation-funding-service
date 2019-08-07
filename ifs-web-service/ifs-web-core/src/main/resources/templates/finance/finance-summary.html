@@ -283,8 +283,9 @@
 
     <th:block th:fragment="application_finances_incomplete_warning (collaborativeProject)"
               th:if="${applicant and hasFinanceSection and currentApplication.isOpen()}">
-        <th:block th:with="financeSectionMarkedAsComplete=${sectionsMarkedAsComplete.contains(financeSection.id)},
+        <th:block th:with="financeSectionMarkedAsComplete=${sectionsMarkedAsComplete.contains(financeSectionId)},
                        enoughCollaboratorsSeekingFunding=${yourFinancesCompleteForAllOrganisations}">
+
 
             <th:block th:unless="${financeSectionMarkedAsComplete}">
                 <div th:if="${collaborativeProject}" class="warning-alert">

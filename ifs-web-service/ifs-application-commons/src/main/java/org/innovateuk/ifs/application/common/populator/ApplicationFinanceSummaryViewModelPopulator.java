@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanc
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -72,10 +73,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
+        boolean isApplicant = false;
+        if (user.hasRole(APPLICANT)) {
+            RestResult<ProcessRoleResource> role = userRestService.findProcessRole(user.getId(), applicationId);
+            isApplicant = role.isSuccess() && applicantProcessRoles().contains(role.getSuccess().getRole());
+        }
 
         boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
-
 
         return new ApplicationFinanceSummaryViewModel(
                 application,
@@ -95,7 +100,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
                 yourFinancesCompleteForAllOrganisations,
-                application.isCollaborativeProject()
+                application.isCollaborativeProject(),
+                isApplicant
         );
     }
 

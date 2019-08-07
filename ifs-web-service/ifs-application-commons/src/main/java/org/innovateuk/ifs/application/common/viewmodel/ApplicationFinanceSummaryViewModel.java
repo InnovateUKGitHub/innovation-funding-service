@@ -34,8 +34,9 @@ public class ApplicationFinanceSummaryViewModel {
     private final Long eachCollaboratorFinanceSectionId;
     private final boolean yourFinancesCompleteForAllOrganisations;
     private final boolean collaborativeProject;
+    private final boolean applicant;
 
-    public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication, Boolean hasFinanceSection, Map<FinanceRowType, BigDecimal> financeTotalPerType, List<OrganisationResource> applicationOrganisations, Set<Long> sectionsMarkedAsComplete, Long financeSectionId, OrganisationResource leadOrganisation, CompetitionResource currentCompetition, OrganisationResource userOrganisation, Map<Long, BaseFinanceResource> organisationFinances, BigDecimal totalFundingSought, BigDecimal totalOtherFunding, BigDecimal totalContribution, BigDecimal financeTotal, Map<Long, Set<Long>> completedSectionsByOrganisation, Long eachCollaboratorFinanceSectionId, boolean yourFinancesCompleteForAllOrganisations, boolean collaborativeProject) {
+    public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication, Boolean hasFinanceSection, Map<FinanceRowType, BigDecimal> financeTotalPerType, List<OrganisationResource> applicationOrganisations, Set<Long> sectionsMarkedAsComplete, Long financeSectionId, OrganisationResource leadOrganisation, CompetitionResource currentCompetition, OrganisationResource userOrganisation, Map<Long, BaseFinanceResource> organisationFinances, BigDecimal totalFundingSought, BigDecimal totalOtherFunding, BigDecimal totalContribution, BigDecimal financeTotal, Map<Long, Set<Long>> completedSectionsByOrganisation, Long eachCollaboratorFinanceSectionId, boolean yourFinancesCompleteForAllOrganisations, boolean collaborativeProject, boolean applicant) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -54,6 +55,7 @@ public class ApplicationFinanceSummaryViewModel {
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
         this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
         this.collaborativeProject = collaborativeProject;
+        this.applicant = applicant;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -130,5 +132,9 @@ public class ApplicationFinanceSummaryViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isApplicant() {
+        return applicant;
     }
 }
