@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.question.transactional.template;
 
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.RequiredFileValidator;
 import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
  * Component that creates a Question object containing default values & validators.
@@ -36,9 +39,11 @@ public class DefaultApplicationQuestionCreator {
     public Question buildQuestion(Competition competition) {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
+        FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
         FormInput appendixInput = buildAppendixInput(competition);
+        FormInput templateInput = buildTemplateInput(competition, requiredFileValidator);
 
         FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
@@ -48,7 +53,7 @@ public class DefaultApplicationQuestionCreator {
         question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
-        question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
+        question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput, templateInput));
 
         return question;
     }
@@ -99,6 +104,20 @@ public class DefaultApplicationQuestionCreator {
         return input;
     }
 
+    private FormInput buildTemplateInput(Competition competition, FormValidator requiredFileValidator) {
+        FormInput input = new FormInput();
+        input.setType(FormInputType.TEMPLATE_DOCUMENT);
+        input.setCompetition(competition);
+        input.setIncludedInApplicationSummary(true);
+        input.setPriority(1);
+        input.setScope(FormInputScope.APPLICATION);
+        input.setActive(false);
+        input.setAllowedFileTypes(emptySet());
+        input.setFormValidators(singleton(requiredFileValidator));
+
+        return input;
+    }
+
     private FormInput buildFeedbackInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
         FormInput input = new FormInput();
         input.setWordCount(DEFAULT_FEEDBACK_WORD_COUNT);
@@ -126,7 +145,7 @@ public class DefaultApplicationQuestionCreator {
         justificationRow5.setPriority(0);
         justificationRow5.setSubject("9,10");
 
-        input.setInputValidators(Stream.of(notEmptyValidator, wordCountValidator).collect(Collectors.toSet()));
+        input.setInputValidators(asSet(notEmptyValidator, wordCountValidator));
         input.setGuidanceRows(Arrays.asList(justificationRow1, justificationRow2, justificationRow3, justificationRow4, justificationRow5));
 
         return input;

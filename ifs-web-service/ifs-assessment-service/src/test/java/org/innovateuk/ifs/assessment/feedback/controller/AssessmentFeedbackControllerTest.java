@@ -202,6 +202,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 true,
                 false,
                 null,
+                null,
+                null,
                 null);
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
@@ -228,7 +230,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     }
 
     @Test
-    public void getQuestion_withAppendix() throws Exception {
+    public void getQuestion_withAppendixAndTemplateDocument() throws Exception {
         Long applicationId = 1L;
 
         CompetitionResource competitionResource = setupCompetitionResource();
@@ -251,7 +253,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         setupQuestionNavigation(questionResource.getId(), of(previousQuestionResource), of(nextQuestionResource));
 
-        List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA, FILEUPLOAD);
+        List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA, FILEUPLOAD, TEMPLATE_DOCUMENT);
         setupApplicantResponses(applicationId, applicationFormInputs);
 
         List<FormInputResource> assessmentFormInputs = setupAssessmentFormInputs(questionResource.getId(), TEXTAREA, ASSESSOR_SCORE);
@@ -268,6 +270,14 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         FileDetailsViewModel expectedFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
                 "File 1",
                 1024L);
+        FileDetailsViewModel expectedTemplateFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(2).getId(),
+                "File 2",
+                1024L);
+        String templateTitle = "templateTitle";
+        applicationFormInputs.stream()
+                .filter(input -> input.getType().equals(TEMPLATE_DOCUMENT))
+                .findAny()
+                .ifPresent(input -> input.setDescription(templateTitle));
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource,
                 questionResource,
@@ -276,6 +286,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 true,
                 false,
                 expectedFileDetailsViewModel,
+                expectedTemplateFileDetailsViewModel,
+                templateTitle,
                 null);
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
@@ -468,6 +480,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 false,
                 true,
                 null,
+                null,
+                null,
                 researchCategoryResources);
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(),
@@ -539,6 +553,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 false,
                 true,
+                null,
+                null,
                 null,
                 researchCategoryResources);
 
@@ -926,6 +942,13 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                                 .withFormInputs(formInput.getId())
                                 .withValue("Applicant response")
                                 .withFileName("File 1")
+                                .withFilesizeBytes(1024L)
+                                .build();
+                    } else if (formInput.getType() == TEMPLATE_DOCUMENT) {
+                        return newFormInputResponseResource()
+                                .withFormInputs(formInput.getId())
+                                .withValue("Applicant response")
+                                .withFileName("File 2")
                                 .withFilesizeBytes(1024L)
                                 .build();
                     } else {

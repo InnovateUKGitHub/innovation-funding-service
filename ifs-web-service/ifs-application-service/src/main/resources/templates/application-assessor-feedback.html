@@ -26,7 +26,11 @@
                 <div th:text="${item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
             </th:block>
             <th:block th:if="${item.fileEntry}">
-                <h3 class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>
+                <h3 th:if="${model.isAppendix(item)}"
+                    class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>
+                <h3 th:if="${model.isTemplateDocument(item)}"
+                    class="govuk-heading-s govuk-!-margin-0"
+                    th:text="|View ${model.templateDocumentTitle}|">View template:</h3>
                 <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
                    th:text="|${item.filename} (${item.humanReadableFileSize})|"
                    class="govuk-link">Project-plan.pdf (161.96 KB)</a>

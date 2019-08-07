@@ -14,6 +14,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class AssessmentFeedbackViewModelTest {
 
@@ -35,9 +36,14 @@ public class AssessmentFeedbackViewModelTest {
                 false,
                 false,
                 null,
+                null,
+                "template document",
                 null
         );
 
         assertEquals("View technical approach appendix", assessmentFeedbackViewModel.getAppendixFileDescription());
+        assertEquals("View template document", assessmentFeedbackViewModel.getTemplateDocumentFileDescription());
+        assertFalse(assessmentFeedbackViewModel.isAppendixExists());
+        assertFalse(assessmentFeedbackViewModel.isTemplateDocumentExists());
     }
 }

@@ -12,6 +12,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicat
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.documentation.*;
+import org.innovateuk.ifs.form.documentation.FormInputResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -94,7 +95,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
                         .andWithPrefix("applicants[].organisation.", OrganisationDocs.organisationResourceFields)
                         .andWithPrefix("question.", QuestionDocs.questionFields)
                         .andWithPrefix("applicantFormInputs[].", ApplicationFormInputDocs.applicationFormResourceFields)
-                        .andWithPrefix("applicantFormInputs[].formInput.", FormInputDocs.formInputFields)
+                        .andWithPrefix("applicantFormInputs[].formInput.", FormInputResourceDocs.formInputResourceFields)
                         .andWithPrefix("applicantFormInputs[].applicantResponses[].", ApplicantFormInputResponseResourceDocs.applicantFormInputResponseResourceFields)
                         .andWithPrefix("applicantFormInputs[].applicantResponses[].applicant.", ApplicantDocs.applicantResourceFields)
                         .andWithPrefix("applicantFormInputs[].applicantResponses[].applicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
@@ -150,7 +151,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
                         .andWithPrefix("applicantQuestions[].applicants[].organisation.", OrganisationDocs.organisationResourceFields)
                         .andWithPrefix("applicantQuestions[].question.", QuestionDocs.questionFields)
                         .andWithPrefix("applicantQuestions[].applicantFormInputs[].", ApplicationFormInputDocs.applicationFormResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].formInput.", FormInputDocs.formInputFields)
+                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].formInput.", FormInputResourceDocs.formInputResourceFields)
                         .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].", ApplicantFormInputResponseResourceDocs.applicantFormInputResponseResourceFields)
                         .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].applicant.", ApplicantDocs.applicantResourceFields)
                         .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].applicant.processRole.", ProcessRoleDocs.processRoleResourceFields)

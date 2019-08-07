@@ -155,7 +155,7 @@ Collaborator: read only view of Application details
 Collaborator: read only view of research
     [Documentation]  IFS-2321
     Given the user clicks the button/link       link = Research category
-    Then the user should not see the element    css = button[name = "mark_as_incomplete"]
+    Then the user should not see the element    css = button[name = "edit"]
     And the user should not see the element     id = application-question-save
     And the user should see the element         jQuery = a:contains("Return to application overview")
 
@@ -182,14 +182,14 @@ the text box should turn to green
     Element Should Be Disabled    css = textarea
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link = Application overview
+    The user clicks the button/link    link = Back to application overview
     The user should see the element    jQuery = li:nth-child(4) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css = textarea
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link        link = Application overview
+    The user clicks the button/link        link = Back to application overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 

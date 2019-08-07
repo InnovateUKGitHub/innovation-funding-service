@@ -26,8 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
@@ -96,11 +94,9 @@ public class ApplicationFeedbackController {
 
         Supplier<String> failureAndSuccessView = () -> feedback(form, bindingResult, validationHandler, model, applicationId, user);
         MultipartFile file = form.getResponse();
-        RestResult<Void> sendResult = interviewResponseRestService
-                .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("response"), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
+        return validationHandler.performFileUpload("response", failureAndSuccessView, () -> interviewResponseRestService
+                .uploadResponse(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")

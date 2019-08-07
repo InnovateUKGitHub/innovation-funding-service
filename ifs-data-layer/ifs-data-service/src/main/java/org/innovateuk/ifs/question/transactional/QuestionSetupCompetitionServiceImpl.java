@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
@@ -97,9 +99,13 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
             case TEMPLATE_DOCUMENT:
-                setupResource.setTemplateUpload(formInput.getActive());
+                setupResource.setTemplateDocument(formInput.getActive());
                 setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
-                setupResource.setTemplateName(formInput.getDescription());
+                setupResource.setTemplateTitle(formInput.getDescription());
+                setupResource.setTemplateFilename(Optional.ofNullable(formInput.getFile())
+                        .map(FileEntry::getName)
+                        .orElse(null));
+                setupResource.setTemplateFormInput(formInput.getId());
                 break;
         }
     }
@@ -185,10 +191,10 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
                 FormInputType.TEMPLATE_DOCUMENT);
-        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateUpload() != null) {
-            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateUpload());
+        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateDocument() != null) {
+            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateDocument());
 
-            if(competitionSetupQuestionResource.getTemplateUpload()) {
+            if(competitionSetupQuestionResource.getTemplateDocument()) {
                 setTemplateSubOptions(templateFormInput, competitionSetupQuestionResource );
             } else {
                 resetTemplateSubOptions(templateFormInput);
@@ -213,8 +219,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     private void setTemplateSubOptions(FormInput templateFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
-        if (competitionSetupQuestionResource.getTemplateName() != null) {
-            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateName());
+        if (competitionSetupQuestionResource.getTemplateTitle() != null) {
+            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
         }
     }
 
