@@ -1,26 +1,27 @@
 package org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel;
 
+import java.util.List;
+
 public class YourFinancesViewModel {
+    private final long applicationId;
+    private final String applicationName;
+    private final List<YourFinancesRowViewModel> rows;
 
-    private final String title;
-    private final String url;
-    private final boolean complete;
-
-    public YourFinancesViewModel(String title, String url, boolean complete) {
-        this.title = title;
-        this.url = url;
-        this.complete = complete;
+    public YourFinancesViewModel(long applicationId, String applicationName, List<YourFinancesRowViewModel> rows) {
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
+        this.rows = rows;
     }
 
-    public String getTitle() {
-        return title;
+    public long getApplicationId() {
+        return applicationId;
     }
 
-    public String getUrl() {
-        return url;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public boolean isComplete() {
-        return complete;
+    public List<YourFinancesRowViewModel> getRows() {
+        return rows;
     }
 }
