@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your finances'"/>
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to application overview', linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}, dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your finances',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <div class="your-finances">
+            <h2 th:unless="${model.h2020}"
+                class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
+            <div class="message-alert"
+                 th:if="${model.collaborativeProject}">
+                <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your
+                    finances.</p>
+            </div>
+            <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
+            <ul class="task-list">
+                <th:block th:each="row : ${model.rows}">
+                    <li>
+                        <div class="task">
+                            <h3 class="govuk-heading-s">
+                                <a th:href="${row.url}"
+                                   th:text="${row.title}" class="govuk-link"></a>
+                            </h3>
+                        </div>
+                        <div th:if="${row.complete}"
+                             class="task-status-complete"><span>Complete</span></div>
+                        <div th:unless="${row.complete}"
+                             class="task-status-incomplete"><span>Incomplete</span></div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+
+        <th:block th:unless="${model.fullyFunded}">
+            <h2 class="govuk-heading-m">Finance summary</h2>
+            <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
+
+            <th:block th:insert="finance/finance-summary :: application-finances-summary"
+                      ifs:global="${model.applicationFinanceSummaryViewModel}"/>
+        </th:block>
+
+        <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+           th:href="${cookieBackLinkUrl}"
+           class="button-secondary"
+           th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
+
+        <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+           th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+           class="button-secondary">Return to application overview</a>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

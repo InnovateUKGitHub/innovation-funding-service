@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundin
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,10 +42,9 @@ public class YourFundingFormPopulator {
     @Autowired
     private ApplicationService applicationService;
 
-    public void populateForm(YourFundingForm form, long applicationId, UserResource user, Optional<Long> organisationId) {
+    public void populateForm(YourFundingForm form, long applicationId, long organisationId) {
 
-        OrganisationResource organisation = organisationId.map(organisationRestService::getOrganisationById).map(RestResult::getSuccess)
-                .orElseGet(() -> organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         ApplicationResource application = applicationService.getById(applicationId);
         QuestionResource otherFundingQuestion = questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING).getSuccess();
