@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
@@ -212,10 +213,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<FileAndContents> downloadTerms(long competitionId) {
         return findCompetitionById(competitionId)
-                .andOnSuccess(c -> fileEntryService.findOne(c.getCompetitionTerms().get().getId()))
-                .andOnSuccess(fe ->
-                        fileService.getFileByFileEntryId(fe.getId())
+                .andOnSuccess(c -> find(c.getCompetitionTerms(), notFoundError(FileEntry.class))
+                        .andOnSuccess(fe -> fileEntryService.findOne(fe.getId()))
+                        .andOnSuccess(fe -> fileService.getFileByFileEntryId(fe.getId())
                                 .andOnSuccessReturn(is -> new BasicFileAndContents(fe, is))
+                        )
                 );
     }
 }
