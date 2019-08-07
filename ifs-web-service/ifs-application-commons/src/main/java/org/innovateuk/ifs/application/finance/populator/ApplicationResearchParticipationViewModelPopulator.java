@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.common.populator;
+package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

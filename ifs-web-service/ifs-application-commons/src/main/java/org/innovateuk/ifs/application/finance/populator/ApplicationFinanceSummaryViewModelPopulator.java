@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.application.common.populator;
+package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -46,7 +45,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -61,24 +59,19 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         final boolean hasFinanceSection = financeSection != null;
         final Long financeSectionId = hasFinanceSection ? financeSection.getId() : null;
-
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-
         final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
         OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
-
-
-        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
-
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
-        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
+        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
         boolean isApplicant = false;
+
         if (user.hasRole(APPLICANT)) {
             RestResult<ProcessRoleResource> role = userRestService.findProcessRole(user.getId(), applicationId);
             isApplicant = role.isSuccess() && applicantProcessRoles().contains(role.getSuccess().getRole());
         }
-
         boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
 

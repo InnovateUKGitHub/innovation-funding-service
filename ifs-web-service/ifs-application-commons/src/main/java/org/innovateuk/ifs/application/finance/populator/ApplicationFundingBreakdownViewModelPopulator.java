@@ -1,13 +1,10 @@
-package org.innovateuk.ifs.application.common.populator;
+package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -15,7 +12,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -25,6 +21,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,40 +34,26 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Component
-public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
+public class ApplicationFundingBreakdownViewModelPopulator {
 
+    @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
     private FinanceService financeService;
+    @Autowired
     private FileEntryRestService fileEntryRestService;
+    @Autowired
     private ApplicationService applicationService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private OrganisationService organisationService;
+    @Autowired
     private InviteService inviteService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private CompetitionRestService competitionRestService;
-
-    public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
-                                                         FileEntryRestService fileEntryRestService,
-                                                         OrganisationRestService organisationRestService,
-                                                         ApplicationService applicationService,
-                                                         SectionService sectionService,
-                                                         QuestionRestService questionRestService,
-                                                         FormInputRestService formInputRestService,
-                                                         OrganisationService organisationService,
-                                                         InviteService inviteService,
-                                                         UserRestService userRestService,
-                                                         CompetitionRestService competitionRestService) {
-        super(sectionService, formInputRestService, questionRestService);
-        this.financeService = financeService;
-        this.fileEntryRestService = fileEntryRestService;
-        this.organisationRestService = organisationRestService;
-        this.applicationService = applicationService;
-        this.sectionService = sectionService;
-        this.organisationService = organisationService;
-        this.inviteService = inviteService;
-        this.userRestService = userRestService;
-        this.competitionRestService = competitionRestService;
-    }
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 

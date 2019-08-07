@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 

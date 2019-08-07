@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.common.viewmodel;
+package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

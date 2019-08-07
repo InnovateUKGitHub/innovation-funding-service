@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfinances.populator;
 
 import org.innovateuk.ifs.application.ApplicationUrlHelper;
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel.YourFinancesRowViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel.YourFinancesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -11,6 +10,8 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -50,7 +51,7 @@ public class YourFinancesModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourFinancesViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         SectionResource yourFinances = sectionRestService.getById(sectionId).getSuccess();
@@ -58,6 +59,7 @@ public class YourFinancesModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<Long> completedSections = sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         List<YourFinancesRowViewModel> rows = yourFinances.getChildSections().stream()
                 .map(sectionRestService::getById)
@@ -69,7 +71,7 @@ public class YourFinancesModelPopulator {
                                 completedSections.contains(subSection.getId()))
                 ).collect(toList());
         return new YourFinancesViewModel(applicationId, application.getName(), competition,
-                applicationFinanceSummaryViewModelPopulator.populate(applicationId, user),
+                applicationFinanceResource,
                 rows);
     }
 

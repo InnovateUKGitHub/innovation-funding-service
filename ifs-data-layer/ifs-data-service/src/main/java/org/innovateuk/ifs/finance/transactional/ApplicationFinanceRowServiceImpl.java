@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -16,8 +15,6 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
@@ -147,47 +144,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
         });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<ApplicationFinanceResource> createApplicationFinance(final ApplicationFinanceResourceId applicationFinanceResourceId) {
-        final Long applicationId = applicationFinanceResourceId.getApplicationId();
-        final Long organisationId = applicationFinanceResourceId.getOrganisationId();
-        return getOpenApplication(applicationId).andOnSuccess(application -> {
-            ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            if (existingFinances != null) {
-                return serviceSuccess(applicationFinanceMapper.mapToResource(existingFinances));
-            }
-
-            return find(organisation(organisationId)).andOnSuccess(organisation -> {
-
-                ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
-
-                applicationFinance = applicationFinanceRepository.save(applicationFinance);
-                initialize(applicationFinance);
-                return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
-            });
-        });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
-        Application application = applicationRepository.findById(applicationFinance.getApplication()).get();
-        return getOpenApplication(application.getId()).andOnSuccess(app ->
-                find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    if (applicationFinance.getOrganisationSize() != null) {
-                        dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
-                    }
-                    if (applicationFinance.getWorkPostcode() != null) {
-                        dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
-                    }
-                    Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
-                    dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
-                    dbFinance = applicationFinanceRepository.save(dbFinance);
-                    return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
-                })
-        );
-    }
 
     @Override
     public ServiceResult<List<FinanceRowItem>> getCostItems(long applicationFinanceId, FinanceRowType type) {
@@ -208,18 +164,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
                     OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(row.getTarget().getApplication().getCompetition().getId(), row.getTarget().getOrganisation().getOrganisationType().getId());
                     return organisationFinanceHandler.getCostHandler(row.getType());
                 }).getSuccess();
-    }
-
-    private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
-        if (fileEntryId == null || fileEntryId == 0L) {
-            applicationFinance.setFinanceFileEntry(null);
-        } else {
-            Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
-            if (fileEntry.isPresent()) {
-                applicationFinance.setFinanceFileEntry(fileEntry.get());
-            }
-        }
-        return applicationFinance;
     }
 
     private FinanceRow addCostItem(ApplicationFinance applicationFinance, FinanceRowItem financeRowItem) {
@@ -315,18 +259,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
-    }
-
-    /**
-     * There are some objects that need a default value, and an instance to use in the form,
-     * so there are some objects that need to be created before loading the form.
-     */
-    private void initialize(ApplicationFinance applicationFinance) {
-        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-
-        for (FinanceRowType costType : applicationFinance.getApplication().getCompetition().getFinanceRowTypes()) {
-            organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
-        }
     }
 
 }

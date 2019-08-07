@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.finance.view;
+package org.innovateuk.ifs.application.finance.populator;
 
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;

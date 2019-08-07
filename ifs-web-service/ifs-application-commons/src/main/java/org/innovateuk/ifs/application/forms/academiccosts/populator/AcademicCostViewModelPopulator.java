@@ -47,7 +47,7 @@ public class AcademicCostViewModelPopulator {
 
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
-        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- ===========================Form: finance breakdown table =========================== -->
-    <th:block th:fragment="finance-breakdown-table" th:if="${financeTotalPerType}">
+    <th:block th:fragment="finance-breakdown-table">
         <div class="project-cost-breakdown"
              th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
@@ -208,11 +208,9 @@
     </th:block>
 
     <!-- ===========================Form: finance summary =========================== -->
-    <th:block th:fragment="application-finances-summary"
-              th:if="${financeTotalPerType}">
+    <th:block th:fragment="application-finances-summary">
 
-        <th:block
-            th:insert="finance/finance-summary :: application_finances_incomplete_warning (collaborativeProject=${collaborativeProject})" />
+        <th:block th:insert="finance/finance-summary :: application_finances_incomplete_warning" />
 
         <div class="govuk-form-group finance-summary table-overflow">
             <table class="govuk-table">
@@ -323,7 +321,7 @@
     </th:block>
     <!-- ===========================Form: finances incomplete =========================== -->
 
-    <th:block th:fragment="application_finances_incomplete_warning (collaborativeProject)"
+    <th:block th:fragment="application_finances_incomplete_warning"
               th:if="${applicant and hasFinanceSection and currentApplication.isOpen()}">
         <th:block th:with="financeSectionMarkedAsComplete=${sectionsMarkedAsComplete.contains(financeSectionId)},
                        enoughCollaboratorsSeekingFunding=${yourFinancesCompleteForAllOrganisations}">
