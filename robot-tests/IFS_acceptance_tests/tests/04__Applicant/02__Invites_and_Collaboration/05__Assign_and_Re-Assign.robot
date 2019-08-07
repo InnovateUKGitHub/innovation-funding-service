@@ -67,7 +67,7 @@ Collaborator should see the terms and conditions from the overview page
     [Documentation]  INFUND-2417
     ...  This test depends on the previous test suite to run first
     [Tags]
-    Given the user clicks the button/link          link = Application overview
+    Given the user clicks the button/link          link = Back to application overview
     When The user clicks the button/link           link = Award terms and conditions
     Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     # checking new Innovate UK terms and conditions

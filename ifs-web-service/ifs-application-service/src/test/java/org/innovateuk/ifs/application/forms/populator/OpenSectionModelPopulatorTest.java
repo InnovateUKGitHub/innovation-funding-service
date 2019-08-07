@@ -153,6 +153,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
                         .withRoleName(LEADAPPLICANT.getName())
+                        .withRole(LEADAPPLICANT)
                         .build())
                 .withOrganisation(organisation)
                 .build();

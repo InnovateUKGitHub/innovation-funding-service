@@ -27,7 +27,8 @@ public class FormInputResourceDocs {
             fieldWithPath("guidanceRows").description("breakdown of guidance by score"),
             fieldWithPath("priority").description("priority of the input, used for rendering purposes only"),
             fieldWithPath("scope").description("the scope for which the input should be rendered"),
-            fieldWithPath("allowedFileTypes").description("a set of allowed file types")
+            fieldWithPath("allowedFileTypes").description("a set of allowed file types"),
+            fieldWithPath("file").description("The file attached to this form input")
     };
 
     public static final FormInputResourceBuilder formInputResourceBuilder = newFormInputResource()

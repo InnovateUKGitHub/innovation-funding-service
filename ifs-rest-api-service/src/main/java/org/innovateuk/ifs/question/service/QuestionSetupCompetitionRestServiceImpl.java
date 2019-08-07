@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.springframework.stereotype.Service;
 
+import static java.lang.String.format;
+
 /**
  * Implements {@link QuestionSetupCompetitionRestService}
  */
@@ -40,5 +42,17 @@ public class QuestionSetupCompetitionRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<Void> deleteById(long questionId) {
         return deleteWithRestResult(QUESTION_SETUP_REST_URL + "/delete-by-id/" + questionId, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> uploadTemplateDocument(long questionId, String contentType, long size, String originalFilename, byte[] multipartFileBytes) {
+        String url = format("%s/%s/%s?filename=%s", QUESTION_SETUP_REST_URL, "template-file", questionId, originalFilename);
+        return postWithRestResult(url, multipartFileBytes, createFileUploadHeader(contentType, size), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteTemplateDocument(long questionId) {
+        String url = format("%s/%s/%s", QUESTION_SETUP_REST_URL, "template-file", questionId);
+        return deleteWithRestResult(url);
     }
 }

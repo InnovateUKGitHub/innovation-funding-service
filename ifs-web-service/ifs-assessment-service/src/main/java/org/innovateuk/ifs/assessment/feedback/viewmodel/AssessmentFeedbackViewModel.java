@@ -34,27 +34,29 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
-    private final boolean appendixExists;
     private final FileDetailsViewModel appendixDetails;
+    private final FileDetailsViewModel templateDocumentDetails;
+    private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
 
     private AssessmentFeedbackViewModel(long assessmentId,
-                                       long daysLeft,
-                                       long daysLeftPercentage,
-                                       long applicationId,
-                                       String applicationName,
-                                       long questionId,
-                                       String questionNumber,
-                                       String questionShortName,
-                                       String questionName,
-                                       Integer maximumScore,
-                                       String applicantResponse,
-                                       List<FormInputResource> assessmentFormInputs,
-                                       boolean scoreFormInputExists,
-                                       boolean scopeFormInputExists,
-                                       boolean appendixExists,
-                                       FileDetailsViewModel appendixDetails,
-                                       List<ResearchCategoryResource> researchCategories) {
+                                        long daysLeft,
+                                        long daysLeftPercentage,
+                                        long applicationId,
+                                        String applicationName,
+                                        long questionId,
+                                        String questionNumber,
+                                        String questionShortName,
+                                        String questionName,
+                                        Integer maximumScore,
+                                        String applicantResponse,
+                                        List<FormInputResource> assessmentFormInputs,
+                                        boolean scoreFormInputExists,
+                                        boolean scopeFormInputExists,
+                                        FileDetailsViewModel appendixDetails,
+                                        FileDetailsViewModel templateDocumentDetails,
+                                        String templateDocumentTitle,
+                                        List<ResearchCategoryResource> researchCategories) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -69,8 +71,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.assessmentFormInputs = assessmentFormInputs;
         this.scoreFormInputExists = scoreFormInputExists;
         this.scopeFormInputExists = scopeFormInputExists;
-        this.appendixExists = appendixExists;
         this.appendixDetails = appendixDetails;
+        this.templateDocumentDetails = templateDocumentDetails;
+        this.templateDocumentTitle = templateDocumentTitle;
         this.researchCategories = researchCategories;
     }
 
@@ -78,25 +81,28 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
-                                       FileDetailsViewModel appendixDetails,  List<ResearchCategoryResource> researchCategories
-                                       ) {
-            this(assessment.getId(),
-                    competition.getAssessmentDaysLeft(),
-                    competition.getAssessmentDaysLeftPercentage(),
-                    assessment.getApplication(),
-                    assessment.getApplicationName(),
-                    question.getId(),
-                    question.getQuestionNumber(),
-                    question.getShortName(),
-                    question.getName(),
-                    question.getAssessorMaximumScore(),
-                    applicantResponse,
-                    assessmentFormInputs,
-                    scoreFormInputExists,
-                    scopeFormInputExists,
-                    appendixDetails != null,
-                    appendixDetails,
-                    researchCategories);
+                                       FileDetailsViewModel appendixDetails,
+                                       FileDetailsViewModel templateDocumentDetails,
+                                       String templateDocumentTitle,
+                                       List<ResearchCategoryResource> researchCategories) {
+        this(assessment.getId(),
+                competition.getAssessmentDaysLeft(),
+                competition.getAssessmentDaysLeftPercentage(),
+                assessment.getApplication(),
+                assessment.getApplicationName(),
+                question.getId(),
+                question.getQuestionNumber(),
+                question.getShortName(),
+                question.getName(),
+                question.getAssessorMaximumScore(),
+                applicantResponse,
+                assessmentFormInputs,
+                scoreFormInputExists,
+                scopeFormInputExists,
+                appendixDetails,
+                templateDocumentDetails,
+                templateDocumentTitle,
+                researchCategories);
     }
 
     public long getAssessmentId() {
@@ -155,31 +161,40 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return scopeFormInputExists;
     }
 
-    public boolean isAppendixExists() {
-        return appendixExists;
-    }
-
     public FileDetailsViewModel getAppendixDetails() {
         return appendixDetails;
+    }
+
+    public FileDetailsViewModel getTemplateDocumentDetails() {
+        return templateDocumentDetails;
     }
 
     public List<ResearchCategoryResource> getResearchCategories() {
         return researchCategories;
     }
 
+    /* view logic. */
     public String getAppendixFileDescription() {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
     }
 
+    public boolean isAppendixExists() {
+        return appendixDetails != null;
+    }
+
+    public String getTemplateDocumentFileDescription() {
+        return format("View %s", templateDocumentTitle);
+    }
+
+    public boolean isTemplateDocumentExists() {
+        return templateDocumentDetails != null;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessmentFeedbackViewModel that = (AssessmentFeedbackViewModel) o;
 
@@ -191,7 +206,6 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(questionId, that.questionId)
                 .append(scoreFormInputExists, that.scoreFormInputExists)
                 .append(scopeFormInputExists, that.scopeFormInputExists)
-                .append(appendixExists, that.appendixExists)
                 .append(applicationName, that.applicationName)
                 .append(questionNumber, that.questionNumber)
                 .append(questionShortName, that.questionShortName)
@@ -200,6 +214,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(applicantResponse, that.applicantResponse)
                 .append(assessmentFormInputs, that.assessmentFormInputs)
                 .append(appendixDetails, that.appendixDetails)
+                .append(templateDocumentDetails, that.templateDocumentDetails)
+                .append(templateDocumentTitle, that.templateDocumentTitle)
                 .append(researchCategories, that.researchCategories)
                 .isEquals();
     }
@@ -221,8 +237,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(assessmentFormInputs)
                 .append(scoreFormInputExists)
                 .append(scopeFormInputExists)
-                .append(appendixExists)
                 .append(appendixDetails)
+                .append(templateDocumentDetails)
+                .append(templateDocumentTitle)
                 .append(researchCategories)
                 .toHashCode();
     }
@@ -244,8 +261,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append("assessmentFormInputs", assessmentFormInputs)
                 .append("scoreFormInputExists", scoreFormInputExists)
                 .append("scopeFormInputExists", scopeFormInputExists)
-                .append("appendixExists", appendixExists)
                 .append("appendixDetails", appendixDetails)
+                .append("templateDocumentDetails", templateDocumentDetails)
+                .append("templateDocumentTitle", templateDocumentTitle)
                 .append("researchCategories", researchCategories)
                 .toString();
     }

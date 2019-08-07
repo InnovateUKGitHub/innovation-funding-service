@@ -94,10 +94,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         for (FileType fileType : fileTypes) {
             switch (fileType.getName()) {
                 case PDF_FILE_TYPE:
-                    validMediaTypes.addAll(PDF.getMediaTypes());
+                    validMediaTypes.addAll(PDF.getMimeTypes());
                     break;
                 case SPREADSHEET_FILE_TYPE:
-                    validMediaTypes.addAll(SPREADSHEET.getMediaTypes());
+                    validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
                     break;
             }
         }

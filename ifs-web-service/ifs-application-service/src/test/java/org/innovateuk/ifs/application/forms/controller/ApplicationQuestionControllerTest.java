@@ -141,20 +141,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Override
     protected ApplicationQuestionController supplyControllerUnderTest() {
-
-        return new ApplicationQuestionController(applicationResearchCategoryModelPopulator,
-                                                 questionModelPopulator,
-                                                 applicationResearchCategoryFormPopulator,
-                                                 applicationNavigationPopulator,
-                                                 applicationService,
-                                                 userRestService,
-                                                 questionService,
-                                                 applicantRestService,
-                                                 applicationRedirectionService,
-                                                 applicationSaver,
-                                                 cookieFlashMessageFilter
-                                                 );
-
+        return new ApplicationQuestionController();
     }
 
     @Before

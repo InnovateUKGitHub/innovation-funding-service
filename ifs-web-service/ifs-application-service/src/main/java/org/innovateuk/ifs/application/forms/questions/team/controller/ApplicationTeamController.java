@@ -60,8 +60,8 @@ public class ApplicationTeamController {
         return "application/questions/application-team";
     }
 
-    @GetMapping(params = "mark_as_complete")
-    public String completeFromReviewPage(@ModelAttribute(value = "form") ApplicationTeamForm form,
+    @GetMapping(params = "show-errors")
+    public String showErrors(@ModelAttribute(value = "form") ApplicationTeamForm form,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          Model model,

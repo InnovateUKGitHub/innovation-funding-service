@@ -59,7 +59,7 @@
                                    type="checkbox" data-switches-button-status="#agree-terms-button"
                                    id="agreed"
                                    th:field="*{agreed}" />
-                            <label th:unless="${model.additionalTerms}" class="govuk-label govuk-checkboxes__label">
+                            <label th:unless="${model.additionalTerms}" for="agreed"  class="govuk-label govuk-checkboxes__label">
                                 I agree to the award terms and conditions set out by Innovate UK.
                             </label>
                             <label th:if="${model.additionalTerms}" class="govuk-label govuk-checkboxes__label">

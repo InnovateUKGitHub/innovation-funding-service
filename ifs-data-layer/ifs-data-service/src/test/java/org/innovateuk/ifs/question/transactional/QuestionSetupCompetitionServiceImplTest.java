@@ -269,7 +269,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         boolean appendixEnabled = true;
         String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
-        FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("PDF");
+        FileTypeCategory allowedFileTypes = FileTypeCategory.PDF;
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(appendixEnabled)
@@ -296,7 +296,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
-        FileTypeCategory allowedFileTypes = FileTypeCategory.fromDisplayName("PDF");
+        FileTypeCategory allowedFileTypes = FileTypeCategory.PDF;
 
         resource.setAppendix(false);
         resource.setAllowedAppendixResponseFileTypes(asSet(PDF));

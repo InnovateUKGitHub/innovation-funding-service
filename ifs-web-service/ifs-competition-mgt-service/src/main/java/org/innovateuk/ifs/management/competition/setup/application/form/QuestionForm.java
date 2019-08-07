@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.application.form;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ public class QuestionForm extends AbstractQuestionForm {
     @Valid
     private List<GuidanceRowForm> guidanceRows = new ArrayList<>();
 
+    private MultipartFile templateDocumentFile;
+
     private boolean removable;
 
     public List<GuidanceRowForm> getGuidanceRows() {
@@ -21,6 +25,14 @@ public class QuestionForm extends AbstractQuestionForm {
 
     public void setGuidanceRows(List<GuidanceRowForm> guidanceRows) {
         this.guidanceRows = guidanceRows;
+    }
+
+    public MultipartFile getTemplateDocumentFile() {
+        return templateDocumentFile;
+    }
+
+    public void setTemplateDocumentFile(MultipartFile templateDocumentFile) {
+        this.templateDocumentFile = templateDocumentFile;
     }
 
     @Override

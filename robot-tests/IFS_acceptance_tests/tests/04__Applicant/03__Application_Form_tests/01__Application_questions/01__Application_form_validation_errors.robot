@@ -104,7 +104,7 @@ Empty text area
     [Tags]
     [Setup]    The user clicks the button/link            link = Application overview
     Given the user clicks the button/link                 link = Project summary
-    When the applicant clears the text area of the "Project Summary"
+    When The user enters text to a text field             css = .editor    ${EMPTY}
     When the user clicks the button/link                  id = application-question-complete
     Then the user should see a field and summary error    Please enter some text.
     When The user enters text to a text field             css = .textarea-wrapped .editor    Test 123
@@ -136,12 +136,6 @@ the applicant inserts an invalid date
     The user enters text to a text field    id = application_details-startdate_year    2015
     Clear Element Text    id = application_details-startdate_month
     The user enters text to a text field    id = application_details-startdate_month    11
-
-the applicant clears the text area of the "Project Summary"
-    Clear Element Text    css = .textarea-wrapped .editor
-    Press Key             css = .textarea-wrapped .editor    \\8
-    Set Focus To Element                   css = .app-submit-btn
-    wait for autosave
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}

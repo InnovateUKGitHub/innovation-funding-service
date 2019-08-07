@@ -10,15 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}")
@@ -49,19 +44,6 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
     }
 
     private AssessorCountSummaryPageResource getCounts(long competitionId, String assessorNameFilter, int page) {
-
-        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("assessorNameFilter", assessorNameFilter);
-
-        String baseUrl = format("%s/find-by-competition-id/%s", "/assessor-count-summary", competitionId);
-
-        String uriWithParams =  UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("sort", (Object) null)
-                .queryParam("assessorNameFilter", assessorNameFilter)
-                .build()
-                .encode()
-                .toUriString();
-
         return applicationCountSummaryRestService
                 .getAssessorCountSummariesByCompetitionId(competitionId, StringUtils.trim(assessorNameFilter), page, PAGE_SIZE)
                 .getSuccess();
