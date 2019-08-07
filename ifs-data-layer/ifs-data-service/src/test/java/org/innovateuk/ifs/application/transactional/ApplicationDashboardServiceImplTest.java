@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
-import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -27,8 +26,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -71,7 +68,7 @@ public class ApplicationDashboardServiceImplTest {
 
         when(interviewAssignmentService.isApplicationAssigned(anyLong())).thenReturn(serviceSuccess(true));
 
-        when(applicationRepository.findApplicationByUserAndRole(EnumSet.of(LEADAPPLICANT, COLLABORATOR), userId))
+        when(applicationRepository.findApplicationsForDashboard(userId))
                 .thenReturn(asList(h2020Application, projectInSetupApplication, completedProjectApplication,
                         inProgressOpenCompApplication, inProgressClosedCompApplication, onHoldNotifiedApplication,
                         unsuccessfulNotifedApplication, ineligibleApplication, submittedAwaitingDecisionApplication));

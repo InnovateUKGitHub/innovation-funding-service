@@ -19,6 +19,7 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -41,7 +42,6 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -50,9 +50,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Rollback
@@ -395,7 +397,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void findApplicationByUserAndRole() {
+    public void findApplicationsForDashboard() {
         loginCompAdmin();
 
         Competition competition = newCompetition().with(id(null)).build();
@@ -419,9 +421,44 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withName("assessorApps")
                 .build();
 
+        Application userOnProjectButNotApplication = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("userOnProjectButNotApplication")
+                .build();
+
+        Application userOnAppButNotProject = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("userOnAppButNotProject")
+                .build();
+
+        Project projectWithoutUser = newProject()
+                .with(id(null))
+                .withName("projectWithoutUser")
+                .withApplication(userOnAppButNotProject)
+                .withProjectUsers(newProjectUser()
+                        .with(id(null))
+                        .withUser(userRepository.findById(getSteveSmith().getId()).get())
+                        .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                        .build(1))
+                .build();
+
+        Project projectWithUser = newProject()
+                .with(id(null))
+                .withName("projectWithUser")
+                .withApplication(userOnProjectButNotApplication)
+                .withProjectUsers(newProjectUser()
+                        .with(id(null))
+                        .withUser(user)
+                        .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                        .build(1))
+                .build();
+
         userRepository.save(user);
         competitionRepository.save(competition);
-        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp));
+        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp, userOnProjectButNotApplication, userOnAppButNotProject));
+        projectRepository.saveAll(asList(projectWithoutUser, projectWithUser));
 
 
         ProcessRole leadRole = newProcessRole()
@@ -445,13 +482,23 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withUser(user)
                 .build();
 
+        ProcessRole appRoleButNotOnProject = newProcessRole()
+                .with(id(null))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(userOnAppButNotProject)
+                .withUser(user)
+                .build();
 
-        processRoleRepository.saveAll(asList(leadRole, collaboratorRole, assessorRole));
+        processRoleRepository.saveAll(asList(leadRole, collaboratorRole, assessorRole, appRoleButNotOnProject));
 
-        List<Application> applications = repository.findApplicationByUserAndRole(asSet(Role.LEADAPPLICANT, Role.COLLABORATOR), user.getId());
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
 
-        assertEquals(2, applications.size());
+        assertEquals(3, applications.size());
         assertTrue(applications.stream().anyMatch(app -> app.getId().equals(leadApp.getId())));
         assertTrue(applications.stream().anyMatch(app -> app.getId().equals(collabApp.getId())));
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(userOnProjectButNotApplication.getId())));
+
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
     }
 }

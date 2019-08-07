@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +14,6 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -207,17 +205,17 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             PREVIOUS_WHERE_CLAUSE)
     int countPrevious(long competitionId);
 
-    @Query(" SELECT DISTINCT app FROM ProcessRole pr" +
-           " JOIN Application app" +
+    @Query(" SELECT DISTINCT app FROM Application app" +
+           " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
+           "        AND pr.user.id=:userId " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR) " +
            " LEFT JOIN Project proj " +
-           " ON proj.application.id = app.id " +
+           "    ON proj.application.id = app.id " +
            " LEFT JOIN ProjectUser pu " +
-           " ON pu.project.id = proj.id and pu.user.id=:userId " +
-           " WHERE pr.role in :roles " +
-           " AND pr.user.id = :userId " +
-           " AND " +
-            "   (proj.id IS NULL " +
-            "    OR pu.id IS NOT NULL)")
-    List<Application> findApplicationByUserAndRole(Set<Role> roles, long userId);
+           "    ON pu.project.id = proj.id " +
+           "        AND pu.user.id=:userId " +
+           " WHERE (proj.id IS NULL AND pr iS NOT NULL)" + // No project exists and user has applicant process role
+           "    OR  pu.id IS NOT NULL") // Or project exists and user is a project user.
+    List<Application> findApplicationsForDashboard(long userId);
 }

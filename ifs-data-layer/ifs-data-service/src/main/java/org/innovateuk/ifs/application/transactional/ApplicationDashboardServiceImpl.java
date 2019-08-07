@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +26,6 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.inProgres
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.ON_HOLD;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
  * Transactional and secured service that generates a dashboard of applications for a user.
@@ -45,7 +42,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
-        List<Application> applications = applicationRepository.findApplicationByUserAndRole(EnumSet.of(LEADAPPLICANT, COLLABORATOR), userId);
+        List<Application> applications = applicationRepository.findApplicationsForDashboard(userId);
 
         List<DashboardInSetupRowResource> inSetup = new ArrayList<>();
         List<DashboardEuGrantTransferRowResource> euGrantTransfer = new ArrayList<>();
