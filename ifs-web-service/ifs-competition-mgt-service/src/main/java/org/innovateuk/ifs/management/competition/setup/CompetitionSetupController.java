@@ -321,7 +321,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
             if (competition.getCompetitionTerms() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document"));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
             }
         } else {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
