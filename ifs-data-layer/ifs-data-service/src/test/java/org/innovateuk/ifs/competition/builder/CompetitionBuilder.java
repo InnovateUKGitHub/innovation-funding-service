@@ -145,10 +145,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                 minProjectDurations);
     }
 
-    public CompetitionBuilder withStatus(CompetitionStatus status) {
-        return with(competition -> setField("status", status, competition));
-    }
-
     public CompetitionBuilder withAssessorsNotifiedDate(ZonedDateTime... dates) {
         return withArray((date, competition) -> competition.notifyAssessors(date), dates);
     }

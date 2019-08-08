@@ -3,7 +3,7 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 /**
  * Applicant dashboard row view model
  */
-public abstract class AbstractApplicantDashboardRowViewModel<T extends AbstractApplicantDashboardRowViewModel> {
+public abstract class AbstractApplicantDashboardRowViewModel {
 
     protected final String title;
     private final long applicationNumber;

@@ -30,7 +30,6 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,7 +142,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
-                    addProcessRoles(project, user, organisation);
                     return addProjectPartner(project, user, organisation);
                 });
     }
@@ -157,12 +155,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }
-    }
-
-    private void addProcessRoles(Project project, User user, Organisation organisation) {
-        Application application = project.getApplication();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
-        processRoleRepository.save(processRole);
     }
 
     @Override

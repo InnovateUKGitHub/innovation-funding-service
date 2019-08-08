@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * View model for each project row in the 'Project' section of the applicant dashboard.
  */
-public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InSetupDashboardRowViewModel> {
+public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
 
     private final long projectId;
     private final String projectTitle;
@@ -27,7 +27,7 @@ public class InSetupDashboardRowViewModel extends AbstractApplicantDashboardRowV
         this.targetStartDate = targetStartDate;
     }
 
-    public InSetupDashboardRowViewModel(DashboardApplicationInSetupResource resource) {
+    public InSetupDashboardRowViewModel(DashboardInSetupRowResource resource) {
         super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
         this.projectId = resource.getProjectId();
         this.projectTitle = resource.getProjectTitle();
