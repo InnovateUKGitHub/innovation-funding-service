@@ -29,6 +29,7 @@
         <div class="project-cost-breakdown"
             th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
+                     hasProcurementOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
                      hasMaterials=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
                      hasCapitalUsage=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
                      hasSubcontracting=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
@@ -50,6 +51,9 @@
                             class="govuk-table__header govuk-table__header--numeric">Labour (&pound;)</th>
                         <th scope="col"
                             th:if="${hasOverheads}"
+                            class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
+                        <th scope="col"
+                            th:if="${hasProcurementOverheads}"
                             class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
                         <th scope="col"
                             th:if="${hasMaterials}"
@@ -119,6 +123,11 @@
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric"
+                                    th:if="${hasProcurementOverheads}"
+                                    th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
+                                    th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric"
                                     th:if="${hasMaterials}"
                                     th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)}"
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
@@ -154,6 +163,8 @@
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasOverheads}"
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                                <td th:if="${hasProcurementOverheads}"
+                                    class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasMaterials}"
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasCapitalUsage}"
@@ -176,6 +187,8 @@
                         <td th:if="${hasLabour}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         <td th:if="${hasOverheads}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasProcurementOverheads}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         <td th:if="${hasMaterials}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
@@ -201,6 +214,11 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                             th:if="${hasOverheads}"
+                            th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
+                            th:if="${hasProcurementOverheads}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"

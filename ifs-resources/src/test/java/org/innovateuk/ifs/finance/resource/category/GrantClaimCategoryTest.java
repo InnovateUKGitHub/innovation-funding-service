@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +47,7 @@ public class GrantClaimCategoryTest {
     @Test
     public void addCost() {
 
-        FinanceRowItem grantClaim3 = new GrantClaim(3L, 30, 1L);
+        FinanceRowItem grantClaim3 = newGrantClaim().withGrantClaimPercentage(30).build();
         costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 

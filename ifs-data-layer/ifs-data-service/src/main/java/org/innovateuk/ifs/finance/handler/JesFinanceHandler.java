@@ -56,7 +56,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
     protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
 
-        for (FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : competition.getFinanceRowTypes()) {
             FinanceRowCostCategory financeRowCostCategory;
             switch (costType) {
                 case FINANCE:

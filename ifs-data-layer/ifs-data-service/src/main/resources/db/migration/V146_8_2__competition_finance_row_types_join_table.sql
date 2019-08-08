@@ -6,6 +6,7 @@ CREATE TABLE competition_finance_row_types (
   finance_row_type enum (
     'LABOUR',
     'OVERHEADS',
+    'PROCUREMENT_OVERHEADS',
     'MATERIALS',
     'CAPITAL_USAGE',
     'SUBCONTRACTING_COSTS',

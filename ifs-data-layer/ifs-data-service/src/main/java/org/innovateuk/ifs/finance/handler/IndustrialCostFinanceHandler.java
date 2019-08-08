@@ -32,6 +32,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     private MaterialsHandler materialsHandler;
 
+    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
+
     private OtherCostHandler otherCostHandler;
 
     private OverheadsHandler overheadsHandler;
@@ -47,18 +49,19 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     private VATHandler vatHandler;
 
     public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                        ProjectFinanceRowRepository projectFinanceRowRepository,
-                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                        QuestionService questionService,
-                                        ApplicationFinanceRepository applicationFinanceRepository,
-                                        ProjectFinanceRepository projectFinanceRepository,
-                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                        OverheadsHandler overheadsHandler,
-                                        SubContractingCostHandler subContractingCostHandler,
-                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                        OtherFundingHandler otherFundingHandler,
-                                        VATHandler vatHandler) {
+                                             ProjectFinanceRowRepository projectFinanceRowRepository,
+                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                             QuestionService questionService,
+                                             ApplicationFinanceRepository applicationFinanceRepository,
+                                             ProjectFinanceRepository projectFinanceRepository,
+                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                             OverheadsHandler overheadsHandler,
+                                             SubContractingCostHandler subContractingCostHandler,
+                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                             OtherFundingHandler otherFundingHandler,
+                                             ProcurementsOverheadsHandler procurementsOverheadsHandler,
+                                             VATHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
@@ -70,6 +73,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
         this.vatHandler = vatHandler;
+        this.procurementsOverheadsHandler = procurementsOverheadsHandler;
     }
 
     @Override
@@ -122,6 +126,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 break;
             case MATERIALS:
                 handler = materialsHandler;
+                break;
+            case PROCUREMENT_OVERHEADS:
+                handler = procurementsOverheadsHandler;
                 break;
             case OTHER_COSTS:
                 handler = otherCostHandler;
