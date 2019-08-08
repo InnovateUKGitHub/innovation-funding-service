@@ -4,10 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.ProcurementOverhead;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -27,6 +24,7 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @DecimalMax(value = "100", message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal projectCost;
 

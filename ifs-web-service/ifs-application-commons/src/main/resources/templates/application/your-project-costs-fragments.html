@@ -599,7 +599,12 @@
                     th:unless="${model.isReadOnly(financeRowType)}">
                     <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the overheads you
                         expect to occur during the
-                        project</p>
+                        project.
+                    </p>
+                    <p class="govuk-body" th:unless="${model.internal}">
+                        The cost to project is the percentage of the total company cost resulting from this project.
+                    </p>
+
                     <div class="govuk-form-group table-overflow">
                         <table class="govuk-table" id="procurement-overheads-costs-table">
                             <thead class="govuk-table__head">
@@ -715,10 +720,10 @@
                    th:errorclass="govuk-input--error"
                    placeholder="0"
                    min="1"
-                   max="9999999999999999999"
+                   max="100"
                    step="1"
                    required="required"
-                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                   th:attr="data-max-errormessage=#{validation.field.max.value.or.lower(100)}"/>
         </td>
         <td class="govuk-table__cell">
             <label th:for="__${path}__.total">
@@ -728,8 +733,8 @@
                    class="alignright govuk-input procurement-overheads-totals"
                    th:id="__${path}__.total"
                    th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
-                   th:attr="data-calculation-fields=|[id='__${path}__.companyCost'],[id='__${path}__.projectCost']|,data-calculation-rawvalue=${row.total}"
-                   data-calculation-operations="/"
+            th:attr="data-calculation-fields=|[id='__${path}__.companyCost'],[id='__${path}__.projectCost'],100|,data-calculation-rawvalue=${row.total}"
+                   data-calculation-operations="*,/"
                    readonly="readonly"/>
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
