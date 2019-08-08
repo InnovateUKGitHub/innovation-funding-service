@@ -45,7 +45,7 @@
                     <p class="govuk-body uploaded-file">No file currently uploaded.</p>
                     <input type="file" id="terms-and-conditions-doc" name="termsAndConditionsDoc" class="inputfile">
                     <label for="terms-and-conditions-doc" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button name="uploadTermsAndConditionsDoc" class="button-secondary" type="submit" data-for-file-upload="terms-and-conditions-doc"></button>
+                    <button name="uploadTermsAndConditionsDoc" class="button-secondary" data-for-file-upload="terms-and-conditions-doc"></button>
                 </div>
                 <div th:if="${model.termsAndConditionsDocUploaded}">
                     <p class="govuk-body"><a target="_blank" th:text="${model.general.competition.competitionTerms.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})}">FileName.pdf</a> (opens in a new window).</p>
