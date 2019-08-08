@@ -25,6 +25,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
@@ -87,6 +88,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
+
+    @Autowired
+    private TermsAndConditionsModelPopulator termsAndConditionsModelPopulator;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -315,8 +319,8 @@ public class CompetitionSetupController {
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if(isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
-            if(competition.getCompetitionTerms() != null) {
+        if (isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
+            if (competition.getCompetitionTerms() == null) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
             }
         } else {
@@ -442,7 +446,7 @@ public class CompetitionSetupController {
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -459,7 +463,8 @@ public class CompetitionSetupController {
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                            Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+
         RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
         return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
@@ -485,14 +490,14 @@ public class CompetitionSetupController {
                                                   CompetitionSetupSection section,
                                                   Model model) {
         if (competition.isNonIfs()) {
-            return "redirect:/non-ifs-competition/setup/" + competition.getId();
+            return format("redirect:/non-ifs-competition/setup/%d", competition.getId());
         }
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
-            return "redirect:/competition/setup/" + competition.getId();
+            return format("redirect:/competition/setup/%d", competition.getId());
         }
 
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPostMarkCompletePath();
+        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";
