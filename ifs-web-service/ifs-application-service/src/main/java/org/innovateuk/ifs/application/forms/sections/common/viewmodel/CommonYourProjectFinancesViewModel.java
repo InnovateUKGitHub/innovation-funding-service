@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 /**
  * A view model that captures attributes common to all of the Your project finances sections.
  */
-public class CommonYourFinancesViewModel {
+public class CommonYourProjectFinancesViewModel {
 
     private final String financesUrl;
     private final String applicationName;
@@ -14,7 +14,7 @@ public class CommonYourFinancesViewModel {
     private final boolean h2020;
 
 
-    public CommonYourFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean h2020, boolean complete) {
+    public CommonYourProjectFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean h2020, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
