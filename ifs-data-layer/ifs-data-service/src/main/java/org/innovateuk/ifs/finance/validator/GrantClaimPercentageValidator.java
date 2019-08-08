@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  * This class validates the GrantClaim.
  */
 @Component
-public class GrantClaimValidator implements Validator {
+public class GrantClaimPercentageValidator implements Validator {
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -30,7 +30,7 @@ public class GrantClaimValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
 
-        if(response.getGrantClaimPercentage() == null) {
+        if(response.getPercentage() == null) {
             rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
             return;
         }
@@ -43,9 +43,9 @@ public class GrantClaimValidator implements Validator {
             return;
         }
 
-        if (response.getGrantClaimPercentage() > max) {
+        if (response.getPercentage() > max) {
             rejectValue(errors, "grantClaimPercentage", "validation.finance.grant.claim.percentage.max", max);
-        } else if(response.getGrantClaimPercentage() < 0) {
+        } else if(response.getPercentage() < 0) {
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }

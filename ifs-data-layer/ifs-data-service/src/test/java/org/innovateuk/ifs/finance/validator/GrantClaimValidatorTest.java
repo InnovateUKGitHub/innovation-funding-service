@@ -25,7 +25,7 @@ public class GrantClaimValidatorTest {
 	private static final Long CLAIM_ID = 1L;
 
 	@InjectMocks
-	private GrantClaimValidator validator;
+	private GrantClaimPercentageValidator validator;
 
 	@Mock
 	private ApplicationFinanceRowRepository financeRowRepository;

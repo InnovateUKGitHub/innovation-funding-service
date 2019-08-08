@@ -42,8 +42,6 @@
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
                 <input type="hidden" id="cacheTest" value=""/>
                 <th:block th:unless="${model.readOnly}" >
-                    <input type="hidden"
-                           th:field="*{otherFundingQuestionId}" />
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -119,9 +117,13 @@
                     </div>
                 </th:block>
                 <th:block th:if="${model.readOnly}">
-                    <dl class="govuk-list readonly-data">
+                    <dl class="govuk-list readonly-data" th:if="${form.fundingPercentage}">
                         <dt>Funding level</dt>
                         <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>
+                    </dl>
+                    <dl class="govuk-list readonly-data" th:if="${form.fundingAmount}">
+                        <dt>Funding level</dt>
+                        <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
                     </dl>
                     <h2 class="govuk-heading-m">Other funding for this project</h2>
                     <th:block th:unless="${form.otherFunding}">

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -107,6 +108,7 @@ public abstract class BaseFinanceResource {
         }
     }
 
+    @JsonIgnore
     public BigDecimal getTotal() {
         if (financeOrganisationDetails == null) {
             return BigDecimal.ZERO;
@@ -127,6 +129,7 @@ public abstract class BaseFinanceResource {
         return total;
     }
 
+    @JsonIgnore
     public GrantClaim getGrantClaim() {
         if (financeOrganisationDetails != null) {
             FinanceRowCostCategory grantClaimPercentageCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
@@ -149,30 +152,39 @@ public abstract class BaseFinanceResource {
         return null;
     }
 
+    @JsonIgnore
+    public boolean isRequestingFunding() {
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.isRequestingFunding();
+    }
+
+    @JsonIgnore
     public Integer getGrantClaimPercentage() {
-        FinanceRowCostCategory financeRowCostCategory = getFinanceOrganisationDetails(FinanceRowType.FINANCE);
-        return (financeRowCostCategory != null && financeRowCostCategory.getTotal() != null) ? financeRowCostCategory.getTotal().intValueExact() : null;
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.calculateClaimPercentage(getTotal());
     }
 
+    @JsonIgnore
+    private BigDecimal getGrantClaimAmount() {
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.calculateGrantClaimAmount(getTotal());
+    }
+
+    @JsonIgnore
     public BigDecimal getTotalFundingSought() {
-        if (getGrantClaimPercentage() == null) {
-            return new BigDecimal(0);
-        }
-        BigDecimal totalFundingSought = getTotal()
-                .multiply(new BigDecimal(getGrantClaimPercentage()))
-                .divide(new BigDecimal(100))
-                .subtract(getTotalOtherFunding());
-
-        return totalFundingSought.max(BigDecimal.ZERO);
-    }
-
-    public BigDecimal getTotalContribution() {
-        return getTotal()
+        return getGrantClaimAmount()
                 .subtract(getTotalOtherFunding())
-                .subtract(getTotalFundingSought())
                 .max(BigDecimal.ZERO);
     }
 
+    @JsonIgnore
+    public BigDecimal getTotalContribution() {
+        return getTotal()
+                .subtract(getGrantClaimAmount())
+                .max(BigDecimal.ZERO);
+    }
+
+    @JsonIgnore
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;

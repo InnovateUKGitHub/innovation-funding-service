@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.populator;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -122,7 +122,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate() {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
 
         service.populateForm(form, APPLICATION_ID, user, Optional.empty());
 
@@ -149,7 +149,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_defaultValues() {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         grantClaim.setGrantClaimPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
@@ -162,7 +162,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_withOrgId() {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         grantClaim.setGrantClaimPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 

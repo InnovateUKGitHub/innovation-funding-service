@@ -7,8 +7,6 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
-import org.innovateuk.ifs.finance.validator.GrantClaimValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
@@ -27,13 +25,9 @@ public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount>
     public static final String GRANT_CLAIM = "Grant Claim Amount";
     public static final String COST_KEY = "grant-claim-amount";
 
-    @Autowired
-    private GrantClaimValidator grantClaimValidator;
-
     @Override
     public void validate(GrantClaimAmount grantClaim, BindingResult bindingResult) {
         super.validate(grantClaim, bindingResult, Default.class);
-        grantClaimValidator.validate(grantClaim, bindingResult);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.validator;
 
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -29,11 +31,16 @@ public class YourFundingFormValidator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    public void validate(YourFundingForm form, Errors errors, UserResource user, long applicationId) {
+    public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId) {
 
         ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
         if (TRUE.equals(form.getRequestingFunding())) {
-            validateFundingLevel(form, errors, user, applicationId);
+            if (form instanceof YourFundingPercentageForm) {
+                validateFundingLevel((YourFundingPercentageForm) form, errors, user, applicationId);
+            }
+            if (form instanceof YourFundingAmountForm) {
+                validateFundingLevel((YourFundingAmountForm) form, errors, user, applicationId);
+            }
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -90,8 +97,9 @@ public class YourFundingFormValidator {
             errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
         }
     }
-
-    private void validateFundingLevel(YourFundingForm form, Errors errors,  UserResource user, long applicationId) {
+    private void validateFundingLevel(YourFundingAmountForm form, Errors errors, UserResource user, long applicationId) {
+    }
+    private void validateFundingLevel(YourFundingPercentageForm form, Errors errors, UserResource user, long applicationId) {
         ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
         if (form.getGrantClaimPercentage() != null) {
             if (form.getGrantClaimPercentage() <= 0) {

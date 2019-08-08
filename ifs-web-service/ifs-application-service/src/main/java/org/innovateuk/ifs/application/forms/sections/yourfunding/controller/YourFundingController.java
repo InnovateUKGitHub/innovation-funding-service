@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.YourF
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -58,68 +62,108 @@ public class YourFundingController {
     @GetMapping("/{applicantOrganisationId}")
     @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    public String managementViewYourFunding(Model model,
+    public String managementViewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
+                                            Model model,
                                             UserResource user,
                                             @PathVariable long applicationId,
                                             @PathVariable long sectionId,
-                                            @PathVariable long applicantOrganisationId,
-                                            @ModelAttribute("form") YourFundingForm form) {
+                                            @PathVariable long applicantOrganisationId) {
 
         YourFundingViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId);
         model.addAttribute("model", viewModel);
-        formPopulator.populateForm(form, applicationId, user, Optional.of(applicantOrganisationId));
+        AbstractYourFundingForm form = formPopulator.populateForm(applicationId, user, Optional.of(applicantOrganisationId));
+        model.addAttribute("form", form );
+//        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "form", new BeanPropertyBindingResult(form, "form"));
         return VIEW;
     }
 
     @GetMapping
-    public String viewYourFunding(Model model,
+    public String viewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
+                                  Model model,
                                   UserResource user,
                                   @PathVariable long applicationId,
-                                  @PathVariable long sectionId,
-                                  @ModelAttribute("form") YourFundingForm form) {
+                                  @PathVariable long sectionId) {
 
         YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, user);
         model.addAttribute("model", viewModel);
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
-        formPopulator.populateForm(form, applicationId, user, Optional.empty());
+        AbstractYourFundingForm form = formPopulator.populateForm(applicationId, user, Optional.empty());
+        model.addAttribute("form", form);
+//        new BeanPropertyBindingResult(form, "form");
         return VIEW;
     }
 
-    @PostMapping
+    @PostMapping(params = "grantClaimPercentage")
     public String saveYourFunding(Model model,
                                   UserResource user,
                                   @PathVariable long applicationId,
                                   @PathVariable long sectionId,
-                                  @ModelAttribute("form") YourFundingForm form) {
+                                  @ModelAttribute("form") YourFundingPercentageForm form) {
         saver.save(applicationId, form, user);
         return redirectToYourFinances(applicationId);
     }
 
-    @PostMapping(params = "edit")
-    public String edit(Model model,
-                       UserResource user,
-                       @PathVariable long applicationId,
-                       @PathVariable long sectionId,
-                       @ModelAttribute("form") YourFundingForm form) {
-        sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
+    @PostMapping(params = "amount")
+    public String saveYourFunding(Model model,
+                                  UserResource user,
+                                  @PathVariable long applicationId,
+                                  @PathVariable long sectionId,
+                                  @ModelAttribute("form") YourFundingAmountForm form) {
+        saver.save(applicationId, form, user);
+        return redirectToYourFinances(applicationId);
     }
 
-    @PostMapping(params = "complete")
+    @PostMapping(params = {"complete", "grantClaimPercentage"})
     public String complete(Model model,
                            UserResource user,
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
-                           @ModelAttribute("form") YourFundingForm form,
+                           @ModelAttribute("form") YourFundingPercentageForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
+        return complete(model,
+                user,
+                applicationId,
+                sectionId,
+                form,
+                bindingResult,
+                validationHandler,
+                (f) -> saver.save(applicationId, f, user));
+    }
+
+    @PostMapping(params = {"complete", "amount"})
+    public String complete(Model model,
+                           UserResource user,
+                           @PathVariable long applicationId,
+                           @PathVariable long sectionId,
+                           @ModelAttribute("form") YourFundingAmountForm form,
+                           BindingResult bindingResult,
+                           ValidationHandler validationHandler) {
+        return complete(model,
+                user,
+                applicationId,
+                sectionId,
+                form,
+                bindingResult,
+                validationHandler,
+                (f) -> saver.save(applicationId, f, user));
+    }
+
+    private <FormType extends AbstractYourFundingForm> String complete(Model model,
+                                                                       UserResource user,
+                                                                       @PathVariable long applicationId,
+                                                                       @PathVariable long sectionId,
+                                                                       @ModelAttribute("form") FormType form,
+                                                                       BindingResult bindingResult,
+                                                                       ValidationHandler validationHandler,
+                                                                       Function<FormType, ServiceResult<Void>> saveFunction) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, user);
         yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(saver.save(applicationId, form, user));
+            validationHandler.addAnyErrors(saveFunction.apply(form));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
                         .getSuccess());
@@ -128,12 +172,22 @@ public class YourFundingController {
         });
     }
 
+    @PostMapping(params = "edit")
+    public String edit(Model model,
+                       UserResource user,
+                       @PathVariable long applicationId,
+                       @PathVariable long sectionId,
+                       @ModelAttribute("form") YourFundingPercentageForm form) {
+        sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
+        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
+    }
+
     @PostMapping(params = "add_cost")
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
                                         @PathVariable long applicationId,
                                         @PathVariable long sectionId,
-                                        @ModelAttribute("form") YourFundingForm form) {
+                                        @ModelAttribute("form") YourFundingPercentageForm form) {
 
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, user);
@@ -144,7 +198,7 @@ public class YourFundingController {
                                            UserResource user,
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
-                                           @ModelAttribute("form") YourFundingForm form,
+                                           @ModelAttribute("form") YourFundingPercentageForm form,
                                            @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
@@ -175,7 +229,7 @@ public class YourFundingController {
 
     @PostMapping("add-row")
     public String ajaxAddRow(Model model) {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
         Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();

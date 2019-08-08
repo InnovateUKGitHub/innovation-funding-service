@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
@@ -74,7 +74,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(empty()));
+        verify(formPopulator).populateForm(any(YourFundingPercentageForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(empty()));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(of(organisationId)));
+        verify(formPopulator).populateForm(any(YourFundingPercentageForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()), eq(of(organisationId)));
     }
 
     @Test
@@ -239,7 +239,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         row.setCostId(Long.valueOf(rowId));
 
         doAnswer((invocation) -> {
-            YourFundingForm form = (YourFundingForm) invocation.getArguments()[0];
+            YourFundingPercentageForm form = (YourFundingPercentageForm) invocation.getArguments()[0];
             form.getOtherFundingRows().put(rowId, row);
             return null;
         }).when(saver).addOtherFundingRow(any());

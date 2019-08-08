@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -77,7 +77,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
 
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setRequestingFunding(true);
         form.setGrantClaimPercentage(100);
 
@@ -115,7 +115,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
     @Test
     public void removeOtherFundingRowForm() {
         String rowId = "12";
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(asMap(rowId, new OtherFundingRowForm()));
 
         service.removeOtherFundingRowForm(form, rowId);
@@ -126,7 +126,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void addOtherFundingRow() {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
 
         service.addOtherFundingRow(form);

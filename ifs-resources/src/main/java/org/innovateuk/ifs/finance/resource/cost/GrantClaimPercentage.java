@@ -68,4 +68,23 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     public void reset() {
         percentage = null;
     }
+
+    @Override
+    public Integer calculateClaimPercentage(BigDecimal total) {
+        return percentage;
+    }
+
+    @Override
+    public boolean isRequestingFunding() {
+        return percentage != null && !percentage.equals(0);
+    }
+
+    @Override
+    public BigDecimal calculateGrantClaimAmount(BigDecimal total) {
+        if (percentage == null) {
+            return BigDecimal.ZERO;
+        }
+        return total.multiply(new BigDecimal(percentage))
+                .divide(new BigDecimal(100));
+    }
 }

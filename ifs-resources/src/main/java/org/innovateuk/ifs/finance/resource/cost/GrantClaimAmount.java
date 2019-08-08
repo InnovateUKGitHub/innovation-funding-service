@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantClaim {
     private Long id;
@@ -37,6 +38,10 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
         return amount;
     }
 
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String getName() {
         return getCostType().getType();
@@ -60,5 +65,28 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
     @Override
     public void reset() {
         amount = null;
+    }
+
+    @Override
+    public Integer calculateClaimPercentage(BigDecimal total) {
+        if (amount == null) {
+            return null;
+        }
+        if (total.equals(BigDecimal.ZERO)) {
+            return 0;
+        }
+        return amount.multiply(new BigDecimal(100))
+                .divide(total, RoundingMode.HALF_UP)
+                .intValue();
+    }
+
+    @Override
+    public boolean isRequestingFunding() {
+        return amount != null && !amount.equals(BigDecimal.ZERO);
+    }
+
+    @Override
+    public BigDecimal calculateGrantClaimAmount(BigDecimal total) {
+        return amount == null ? BigDecimal.ZERO : amount;
     }
 }

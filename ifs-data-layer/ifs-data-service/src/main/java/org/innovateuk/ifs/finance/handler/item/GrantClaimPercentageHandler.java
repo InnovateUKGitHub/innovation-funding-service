@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
-import org.innovateuk.ifs.finance.validator.GrantClaimValidator;
+import org.innovateuk.ifs.finance.validator.GrantClaimPercentageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -31,7 +31,7 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     public static final String COST_KEY = "grant-claim";
 
     @Autowired
-    private GrantClaimValidator grantClaimValidator;
+    private GrantClaimPercentageValidator grantClaimValidator;
 
     @Override
     public void validate(GrantClaimPercentage grantClaim, BindingResult bindingResult) {
