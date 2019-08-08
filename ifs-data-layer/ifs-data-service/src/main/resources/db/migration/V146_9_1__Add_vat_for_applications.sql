@@ -1,4 +1,4 @@
--- IFS-5098 add vat for procurement competitions
+-- IFS-5098 add 0 Vat to all existing applications and projects
 -- Application finance
 INSERT INTO finance_row (`cost`, `description`, `item`, `quantity`, `name`, `target_id`, `row_type`, `type`)
 SELECT

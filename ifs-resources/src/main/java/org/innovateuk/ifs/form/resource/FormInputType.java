@@ -40,9 +40,7 @@ public enum FormInputType implements IdentifiableEnum {
     FINANCIAL_YEAR_END(26),
     FINANCIAL_OVERVIEW_ROW(27),
     FINANCIAL_STAFF_COUNT(28),
-    TEMPLATE_DOCUMENT(29),
-    VAT(30);
-
+    TEMPLATE_DOCUMENT(29);
     private static List<FormInputType> COST_CATEGORIES =
             asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
 
