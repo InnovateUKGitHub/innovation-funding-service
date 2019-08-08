@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
@@ -85,6 +87,7 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
         List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
+        List<FormInputResource> formInputs = newFormInputResource().build(2);
         AssessmentFeedbackAggregateResource aggregateResource = newAssessmentFeedbackAggregateResource().build();
         NavigationViewModel expectedNavigation = new NavigationViewModel();
         expectedNavigation.setNextText("next");
@@ -94,7 +97,7 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
 
 
         AssessQuestionFeedbackViewModel expectedModel =
-                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation);
+                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, formInputs, aggregateResource, expectedNavigation);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));

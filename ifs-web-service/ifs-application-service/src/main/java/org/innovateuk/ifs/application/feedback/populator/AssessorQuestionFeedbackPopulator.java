@@ -57,6 +57,7 @@ public class AssessorQuestionFeedbackPopulator {
       return new AssessQuestionFeedbackViewModel(applicationResource,
               questionResource,
               responseResource,
+              inputs,
               aggregateResource,
               navigationViewModel);
     }
