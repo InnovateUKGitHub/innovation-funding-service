@@ -133,10 +133,10 @@ Validations for procurement Overhead costs
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   ${EMPTY}
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   ${EMPTY}
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   ${EMPTY}
-    the user should see a field error       ${empty_field_warning_message}
-    the user should see a field error       ${empty_field_warning_message}
-    the user should see a field error       ${empty_field_warning_message}
-    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(1) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(2) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(3) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button   #Remove
 
 the user fills in Overhead costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
