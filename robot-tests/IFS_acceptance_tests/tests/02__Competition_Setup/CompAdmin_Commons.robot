@@ -70,7 +70,7 @@ the user selects procurement Terms and Conditions
     the user clicks the button/link       jQuery = button:contains("Done")
     then the user should see a field and summary error  Upload a terms and conditions document.
     the user uploads the file             css = .inputfile  ${valid_pdf}
-    the user clicks the button/link       link = Competition setup
+    the user clicks the button/link       jQuery = button:contains("Done")
     the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 
