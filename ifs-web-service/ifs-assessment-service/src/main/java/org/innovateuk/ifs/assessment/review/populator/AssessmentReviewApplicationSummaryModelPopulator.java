@@ -1,16 +1,19 @@
 package org.innovateuk.ifs.assessment.review.populator;
 
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewFeedbackViewModel;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,7 +33,7 @@ import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 public class AssessmentReviewApplicationSummaryModelPopulator {
 
     @Autowired
-    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
+    private ApplicationReadOnlyViewModelPopulator summaryViewModelPopulator;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -47,18 +50,24 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     @Autowired
     private SectionService sectionService;
 
-    public AssessmentReviewApplicationSummaryViewModel populateModel(ApplicationForm form, UserResource user, long applicationId) {
-        form.setAdminMode(true);
-        SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
-        CompetitionResource competition = competitionRestService.getCompetitionById(summaryViewModel.getCurrentApplication().getCompetition()).getSuccess();
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    public AssessmentReviewApplicationSummaryViewModel populateModel(UserResource user, long applicationId) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        ApplicationReadOnlyViewModel readOnlyViewModel = summaryViewModelPopulator.populate(application, competition, user, ApplicationReadOnlySettings.defaultSettings());
         long termsAndConditionsId = sectionService.getTermsAndConditionsSection(competition.getId()).getQuestions().get(0);
-        return new AssessmentReviewApplicationSummaryViewModel(summaryViewModel,
+        return new AssessmentReviewApplicationSummaryViewModel(readOnlyViewModel,
                                                                competition,
-                                                               assessmentDetails(applicationId, user, summaryViewModel),
+                                                               assessmentDetails(applicationId, user),
                                                                termsAndConditionsId);
     }
 
-    private AssessmentReviewFeedbackViewModel assessmentDetails(long applicationId, UserResource user, SummaryViewModel viewModel) {
+    private AssessmentReviewFeedbackViewModel assessmentDetails(long applicationId, UserResource user) {
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
         if (isAssessorForApplication(userApplicationRoles, user)) {
             List<AssessorFormInputResponseResource> allAssessorResponses = assessorFormInputResponseRestService
@@ -67,7 +76,9 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
 
             if(!allAssessorResponses.isEmpty()) {
 
-                List<AssessmentResource> feedbackSummary = viewModel.getFeedbackSummary();
+                List<AssessmentResource> feedbackSummary = assessmentRestService
+                        .getByUserAndApplication(user.getId(), applicationId)
+                        .getSuccess();
 
                 long assessmentId = feedbackSummary.get(0).getId();
 

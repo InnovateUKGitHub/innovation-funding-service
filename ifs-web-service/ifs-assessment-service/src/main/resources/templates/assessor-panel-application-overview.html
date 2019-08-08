@@ -24,9 +24,10 @@
               method="post" enctype="multipart/form-data"
               th:object="${form}" class="form-serialize-js section-overview">
             <h2 class="govuk-heading-m">Details</h2>
-            <th:block ifs:global="${model.feedbackViewModel}">
-                <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
-            </th:block>
+
+
+            <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

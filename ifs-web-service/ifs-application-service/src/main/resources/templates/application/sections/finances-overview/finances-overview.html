@@ -37,18 +37,16 @@
 
         <th:block th:unless="${model.procurement}">
             <h2 class="govuk-heading-m">Finances summary</h2>
-            <th:block th:insert="finance/finance-summary :: application-finances-summary"
-                      ifs:global="${model.applicationFinanceSummaryViewModel}"/>
+            <th:block th:insert="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})"/>
         </th:block>
         <h2 class="govuk-heading-m">Project cost breakdown</h2>
-        <th:block th:insert="finance/finance-summary :: finance-breakdown-table"
-                  ifs:global="${model.applicationFundingBreakdownViewModel}" />
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})"/>
         <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
-
-
 
         <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return
             to application overview</a>
+
+
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer"/>

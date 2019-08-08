@@ -23,12 +23,11 @@
         <th:block
             th:unless="${model.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
             <h2 class="govuk-heading-m">Finances summary</h2>
-            <th:block th:insert="finance/finance-summary :: application-finances-summary"
-                      ifs:global="${model.applicationFundingBreakdownViewModel}"/>
+            <th:block th:insert="finance/finance-summary :: application-finances-summary(${model.applicationFundingBreakdownViewModel})" />
         </th:block>
 
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Project cost breakdown</h2>
-        <th:block ifs:global="${model.applicationFinanceSummaryViewModel}" th:insert="finance/finance-summary :: finance-breakdown-table"/>
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.aplicationFinanceSummaryViewModel})"/>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

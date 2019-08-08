@@ -38,6 +38,7 @@ public class FinancesOverviewModelPopulator {
     @Autowired
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
+
     public FinancesOverviewViewModel populate(long applicationId, long sectionId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();

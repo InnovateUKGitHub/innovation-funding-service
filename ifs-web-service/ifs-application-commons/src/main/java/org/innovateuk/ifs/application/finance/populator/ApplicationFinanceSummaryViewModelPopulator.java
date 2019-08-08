@@ -1,144 +1,142 @@
 package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceSummaryTableRow;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 
-import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
+import static java.util.Collections.emptyMap;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
+
     @Autowired
-    private FinanceService financeService;
+    private ApplicationRestService applicationRestService;
+
     @Autowired
-    private FileEntryRestService fileEntryRestService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     @Autowired
     private OrganisationRestService organisationRestService;
-    @Autowired
-    private ApplicationService applicationService;
-    @Autowired
-    private SectionService sectionService;
+
     @Autowired
     private UserRestService userRestService;
-    @Autowired
-    private OrganisationService organisationService;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private SectionStatusRestService sectionStatusRestService;
+
+    @Autowired
+    private SectionRestService sectionRestService;
+
+    @Autowired
+    private InviteService inviteService;
+
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
-        ApplicationResource application = applicationService.getById(applicationId);
+
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        Optional<ProcessRoleResource> currentUsersRole = getCurrentUsersRole(processRoles, user);
 
-        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
-                financeService,
-                fileEntryRestService,
-                applicationId
-        );
-
-        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        final boolean hasFinanceSection = financeSection != null;
-        final Long financeSectionId = hasFinanceSection ? financeSection.getId() : null;
-        final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getLeadOrganisation(applicationId, applicationOrganisations);
-        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
-
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
-        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
-        boolean isApplicant = false;
-
-        if (user.hasRole(APPLICANT)) {
-            RestResult<ProcessRoleResource> role = userRestService.findProcessRole(user.getId(), applicationId);
-            isApplicant = role.isSuccess() && applicantProcessRoles().contains(role.getSuccess().getRole());
-        }
-        boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
-                completedSectionsByOrganisation, application.getCompetition());
-
-        return new ApplicationFinanceSummaryViewModel(
-                application,
-                hasFinanceSection,
-                organisationFinanceOverview.getTotalPerType(),
-                applicationOrganisations,
-                sectionsMarkedAsComplete,
-                financeSectionId,
-                leadOrganisation,
-                competition,
-                getUserOrganisation(user, applicationId),
-                organisationFinanceOverview.getFinancesByOrganisation(),
-                organisationFinanceOverview.getTotalFundingSought(),
-                organisationFinanceOverview.getTotalOtherFunding(),
-                organisationFinanceOverview.getTotalContribution(),
-                organisationFinanceOverview.getTotal(),
-                completedSectionsByOrganisation,
-                eachCollaboratorFinanceSectionId,
-                yourFinancesCompleteForAllOrganisations,
-                application.isCollaborativeProject(),
-                isApplicant
-        );
-    }
-
-    private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
-        return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-    }
-
-    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                              OrganisationResource userOrganisation) {
-        return completedSectionsByOrganisation.getOrDefault(
-                userOrganisation.getId(),
-                new HashSet<>()
-        );
-    }
-
-    private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                                   Long competitionId) {
-        Optional<Long> optionalFinanceOverviewSectionId =
-                getOnlyElementOrEmpty(sectionService.getSectionsForCompetitionByType(competitionId,
-                        OVERVIEW_FINANCES)).map(SectionResource::getId);
-
-        return optionalFinanceOverviewSectionId
-                .map(financeOverviewSectionId -> completedSectionsByOrganisation.values()
-                        .stream()
-                        .allMatch(completedSections -> completedSections.contains(financeOverviewSectionId)))
+        boolean open = application.isOpen() && competition.isOpen() && currentUsersRole
+                .map(role -> applicantProcessRoles().contains(role.getRole()))
                 .orElse(false);
+        Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
+                .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
+        List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
+        Map<Long, Set<Long>> completedSections;
+        if (open) {
+            completedSections = sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
+        } else {
+            completedSections = emptyMap();
+        }
+        long leadOrganisationId = leadOrganisationId(processRoles);
+        SectionResource financeSection = getFinanceSection(competition.getId());
+
+        List<FinanceSummaryTableRow> rows = organisations.stream()
+                .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
+                .collect(toList());
+
+        rows.addAll(pendingOrganisations(applicationId));
+
+        return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open, application.isCollaborativeProject(),
+                currentUsersRole.map(ProcessRoleResource::getOrganisationId).orElse(null));
     }
 
-    private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
-        if (!eachOrganisationFinanceSections.isEmpty()) {
-            return eachOrganisationFinanceSections.get(0).getId();
-        }
+    private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
+        return processRoles.stream()
+                .filter(role -> role.getUser().equals(user.getId()))
+                .findFirst();
+    }
 
+    private Collection<FinanceSummaryTableRow> pendingOrganisations(long applicationId) {
+        return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
+                .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
+                .distinct()
+                .map(FinanceSummaryTableRow::pendingOrganisation)
+                .collect(toList());
+    }
+
+    private long leadOrganisationId(List<ProcessRoleResource> processRoles) {
+        return processRoles.stream()
+                .filter(role -> LEADAPPLICANT.equals(role.getRole()))
+                .findFirst()
+                .orElseThrow(ObjectNotFoundException::new)
+                .getOrganisationId();
+    }
+
+    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection) {
+        Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
+        return new FinanceSummaryTableRow(
+                organisation.getId(),
+                organisation.getName(),
+                organisation.getId().equals(leadOrganisationId) ? "Lead organisation" : "Partner",
+                finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
+                finance.map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(0),
+                finance.map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO),
+                finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO),
+                finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO),
+                ofNullable(completedSections.get(organisation.getId()))
+                        .map(completedIds -> completedIds.contains(financeSection.getId()))
+                        .orElse(false)
+        );
+    }
+
+    private SectionResource getFinanceSection(long competitionId) {
+        List<SectionResource> sections = sectionRestService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FINANCE).getSuccess();
+        if (sections.size() == 1) {
+            return sections.get(0);
+        }
         return null;
-    }
-
-    private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
-        OrganisationResource userOrganisation = null;
-
-        if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR, STAKEHOLDER, MONITORING_OFFICER)) {
-            ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
-        }
-
-        return userOrganisation;
     }
 }

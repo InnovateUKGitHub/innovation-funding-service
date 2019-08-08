@@ -50,4 +50,5 @@ public class FinancesOverviewViewModel {
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
     }
+
 }

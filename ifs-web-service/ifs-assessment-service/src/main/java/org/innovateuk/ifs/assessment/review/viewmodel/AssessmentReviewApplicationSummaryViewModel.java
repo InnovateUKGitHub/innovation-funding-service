@@ -1,36 +1,30 @@
 package org.innovateuk.ifs.assessment.review.viewmodel;
 
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 public class AssessmentReviewApplicationSummaryViewModel {
 
-    private final SummaryViewModel summaryViewModel;
+    private final ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel;
 
     private final CompetitionResource currentCompetition;
 
     private final AssessmentReviewFeedbackViewModel feedbackViewModel;
 
-    private final boolean collaborativeProject;
-
     private final long applicationId;
 
-    private final long applicationTermsQuestionId;
-
-    public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel,
+    public AssessmentReviewApplicationSummaryViewModel(ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel,
                                                        CompetitionResource currentCompetition,
                                                        AssessmentReviewFeedbackViewModel feedbackViewModel,
-                                                       long termsAndConditionsId) {
-        this.summaryViewModel = summaryViewModel;
+                                                       long applicationId) {
+        this.ApplicationReadOnlyViewModel = ApplicationReadOnlyViewModel;
         this.currentCompetition = currentCompetition;
         this.feedbackViewModel = feedbackViewModel;
-        this.collaborativeProject = summaryViewModel.getCurrentApplication().isCollaborativeProject();
-        this.applicationId = summaryViewModel.getCurrentApplication().getId();
-        this.applicationTermsQuestionId = termsAndConditionsId;
+        this.applicationId = applicationId;
     }
 
-    public SummaryViewModel getSummaryViewModel() {
-        return summaryViewModel;
+    public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
+        return ApplicationReadOnlyViewModel;
     }
 
     public CompetitionResource getCurrentCompetition() {
@@ -41,15 +35,7 @@ public class AssessmentReviewApplicationSummaryViewModel {
         return feedbackViewModel;
     }
 
-    public boolean isCollaborativeProject() {
-        return collaborativeProject;
-    }
-
     public long getApplicationId() {
         return applicationId;
-    }
-
-    public long getApplicationTermsQuestionId() {
-        return applicationTermsQuestionId;
     }
 }
