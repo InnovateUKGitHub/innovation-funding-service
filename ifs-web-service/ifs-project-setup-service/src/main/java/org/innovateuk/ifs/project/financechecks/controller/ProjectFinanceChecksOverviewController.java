@@ -62,7 +62,6 @@ public class ProjectFinanceChecksOverviewController {
     public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
-        Long applicationId = project.getApplication();
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
@@ -73,19 +72,19 @@ public class ProjectFinanceChecksOverviewController {
 
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
-        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs), project.getApplication());
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication());
     }
 
-    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs) {
+    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) ->
                 financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), org.getOrganisation()));
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new FinanceCheckSummariesViewModel(summaries, partnerOrgs, competition.getFundingType());
     }
 
-    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
+    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<ProjectFinanceResource> finances = financeService.getProjectFinances(projectId);
-        return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs);
+        return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
     }
 }

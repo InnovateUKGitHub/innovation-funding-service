@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;

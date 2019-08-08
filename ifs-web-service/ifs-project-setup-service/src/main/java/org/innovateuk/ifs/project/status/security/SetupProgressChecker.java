@@ -92,7 +92,7 @@ class SetupProgressChecker {
         return projectTeamStatus.getLeadPartnerStatus().isGrantOfferLetterSent();
     }
 
-    public boolean isOffline() {
-        return projectTeamStatus.getProjectState().isOffline();
+    public boolean isOfflineOrWithdrawn() {
+        return projectTeamStatus.getProjectState().isOffline() || projectTeamStatus.getProjectState().isWithdrawn();
     }
 }

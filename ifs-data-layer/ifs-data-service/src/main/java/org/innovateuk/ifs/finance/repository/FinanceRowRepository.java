@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.repository;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+
 import java.util.List;
 
 /**
@@ -8,8 +10,6 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface FinanceRowRepository<T> {
-    List<T> findByTargetId(Long targetId);
-    T findOneByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
-    List<T> findByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
-    List<T> findByTargetIdAndQuestionId(Long targetId, Long questionId);
+    List<T> findByTargetId(long targetId);
+    List<T> findByTargetIdAndType(long targetId, FinanceRowType type);
 }

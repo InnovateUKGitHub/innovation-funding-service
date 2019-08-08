@@ -9,6 +9,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -27,6 +29,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -44,6 +47,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private OrganisationService organisationService;
     private InviteService inviteService;
     private UserRestService userRestService;
+    private CompetitionRestService competitionRestService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
@@ -54,7 +58,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          FormInputRestService formInputRestService,
                                                          OrganisationService organisationService,
                                                          InviteService inviteService,
-                                                         UserRestService userRestService) {
+                                                         UserRestService userRestService,
+                                                         CompetitionRestService competitionRestService) {
         super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
@@ -64,11 +69,13 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.organisationService = organisationService;
         this.inviteService = inviteService;
         this.userRestService = userRestService;
+        this.competitionRestService = competitionRestService;
     }
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
 
@@ -116,7 +123,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     pendingOrganisationNames,
                     application,
                     userOrganisation,
-                    showDetailedFinanceLink);
+                    showDetailedFinanceLink,
+                    competition);
         } else {
             return new ApplicationFundingBreakdownViewModel(
                     organisationFinanceOverview.getTotalPerType(),
@@ -127,7 +135,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     pendingOrganisationNames,
                     application,
                     userOrganisation,
-                    showDetailedFinanceLink);
+                    showDetailedFinanceLink,
+                    competition);
         }
 
     }
@@ -154,8 +163,10 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         OrganisationResource userOrganisation = null;
 
         if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR, STAKEHOLDER, MONITORING_OFFICER)) {
-            ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
+            Optional<ProcessRoleResource> processRoleResource = userRestService.findProcessRole(user.getId(), applicationId).toOptionalIfNotFound().getSuccess();
+            if (processRoleResource.isPresent()) {
+                userOrganisation = organisationRestService.getOrganisationById(processRoleResource.get().getOrganisationId()).getSuccess();
+            }
         }
 
         return userOrganisation;

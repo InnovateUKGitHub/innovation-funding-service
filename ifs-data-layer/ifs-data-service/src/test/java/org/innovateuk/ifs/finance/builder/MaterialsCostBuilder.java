@@ -43,6 +43,6 @@ public class MaterialsCostBuilder extends AbstractCostBuilder<Materials, Materia
 
     @Override
     protected Materials createInitial() {
-        return new Materials();
+        return newInstance(Materials.class);
     }
 }

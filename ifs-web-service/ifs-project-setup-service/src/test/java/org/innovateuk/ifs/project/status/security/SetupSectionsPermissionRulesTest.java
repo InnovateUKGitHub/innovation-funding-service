@@ -234,12 +234,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
-    public void projectSetupStatusAccessUnavailableForWithdrawnProject() {
-        assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectSetupStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectServiceMock).getById(withdrawnProject.getId());
-    }
-
-    @Test
     public void projectTeamStatusAccessUnavailableForWithdrawnProject() {
         assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectTeamStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
         verify(projectServiceMock).getById(withdrawnProject.getId());

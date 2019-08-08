@@ -1,38 +1,33 @@
 package org.innovateuk.ifs.application.feedback.controller;
 
-import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopulator;
 import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamViewModel;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
@@ -42,12 +37,11 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicationMockMVCTest<ApplicationQuestionFeedbackController> {
+public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMockMVCTest<ApplicationQuestionFeedbackController> {
 
     @Spy
     @InjectMocks
@@ -58,46 +52,28 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
     private FeedbackNavigationPopulator feedbackNavigationPopulator;
 
     @Mock
-    private ApplicantRestService applicantRestService;
-
-    @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Mock
-    private CategoryRestService categoryRestServiceMock;
-
-    @Mock
-    private UserRestService userRestServiceMock;
-
-    @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-
-    @Mock
-    private AssessmentRestService assessmentRestService;
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Mock
-    private InterviewResponseRestService interviewResponseRestService;
+    private FormInputResponseRestService formInputResponseRestService;
+
+    @Mock
+    private QuestionService questionService;
+
+    @Mock
+    private QuestionRestService questionRestService;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
+
+    @Mock
+    private FormInputRestService formInputRestService;
 
     @Mock
     private ApplicationTeamPopulator applicationTeamPopulator;
-
-    @Before
-    public void setUpData() {
-
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        this.setupApplicationResponses();
-        this.setupFinances();
-        this.setupInvites();
-
-        questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
-        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
-        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
-    }
 
     @Test
     public void applicationAssessorQuestionFeedback() throws Exception {
@@ -135,7 +111,6 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
                 .andExpect(model().attribute("model", expectedModel));
     }
 
-
     @Test
     public void applicationAssessorQuestionFeedback_ResearchCategory() throws Exception {
         long applicationId = 1L;
@@ -157,10 +132,6 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
         expectedNavigation.setNextUrl("/application/1/question/3/feedback");
         expectedNavigation.setPreviousText("previous");
         expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
-
-
-        AssessQuestionFeedbackViewModel expectedModel =
-                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));

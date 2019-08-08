@@ -74,7 +74,7 @@ public class TravelRowForm extends AbstractCostRowForm<TravelCost> {
     }
 
     @Override
-    public TravelCost toCost() {
-        return new TravelCost(getCostId(), item, eachCost, times);
+    public TravelCost toCost(Long financeId) {
+        return new TravelCost(getCostId(), item, eachCost, times, financeId);
     }
 }

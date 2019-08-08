@@ -22,18 +22,17 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/project")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class SetupStatusController {
 
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
     @AsyncMethod
     public String viewProjectSetupStatus(@PathVariable("projectId") long projectId,
                                          Model model,
-                                         UserResource loggedInUser,
+                                          UserResource loggedInUser,
                                          HttpServletRequest request,
                                          @RequestParam MultiValueMap<String, String> queryParams) {
         queryParams.add("projectId", String.valueOf(projectId));

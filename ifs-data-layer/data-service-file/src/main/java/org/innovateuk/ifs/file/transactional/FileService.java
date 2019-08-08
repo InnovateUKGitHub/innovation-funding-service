@@ -19,7 +19,7 @@ public interface FileService {
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier);
 
-    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This Service is to be used within other services", mustBeSecuredByOtherServices = false)
     ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId);
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)

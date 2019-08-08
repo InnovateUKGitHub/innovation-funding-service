@@ -24,7 +24,7 @@ public class LabourCostCategoryBuilder extends AbstractFinanceRowCostCategoryBui
 
     @Override
     protected LabourCostCategory createInitial() {
-        return new LabourCostCategory();
+        return newInstance(LabourCostCategory.class);
     }
 }
 

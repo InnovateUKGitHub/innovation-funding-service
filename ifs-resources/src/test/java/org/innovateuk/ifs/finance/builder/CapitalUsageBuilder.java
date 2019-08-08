@@ -55,6 +55,6 @@ public class CapitalUsageBuilder extends BaseBuilder<CapitalUsage, CapitalUsageB
 
     @Override
     protected CapitalUsage createInitial() {
-        return new CapitalUsage();
+        return newInstance(CapitalUsage.class);
     }
 }

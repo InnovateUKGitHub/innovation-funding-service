@@ -31,7 +31,7 @@ Applicant submits his application
     Given the user clicks the button/link               link=Application details
     When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
-    Then the lead applicant fills all the questions and marks as complete(Programme)
+    Then the lead applicant fills all the questions and marks as complete(procurement)
     When the user navigates to Your-finances page                ${appl_name}
     And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
     And the user accept the competition terms and conditions

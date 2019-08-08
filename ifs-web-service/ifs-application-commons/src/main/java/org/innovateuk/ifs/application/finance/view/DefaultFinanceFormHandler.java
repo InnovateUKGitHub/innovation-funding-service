@@ -4,7 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
  * to {@link FinanceRowItem}.
  */
 @Component
-public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFinanceRowRestService> implements FinanceFormHandler {
+public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<ApplicationFinanceRowRestService> implements FinanceFormHandler {
 
     private final FinanceService financeService;
 
     @Autowired
     public DefaultFinanceFormHandler(final FinanceService financeService,
-                                     final DefaultFinanceRowRestService defaultFinanceRowRestService) {
+                                     final ApplicationFinanceRowRestService defaultFinanceRowRestService) {
         super(defaultFinanceRowRestService);
         this.financeService = financeService;
     }

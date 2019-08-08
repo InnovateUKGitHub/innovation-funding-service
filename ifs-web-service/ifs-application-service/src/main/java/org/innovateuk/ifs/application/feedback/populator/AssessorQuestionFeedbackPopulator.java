@@ -6,10 +6,12 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -31,6 +33,9 @@ public class AssessorQuestionFeedbackPopulator {
     private FeedbackNavigationPopulator feedbackNavigationPopulator;
 
     @Autowired
+    private FormInputRestService formInputRestService;
+
+    @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, QuestionResource questionResource, UserResource user, Model model) {
@@ -42,15 +47,17 @@ public class AssessorQuestionFeedbackPopulator {
                         new FormInputResponseResource(applicationResource.getResearchCategory().getName())
                 ) : formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionResource.getId()).getSuccess();
 
+        List<FormInputResource> inputs = formInputRestService.getByQuestionId(questionResource.getId()).getSuccess();
+
         AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
                 .getAssessmentAggregateFeedback(applicationId, questionResource.getId())
                 .getSuccess();
         NavigationViewModel navigationViewModel = feedbackNavigationPopulator.addNavigation(questionResource, applicationId);
 
-        return new AssessQuestionFeedbackViewModel(applicationResource,
-                questionResource,
-                responseResource,
-                aggregateResource,
-                navigationViewModel);
+      return new AssessQuestionFeedbackViewModel(applicationResource,
+              questionResource,
+              responseResource,
+              aggregateResource,
+              navigationViewModel);
     }
 }

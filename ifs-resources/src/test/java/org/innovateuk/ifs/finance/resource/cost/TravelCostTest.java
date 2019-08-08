@@ -20,7 +20,7 @@ public class TravelCostTest {
         item = "Travel to America for research consultancy";
         cost = new BigDecimal(600);
         quantity = 12;
-        travelCost = new TravelCost(id, item, cost, quantity);
+        travelCost = new TravelCost(id, item, cost, quantity, 1L);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TravelCostTest {
 
     @Test
     public void calculatedTotalMustBeZeroWhenQuantityOrCostAreNotSetTest() throws Exception {
-        TravelCost travelCostWithoutValues = new TravelCost();
+        TravelCost travelCostWithoutValues = new TravelCost(1L);
         assertEquals(BigDecimal.ZERO, travelCostWithoutValues.getTotal());
     }
 }

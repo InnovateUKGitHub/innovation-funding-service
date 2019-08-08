@@ -37,7 +37,7 @@ public class SectionServiceImpl implements SectionService {
     private QuestionRestService questionRestService;
 
     @Override
-    public List<ValidationMessages> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
+    public ValidationMessages markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
         LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
         return sectionStatusRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }

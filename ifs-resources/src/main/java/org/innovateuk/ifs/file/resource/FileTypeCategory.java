@@ -1,40 +1,76 @@
 package org.innovateuk.ifs.file.resource;
 
-import java.util.List;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static com.google.common.collect.Sets.union;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.joining;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 public enum FileTypeCategory {
-    SPREADSHEET("spreadsheet", asList(
-            "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/vnd.oasis.opendocument.spreadsheet"
-    )),
-    PDF("PDF", singletonList("application/pdf"));
+    SPREADSHEET("spreadsheet",
+                union(MimeTypes.MS_SPREADSHEET, MimeTypes.OPEN_SPREADSHEET),
+                FileExtensions.SPREADSHEET
+    ),
+    PDF("PDF",
+            MimeTypes.PDF,
+            FileExtensions.PDF
+    ),
+    DOCUMENT("text document",
+            union(MimeTypes.MS_DOCUMENT, MimeTypes.OPEN_DOCUMENT),
+            FileExtensions.DOCUMENT
+    ),
+    OPEN_DOCUMENT(MimeTypes.OPEN_DOCUMENT),
+    OPEN_SPREADSHEET(MimeTypes.OPEN_SPREADSHEET);
 
     private String displayName;
-    private List<String> mediaTypes;
+    private Set<String> mimeTypes;
+    private Set<String> fileExtensions;
 
-    FileTypeCategory(String displayName, List<String> mediaTypes) {
+
+    FileTypeCategory(String displayName, Set<String> mimeTypes, Set<String> fileExtensions) {
         this.displayName = displayName;
-        this.mediaTypes = mediaTypes;
+        this.mimeTypes = mimeTypes;
+        this.fileExtensions = fileExtensions;
+    }
+
+    FileTypeCategory(Set<String> mimeTypes) {
+        this(null, mimeTypes, emptySet());
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public List<String> getMediaTypes() {
-        return mediaTypes;
+    public Set<String> getMimeTypes() {
+        return mimeTypes;
     }
 
-    public static FileTypeCategory fromDisplayName(String displayName) {
-        return simpleFindFirst(
-                FileTypeCategory.values(),
-                category -> category.getDisplayName().equals(displayName)
-        )
-                .orElse(null);
+    public Set<String> getFileExtensions() {
+        return fileExtensions;
+    }
+
+    public String getDisplayMediaTypes() {
+        return fileExtensions.stream().collect(joining(", "));
+    }
+
+    public static class MimeTypes {
+        private MimeTypes() {}
+        public static final Set<String> PDF = singleton("application/pdf");
+
+        public static final Set<String> MS_SPREADSHEET = asSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        public static final Set<String> OPEN_SPREADSHEET = singleton("application/vnd.oasis.opendocument.spreadsheet");
+
+        public static final Set<String> MS_DOCUMENT =  asSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        public static final Set<String> OPEN_DOCUMENT = singleton("application/vnd.oasis.opendocument.text");
+    }
+
+    public static class FileExtensions {
+        private FileExtensions() {}
+        public static final Set<String> PDF = singleton(".pdf");
+
+        public static final Set<String> SPREADSHEET = asSet(".ods", ".xls", ".xlsx");
+        public static final Set<String> DOCUMENT =  asSet(".odt", ".doc", ".docx");
     }
 }

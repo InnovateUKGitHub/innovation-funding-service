@@ -25,9 +25,11 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Application team',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
-
+        <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Application team',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
         <th:block th:if="${model.complete AND !model.projectSetup}">
             <div class="success-alert assignee govuk-!-margin-bottom-6">
                 <p class="govuk-body">Application team is marked as complete</p>

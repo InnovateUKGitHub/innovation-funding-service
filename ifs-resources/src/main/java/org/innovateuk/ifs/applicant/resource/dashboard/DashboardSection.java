@@ -8,7 +8,7 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * An enum representing the a logical grouping of applications in the applications dashboard into sections
+ * An enum representing the a logical grouping of applications and projects in the applicant dashboard into sections
  */
 public enum DashboardSection {
 

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance;
 
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,25 +58,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId) {
-        return projectFinanceRestService.getFinanceTotals(projectId).handleSuccessOrFailure(
-                failure -> Collections.<ProjectFinanceResource>emptyList(),
-                success -> success
-        );
-    }
-
-    @Override
-    public ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId) {
-        return projectFinanceRestService.addProjectFinanceForOrganisation(projectId, organisationId).getSuccess();
-    }
-
-    @Override
     public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId) {
         return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
-    }
-
-    @Override
-    public ValidationMessages addCost(Long projectFinanceId, Long questionId) {
-        return projectFinanceRowRestService.add(projectFinanceId, questionId, null).getSuccess();
     }
 }

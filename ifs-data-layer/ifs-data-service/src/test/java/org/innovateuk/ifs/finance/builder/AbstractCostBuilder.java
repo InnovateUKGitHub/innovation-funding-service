@@ -12,4 +12,8 @@ public abstract class AbstractCostBuilder<S extends FinanceRowItem, T extends Ba
         super(multiActions);
     }
 
+    public T withTargetId(Long... value) {
+        return withArraySetFieldByReflection("targetId", value);
+    }
+
 }

@@ -6,11 +6,12 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundin
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -33,9 +34,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> {
     private static final long APPLICATION_ID = 1L;
@@ -47,7 +46,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     @Override
     protected YourFundingSaver supplyServiceUnderTest() {
@@ -66,7 +65,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withFinanceOrganisationDetails(asMap(
                 FinanceRowType.FINANCE,  newGrantClaimCostCategory()
-                    .withCosts(asList(new GrantClaim()))
+                    .withCosts(asList(new GrantClaim(1L)))
                     .build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory()
                     .withCosts(asList(otherFunding))
@@ -74,7 +73,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         )).build();
 
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.add(eq(finance.getId()), eq(otherFundingQuestionId), any())).thenReturn(restSuccess(new ValidationMessages()));
+        when(financeRowRestService.create(any())).thenReturn(restSuccess(mock(FinanceRowItem.class)));
         when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
 
@@ -85,9 +84,9 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         form.setOtherFundingQuestionId(otherFundingQuestionId);
         form.setOtherFunding(true);
 
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123)));
+        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId()));
 
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321)));
+        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321), finance.getId()));
 
         form.setOtherFundingRows(asMap(
                 generateUnsavedRowId(), emptyRow,
@@ -96,19 +95,19 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         service.save(APPLICATION_ID, form, user);
 
-        GrantClaim expectedGrantClaim = new GrantClaim(finance.getGrantClaim().getId(), 100);
+        GrantClaim expectedGrantClaim = new GrantClaim(finance.getGrantClaim().getId(), 100, finance.getId());
         verify(financeRowRestService).update(expectedGrantClaim);
 
-        OtherFunding expectedOtherFundingSet = new OtherFunding();
+        OtherFunding expectedOtherFundingSet = new OtherFunding(finance.getId());
         expectedOtherFundingSet.setId(otherFunding.getId());
         expectedOtherFundingSet.setOtherPublicFunding("Yes");
         expectedOtherFundingSet.setFundingSource(OtherFundingCostCategory.OTHER_FUNDING);
         verify(financeRowRestService).update(expectedGrantClaim);
 
-        OtherFunding expectedEmptyRow = new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123));
-        verify(financeRowRestService).add(finance.getId(), form.getOtherFundingQuestionId(), expectedEmptyRow);
+        OtherFunding expectedEmptyRow = new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId());
+        verify(financeRowRestService).create(expectedEmptyRow);
 
-        OtherFunding updatedEmptyRow = new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321));
+        OtherFunding updatedEmptyRow = new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321), finance.getId());
         verify(financeRowRestService).update(updatedEmptyRow);
     }
 

@@ -19,12 +19,14 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singleton;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -176,6 +178,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
+                .withFinanceRowTypes(singleton(FINANCE))
                 .build();
 
         List<Competition> competitions = asList(competitionTemplate);
@@ -207,5 +210,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
         assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
         assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());
+        assertEquals(singleton(FINANCE), competition.getFinanceRowTypes());
     }
 }
