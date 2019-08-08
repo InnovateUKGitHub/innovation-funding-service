@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.eligibility.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -81,9 +80,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private FinanceUtil financeUtil;

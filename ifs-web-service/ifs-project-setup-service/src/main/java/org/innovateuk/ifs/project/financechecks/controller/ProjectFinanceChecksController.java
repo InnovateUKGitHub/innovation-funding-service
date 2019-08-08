@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -124,9 +123,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private EncryptedCookieService cookieUtil;
-
-    @Autowired
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private FinanceUtil financeUtil;
