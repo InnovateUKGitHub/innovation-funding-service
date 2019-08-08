@@ -1,41 +1,47 @@
 package org.innovateuk.ifs.assessment.review.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+
+import java.util.List;
 
 public class AssessmentReviewApplicationSummaryViewModel {
 
-    private final ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel;
+    private final long applicationId;
+    private final String applicationName;
+
+    private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
 
     private final CompetitionResource currentCompetition;
 
-    private final AssessmentReviewFeedbackViewModel feedbackViewModel;
+    private final List<AssessmentResource> feedbackSummary;
 
-    private final long applicationId;
-
-    public AssessmentReviewApplicationSummaryViewModel(ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel,
-                                                       CompetitionResource currentCompetition,
-                                                       AssessmentReviewFeedbackViewModel feedbackViewModel,
-                                                       long applicationId) {
-        this.ApplicationReadOnlyViewModel = ApplicationReadOnlyViewModel;
-        this.currentCompetition = currentCompetition;
-        this.feedbackViewModel = feedbackViewModel;
+    public AssessmentReviewApplicationSummaryViewModel(long applicationId, String applicationName, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, CompetitionResource currentCompetition, List<AssessmentResource> feedbackSummary) {
         this.applicationId = applicationId;
+        this.applicationName = applicationName;
+        this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
+        this.currentCompetition = currentCompetition;
+        this.feedbackSummary = feedbackSummary;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
-        return ApplicationReadOnlyViewModel;
+        return applicationReadOnlyViewModel;
     }
 
     public CompetitionResource getCurrentCompetition() {
         return currentCompetition;
     }
 
-    public AssessmentReviewFeedbackViewModel getFeedbackViewModel() {
-        return feedbackViewModel;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
+    public List<AssessmentResource> getFeedbackSummary() {
+        return feedbackSummary;
     }
 }
