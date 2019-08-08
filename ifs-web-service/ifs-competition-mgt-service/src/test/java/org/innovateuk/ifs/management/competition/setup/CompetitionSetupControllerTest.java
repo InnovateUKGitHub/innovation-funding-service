@@ -1281,8 +1281,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
-        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), any(CompetitionResource.class), eq(CompetitionSetupSection.TERMS_AND_CONDITIONS)))
-                .thenReturn(serviceSuccess());
 
         mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
                 .file(file)
@@ -1294,7 +1292,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         inOrder.verify(competitionRestService).getCompetitionById(COMPETITION_ID);
         inOrder.verify(competitionSetupRestService)
                 .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-        inOrder.verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class), any(CompetitionResource.class), eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
         inOrder.verifyNoMoreInteractions();
     }
 
