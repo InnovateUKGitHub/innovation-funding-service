@@ -39,6 +39,6 @@ public class ProcurementsOverheadsHandler extends FinanceRowHandler<ProcurementO
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new ProcurementOverhead(cost.getTarget().getId(), cost.getId(),cost.getQuantity(), cost.getCost(), cost.getItem(), cost.getName());
+        return new ProcurementOverhead(cost.getTarget().getId(), cost.getId(), cost.getQuantity(), cost.getCost(), cost.getItem(), cost.getName());
     }
 }

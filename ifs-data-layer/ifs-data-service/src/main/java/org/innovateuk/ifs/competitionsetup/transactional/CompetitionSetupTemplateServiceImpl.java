@@ -68,9 +68,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         Competition populatedCompetition = copyTemplatePropertiesToCompetition(template, competition);
 
-        Competition competitionWithFiances = initialiseFinanceTypes(populatedCompetition);
+        Competition competitionWithFinances = initialiseFinanceTypes(populatedCompetition);
 
-        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competitionWithFiances));
+        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competitionWithFinances));
     }
 
 

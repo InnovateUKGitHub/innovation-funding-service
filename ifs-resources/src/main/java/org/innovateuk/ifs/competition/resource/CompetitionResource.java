@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
