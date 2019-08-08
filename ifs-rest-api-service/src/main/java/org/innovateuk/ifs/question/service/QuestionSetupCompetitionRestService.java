@@ -18,4 +18,9 @@ public interface QuestionSetupCompetitionRestService {
     RestResult<Void> addResearchCategoryQuestionToCompetition(long competitionId);
 
     RestResult<Void> deleteById(long questionId);
+
+    RestResult<Void> uploadTemplateDocument(long questionId, String contentType, long size, String originalFilename, byte[] multipartFileBytes);
+
+    RestResult<Void> deleteTemplateDocument(long questionId);
+
 }

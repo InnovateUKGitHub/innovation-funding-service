@@ -5,8 +5,6 @@ import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
-import org.innovateuk.ifs.file.controller.FileUploadErrorTranslator;
-import org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -41,8 +39,6 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
 
     @Autowired
     private FormInputRestService formInputRestService;
-
-    private FileUploadErrorTranslator fileUploadErrorTranslator = new ValidMediaTypesFileUploadErrorTranslator();
 
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,
@@ -84,7 +80,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
                         file.getBytes());
 
                 return result.handleSuccessOrFailure(
-                    failure -> fromErrors(fileUploadErrorTranslator.translateFileUploadErrors(e -> getFormInputKey(formInputId), failure.getErrors())),
+                    failure -> fromErrors(failure.getErrors()),
                     success -> noErrors()
                 );
 

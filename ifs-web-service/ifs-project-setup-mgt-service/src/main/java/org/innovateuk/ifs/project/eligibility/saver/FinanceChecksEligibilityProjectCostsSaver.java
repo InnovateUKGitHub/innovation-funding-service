@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.eligibility.saver;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class FinanceChecksEligibilityProjectCostsSaver extends AbstractYourProje
     }
 
     @Override
-    protected BaseFinanceRowRestService getFinanceRowService() {
+    protected FinanceRowRestService getFinanceRowService() {
         return projectFinanceRowRestService;
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -157,8 +158,10 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         OrganisationResource userOrganisation = null;
 
         if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR, STAKEHOLDER, MONITORING_OFFICER)) {
-            ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
+            Optional<ProcessRoleResource> processRoleResource = userRestService.findProcessRole(user.getId(), applicationId).toOptionalIfNotFound().getSuccess();
+            if (processRoleResource.isPresent()) {
+                userOrganisation = organisationRestService.getOrganisationById(processRoleResource.get().getOrganisationId()).getSuccess();
+            }
         }
 
         return userOrganisation;

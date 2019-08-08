@@ -12,6 +12,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import java.math.BigDecimal;
@@ -23,9 +24,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
@@ -135,4 +134,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withCompanyAge(CompanyAge... companyAges) {
         return withArray((companyAge, application) -> application.setCompanyAge(companyAge), companyAges);
     }
+
+    public ApplicationBuilder withProject(Project... projects) {
+        return withArray((project, application) -> application.setProject(project), projects);
+    }
+
+
 }

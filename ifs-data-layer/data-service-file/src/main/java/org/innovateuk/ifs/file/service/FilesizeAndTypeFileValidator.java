@@ -2,6 +2,7 @@ package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.controller.ValidMediaTypeErrorHelper;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.springframework.http.MediaType;
 
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.util.ParsingFunctions.validLongResult;
 public class FilesizeAndTypeFileValidator<MediaTypeContext> {
 
     private MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator;
+    private ValidMediaTypeErrorHelper validMediaTypeErrorHelper = new ValidMediaTypeErrorHelper();
 
     public FilesizeAndTypeFileValidator(MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator) {
         this.validMediaTypesGenerator = validMediaTypesGenerator;
@@ -67,13 +69,15 @@ public class FilesizeAndTypeFileValidator<MediaTypeContext> {
         List<MediaType> validMediaTypes = validMediaTypesGenerator.apply(validMediaTypesContext);
 
         if (isBlank(contentTypeHeader)) {
-            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypeErrorHelper.findErrorKey(validMediaTypes),
+                    validMediaTypes));
         }
 
         MediaType mediaType = MediaType.valueOf(contentTypeHeader);
 
         if (!validMediaTypes.contains(mediaType)) {
-            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypeErrorHelper.findErrorKey(validMediaTypes),
+                    validMediaTypes));
         }
 
         return serviceSuccess(mediaType);

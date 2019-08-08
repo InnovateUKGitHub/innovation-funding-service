@@ -73,7 +73,7 @@ Internal user can filter notified applications
 External lead applicant and collaborators reads their funding decision emails
     [Documentation]  INFUND-7376  IFS-360
     [Tags]
-    Given external lead applicant reads his email
+    Given external lead applicant reads his email and checks status on his dashboard
     And external collaborators read their email
 
 Unsuccessful Funding Decision
@@ -229,8 +229,11 @@ the user filter applications by sent email status
     the user clicks the button/link                      jQuery = button:contains("Filter")
     the user should not see the element                  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
 
-external lead applicant reads his email
+external lead applicant reads his email and checks status on his dashboard
     verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
+    log in as a different user                      ${test_mailbox_one}+fundsuccess@gmail.com   ${short_password}
+    the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Application submitted")
+
 
 external collaborators read their email
     verify the user has received the on hold email    ${lead_applicant}

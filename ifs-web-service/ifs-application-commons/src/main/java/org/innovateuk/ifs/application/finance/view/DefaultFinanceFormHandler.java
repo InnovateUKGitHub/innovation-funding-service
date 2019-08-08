@@ -5,14 +5,14 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
-import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
- * transfered to view or stored. The costs retrieved from the {@link BaseFinanceRowRestService} are converted
+ * transfered to view or stored. The costs retrieved from the {@link FinanceRowRestService} are converted
  * to {@link FinanceRowItem}.
  */
 @Component

@@ -38,7 +38,6 @@ import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStr
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -121,9 +120,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private UserRepository userRepositoryMock;
-
-    @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
 
     @Mock
     private ProjectUserRepository projectUserRepositoryMock;
@@ -353,7 +349,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
-        verifyZeroInteractions(processRoleRepositoryMock);
     }
 
     @Test
@@ -386,7 +381,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
-        verify(processRoleRepositoryMock).save(any(ProcessRole.class));
     }
 
     @Test

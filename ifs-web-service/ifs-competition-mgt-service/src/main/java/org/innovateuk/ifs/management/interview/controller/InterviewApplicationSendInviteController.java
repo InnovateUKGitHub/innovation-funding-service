@@ -27,7 +27,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
@@ -102,11 +101,8 @@ public class InterviewApplicationSendInviteController {
 
         MultipartFile file = form.getNotEmptyFile();
         int index = form.getFeedback().indexOf(file);
-        RestResult<Void> sendResult = interviewAssignmentRestService
-                    .uploadFeedback(form.getAttachFeedbackApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField(String.format("feedback[%s]", index)), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccesView, failureAndSuccesView);
+        return validationHandler.performFileUpload(String.format("feedback[%s]", index), failureAndSuccesView, () -> interviewAssignmentRestService
+                .uploadFeedback(form.getAttachFeedbackApplicationId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
     @PostMapping(value = "/send", params = {"removeFeedbackApplicationId"})

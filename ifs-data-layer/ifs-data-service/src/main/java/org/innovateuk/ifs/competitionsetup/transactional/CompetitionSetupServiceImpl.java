@@ -15,8 +15,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -25,10 +31,13 @@ import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -40,9 +49,9 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.util.ReflectionUtils.*;
 
@@ -79,8 +88,30 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
+
+    @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
+    private Long maxFileSize;
+
+    @Value("${ifs.data.service.file.storage.competition.terms.valid.media.types}")
+    private List<String> validMediaTypes;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private FileEntryService fileEntryService;
+
+    @Autowired
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
+
     @Autowired
     private FileTypeRepository fileTypeRepository;
+
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -341,6 +372,32 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<FileEntryResource> uploadCompetitionTerms(String contentType, String contentLength, String originalFilename, long competitionId, HttpServletRequest request) {
+        return findCompetition(competitionId)
+                .andOnSuccess(competition -> fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
+                        (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                                .andOnSuccessReturn(created -> {
+                                    competition.setCompetitionTerms(created.getValue());
+                                    return fileEntryMapper.mapToResource(created.getValue());
+                                })
+                        )
+                        .toServiceResult()
+                );
+    }
+
+    @Override
+    public ServiceResult<Void> deleteCompetitionTerms(long competitionId) {
+        return findCompetition(competitionId)
+                .andOnSuccess(competition -> fileService.deleteFileIgnoreNotFound(competition.getCompetitionTerms().getId())
+                        .andOnSuccessReturnVoid(() -> competition.setCompetitionTerms(null)));
+    }
+
+    private ServiceResult<Competition> findCompetition(long competitionId) {
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId));
     }
 
     private void deleteSetupStatus(Competition competition) {

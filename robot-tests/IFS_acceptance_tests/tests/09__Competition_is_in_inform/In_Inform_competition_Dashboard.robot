@@ -104,8 +104,8 @@ Successful applicant see successful alert
     [Documentation]    INFUND-7861
     [Tags]  HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
-    Given the user should see the element    jQuery = .status:contains("Successful")
-    When the user clicks the button/link     jQuery = .previous-applications a:contains("High Performance Gasoline Stratified")
+    Given the user clicks the button/link    link = ${INFORM_COMPETITION_NAME_2}
+    And the user clicks the button/link      link = view application feedback
     Then the user should see the element     jQuery = .success-alert:contains("Congratulations, your application has been successful")
 
 View feedback from each assessor
@@ -149,8 +149,8 @@ The finance details are shown
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Back to applications")
-    Then the user should see the element     jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
+    Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Back to set up your project")
+    Then the user should see the element     jQuery = h1:contains("Set up your project")
 
 *** Keywords ***
 Custom Suite Setup

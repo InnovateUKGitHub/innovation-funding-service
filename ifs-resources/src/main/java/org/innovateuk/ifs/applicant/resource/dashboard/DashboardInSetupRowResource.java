@@ -5,17 +5,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.IN_SETUP;
+
 /**
- * Resource representing an application for use in the applicant dashboard.
+ * Resource representing a project for use in the setup section of the applicant dashboard.
  */
-public class DashboardApplicationInSetupResource extends DashboardApplicationResource {
+public class DashboardInSetupRowResource extends DashboardRowResource {
 
     private long projectId;
     private String projectTitle;
     private LocalDate targetStartDate;
 
     // Private constructor to enforce immutability
-    private DashboardApplicationInSetupResource() {
+    private DashboardInSetupRowResource() {
+        this.dashboardSection = IN_SETUP;
     }
 
     public long getProjectId() {
@@ -34,7 +37,7 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DashboardApplicationInSetupResource that = (DashboardApplicationInSetupResource) o;
+        DashboardInSetupRowResource that = (DashboardInSetupRowResource) o;
         return new EqualsBuilder()
                 .append(projectId, that.projectId)
                 .append(projectTitle, that.projectTitle)
@@ -66,7 +69,6 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
         private String competitionTitle;
         private long projectId;
         private String projectTitle;
-        private DashboardSection dashboardSection;
         private LocalDate targetStartDate;
 
         public DashboardApplicationInSetupResourceBuilder withTitle(String title) {
@@ -94,24 +96,18 @@ public class DashboardApplicationInSetupResource extends DashboardApplicationRes
             return this;
         }
 
-        public DashboardApplicationInSetupResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
-            this.dashboardSection = dashboardSection;
-            return this;
-        }
-
         public DashboardApplicationInSetupResourceBuilder withTargetStartDate(LocalDate targetStartDate) {
             this.targetStartDate = targetStartDate;
             return this;
         }
 
-        public DashboardApplicationInSetupResource build(){
-            DashboardApplicationInSetupResource result = new DashboardApplicationInSetupResource();
+        public DashboardInSetupRowResource build() {
+            DashboardInSetupRowResource result = new DashboardInSetupRowResource();
             result.applicationId = this.applicationId;
             result.competitionTitle = this.competitionTitle;
             result.projectId = this.projectId;
             result.projectTitle = this.projectTitle;
             result.title = this.title;
-            result.dashboardSection = this.dashboardSection;
             result.targetStartDate = this.targetStartDate;
 
             return result;

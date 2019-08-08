@@ -11,7 +11,11 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VATCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.service.BaseFinanceRowRestService;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.Overhead;
+import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,5 +269,5 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);
 
-    protected abstract BaseFinanceRowRestService getFinanceRowService();
+    protected abstract FinanceRowRestService getFinanceRowService();
 }
