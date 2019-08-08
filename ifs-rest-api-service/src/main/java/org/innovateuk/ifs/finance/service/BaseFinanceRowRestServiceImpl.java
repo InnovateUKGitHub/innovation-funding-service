@@ -9,7 +9,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
  * FinanceRowRestServiceImpl is a utility for CRUD operations on
  * {@link org.innovateuk.ifs.finance.resource.FinanceRowResource}.
  */
-public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService implements BaseFinanceRowRestService {
+public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService implements FinanceRowRestService {
 
     private String financeRowRestUrl;
 

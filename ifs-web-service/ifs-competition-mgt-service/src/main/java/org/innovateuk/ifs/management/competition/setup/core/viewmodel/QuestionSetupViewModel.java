@@ -4,14 +4,17 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     private CompetitionSetupSubsectionViewModel subsectionViewModel;
     private String competitionName;
     private boolean editable;
+    private String templateFilename;
 
     public QuestionSetupViewModel(GeneralSetupViewModel generalSetupViewModel,
                                   CompetitionSetupSubsectionViewModel subsectionViewModel,
-                                  String competitionName, boolean editable) {
+                                  String competitionName, boolean editable,
+                                  String templateFilename) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.subsectionViewModel = subsectionViewModel;
         this.competitionName = competitionName;
         this.editable = editable;
+        this.templateFilename = templateFilename;
     }
 
     public CompetitionSetupSubsectionViewModel getSubsection() {
@@ -25,4 +28,13 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     public boolean isEditable() {
         return editable;
     }
+
+    public String getTemplateFilename() {
+        return templateFilename;
+    }
+
+    public boolean isTemplateFileUploaded() {
+        return templateFilename != null;
+    }
+
 }

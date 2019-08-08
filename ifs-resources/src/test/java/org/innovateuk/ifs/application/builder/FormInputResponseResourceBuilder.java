@@ -73,6 +73,10 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setUpdatedBy(processRoleId));
     }
 
+    public FormInputResponseResourceBuilder withUpdatedByUser(Long userId) {
+        return with(response -> response.setUpdatedByUser(userId));
+    }
+
     public FormInputResponseResourceBuilder withUpdatedByUserName(String userName) {
         return with(response -> response.setUpdatedByUserName(userName));
     }

@@ -137,4 +137,14 @@ public class ValidationHandler {
                    failNowOrSucceedWith(failureView, successView);
         });
     }
+
+    public String performFileUpload(String field, Supplier<String> view, Supplier<FailingOrSucceedingResult<?, ?>> action) {
+        return failNowOrSucceedWith(view, () -> {
+
+            FailingOrSucceedingResult<?, ?> result = action.get();
+
+            return addAnyErrors(result, fileUploadField(field), defaultConverters()).
+                    failNowOrSucceedWith(view, view);
+        });
+    }
 }

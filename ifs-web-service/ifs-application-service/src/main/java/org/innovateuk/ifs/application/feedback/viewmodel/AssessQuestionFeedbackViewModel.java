@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
@@ -18,20 +20,17 @@ public class AssessQuestionFeedbackViewModel {
     private ApplicationResource application;
     private QuestionResource question;
     private List<FormInputResponseResource> responses;
+    private List<FormInputResource> inputs;
     private AssessmentFeedbackAggregateResource aggregateResource;
     private NavigationViewModel navigation;
 
-    public AssessQuestionFeedbackViewModel(ApplicationResource application,
-                                           QuestionResource question,
-                                           List<FormInputResponseResource> responses,
-                                           AssessmentFeedbackAggregateResource aggregateResource,
-                                           NavigationViewModel navigationViewModel
-    ) {
+    public AssessQuestionFeedbackViewModel(ApplicationResource application, QuestionResource question, List<FormInputResponseResource> responses, List<FormInputResource> inputs, AssessmentFeedbackAggregateResource aggregateResource, NavigationViewModel navigation) {
         this.application = application;
         this.question = question;
         this.responses = responses;
+        this.inputs = inputs;
         this.aggregateResource = aggregateResource;
-        this.navigation = navigationViewModel;
+        this.navigation = navigation;
     }
 
     public ApplicationResource getApplication() {
@@ -52,6 +51,24 @@ public class AssessQuestionFeedbackViewModel {
 
     public NavigationViewModel getNavigation() {
         return navigation;
+    }
+
+    public boolean isAppendix(FormInputResponseResource response) {
+        return inputs.stream()
+                .anyMatch(input -> input.getId().equals(response.getFormInput()) && input.getType().equals(FormInputType.FILEUPLOAD));
+    }
+
+    public boolean isTemplateDocument(FormInputResponseResource response) {
+        return inputs.stream()
+                .anyMatch(input -> input.getId().equals(response.getFormInput()) && input.getType().equals(FormInputType.TEMPLATE_DOCUMENT));
+    }
+
+    public String getTemplateDocumentTitle() {
+        return inputs.stream()
+                .filter(input -> input.getType().equals(FormInputType.TEMPLATE_DOCUMENT))
+                .findAny()
+                .map(FormInputResource::getDescription)
+                .orElse(null);
     }
 
     @Override

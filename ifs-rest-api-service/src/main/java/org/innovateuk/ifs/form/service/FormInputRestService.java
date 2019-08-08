@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
 
@@ -20,4 +22,8 @@ public interface FormInputRestService {
     RestResult<Void> delete(Long id);
 
     RestResult<FormInputResource> save(FormInputResource formInputResource);
+
+    RestResult<ByteArrayResource> downloadFile(long formInputId);
+
+    RestResult<FileEntryResource> findFile(long formInputId);
 }

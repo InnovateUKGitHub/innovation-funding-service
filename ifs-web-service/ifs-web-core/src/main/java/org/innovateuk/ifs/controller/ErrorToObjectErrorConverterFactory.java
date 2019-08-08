@@ -4,11 +4,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
@@ -28,9 +26,9 @@ public final class ErrorToObjectErrorConverterFactory {
     }
 
     public static ErrorToObjectErrorConverter fileUploadField(String field) {
-        List<String> fileErrors = asList(PAYLOAD_TOO_LARGE.name(), UNSUPPORTED_MEDIA_TYPE.name());
         return e -> {
-            if (fileErrors.contains(e.getErrorKey())) {
+            if (PAYLOAD_TOO_LARGE.name().equals(e.getErrorKey())
+                    || e.getErrorKey().startsWith(UNSUPPORTED_MEDIA_TYPE.name())) {
                 return toField(field).apply(e);
             }
             return Optional.empty();

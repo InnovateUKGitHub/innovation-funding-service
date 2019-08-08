@@ -34,7 +34,8 @@ public class ApplicantFormInputResourceBuilder extends BaseBuilder<ApplicantForm
         return withArraySetFieldByReflection("formInput", formInput);
     }
 
-    public ApplicantFormInputResourceBuilder withApplicantResponses(List<ApplicantFormInputResponseResource>... applicantResponses) {
+    @SafeVarargs
+    public final ApplicantFormInputResourceBuilder withApplicantResponses(List<ApplicantFormInputResponseResource>... applicantResponses) {
         return withArraySetFieldByReflection("applicantResponses", applicantResponses);
     }
 }

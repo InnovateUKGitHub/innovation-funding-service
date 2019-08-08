@@ -66,15 +66,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
     @Override
     protected ApplicationDetailsController supplyControllerUnderTest() {
-        return new ApplicationDetailsController(
-                applicationDetailsViewModelPopulator,
-                questionStatusRestService,
-                userRestService,
-                applicantRestService,
-                applicationNavigationPopulator,
-                applicationService,
-                competitionRestService
-        );
+        return new ApplicationDetailsController();
     }
 
     @Test

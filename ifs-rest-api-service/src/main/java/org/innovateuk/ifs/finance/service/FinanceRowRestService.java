@@ -7,7 +7,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 /**
  * Interface for CRUD operations on {@link FinanceRowItem} related data.
  */
-public interface BaseFinanceRowRestService {
+public interface FinanceRowRestService {
 
     RestResult<FinanceRowItem> create(FinanceRowItem financeRowItem);
 

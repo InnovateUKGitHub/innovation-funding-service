@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import java.util.LinkedHashSet;
@@ -22,6 +23,7 @@ public class FormInputResource {
     private Integer priority;
     private FormInputScope scope;
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
+    private FileEntryResource file;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -153,5 +155,13 @@ public class FormInputResource {
 
     public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
+    }
+
+    public FileEntryResource getFile() {
+        return file;
+    }
+
+    public void setFile(FileEntryResource file) {
+        this.file = file;
     }
 }
