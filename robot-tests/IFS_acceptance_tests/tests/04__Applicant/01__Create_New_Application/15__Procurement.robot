@@ -34,7 +34,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(procurement)
     When the user navigates to Your-finances page                ${appl_name}
     And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
-    And the user accept the competition terms and conditions
+    And the user accept the procurement terms and conditions
     And the user selects research category                       Feasibility studies
     And the applicant submits the procurement application
     [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
@@ -150,8 +150,6 @@ the user should see all procurement finance subsections complete
 the applicant submits the procurement application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
-    the user should see that the element is disabled   jQuery = .govuk-button:contains("Submit application")
-    the user selects the checkbox                      agreeTerms
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track
