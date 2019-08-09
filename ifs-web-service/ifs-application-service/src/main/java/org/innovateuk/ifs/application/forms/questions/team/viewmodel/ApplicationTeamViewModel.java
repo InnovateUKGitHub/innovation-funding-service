@@ -13,7 +13,6 @@ public class ApplicationTeamViewModel {
     private final boolean collaborationLevelSingle;
     private final boolean open;
     private final boolean complete;
-    private final boolean projectSetup;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -23,8 +22,7 @@ public class ApplicationTeamViewModel {
                                     boolean leadApplicant,
                                     boolean collaborationLevelSingle,
                                     boolean open,
-                                    boolean complete,
-                                    boolean projectSetup) {
+                                    boolean complete) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.questionId = questionId;
@@ -34,7 +32,6 @@ public class ApplicationTeamViewModel {
         this.collaborationLevelSingle = collaborationLevelSingle;
         this.open = open;
         this.complete = complete;
-        this.projectSetup = projectSetup;
     }
 
     public long getApplicationId() {
@@ -71,10 +68,6 @@ public class ApplicationTeamViewModel {
 
     public boolean isCollaborationLevelSingle() {
         return collaborationLevelSingle;
-    }
-
-    public boolean isProjectSetup() {
-        return projectSetup;
     }
 
     public ApplicationTeamViewModel openAddTeamMemberForm(long organisationId) {

@@ -4,8 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopulator;
 import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
-import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
-import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -20,7 +18,6 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,7 +35,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -74,9 +70,6 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
     @Mock
     private FormInputRestService formInputRestService;
 
-    @Mock
-    private ApplicationTeamPopulator applicationTeamPopulator;
-
     @Test
     public void applicationAssessorQuestionFeedback() throws Exception {
         long applicationId = 1L;
@@ -103,7 +96,8 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
-        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
+        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionResource.getId())).thenReturn(restSuccess(responseResources));
+        when(formInputRestService.getByQuestionId(questionResource.getId())).thenReturn(restSuccess(formInputs));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
@@ -122,6 +116,7 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
         QuestionResource questionResource = newQuestionResource().withId(questionId).withQuestionSetupType(QuestionSetupType.RESEARCH_CATEGORY).build();
         QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
+        List<FormInputResource> formInputs = newFormInputResource().build(2);
         ApplicationResource applicationResource = newApplicationResource()
                 .withId(applicationId)
                 .withResearchCategory(newResearchCategoryResource().withName("research")
@@ -141,6 +136,7 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
+        when(formInputRestService.getByQuestionId(questionResource.getId())).thenReturn(restSuccess(formInputs));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
 
@@ -151,12 +147,10 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         verify(formInputResponseRestService, never());
     }
 
-
     @Test
     public void applicationAssessorQuestionFeedback_ApplicationTeam() throws Exception {
         long applicationId = 1L;
         long questionId = 2L;
-        UserResource user = newUserResource().build();
 
         QuestionResource questionResource = newQuestionResource().withId(questionId).withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM).build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
@@ -165,13 +159,9 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
 
-        ApplicationTeamViewModel viewModel = mock(ApplicationTeamViewModel.class);
-
-        when(applicationTeamPopulator.populate(applicationId, questionId, user)).thenReturn(viewModel);
-
         mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application/questions/application-team"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/team", applicationId, questionId)));
     }
 
     @Test

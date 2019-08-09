@@ -30,12 +30,12 @@
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle='Application team',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
-        <th:block th:if="${model.complete AND !model.projectSetup}">
+        <th:block th:if="${model.complete}">
             <div class="success-alert assignee govuk-!-margin-bottom-6">
                 <p class="govuk-body">Application team is marked as complete</p>
             </div>
         </th:block>
-        <th:block th:unless="${model.readOnly AND !model.projectSetup}">
+        <th:block th:unless="${model.readOnly}">
             <div th:if="${model.anyPendingInvites}" class="message-alert">
                 <p class="govuk-body">There are pending invites. The lead applicant cannot submit the application until
                     these people accept or are removed.</p>
@@ -46,7 +46,7 @@
                 from these organisations to help you with the application. They can invite other people from their own
                 organisation.</p>
 
-            <p class="govuk-body" th:unless="${model.collaborationLevelSingle AND model.projectSetup}">You must read the <a
+            <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
                 class="govuk-link" target="_blank"
                 aria-describedby="guidance-hint">general guidance</a> <span id="guidance-hint">(opens in a new window)</span> before you start.</p>
@@ -243,7 +243,7 @@
                 </form>
             </th:block>
 
-            <div class="govuk-!-margin-top-6" th:unless="${model.projectSetup}">
+            <div class="govuk-!-margin-top-6">
                 <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                    class="button-secondary">Return to application overview
                 </a>
