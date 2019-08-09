@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface CompetitionRestService {
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
 
     RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
+
+    RestResult<ByteArrayResource> downloadTerms(long competitionId);
 }

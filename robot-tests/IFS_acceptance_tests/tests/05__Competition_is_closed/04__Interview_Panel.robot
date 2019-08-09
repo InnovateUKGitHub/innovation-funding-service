@@ -222,7 +222,8 @@ CompAdmin marks appplications as successful and releases competition feedback
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
-    When the user clicks the button/link      jQuery = section:contains("Previous") h3:contains("Neural network")
+    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       link = view application feedback
     Then the user should see the element      link = testing_5MB.pdf
 
 *** Keywords ***

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.applicant.resource.dashboard;
 import javax.validation.constraints.NotNull;
 
 /**
- * Abstract resource representing the minimum requirements for an application in the applicant dashboard.
+ * Abstract resource representing an application or project on the applicant dashboard
  */
-public abstract class DashboardApplicationResource implements Comparable<DashboardApplicationResource> {
+public abstract class DashboardRowResource implements Comparable<DashboardRowResource> {
 
     protected String title;
     protected long applicationId;
@@ -29,13 +29,7 @@ public abstract class DashboardApplicationResource implements Comparable<Dashboa
     }
 
     @Override
-    public abstract boolean equals(Object o);
-
-    @Override
-    public abstract int hashCode();
-
-    @Override
-    public int compareTo(@NotNull DashboardApplicationResource that) {
+    public int compareTo(@NotNull DashboardRowResource that) {
         return this.getTitle().compareTo(that.getTitle());
     }
 

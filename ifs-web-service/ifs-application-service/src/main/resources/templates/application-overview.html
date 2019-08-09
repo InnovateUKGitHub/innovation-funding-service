@@ -57,11 +57,6 @@
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
-            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-                <th:block th:if="${procurementCompetition}">
-                    <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
-                </th:block>
-            </div>
         </div>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">

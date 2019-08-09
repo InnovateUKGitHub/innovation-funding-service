@@ -22,6 +22,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-3132 Email content templates for notifications
 ...
 ...               IFS-2994 New Stakeholder role and permissions
+...
+...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -116,9 +118,9 @@ Inform a user their application is ineligible
     Then the user inform applicant their application is ineligible
 
 Applicant is informed that his application is not eligible
-    [Documentation]  INFUND-7374  IFS-3132
+    [Documentation]  INFUND-7374  IFS-3132  IFS-6021
     [Tags]  Applicant
-    Given the applicant can see his application in the right section    Previous applications
+    Given the applicant can see his application in the right section   Previous
     Then the user reads his email  ${Ineligible_user["email"]}         Notification regarding your application  ${ineligibleMessage}
 
 Innovation Lead is not able to reinstate an application

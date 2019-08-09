@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 public abstract class TermsAndConditionsResource {
 
     private Long id;
-    private String name;
+    protected String name;
     private String template;
     private int version;
     private String createdBy;
