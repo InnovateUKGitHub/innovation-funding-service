@@ -53,6 +53,8 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean procurementCompetition = FundingType.PROCUREMENT == competition.getFundingType();
 
+
+
         return new YourProjectCostsViewModel(applicationId,
                 sectionId,
                 competition.getId(),

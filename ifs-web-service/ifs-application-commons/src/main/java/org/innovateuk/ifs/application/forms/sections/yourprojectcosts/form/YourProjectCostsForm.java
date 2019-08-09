@@ -121,7 +121,7 @@ public class YourProjectCostsForm {
         if (vat == null || Boolean.FALSE.equals(vat.getRegistered())) {
             return BigDecimal.ZERO;
         }
-        return getOrganisationFinanceTotal().divide(VAT_RATE);
+        return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
     }
 
     public BigDecimal getProjectVatTotal() {

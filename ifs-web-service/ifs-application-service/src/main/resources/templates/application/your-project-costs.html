@@ -75,10 +75,36 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-row" th:if="${model.procurementCompetition}">
+            <div class="govuk-form-group" th:if="${model.procurementCompetition}">
                 <label class="govuk-heading-m">Are you VAT registered?</label>
                 <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
                 <span class="govuk-hint" th:if="${model.readOnly}" th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
+
+                <div class="govuk-grid-row total-cost">
+                    <div class="govuk-grid-column-one-half">
+                        <label for="total-cost" class="govuk-heading-m"
+                               th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
+                            costs</label>
+                    </div>
+
+                    <div class="govuk-grid-column-one-half alignright">
+                        <label for="total-cost" class="govuk-heading-m"
+                               th:text="'£' + ${#numbers.formatDecimal(form.getVatTotal(),0,0)}">£120</label>
+                    </div>
+
+                    <div class="govuk-grid-column-one-half">
+                        <label for="total-cost" class="govuk-heading-m"
+                               th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
+                            Total project
+                            costs</label>
+                    </div>
+
+                    <div class="govuk-grid-column-one-half alignright">
+                        <label for="total-cost" class="govuk-heading-m"
+                               th:text="'£' + ${#numbers.formatDecimal(form.getProjectVatTotal(),0,0)}">£120</label>
+                    </div>
+                </div>
+
             </div>
 
             <div class="govuk-form-group" th:unless="${model.readOnly}" th:if="${model.procurementCompetition}">
@@ -110,7 +136,7 @@
 
                                 <div class="govuk-grid-column-one-half alignright">
                                     <label for="total-cost" class="govuk-heading-m"
-                                           th:text="'£' + ${form.getVatTotal()}">£120</label>
+                                           th:text="'£' + ${#numbers.formatDecimal(form.getVatTotal(),0,0)}">£120</label>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignleft">
                                     <label for="total-cost" class="govuk-heading-m"
@@ -118,10 +144,9 @@
                                         Total project
                                         costs</label>
                                 </div>
-
                                 <div class="govuk-grid-column-one-half alignright">
                                     <label for="total-cost" class="govuk-heading-m"
-                                           th:text="'£' + ${form.getProjectVatTotal()}">£120</label>
+                                           th:text="'£' + ${#numbers.formatDecimal(form.getProjectVatTotal(),0,0)}">£120</label>
                                 </div>
                             </div>
                         </div>

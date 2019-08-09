@@ -104,7 +104,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PROCUREMENT_OVERHEADS)) {
             futures.add(saveRows(form.getProcurementOverheadRows(), finance));
         }
-        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OTHER_COSTS)) {
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.VAT)) {
             futures.add(saveVAT(form.getVat(), finance));
         }
 
