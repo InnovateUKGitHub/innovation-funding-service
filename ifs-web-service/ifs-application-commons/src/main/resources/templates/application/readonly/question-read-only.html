@@ -118,8 +118,8 @@
     <div>
         <th:block th:unless="${model.fullyFunded}">
             <th:block th:replace="finance/finance-summary :: application-finances-summary (${model.applicationFinanceSummaryViewModel})" />
-            <th:block th:replace="finance/finance-summary :: research-participation-alert" (${model.applicationResearchParticipationViewModel})
-                      th:if="${model.open}"></th:block>
+            <th:block th:replace="finance/finance-summary :: research-participation-alert (${model.applicationResearchParticipationViewModel})"
+                      th:if="${model.open}"/>
         </th:block>
 
         <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>

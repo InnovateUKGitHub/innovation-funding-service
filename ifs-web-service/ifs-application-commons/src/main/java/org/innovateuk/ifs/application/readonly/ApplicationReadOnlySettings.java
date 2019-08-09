@@ -7,6 +7,7 @@ public class ApplicationReadOnlySettings {
 
     private boolean includeStatuses = false;
     private boolean includeQuestionLinks = false;
+    private Long assesmentId = null;
 
     private ApplicationReadOnlySettings() {}
 
@@ -29,6 +30,18 @@ public class ApplicationReadOnlySettings {
 
     public ApplicationReadOnlySettings setIncludeQuestionLinks(boolean includeQuestionLinks) {
         this.includeQuestionLinks = includeQuestionLinks;
+        return this;
+    }
+
+    public boolean isIncludeAssessment() {
+        return assesmentId != null;
+    }
+    public Long getAssessmentId() {
+        return assesmentId;
+    }
+
+    public ApplicationReadOnlySettings setAssesmentId(Long assesmentId) {
+        this.assesmentId = assesmentId;
         return this;
     }
 
