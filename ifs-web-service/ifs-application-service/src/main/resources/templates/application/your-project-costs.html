@@ -80,7 +80,7 @@
                 <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
                 <span class="govuk-hint" th:if="${model.readOnly}" th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
 
-                <div class="govuk-grid-row total-cost" th:if="${model.readOnly}">
+                <div class="govuk-grid-row total-cost" th:if="${model.readOnly AND form.vat.registered}">
                     <div class="govuk-grid-column-one-half">
                         <label for="total-cost" class="govuk-heading-m"
                                th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
