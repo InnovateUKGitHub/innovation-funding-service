@@ -135,7 +135,9 @@
                                 </div>
 
                                 <div class="govuk-grid-column-one-half alignright">
-                                    <label for="total-cost" class="govuk-heading-m"
+                                    <label id="vat-total" class="govuk-heading-m"
+                                           data-calculation-fields="#total-cost,0.2"
+                                           data-calculation-operations="*"
                                            th:text="'£' + ${#numbers.formatDecimal(form.getVatTotal(),0,0)}">£120</label>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignleft">
@@ -146,6 +148,8 @@
                                 </div>
                                 <div class="govuk-grid-column-one-half alignright">
                                     <label for="total-cost" class="govuk-heading-m"
+                                           data-calculation-fields="#vat-total,#total-cost"
+                                           data-calculation-operations="+"
                                            th:text="'£' + ${#numbers.formatDecimal(form.getProjectVatTotal(),0,0)}">£120</label>
                                 </div>
                             </div>
