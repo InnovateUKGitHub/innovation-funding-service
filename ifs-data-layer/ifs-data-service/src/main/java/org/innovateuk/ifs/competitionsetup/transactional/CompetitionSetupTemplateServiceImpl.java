@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
 
 /**
  * Service that can create Competition template copies
@@ -70,7 +71,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         Competition populatedCompetition = copyTemplatePropertiesToCompetition(template, competition);
 
-        Competition competitionWithFinances = competitionInitialiser.initialiseFinanceTypes(populatedCompetition);
+        Competition competitionWithFinances = initialiseFinanceTypes(populatedCompetition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competitionWithFinances));
     }

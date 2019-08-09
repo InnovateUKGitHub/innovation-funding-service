@@ -1,16 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.util;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
-@Component
-public class CompetitionInitialiser {
+public final class CompetitionInitialiser {
 
-    public Competition initialiseFinanceTypes(Competition competition) {
+    public static Competition initialiseFinanceTypes(Competition competition) {
         switch (competition.getFundingType()) {
             case GRANT:
                 addGrantFinanceTypes(competition);
@@ -24,7 +22,7 @@ public class CompetitionInitialiser {
         return competition;
     }
 
-    private void addLoanFinanceTypes(Competition competition) {
+    private static void addLoanFinanceTypes(Competition competition) {
         competition.getFinanceRowTypes().addAll(EnumSet.of(
                 LABOUR,
                 OVERHEADS,
@@ -38,7 +36,7 @@ public class CompetitionInitialiser {
         ));
     }
 
-    private void addProcurementFinanceTypes(Competition competition) {
+    private static void addProcurementFinanceTypes(Competition competition) {
         competition.getFinanceRowTypes().addAll(EnumSet.of(
                 LABOUR,
                 PROCUREMENT_OVERHEADS,
@@ -50,10 +48,11 @@ public class CompetitionInitialiser {
                 FINANCE,
                 OTHER_FUNDING,
                 VAT
+
         ));
     }
 
-    private void addGrantFinanceTypes(Competition competition) {
+    private static void addGrantFinanceTypes(Competition competition) {
         competition.getFinanceRowTypes().addAll(EnumSet.of(
                 LABOUR,
                 OVERHEADS,
