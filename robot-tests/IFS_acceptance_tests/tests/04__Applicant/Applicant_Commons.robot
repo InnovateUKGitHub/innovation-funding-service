@@ -133,10 +133,10 @@ Validations for procurement Overhead costs
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   ${EMPTY}
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   ${EMPTY}
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   ${EMPTY}
-    the user should see a field error       ${empty_field_warning_message}
-    the user should see a field error       ${empty_field_warning_message}
-    the user should see a field error       ${empty_field_warning_message}
-    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(1) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(2) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(3) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button   #Remove
 
 the user fills in Overhead costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
@@ -457,6 +457,15 @@ the user selects medium organisation size
 
 the user accept the competition terms and conditions
     the user clicks the button/link    link = Award terms and conditions
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview
+
+the user accept the procurement terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user clicks the button/link    link = View full terms and conditions
+    the user goes back to the previous page
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")

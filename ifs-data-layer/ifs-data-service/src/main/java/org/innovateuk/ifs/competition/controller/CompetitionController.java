@@ -64,6 +64,7 @@ public class CompetitionController {
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
+
     @GetMapping(path = "/{id}/terms-and-conditions", produces = "application/json")
     public ResponseEntity<Object> downloadTerms(@PathVariable("id") long competitionId) {
         return fileControllerUtils.handleFileDownload(() -> competitionService.downloadTerms(competitionId));

@@ -2,14 +2,19 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.file.service.BasicFileAndContents;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,7 +33,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void findInnovationLeads() throws Exception {
-        final Long competitionId = 1L;
+        final long competitionId = 1L;
 
         List<UserResource> innovationLeads = new ArrayList<>();
         when(competitionServiceMock.findInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
@@ -42,8 +47,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void addInnovationLead() throws Exception {
-        final Long competitionId = 1L;
-        final Long innovationLeadUserId = 2L;
+        final long competitionId = 1L;
+        final long innovationLeadUserId = 2L;
 
         when(competitionServiceMock.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
@@ -55,8 +60,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void removeInnovationLead() throws Exception {
-        final Long competitionId = 1L;
-        final Long innovationLeadUserId = 2L;
+        final long competitionId = 1L;
+        final long innovationLeadUserId = 2L;
 
         when(competitionServiceMock.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
@@ -68,8 +73,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void testUpdateTermsAndConditionsForCompetition() throws Exception {
-        final Long competitionId = 1L;
-        final Long termsAndConditionsId = 2L;
+        final long competitionId = 1L;
+        final long termsAndConditionsId = 2L;
 
         when(competitionServiceMock.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
 
@@ -77,5 +82,28 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
+    }
+
+    @Test
+    public void downloadTerms() throws Exception {
+        final long competitionId = 1L;
+        String fileName = "filename";
+        String fileContent = "content";
+        FileAndContents fileAndContents =  new BasicFileAndContents(newFileEntryResource().build(), () -> {
+            try {
+                return new MockMultipartFile(fileName, fileContent.getBytes()).getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+
+        when(competitionServiceMock.downloadTerms(competitionId)).thenReturn(serviceSuccess(fileAndContents));
+
+        mockMvc.perform(get("/competition/{id}/terms-and-conditions", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(fileContent));
+
+        verify(competitionServiceMock, only()).downloadTerms(competitionId);
     }
 }
