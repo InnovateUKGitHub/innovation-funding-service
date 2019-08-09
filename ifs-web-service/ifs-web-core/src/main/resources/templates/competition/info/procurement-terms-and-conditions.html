@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Award terms and conditions'" />
+</head>
+<body class="govuk-template__body grant-terms-conditions">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Award terms and conditions',size='govuk-heading-l'" />
+
+        <th:block th:fragment="terms-and-conditions-content">
+
+            <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">View full terms and conditions</a></p>
+
+            <h2 class="govuk-heading-m">A summary of the award terms and conditions</h2>
+
+            <p class="govuk-body">
+                The full terms and conditions are specific to this procurement competition. They will differ from any
+                you have agreed to before. By submitting an application you are agreeing to the full terms and
+                conditions pending the final contract if you are successful. It is your responsibility to make sure
+                you read these terms.
+            </p>
+
+            <p class="govuk-body">
+                They represent an agreement between the funding authority and your organisation and include details about your obligations and the administration of your project. They cover:
+            </p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>intellectual property rights</li>
+                <li>confidentiality</li>
+                <li>publicity</li>
+                <li>accounting and payments</li>
+                <li>monitoring and reporting</li>
+                <li>final report and evaluation</li>
+                <li>termination</li>
+                <li>warranties and insurance</li>
+                <li>resolution procedure</li>
+            </ul>
+
+            <p class="govuk-body">This list is not exhaustive.</p>
+
+            <p class="govuk-body">
+                If you are successful in your application you must sign a final contract with the funding authority
+                which may include additional details agreed between you and the funding authority.
+            </p>
+
+            <p class="govuk-body">If there is anything you do not understand, please <a href="/info/contact">contact us</a>.</p>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
