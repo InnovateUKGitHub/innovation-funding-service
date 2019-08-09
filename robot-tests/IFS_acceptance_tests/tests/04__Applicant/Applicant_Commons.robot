@@ -443,6 +443,15 @@ the user accept the competition terms and conditions
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
     the user clicks the button/link    link = Return to application overview
 
+the user accept the procurement terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user clicks the button/link    link = View full terms and conditions
+    the user goes back to the previous page
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview
+
 the internal user should see read only view of terms and conditions
     [Arguments]  ${url}  ${applicationid}  ${heading}
     the user navigates to the page             ${url}

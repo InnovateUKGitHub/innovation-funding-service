@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
+import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,8 +15,7 @@ import org.mockito.Mock;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -70,7 +70,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void termsAndConditions() throws Exception {
-
         GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
                 "special-terms-and-conditions", 3);
 
@@ -83,8 +82,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
                 .andExpect(view().name("competition/info/special-terms-and-conditions"));
 
-        verify(competitionRestService).getCompetitionById(competitionResource.getId());
+        verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
     }
 }

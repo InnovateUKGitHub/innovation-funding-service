@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -121,5 +122,5 @@ public class CompetitionResourceDocs {
             .withStateAid(true)
             .withIncludeJesForm(true)
             .withFundingType(FundingType.PROCUREMENT)
-            .withCompetitionTerms(null);
+            .withCompetitionTerms((FileEntryResource) null);
 }

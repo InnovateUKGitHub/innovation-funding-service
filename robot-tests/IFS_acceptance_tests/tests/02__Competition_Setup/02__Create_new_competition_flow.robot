@@ -181,7 +181,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
+    When The user clicks the button/link     jQuery = label:contains("Advanced")
     And the user clicks the button/link      jQuery = button:contains("Done")
     Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup

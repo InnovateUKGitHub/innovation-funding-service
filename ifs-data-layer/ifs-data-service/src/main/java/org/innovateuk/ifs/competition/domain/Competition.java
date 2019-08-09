@@ -847,8 +847,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         this.competitionTerms = competitionTerms;
     }
 
-    // TODO make optional -- ?
-    public FileEntry getCompetitionTerms() {
-        return competitionTerms;
+    public Optional<FileEntry> getCompetitionTerms() {
+        return ofNullable(competitionTerms);
     }
 }

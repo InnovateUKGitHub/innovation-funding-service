@@ -6,10 +6,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
@@ -20,53 +22,56 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 @Service
 public class CompetitionRestServiceImpl extends BaseRestService implements CompetitionRestService {
 
-    private String competitionsRestURL = "/competition";
-    private String competitionsTypesRestURL = "/competition-type";
+    private static final String COMPETITION_REST_SERVICE = "/competition";
+    private static final String COMPETITION_TYPE_REST_SERVICE = "/competition-type";
 
     @Override
     public RestResult<List<CompetitionResource>> getAll() {
-        return getWithRestResult(competitionsRestURL + "/find-all", competitionResourceListType());
+        return getWithRestResult(format("%s/%s", COMPETITION_REST_SERVICE, "find-all"), competitionResourceListType());
     }
-
 
     @Override
     public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+        return getWithRestResult(format("%s/%d", COMPETITION_REST_SERVICE, competitionId), CompetitionResource.class);
     }
 
     @Override
     public RestResult<List<UserResource>> findInnovationLeads(long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/innovation-leads", userListType());
+        return getWithRestResult(format("%s/%d/%s", COMPETITION_REST_SERVICE, competitionId, "innovation-leads"), userListType());
     }
 
     @Override
     public RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
-        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/add-innovation-lead/" + innovationLeadUserId, Void.class);
+        return postWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "add-innovation-lead", innovationLeadUserId), Void.class);
     }
 
     @Override
     public RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
-        return postWithRestResult(competitionsRestURL + "/" + competitionId + "/remove-innovation-lead/" + innovationLeadUserId, Void.class);
+        return postWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "remove-innovation-lead", innovationLeadUserId), Void.class);
     }
 
     @Override
     public RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long competitionId) {
-        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId + "/get-organisation-types", organisationTypeResourceListType());
+        return getWithRestResultAnonymous(format("%s/%d/%s", COMPETITION_REST_SERVICE, competitionId, "get-organisation-types"), organisationTypeResourceListType());
     }
 
     @Override
     public RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId) {
-        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+        return getWithRestResultAnonymous(format("%s/%d", COMPETITION_REST_SERVICE, competitionId), CompetitionResource.class);
     }
 
     @Override
     public RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
-        return putWithRestResult(competitionsRestURL + "/" + competitionId + "/update-terms-and-conditions/" + termsAndConditionsId, Void.class);
+        return putWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "update-terms-and-conditions", termsAndConditionsId), Void.class);
     }
 
     @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
-        return getWithRestResult(competitionsTypesRestURL + "/find-all", competitionTypeResourceListType());
+        return getWithRestResult(format("%s/%s", COMPETITION_TYPE_REST_SERVICE, "find-all"), competitionTypeResourceListType());
     }
 
+    @Override
+    public RestResult<ByteArrayResource> downloadTerms(long competitionId) {
+        return getWithRestResult(format("%s/%d/terms-and-conditions", COMPETITION_REST_SERVICE, competitionId), ByteArrayResource.class);
+    }
 }
