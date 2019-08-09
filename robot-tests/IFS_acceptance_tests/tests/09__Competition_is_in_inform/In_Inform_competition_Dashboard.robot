@@ -127,10 +127,6 @@ User can see the Application details along with feedback
     Given the user should see the element                          jQuery = h2:contains("Application details")
     And the user should see the element                            jQuery = h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
     When the user checks the application details sections
-    When the user checks the Project summary functionality
-    And the user checks the Public description functionality
-    And the user checks the Scope functionality
-
     Then the user should see the element                            jQuery = h2:contains("Application details")
 
 User can see feedback to individual questions
