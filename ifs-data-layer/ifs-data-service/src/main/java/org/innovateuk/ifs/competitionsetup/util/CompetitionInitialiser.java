@@ -48,7 +48,8 @@ public class CompetitionInitialiser {
                 TRAVEL,
                 OTHER_COSTS,
                 FINANCE,
-                OTHER_FUNDING
+                OTHER_FUNDING,
+                VAT
         ));
     }
 
