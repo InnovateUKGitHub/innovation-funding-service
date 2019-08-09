@@ -74,7 +74,6 @@ the user selects procurement Terms and Conditions
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
-
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
     the user clicks the button/link      jQuery = button:contains("Done")
