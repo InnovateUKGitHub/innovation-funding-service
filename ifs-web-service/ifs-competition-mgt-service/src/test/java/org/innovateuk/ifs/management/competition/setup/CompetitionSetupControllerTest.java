@@ -1292,6 +1292,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         inOrder.verify(competitionRestService).getCompetitionById(COMPETITION_ID);
         inOrder.verify(competitionSetupRestService)
                 .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+        inOrder.verify(competitionSetupService)
+                .saveCompetitionSetupSection(form, competitionResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
         inOrder.verifyNoMoreInteractions();
     }
 
