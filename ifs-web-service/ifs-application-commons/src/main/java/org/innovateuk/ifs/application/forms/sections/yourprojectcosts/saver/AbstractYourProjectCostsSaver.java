@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -34,14 +33,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AbstractYourProjectCostsSaver.class);
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ApplicationRestService applicationRestService;
-
     public ServiceResult<Void> saveType(YourProjectCostsForm form, FinanceRowType type, long targetId, long organisationId) {
         try {
             BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
@@ -68,6 +59,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     break;
                 case TRAVEL:
                     messages.addAll(saveRows(form.getTravelRows(), finance).get());
+                    break;
+                case PROCUREMENT_OVERHEADS:
+                    messages.addAll(saveRows(form.getProcurementOverheadRows(), finance).get());
                     break;
             }
             if (messages.getErrors().isEmpty()) {
@@ -105,6 +99,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OTHER_COSTS)) {
             futures.add(saveRows(form.getOtherRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PROCUREMENT_OVERHEADS)) {
+            futures.add(saveRows(form.getProcurementOverheadRows(), finance));
         }
 
         ValidationMessages messages = new ValidationMessages();
@@ -215,6 +212,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case TRAVEL:
                 map = form.getTravelRows();
                 break;
+            case PROCUREMENT_OVERHEADS:
+                map = form.getProcurementOverheadRows();
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
@@ -241,6 +241,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case TRAVEL:
                 clazz = TravelRowForm.class;
+                break;
+            case PROCUREMENT_OVERHEADS:
+                clazz = ProcurementOverheadRowForm.class;
                 break;
             default:
                 throw new RuntimeException("Unknown row type");

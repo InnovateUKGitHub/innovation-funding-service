@@ -93,7 +93,9 @@ the user fills in the project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link = Your project costs
     the user fills in Labour
-    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    Run Keyword If   '${status}' == 'PASS'    Run Keyword  the user fills in procurement Overhead costs
+    ...  ELSE    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -118,6 +120,23 @@ the user fills in Labour
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
     the user enters text to a text field       jQuery = input[id$="days"][value = ""]:first    100
     the user clicks the button/link            jQuery = button:contains("Labour")
+
+the user fills in procurement Overhead costs
+    Validations for procurement Overhead costs
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   Cost
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   5000
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   10
+    the user should not see an error in the page
+
+Validations for procurement Overhead costs
+    the user clicks the button/link         jQuery = button:contains("Add another overhead")
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   ${EMPTY}
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   ${EMPTY}
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   ${EMPTY}
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(1) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(2) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(3) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button   #Remove
 
 the user fills in Overhead costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
