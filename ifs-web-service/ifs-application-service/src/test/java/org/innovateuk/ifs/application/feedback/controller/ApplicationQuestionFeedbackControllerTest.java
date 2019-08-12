@@ -143,8 +143,6 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-assessor-feedback"));
-
-        verify(formInputResponseRestService, never());
     }
 
     @Test
