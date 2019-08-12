@@ -116,7 +116,7 @@
                                    class="govuk-radios__input"
                                    id="vatRegistered-yes"
                                    th:field="*{vat.registered}"
-                                   th:checked="${form.vat.registered == null ? false : form.vat.registered}"
+                                   th:checked="${form.vat == null ? false : form.vat.registered}"
                                    value="true"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
@@ -161,7 +161,7 @@
                                    class="govuk-radios__input"
                                    id="vatRegistered-no"
                                    th:field="*{vat.registered}"
-                                   th:checked="${form.vat.registered == null ? false : form.vat.registered}"
+                                   th:checked="${form.vat == null ? false : form.vat.registered}"
                                    value="false"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>

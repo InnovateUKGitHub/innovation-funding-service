@@ -14,6 +14,7 @@ import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.innovateuk.ifs.finance.resource.cost.VAT;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,8 @@ public class YourProjectCostsFormValidator {
             case TRAVEL:
                 validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
                 break;
+            case VAT:
+                validateVAT(form.getVat(), validationHandler);
         }
     }
 
@@ -102,6 +105,12 @@ public class YourProjectCostsFormValidator {
     private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {
         validateForm(labour, validationHandler, "labour.");
         validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
+    }
+
+    private void validateVAT(VAT vat, ValidationHandler validationHandler) {
+        if (vat == null) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vat.registered", null, "validation.field.must.not.be.blank")));
+        }
     }
 
     private ErrorToObjectErrorConverter toFieldErrorWithPath(String path) {
