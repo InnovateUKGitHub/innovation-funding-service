@@ -107,10 +107,13 @@
 
             </div>
 
-            <div class="govuk-form-group" th:unless="${model.readOnly}" th:if="${model.procurementCompetition}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('vat')} ? 'govuk-form-group--error'"
+                 th:unless="${model.readOnly}" th:if="${model.procurementCompetition}">
                 <fieldset class="govuk-fieldset">
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" data-target="vatRegistered-totals"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('vat')}"
+                              th:text="${err}"></span>
+                        <div id="vat" class="govuk-radios__item" data-target="vatRegistered-totals"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input govuk-input--error"

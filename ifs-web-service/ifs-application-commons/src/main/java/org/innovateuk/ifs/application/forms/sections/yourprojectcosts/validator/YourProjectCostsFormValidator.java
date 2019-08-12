@@ -109,7 +109,7 @@ public class YourProjectCostsFormValidator {
 
     private void validateVAT(VAT vat, ValidationHandler validationHandler) {
         if (vat == null) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vatRegistered-totals", null, "validation.field.must.not.be.blank")));
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vat", null, "validation.field.must.not.be.blank")));
         }
     }
 
