@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.VAT;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -165,5 +166,20 @@ public abstract class BaseFinanceResource {
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+    }
+
+    public boolean hasVatFinanceColumn() {
+        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
+            FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
+            VAT vat = financeRowCostCategory.getCosts().stream()
+                    .findAny()
+                    .filter(c -> c instanceof VAT)
+                    .map(c -> (VAT) c)
+                    .orElse(null);
+
+            return vat == null ? false : vat.getRegistered();
+        } else {
+            return false;
+        }
     }
 }

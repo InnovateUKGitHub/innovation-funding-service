@@ -3,9 +3,7 @@ package org.innovateuk.ifs.application.common.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.VATCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.VAT;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
@@ -158,9 +156,7 @@ public class ApplicationFundingBreakdownViewModel {
                 .findFirst();
 
         if (financeResource.isPresent()) {
-            VATCategory category = (VATCategory) financeResource.get().getFinanceOrganisationDetails().get(FinanceRowType.FINANCE);
-            VAT vat = (VAT) category.getCosts().get(0);
-            return vat.getRegistered();
+            return financeResource.get().hasVatFinanceColumn();
         }
 
         return false;
