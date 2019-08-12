@@ -48,14 +48,14 @@
                 to one member of your team.</p>
 
             <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
-                <th:block th:insert="application/your-project-costs-fragments :: labour" />
-                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
-                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads" />
-                <th:block th:insert="application/your-project-costs-fragments :: materials" />
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
-                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
-                <th:block th:insert="application/your-project-costs-fragments :: travel" />
-                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+                <th:block th:insert="application/your-project-costs-fragments :: labour"/>
+                <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
+                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
+                <th:block th:insert="application/your-project-costs-fragments :: materials"/>
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage"/>
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs"/>
+                <th:block th:insert="application/your-project-costs-fragments :: travel"/>
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs"/>
             </div>
 
             <div class="govuk-grid-row total-cost">
@@ -76,15 +76,18 @@
             </div>
 
             <div class="govuk-form-group" th:if="${model.procurementCompetition}">
-                <label class="govuk-heading-m">Are you VAT registered?</label>
-                <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
-                <span class="govuk-hint" th:if="${model.readOnly}" th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
+                <div class="govuk-grid-row">
+                    <label class="govuk-label govuk-label--s"
+                           th:classappend="${model.readOnly} ? 'govuk-grid-column-one-half': ''">Are you VAT
+                        registered?</label>
+                    <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
+                    <span class="govuk-hint govuk-grid-column-one-half alignright" th:if="${model.readOnly}"
+                          th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
+                </div>
 
                 <div class="govuk-grid-row total-cost" th:if="${model.readOnly AND form.vat.registered}">
                     <div class="govuk-grid-column-one-half">
-                        <label for="total-cost" class="govuk-heading-m"
-                               th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
-                            costs</label>
+                        <label for="total-cost" class="govuk-heading-m">Total VAT</label>
                     </div>
 
                     <div class="govuk-grid-column-one-half alignright">
@@ -93,10 +96,7 @@
                     </div>
 
                     <div class="govuk-grid-column-one-half">
-                        <label for="total-cost" class="govuk-heading-m"
-                               th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
-                            Total project
-                            costs</label>
+                        <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
                     </div>
 
                     <div class="govuk-grid-column-one-half alignright">
@@ -113,7 +113,7 @@
                         <div class="govuk-radios__item" data-target="vatRegistered-totals"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
-                                   class="govuk-radios__input"
+                                   class="govuk-radios__input govuk-input--error"
                                    id="vatRegistered-yes"
                                    th:field="*{vat.registered}"
                                    th:checked="${form.vat == null ? false : form.vat.registered}"
@@ -129,9 +129,7 @@
                         <div id="vatRegistered-totals" class="panel">
                             <div class="govuk-form-group">
                                 <div class="govuk-grid-column-one-half alignleft">
-                                    <label for="total-cost" class="govuk-heading-m"
-                                           th:text="|'${model.organisationName}' Total VAT|">'Bobs' Total project
-                                        costs</label>
+                                    <label for="total-cost" class="govuk-heading-m">Total VAT</label>
                                 </div>
 
                                 <div class="govuk-grid-column-one-half alignright">
@@ -141,10 +139,8 @@
                                            th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignleft">
-                                    <label for="total-cost" class="govuk-heading-m"
-                                           th:text="|'${model.organisationName}' Total project costs inclusive of VAT|">'Bobs'
-                                        Total project
-                                        costs</label>
+                                    <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of
+                                        VAT</label>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignright">
                                     <label for="total-cost" class="govuk-heading-m"
@@ -158,7 +154,7 @@
                         <div class="govuk-radios__item"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
-                                   class="govuk-radios__input"
+                                   class="govuk-radios__input govuk-input--error"
                                    id="vatRegistered-no"
                                    th:field="*{vat.registered}"
                                    th:checked="${form.vat == null ? false : form.vat.registered}"
