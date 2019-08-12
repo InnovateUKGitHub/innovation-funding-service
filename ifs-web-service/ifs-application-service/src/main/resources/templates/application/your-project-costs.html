@@ -89,7 +89,7 @@
 
                     <div class="govuk-grid-column-one-half alignright">
                         <label for="total-cost" class="govuk-heading-m"
-                               th:text="'£' + ${#numbers.formatDecimal(form.getVatTotal(),0,0)}">£120</label>
+                               th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
                     </div>
 
                     <div class="govuk-grid-column-one-half">
@@ -101,7 +101,7 @@
 
                     <div class="govuk-grid-column-one-half alignright">
                         <label for="total-cost" class="govuk-heading-m"
-                               th:text="'£' + ${#numbers.formatDecimal(form.getProjectVatTotal(),0,0)}">£120</label>
+                               th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
                     </div>
                 </div>
 
@@ -138,7 +138,7 @@
                                     <label id="vat-total" class="govuk-heading-m"
                                            data-calculation-fields="#total-cost,0.2"
                                            data-calculation-operations="*"
-                                           th:text="'£' + ${#numbers.formatDecimal(form.getVatTotal(),0,0)}">£120</label>
+                                           th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignleft">
                                     <label for="total-cost" class="govuk-heading-m"
@@ -150,7 +150,7 @@
                                     <label for="total-cost" class="govuk-heading-m"
                                            data-calculation-fields="#vat-total,#total-cost"
                                            data-calculation-operations="+"
-                                           th:text="'£' + ${#numbers.formatDecimal(form.getProjectVatTotal(),0,0)}">£120</label>
+                                           th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
                                 </div>
                             </div>
                         </div>

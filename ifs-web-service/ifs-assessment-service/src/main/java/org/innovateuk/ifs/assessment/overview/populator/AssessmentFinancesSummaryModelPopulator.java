@@ -13,6 +13,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.VATCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.VAT;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -23,6 +26,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,6 +114,21 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
         model.addAttribute("currentCompetition", competition);
+        model.addAttribute("procurementCompetition", competition.isProcurement());
+        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(1.2)));
+        model.addAttribute("hasVatColumn", hasVatColumn(organisationFinances));
+    }
+
+    private boolean hasVatColumn(Map<Long, BaseFinanceResource> organisationFinances) {
+        VATCategory category = (VATCategory) organisationFinances.values()
+                .stream()
+                .findFirst()
+                .get()
+                .getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+
+        VAT vat = (VAT) category.getCosts().get(0);
+
+        return vat.getRegistered();
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

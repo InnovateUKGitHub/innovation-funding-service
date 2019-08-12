@@ -30,6 +30,7 @@
             th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
                      hasProcurementOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
+                     hasVatColumn=${hasVatColumn},
                      hasMaterials=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
                      hasCapitalUsage=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
                      hasSubcontracting=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
@@ -70,7 +71,7 @@
                         <th scope="col"
                             th:if="${hasOther}"
                             class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
-                        <th scope="col" th:if="${procurementCompetition}"
+                        <th scope="col" th:if="${hasVatColumn}"
                             class="govuk-table__header govuk-table__header--numeric width-80">VAT total (&pound;)</th>
                     </tr>
                     </thead>
@@ -152,8 +153,8 @@
                                     th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                                 </td>
-                                <td th:if="${procurementCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
-                                    th:text="${#numbers.formatInteger(model.applicationFundingBreakdownViewModel.getVatTotal(), 0, 'DEFAULT')}">
+                                <td th:if="${hasVatColumn}" class="govuk-table__cell govuk-table__cell--numeric"
+                                    th:text="${#numbers.formatInteger(vatTotal, 0, 'DEFAULT')}">
                                 </td>
                             </th:block>
                             <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
@@ -246,8 +247,8 @@
                             th:if="${hasOther}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
-                        <td th:if="${procurementCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
-                            th:with="financeTotal = ${model.getVatTotal()}"
+                        <td th:if="${hasVatColumn}" class="govuk-table__cell govuk-table__cell--numeric"
+                            th:with="financeTotal = ${vatTotal}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
                     </tr>

@@ -34,5 +34,4 @@ public class ApplicationSummaryViewModelPopulator {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         return project != null && project.isWithdrawn();
     }
-
 }

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.common.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.VATCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.VAT;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
@@ -28,6 +30,8 @@ public class ApplicationFundingBreakdownViewModel {
     private final Map<Long, Boolean> showDetailedFinanceLink;
     private final boolean procurementCompetition;
     private final CompetitionResource currentCompetition;
+    private final BigDecimal vatTotal;
+    private final boolean hasVatColumn;
 
     public ApplicationFundingBreakdownViewModel(
             Map<FinanceRowType, BigDecimal> financeTotalPerType,
@@ -53,6 +57,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
         this.procurementCompetition = currentCompetition.isProcurement();
+        this.hasVatColumn = hasVatColumn();
+        this.vatTotal = calculateVatTotal();
     }
 
     //For EOI Competitions
@@ -77,6 +83,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
         this.procurementCompetition = currentCompetition.isProcurement();
+        this.hasVatColumn = hasVatColumn();
+        this.vatTotal = calculateVatTotal();
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -127,8 +135,31 @@ public class ApplicationFundingBreakdownViewModel {
         return currentCompetition;
     }
 
-    /* view model logic. */
+    public boolean isHasVatColumn() {
+        return hasVatColumn;
+    }
+
     public BigDecimal getVatTotal() {
+        return vatTotal;
+    }
+
+    /* view model logic. */
+    public BigDecimal calculateVatTotal() {
         return getFinanceTotal().multiply(BigDecimal.valueOf(1.2));
+    }
+
+    /*
+     Procurement competitions only have one applicant
+     */
+    public boolean hasVatColumn() {
+        VATCategory category = (VATCategory) organisationFinances.values()
+                .stream()
+                .findFirst()
+                .get()
+                .getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+
+        VAT vat = (VAT) category.getCosts().get(0);
+
+        return vat.getRegistered();
     }
 }
