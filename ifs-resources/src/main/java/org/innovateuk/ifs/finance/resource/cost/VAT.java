@@ -4,11 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class VAT extends AbstractFinanceRowItem {
     private Long id;
     private String name;
+
+    @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean registered;
 
     public VAT() {
