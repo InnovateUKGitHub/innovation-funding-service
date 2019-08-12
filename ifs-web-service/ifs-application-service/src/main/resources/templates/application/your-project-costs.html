@@ -79,13 +79,12 @@
                  th:classappend="${#fields.hasErrors('vat.registered')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend id="vat"
-                            class="govuk-fieldset__legend govuk-fieldset__legend--s"
-                            th:classappend="${model.readOnly} ? 'govuk-grid-column-one-half': ''">
+                            class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         Are you VAT
                         registered?
                     </legend>
                     <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
-                    <span class="govuk-hint govuk-grid-column-one-half alignright" th:if="${model.readOnly}"
+                    <span class="govuk-body" th:if="${model.readOnly}"
                           th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
 
                     <div class="govuk-grid-row total-cost" th:if="${model.readOnly AND form.vat.registered}">
