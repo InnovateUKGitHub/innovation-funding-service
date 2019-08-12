@@ -120,15 +120,17 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     }
 
     private boolean hasVatColumn(Map<Long, BaseFinanceResource> organisationFinances) {
-        VATCategory category = (VATCategory) organisationFinances.values()
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
                 .stream()
-                .findFirst()
-                .get()
-                .getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+                .findFirst();
 
-        VAT vat = (VAT) category.getCosts().get(0);
+        if (financeResource.isPresent()) {
+            VATCategory category = (VATCategory) financeResource.get().getFinanceOrganisationDetails().get(FinanceRowType.FINANCE);
+            VAT vat = (VAT) category.getCosts().get(0);
+            return vat.getRegistered();
+        }
 
-        return vat.getRegistered();
+        return false;
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

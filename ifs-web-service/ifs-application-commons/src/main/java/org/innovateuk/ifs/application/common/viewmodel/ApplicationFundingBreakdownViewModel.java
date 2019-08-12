@@ -12,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * View model for finance/finance-summary :: financial_summary_table.
@@ -152,14 +153,16 @@ public class ApplicationFundingBreakdownViewModel {
      Procurement competitions only have one applicant
      */
     public boolean hasVatColumn() {
-        VATCategory category = (VATCategory) organisationFinances.values()
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
                 .stream()
-                .findFirst()
-                .get()
-                .getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+                .findFirst();
 
-        VAT vat = (VAT) category.getCosts().get(0);
+        if (financeResource.isPresent()) {
+            VATCategory category = (VATCategory) financeResource.get().getFinanceOrganisationDetails().get(FinanceRowType.FINANCE);
+            VAT vat = (VAT) category.getCosts().get(0);
+            return vat.getRegistered();
+        }
 
-        return vat.getRegistered();
+        return false;
     }
 }

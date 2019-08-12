@@ -161,10 +161,8 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withOrganisation(organisations.get(0).getId()).build();
 
-
         when(userRestService.findProcessRole(userResource.getId(), app.getId())).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(processRole.getOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
-
 
         when(interviewResponseRestService.deleteResponse(app.getId()))
                 .thenReturn(restSuccess());
