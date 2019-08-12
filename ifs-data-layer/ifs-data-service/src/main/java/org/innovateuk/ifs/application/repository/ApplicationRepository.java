@@ -204,4 +204,18 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "   ON project.application.id = app.id " +
             PREVIOUS_WHERE_CLAUSE)
     int countPrevious(long competitionId);
+
+    @Query(" SELECT DISTINCT app FROM Application app" +
+           " LEFT JOIN ProcessRole pr " +
+           "    ON app.id = pr.applicationId " +
+           "        AND pr.user.id=:userId " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR) " +
+           " LEFT JOIN Project proj " +
+           "    ON proj.application.id = app.id " +
+           " LEFT JOIN ProjectUser pu " +
+           "    ON pu.project.id = proj.id " +
+           "        AND pu.user.id=:userId " +
+           " WHERE (proj.id IS NULL AND pr iS NOT NULL)" + // No project exists and user has applicant process role
+           "    OR  pu.id IS NOT NULL") // Or project exists and user is a project user.
+    List<Application> findApplicationsForDashboard(long userId);
 }

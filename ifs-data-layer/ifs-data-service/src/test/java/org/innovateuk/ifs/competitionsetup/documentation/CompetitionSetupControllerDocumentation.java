@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.apache.http.HttpHeaders;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -9,33 +10,50 @@ import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.TermsAndConditionsResourceDocs;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStatusResourceBuilder;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionSetupControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupController> {
+public class CompetitionSetupControllerDocumentation extends BaseFileControllerMockMVCTest<CompetitionSetupController> {
+
+    private static final long MAX_FILE_SIZE = 1234L;
+    private static final List<String> MEDIA_TYPES = singletonList("application/pdf");
+
     @Mock
     private CompetitionService competitionService;
 
     @Mock
     private CompetitionSetupService competitionSetupService;
 
+    @Mock
+    private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
+
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
-        return new CompetitionSetupController();
+        CompetitionSetupController controller = new CompetitionSetupController();
+        ReflectionTestUtils.setField(controller, "maxFilesizeBytesForCompetitionTerms", MAX_FILE_SIZE);
+        ReflectionTestUtils.setField(controller, "validMediaTypesForCompetitionTerms", MEDIA_TYPES);
+        return controller;
     }
 
     @Test
@@ -169,4 +187,48 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                         pathParameters(parameterWithName("id").description("Id of the competition to delete")))
                 );
     }
+
+    @Test
+    public void uploadCompetitionTerms() throws Exception {
+        long competitionId = 1;
+        long fileEntryId = 2;
+
+        final FileEntryResource fileEntryResource = new FileEntryResource(fileEntryId, "filename.pdf", "application/pdf", 1234);
+
+        when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class), isA(List.class), isA(Long.class)))
+                .thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf(fileEntryResource.getMediaType()), fileEntryResource.getFilesizeBytes(), fileEntryResource.getName())));
+
+        when(competitionSetupService.uploadCompetitionTerms(eq(fileEntryResource.getMediaType()), eq("1234"), eq(fileEntryResource.getName()), eq(competitionId), any(HttpServletRequest.class))).thenReturn(serviceSuccess(fileEntryResource));
+
+        mockMvc.perform(post("/competition/setup/competition-terms")
+                .param("competitionId", String.valueOf(competitionId))
+                .param("filename", fileEntryResource.getName())
+                .contentType(fileEntryResource.getMediaType())
+                .content("fileContent")
+                .header(HttpHeaders.CONTENT_LENGTH, 1234))
+                .andExpect(status().isCreated())
+                .andDo(document(
+                        "competition/competition-terms",
+                        requestParameters(
+                                parameterWithName("competitionId").description("The ID of the competition"),
+                                parameterWithName("filename").description("The name of the file"))
+                        ));
+    }
+
+    @Test
+    public void deleteCompetitionTerms() throws Exception {
+        long competitionId = 1;
+
+        when(competitionSetupService.deleteCompetitionTerms(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competition/setup/competition-terms")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent())
+                .andDo(document(
+                        "competition/competition-terms",
+                        requestParameters(
+                                parameterWithName("competitionId").description("The ID of the competition")
+                )));
+    }
 }
+

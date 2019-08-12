@@ -7,26 +7,26 @@ import java.util.List;
 
 public class ApplicantDashboardResource {
 
-    private List<DashboardApplicationInSetupResource> inSetup;
-    private List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer;
-    private List<DashboardApplicationInProgressResource> inProgress;
-    private List<DashboardPreviousApplicationResource> previous;
+    private List<DashboardInSetupRowResource> inSetup;
+    private List<DashboardEuGrantTransferRowResource> euGrantTransfer;
+    private List<DashboardInProgressRowResource> inProgress;
+    private List<DashboardPreviousRowResource> previous;
 
     private ApplicantDashboardResource() {}
 
-    public List<DashboardApplicationInSetupResource> getInSetup() {
+    public List<DashboardInSetupRowResource> getInSetup() {
         return inSetup;
     }
 
-    public List<DashboardApplicationForEuGrantTransferResource> getEuGrantTransfer() {
+    public List<DashboardEuGrantTransferRowResource> getEuGrantTransfer() {
         return euGrantTransfer;
     }
 
-    public List<DashboardApplicationInProgressResource> getInProgress() {
+    public List<DashboardInProgressRowResource> getInProgress() {
         return inProgress;
     }
 
-    public List<DashboardPreviousApplicationResource> getPrevious() {
+    public List<DashboardPreviousRowResource> getPrevious() {
         return previous;
     }
 
@@ -54,27 +54,27 @@ public class ApplicantDashboardResource {
     }
 
     public static class ApplicantDashboardResourceBuilder {
-        private List<DashboardApplicationInSetupResource> inSetup;
-        private List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer;
-        private List<DashboardApplicationInProgressResource> inProgress;
-        private List<DashboardPreviousApplicationResource> previous;
+        private List<DashboardInSetupRowResource> inSetup;
+        private List<DashboardEuGrantTransferRowResource> euGrantTransfer;
+        private List<DashboardInProgressRowResource> inProgress;
+        private List<DashboardPreviousRowResource> previous;
 
-        public ApplicantDashboardResourceBuilder withInSetup(List<DashboardApplicationInSetupResource> inSetup) {
+        public ApplicantDashboardResourceBuilder withInSetup(List<DashboardInSetupRowResource> inSetup) {
             this.inSetup = inSetup;
             return this;
         }
 
-        public ApplicantDashboardResourceBuilder withEuGrantTransfer(List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer) {
+        public ApplicantDashboardResourceBuilder withEuGrantTransfer(List<DashboardEuGrantTransferRowResource> euGrantTransfer) {
             this.euGrantTransfer = euGrantTransfer;
             return this;
         }
 
-        public ApplicantDashboardResourceBuilder withInProgress(List<DashboardApplicationInProgressResource> inProgress) {
+        public ApplicantDashboardResourceBuilder withInProgress(List<DashboardInProgressRowResource> inProgress) {
             this.inProgress = inProgress;
             return this;
         }
 
-        public ApplicantDashboardResourceBuilder withPrevious(List<DashboardPreviousApplicationResource> previous) {
+        public ApplicantDashboardResourceBuilder withPrevious(List<DashboardPreviousRowResource> previous) {
             this.previous = previous;
             return this;
         }

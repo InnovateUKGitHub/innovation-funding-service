@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -92,6 +93,9 @@ public class Application implements ProcessActivity {
 
     @Enumerated(EnumType.STRING)
     private CompanyPrimaryFocus companyPrimaryFocus;
+
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private Project project;
 
     public Application() {
     }
@@ -273,6 +277,14 @@ public class Application implements ProcessActivity {
 
     public void setFormInputResponses(List<FormInputResponse> formInputResponses) {
         this.formInputResponses = formInputResponses;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {

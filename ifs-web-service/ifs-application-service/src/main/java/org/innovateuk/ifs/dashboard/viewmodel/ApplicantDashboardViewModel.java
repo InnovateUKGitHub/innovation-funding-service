@@ -7,23 +7,23 @@ import java.util.List;
  */
 public class ApplicantDashboardViewModel {
 
-    private final List<InSetupDashboardRowViewModel> projects;
+    private final List<InSetupDashboardRowViewModel> inSetup;
     private final List<EuGrantTransferDashboardRowViewModel> euGrantTransfers;
     private final List<InProgressDashboardRowViewModel> inProgress;
     private final List<PreviousDashboardRowViewModel> previous;
 
-    public ApplicantDashboardViewModel(List<InSetupDashboardRowViewModel> projects,
+    public ApplicantDashboardViewModel(List<InSetupDashboardRowViewModel> inSetup,
                                        List<EuGrantTransferDashboardRowViewModel> euGrantTransfers,
                                        List<InProgressDashboardRowViewModel> inProgress,
                                        List<PreviousDashboardRowViewModel> previous) {
-        this.projects = projects;
+        this.inSetup = inSetup;
         this.inProgress = inProgress;
         this.euGrantTransfers = euGrantTransfers;
         this.previous = previous;
     }
 
     public List<InSetupDashboardRowViewModel> getProjects() {
-        return projects;
+        return inSetup;
     }
 
     public List<InProgressDashboardRowViewModel> getInProgress() {

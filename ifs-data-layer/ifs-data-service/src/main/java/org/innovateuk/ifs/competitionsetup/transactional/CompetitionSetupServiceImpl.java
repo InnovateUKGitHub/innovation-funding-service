@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
@@ -390,9 +391,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteCompetitionTerms(long competitionId) {
         return findCompetition(competitionId)
-                .andOnSuccess(competition -> fileService.deleteFileIgnoreNotFound(competition.getCompetitionTerms().getId())
+                .andOnSuccess(competition -> find(competition.getCompetitionTerms(), notFoundError(FileEntry.class))
+                        .andOnSuccess(competitionTerms -> fileService.deleteFileIgnoreNotFound(competitionTerms.getId()))
                         .andOnSuccessReturnVoid(() -> competition.setCompetitionTerms(null)));
     }
 

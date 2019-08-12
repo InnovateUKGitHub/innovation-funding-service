@@ -181,7 +181,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
+    When The user clicks the button/link     jQuery = label:contains("Advanced")
     And the user clicks the button/link      jQuery = button:contains("Done")
     Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
@@ -518,7 +518,7 @@ Application: Finances
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
     When the user should see the element           jQuery = h1:contains("Finances")
-    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
+    And the user selects the radio button          applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
@@ -731,13 +731,6 @@ The Applicant see the correct Questions
     Given the user should see the element      jQuery = li:contains("${customQuestion}")
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
-
-The user can see the VAT text in Your project costs
-    [Documentation]  IFS-4345
-    [Tags]
-    Given the user clicks the button/link      link = Your project finances
-    When the user clicks the button/link       link = Your project costs
-    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 *** Keywords ***
 the total should be correct

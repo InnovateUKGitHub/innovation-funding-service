@@ -26,7 +26,7 @@ public class AssessmentTermsAndConditionsModelPopulator {
                 assessmentId,
                 competition.getTermsAndConditions().getTemplate(),
                 competition.getAssessmentDaysLeft(),
-                competition.getAssessmentDaysLeftPercentage()
-        );
+                competition.getAssessmentDaysLeftPercentage(),
+                competitionId);
     }
 }

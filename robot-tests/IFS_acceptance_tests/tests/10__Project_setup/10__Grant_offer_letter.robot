@@ -48,6 +48,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-5865 GOL download/upload page for admins
 ...
 ...               IFS-6054 Display completed projects in the previous tab
+...
+...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
 Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -409,12 +411,13 @@ Internal user accepts signed grant offer letter
     Then the user should see the element   jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok
 
 Project manager's status should be updated
-    [Documentation]   INFUND-5998, INFUND-6377
+    [Documentation]   INFUND-5998, INFUND-6377  IFS-6021
     [Tags]
-    [Setup]    log in as a different user    ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    Given the user navigates to the page     ${server}/project-setup/project/${Elbow_Grease_Project_Id}
-    Then the user should see the element     jQuery = .success-alert:contains("The project is live, you can review progress at")
-    And the user should see the element      link = _connect
+    [Setup]    log in as a different user      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+    Given the user should see live project on dashboard
+    When the user clicks the button/link       link = ${Elbow_Grease_Title}
+    Then the user should see the element       jQuery = .success-alert:contains("The project is live, you can review progress at")
+    And the user should see the element        link = _connect
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
@@ -526,3 +529,8 @@ the user should see project setup compeletion status
     the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(6).status.ok    # Finance checks
     the user should see the element      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(7).status.ok a  # Spend profile
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
+
+the user should see live project on dashboard
+    the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
+    the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
+    the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status:contains("Live project")

@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation   IFS-6096 SBRI - Project Cost Guidance Review
+...
+...             IFS-5097 Update to overhead costs in procurement application
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -26,7 +28,7 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
@@ -34,7 +36,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(procurement)
     When the user navigates to Your-finances page                ${appl_name}
     And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
-    And the user accept the competition terms and conditions
+    And the user accept the procurement terms and conditions
     And the user selects research category                       Feasibility studies
     And the applicant submits the procurement application
     [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
@@ -150,8 +152,6 @@ the user should see all procurement finance subsections complete
 the applicant submits the procurement application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
-    the user should see that the element is disabled   jQuery = .govuk-button:contains("Submit application")
-    the user selects the checkbox                      agreeTerms
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track

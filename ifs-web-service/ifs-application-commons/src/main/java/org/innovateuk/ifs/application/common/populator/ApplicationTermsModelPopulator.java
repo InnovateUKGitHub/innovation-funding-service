@@ -52,6 +52,7 @@ public class ApplicationTermsModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        boolean additionalTerms = competition.getCompetitionTerms() != null;
 
         if (!readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
@@ -81,8 +82,8 @@ public class ApplicationTermsModelPopulator {
                         termsAccepted,
                         termsAcceptedByName,
                         termsAcceptedOn,
-                        isAllOrganisationsTermsAccepted(applicationId, competition.getId())
-                );
+                        isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
+                        additionalTerms);
             }
         }
 
@@ -92,7 +93,7 @@ public class ApplicationTermsModelPopulator {
                 termsQuestionId,
                 competition.getTermsAndConditions().getTemplate(),
                 application.isCollaborativeProject(),
-                isAllOrganisationsTermsAccepted(applicationId, competition.getId()));
+                isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms);
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
 import java.time.LocalDate;
@@ -12,8 +12,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 /**
  * View model for each application row in the 'Grant transfer' section of the applicant dashboard.
  */
-public class EuGrantTransferDashboardRowViewModel extends
-        AbstractApplicantDashboardRowViewModel<EuGrantTransferDashboardRowViewModel>
+public class EuGrantTransferDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel
         implements Comparable<EuGrantTransferDashboardRowViewModel> {
     private final ApplicationState applicationState;
     private final int applicationProgress;
@@ -34,7 +33,7 @@ public class EuGrantTransferDashboardRowViewModel extends
         this.startDate = startDate;
     }
 
-    public EuGrantTransferDashboardRowViewModel(DashboardApplicationForEuGrantTransferResource resource){
+    public EuGrantTransferDashboardRowViewModel(DashboardEuGrantTransferRowResource resource){
         super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
         this.applicationState = resource.getApplicationState();
         this.applicationProgress = resource.getApplicationProgress();
