@@ -48,12 +48,6 @@ public class ApplicationQuestionFeedbackController {
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user
                                                       ) {
-
-        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
-        if (questionResource.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
-            return redirectToApplicationTeam(applicationId, questionId);
-        }
-        
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
 
@@ -61,6 +55,11 @@ public class ApplicationQuestionFeedbackController {
 
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return "redirect:/application/" + applicationId + "/summary";
+        }
+
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+        if (questionResource.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
+            return redirectToApplicationTeam(applicationId, questionId);
         }
 
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionResource, user, model));
