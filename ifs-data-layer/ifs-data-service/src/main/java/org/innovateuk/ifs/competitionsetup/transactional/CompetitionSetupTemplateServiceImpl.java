@@ -75,6 +75,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
 
     private Competition initialiseFinanceTypes(Competition competition) {
+        if (competition.getFundingType() == null) {
+            return competition;
+        }
+
         switch (competition.getFundingType()) {
             case GRANT:
                 competition.getFinanceRowTypes().addAll(EnumSet.of(
@@ -86,7 +90,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                         TRAVEL,
                         OTHER_COSTS,
                         FINANCE,
-                        OTHER_FUNDING
+                        OTHER_FUNDING,
+                        YOUR_FINANCE
                 ));
                 break;
             case LOAN:
