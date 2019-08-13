@@ -32,6 +32,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     private MaterialsHandler materialsHandler;
 
+    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
+
     private OtherCostHandler otherCostHandler;
 
     private OverheadsHandler overheadsHandler;
@@ -45,17 +47,18 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     private OtherFundingHandler otherFundingHandler;
 
     public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                        ProjectFinanceRowRepository projectFinanceRowRepository,
-                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                        QuestionService questionService,
-                                        ApplicationFinanceRepository applicationFinanceRepository,
-                                        ProjectFinanceRepository projectFinanceRepository,
-                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                        OverheadsHandler overheadsHandler,
-                                        SubContractingCostHandler subContractingCostHandler,
-                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                        OtherFundingHandler otherFundingHandler) {
+                                             ProjectFinanceRowRepository projectFinanceRowRepository,
+                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                             QuestionService questionService,
+                                             ApplicationFinanceRepository applicationFinanceRepository,
+                                             ProjectFinanceRepository projectFinanceRepository,
+                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                             OverheadsHandler overheadsHandler,
+                                             SubContractingCostHandler subContractingCostHandler,
+                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                             OtherFundingHandler otherFundingHandler,
+                                             ProcurementsOverheadsHandler procurementsOverheadsHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
@@ -66,6 +69,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         this.travelCostHandler = travelCostHandler;
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
+        this.procurementsOverheadsHandler = procurementsOverheadsHandler;
     }
 
     @Override
@@ -118,6 +122,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 break;
             case MATERIALS:
                 handler = materialsHandler;
+                break;
+            case PROCUREMENT_OVERHEADS:
+                handler = procurementsOverheadsHandler;
                 break;
             case OTHER_COSTS:
                 handler = otherCostHandler;
@@ -242,9 +249,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
-            if(cost.getApplicationRowId() != null) {
+            if (cost.getApplicationRowId() != null) {
                 applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
-            } else{
+            } else {
                 applicationFinanceRow = Optional.empty();
             }
             return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));

@@ -15,9 +15,7 @@ import org.innovateuk.ifs.application.forms.questions.researchcategory.populator
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
@@ -87,12 +85,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     @Spy
     @InjectMocks
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
-
-    @Mock
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Mock
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Mock
     private OverheadFileSaver overheadFileSaver;

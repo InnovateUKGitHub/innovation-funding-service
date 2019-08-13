@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
@@ -43,8 +42,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     @Mock
     private CompetitionRestService competitionRestService;
     @Mock
-    private ApplicationModelPopulator applicationModelPopulator;
-    @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Mock
     private UserService userService;
@@ -57,7 +54,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
     @Override
     protected ReviewAndSubmitController supplyControllerUnderTest() {
-        return new ReviewAndSubmitController(reviewAndSubmitViewModelPopulator, applicationRestService, competitionRestService, applicationModelPopulator, cookieFlashMessageFilter, userService, questionStatusRestService, userRestService, questionRestService);
+        return new ReviewAndSubmitController();
     }
 
     @Test
@@ -79,7 +76,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .build();
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(applicationModelPopulator.userIsLeadApplicant(application, loggedInUser.getId())).thenReturn(true);
+        when(userService.isLeadApplicant( loggedInUser.getId(), application)).thenReturn(true);
         when(applicationRestService.updateApplicationState(application.getId(), SUBMITTED)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/" + application.getId() + "/confirm-submit"))
@@ -96,7 +93,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .build();
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(applicationModelPopulator.userIsLeadApplicant(application, loggedInUser.getId())).thenReturn(true);
+        when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
         when(applicationRestService.updateApplicationState(application.getId(), SUBMITTED)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/" + application.getId() + "/confirm-submit")
