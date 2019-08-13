@@ -13,4 +13,4 @@ if [ -z "$3" ]; then
     exit 1
 fi
 
-docker exec ifs-database mysqldump $1 -u$2 -p$3 --no-create-info --insert-ignore --complete-insert > ../data-dump/ifs-data.sql
+mysqldump $1 -u$2 -p$3 --no-create-info --insert-ignore --complete-insert > ../data-dump/ifs-data.sql
