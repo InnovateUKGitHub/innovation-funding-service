@@ -32,7 +32,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setOtherRows(otherRows(finance));
         form.setSubcontractingRows(subcontractingRows(finance));
         form.setTravelRows(travelRows(finance));
-        form.setVat(vat(finance));
+        form.setVatForm(vat(finance));
         return form;
     }
 
@@ -56,7 +56,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
         return new OverheadForm();
     }
-
 
     private Map<String, LabourRowForm> labourCosts(LabourCostCategory costCategory) {
         Map<String, LabourRowForm> rows = costCategory.getCosts().stream()
@@ -162,14 +161,14 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return new HashMap<>();
     }
 
-     private Vat vat(BaseFinanceResource finance) {
+     private VatForm vat(BaseFinanceResource finance) {
         VatCategory costCategory = (VatCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
          if (costCategory != null) {
-             return (Vat) costCategory.getCosts().stream().findFirst().get();
+             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));;
+            return new VatForm(vat);
          }
-         return new Vat();
+         return new VatForm();
     }
-
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);
 

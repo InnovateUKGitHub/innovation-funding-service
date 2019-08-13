@@ -29,8 +29,6 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     private JESCostHandler jesCostHandler;
 
-    private VatHandler vatHandler;
-
     public JesFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                              ProjectFinanceRowRepository projectFinanceRowRepository,
                              FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
@@ -38,13 +36,11 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                              ApplicationFinanceRepository applicationFinanceRepository,
                              ProjectFinanceRepository projectFinanceRepository,
                              GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
-                             JESCostHandler jesCostHandler,
-                             VatHandler vatHandler) {
+                             JESCostHandler jesCostHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
         this.jesCostHandler = jesCostHandler;
-        this.vatHandler = vatHandler;
     }
 
     @Override
@@ -99,9 +95,6 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                 break;
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
-                break;
-            case VAT:
-                handler = vatHandler;
                 break;
         }
         if (handler != null) {

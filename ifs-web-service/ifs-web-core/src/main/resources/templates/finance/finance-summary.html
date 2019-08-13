@@ -111,7 +111,7 @@
                             <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}"
                                       th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
-                                    <span th:text="'£'+${#numbers.formatInteger(isVatRegistered ? organisationFinance.vatTotal : organisationFinance.total, 0, 'DEFAULT')}" />
+                                    <span th:text="'£'+${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric"
                                     th:if="${hasLabour}"
@@ -309,7 +309,7 @@
                     <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}"
                               th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" /></strong>
+                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.totalCosts, 0, 'DEFAULT')}" /></strong>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought, 0, 'DEFAULT')}"/>

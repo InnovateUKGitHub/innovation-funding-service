@@ -29,7 +29,7 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new Vat(cost.getId(), "Vat", cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
+        return new Vat(cost.getId(), cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
     }
 
     @Override

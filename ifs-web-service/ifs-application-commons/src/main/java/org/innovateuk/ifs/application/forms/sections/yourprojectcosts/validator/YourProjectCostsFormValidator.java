@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator;
 
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.OverheadForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -14,7 +11,6 @@ import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
-import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +73,7 @@ public class YourProjectCostsFormValidator {
                 validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
                 break;
             case VAT:
-                validateVat(form.getVat(), validationHandler);
+                validateVat(form.getVatForm(), validationHandler);
         }
     }
 
@@ -107,8 +103,8 @@ public class YourProjectCostsFormValidator {
         validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
     }
 
-    private void validateVat(Vat vat, ValidationHandler validationHandler) {
-        if (vat == null) {
+    private void validateVat(VatForm vatForm, ValidationHandler validationHandler) {
+        if (vatForm == null) {
             validationHandler.addAnyErrors(new ValidationMessages(fieldError("vat.registered", null, "validation.yourProjectCostsForm.vatRegistered.required")));
         }
     }

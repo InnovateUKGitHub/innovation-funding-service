@@ -62,7 +62,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     messages.addAll(saveRows(form.getProcurementOverheadRows(), finance).get());
                     break;
                 case VAT:
-                    messages.addAll(saveVat(form.getVat(), finance).get());
+                    messages.addAll(saveVat(form.getVatForm(), finance).get());
                     break;
             }
             if (messages.getErrors().isEmpty()) {
@@ -105,7 +105,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             futures.add(saveRows(form.getProcurementOverheadRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.VAT)) {
-            futures.add(saveVat(form.getVat(), finance));
+            futures.add(saveVat(form.getVatForm(), finance));
         }
 
         ValidationMessages messages = new ValidationMessages();
@@ -149,13 +149,13 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
-    private CompletableFuture<ValidationMessages> saveVat(Vat vat, BaseFinanceResource finance) {
+    private CompletableFuture<ValidationMessages> saveVat(VatForm vatForm, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
             VatCategory vatCategory = (VatCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
             Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
 
-            vatCost.setRegistered(vat.getRegistered());
+            vatCost.setRegistered(vatForm.getRegistered());
 
             messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
 

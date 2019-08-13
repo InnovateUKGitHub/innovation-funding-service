@@ -18,6 +18,8 @@ public final class CompetitionInitialiser {
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
+            default:
+                break;
         }
         return competition;
     }

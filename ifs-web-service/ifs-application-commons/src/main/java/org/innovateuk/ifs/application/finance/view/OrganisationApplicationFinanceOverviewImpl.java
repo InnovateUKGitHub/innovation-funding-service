@@ -79,7 +79,7 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
 
     public BigDecimal getTotal() {
         return applicationFinances.stream()
-                .map(ApplicationFinanceResource::getTotal)
+                .map(ApplicationFinanceResource::getTotalCosts)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

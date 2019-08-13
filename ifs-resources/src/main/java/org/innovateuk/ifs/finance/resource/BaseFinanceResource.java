@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -108,7 +109,7 @@ public abstract class BaseFinanceResource {
         }
     }
 
-    public BigDecimal getTotal() {
+    public BigDecimal getTotalCosts() {
 
         if (financeOrganisationDetails == null) {
             return BigDecimal.ZERO;
@@ -171,10 +172,13 @@ public abstract class BaseFinanceResource {
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
     }
 
-    public BigDecimal getVatTotal() {
-        return getTotal().multiply(VAT_RATE);
+    @JsonIgnore
+    public BigDecimal getTotal() {
+        if (isVatRegistered()) {
+            return getTotalCosts().multiply(VAT_RATE);
+        }
+        return getTotalCosts();
     }
-
 
     public boolean isVatRegistered() {
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {

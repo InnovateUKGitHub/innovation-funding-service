@@ -75,8 +75,8 @@
                 </div>
             </div>
 
-            <div class="govuk-form-group" th:if="${model.procurementCompetition}"
-                 th:classappend="${#fields.hasErrors('vat.registered')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:if="${model.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
+                 th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend id="vat"
                             class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -85,9 +85,9 @@
                     </legend>
                     <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
                     <span class="govuk-body" th:if="${model.readOnly}"
-                          th:text="${form.vat.registered ? 'Yes' : 'No'}">No</span>
+                          th:text="${form.vatForm.registered ? 'Yes' : 'No'}">No</span>
 
-                    <div class="govuk-grid-row total-cost" th:if="${model.readOnly AND form.vat.registered}">
+                    <div class="govuk-grid-row total-cost" th:if="${model.readOnly AND form.vatForm.registered}">
                         <div class="govuk-grid-column-one-half">
                             <label for="total-cost" class="govuk-heading-m">Total VAT</label>
                         </div>
@@ -107,8 +107,8 @@
                         </div>
                     </div>
 
-                    <th:block th:if="${#fields.hasErrors('vat.registered')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('vat.registered')}"
+                    <th:block th:if="${#fields.hasErrors('vatForm.registered')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('vatForm.registered')}"
                                   th:text="${err}">
                             </span>
                     </th:block>
@@ -120,8 +120,8 @@
                                    id="vat-registered-yes"
                                    name="vat-registered"
                                    type="radio"
-                                   th:checked="${form.vat == null ? false : form.vat.registered}"
-                                   th:field="*{vat.registered}"
+                                   th:checked="${form.vatForm == null ? false : form.vatForm.registered}"
+                                   th:field="*{vatForm.registered}"
                                    value="yes"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
@@ -160,9 +160,9 @@
                             <input class="govuk-radios__input"
                                    id="vat-registered-no"
                                    name="vat-registered"
-                                   th:checked="${form.vat == null ? false : form.vat.registered}"
+                                   th:checked="${form.vatForm == null ? false : form.vatForm.registered}"
                                    type="radio"
-                                   th:field="*{vat.registered}"
+                                   th:field="*{vatForm.registered}"
                                    value="no"
                                    required="required"
                                    th:attr=
