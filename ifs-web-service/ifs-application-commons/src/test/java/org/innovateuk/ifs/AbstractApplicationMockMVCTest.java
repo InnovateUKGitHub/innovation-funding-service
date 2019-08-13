@@ -2,9 +2,6 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -84,17 +81,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected ProcessRoleService processRoleService;
     @Mock
-    protected DefaultFinanceModelManager defaultFinanceModelManager;
-    @Mock
     protected FormInputRestService formInputRestService;
-    @Mock
-    protected FinanceViewHandlerProvider financeViewHandlerProvider;
     @Mock
     protected FinanceService financeService;
     @Mock
     protected ApplicationFinanceRestService applicationFinanceRestService;
-    @Mock
-    protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
     @Mock
@@ -585,8 +576,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn
                 (applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(competitionResource, 1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, 1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupQuestionStatus(ApplicationResource application) {
