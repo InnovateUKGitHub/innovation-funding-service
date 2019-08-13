@@ -188,7 +188,7 @@ public abstract class BaseFinanceResource {
                     .filter(c -> c instanceof Vat)
                     .map(c -> (Vat) c)
                     .orElse(null);
-            return vat == null ? false : vat.getRegistered() == null ? false : true;
+            return vat == null ? false : vat.getRegistered() == null ? false : vat.getRegistered();
         } else {
             return false;
         }
