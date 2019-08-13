@@ -360,7 +360,7 @@ Non-lead can edit and remark Organisation as Complete
 Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
     [Setup]  the user clicks the button/link      link = Your finances
-    Given the user clicks the button/link         link = Application overview
+    Given the user clicks the button/link         link = Back to application overview
     When the user accept the competition terms and conditions
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 

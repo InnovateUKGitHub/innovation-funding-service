@@ -75,6 +75,7 @@ public class YourFundingViewModelPopulator {
 
         return new YourFundingViewModel(applicationId,
                 section.getSection().getId(),
+                section.getCurrentApplicant().getOrganisation().getId(),
                 section.getCompetition().getId(),
                 complete,
                 open,
@@ -92,7 +93,7 @@ public class YourFundingViewModelPopulator {
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        return new ManagementYourFundingViewModel(applicationId, sectionId, application.getCompetition(), application.getName(),
+        return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
                 String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
 
     }

@@ -62,8 +62,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private InviteService inviteService;
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
-
-
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
