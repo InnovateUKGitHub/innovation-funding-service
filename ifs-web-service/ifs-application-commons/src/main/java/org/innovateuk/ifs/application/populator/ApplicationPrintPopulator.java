@@ -35,6 +35,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -51,21 +52,37 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class ApplicationPrintPopulator {
 
+    @Autowired
     private ApplicationService applicationService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private CompetitionRestService competitionRestService;
+    @Autowired
     private QuestionRestService questionRestService;
+    @Autowired
     private FormInputResponseService formInputResponseService;
+    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
     private InviteService inviteService;
+    @Autowired
     private FormInputRestService formInputRestService;
+    @Autowired
     private ApplicantRestService applicantRestService;
+    @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
+    @Autowired
     private UserService userService;
+    @Autowired
     private FinanceService financeService;
+    @Autowired
     private FileEntryRestService fileEntryRestService;
+    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public String print(final Long applicationId,
