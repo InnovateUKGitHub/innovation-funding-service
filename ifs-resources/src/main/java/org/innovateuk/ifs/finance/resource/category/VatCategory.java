@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VATCategory implements FinanceRowCostCategory {
+public class VatCategory implements FinanceRowCostCategory {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;

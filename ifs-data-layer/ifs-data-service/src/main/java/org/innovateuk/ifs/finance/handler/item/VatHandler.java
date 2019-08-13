@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.VAT;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class VATHandler extends FinanceRowHandler<VAT> {
+public class VatHandler extends FinanceRowHandler<Vat> {
     public static final String COST_KEY = "vat";
 
     @Override
-    public void validate(@NotNull VAT vat, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull Vat vat, @NotNull BindingResult bindingResult) {
         super.validate(vat, bindingResult);
     }
 
@@ -29,23 +29,23 @@ public class VATHandler extends FinanceRowHandler<VAT> {
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new VAT(cost.getId(), "VAT", cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
+        return new Vat(cost.getId(), "Vat", cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
     }
 
     @Override
-    public ApplicationFinanceRow toApplicationDomain(VAT vat) {
+    public ApplicationFinanceRow toApplicationDomain(Vat vat) {
         return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectDomain(VAT vat) {
+    public ProjectFinanceRow toProjectDomain(Vat vat) {
         return new ProjectFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(toApplicationDomain(new VAT(applicationFinance.getId())));
+        costs.add(toApplicationDomain(new Vat(applicationFinance.getId())));
         return costs;
     }
 }

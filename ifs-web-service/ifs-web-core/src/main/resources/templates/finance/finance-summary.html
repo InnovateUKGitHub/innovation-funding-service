@@ -30,7 +30,7 @@
             th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
                      hasProcurementOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
-                     hasVatColumn=${hasVatColumn},
+                     hasVatColumn=${isVatRegistered},
                      hasMaterials=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
                      hasCapitalUsage=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
                      hasSubcontracting=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
@@ -72,7 +72,7 @@
                             th:if="${hasOther}"
                             class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
                         <th scope="col" th:if="${hasVatColumn}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Total including VAT (&pound;)</th>
+                            class="govuk-table__header govuk-table__header--numeric width-80">Total VAT (&pound;)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -111,7 +111,7 @@
                             <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}"
                                       th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
-                                    <span th:text="'£'+${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
+                                    <span th:text="'£'+${#numbers.formatInteger(isVatRegistered ? organisationFinance.vatTotal : organisationFinance.total, 0, 'DEFAULT')}" />
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric"
                                     th:if="${hasLabour}"

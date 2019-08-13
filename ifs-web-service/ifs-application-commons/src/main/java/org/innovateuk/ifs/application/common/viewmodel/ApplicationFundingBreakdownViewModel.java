@@ -30,7 +30,7 @@ public class ApplicationFundingBreakdownViewModel {
     private final boolean procurementCompetition;
     private final CompetitionResource currentCompetition;
     private final BigDecimal vatTotal;
-    private final boolean hasVatColumn;
+    private final boolean isVatRegistered;
 
     public ApplicationFundingBreakdownViewModel(
             Map<FinanceRowType, BigDecimal> financeTotalPerType,
@@ -56,8 +56,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
         this.procurementCompetition = currentCompetition.isProcurement();
-        this.hasVatColumn = hasVatColumn();
-        this.vatTotal = calculateVatTotal();
+        this.isVatRegistered = isApplicationVatRegistered();
+        this.vatTotal = calculateVat();
     }
 
     //For EOI Competitions
@@ -82,8 +82,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
         this.procurementCompetition = currentCompetition.isProcurement();
-        this.hasVatColumn = hasVatColumn();
-        this.vatTotal = calculateVatTotal();
+        this.isVatRegistered = isApplicationVatRegistered();
+        this.vatTotal = calculateVat();
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -134,8 +134,12 @@ public class ApplicationFundingBreakdownViewModel {
         return currentCompetition;
     }
 
-    public boolean isHasVatColumn() {
-        return hasVatColumn;
+    public boolean isVatRegistered() {
+        return isVatRegistered;
+    }
+
+    public boolean isIsVatRegistered() {
+        return isVatRegistered;
     }
 
     public BigDecimal getVatTotal() {
@@ -143,6 +147,10 @@ public class ApplicationFundingBreakdownViewModel {
     }
 
     /* view model logic. */
+    public BigDecimal calculateVat() {
+        return getFinanceTotal().multiply(BigDecimal.valueOf(0.2));
+    }
+
     public BigDecimal calculateVatTotal() {
         return getFinanceTotal().multiply(BigDecimal.valueOf(1.2));
     }
@@ -150,13 +158,13 @@ public class ApplicationFundingBreakdownViewModel {
     /*
      Procurement competitions only have one applicant
      */
-    public boolean hasVatColumn() {
+    public boolean isApplicationVatRegistered() {
         Optional<BaseFinanceResource> financeResource = organisationFinances.values()
                 .stream()
                 .findFirst();
 
         if (financeResource.isPresent()) {
-            return financeResource.get().hasVatFinanceColumn();
+            return financeResource.get().isVatRegistered();
         }
 
         return false;

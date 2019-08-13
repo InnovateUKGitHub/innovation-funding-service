@@ -34,9 +34,9 @@ import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VATCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.VAT;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
@@ -853,8 +853,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), MEDIUM, ""));
 
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
-        FinanceRowCostCategory costCategory = new VATCategory();
-        costCategory.addCost(new VAT(1L, "vat", false, 2L));
+        FinanceRowCostCategory costCategory = new VatCategory();
+        costCategory.addCost(new Vat(1L, "vat", false, 2L));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
 
         appFinanceList.stream().findFirst().get().setFinanceOrganisationDetails(organisationFinances);

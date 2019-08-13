@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VATCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -62,7 +62,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     messages.addAll(saveRows(form.getProcurementOverheadRows(), finance).get());
                     break;
                 case VAT:
-                    messages.addAll(saveVAT(form.getVat(), finance).get());
+                    messages.addAll(saveVat(form.getVat(), finance).get());
                     break;
             }
             if (messages.getErrors().isEmpty()) {
@@ -105,7 +105,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             futures.add(saveRows(form.getProcurementOverheadRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.VAT)) {
-            futures.add(saveVAT(form.getVat(), finance));
+            futures.add(saveVat(form.getVat(), finance));
         }
 
         ValidationMessages messages = new ValidationMessages();
@@ -149,11 +149,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
-    private CompletableFuture<ValidationMessages> saveVAT(VAT vat, BaseFinanceResource finance) {
+    private CompletableFuture<ValidationMessages> saveVat(Vat vat, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
-            VATCategory vatCategory = (VATCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
-            VAT vatCost = (VAT) vatCategory.getCosts().stream().findFirst().get();
+            VatCategory vatCategory = (VatCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
+            Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
 
             vatCost.setRegistered(vat.getRegistered());
 

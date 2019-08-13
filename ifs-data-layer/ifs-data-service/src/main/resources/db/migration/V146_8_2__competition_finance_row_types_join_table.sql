@@ -60,7 +60,3 @@ FROM competition;
 INSERT INTO competition_finance_row_types (competition_id, finance_row_type)
 SELECT id as competition_id, 'YOUR_FINANCE' as finance_row_type
 FROM competition;
-
-INSERT INTO competition_finance_row_types (competition_id, finance_row_type)
-SELECT id as competition_id, 'VAT' as finance_row_type
-FROM competition;

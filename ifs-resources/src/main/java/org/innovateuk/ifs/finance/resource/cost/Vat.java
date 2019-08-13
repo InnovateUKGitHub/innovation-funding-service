@@ -7,23 +7,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class VAT extends AbstractFinanceRowItem {
+public class Vat extends AbstractFinanceRowItem {
     private Long id;
     private String name;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean registered;
 
-    public VAT() {
+    public Vat() {
         this(null);
     }
 
-    public VAT(Long targetId) {
+    public Vat(Long targetId) {
         super(targetId);
         this.name = getCostType().getType();
     }
 
-    public VAT(Long id, String name, Boolean registered, Long targetId) {
+    public Vat(Long id, String name, Boolean registered, Long targetId) {
         this(targetId);
         this.id = id;
         this.name = name;
@@ -83,7 +83,7 @@ public class VAT extends AbstractFinanceRowItem {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        VAT that = (VAT) o;
+        Vat that = (Vat) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

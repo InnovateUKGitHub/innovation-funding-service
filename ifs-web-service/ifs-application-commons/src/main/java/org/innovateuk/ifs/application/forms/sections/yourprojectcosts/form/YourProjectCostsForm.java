@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.innovateuk.ifs.finance.resource.cost.VAT;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -28,15 +28,15 @@ public class YourProjectCostsForm {
 
     private Map<String, OtherCostRowForm> otherRows = new LinkedHashMap<>();
 
-    private VAT vat;
+    private Vat vat;
 
     private Boolean eligibleAgreement;
 
-    public VAT getVat() {
+    public Vat getVat() {
         return vat;
     }
 
-    public void setVat(VAT vat) {
+    public void setVat(Vat vat) {
         this.vat = vat;
     }
 

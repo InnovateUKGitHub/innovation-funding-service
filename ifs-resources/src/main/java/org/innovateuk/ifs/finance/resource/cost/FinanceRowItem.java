@@ -22,7 +22,7 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = Overhead.class, name = "overhead"),
         @JsonSubTypes.Type(value = SubContractingCost.class, name = "subContractingCost"),
         @JsonSubTypes.Type(value = TravelCost.class, name = "travelCost"),
-        @JsonSubTypes.Type(value = VAT.class, name = "VAT")
+        @JsonSubTypes.Type(value = Vat.class, name = "VAT")
 })
 public interface FinanceRowItem {
     int MAX_DIGITS = 20;

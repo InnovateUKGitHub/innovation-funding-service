@@ -29,7 +29,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     private JESCostHandler jesCostHandler;
 
-    private VATHandler vatHandler;
+    private VatHandler vatHandler;
 
     public JesFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
                              ProjectFinanceRowRepository projectFinanceRowRepository,
@@ -39,7 +39,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                              ProjectFinanceRepository projectFinanceRepository,
                              GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
                              JESCostHandler jesCostHandler,
-                             VATHandler vatHandler) {
+                             VatHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;

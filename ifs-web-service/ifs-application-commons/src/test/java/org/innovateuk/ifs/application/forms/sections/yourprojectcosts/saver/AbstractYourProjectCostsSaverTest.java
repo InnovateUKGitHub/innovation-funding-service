@@ -91,7 +91,7 @@ public class AbstractYourProjectCostsSaverTest {
         otherRow.setEstimate(new BigDecimal(123));
         form.setOtherRows(asMap(UNSAVED_ROW_PREFIX, otherRow));
 
-        VAT vat = new VAT();
+        Vat vat = new Vat();
         vat.setRegistered(false);
         form.setVat(vat);
 
@@ -118,7 +118,7 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).create(isA(SubContractingCost.class));
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
-        verify(financeRowRestService).update(isA(VAT.class));
+        verify(financeRowRestService).update(isA(Vat.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);

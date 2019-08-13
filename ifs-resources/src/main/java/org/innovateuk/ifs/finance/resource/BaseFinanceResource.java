@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.finance.resource.cost.VAT;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import java.util.Map;
  * Application finance resource holds the organisation's finance resources for an target
  */
 public abstract class BaseFinanceResource {
+
+    public static final BigDecimal VAT_RATE = BigDecimal.valueOf(1.2);
 
     protected Long id;
     protected Long organisation;
@@ -107,6 +109,7 @@ public abstract class BaseFinanceResource {
     }
 
     public BigDecimal getTotal() {
+
         if (financeOrganisationDetails == null) {
             return BigDecimal.ZERO;
         }
@@ -168,16 +171,20 @@ public abstract class BaseFinanceResource {
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
     }
 
-    public boolean hasVatFinanceColumn() {
+    public BigDecimal getVatTotal() {
+        return getTotal().multiply(VAT_RATE);
+    }
+
+
+    public boolean isVatRegistered() {
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
-            VAT vat = financeRowCostCategory.getCosts().stream()
+            Vat vat = financeRowCostCategory.getCosts().stream()
                     .findAny()
-                    .filter(c -> c instanceof VAT)
-                    .map(c -> (VAT) c)
+                    .filter(c -> c instanceof Vat)
+                    .map(c -> (Vat) c)
                     .orElse(null);
-
-            return vat == null ? false : vat.getRegistered();
+            return vat == null ? false : vat.getRegistered() == null ? false : true;
         } else {
             return false;
         }

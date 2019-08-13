@@ -113,16 +113,16 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("procurementCompetition", competition.isProcurement());
         model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(1.2)));
-        model.addAttribute("hasVatColumn", hasVatColumn(organisationFinances));
+        model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
 
-    private boolean hasVatColumn(Map<Long, BaseFinanceResource> organisationFinances) {
+    private boolean isVatRegistered(Map<Long, BaseFinanceResource> organisationFinances) {
         Optional<BaseFinanceResource> financeResource = organisationFinances.values()
                 .stream()
                 .findFirst();
 
         if (financeResource.isPresent()) {
-            return financeResource.get().hasVatFinanceColumn();
+            return financeResource.get().isVatRegistered();
         }
 
         return false;
