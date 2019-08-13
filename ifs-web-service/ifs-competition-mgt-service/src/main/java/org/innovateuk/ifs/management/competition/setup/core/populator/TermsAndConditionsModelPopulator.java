@@ -37,6 +37,9 @@ public class TermsAndConditionsModelPopulator implements CompetitionSetupSection
         GrantTermsAndConditionsResource termsAndConditions = termsAndConditionsRestService.getById(
                 competitionResource.getTermsAndConditions().getId()).getSuccess();
 
-        return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList, termsAndConditions);
+        boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
+
+        return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
+                termsAndConditions, termsAndConditionsDocUploaded);
     }
 }

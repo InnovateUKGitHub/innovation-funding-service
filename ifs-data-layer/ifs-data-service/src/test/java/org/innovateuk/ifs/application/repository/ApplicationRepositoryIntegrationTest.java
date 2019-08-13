@@ -19,6 +19,7 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -49,9 +50,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
@@ -390,5 +394,111 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals((long) withoutProject.getId(), previous.get(0).getId());
         assertEquals("Lead", previous.get(0).getLeadOrganisationName());
 
+    }
+
+    @Test
+    public void findApplicationsForDashboard() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition().with(id(null)).build();
+        User user = new User("Person", "Applicant", "person@gmail.com", "", "123abc");
+
+        Application leadApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("leadApp")
+                .build();
+
+        Application collabApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("collabApp")
+                .build();
+
+        Application assessorApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("assessorApps")
+                .build();
+
+        Application userOnProjectButNotApplication = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("userOnProjectButNotApplication")
+                .build();
+
+        Application userOnAppButNotProject = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("userOnAppButNotProject")
+                .build();
+
+        Project projectWithoutUser = newProject()
+                .with(id(null))
+                .withName("projectWithoutUser")
+                .withApplication(userOnAppButNotProject)
+                .withProjectUsers(newProjectUser()
+                        .with(id(null))
+                        .withUser(userRepository.findById(getSteveSmith().getId()).get())
+                        .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                        .build(1))
+                .build();
+
+        Project projectWithUser = newProject()
+                .with(id(null))
+                .withName("projectWithUser")
+                .withApplication(userOnProjectButNotApplication)
+                .withProjectUsers(newProjectUser()
+                        .with(id(null))
+                        .withUser(user)
+                        .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                        .build(1))
+                .build();
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.saveAll(asList(leadApp, collabApp, assessorApp, userOnProjectButNotApplication, userOnAppButNotProject));
+        projectRepository.saveAll(asList(projectWithoutUser, projectWithUser));
+
+
+        ProcessRole leadRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(leadApp)
+                .withUser(user)
+                .build();
+
+        ProcessRole collaboratorRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(collabApp)
+                .withUser(user)
+                .build();
+
+        ProcessRole assessorRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.ASSESSOR)
+                .withApplication(assessorApp)
+                .withUser(user)
+                .build();
+
+        ProcessRole appRoleButNotOnProject = newProcessRole()
+                .with(id(null))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(userOnAppButNotProject)
+                .withUser(user)
+                .build();
+
+        processRoleRepository.saveAll(asList(leadRole, collaboratorRole, assessorRole, appRoleButNotOnProject));
+
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
+
+        assertEquals(3, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(leadApp.getId())));
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(collabApp.getId())));
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(userOnProjectButNotApplication.getId())));
+
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
     }
 }

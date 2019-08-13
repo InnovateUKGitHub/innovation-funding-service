@@ -18,6 +18,9 @@
             <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
         </div>
 
+        <div class="message-alert" th:if="${model.projectState.withdrawn}">
+            <p class="govuk-body">Innovate UK has withdrawn this project. For help call 0300 321 4357.</p>
+        </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
@@ -49,7 +52,7 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:unless="${model.projectState.offline}">
+        <th:block th:if="${model.projectState.active}">
             <th:block th:unless="${model.projectComplete}">
                 <div class="message-alert">
                     <th:block th:unless="${model.monitoringOfficer}">

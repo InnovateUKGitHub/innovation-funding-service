@@ -1,6 +1,6 @@
 
 <!-- =================Section: Terms and Conditions (3) =========================== -->
-<th:block th:fragment="section-content">
+<th:block th:fragment="section-content" xmlns:th="http://www.w3.org/1999/xhtml">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
@@ -19,28 +19,41 @@
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
           th:object="${competitionSetupForm}"
           data-section="terms-and-conditions"
-          method="post" novalidate="novalidate">
+          method="post" novalidate="novalidate"
+          enctype="multipart/form-data">
         <div th:if="${model.general.editable}" id="section-3-edit">
 
-            <div class="govuk-form-group">
-                <label class="govuk-label govuk-visually-hidden" th:for="termsAndConditionsId">
-                    Please select an innovation sector
-                </label>
-                <select
-                    th:field="*{termsAndConditionsId}"
-                    required="required"
-                    class="govuk-select govuk-!-width-one-third"
-                    th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}">
-                    <option value="" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="termsAndConditions : ${model.termsAndConditionsList}"
-                            th:text="${termsAndConditions.name}"
-                            th:value="${termsAndConditions.id}">
-                        Terms and conditions
-                    </option>
-                </select>
+            <div class="govuk-radios">
+                <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}" th:attr="data-target=${item.procurement ? 'procurement-upload' : null}">
+                    <input type="radio"
+                           class="govuk-radios__input"
+                           th:field="*{termsAndConditionsId}"
+                           required="required"
+                           th:value="${item.id}"
+                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
+                    <label th:for="${#ids.prev('termsAndConditionsId')}" class="govuk-label govuk-radios__label">
+                        [[${item.name}]]
+                    </label>
+                </div>
             </div>
 
-            <button class="govuk-button">Done</button>
+            <div id="procurement-upload" class="upload-section">
+                <div th:unless="${model.termsAndConditionsDocUploaded}">
+                    <th:block th:if="${#fields.hasErrors('termsAndConditionsDoc')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('termsAndConditionsDoc')}" th:text="${err}" />
+                    </th:block>
+                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
+                    <input type="file" id="terms-and-conditions-doc" name="termsAndConditionsDoc" class="inputfile">
+                    <label for="terms-and-conditions-doc" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                    <button name="uploadTermsAndConditionsDoc" class="button-secondary" data-for-file-upload="terms-and-conditions-doc"></button>
+                </div>
+                <div th:if="${model.termsAndConditionsDocUploaded}">
+                    <p class="govuk-body"><a target="_blank" th:text="${model.general.competition.competitionTerms.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})}">FileName.pdf</a> (opens in a new window).</p>
+                    <button name="deleteTermsAndConditionsDoc" class="button-secondary" type="submit">Remove</button>
+                </div>
+            </div>
+
+            <button class="govuk-button govuk-!-margin-top-5">Done</button>
         </div>
 
         <th:block th:unless="${model.general.editable}">

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesVie
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -68,9 +67,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private SectionService sectionService;
 
     @Autowired
     private ProjectService projectService;

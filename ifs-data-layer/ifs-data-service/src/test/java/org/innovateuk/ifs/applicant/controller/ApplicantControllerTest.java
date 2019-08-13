@@ -5,10 +5,10 @@ import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.documentation.*;
@@ -26,10 +26,10 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResour
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource.ApplicantDashboardResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -181,10 +181,10 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         long inSetupId = 3L;
         long previousId = 4L;
 
-        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder().withApplicationId(euGrantTransferId).build();
-        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder().withApplicationId(inProgressId).build();
-        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder().withApplicationId(inSetupId).build();
-        DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder().withApplicationId(previousId).build();
+        DashboardEuGrantTransferRowResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder().withApplicationId(euGrantTransferId).build();
+        DashboardInProgressRowResource inProgress = new DashboardApplicationInProgressResourceBuilder().withApplicationId(inProgressId).build();
+        DashboardInSetupRowResource inSetup = new DashboardApplicationInSetupResourceBuilder().withApplicationId(inSetupId).build();
+        DashboardPreviousRowResource previous = new DashboardPreviousApplicationResourceBuilder().withApplicationId(previousId).build();
 
         when(applicationDashboardService.getApplicantDashboard(USER_ID)).thenReturn(serviceSuccess(new ApplicantDashboardResourceBuilder()
                 .withEuGrantTransfer(singletonList(euGrantTransfer))

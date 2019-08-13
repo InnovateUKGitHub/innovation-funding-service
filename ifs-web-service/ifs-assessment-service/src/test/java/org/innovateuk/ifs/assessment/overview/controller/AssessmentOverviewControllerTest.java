@@ -826,8 +826,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                         assessmentResource.getId(),
                         grantTermsAndConditions.getTemplate(),
                         3,
-                        50
-                );
+                        50,
+                        competitionId);
 
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
         when(competitionRestService.getCompetitionById(assessmentResource.getCompetition())).thenReturn(restSuccess(competition));

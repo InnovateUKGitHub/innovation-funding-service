@@ -41,37 +41,23 @@
                                th:href="${row.url}"
                                class="govuk-link govuk-!-font-weight-regular">View finances</a>
                         </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
-                            <span th:text="'£'+${#numbers.formatInteger(row.total, 0, 'DEFAULT')}" />
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasLabour}"
-                            th:text="${#numbers.formatInteger(row.labour, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasOverheads}"
-                            th:text="${#numbers.formatInteger(row.overheads, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasMaterials}"
-                            th:text="${#numbers.formatInteger(row.materials, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasCapitalUsage}"
-                            th:text="${#numbers.formatInteger(row.capitalUsage, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasSubcontracting}"
-                            th:text="${#numbers.formatInteger(row.subcontracting, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasTravel}"
-                            th:text="${#numbers.formatInteger(row.travel, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasOther}"
-                            th:text="${#numbers.formatInteger(row.other, 0, 'DEFAULT')}">
-                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><span>&pound;0</span></td>
+                        <td th:if="${hasLabour}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasOverheads}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasProcurementOverheads}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasMaterials}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasCapitalUsage}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasSubcontracting}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasTravel}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasOther}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
                     </tr>
                     <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
                         <th class="govuk-table__header" scope="row">Total</th>

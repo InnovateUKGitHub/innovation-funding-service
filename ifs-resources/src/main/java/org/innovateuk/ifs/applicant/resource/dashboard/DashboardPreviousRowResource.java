@@ -1,19 +1,25 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
+
 /**
- * Resource representing an application for use in the applicant dashboard.
+ * Resource representing an application or project for use in the previous section of the applicant dashboard.
  */
-public class DashboardPreviousApplicationResource extends DashboardApplicationResource {
+public class DashboardPreviousRowResource extends DashboardRowResource {
 
     private boolean assignedToMe;
     private ApplicationState applicationState;
+    private ProjectState projectState;
+    private Long projectId;
     private boolean leadApplicant;
     private ZonedDateTime endDate;
     private long daysLeft;
@@ -22,7 +28,8 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
     private LocalDate startDate;
 
     // Private constructor to enforce immutability
-    private DashboardPreviousApplicationResource() {
+    private DashboardPreviousRowResource() {
+        this.dashboardSection = PREVIOUS;
     }
 
     public boolean isAssignedToMe() {
@@ -57,11 +64,24 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         return startDate;
     }
 
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    @JsonIgnore
+    public boolean activeProject() {
+        return projectState != null && projectState.isActive();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DashboardPreviousApplicationResource that = (DashboardPreviousApplicationResource) o;
+        DashboardPreviousRowResource that = (DashboardPreviousRowResource) o;
         return new EqualsBuilder()
                 .append(assignedToMe, that.assignedToMe)
                 .append(leadApplicant, that.leadApplicant)
@@ -69,6 +89,8 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
                 .append(applicationProgress, that.applicationProgress)
                 .append(assignedToInterview, that.assignedToInterview)
                 .append(applicationState, that.applicationState)
+                .append(projectState, that.projectState)
+                .append(projectId, that.projectId)
                 .append(endDate, that.endDate)
                 .append(title, that.title)
                 .append(applicationId, that.applicationId)
@@ -83,6 +105,8 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         return new HashCodeBuilder(17, 37)
                 .append(assignedToMe)
                 .append(applicationState)
+                .append(projectState)
+                .append(projectId)
                 .append(leadApplicant)
                 .append(endDate)
                 .append(daysLeft)
@@ -101,9 +125,10 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
         private String title;
         private long applicationId;
         private String competitionTitle;
-        private DashboardSection dashboardSection;
         private boolean assignedToMe;
         private ApplicationState applicationState;
+        private ProjectState projectState;
+        private Long projectId;
         private boolean leadApplicant;
         private ZonedDateTime endDate;
         private long daysLeft;
@@ -126,11 +151,6 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
             return this;
         }
 
-        public DashboardPreviousApplicationResourceBuilder withDashboardSection(DashboardSection dashboardSection) {
-            this.dashboardSection = dashboardSection;
-            return this;
-        }
-
         public DashboardPreviousApplicationResourceBuilder withAssignedToMe(boolean assignedToMe) {
             this.assignedToMe = assignedToMe;
             return this;
@@ -138,6 +158,16 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
 
         public DashboardPreviousApplicationResourceBuilder withApplicationState(ApplicationState applicationState) {
             this.applicationState = applicationState;
+            return this;
+        }
+
+        public DashboardPreviousApplicationResourceBuilder withProjectState(ProjectState projectState) {
+            this.projectState = projectState;
+            return this;
+        }
+
+        public DashboardPreviousApplicationResourceBuilder withProjectId(Long projectId) {
+            this.projectId = projectId;
             return this;
         }
 
@@ -171,12 +201,13 @@ public class DashboardPreviousApplicationResource extends DashboardApplicationRe
             return this;
         }
 
-        public DashboardPreviousApplicationResource build(){
-            DashboardPreviousApplicationResource result = new DashboardPreviousApplicationResource();
+        public DashboardPreviousRowResource build(){
+            DashboardPreviousRowResource result = new DashboardPreviousRowResource();
             result.title = this.title;
             result.applicationId = this.applicationId;
+            result.projectState = this.projectState;
+            result.projectId = this.projectId;
             result.competitionTitle = this.competitionTitle;
-            result.dashboardSection = this.dashboardSection;
             result.assignedToMe = this.assignedToMe;
             result.applicationState = this.applicationState;
             result.leadApplicant = this.leadApplicant;

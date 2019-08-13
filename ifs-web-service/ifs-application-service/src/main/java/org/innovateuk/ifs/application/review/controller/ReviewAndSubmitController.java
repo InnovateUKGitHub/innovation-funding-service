@@ -83,16 +83,6 @@ public class ReviewAndSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.isProcurement()) {
-            if (!applicationSubmitForm.isAgreeTerms()) {
-                String errorCode = "validation.application.procurement.terms.required";
-                bindingResult.rejectValue("agreeTerms", errorCode);
-                redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
-                redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
-                return format("redirect:/application/%d/summary", applicationId);
-            }
-
-        }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
     }
