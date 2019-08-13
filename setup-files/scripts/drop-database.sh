@@ -19,6 +19,6 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
-  mysql $1 -u$2 -p$3 < ../data-dump/ifs-drop-tables.sql
+  docker exec ifs-database mysql $1 -u$2 -p$3 < ../data-dump/ifs-drop-tables.sql
 
 fi
