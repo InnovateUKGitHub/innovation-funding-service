@@ -1,46 +1,18 @@
 package org.innovateuk.ifs.assessment.review.controller.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUnitTest {
@@ -49,7 +21,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     private AssessmentReviewApplicationSummaryModelPopulator populator;
 
     @Mock
-    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
+    private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -69,60 +41,6 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     @Test
     public void populateModel() {
 
-        UserResource userResource = newUserResource()
-                .withId(1L)
-                .build();
-
-        ApplicationResource applicationResource = newApplicationResource()
-                .withId(1L)
-                .withCompetition(2L)
-                .build();
-
-        List<AssessmentResource> assessmentResources = newAssessmentResource()
-                .build(1);
-
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withId(applicationResource.getCompetition())
-                .build();
-
-        ApplicationForm applicationForm = new ApplicationForm();
-        applicationForm.setApplication(applicationResource);
-
-        List<ProcessRoleResource> userApplicationRoles = newProcessRoleResource()
-                .withApplication(applicationResource.getId())
-                .withUser(userResource)
-                .withRole(Role.ASSESSOR)
-                .build(1);
-
-        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentResources.get(0).getId())
-                .build(1);
-
-        List<FormInputResource> formInputResources = newFormInputResource()
-                .build(2);
-
-        long questionId = 123L;
-        SectionResource termsAndConditionsSection = newSectionResource()
-                .withQuestions(singletonList(questionId))
-                .build();
-
-        SummaryViewModel summary = mock(SummaryViewModel.class);
-
-        when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(userApplicationRoles));
-        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(applicationResource.getId())).thenReturn(restSuccess(assessorFormInputResponseResources));
-        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(0)));
-        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(1)));
-        when(sectionService.getTermsAndConditionsSection(competitionResource.getId())).thenReturn(termsAndConditionsSection);
-        when(summaryViewModelPopulator.populate(applicationResource.getId(), userResource, applicationForm)).thenReturn(summary);
-        when(summary.getCurrentApplication()).thenReturn(applicationResource);
-        when(summary.getFeedbackSummary()).thenReturn(assessmentResources);
-
-        AssessmentReviewApplicationSummaryViewModel viewModel = populator.populateModel(applicationForm, userResource, applicationResource.getId());
-
-        assertEquals(viewModel.getFeedbackViewModel().getFeedback(), emptyList());
-        assertEquals(viewModel.getFeedbackViewModel().getScore(), emptyList());
-        assertEquals(viewModel.getCurrentCompetition(), competitionResource);
-        assertEquals(viewModel.getSummaryViewModel(), summary);
+       //TODO
     }
 }

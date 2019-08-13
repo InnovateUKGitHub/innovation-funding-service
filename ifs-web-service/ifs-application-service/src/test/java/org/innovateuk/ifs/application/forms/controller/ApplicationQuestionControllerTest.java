@@ -4,10 +4,6 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
@@ -16,16 +12,12 @@ import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,23 +72,13 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Spy
     @InjectMocks
-    private OpenSectionModelPopulator openSectionModel;
-
-    @Spy
-    @InjectMocks
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Mock
     private OverheadFileSaver overheadFileSaver;
 
     @Mock
-    private DefaultFinanceFormHandler defaultFinanceFormHandler;
-
-    @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Mock
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -113,9 +95,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationQuestionSaver applicationSaver;
-
-    @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private ApplicationResearchCategoryModelPopulator applicationResearchCategoryModelPopulator;
@@ -157,7 +136,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
-        when(financeViewHandlerProvider.getFinanceFormHandler(any(), anyLong())).thenReturn(defaultFinanceFormHandler);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
@@ -165,15 +143,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
-        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
-        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
-
-        FinanceViewModel financeViewModel = new FinanceViewModel();
-        financeViewModel.setOrganisationGrantClaimPercentage(76);
-
-        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
         when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
                 .thenReturn(new ValidationMessages());
     }
