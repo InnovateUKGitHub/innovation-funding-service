@@ -1,11 +1,11 @@
-#!/usr/bin/python
+
 
 import subprocess
 import re
 import sys
-import urllib
-from urlparse import urlparse
-from HTMLParser import HTMLParser
+import urllib.request, urllib.parse, urllib.error
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 
 
 # Implement bash commands inside python
@@ -23,8 +23,8 @@ def getBaseUrl(downloadUrl):
 # Go to the base url. Follow any redirects. Find the final auth base url. Find the relative url to post credentials to
 def getBaseAuthUrlAndPortUrl(baseUrl):
   curlCommand = "curl -L --insecure -w marker%{url_effective}marker " + baseUrl
-  loginHtml = shell(curlCommand)
-  loginPostUrl = re.findall('<form action="(.*)" method="post" id="sign-in-form">', loginHtml, re.MULTILINE)[0]
+  loginHtml = shell(curlCommand).decode('utf8')
+  loginPostUrl = re.findall('<form action="(.*)" method="post" id="sign-in-form" novalidate="novalidate">', loginHtml, re.MULTILINE)[0]
   redirectUrl = re.findall("marker(.*)marker", loginHtml, re.MULTILINE)[0]
   o = urlparse(redirectUrl)
   baseAuthUrl = o.scheme + "://" + o.netloc
@@ -33,16 +33,16 @@ def getBaseAuthUrlAndPortUrl(baseUrl):
 # Post the credentials to the base auth url and get SAML credentials which are needed to continue the authentication process
 def postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl):
   # Note that python will put quotes around the individual parameters automatically. In particular the authUrl, and with out these the curl command would not work.
-  curlCommand = "curl --insecure -L --data j_username=" + urllib.quote(user) + "&j_password=" + urllib.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
-  postLoginPage = shell(curlCommand)
+  curlCommand = "curl --insecure -L --data j_username=" + urllib.parse.quote(user) + "&j_password=" + urllib.parse.quote(password) + "&_eventId_proceed= " + baseAuthUrl + loginPostUrl
+  postLoginPage = shell(curlCommand).decode('utf8')
   sAMLResponse = re.findall('name="SAMLResponse" value="(.*)"', postLoginPage, re.MULTILINE)[0]
   return sAMLResponse
 
 # Post the SAML credentials and get back a session cookie. The user is now logged in and the session cookie is all that is required going forward.
 def postShibbolethParametersForSession(sAMLResponse, baseUrl):
   h = HTMLParser()
-  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
-  exchange = shell(curlCommand)
+  curlCommand = "curl --insecure -L -c - --data SAMLRequest=" + urllib.parse.quote(h.unescape(sAMLResponse)) + " " + baseUrl + "/Shibboleth.sso/SAML2/POST"
+  exchange = shell(curlCommand).decode('utf8')
   session = re.findall('(_shibsession_([^\s-]*))\s*(.*)', exchange, re.MULTILINE)
   shibCookieName = session[0][0]
   shibCookieValue = session[0][2]

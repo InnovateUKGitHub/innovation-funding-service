@@ -15,7 +15,6 @@ IFS.competitionManagement.initialDetails = (function () {
       jQuery('.competition-management.competition-setup').on('change', '[name^="innovationAreaCategoryIds"]', function () {
         IFS.competitionManagement.initialDetails.handleInnovationArea()
         IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
-        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       })
     },
     handleInnovationArea: function () {
@@ -27,7 +26,6 @@ IFS.competitionManagement.initialDetails = (function () {
         jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
         IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
         jQuery('#innovation-row-0 select').val('-1')
-        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       }
     },
     hasAllInnovationArea: function () {
@@ -55,7 +53,6 @@ IFS.competitionManagement.initialDetails = (function () {
           if (pageLoad) {
             IFS.competitionManagement.initialDetails.filterInnovationAreasPageLoad(areas)
           } else {
-            IFS.core.autoSave.fieldChanged('[name="innovationSectorCategoryId"]')
             IFS.competitionManagement.initialDetails.fillInnovationAreas(areas)
             jQuery(innovationCategory).trigger('ifsValidate')
           }
@@ -87,14 +84,6 @@ IFS.competitionManagement.initialDetails = (function () {
           innovationAreasField.append('<option value="' + this.id + '">' + this.name + '</option>')
         })
       })
-      IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
-    },
-    autosaveInnovationAreaIds: function () {
-      // gets called whenever something changed in the list
-      var saveField = jQuery('[name="autosaveInnovationAreaIds"]')
-      var innovationAreas = jQuery.unique(jQuery.map(jQuery('[name*="innovationAreaCategoryId"]'), function (el) { return jQuery(el).val() }))
-      saveField.val(innovationAreas.join())
-      IFS.core.autoSave.fieldChanged(saveField)
     },
     filterInnovationAreasPageLoad: function (currentAreas) {
       currentAreas = jQuery.map(currentAreas, function (area) {

@@ -14,7 +14,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = .in-progress a:contains("${Application}")
+    the user clicks the button/link  jQuery = h3:contains("${Application}") a
     the user clicks the button/link  link = Your finances
 
 Applicant navigates to the finances of the Robot application
@@ -54,18 +54,18 @@ the applicant completes the application details
     the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
-     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = .button-clear[name="mark_as_incomplete"]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = .button-clear[name="mark_as_incomplete"]  # the Edit link
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=mark_as_incomplete]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=mark_as_incomplete]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="application.name"]  ${appTitle}
-    the user enters text to a text field  css = #application_details-startdate_day  ${tomorrowday}
+    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css = [id="application.durationInMonths"]  24
-    the user clicks the button twice      css = label[for="application.resubmission-no"]
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
     The user clicks the button/link       css = button[name="mark_as_complete"]
     the user clicks the button/link       link = Application overview
@@ -93,7 +93,9 @@ the user fills in the project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link = Your project costs
     the user fills in Labour
-    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    Run Keyword If   '${status}' == 'PASS'    Run Keyword  the user fills in procurement Overhead costs
+    ...  ELSE    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -110,7 +112,7 @@ the user has read only view once section is marked complete
     the user clicks the button/link       jQuery = a:contains("Return to finances")
 
 the user fills in Labour
-    the user clicks the button/link            jQuery = button:contains("Labour")
+    the user expands the section               Labour
     the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       id = working-days-per-year   230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
@@ -118,6 +120,23 @@ the user fills in Labour
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
     the user enters text to a text field       jQuery = input[id$="days"][value = ""]:first    100
     the user clicks the button/link            jQuery = button:contains("Labour")
+
+the user fills in procurement Overhead costs
+    Validations for procurement Overhead costs
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   Cost
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   5000
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   10
+    the user should not see an error in the page
+
+Validations for procurement Overhead costs
+    the user clicks the button/link         jQuery = button:contains("Add another overhead")
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   ${EMPTY}
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   ${EMPTY}
+    the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(3) input   ${EMPTY}
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(1) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(2) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element         jQuery = #accordion-finances-content-10 td:nth-of-type(3) .govuk-error-message:contains("${empty_field_warning_message}")
+    the user clicks the button/link         css = #accordion-finances-content-10 tbody tr:nth-of-type(2) td:nth-of-type(5) button   #Remove
 
 the user fills in Overhead costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
@@ -155,7 +174,7 @@ the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
 
 the user fills in Capital usage
-    the user clicks the button/link       jQuery = button:contains("Capital usage")
+    the user expands the section          Capital usage
     the user enters text to a text field  css = textarea.govuk-textarea[name^=capitalUsageRows]  some description
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
@@ -163,7 +182,7 @@ the user fills in Capital usage
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
     textfield should contain              css = #capital-usage .form-row:nth-of-type(1) [readonly="readonly"]  £4,975
-    the user clicks the button/link       jQuery = button:contains("Capital usage")
+    the user expands the section          Capital usage
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
@@ -264,14 +283,13 @@ the user selects research area
 the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
-    the user clicks the button/link       link = Your funding
-    the user selects the radio button     requestingFunding   true
-    the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
-    the user selects the radio button     otherFunding   false
-    the user selects the checkbox         agree-terms-page
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Your funding
-    the user should see the element       jQuery = button:contains("Edit")
+    the user clicks the button/link            link = Your funding
+    the user selects the radio button          requestingFunding   true
+    the user enters text to a text field       css = [name^="grantClaimPercentage"]  45
+    the user selects the radio button          otherFunding   false
+    the user clicks the button/link            jQuery = button:contains("Mark as complete")
+    the user clicks the button/link            link = Your funding
+    the user should see the element            jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
@@ -326,12 +344,12 @@ the user completes the new account creation
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
     Input Text    css = .textarea-wrapped .editor    This is some random text
-    the user clicks the button/link    name = mark_as_complete
-    the user should see the element    name = mark_as_incomplete
+    the user clicks the button/link    name = complete
+    the user should see the element    name = edit
 
 the applicant edits the "economic benefit" question
-    the user clicks the button/link    name = mark_as_incomplete
-    the user should see the element    name = mark_as_complete
+    the user clicks the button/link    name = edit
+    the user should see the element    name = complete
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
@@ -341,7 +359,13 @@ logged in user applies to competition
 navigate to next page if not found
     [Arguments]  ${competition}
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
-    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link = ${competition}
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery = a span:contains("Next")
 
 the user select the competition and starts application
     [Arguments]  ${competition}
@@ -430,3 +454,35 @@ the user marks your funding section as complete
 the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+
+the user accept the competition terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview
+
+the user accept the procurement terms and conditions
+    the user clicks the button/link    link = Award terms and conditions
+    the user clicks the button/link    link = View full terms and conditions
+    the user goes back to the previous page
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link    link = Return to application overview
+
+the internal user should see read only view of terms and conditions
+    [Arguments]  ${url}  ${applicationid}  ${heading}
+    the user navigates to the page             ${url}
+    the user clicks the button/link            link = ${applicationid}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
+    the user clicks the button/link            link = View terms and conditions
+    the user should see the element            jQuery = h1:contains("${heading}")
+    the user should not see the element        jQuery = button:contains("Agree and continue")
+
+the user adds a partner organisation
+    [Arguments]  ${orgName}  ${name}  ${email}
+    the user enters text to a text field          id = organisationName    ${orgName}
+    the user enters text to a text field          id = name   ${name}
+    the user enters text to a text field          id = email  ${email}

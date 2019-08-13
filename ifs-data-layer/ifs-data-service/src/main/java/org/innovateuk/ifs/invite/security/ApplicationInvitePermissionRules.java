@@ -65,9 +65,14 @@ public class ApplicationInvitePermissionRules {
         return isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application and applicant can not delete his own invite from the application")
-    public boolean leadApplicantAndNotDeleteOwnInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
+    @PermissionRule(value = "DELETE", description = "lead applicant can delete as long as its not their own.")
+    public boolean leadCanDeleteNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
         return applicationIsEditableById(invite.getApplication()) && isNotOwnInvite(invite, user) && isLeadForInvite(invite, user);
+    }
+
+    @PermissionRule(value = "DELETE", description = "collaborator can delete invite as long as its not their own.")
+    public boolean collaboratorCanDeleteNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
+        return applicationIsEditableById(invite.getApplication()) && isNotOwnInvite(invite, user) && isCollaboratorOnInvite(invite, user);
     }
 
     private boolean isNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
@@ -112,6 +117,6 @@ public class ApplicationInvitePermissionRules {
 
     private boolean applicationIsEditable(final Application application) {
         ApplicationProcess state = application.getApplicationProcess();
-        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
+        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPENED);
     }
 }

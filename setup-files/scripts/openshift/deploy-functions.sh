@@ -9,7 +9,7 @@ function isNamedEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "ifs-prod" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -20,7 +20,7 @@ function isProductionEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "production" ]]; then
+    if [[ ${TARGET} != "ifs-prod" ]]; then
         exit 1
     else
         exit 0
@@ -31,7 +31,7 @@ function isSysIntEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "sysint" ]]; then
+    if [[ ${TARGET} != "ifs-sysint" ]]; then
         exit 1
     else
         exit 0
@@ -42,7 +42,7 @@ function isPerfEnvironment() {
 
     TARGET=$1
 
-    if [[ ${TARGET} != "perf" ]]; then
+    if [[ ${TARGET} != "ifs-perf" ]]; then
         exit 1
     else
         exit 0
@@ -91,7 +91,7 @@ function getHost() {
 
     if [[ (${TARGET} == "local") ]]; then
       echo "ifs-local"
-    elif [[ ${TARGET} == "production" ]]; then
+    elif [[ ${TARGET} == "ifs-prod" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
       echo $(getClusterAddress)
@@ -103,7 +103,7 @@ function getRouteDomain() {
     TARGET=$1
     HOST=$2
 
-    if [[ ${TARGET} == "production" ]]; then
+    if [[ ${TARGET} == "ifs-prod" ]]; then
       echo "$HOST"
     else
       echo "apps.$HOST"
@@ -193,7 +193,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
+    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
@@ -207,7 +207,6 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
@@ -220,7 +219,6 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql-client/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/shib/*.yml
@@ -231,7 +229,6 @@ function useContainerRegistry() {
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-baseline/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/finance-data-service-sync/*.yml
@@ -265,16 +262,6 @@ function pushFinanceDataServiceSyncImages() {
     docker push ${REGISTRY}/${PROJECT}/finance-data-service-sync:${VERSION}
 }
 
-function pushFractalImages() {
-    docker tag innovateuk/fractal:latest \
-        ${REGISTRY}/${PROJECT}/fractal:${VERSION}
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
-}
-
-
 function pushAnonymisedDatabaseDumpImages() {
     docker tag innovateuk/db-anonymised-data:latest \
         ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
@@ -296,7 +283,7 @@ function blockUntilServiceIsUp() {
     while [ ${UNREADY_PODS} -ne "0" ] || [ ${UNSATISFIED_DEPLOYMENTS} -ne "0" ];
     do
         UNREADY_PODS=$(oc get pods ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep -v 1 | wc -l)
+        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep 0 | wc -l)
         ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
         ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
@@ -377,11 +364,9 @@ function createProject() {
 }
 
 function getClusterAddress() {
-    echo "prod.ifs-test-clusters.com"
-#     echo "dev-nige-1.dev.ifs-test-clusters.com"
+  echo $(cat gradle.properties | grep openshiftDomain | cut -d'=' -f2)
 }
 
 function getRemoteRegistryUrl() {
-        echo "172.30.80.28:5000"
-#        echo "172.30.114.178:5000"
+  echo "docker-registry.default.svc:5000"
 }

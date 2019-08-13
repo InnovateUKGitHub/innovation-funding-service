@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -36,10 +38,8 @@ import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStr
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -60,7 +60,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -123,9 +122,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private UserRepository userRepositoryMock;
 
     @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
@@ -133,6 +129,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -287,6 +286,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
+        verify(activityLogService).recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
     }
 
     @Test
@@ -311,123 +311,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
-    }
-
-    @Test
-    public void withdrawProject() {
-        Long projectId = 123L;
-        Long userId = 456L;
-        Project project = newProject().withId(projectId).build();
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-        setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(true);
-
-        ServiceResult<Void> result = service.withdrawProject(projectId);
-        assertTrue(result.isSuccess());
-
-        verify(projectRepositoryMock).findById(projectId);
-        verify(userRepositoryMock).findById(userId);
-        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
-    }
-
-    @Test
-    public void withdrawProject_fails() {
-        Long projectId = 321L;
-        Long userId = 987L;
-        Project project = newProject().withId(projectId).build();
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        setLoggedInUser(loggedInUser);
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
-
-        ServiceResult<Void> result = service.withdrawProject(projectId);
-        assertTrue(result.isFailure());
-        assertEquals(PROJECT_CANNOT_BE_WITHDRAWN.getErrorKey(), result.getErrors().get(0).getErrorKey());
-        verify(projectRepositoryMock).findById(projectId);
-        verify(userRepositoryMock).findById(userId);
-        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
-    }
-
-    @Test
-    public void withdrawProject_cannotFindIdFails() {
-        Long projectId = 456L;
-        Project project = newProject().withId(projectId).build();
-        UserResource user = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .build();
-        setLoggedInUser(user);
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
-        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
-
-        ServiceResult<Void> result = service.withdrawProject(projectId);
-        assertTrue(result.isFailure());
-        verify(projectRepositoryMock).findById(projectId);
-        verifyZeroInteractions(projectWorkflowHandlerMock);
-    }
-
-    @Test
-    public void handleProjectOffline() {
-        Long projectId = 123L;
-        Long userId = 456L;
-        Project project = newProject().withId(projectId).build();
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-        setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
-        when(projectWorkflowHandlerMock.handleProjectOffline(eq(project), any())).thenReturn(true);
-
-        ServiceResult<Void> result = service.handleProjectOffline(projectId);
-        assertTrue(result.isSuccess());
-
-        verify(projectRepositoryMock).findById(projectId);
-        verify(userRepositoryMock).findById(userId);
-        verify(projectWorkflowHandlerMock).handleProjectOffline(eq(project), any());
-    }
-
-    @Test
-    public void completeProjectOffline() {
-        Long projectId = 123L;
-        Long userId = 456L;
-        Project project = newProject().withId(projectId).build();
-        UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
-                .withId(userId)
-                .build();
-        User user = newUser()
-                .withId(userId)
-                .build();
-        setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
-        when(projectWorkflowHandlerMock.completeProjectOffline(eq(project), any())).thenReturn(true);
-
-        ServiceResult<Void> result = service.completeProjectOffline(projectId);
-        assertTrue(result.isSuccess());
-
-        verify(projectRepositoryMock).findById(projectId);
-        verify(userRepositoryMock).findById(userId);
-        verify(projectWorkflowHandlerMock).completeProjectOffline(eq(project), any());
     }
 
     @Test
@@ -466,7 +349,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
-        verifyZeroInteractions(processRoleRepositoryMock);
     }
 
     @Test
@@ -499,7 +381,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
-        verify(processRoleRepositoryMock).save(any(ProcessRole.class));
     }
 
     @Test
@@ -557,6 +438,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
+        verify(activityLogService).recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+
     }
 
     @Test
@@ -571,7 +454,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             service.createProjectsFromFundingDecisions(fundingDecisions);
             assertThat("Service failed to throw expected exception.", false);
         } catch (Exception e) {
-            assertEquals(e.getCause().getCause().getCause().getMessage(),"dummy constraint violation");
+            assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
         }
     }
 

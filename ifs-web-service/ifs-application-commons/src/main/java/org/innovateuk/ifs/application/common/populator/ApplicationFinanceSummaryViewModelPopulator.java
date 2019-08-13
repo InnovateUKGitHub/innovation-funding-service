@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -144,8 +143,10 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         OrganisationResource userOrganisation = null;
 
         if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR, STAKEHOLDER, MONITORING_OFFICER)) {
-            ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
+            Optional<ProcessRoleResource> processRoleResource = userRestService.findProcessRole(user.getId(), applicationId).toOptionalIfNotFound().getSuccess();
+            if (processRoleResource.isPresent()) {
+                userOrganisation = organisationRestService.getOrganisationById(processRoleResource.get().getOrganisationId()).getSuccess();
+            }
         }
 
         return userOrganisation;

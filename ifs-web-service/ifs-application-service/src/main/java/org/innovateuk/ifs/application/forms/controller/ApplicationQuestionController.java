@@ -13,13 +13,15 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,7 +34,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
@@ -42,8 +50,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -52,46 +62,35 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
 public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
     @Autowired
     private QuestionModelPopulator questionModelPopulator;
-
     @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryPopulator;
-
     @Autowired
     private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
-
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
-
     @Autowired
     private ApplicationService applicationService;
-
     @Autowired
     private UserRestService userRestService;
-
     @Autowired
     private QuestionService questionService;
-
     @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
+    private QuestionRestService questionRestService;
     @Autowired
     private ApplicantRestService applicantRestService;
-
-    @Autowired
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
-
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
-
     @Autowired
     private ApplicationQuestionSaver applicationSaver;
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -120,15 +119,16 @@ public class ApplicationQuestionController {
                         user.getId(),
                         request,
                         response,
-                        Optional.of(Boolean.TRUE)
+                        Optional.of(TRUE)
                 );
                 validationHandler.addAnyErrors(errors);
             }
         });
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, markAsComplete);
     }
 
+    @ZeroDowntime(description = "remove references to assign", reference = "IFS-6123")
     @PostMapping(value = {
             QUESTION_URL + "{" + QUESTION_ID + "}",
             QUESTION_URL + "edit/{" + QUESTION_ID + "}"
@@ -151,7 +151,6 @@ public class ApplicationQuestionController {
             return handleEditQuestion(form, model, applicationId, questionId, user);
         } else {
             handleAssignedQuestions(applicationId, user, request, response);
-
             // First check if any errors already exist in bindingResult
             ValidationMessages errors = checkErrorsInFormAndSave(form, applicationId, questionId, user.getId(), request, response);
 
@@ -161,7 +160,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                return viewQuestion(user, applicationId, questionId, model, form);
+                return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -212,26 +211,22 @@ public class ApplicationQuestionController {
             Long applicationId,
             Long questionId,
             Model model,
-            ApplicationForm form
-    ) {
-        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+            ApplicationForm form,
+            Optional<Boolean> markAsComplete) {
 
-        if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
-        } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
-            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+        QuestionSetupType questionType = questionResource.getQuestionSetupType();
+        Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId);
+        if (questionUrl.isPresent()) {
+            return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?show-errors=true" : "");
         }
 
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
-
         boolean isSupport = user.hasRole(SUPPORT);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), isSupport);
 
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), isSupport);
-
-        if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            model.addAttribute("applicationTeamModel",
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
-        } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+        if (question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
                     applicationResource, user.getId(), questionId));
@@ -240,18 +235,17 @@ public class ApplicationQuestionController {
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
-        QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
         if (questionType == null) {
             return APPLICATION_FORM;
         }
         switch (questionType) {
-            case APPLICATION_DETAILS:
             case APPLICATION_TEAM:
             case RESEARCH_CATEGORY:
                 return APPLICATION_FORM_LEAD;
             default:
                 return APPLICATION_FORM;
-        }    }
+        }
+    }
 
     private String handleEditQuestion(
             ApplicationForm form,
@@ -264,10 +258,10 @@ public class ApplicationQuestionController {
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
-            LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
+            LOG.error("Not able to find process role for user {} for application id {}", user.getName(), applicationId);
         }
 
-        return viewQuestion(user, applicationId, questionId, model, form);
+        return viewQuestion(user, applicationId, questionId, model, form, Optional.empty());
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
@@ -280,16 +274,16 @@ public class ApplicationQuestionController {
         return (request.getParameter(UPLOAD_FILE) != null && errors.hasErrors());
     }
 
-    private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
+    private boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
         List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(
                 questionId,
                 applicationId);
         return questionStatuses.isEmpty() || questionStatuses.stream()
                 .anyMatch(questionStatusResource ->
-                        (questionStatusResource.getAssignee() == null
-                                || questionStatusResource.getAssigneeUserId().equals(userId))
-                        && (questionStatusResource.getMarkedAsComplete() == null
-                                || !questionStatusResource.getMarkedAsComplete())
+                                  (questionStatusResource.getAssignee() == null
+                                          || questionStatusResource.getAssigneeUserId().equals(userId))
+                                          && (questionStatusResource.getMarkedAsComplete() == null
+                                          || !questionStatusResource.getMarkedAsComplete())
                 );
     }
 }

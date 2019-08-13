@@ -16,26 +16,22 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 public enum FormInputType implements IdentifiableEnum {
 
-    TEXTINPUT(1),
     TEXTAREA(2),
-    DATE(3),
     FILEUPLOAD(4),
-    APPLICATION_DETAILS(5),
-    EMPTY(6),
-    FINANCE(7),
-    LABOUR(8),
-    OVERHEADS(9),
-    MATERIALS(10),
-    CAPITAL_USAGE(11),
-    SUBCONTRACTING(12),
-    TRAVEL(13),
-    OTHER_COSTS(14),
-    YOUR_FINANCE(15),
-    FINANCIAL_SUMMARY(16),
-    OTHER_FUNDING(17),
-    PERCENTAGE(18),
-    ORGANISATION_SIZE(19),
-    FINANCE_UPLOAD(20),
+    APPLICATION_DETAILS(5), //TODO Remove IFS-6216
+    FINANCE(7), // TODO remove all finance types IFS-6217
+    LABOUR(8), // TODO remove all finance types IFS-6217
+    OVERHEADS(9), // TODO remove all finance types IFS-6217
+    MATERIALS(10), // TODO remove all finance types IFS-6217
+    CAPITAL_USAGE(11), // TODO remove all finance types IFS-6217
+    SUBCONTRACTING(12), // TODO remove all finance types IFS-6217
+    TRAVEL(13), // TODO remove all finance types IFS-6217
+    OTHER_COSTS(14), // TODO remove all finance types IFS-6217
+    YOUR_FINANCE(15), // TODO remove all finance types IFS-6217
+    FINANCIAL_SUMMARY(16), // TODO remove all finance types IFS-6217
+    ORGANISATION_SIZE(19), // TODO remove all finance types IFS-6217
+    OTHER_FUNDING(17), // TODO remove all finance types IFS-6217
+    FINANCE_UPLOAD(20), // TODO remove all finance types IFS-6217
     ASSESSOR_RESEARCH_CATEGORY(21),
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23),
@@ -43,7 +39,8 @@ public enum FormInputType implements IdentifiableEnum {
     STAFF_COUNT(25),
     FINANCIAL_YEAR_END(26),
     FINANCIAL_OVERVIEW_ROW(27),
-    FINANCIAL_STAFF_COUNT(28);
+    FINANCIAL_STAFF_COUNT(28),
+    TEMPLATE_DOCUMENT(29);
 
     private static List<FormInputType> COST_CATEGORIES =
             asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);

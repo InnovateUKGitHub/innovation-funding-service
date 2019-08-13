@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectTitle} - Monitoring Officer|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body competition-management project-management assign-mo">
     <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -11,7 +11,7 @@
 
     <div class="govuk-width-container">
         <th:block th:insert="fragments/layout :: phase-banner" />
-        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})},dynamicBackLink=${true}" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
@@ -22,9 +22,6 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Monitoring Officer',subTitle=|${model.applicationId}: ${model.projectTitle}|,size='govuk-heading-xl'" />
-                </div>
-                <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
-                    <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
                 </div>
             </div>
 

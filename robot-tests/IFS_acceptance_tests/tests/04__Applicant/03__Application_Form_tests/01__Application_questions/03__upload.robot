@@ -8,7 +8,7 @@ Documentation     INFUND-832 Acceptance test: Verify that only users with the ri
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
-Force Tags        Upload    Applicant
+Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
 # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically
@@ -63,18 +63,14 @@ Lead applicant can upload a pdf file
 Lead applicant can view a file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
-    Given The user opens the link in new window  ${5mb_pdf}
-    And the file has been scanned for viruses
-    When the applicant opens the uploaded file
-    And the user closes the last opened tab
-    Then the user should not see an error in the page
-    When The user goes back to the previous page
-    And the user closes the last opened tab
+    Given the file has been scanned for viruses
+    Then open pdf link   ${5mb_pdf}
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
     [Tags]  HappyPath
-    When Log in as a different user               &{Comp_admin1_credentials}
+    [Setup]  get application id by name and set as suite variable   Academic robot test application
+    Given Log in as a different user               &{Comp_admin1_credentials}
     Then User verifies if uploaded document can be viewed
     When Log in as a different user               &{internal_finance_credentials}
     Then User verifies if uploaded document can be viewed
@@ -90,10 +86,7 @@ Collaborators can view a file
     Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
-    And the user should see the element           link = ${5mb_pdf}
-    When The user opens the link in new window    ${5mb_pdf}
-    And the user should not see an error in the page
-    Then the user closes the last opened tab
+    Then open pdf link                             ${5mb_pdf}
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -117,7 +110,7 @@ Questions can be assigned with appendices
     And the user should see the element                     link = ${5mb_pdf}
     When the user assigns the question to the collaborator  Arsene Wenger
     Then the user should not see the element                jQuery = button:contains("Remove")
-    And the user clicks the button/link                     link = Application overview
+    And the user clicks the button/link                     link = Back to application overview
     Then the user clicks the button/link                    link = 6. Innovation
     And the user assigns the question to the collaborator   Arsene Wenger
 
@@ -127,11 +120,8 @@ Collaborators can view a file when the question is assigned
     [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Given the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link         link = Academic robot test application
-    And the user clicks the button/link         link = 5. Technical approach
-    And the user should see the element         link = ${5mb_pdf}
-    When The user opens the link in new window  ${5mb_pdf}
-    And the user should not see an error in the page
-    Then the user closes the last opened tab
+    When the user clicks the button/link        link = 5. Technical approach
+    Then open pdf link                          ${5mb_pdf}
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
@@ -140,8 +130,8 @@ Collaborator can remove a file when the question is assigned
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
     And the user should see the element           link = ${5mb_pdf}
-    When the user can remove the uploaded file    remove_uploaded_file  ${5mb_pdf}
-    Then the user can re-assign the question back to the lead applicant
+    When the user can remove the uploaded file    removeAppendix  ${5mb_pdf}
+    Then the user clicks the button/link          name = assign
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
@@ -151,7 +141,7 @@ Collaborators can upload a file when the question is assigned
     And the user clicks the button/link            link = 6. Innovation
     When the user should see the element           jQuery = label:contains("+ Upload")
     Then the user uploads the file                 css = .inputfile     ${5mb_pdf}
-    And the user can re-assign the question back to the lead applicant
+    And the user clicks the button/link            name = assign
 
 Quarantined files are not returned to the user and the user is informed
     [Documentation]    INFUND-2683
@@ -173,7 +163,7 @@ Custom Suite Setup
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
-    the user clicks the button/link  name = assign_question
+    the user clicks the button/link  name = assign
     the user reloads the page
 
 the user cannot see the option to upload a file on the question
@@ -194,20 +184,14 @@ the user can see the option to upload a file on the question
 the user checks the Appendix guidance
     [Documentation]  IFS-2564
     the user clicks the button/link           jQuery = span:contains("What should I include in the appendix?")
-    the user should see the element           jQuery = h4:contains("Accepted appendix file types")
+    the user should see the element           jQuery = h3:contains("Accepted appendix file types")
     the user should see the element           jQuery = li:contains("PDF")
     the user should see the element           jQuery = p:contains("It must be less than 10MB in size.")
 
-The applicant opens the uploaded file
-    The user opens the link in new window        ${5mb_pdf}
-
 User verifies if uploaded document can be viewed
-     ${academic_applicaton_id} =  get application id by name  Academic robot test application
      the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
-     The user opens the link in new window     ${5mb_pdf}
-     the user should not see an error in the page
-     the user closes the last opened tab
+     open pdf link                             ${5mb_pdf}
 
 Custom suite teardown
     Close browser and delete emails

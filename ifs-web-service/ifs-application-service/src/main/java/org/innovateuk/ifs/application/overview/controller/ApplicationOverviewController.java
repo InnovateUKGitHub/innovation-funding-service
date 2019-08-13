@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -83,7 +84,7 @@ public class ApplicationOverviewController {
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
         if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
                 && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
-            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccess();
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPENED).getSuccess();
         }
     }
 
@@ -92,6 +93,7 @@ public class ApplicationOverviewController {
                 .getRole() == LEADAPPLICANT;
     }
 
+    @ZeroDowntime(description = "remove this method", reference = "IFS-6123")
     @PostMapping(value = "/{applicationId}")
     public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
@@ -108,6 +110,7 @@ public class ApplicationOverviewController {
         return "application-terms-and-conditions";
     }
 
+    @ZeroDowntime(description = "remove method and comment", reference = "IFS-6123")
     /**
      * Assign a question to a user
      *
@@ -127,6 +130,7 @@ public class ApplicationOverviewController {
         return "redirect:/application/" + applicationId + "/section/" + sectionId;
     }
 
+    @ZeroDowntime(description = "remove method", reference = "IFS-6123")
     private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
         ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
 

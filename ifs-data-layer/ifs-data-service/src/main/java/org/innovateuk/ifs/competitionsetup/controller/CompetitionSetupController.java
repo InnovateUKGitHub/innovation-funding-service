@@ -6,11 +6,18 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,6 +33,18 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+    @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
+    private Long maxFilesizeBytesForCompetitionTerms;
+
+    @Value("${ifs.data.service.file.storage.competition.terms.valid.media.types}")
+    private List<String> validMediaTypesForCompetitionTerms;
+
+    @Autowired
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @PutMapping("/{id}")
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
@@ -110,7 +129,26 @@ public class CompetitionSetupController {
     }
 
     @DeleteMapping("{id}")
-    public RestResult<Void> delete(@PathVariable("id") long competitionId) {
+    public RestResult<Void> deleteIfExists(@PathVariable("id") long competitionId) {
         return competitionSetupService.deleteCompetition(competitionId).toDeleteResponse();
+    }
+
+    @PostMapping(value = "/competition-terms", produces = "application/json")
+    public RestResult<FileEntryResource> uploadCompetitionTerms(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam long competitionId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator,
+                validMediaTypesForCompetitionTerms, maxFilesizeBytesForCompetitionTerms, request,
+                     (fileAttributes, inputStreamSupplier) ->
+                            competitionSetupService.uploadCompetitionTerms(contentType, contentLength, originalFilename, competitionId, request));
+    }
+
+    @DeleteMapping(value = "/competition-terms", produces = "application/json")
+    public RestResult<Void> deleteCompetitionTerms(@RequestParam(value = "competitionId") long competitionId) {
+        return competitionSetupService.deleteCompetitionTerms(competitionId).toDeleteResponse();
     }
 }

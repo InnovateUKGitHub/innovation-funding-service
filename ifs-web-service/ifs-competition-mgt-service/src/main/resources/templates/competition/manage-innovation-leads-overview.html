@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage innovation leads'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionName} + ' - Manage innovation leads'" />
     </head>
     <body class="govuk-template__body competition-management">
         <th:block th:insert="fragments/layout :: body-start" />
@@ -49,8 +49,7 @@
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}"
-                               aria-selected="true"
-                               class="govuk-tabs__tab">Added to competition (<th:block th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></th:block>)</a>
+                               class="govuk-tabs__tab govuk-tabs__tab--selected">Added to competition (<th:block th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></th:block>)</a>
                         </li>
                     </ul>
                     <section class="govuk-tabs__panel">

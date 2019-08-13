@@ -22,7 +22,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -35,7 +35,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessProjectDetailsSection(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -47,8 +47,21 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessProjectTeamSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                 "Unable to access Project Team section until Companies House details are complete for Organisation")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
     public SectionAccess canAccessFinanceContactPage(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -60,7 +73,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -81,7 +94,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -93,7 +106,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -109,7 +122,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectAddressPage(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -152,7 +165,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -166,7 +179,7 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -190,7 +203,7 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -209,7 +222,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessSpendProfileSection(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -223,6 +236,10 @@ public class SetupSectionAccessibilityHelper {
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
+        if (!setupProgressChecker.isProjectTeamCompleted()) {
+            return fail("Unable to access Spend Profile section until the Project Team section is complete");
+        }
+
         if (!setupProgressChecker.isSpendProfileGenerated()) {
 
             return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
@@ -233,7 +250,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canEditSpendProfileSection(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -252,7 +269,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessDocumentsSection(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -270,7 +287,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
-        if (setupProgressChecker.isOffline()) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
 

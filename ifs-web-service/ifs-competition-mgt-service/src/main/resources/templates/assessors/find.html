@@ -54,8 +54,7 @@
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}"
-                       class="govuk-tabs__tab"
-                       aria-selected="true">Find</a>
+                       class="govuk-tabs__tab govuk-tabs__tab--selected">Find</a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
@@ -77,37 +76,28 @@
                     </div>
                 </div>
 
-                <form method="GET" th:object="${filterForm}">
+                <form method="GET">
                     <div class="search-filters govuk-!-margin-top-6">
                         <fieldset class="govuk-fieldset">
-                            <legend class="ggovuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
                                 <h2 class="govuk-fieldset__heading">Filter assessors</h2>
                             </legend>
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds">
-                                    <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
-                                    <select name="innovationArea"
-                                            id="filterInnovationArea"
-                                            class="govuk-select"
-                                            th:field="*{innovationArea}">
-                                        <option value="">Any</option>
-                                        <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"
-                                                  th:label="${innovationSector.name}">
-                                            <option th:each="innovationArea : ${innovationSector.children}"
-                                                    th:value="${innovationArea.id}"
-                                                    th:text="${innovationArea.name}">
-                                            </option>
-                                        </optgroup>
-                                    </select>
-                                    <input type="hidden" name="filterChanged" value="1"/>
+                                    <label class="govuk-label"
+                                           for="assessorNameFilter">Search for an assessor by first or last name.</label>
+                                    <input class="govuk-input"
+                                           id="assessorNameFilter"
+                                           name="assessorNameFilter"
+                                           value="">
                                 </div>
                                 <div class="govuk-grid-column-one-third">
-                                    <button class="govuk-button">Filter</button>
+                                    <button class="govuk-button" >Filter</button>
                                 </div>
                             </div>
                         </fieldset>
                         <div class="govuk-!-margin-top-6">
-                            <a href="?filterChanged=1" class="govuk-body govuk-link">Clear all filters</a>
+                            <a href="?" class="govuk-link govuk-body">Clear filter</a>
                         </div>
                     </div>
                 </form>
@@ -189,7 +179,7 @@
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
+                                    <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})}"
                                        th:text="${assessor.name}"
                                        class="govuk-link">John Barnes
                                     </a>

@@ -29,7 +29,6 @@
                                     <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
                                     <option id="successful" th:href="@{/competition/{cid}/applications/previous?filter=}" value="SUCCESSFUL" th:selected="${(param.filter != null) and (param.filter[0] == 'SUCCESSFUL')}">Successful</option>
                                     <option id="previous" th:href="@{/competition/{cid}/applications/previous?filter=}" value="REJECTED" th:selected="${(param.filter != null) and (param.filter[0] == 'REJECTED')}">Unsuccessful</option>
-                                    <option id="withdrawn" th:href="@{/competition/{cid}/applications/previous?filter=}" value="WITHDRAWN" th:selected="${(param.filter != null) and (param.filter[0] == 'WITHDRAWN')}">Withdrawn</option>
                                     <option id="ineligable" th:href="@{/competition/{cid}/applications/previous?filter=}" value="INELIGIBLE" th:selected="${(param.filter != null) and (param.filter[0] == 'INELIGIBLE')}">Ineligible</option>
                                 </select>
                             </div>
@@ -63,7 +62,7 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="row, iterStat : ${model.previousApplications}">
                         <td class="govuk-table__cell">
-                            <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                            <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id}}" th:text="${row.id}">124</a>
                         </td>
                         <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
                         <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>

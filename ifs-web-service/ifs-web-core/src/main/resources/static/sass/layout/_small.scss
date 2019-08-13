@@ -31,18 +31,6 @@ small {
   padding-left: 20px;
 }
 
-.blue-block {
-  @include media-down(mobile){
-    display:block;
-  }
-
-  display: inline-block;
-  background: govuk-colour("blue");
-  color:#fff;
-  text-align: center;
-  padding:20px;
-}
-
 .bordered {
   border:1px solid $govuk-border-colour;
 }
@@ -143,6 +131,10 @@ th {
   text-align:right;
 }
 
+.alignleft {
+  text-align:left;
+}
+
 .aligncentre {
   text-align:center;
 }
@@ -239,4 +231,12 @@ span {
 pre,
 .display-content {
   white-space: pre-wrap;
+}
+
+.accepted {
+  color: govuk-colour("green");
+}
+
+.unaccepted {
+  color: govuk-colour("grey-1");
 }

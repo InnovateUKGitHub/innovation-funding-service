@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks summary'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.financeCheckSummaryResource.applicationId}: ${model.financeCheckSummaryResource.projectName} - Finance checks|"/>
 </head>
 <body class="govuk-template__body competition-management project-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay"/>
@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}"/>
+              th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"

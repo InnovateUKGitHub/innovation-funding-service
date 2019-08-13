@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -49,7 +49,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
     private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     @Mock
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandlerMock;
 
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepositoryMock;
@@ -138,7 +138,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
 
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId(), competition)).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
 
         when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
 
@@ -161,4 +161,3 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
         assertEquals(existingFinances, result.getSuccess());
     }
 }
-

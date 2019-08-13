@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.application.domain.ApplicationStatistics;
-import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -17,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 
+import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
@@ -31,9 +29,6 @@ public class CompetitionKeyAssessmentStatisticsServiceImpl extends BaseTransacti
 
     @Autowired
     private AssessmentInviteRepository assessmentInviteRepository;
-
-    @Autowired
-    private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -92,9 +87,9 @@ public class CompetitionKeyAssessmentStatisticsServiceImpl extends BaseTransacti
     getInAssessmentKeyStatisticsByCompetition(long competitionId) {
         CompetitionInAssessmentKeyAssessmentStatisticsResource competitionInAssessmentKeyAssessmentStatisticsResource
                 = new CompetitionInAssessmentKeyAssessmentStatisticsResource();
-        competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentCount(applicationStatisticsRepository
-                .findByCompetitionAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES).stream()
-                .mapToInt(ApplicationStatistics::getAssessors).sum());
+        competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentCount(
+                assessmentRepository.countByActivityStateInAndTargetCompetitionId(
+                        complementOf(of(REJECTED, WITHDRAWN)), competitionId));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentsWaiting(assessmentRepository
                 .countByActivityStateAndTargetCompetitionId(PENDING, competitionId));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentsAccepted(assessmentRepository

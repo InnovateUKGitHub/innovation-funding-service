@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-content">
@@ -13,7 +15,6 @@
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <div th:if="${model.general.editable}" id="section-4-edit">
@@ -22,11 +23,11 @@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
-                    <th class="govuk-table__header" scope="col">Time</th>
-                    <th class="govuk-table__header" scope="col">Weekday</th>
-                    <th class="govuk-table__header" scope="col">Day</th>
-                    <th class="govuk-table__header" scope="col">Month</th>
-                    <th class="govuk-table__header" scope="col">Year</th>
+                    <th class="govuk-table__header" scope="col" id="time">Time</th>
+                    <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
+                    <th class="govuk-table__header" scope="col" id="day">Day</th>
+                    <th class="govuk-table__header" scope="col" id="month">Month</th>
+                    <th class="govuk-table__header" scope="col" id="year">Year</th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -47,14 +48,14 @@
                         <input type="hidden"
                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
                                th:value="${milestoneEntry.value.editable}" />
-
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                  aria-labelledby="time"
                                   class="govuk-select"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
-                              <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).values()}"
+                              <option th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
                           <th:block th:if="${milestoneEntry.value.middayTime}" >
@@ -63,7 +64,7 @@
                                 data-time="12"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                 th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                th:value="${T(org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime).TWELVE_PM}">
+                                th:value="${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).TWELVE_PM}">
                           </th:block>
                       </td>
                       <td class="govuk-table__cell js-addWeekDay" th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}" th:text="${milestoneEntry.value.dayOfWeek}"></td>
@@ -78,6 +79,7 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
                                  minlength="1"
+                                 aria-labelledby="day"
                                  class="govuk-input govuk-input--width-4"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
@@ -95,6 +97,7 @@
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
                                 minlength="1"
+                                aria-labelledby="month"
                                 class="govuk-input govuk-input--width-4"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
@@ -108,6 +111,7 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="4"
                                  minlength="4"
+                                 aria-labelledby="year"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                  data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
@@ -167,3 +171,4 @@
         </li>
     </ul>
 </th:block>
+</html>

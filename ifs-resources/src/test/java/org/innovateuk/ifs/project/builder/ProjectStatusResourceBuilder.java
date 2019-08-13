@@ -39,6 +39,10 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((projectNumber, psr) -> setField("projectNumber", projectNumber, psr), projectNumbers);
     }
 
+    public ProjectStatusResourceBuilder withApplicationNumber(Long... applicationNumbers) {
+        return withArray((applicationNumber, psr) -> setField("applicationNumber", applicationNumber, psr), applicationNumbers);
+    }
+
     public ProjectStatusResourceBuilder withNumberOfPartners(Integer... numberOfPartnersList) {
         return withArray((numberOfPartners, psr) -> setField("numberOfPartners", numberOfPartners, psr), numberOfPartnersList);
     }
@@ -49,6 +53,10 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
 
     public ProjectStatusResourceBuilder withProjectDetailStatus(ProjectActivityStates... projectDetailsStatuses) {
         return withArray((projectDetailsStatus, psr) -> setField("projectDetailsStatus", projectDetailsStatus, psr), projectDetailsStatuses);
+    }
+
+    public ProjectStatusResourceBuilder withProjectTeamStatus(ProjectActivityStates... projectTeamStatuses) {
+        return withArray((projectTeamStatus, psr) -> setField("projectTeamStatus", projectTeamStatus, psr), projectTeamStatuses);
     }
 
     public ProjectStatusResourceBuilder withBankDetailsStatus(ProjectActivityStates... bankDetailsStatuses) {

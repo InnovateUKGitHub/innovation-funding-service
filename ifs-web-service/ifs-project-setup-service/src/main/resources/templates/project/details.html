@@ -13,10 +13,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}/new-details(projectId='4')}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.project.id})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle='Magic material',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
         <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
@@ -25,9 +25,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header larger-cols"><span class="govuk-visually-hidden">Action</span></th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Information</span></th>
-                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Status</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half"><span class="govuk-visually-hidden">Action</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><span class="govuk-visually-hidden">Information</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><span class="govuk-visually-hidden">Status</span></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -40,7 +40,7 @@
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
                     <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell alignright">
                     <strong th:if="${model.project.targetStartDate == null}" id="start-date-status" class="incomplete-status">Incomplete</strong>
                     <strong th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="complete-status">Complete</strong>
                 </td>
@@ -54,7 +54,7 @@
                     <th:block th:if="${model.project.address.id == null}">-</th:block>
                     <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell alignright">
                     <strong th:if="${model.project.address.id == null}" id="project-address-status" class="incomplete-status">Incomplete</strong>
                     <strong th:unless="${model.project.address.id == null}" id="project-address-status" class="complete-status">Complete</strong>
                 </td>
@@ -66,9 +66,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header larger-cols">Partner</th>
-                <th scope="col" class="govuk-table__header">Project location</th>
-                <th scope="col" class="govuk-table__header smaller-col"><span class="govuk-visually-hidden">Actions</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">Partner</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Project location</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><span class="govuk-visually-hidden">Actions</span></th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -85,7 +85,7 @@
                         <span>-</span>
                     </th:block>
                 </td>
-                <td class="govuk-table__cell text-align-right">
+                <td class="govuk-table__cell alignright">
                     <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}"
                        th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
                        class="govuk-link">Edit</a>
@@ -93,6 +93,8 @@
             </tr>
             </tbody>
         </table>
+        <a class="button-secondary"
+           th:href="@{/project/{id}(id=${model.project.id})}">Return to set up your project</a>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

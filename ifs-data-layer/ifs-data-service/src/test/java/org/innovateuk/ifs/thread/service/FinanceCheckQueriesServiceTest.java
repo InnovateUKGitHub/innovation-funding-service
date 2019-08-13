@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -19,6 +21,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
+import org.innovateuk.ifs.threads.domain.MessageThread;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -95,6 +98,9 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private AuthenticationHelper authenticationHelperMock;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     @Before
     public void before() {
@@ -217,6 +223,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertEquals(result, Long.valueOf(1L));
 
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        verify(activityLogService).recordQueryActivityByProjectFinanceId(queryToCreateAsDomain.contextClassPk(), ActivityType.FINANCE_QUERY, result);
     }
 
     @Test
@@ -385,8 +392,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
 
         List<Object> allArguments = new ArrayList<>();
-        allArguments.add(Thread.class.getSimpleName());
-        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, Thread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
+        allArguments.add(MessageThread.class.getSimpleName());
+        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, MessageThread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
     }
 
     @Test

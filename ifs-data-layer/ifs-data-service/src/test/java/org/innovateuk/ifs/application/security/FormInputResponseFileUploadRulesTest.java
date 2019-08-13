@@ -2,10 +2,8 @@ package org.innovateuk.ifs.application.security;
 
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -16,7 +14,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -30,7 +27,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -41,7 +37,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +66,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
-        Application application = newApplication().withApplicationState(ApplicationState.OPEN).build();
+        Application application = newApplication().withApplicationState(ApplicationState.OPENED).build();
 
         User user = newUser().build();
         UserResource userResource = newUserResource().withId(user.getId()).build();
@@ -129,7 +125,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
     @Test
     public void stakeholdersCanDownloadFilesInResponse() {
-        Application application = newApplication().withApplicationState(ApplicationState.OPEN).build();
+        Application application = newApplication().withApplicationState(ApplicationState.OPENED).build();
 
         Competition competition = newCompetition().build();
         application.setCompetition(competition);
@@ -155,7 +151,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         long applicationId = 3L;

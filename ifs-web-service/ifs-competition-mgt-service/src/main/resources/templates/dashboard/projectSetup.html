@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='All competitions'" />
 </head>
 <body class="govuk-template__body competition-management competition-overview">
 
@@ -25,10 +25,7 @@
                     <p class="govuk-body">There are no competitions assigned to you.</p>
                 </th:block>
 
-                <th:block th:if="${model.counts.projectSetupCount > 0}"
-                          th:with="projectSetupComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)},
-                                   informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)},
-                                   panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
+                <th:block th:if="${model.counts.projectSetupCount > 0}">
                     <h2 class="govuk-heading-m" th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
 
                     <th:block th:if="${model.projectFinanceUser}">
@@ -41,29 +38,7 @@
                     </th:block>
 
                     <ul class="govuk-list list-overview govuk-!-margin-top-6">
-                        <!-- Deliberate separation from PS list.  Check with BAs if this should be categorised like in live tab for clarity of status -->
-                        <li class="govuk-grid-row" th:each="competition : ${panelComps}">
-                            <th:block
-                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                                th:with="competition=${competition},
-                                innovationAreas=competition.innovationAreaNames,
-                                cell4=${competition.projectsCount + ' projects'}"/>
-                        </li>
-                        <li class="govuk-grid-row" th:each="competition : ${informComps}">
-                            <th:block
-                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                                th:with="competition=${competition},
-                                innovationAreas=competition.innovationAreaNames,
-                                cell4=${competition.projectsCount + ' projects'}"/>
-                        </li>
-                        <li class="govuk-grid-row" th:each="competition : ${projectSetupComps}">
-                            <th:block
-                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
-                                th:with="competition=${competition},
-                                innovationAreas=competition.innovationAreaNames,
-                                cell4=${competition.projectsCount + ' projects'}"/>
-                        </li>
-                        <li class="govuk-grid-row" th:each="competition : ${model.nonPrioritisedCompetitions}">
+                        <li class="govuk-grid-row" th:each="competition : ${model.result.content}">
                             <th:block
                                 th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
                                 th:with="competition=${competition},
@@ -72,6 +47,11 @@
                         </li>
                     </ul>
                 </th:block>
+                <form method="get"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                    <th:block
+                        th:insert="fragments/competition-management :: applications-pagination(results=${model.result})"/>
+                </form>
             </section>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end" />

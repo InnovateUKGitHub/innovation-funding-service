@@ -253,7 +253,8 @@
                                 <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
                             The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
                                     href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
-                                    target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
+                                    target="_blank" class="govuk-link"
+                                    aria-describedby="portal-hint">participant portal</a> <span id="portal-hint">(opens in a new window)</span>.
                         </span>
                             </label>
                             <th:block th:if="${#fields.hasErrors('participantId')}">
@@ -276,7 +277,7 @@
                             <label class="govuk-label govuk-label--s" for="actionType">
                                 Type of action
                                 <span id="grant-action-type-hint" class="govuk-hint">
-                            The funding scheme you applied for.
+                            Enter the funding scheme you applied for.
                         </span>
                             </label>
                             <th:block th:if="${#fields.hasErrors('actionType')}">

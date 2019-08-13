@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -48,6 +49,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("resubmission").description("indicates if the competition has the ability to do a resubmission").optional(),
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams").optional(),
             fieldWithPath("streamName").description("the name of the stream"),
+            fieldWithPath("financeRowTypes").description("The finance types supported by this competition").optional(),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)").optional(),
             fieldWithPath("leadApplicantTypes").description("permitted organisation types of lead applicant (business, research...)").optional(),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup").optional(),
@@ -76,6 +78,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table").optional(),
             fieldWithPath("includeYourOrganisationSection").description("Indicates if the competition has a your organisation section").optional(),
             fieldWithPath("fundingType").description("The FundingType of the competition").optional(),
+            fieldWithPath("competitionTerms").description("Any competition-specific terms").optional(),
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
@@ -118,5 +121,6 @@ public class CompetitionResourceDocs {
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
             .withStateAid(true)
             .withIncludeJesForm(true)
-            .withFundingType(FundingType.PROCUREMENT);
+            .withFundingType(FundingType.PROCUREMENT)
+            .withCompetitionTerms((FileEntryResource) null);
 }

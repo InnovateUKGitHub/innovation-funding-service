@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -44,12 +41,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.AffiliationListResource;
-import org.innovateuk.ifs.user.resource.AffiliationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -133,6 +125,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<SimpleUserResource>> simpleUserListType() {
+        return new ParameterizedTypeReference<List<SimpleUserResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {
         return new ParameterizedTypeReference<List<UserOrganisationResource>>() {};
     }
@@ -163,6 +159,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>> previousCompetitionSearchResultItemListType() {
         return new ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<PreviousApplicationResource>> previousApplicationResourceListType() {
+        return new ParameterizedTypeReference<List<PreviousApplicationResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {
@@ -369,4 +369,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<MonitoringOfficerAssignmentResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
+        return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
+    }
 }

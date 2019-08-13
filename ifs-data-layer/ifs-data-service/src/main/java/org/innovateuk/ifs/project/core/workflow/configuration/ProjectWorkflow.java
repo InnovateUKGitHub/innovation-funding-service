@@ -39,24 +39,35 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
 
     @Override
     public void configure(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        configureCreated(transitions);
+        configureLive(transitions);
+        configureWithdraw(transitions);
+        configureOffline(transitions);
+        configureOnHold(transitions);
+    }
+
+    private void configureOnHold(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                     .source(SETUP)
-                    .event(PROJECT_CREATED)
-                    .target(SETUP)
+                    .event(PUT_ON_HOLD)
+                    .target(ON_HOLD)
                 .and()
                 .withExternal()
-                    .source(SETUP)
-                    .event(GOL_APPROVED)
-                    .target(LIVE)
-                .and()
+                    .source(ON_HOLD)
+                    .event(RESUME_PROJECT)
+                    .target(SETUP);
+    }
+
+    private void configureOffline(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        transitions
                 .withExternal()
                     .source(SETUP)
-                    .event(PROJECT_WITHDRAWN)
-                    .target(WITHDRAWN)
+                    .event(HANDLE_OFFLINE)
+                    .target(HANDLED_OFFLINE)
                 .and()
                 .withExternal()
-                    .source(SETUP)
+                    .source(ON_HOLD)
                     .event(HANDLE_OFFLINE)
                     .target(HANDLED_OFFLINE)
                 .and()
@@ -64,5 +75,39 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                     .source(HANDLED_OFFLINE)
                     .event(COMPLETE_OFFLINE)
                     .target(COMPLETED_OFFLINE);
+    }
+
+    private void configureWithdraw(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                    .source(SETUP)
+                    .event(PROJECT_WITHDRAWN)
+                    .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                    .source(HANDLED_OFFLINE)
+                    .event(PROJECT_WITHDRAWN)
+                    .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                    .source(ON_HOLD)
+                    .event(PROJECT_WITHDRAWN)
+                    .target(WITHDRAWN);
+    }
+
+    private void configureLive(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                    .source(SETUP)
+                    .event(GOL_APPROVED)
+                    .target(LIVE);
+    }
+
+    private void configureCreated(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                    .source(SETUP)
+                    .event(PROJECT_CREATED)
+                    .target(SETUP);
     }
 }

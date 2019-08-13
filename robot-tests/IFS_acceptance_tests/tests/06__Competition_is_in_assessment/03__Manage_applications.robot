@@ -20,6 +20,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               IFS-1079 Remove an application - Closed and In assessment states
 ...
 ...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
+...
+...               IFS-5915  Assessor Filter Option
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -47,11 +49,10 @@ View the list of assessors
     Then the assessor list is correct before changes
 
 Filter assessors
-    [Documentation]    IFS-399
+    [Documentation]    IFS-399  IFS-5915
     [Tags]
-    Given the user filter assessors by innovation sector
-    Then the user filter assessors by business type
-    [Teardown]    the user clicks the button/link  link = Clear all filters
+    Given the user filter assessors by first or last name
+    [Teardown]    the user clicks the button/link  link = Clear filter
 
 View assessor progress page
     [Documentation]  IFS-321
@@ -121,7 +122,7 @@ Application number navigates to Overview
     Given the user clicks the button/link           link = ${Intelligent_water}
     Then The user should see the element           jQuery = .govuk-caption-l:contains("Intelligent water system")
     And the user should see the element            jQuery = h1:contains("Application overview")
-    [Teardown]    the user clicks the button/link  link = Back
+    [Teardown]    the user clicks the button/link  link = Back to manage applications
 
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
@@ -229,18 +230,13 @@ the user accepts the application
     the user selects the radio button  assessmentAccept  true
     the user clicks the button/link  jQuery = button:contains("Confirm")
 
-the user filter assessors by innovation sector
-    the user selects the option from the drop-down menu    Materials and manufacturing  id = innovationSector
+the user filter assessors by first or last name
+    the user enters text to a text field                   id = assessorNameFilter   Je
     the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
-    the user should not see the element                    jQuery = td:contains("Paul Plum")
-    the user should see the element                        jQuery = td:contains("Felix Wilson")
+    the user should see the element                        jQuery = td:contains("Jeannie Newton")
+    the user should see the element                        jQuery = td:contains("Jesse Stevens")
     the user should see the element                        jQuery = td:contains("Jenna Diaz")
-
-the user filter assessors by business type
-    the user selects the option from the drop-down menu   Academic  id = businessType
-    the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
-    the user should see the element                       jQuery = td:contains("Felix Wilson")
-    the user should not see the element                   jQuery = td:contains("Jenna Diaz")
+    the user should not see the element                    jQuery = td:contains("Alexis Colon")
 
 the user should see details on assessors progress page
     the user should see the element    jQuery = h2:contains("Paul Plum")

@@ -5,7 +5,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -16,7 +19,6 @@ import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -31,7 +33,6 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -114,7 +115,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
 
-        PageRequest pageRequest = new PageRequest(0, 40);
+        PageRequest pageRequest = PageRequest.of(0, 40);
         when(applicationServiceMock.wildcardSearchById("", pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
 
         mockMvc.perform(get("/application/wildcard-search-by-id"))
@@ -204,18 +205,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void withdraw() throws Exception {
-        long applicationId = 1L;
-        when(applicationServiceMock.withdrawApplication(applicationId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/application/{applicationId}/withdraw", applicationId)
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        verify(applicationServiceMock).withdrawApplication(applicationId);
-    }
-
-    @Test
     public void showApplicationTeam() throws Exception {
         long applicationId = 1L;
         long userId = 2L;
@@ -224,24 +213,5 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/show-application-team/{applicationId}/{userId}", applicationId, userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
-    }
-
-    @Test
-    public void findPreviousApplications() throws Exception {
-        final Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-        String filter = "ALL";
-
-        PreviousApplicationPageResource previousApplicationPageResource = new PreviousApplicationPageResource();
-
-        when(applicationServiceMock.findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter)).thenReturn(serviceSuccess(previousApplicationPageResource));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/application/{id}/previous-applications?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, pageIndex, pageSize, sortField, filter))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(previousApplicationPageResource)));
-
-        verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);
     }
 }

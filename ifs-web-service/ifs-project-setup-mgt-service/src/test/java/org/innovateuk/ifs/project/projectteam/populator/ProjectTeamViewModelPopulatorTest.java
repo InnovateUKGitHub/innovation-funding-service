@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.*;
@@ -62,6 +63,7 @@ public class ProjectTeamViewModelPopulatorTest {
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
                 .withName("Imaginative project name")
+                .withProjectState(SETUP)
                 .build();
         OrganisationResource leadOrg = newOrganisationResource()
                 .withName("Imaginative organisation name")
@@ -99,6 +101,7 @@ public class ProjectTeamViewModelPopulatorTest {
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
         assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals((long) competition.getId(), model.getCompetitionId());
         assertEquals(project.getName(), model.getProjectName());
         assertEquals((long) project.getId(), model.getProjectId());
         assertEquals(false, model.isUserLeadPartner());
@@ -107,7 +110,12 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(model.isReadOnly());
         assertEquals(2, model.getPartnerOrgs().size());
 
-        ProjectOrganisationViewModel partnerOneViewModel = model.getPartnerOrgs().stream().filter(view -> view.getOrgId() == partnerOne.getId()).findAny().get();
+        ProjectOrganisationViewModel partnerOneViewModel =
+                model.getPartnerOrgs()
+                        .stream()
+                        .filter(view -> view.getOrgId() == partnerOne.getId())
+                        .findAny()
+                        .get();
 
         assertEquals(2, partnerOneViewModel.getUsers().size());
         assertNotNull(partnerOneViewModel.getProjectManager());

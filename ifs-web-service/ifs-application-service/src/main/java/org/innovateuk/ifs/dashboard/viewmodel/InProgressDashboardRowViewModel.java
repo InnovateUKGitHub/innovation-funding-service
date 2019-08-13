@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -9,13 +10,13 @@ import java.time.ZonedDateTime;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
  */
-public class InProgressDashboardRowViewModel extends
-        AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
+public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
 
     private static final int ONE_HUNDRED_PERCENT = 100;
 
@@ -26,6 +27,7 @@ public class InProgressDashboardRowViewModel extends
     private final long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
+    private final LocalDate startDate;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -36,7 +38,8 @@ public class InProgressDashboardRowViewModel extends
                                            ZonedDateTime endDate,
                                            long daysLeft,
                                            int applicationProgress,
-                                           boolean assignedToInterview) {
+                                           boolean assignedToInterview,
+                                           LocalDate startDate) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -45,6 +48,19 @@ public class InProgressDashboardRowViewModel extends
         this.daysLeft = daysLeft;
         this.applicationProgress = applicationProgress;
         this.assignedToInterview = assignedToInterview;
+        this.startDate = startDate;
+    }
+
+    public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
+        super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
+        this.assignedToMe = resource.isAssignedToMe();
+        this.applicationState = resource.getApplicationState();
+        this.leadApplicant = resource.isLeadApplicant();
+        this.endDate = resource.getEndDate();
+        this.daysLeft = resource.getDaysLeft();
+        this.applicationProgress = resource.getApplicationProgress();
+        this.assignedToInterview = resource.isAssignedToInterview();
+        this.startDate = resource.getStartDate();
     }
 
     public boolean isAssignedToMe() {
@@ -69,6 +85,10 @@ public class InProgressDashboardRowViewModel extends
 
     public boolean isAssignedToInterview() {
         return assignedToInterview;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
     /* view logic */
@@ -127,11 +147,4 @@ public class InProgressDashboardRowViewModel extends
         return "Untitled application (start here)";
     }
 
-    @Override
-    public int compareTo(InProgressDashboardRowViewModel o) {
-        if (assignedToInterview != o.isAssignedToInterview()) {
-            return assignedToInterview ? -1 : 1;
-        }
-        return Long.compare(getApplicationNumber(), o.getApplicationNumber());
-    }
 }

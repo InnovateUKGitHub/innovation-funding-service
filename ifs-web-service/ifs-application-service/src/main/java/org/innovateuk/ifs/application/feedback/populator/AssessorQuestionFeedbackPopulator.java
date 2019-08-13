@@ -7,8 +7,10 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,15 +32,20 @@ public class AssessorQuestionFeedbackPopulator {
     private FeedbackNavigationPopulator feedbackNavigationPopulator;
 
     @Autowired
+    private FormInputRestService formInputRestService;
+
+    @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
-    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId, String originQuery ) {
+    public AssessQuestionFeedbackViewModel populate(ApplicationResource applicationResource, long questionId) {
 
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         long applicationId = applicationResource.getId();
 
         List<FormInputResponseResource> responseResource = formInputResponseRestService.getByApplicationIdAndQuestionId(
                 applicationId, questionResource.getId()).getSuccess();
+
+        List<FormInputResource> inputs = formInputRestService.getByQuestionId(questionId).getSuccess();
 
         AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
                 .getAssessmentAggregateFeedback(applicationId, questionId)
@@ -48,8 +55,8 @@ public class AssessorQuestionFeedbackPopulator {
       return new AssessQuestionFeedbackViewModel(applicationResource,
               questionResource,
               responseResource,
+              inputs,
               aggregateResource,
-              navigationViewModel,
-              originQuery);
+              navigationViewModel);
     }
 }

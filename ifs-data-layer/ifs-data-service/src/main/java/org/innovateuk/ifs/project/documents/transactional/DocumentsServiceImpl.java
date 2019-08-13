@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -23,7 +25,6 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +72,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
+    @Autowired
+    private ActivityLogService activityLogService;
+
     private static final String PDF_FILE_TYPE = "PDF";
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
 
@@ -90,10 +94,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         for (FileType fileType : fileTypes) {
             switch (fileType.getName()) {
                 case PDF_FILE_TYPE:
-                    validMediaTypes.addAll(PDF.getMediaTypes());
+                    validMediaTypes.addAll(PDF.getMimeTypes());
                     break;
                 case SPREADSHEET_FILE_TYPE:
-                    validMediaTypes.addAll(SPREADSHEET.getMediaTypes());
+                    validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
                     break;
             }
         }
@@ -104,13 +108,13 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
                         .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
     }
 
-    private ServiceResult<Void> validateProjectIsInSetup(Project project) {
-        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+    private ServiceResult<Void> validateProjectActive(Project project) {
+        if (!projectWorkflowHandler.getState(project).isActive()) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 
@@ -156,7 +160,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
                         .andOnSuccess(() -> deleteFile(project, documentConfigId))
                 );
@@ -181,9 +185,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Transactional
     public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> submitDocument(project, documentConfigId))
-                );
+                ).andOnSuccessReturnVoid(() -> activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId));
+
     }
 
     private ServiceResult<Void> submitDocument(Project project, long documentConfigId) {
@@ -219,10 +224,15 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
         return validateProjectDocumentDecision(decision)
                 .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
-                        andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                        andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
-                                .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))
-                        ));
+                        )).andOnSuccessReturnVoid(() -> {
+                    if (decision.getApproved()) {
+                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
+                    } else {
+                        activityLogService.recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_REJECTED, documentConfigId);
+                    }
+                });
     }
 
     private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {
@@ -246,11 +256,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
         }
-    }
-
-    private ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId)
-                .andOnFailure(() -> serviceFailure(GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 
     private void setOtherDocsApproved(Project project) {

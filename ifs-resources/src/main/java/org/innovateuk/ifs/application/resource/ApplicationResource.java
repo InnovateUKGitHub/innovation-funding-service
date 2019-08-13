@@ -15,24 +15,22 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 
 public class ApplicationResource {
-    private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
 
+    private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
     private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = singletonList(OPEN);
 
     private Long id;
-
     private String name;
-
     private LocalDate startDate;
-
     private ZonedDateTime submittedDate;
-
     private Long durationInMonths;
-
     private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
@@ -40,22 +38,19 @@ public class ApplicationResource {
     private BigDecimal completion;
     private Boolean stateAidAgreed;
     private Boolean resubmission;
-
     private String previousApplicationNumber;
     private String previousApplicationTitle;
     private ResearchCategoryResource researchCategory;
     private InnovationAreaResource innovationArea;
-
     private boolean noInnovationAreaApplicable;
-
     private IneligibleOutcomeResource ineligibleOutcome;
-
     private Long leadOrganisationId;
-
     private boolean isInAssessmentReviewPanel;
-
     private CollaborationLevel collaborationLevel;
     private boolean collaborativeProject;
+    private CompetitionReferralSource competitionReferralSource;
+    private CompanyAge companyAge;
+    private CompanyPrimaryFocus companyPrimaryFocus;
 
     public Long getId() {
         return id;
@@ -130,7 +125,7 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED;
     }
 
     @JsonIgnore
@@ -197,9 +192,6 @@ public class ApplicationResource {
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
-
-    @JsonIgnore
-    public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 
     private boolean isInSubmittableCompetitionState() {
         return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);
@@ -269,6 +261,30 @@ public class ApplicationResource {
         this.collaborativeProject = collaborativeProject;
     }
 
+    public CompetitionReferralSource getCompetitionReferralSource() {
+        return competitionReferralSource;
+    }
+
+    public void setCompetitionReferralSource(CompetitionReferralSource competitionReferralSource) {
+        this.competitionReferralSource = competitionReferralSource;
+    }
+
+    public CompanyAge getCompanyAge() {
+        return companyAge;
+    }
+
+    public void setCompanyAge(CompanyAge companyAge) {
+        this.companyAge = companyAge;
+    }
+
+    public CompanyPrimaryFocus getCompanyPrimaryFocus() {
+        return companyPrimaryFocus;
+    }
+
+    public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
+        this.companyPrimaryFocus = companyPrimaryFocus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -299,6 +315,9 @@ public class ApplicationResource {
                 .append(leadOrganisationId, that.leadOrganisationId)
                 .append(collaborationLevel, that.collaborationLevel)
                 .append(collaborativeProject, that.collaborativeProject)
+                .append(competitionReferralSource, that.competitionReferralSource)
+                .append(companyAge, that.companyAge)
+                .append(companyPrimaryFocus, that.companyPrimaryFocus)
                 .isEquals();
     }
 
@@ -326,6 +345,9 @@ public class ApplicationResource {
                 .append(isInAssessmentReviewPanel)
                 .append(collaborationLevel)
                 .append(collaborativeProject)
+                .append(competitionReferralSource)
+                .append(companyAge)
+                .append(companyPrimaryFocus)
                 .toHashCode();
     }
 }

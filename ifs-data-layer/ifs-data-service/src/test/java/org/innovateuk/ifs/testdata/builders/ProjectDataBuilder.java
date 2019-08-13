@@ -24,6 +24,7 @@ import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -174,6 +176,15 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     public ProjectDataBuilder withPublishGrantOfferLetter() {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
+            try {
+                File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
+                InputStream inputStream = new FileInputStream(file);
+                Supplier<InputStream> inputStreamSupplier = () -> inputStream;
+                grantOfferLetterService.createGrantOfferLetterFileEntry(data.getProject().getId(), new FileEntryResource(null, "GOL.pdf", "application/pdf", file.length()), inputStreamSupplier);
+            } catch (Exception e) {
+                LOG.error("Unable to upload grant offer letter", e);
+                throw new RuntimeException(e);
+            }
             grantOfferLetterService.sendGrantOfferLetter(data.getProject().getId());
         }));
     }
@@ -242,7 +253,8 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetails.setRegistrationNumber(organisationResource.getCompaniesHouseNumber());
                 bankDetails.setManualApproval(bankDetailsApproved);
 
-                bankDetailsService.submitBankDetails(bankDetails).getSuccess();
+                bankDetailsService.submitBankDetails(new ProjectOrganisationCompositeId(data.getProject().getId(), organisationResource.getId()),
+                        bankDetails).getSuccess();
             });
         });
     }
@@ -251,14 +263,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
         return asIfsAdmin(data -> {
             if (ProjectState.WITHDRAWN.equals(state)) {
-                projectService.withdrawProject(data.getProject().getId()).getSuccess();
-                applicationService.withdrawApplication(data.getApplication().getId()).getSuccess();
+                projectStateService.withdrawProject(data.getProject().getId()).getSuccess();
             }
         });
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRoles(Role.PROJECT_FINANCE);
+        List<User> projectFinanceUsers = userRepository.findByRolesAndStatusIn(Role.PROJECT_FINANCE, EnumSet.allOf(UserStatus.class));
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

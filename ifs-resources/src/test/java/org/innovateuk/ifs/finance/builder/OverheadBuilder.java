@@ -43,6 +43,6 @@ public class OverheadBuilder extends BaseBuilder<Overhead, OverheadBuilder> {
 
     @Override
     protected Overhead createInitial() {
-        return new Overhead();
+        return newInstance(Overhead.class);
     }
 }

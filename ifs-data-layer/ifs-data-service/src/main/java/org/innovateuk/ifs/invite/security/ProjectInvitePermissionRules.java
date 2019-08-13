@@ -28,7 +28,7 @@ public class ProjectInvitePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "SEND_PROJECT_INVITE", description = "A user can send a project invite that they are partners on and belong to same organisation")
     public boolean partnersOnProjectCanSendInvite(final ProjectUserInviteResource invite, UserResource user) {
-        return isUserPartnerOnProjectWithinSameOrganisation(invite, user) && isProjectInSetup(invite.getProject());
+        return isUserPartnerOnProjectWithinSameOrganisation(invite, user) && isProjectActive(invite.getProject());
     }
 
     @PermissionRule(value = "SEND_PROJECT_INVITE", description = "Internal users can send invites to any project")

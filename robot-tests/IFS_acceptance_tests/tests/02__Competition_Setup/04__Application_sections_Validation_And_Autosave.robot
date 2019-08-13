@@ -21,6 +21,8 @@ Business opportunity Server-side validations setup questions
     And the user should see the element    jQuery = .govuk-label:contains("Max word count") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted appendix file type") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-label:contains("Appendix guidance") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-label:contains("Template title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted upload file types") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see a summary error    ${empty_field_warning_message}
 
 Business opportunity Sever-side validations assessment questions
@@ -37,27 +39,17 @@ Business opportunity: Client side validations
     [Tags]
     Given the user fills the empty question fields
     And the user enters text to a text field                            id = question.shortTitle    Test Heading
-    And the user moves focus and waits for autosave
     And the user selects the radio button                               question.appendix  0
-    And the user moves focus and waits for autosave
+    And the user selects the radio button                               question.templateDocument  0
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.title"]                 ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.guidanceTitle"]         ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="question.maxWords"]              ${empty_field_warning_message}
-    And the validation error above the question should not be visible   id = question.allowedFileTypes                    ${empty_field_warning_message}
+    And the validation error above the question should not be visible   id = question.allowedAppendixResponseFileTypes    ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreFrom"]      ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreTo"]        ${empty_field_warning_message}
     And the validation error above the question should not be visible   css = label[for="guidanceRows[0].justification"]  ${empty_field_warning_message}
-
-Business opportunity: Autosave
-    [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link = Application
-    And The user clicks the button/link     jQuery = a:contains("Test Heading")
-    Then the user should see the correct inputs in the Applications questions form
-    And the user should see the correct inputs in assessment questions
 
 Test Heading: Mark as done
     [Documentation]    INFUND-5629
@@ -91,13 +83,13 @@ the user leaves all the question field empty
     Clear Element Text    css = .editor
     Press Key    css = .editor    \\8
     Set Focus To Element      css = button[type="submit"]
-    wait for autosave
     The user enters text to a text field    id = question.shortTitle     ${EMPTY}
     The user enters text to a text field    id = question.title          ${EMPTY}
     The user enters text to a text field    id = question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id = question.maxWords       ${EMPTY}
     the user selects the radio button       question.appendix  1
-    the user clicks the button/link         css = label[for="question.allowedFileTypes1"]
+    the user clicks the button/link         css = label[for="question.allowedAppendixResponseFileTypes1"]
+    the user selects the radio button       question.templateDocument  1
 
 The user leaves all the assessment questions empty
     The user enters text to a text field    id = guidanceRows[0].scoreFrom      ${EMPTY}
@@ -113,10 +105,6 @@ the validation error above the question should not be visible
     Set Focus To Element      css = button[type="submit"]
     Wait Until Element Is Not Visible Without Screenshots    css = .govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
-
-the user moves focus and waits for autosave
-    Set Focus To Element      link = Sign out
-    Wait For Autosave
 
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id = question.shortTitle

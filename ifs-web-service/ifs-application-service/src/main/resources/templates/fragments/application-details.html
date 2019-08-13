@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application_details(formInputViewModel)" th:with="formInput=${formInputViewModel.formInput}, question=${formInputViewModel.question}, competition=${formInputViewModel.competition}">
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
           data-autosave="application" enctype="multipart/form-data"
@@ -28,11 +28,11 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0" id="application.startDate">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                             <span>Estimated timescales</span>
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='When do you wish to start your project? For example: 31 12 2015')"  />
+                        <span class="govuk-hint">When do you wish to start your project? For example: <span data-example-date="">31 12 2020</span></span>
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                     </fieldset>
                 </div>
@@ -159,7 +159,7 @@
                      th:class="${(formInputViewModel.complete and !formInputViewModel.summary)
                             or (!formInputViewModel.complete and formInputViewModel.canMarkAsComplete)
                             or (formInputViewModel.summary and formInputViewModel.readonly and formInputViewModel.assignButtonsViewModel.currentUserIsLead) ? 'form-footer govuk-!-margin-top-6' : ''}">
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${formInputViewModel})"/>
+                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${formInputViewModel}, 'application details')"/>
                     <th:block th:if="${formInputViewModel.summary and formInputViewModel.readonly and formInputViewModel.assignButtonsViewModel.currentUserIsLead}"
                               th:insert="question-type/form-elements :: form-edit-question-button (${formInputViewModel},${formInputViewModel.question})"/>
                 </div>

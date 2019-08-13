@@ -31,12 +31,12 @@ Application details: Previous submission
     And the user clicks the button/link                 link = Application details
     When the user clicks the button/link                id = application-question-complete
     Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
-    When the user clicks the button twice               css = label[for = "application.resubmission-yes"]
+    When the user clicks the button twice               css = label[for = "resubmission-yes"]
     And the user clicks the button/link                 id = application-question-complete
     Then the user should see a field and summary error  Please enter the previous application number.
     And the user should see a field and summary error   Please enter the previous application title.
-    When the user clicks the button/link                css = label[for = "application.resubmission-no"]
-    Then The user should not see the element            css = [id = "application.previousApplicationNumber"]
+    When the user clicks the button/link                css = label[for = "resubmission-no"]
+    Then The user should not see the element            css = [id = "previousApplicationNumber"]
 
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
@@ -83,7 +83,7 @@ Marking a question as complete
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]
-    When the user clicks the button/link    jQuery = button:contains("Mark as complete")
+    When the user clicks the button/link    jQuery = button:contains("Mark")
     Then the text box should turn to green
     And the word count should be correct for the Project summary
     And the user should see the element     jQuery = button:contains("Edit")
@@ -95,7 +95,7 @@ Mark a question as incomplete
     Given the user clicks the button/link    link = Project summary
     When the user clicks the button/link     jQuery = button:contains("Edit")
     Then the text box should be editable
-    And the user should see the element      jQuery = button:contains("Mark as complete")
+    And the user should see the element      jQuery = button:contains("Mark")
     And the question should not be marked as complete on the application overview page
 
 Review and submit button
@@ -112,9 +112,9 @@ Incomplete sections contain mark as complete link
     [Tags]
     Given the user should see the element  jQuery = button:contains("Application details") .section-incomplete
     When the user expands the section      Application details
-    Then the user should see the element   jQuery = .collapsible:contains("Application details") button:contains("Mark as complete")
-    And the user should see the element    jQuery = .collapsible:contains("Application details") button:contains("Return and edit")
-    When the user clicks the button/link   jQuery = .collapsible:contains("Application details") button:contains("Mark as complete")
+    Then the user should see the element   jQuery = #accordion-questions-content-2 button:contains("Mark")
+    And the user should see the element    jQuery = #accordion-questions-content-2 button:contains("Return and edit")
+    When the user clicks the button/link   jQuery = #accordion-questions-content-2 button:contains("Mark")
     And the user fills in the Application details  ${aeroApplication}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user should no longer see the Mark-as-complete-link  Application details
 
@@ -155,7 +155,7 @@ Collaborator: read only view of Application details
 Collaborator: read only view of research
     [Documentation]  IFS-2321
     Given the user clicks the button/link       link = Research category
-    Then the user should not see the element    css = button[name = "mark_as_incomplete"]
+    Then the user should not see the element    css = button[name = "edit"]
     And the user should not see the element     id = application-question-save
     And the user should see the element         jQuery = a:contains("Return to application overview")
 
@@ -168,11 +168,11 @@ Custom Suite Setup
     Set suite variable  ${appId}
 
 the application details need to be autosaved
-    the user enters text to a text field    application.durationInMonths    22
+    the user enters text to a text field    durationInMonths    22
     wait for autosave
     the user clicks the button/link         link = Application overview
     the user clicks the button/link         link = Application details
-    the user should not see the text in the element    application.durationInMonths    22
+    the user should not see the text in the element    durationInMonths    22
 
 the word count should be correct for the Project summary
     Wait Until Element Contains Without Screenshots    css = .count-down    369
@@ -182,14 +182,14 @@ the text box should turn to green
     Element Should Be Disabled    css = textarea
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link = Application overview
+    The user clicks the button/link    link = Back to application overview
     The user should see the element    jQuery = li:nth-child(4) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css = textarea
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link        link = Application overview
+    The user clicks the button/link        link = Back to application overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 
@@ -207,13 +207,13 @@ Log in and create a new application for the Aerospace competition
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 
     The user clicks the button/link       link = Application details
-    The user enters text to a text field  id = application.name  ${aeroApplication}
+    The user enters text to a text field  id = name  ${aeroApplication}
     The user clicks the button/link       id = application-question-save
 
 the user should no longer see the Mark-as-complete-link
     [Arguments]  ${Section}
     the user navigates to the page       ${server}/application/${appId}/review-and-submit
-    the user should see the element      jQuery = .collapsible:contains("${Section}") button:contains("Return and edit")
+    the user should see the element      jQuery = #accordion-questions-content-2 button:contains("Return and edit")
 
 Custom suite teardown
     The user closes the browser

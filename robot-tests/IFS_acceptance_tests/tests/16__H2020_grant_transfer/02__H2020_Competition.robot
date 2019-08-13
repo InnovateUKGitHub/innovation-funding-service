@@ -141,6 +141,7 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
+    the user clicks the button/link         id = generate-code
     the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
     the user clicks the button/link         id = funders[0].funder
     click element                           id = funders[0].funder__option--0
@@ -148,8 +149,8 @@ The user completes funding information
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
     the user enters text to a text field    id = activityCode    4242
-    the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
@@ -229,8 +230,8 @@ The user completes the application proccess details
     the user selects the radio button       includeJesForm  false
     the user selects the radio button       includeYourOrganisationSection  false
     the user enters text to a text field    css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
 
 The user completes grant transfer setup
     the user clicks the button/link         jQuery = a:contains("Complete")
@@ -264,6 +265,7 @@ The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
+    the user accept the competition terms and conditions
     the user is able to submit the application
 
 The user is able to complete Application details section
@@ -315,7 +317,7 @@ The user is able to complete Your project location section
      the user clicks the button/link           jQuery = a:contains("Your project location")
      the user should see the element           jQuery = h1:contains("Your project location")
      the user enters text to a text field      id = postcode   SE1 9HB
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your project location") > .task-status-complete
 
 The user is able to complete Your organisation section
@@ -324,7 +326,7 @@ The user is able to complete Your organisation section
      the user selects the radio button         organisationSize   MEDIUM
      the user enters text to a text field      id = turnover   500000
      the user enters text to a text field      id = headCount  100
-     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user clicks the button/link           jQuery = button:contains("Mark")
      the user should see the element           jQuery = li:contains("Your organisation") > .task-status-complete
 
 The user is able to complete your project costs section
@@ -338,11 +340,11 @@ The user is able to complete your project costs section
     the user enters text to a text field      id = subcontracting  15000
     the user enters text to a text field      id = travel  10000
     the user enters text to a text field      id = other  0
-    the user clicks the button/link           jQuery = button:contains("Mark as complete")
+    the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user opens the link in new window           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab
@@ -350,7 +352,6 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user selects the checkbox             agreeTerms
     the user clicks the button/link           id = submit-application-button
     the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
 
@@ -377,7 +378,7 @@ Validate errors on Application details page
 
 Validate errors on Public description page
     the user clicks the button/link                      jQuery = a:contains("Public description")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Please enter some text.
     the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
 
@@ -390,11 +391,11 @@ Validate errors on H2020 grant agreement page
 Validate errors on Your Finances section
     the user clicks the button/link                      jQuery = a:contains("Your finances")
     the user clicks the button/link                      jQuery = a:contains("Your project location")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.
     the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
-    the user clicks the button/link                      jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter your organisation size.
     the user should see a field and summary error        ${empty_field_warning_message}
     the user should see a field and summary error        ${empty_field_warning_message}

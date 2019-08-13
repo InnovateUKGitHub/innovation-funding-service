@@ -127,7 +127,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void getCreatedInvites() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L, pageable), COMP_ADMIN,
                 PROJECT_FINANCE);
@@ -147,32 +147,30 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void getInvitationOverview() {
-        Pageable pageable = new PageRequest(0, 20);
-        Optional<Long> innovationArea = of(1L);
+        Pageable pageable = PageRequest.of(0, 20);
         List<ParticipantStatus> status = singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable,
-                innovationArea, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, status, compliant, assessorName), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getAssessorInviteIds() {
-        Optional<Long> innovationArea = of(1L);
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
+        Optional<String> assessorName = of("name");
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L,
-                innovationArea, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, status, compliant, assessorName), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getAvailableAssessors() {
-        Pageable pageable = new PageRequest(0, 20);
-        Optional<Long> innovationArea = of(1L);
+        Pageable pageable = PageRequest.of(0, 20);
+        String assessorFilter = "";
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable,
-                innovationArea), COMP_ADMIN, PROJECT_FINANCE);
+                assessorFilter), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test

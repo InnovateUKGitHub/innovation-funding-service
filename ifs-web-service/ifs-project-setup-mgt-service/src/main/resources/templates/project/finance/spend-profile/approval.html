@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Spend profile|" />
 </head>
 <body class="govuk-template__body competition-management project-management finance-checks-overview">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,15 +12,12 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
-            </div>
-            <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
-                <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Spend profile</h2>
             </div>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
@@ -64,7 +61,7 @@
                 </li>
             </ul>
 
-            <th:block th:if="${model.notApprovedOrRejected}">
+            <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive}">
                 <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">

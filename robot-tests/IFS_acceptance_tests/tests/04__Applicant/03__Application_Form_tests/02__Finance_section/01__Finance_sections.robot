@@ -53,7 +53,7 @@ Working days per year should be 232
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
-    [Tags]  HappyPathh
+    [Tags]  HappyPath
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
@@ -85,7 +85,7 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]  happyPath
+    [Tags]  HappyPath
     Given the user navigates to Your-finances page  ${applicationName}
     And the user clicks the button/link             link = Your project costs
     # Note the Jes form is already uploaded
@@ -127,6 +127,7 @@ Applicant chooses Calculate overheads option
     Then the user fills in the project costs                Calculate  185,997
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link = Your project costs
+    And the user expands the section                        Overhead costs
     Then the user should see the element                    link = ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
     And the user clicks the button/link                     css = button[name="removeOverheadFile"]
@@ -148,17 +149,18 @@ the user adds three material rows
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
-    Wait for autosave
+
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
-    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
-    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link    jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    the user clicks the button/link                          css = td[class="govuk-table__cell alignright buttoncolumn remove"]
+    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link     css = td[class="govuk-table__cell alignright buttoncolumn remove"]
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = button:contains("Materials")
 

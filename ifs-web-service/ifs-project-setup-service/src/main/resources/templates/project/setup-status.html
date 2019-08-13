@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Set up your project'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' + pageTitle}" />
 </head>
 <body class="govuk-template__body project-overview">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -11,12 +12,15 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=${model.monitoringOfficer ? '/project-setup/monitoring-officer/dashboard' : '/applicant/dashboard'}" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'},subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div class="message-alert" th:if="${model.projectState.offline}">
             <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
         </div>
 
+        <div class="message-alert" th:if="${model.projectState.withdrawn}">
+            <p class="govuk-body">Innovate UK has withdrawn this project. For help call 0300 321 4357.</p>
+        </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
@@ -30,7 +34,7 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}"
+                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'}"
                            class="govuk-link">
                         view application feedback</a></li>
                     <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
@@ -48,7 +52,7 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:unless="${model.projectState.offline}">
+        <th:block th:if="${model.projectState.active}">
             <th:block th:unless="${model.projectComplete}">
                 <div class="message-alert">
                     <th:block th:unless="${model.monitoringOfficer}">
@@ -83,11 +87,30 @@
                                 details
                             </th:block>
                         </h2>
-                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the contact details, proposed start date and
+                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Confirm the proposed start date and
                             location of the project.</p>
-                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The contact details, start date and location of the project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The proposed start date and location of the project.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
+                </li>
+                <!--/* ========================= Project Team ========================= */-->
+                <li th:class="${model.projectTeamSection.notAccessible} ? 'read-only'" th:classappend="${model.projectTeamStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="govuk-heading-s">
+                            <a th:if="${model.projectTeamSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/team(id=${model.projectId})}"
+                               class="govuk-link">Project team</a>
+                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}"
+                               class="govuk-link">Project
+                                team</a>
+                            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
+                                team
+                            </th:block>
+                        </h2>
+                        <p th:if="${not model.projectComplete}" class="govuk-body govuk-!-margin-0">Add people to your project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body govuk-!-margin-0">The people on your project.</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectTeamStatus.getSectionStatus()})"/>
                 </li>
                    <!--/* ========================= Documents ========================= */-->
                 <li th:if="${model.competitionDocuments}" th:class="${model.documentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">

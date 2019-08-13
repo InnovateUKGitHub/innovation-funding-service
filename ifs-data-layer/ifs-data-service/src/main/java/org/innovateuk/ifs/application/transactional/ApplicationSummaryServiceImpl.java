@@ -51,7 +51,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     public static final Set<ApplicationState> NOT_SUBMITTED_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN));
+            ApplicationState.OPENED));
 
     public static final Set<ApplicationState> INELIGIBLE_STATES = unmodifiableSet(asLinkedSet(
             ApplicationState.INELIGIBLE,
@@ -59,7 +59,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     public static final Set<ApplicationState> CREATED_AND_OPEN_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.CREATED,
-            ApplicationState.OPEN));
+            ApplicationState.OPENED));
 
     public static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = unmodifiableSet(asLinkedSet(
             ApplicationState.APPROVED,
@@ -253,6 +253,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 });
     }
 
+    @Override
+    public ServiceResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId) {
+        return serviceSuccess(applicationRepository.findPrevious(competitionId));
+    }
+
     private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {
         ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
         Organisation organisation = organisationRepository.findById(organisationId).get();
@@ -294,7 +299,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Function<Pageable, Page<Application>> paginatedApplicationsSupplier,
             Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
         Sort sortField = getApplicationSummarySortField(sortBy);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sortField);
 
         if (canUseSpringDataPaginationForSummaryResults(sortBy)) {
             Page<Application> applicationResults = paginatedApplicationsSupplier.apply(pageable);

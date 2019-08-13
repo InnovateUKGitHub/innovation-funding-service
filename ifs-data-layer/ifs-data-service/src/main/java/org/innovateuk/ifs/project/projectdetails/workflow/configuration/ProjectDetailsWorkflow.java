@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
+import org.innovateuk.ifs.project.projectdetails.workflow.actions.ProjectDetailsCompleteAction;
 import org.innovateuk.ifs.project.projectdetails.workflow.guards.AllProjectDetailsSuppliedGuard;
 import org.innovateuk.ifs.project.resource.ProjectDetailsEvent;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
@@ -27,10 +28,13 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     @Autowired
     private AllProjectDetailsSuppliedGuard allProjectDetailsSuppliedGuard;
 
+    @Autowired
+    private ProjectDetailsCompleteAction projectDetailsCompleteAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectDetailsState, ProjectDetailsEvent> config) throws Exception {
-        config.withConfiguration().listener(new WorkflowStateMachineListener<>());
-
+        config.withConfiguration()
+                .listener(new WorkflowStateMachineListener<>());
     }
 
     @Override
@@ -62,12 +66,12 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .and()
             .withExternal()
                 .source(PENDING)
-                .event(PROJECT_MANAGER_ADDED)
+                .event(PROJECT_LOCATION_ADDED)
                 .target(DECIDE_IF_READY_TO_SUBMIT)
                 .and()
             .withChoice()
                 .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(SUBMITTED, allProjectDetailsSuppliedGuard)
+                .first(SUBMITTED, allProjectDetailsSuppliedGuard, projectDetailsCompleteAction)
                 .last(PENDING);
 
     }

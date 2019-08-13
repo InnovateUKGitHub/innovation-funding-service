@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.application.name + ' - Feedback overview'}" />
     </head>
 
     <body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub (linkTitle=${model.backLinkTitle},linkUrl=@{${model.backUrl}})" />
+            <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />
@@ -85,8 +85,9 @@
                                         <a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                            th:text="${model.interviewFeedbackViewModel.responseFilename}"
                                            target="_blank"
-                                           class="govuk-link">File</a>
-                                        (opens in a new window).</p>
+                                           class="govuk-link"
+                                           aria-describedby="file-hint">File</a>
+                                        <span id="file-hint">(opens in a new window)</span>.</p>
                                     <button th:unless="${model.interviewFeedbackViewModel.feedbackReleased}" name="removeResponse" class="button-secondary">Remove</button>
                                 </div>
                             </div>
@@ -104,8 +105,9 @@
                                     <a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                        th:text="${model.interviewFeedbackViewModel.responseFilename}"
                                        target="_blank"
-                                       class="govuk-link">File</a>
-                                    (opens in a new window).</p>
+                                       class="govuk-link"
+                                       aria-describedby="file-hint">File</a>
+                                    <span id="file-hint">(opens in a new window)</span>.</p>
                             </div>
                         </th:block>
                     </th:block>
@@ -114,7 +116,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-6">Application details</h2>
                 <p class="govuk-body govuk-hint">Assessors do not provide scores on these sections of the application.</p>
 
-                <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
+                <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances') or section.name.equals('Terms and conditions')}">
                     <th:block th:if="${section.name.equals('Project details')}">
                         <ul class="govuk-list list-overview govuk-!-margin-top-6">
                             <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
@@ -122,7 +124,7 @@
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-two-thirds">
                                             <h3 class="govuk-heading-s">
-                                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
+                                                <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
                                                    th:text="${question.shortName}"
                                                    class="govuk-link">Project summary</a>
                                             </h3>
@@ -153,7 +155,7 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds">
                                     <h3 class="govuk-heading-s">
-                                        <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
+                                        <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
                                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"
                                            class="govuk-link">1. Business opportunity</a>
                                     </h3>
@@ -182,21 +184,39 @@
                         <a target="_blank"
                            th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"
                            th:text="${model.interviewFeedbackViewModel.feedbackFilename}"
-                           class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>
-                        <span class="govuk-body"> (opens in a new window).</span>
+                           class="govuk-link"
+                           aria-describedby="feedback-hint">panel-assessment-feedback.pdf, 6 KB </a>
+                        <span id="feedback-hint" class="govuk-body"> (opens in a new window).</span>
                     </div>
                 </th:block>
 
                 <section th:if="${model.hasFinanceSection}">
-                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
-                    <div class="collapsible">
-                        <h3 class="govuk-heading-s">Finances summary</h3>
-                        <div class="question">
-                            <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true, supportUserAndSummaryPage = false)"></div>
-                            <h2 class="govuk-heading-m">Funding breakdown</h2>
-                            <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
+                    <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>
+                    <div class="govuk-accordion" data-module="accordion" id="accordion-finance">
+                        <div class="govuk-accordion__section">
+                            <div class="govuk-accordion__section-header">
+                                <h3 class="govuk-accordion__section-heading">
+                                    <span class="govuk-accordion__section-button" id="accordion-finance-heading-1">
+                                        Finances summary
+                                    </span>
+                                </h3>
+                            </div>
+                            <div id="accordion-finance-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finance-heading-1">
+                                <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true, supportUserAndSummaryPage = false)"></div>
+                                <h4 class="govuk-heading-m">Funding breakdown</h4>
+                                <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
+                            </div>
                         </div>
                     </div>
+                </section>
+
+                <section>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
+                    <p class="govuk-body">
+                        <a class="govuk-link"
+                           th:href="@{/application/{apId}/form/question/{qId}(apId=${model.application.id},qId=${model.applicationTermsQuestionId})}">
+                            View award terms and conditions</a>
+                    </p>
                 </section>
 
                 <div th:if="!${#lists.isEmpty(model.feedback)}">

@@ -24,26 +24,21 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(Materials materials) {
-        return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
+    public ApplicationFinanceRow toApplicationDomain(Materials materials) {
+        return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, materials.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(Materials materials) {
-        return new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
+    public ProjectFinanceRow toProjectDomain(Materials materials) {
+        return new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, materials.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
+        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity(), cost.getTarget().getId());
     }
 }

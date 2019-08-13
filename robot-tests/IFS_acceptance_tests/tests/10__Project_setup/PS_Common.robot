@@ -103,6 +103,12 @@ ${Project_Address_Page}                 ${Project_In_Setup_Details_Page}/project
 ${Internal_Competition_Status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${Notified_Application_Competition_Status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
+#Project: Project Setup Comp 10 - On Hold
+${OnHoldCompName}      Project Setup Comp 10
+${OnHoldCompId}        ${competition_ids["${OnHoldCompName}"]}
+${OnHoldProjectName}   PSC application 10
+${OnHoldProjectId}     ${project_ids["${OnHoldProjectName}"]}
+
 #Finances Checks
 ${PS_FC_Application_Title}    Office Chair for Life
 ${PS_FC_Project_Id}           ${project_ids["${PS_FC_Application_Title}"]}
@@ -172,7 +178,7 @@ partner fills in his bank details
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/
-    ${finance_contact}  ${val} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = .progress-list li:nth-child(1):contains("Completed")
+    ${finance_contact}  ${val} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = .progress-list li:nth-child(2):contains("Completed")
     the user clicks the button/link   link = Project details
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
 
@@ -210,7 +216,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
-    project lead submits project details  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
 project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
@@ -221,13 +227,13 @@ project lead submits project address
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link               jQuery = button:contains("Save address")
 
-project lead submits project details
+project lead submits project details and team
     [Arguments]  ${project_id}
     project lead submits project address    ${project_id}
-    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-manager
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/team/project-manager
     the user selects the radio button  projectManager  projectManager2
     the user clicks the button/link    jQuery = .govuk-button:contains("Save")
-    the user navigates to the page     ${server}/project-setup/project/${project_id}/details
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/team
 
 partners submit their finance contacts
     the partner submits their finance contact  ${EMPIRE_LTD_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
@@ -241,7 +247,7 @@ the partner submits their finance contact
 
 navigate to external finance contact page, choose finance contact and save
     [Arguments]  ${org_id}   ${financeContactSelector}  ${project}
-    the user navigates to the page     ${server}/project-setup/project/${project}/details/finance-contact?organisation=${org_id}
+    the user navigates to the page     ${server}/project-setup/project/${project}/team/finance-contact/organisation/${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery = .govuk-button:contains("Save")
     ${project_details}  ${complete}=  Run Keyword And Ignore Error Without Screenshots    the user should see the element    link=Select project location

@@ -2,9 +2,12 @@ package org.innovateuk.ifs.question.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.question.transactional.QuestionFileSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * QuestionController exposes competition setup application questions data and operations through a REST API.
@@ -15,10 +18,12 @@ public class QuestionSetupCompetitionController {
 
     @Autowired
     private QuestionSetupCompetitionService questionSetupCompetitionService;
+    @Autowired
+    private QuestionFileSetupCompetitionService questionFileSetupCompetitionService;
 
-    @GetMapping("/get-by-id/{id}")
-    public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
-        return questionSetupCompetitionService.getByQuestionId(id).toGetResponse();
+    @GetMapping("/get-by-id/{questionId}")
+    public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable final long questionId) {
+        return questionSetupCompetitionService.getByQuestionId(questionId).toGetResponse();
     }
 
     @PutMapping("/save")
@@ -26,20 +31,35 @@ public class QuestionSetupCompetitionController {
         return questionSetupCompetitionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
-    @PostMapping("/add-default-to-competition/{id}")
+    @PostMapping("/add-default-to-competition/{competitionId}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(
-            @PathVariable("id") final Long competitionId) {
+            @PathVariable long competitionId) {
         return questionSetupCompetitionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
-    @PostMapping("/add-research-category-question-to-competition/{id}")
-    public RestResult<Void> addResearchCategoryQuestionToCompetition(@PathVariable("id") final long competitionId) {
+    @PostMapping("/add-research-category-question-to-competition/{competitionId}")
+    public RestResult<Void> addResearchCategoryQuestionToCompetition(@PathVariable long competitionId) {
         return questionSetupCompetitionService.addResearchCategoryQuestionToCompetition(competitionId)
                 .toPostCreateResponse();
     }
 
-    @DeleteMapping("/delete-by-id/{id}")
-    public RestResult<Void> deleteById(@PathVariable("id") final long questionId) {
+    @DeleteMapping("/delete-by-id/{questionId}")
+    public RestResult<Void> deleteById(@PathVariable long questionId) {
         return questionSetupCompetitionService.delete(questionId).toDeleteResponse();
+    }
+
+    @PostMapping(value = "/template-file/{questionId}", produces = "application/json")
+    public RestResult<Void> uploadTemplateFile(@RequestHeader(value = "Content-Type", required = false) String contentType,
+                                           @RequestHeader(value = "Content-Length", required = false) String contentLength,
+                                           @RequestParam(value = "filename", required = false) String originalFilename,
+                                           @PathVariable long questionId,
+                                           HttpServletRequest request)
+    {
+        return questionFileSetupCompetitionService.uploadTemplateFile(contentType, contentLength, originalFilename, questionId, request).toPostCreateResponse();
+    }
+
+    @DeleteMapping(value = "/template-file/{questionId}", produces = "application/json")
+    public RestResult<Void> deleteFile(@PathVariable long questionId) {
+        return questionFileSetupCompetitionService.deleteTemplateFile(questionId).toDeleteResponse();
     }
 }

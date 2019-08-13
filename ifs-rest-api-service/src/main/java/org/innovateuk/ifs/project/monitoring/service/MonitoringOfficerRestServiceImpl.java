@@ -5,13 +5,14 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.monitoringOfficerResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.simpleUserListType;
 
 @Service
 public class MonitoringOfficerRestServiceImpl extends BaseRestService implements MonitoringOfficerRestService {
@@ -34,8 +35,8 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<MonitoringOfficerAssignmentResource>> findAll() {
-        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), monitoringOfficerResourceListType());
+    public RestResult<List<SimpleUserResource>> findAll() {
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), simpleUserListType());
     }
 
     @Override

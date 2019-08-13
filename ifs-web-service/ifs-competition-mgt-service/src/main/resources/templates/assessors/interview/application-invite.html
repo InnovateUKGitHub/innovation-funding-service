@@ -55,7 +55,7 @@
                             <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
                         </li>
                         <li class="govuk-tabs__list-item">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab" aria-selected="true">Invite</a>
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Invite</a>
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="govuk-tabs__tab">View status</a>
@@ -93,7 +93,7 @@
                                     <tbody class="govuk-table__body">
                                     <tr class="govuk-table__row" th:each="app : ${model.applications}">
                                         <td class="govuk-table__cell">
-                                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
+                                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})}"
                                                th:text="${app.applicationId}"
                                                class="govuk-link">123
                                             </a>

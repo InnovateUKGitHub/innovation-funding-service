@@ -46,7 +46,7 @@
             Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
         </p>
 
-        <th:block th:insert="application/readonly/application-read-only :: collapsible-list  (${model.applicationReadOnlyViewModel})" />
+        <th:block th:insert="application/readonly/application-read-only :: accordion  (${model.applicationReadOnlyViewModel})" />
 
         <div th:if="${!model.competition.isOpen() and !model.application.isSubmitted()}">
             <div class="warning-alert">
@@ -60,35 +60,6 @@
                 </div>
 
                 <form class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
-
-                    <th:block th:if="${model.competition.onlyOneOrgAllowedPerApplication() and model.applicationReadyForSubmit}">
-                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreeTerms')} ? 'govuk-form-group--error'">
-                            <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
-                                    <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
-                                </legend>
-                                <th:block th:if="${#fields.hasErrors('agreeTerms')}">
-                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('agreeTerms')}" th:text="${err}" />
-                                </th:block>
-                                <div class="govuk-checkboxes">
-                                    <div class="govuk-checkboxes__item">
-                                        <input id="agreeTerms"
-                                               class="govuk-checkboxes__input"
-                                               th:field="*{agreeTerms}"
-                                               type="checkbox"
-                                               value="true"
-                                               data-switches-button-status="#submit-application-button"
-                                               data-autosave-disabled />
-                                        <label for="agreeTerms"
-                                               class="govuk-label govuk-checkboxes__label">
-                                            <th:block th:if="${model.competition.isH2020()}">By ticking this box you are accepting the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competition.id})}" class="govuk-link" target="_blank">terms and conditions</a> (opens in a new window).</th:block>
-                                            <th:block th:unless="${model.competition.isH2020()}">I agree to the standard terms set out in the <a href="/files/draft-procurement-contract.pdf" class="govuk-link" target="_blank">draft contract</a> (opens in a new window). I understand that I will receive the final contract, which will include the full terms and conditions, if my application is successful.</th:block>
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </th:block>
                     <button id="submit-application-button"
                             th:disabled="${!model.applicationReadyForSubmit}"
                             class="govuk-button"

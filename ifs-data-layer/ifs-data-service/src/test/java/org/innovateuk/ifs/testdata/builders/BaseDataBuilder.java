@@ -33,7 +33,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinance
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -68,12 +68,13 @@ import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLette
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -153,9 +154,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
+    protected ProjectStateService projectStateService;
     protected ProjectDetailsService projectDetailsService;
     protected LegacyMonitoringOfficerService monitoringOfficerService;
-    protected FinanceRowCostsService financeRowCostsService;
+    protected ApplicationFinanceRowService financeRowCostsService;
     protected SectionService sectionService;
     protected SectionStatusService sectionStatusService;
     protected UsersRolesService usersRolesService;
@@ -243,9 +245,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         projectService = serviceLocator.getBean(ProjectService.class);
+        projectStateService = serviceLocator.getBean(ProjectStateService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
-        financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
+        financeRowCostsService = serviceLocator.getBean(ApplicationFinanceRowService.class);
         financeService = serviceLocator.getBean(FinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
         sectionStatusService = serviceLocator.getBean(SectionStatusService.class);

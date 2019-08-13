@@ -29,7 +29,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void calculatedTotalMustBeZeroWhenQuantityOrCostAreNotSetTest() throws Exception {
-        Materials materialWithoutValues = new Materials();
+        Materials materialWithoutValues = new Materials(1L);
         Assert.assertEquals(BigDecimal.ZERO, materialWithoutValues.getTotal());
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${summaryModel.applicationId}: ${summaryModel.projectName} - Eligibility check for ${summaryModel.organisationName}|" />
 </head>
 
 <body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">
@@ -16,7 +16,7 @@
     <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <div class="success-alert">
@@ -103,13 +103,16 @@
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-and-continue">Save form</button>
 
-                <th:block th:insert="application/your-project-costs-fragments :: labour" />
-                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
-                <th:block th:insert="application/your-project-costs-fragments :: materials" />
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
-                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
-                <th:block th:insert="application/your-project-costs-fragments :: travel" />
-                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+                <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+                    <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                    <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads" />
+                    <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                    <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                    <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                    <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                    <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+                </div>
 
             </form>
             <div class="govuk-grid-row total-cost">
@@ -138,8 +141,9 @@
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
                        class="govuk-link"
                        th:text="${summaryModel.jesFileDetails?.filename}"
-                       target="_blank">The-uploaded-file-example.pdf</a>
-                    (opens in a new window).
+                       target="_blank"
+                       aria-describedby="file-download-hint">The-uploaded-file-example.pdf</a>
+                    <span id="file-download-hint">(opens in a new window)</span>.
                 </p>
             </div>
         </th:block>
@@ -149,7 +153,7 @@
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
 
-            <th:block th:unless="${summaryModel.isApproved()}">
+            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
                 <p th:unless="${summaryModel.isH2020()}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>

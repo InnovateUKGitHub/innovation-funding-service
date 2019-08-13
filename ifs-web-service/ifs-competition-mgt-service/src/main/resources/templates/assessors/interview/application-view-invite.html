@@ -30,7 +30,7 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
-                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
+                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})}"
                                th:text="${model.applicationId}"
                                class="govuk-link">114
                             </a>
@@ -43,8 +43,9 @@
                                 <a th:text="${model.feedbackFilename}"
                                    th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
                                    target="_blank"
-                                   class="govuk-link">Uploaded-file.pdf</a>
-                                <p class="govuk-hint">(opens in a new window).</p>
+                                   class="govuk-link"
+                                   aria-describedby="attachment-hint">Uploaded-file.pdf</a>
+                                <p class="govuk-hint"><span id="attachment-hint">(opens in a new window)</span>.</p>
                             </div>
                             <th:block th:unless="${model.hasAttachment()}">No feedback uploaded</th:block>
                         </td>

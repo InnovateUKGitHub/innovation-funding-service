@@ -16,7 +16,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-9061 Internal server error on bank details being approved multiple times by proj finance
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Experian    Project Setup
+Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../../resources/defaultResources.robot
 
@@ -179,8 +179,9 @@ The user is able to see company details with scores
 
 Project finance navigates to bank details requiring action
     the user navigates to the page    ${server}/management/dashboard/project-setup
+    the user clicks the button/link   jQuery = button:contains("Next")
     the user clicks the button/link   link = ${PS_Competition_Name}
-    the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(5) a  # Complete Bank details
+    the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(6) a  # Complete Bank details
 
 Project finance navigates to review bank details page
     the user navigates to the page                      ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details

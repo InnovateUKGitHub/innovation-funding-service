@@ -27,6 +27,11 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
     }
 
+    public boolean isProjectTeamCompleted() {
+        return projectTeamStatus.checkForAllPartners(projectPartnerStatusResource ->
+                                                             COMPLETE.equals(projectPartnerStatusResource.getProjectTeamStatus()));
+    }
+
     public boolean isMonitoringOfficerAssigned() {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getMonitoringOfficerStatus());
     }
@@ -87,7 +92,7 @@ class SetupProgressChecker {
         return projectTeamStatus.getLeadPartnerStatus().isGrantOfferLetterSent();
     }
 
-    public boolean isOffline() {
-        return projectTeamStatus.getProjectState().isOffline();
+    public boolean isOfflineOrWithdrawn() {
+        return projectTeamStatus.getProjectState().isOffline() || projectTeamStatus.getProjectState().isWithdrawn();
     }
 }

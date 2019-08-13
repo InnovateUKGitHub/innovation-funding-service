@@ -19,6 +19,7 @@ import org.innovateuk.ifs.competition.resource.search.PreviousCompetitionSearchR
 import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -29,10 +30,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,8 +42,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -54,7 +53,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -107,7 +105,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     private Long competitionId = 1L;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.COMP_ADMIN)).build();
         setLoggedInUser(userResource);
@@ -128,19 +126,23 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Test
     public void findProjectSetupCompetitions() {
+        int page = 0;
+        int size = 20;
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(competitionRepositoryMock.findProjectSetup()).thenReturn(expectedCompetitions);
+        when(competitionRepositoryMock.findProjectSetup(any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
 
-        List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccess();
+        CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
-        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response);
+        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
     }
 
     @Test
     public void findProjectSetupCompetitionsWhenLoggedInAsStakeholder() {
+        int page = 0;
+        int size = 20;
         UserResource stakeholderUser = newUserResource().withId(1L).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         User user = newUser().withId(stakeholderUser.getId()).withRoles(singleton(STAKEHOLDER)).build();
         setLoggedInUser(stakeholderUser);
@@ -148,15 +150,15 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(expectedCompetitions);
+        when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholder(eq(stakeholderUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
 
-        List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccess();
+        CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
-        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response);
-        verify(competitionRepositoryMock).findProjectSetupForInnovationLeadOrStakeholder(stakeholderUser.getId());
-        verify(competitionRepositoryMock, never()).findProjectSetup();
+        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
+        verify(competitionRepositoryMock).findProjectSetupForInnovationLeadOrStakeholder(eq(stakeholderUser.getId()), any());
+        verify(competitionRepositoryMock, never()).findProjectSetup(any());
     }
 
     @Test
@@ -171,47 +173,33 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Test
     public void findNonIfsCompetitions() {
+        int page = 0;
+        int size = 20;
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(newPublicContent().build());
-        when(competitionRepositoryMock.findNonIfs()).thenReturn(competitions);
+        when(competitionRepositoryMock.findNonIfs(any())).thenReturn(new PageImpl<>(competitions, PageRequest.of(page, size), 1L));
 
-        List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccess();
+        CompetitionSearchResult response = service.findNonIfsCompetitions(page, size).getSuccess();
 
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response.getContent());
     }
 
     @Test
     public void findPreviousCompetitions() {
-        Long competition2Id = 2L;
-        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
-        when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
+        int page = 0;
+        int size = 20;
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build(1));
+        when(competitionRepositoryMock.findPrevious(any())).thenReturn(new PageImpl<>(competitions, PageRequest.of(page, size), 30));
+        when(applicationRepository.countPrevious(competitionId)).thenReturn(1);
+        when(projectRepositoryMock.countByApplicationCompetitionId(competitionId)).thenReturn(2);
+        when(projectRepositoryMock.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, ProjectState.COMPLETED_STATES)).thenReturn(3);
 
-        MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(milestone));
+        CompetitionSearchResult response = service.findPreviousCompetitions(page, size).getSuccess();
 
-        milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault())).build();
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition2Id)).thenReturn(serviceSuccess(milestone));
-
-        List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccess();
-
-        //Ensure sorted by open date
-        assertEquals((long) competition2Id, response.get(0).getId());
-        assertEquals(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault()), ((PreviousCompetitionSearchResultItem) response.get(0)).getOpenDate());
-
-        assertEquals((long) competitionId, response.get(1).getId());
-        assertEquals(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault()), ((PreviousCompetitionSearchResultItem) response.get(1)).getOpenDate());
-    }
-
-    @Test
-    public void findPreviousCompetitions_NoOpenDate() {
-        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceFailure(GENERAL_UNEXPECTED_ERROR));
-
-        List<CompetitionSearchResultItem> response = service.findPreviousCompetitions().getSuccess();
-
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
-        assertNull(((PreviousCompetitionSearchResultItem) response.get(0)).getOpenDate());
+        assertEquals((long) competitionId, response.getContent().get(0).getId());
+        assertEquals((Integer) 1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
+        assertEquals((Integer) 2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
+        assertEquals((Integer) 3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
     }
 
     @Test
@@ -223,7 +211,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         when(competitionRepositoryMock.countLive()).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
-        when(competitionRepositoryMock.countFeedbackReleased()).thenReturn(countFeedbackReleased);
+        when(competitionRepositoryMock.countPrevious()).thenReturn(countFeedbackReleased);
 
         CompetitionCountResource response = service.countCompetitions().getSuccess();
 
@@ -239,7 +227,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(competitionRepositoryMock.countLiveForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetupForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countProjectSetup);
-        when(competitionRepositoryMock.countFeedbackReleasedForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countFeedbackReleased);
+        when(competitionRepositoryMock.countPreviousForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countFeedbackReleased);
         when(userRepositoryMock.findById(innovationLeadUser.getId())).thenReturn(Optional.of(newUser().withId(innovationLeadUser.getId()).withRoles(singleton(Role.INNOVATION_LEAD)).build()));
 
         response = service.countCompetitions().getSuccess();
@@ -254,7 +242,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(competitionRepositoryMock.countLiveForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetupForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(countProjectSetup);
-        when(competitionRepositoryMock.countFeedbackReleasedForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(countFeedbackReleased);
+        when(competitionRepositoryMock.countPreviousForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(countFeedbackReleased);
         when(userRepositoryMock.findById(stakeholderUser.getId())).thenReturn(Optional.of(newUser().withId(stakeholderUser.getId()).withRoles(singleton(Role.STAKEHOLDER)).build()));
 
         response = service.countCompetitions().getSuccess();
@@ -271,7 +259,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         int page = 1;
         int size = 20;
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
@@ -283,6 +271,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
+        when(queryResponse.getPageable()).thenReturn(pageRequest);
         when(competitionRepositoryMock.search(searchLike, pageRequest)).thenReturn(queryResponse);
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccess();
 
@@ -322,7 +311,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -331,7 +320,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
                                            Competition competition, UserResource userResource, User user) {
 
         String searchLike = "%" + searchQuery + "%";
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Competition> queryResponse = mock(Page.class);
 
         setLoggedInUser(userResource);
@@ -342,9 +331,10 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
+        when(queryResponse.getPageable()).thenReturn(pageRequest);
 
         if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-            when(competitionRepositoryMock.searchForLeadTechnologist(searchLike, user.getId(), pageRequest)).thenReturn(queryResponse);
+            when(competitionRepositoryMock.searchForInnovationLeadOrStakeholder(searchLike, user.getId(), pageRequest)).thenReturn(queryResponse);
         } else if (user.hasRole(SUPPORT)) {
             when(competitionRepositoryMock.searchForSupportUser(searchLike, pageRequest)).thenReturn(queryResponse);
         }
@@ -390,7 +380,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -415,7 +405,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock, never()).searchForLeadTechnologist(any(), any(), any());
+        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }

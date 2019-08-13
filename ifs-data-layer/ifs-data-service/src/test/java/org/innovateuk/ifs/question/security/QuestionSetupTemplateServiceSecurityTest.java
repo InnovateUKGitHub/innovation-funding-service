@@ -3,15 +3,16 @@ package org.innovateuk.ifs.question.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateService;
-import org.innovateuk.ifs.question.transactional.QuestionSetupTemplateServiceImpl;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class QuestionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<QuestionSetupTemplateService> {
@@ -30,27 +31,27 @@ public class QuestionSetupTemplateServiceSecurityTest extends BaseServiceSecurit
     }
 
     @Test
-    public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+    public void allServiceFunctionsShouldBeAuthorizedForCompAdmin() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetition(1L);
     }
 
     @Test
-    public void testAllServiceFunctionsShouldBeAuthorizedForProjectFinance() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+    public void allServiceFunctionsShouldBeAuthorizedForProjectFinance() {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetition(1L);
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void testAddDefaultAssessedQuestionToCompetitionShouldFailForAnonymousUser() {
+    public void addDefaultAssessedQuestionToCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
+    public void deleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
         classUnderTest.deleteQuestionInCompetition(1L);
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='All competitions'" />
 </head>
 <body class="govuk-template__body competition-management competition-overview">
 
@@ -20,20 +20,48 @@
             </h2>
             <th:block  th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-            <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS)}"
-                     class="govuk-tabs__panel">
+            <section class="govuk-tabs__panel">
                 <h2 class="govuk-heading-m"
                     th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
-                <ul class="govuk-list list-overview">
-                    <li class="govuk-grid-row" th:each="competition : ${previousComps}">
-                        <th:block
-                            th:insert="competition/dashboard :: dashboard-row"
-                            th:with="competition=${competition},
-                                innovationAreas=competition.innovationAreaNames,
-                                cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                                customLink='/competition/'+${competition.id}+'/applications/previous'"/>
-                    </li>
-                </ul>
+
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header width-80" scope="col">ID</th>
+                        <th class="govuk-table__header" scope="col">Title</th>
+                        <th class="govuk-table__header width-100" scope="col">Type</th>
+                        <th class="govuk-table__header" scope="col">Innovation area</th>
+                        <th class="govuk-table__header width-80" scope="col">Number of submitted applications</th>
+                        <th class="govuk-table__header width-80" scope="col">Number of completed projects</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__head">
+                    <tr class="govuk-table__row" th:each="competition : ${model.result.content}">
+                        <td class="govuk-table__cell" th:text="${competition.id}"></td>
+                        <td class="govuk-table__cell">
+                            <a th:href="@{/competition/{competitionId}/previous(competitionId=${competition.id})}"
+                               th:text="${competition.name}"
+                               class="govuk-link">
+                                My competition
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${competition.competitionTypeName}"></td>
+                        <td class="govuk-table__cell">
+                            <th:block th:unless="${competition.innovationAreaNames.size() > 5}"
+                               th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}">Innovation</th:block>
+                            <th:block th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</th:block>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${competition.applications}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="|${competition.completeProjects} of ${competition.projects}|"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <form method="get"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                    <th:block
+                        th:insert="fragments/competition-management :: applications-pagination(results=${model.result})"/>
+                </form>
             </section>
         </div>
 

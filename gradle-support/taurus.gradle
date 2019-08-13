@@ -2,6 +2,7 @@ ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 
 ext.server_url = project.properties['serverUrl'] ?: "ifs.local-dev"
 ext.authorisation_url = project.properties['authorisationUrl'] ?: "auth.local-dev:9443"
+ext.fail_criteria = project.properties['failCriteria'] ?: "succ<100%, stop as failed"
 ext.invite_users = project.properties['inviteUsers'] ?: 1
 ext.registration_users = project.properties['registrationUsers'] ?: 1
 ext.front_door_users = project.properties['frontDoorUsers'] ?: 1

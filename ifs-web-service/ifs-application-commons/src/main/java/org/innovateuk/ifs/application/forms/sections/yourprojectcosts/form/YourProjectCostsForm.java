@@ -12,6 +12,8 @@ public class YourProjectCostsForm {
 
     private OverheadForm overhead = new OverheadForm();
 
+    private Map<String, ProcurementOverheadRowForm> procurementOverheadRows = new LinkedHashMap<>();
+
     private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
     private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
@@ -30,6 +32,14 @@ public class YourProjectCostsForm {
 
     public void setOverhead(OverheadForm overhead) {
         this.overhead = overhead;
+    }
+
+    public Map<String, ProcurementOverheadRowForm> getProcurementOverheadRows() {
+        return procurementOverheadRows;
+    }
+
+    public void setProcurementOverheadRows(Map<String, ProcurementOverheadRowForm> procurementOverheadRows) {
+        this.procurementOverheadRows = procurementOverheadRows;
     }
 
     public Map<String, MaterialRowForm> getMaterialRows() {
@@ -90,23 +100,29 @@ public class YourProjectCostsForm {
 
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
-        return calculateTotal(labour.getRows());
+        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
     }
 
     public BigDecimal getTotalOverheadCosts() {
-        switch (overhead.getRateType()) {
-            case NONE:
-                return BigDecimal.ZERO;
-            case DEFAULT_PERCENTAGE:
-                return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
-            case TOTAL:
-                return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+        if (overhead != null && overhead.getRateType() != null) {
+            switch (overhead.getRateType()) {
+                case NONE:
+                    return BigDecimal.ZERO;
+                case DEFAULT_PERCENTAGE:
+                    return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
+                case TOTAL:
+                    return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+            }
         }
         return BigDecimal.ZERO;
     }
 
     public BigDecimal getTotalMaterialCosts() {
         return calculateTotal(materialRows);
+    }
+
+    public BigDecimal getTotalProcurementOverheadCosts() {
+        return calculateTotal(procurementOverheadRows);
     }
 
     public BigDecimal getTotalCapitalUsageCosts() {
@@ -129,6 +145,7 @@ public class YourProjectCostsForm {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
                 .add(getTotalMaterialCosts())
+                .add(getTotalProcurementOverheadCosts())
                 .add(getTotalCapitalUsageCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())

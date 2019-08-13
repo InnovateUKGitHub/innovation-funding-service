@@ -39,7 +39,24 @@
   color: $govuk-error-colour;
 }
 
-.collapsible,
+%badge {
+  padding-left: 30px;
+  position: relative;
+
+  &:before{
+    position: absolute;
+    left: 0px;
+    top: 2px;
+    background-size: 14px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    content:""
+  }
+}
+
+.govuk-accordion,
 .list-overview {
   li {
     position: relative;
@@ -288,5 +305,37 @@ ul {
         }
       }
     }
+  }
+}
+
+.ifs-project-status-withdrawn {
+  @extend %badge;
+
+  &:before {
+    background-color: $govuk-error-colour;
+  }
+}
+
+.ifs-project-status-completed-offline {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("green");
+  }
+}
+
+.ifs-project-status-managed-offline {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("blue");
+  }
+}
+
+.ifs-project-status-on-hold {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("yellow");
   }
 }

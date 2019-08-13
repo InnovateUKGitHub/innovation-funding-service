@@ -74,8 +74,9 @@ public class FinanceOverviewController {
                 = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
         ProjectResource project = projectService.getById(projectId);
         long applicationId = project.getApplication();
-        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations),
-                getProjectFinanceCostBreakdown(projectId, sortedOrganisations), applicationId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations, competition),
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId);
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
@@ -83,16 +84,15 @@ public class FinanceOverviewController {
         return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
     }
 
-    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs) {
+    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) ->
                 financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), org.getOrganisation()));
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new FinanceCheckSummariesViewModel(summaries, partnerOrgs, competition.getFundingType());
     }
 
-    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
+    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<ProjectFinanceResource> finances = financeService.getProjectFinances(projectId);
-        return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs);
+        return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
     }
 
 }

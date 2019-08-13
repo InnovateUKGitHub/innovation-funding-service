@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='All competitions'" />
 </head>
 <body class="govuk-template__body competition-management competition-overview">
 
@@ -24,7 +24,7 @@
                 <h2 class="govuk-heading-m"
                     th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
                 <ul class="govuk-list list-overview">
-                    <li class="govuk-grid-row" th:each="competition : ${model.getAllCompetitions()}">
+                    <li class="govuk-grid-row" th:each="competition : ${model.result.content}">
                         <th:block
                             th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
                             th:with="competition=${competition},
@@ -33,7 +33,13 @@
                     </li>
                 </ul>
                 <a th:href="@{/non-ifs-competition/create}" class="govuk-button govuk-!-margin-top-6">Create non-IFS competition</a>
+                <form method="get"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                    <th:block
+                        th:insert="fragments/competition-management :: applications-pagination(results=${model.result})"/>
+                </form>
             </section>
+
         </div>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

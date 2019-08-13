@@ -4,6 +4,8 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 ...
 ...               IFS-4569: As an applicant I am able to input a non-UK postcode for Project location
+...
+...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -11,14 +13,13 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
 *** Test Cases ***
-Mark as complete Your funding with only one input should not be possible
-    [Documentation]    INFUND-2214
+Your funding: client and server side validations
+    [Documentation]    INFUND-2214  IFS-5920
     [Tags]
-    When the user clicks the button/link      link = Your funding
-    And the user selects the radio button     requestingFunding   true
-    And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
-    And Set Focus To Element                  css = [data-target="other-funding-table"] label
-    Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
+    Given the user clicks the button/link                link = Your funding
+    And the user selects the radio button                requestingFunding   true
+    When the user enters text to a text field            css = [name^="grantClaimPercentage"]  ${EMPTY}
+    Then the user should see validations on your funding page
 
 Other funding client side
     [Documentation]    INFUND-2214
@@ -163,16 +164,16 @@ Capital usage server side
 Subcontracting costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
-    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
+    When the user enters text to a text field   css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
     Then the user should see a field error      ${empty_field_warning_message}
 
 Subcontracting costs server side
     [Documentation]    INFUND-844
-    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    -100
-    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
+    When the user enters text to a text field            css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="cost"]    -100
+    And the user enters text to a text field             css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
@@ -277,6 +278,11 @@ Remove row
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
+
+the user should see validations on your funding page
+    the user should see a field error               ${empty_field_warning_message}
+    the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error   ${empty_field_warning_message}
 
 Custom suite teardown
     Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}

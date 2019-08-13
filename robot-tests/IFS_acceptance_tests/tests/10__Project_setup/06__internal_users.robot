@@ -25,6 +25,7 @@ Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
     [Tags]  HappyPath
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link     jQuery = button:contains("Next")
     When the user clicks the button/link    link = ${PS_Competition_Name}
     Then the user is able to see projects in PS
     And navigate to an application in PS
@@ -36,6 +37,12 @@ Project Finance can visit an application and navigate back
     When the user clicks the button/link  link = ${PS_IU_Application_No}
     Then the user navigates back successfully
 
+Project Finance can visit link to the competition from application overview
+    [Documentation]  IFS-6060
+    Given The user clicks the button/link  link = ${PS_IU_Application_No}
+    When the user clicks the button/link   link = ${PS_Competition_Name}
+    Then The user should be redirected to the correct page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
@@ -43,9 +50,10 @@ Project Finance can see the status of projects in PS
 
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720, IFS-1881
-    [Tags]    Experian  HappyPath
+    [Tags]    HappyPath
     [Setup]    Log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link           jQuery = button:contains("Next")
     When the user clicks the button/link          link = ${PS_Competition_Name}
     Then the user isn't able to see bank details and finance checks
 
@@ -62,8 +70,8 @@ The comp admin navigates to project summary page
 
 The user isn't able to see bank details and finance checks
     the user should see the element                                  link = All projects
-    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(4) a
-    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5) a
+    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5) a
+    the user should not see the element                              css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(6) a
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/review-all-bank-details    ${403_error_message}
     the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_IU_Application_Project}/finance-check    ${403_error_message}
 
@@ -71,11 +79,11 @@ The user is able to see project status in PS
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok
     the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok
-    the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action
+    the user should see the element   css = #table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.action
 
 the user navigates back successfully
     the user should see the element                     jQuery = h1:contains("Application overview")
-    the user clicks the button/link                     link = Back
+    the user clicks the button/link                     link = Back to project setup
     the user should be redirected to the correct page   ${server}/project-setup-management/competition/${PS_Competition_Id}/status
 
 Navigate to an application in PS

@@ -25,35 +25,39 @@ public class BankDetailsReviewModelPopulator {
     @Autowired
     private ProjectService projectService;
 
-    public BankDetailsReviewViewModel populateBankDetailsReviewViewModel(OrganisationResource organisation, ProjectResource project, BankDetailsResource bankDetails){
+    public BankDetailsReviewViewModel populateBankDetailsReviewViewModel(OrganisationResource organisation,
+                                                                         ProjectResource project,
+                                                                         BankDetailsResource bankDetails) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        ProjectUserResource financeContact = getOnlyElement(simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.getId().equals(pr.getOrganisation())));
-        return buildViewModel(project, financeContact, organisation, bankDetails);
+        ProjectUserResource financeContact = getOnlyElement(simpleFilter(
+                projectUsers,
+                pr -> pr.isFinanceContact() && organisation.getId().equals(pr.getOrganisation())
+        ));
+        boolean projectIsActive = project.getProjectState().isActive();
+
+        return new BankDetailsReviewViewModel(project.getId(),
+                                              project.getApplication(),
+                                              project.getName(),
+                                              financeContact.getUserName(),
+                                              financeContact.getEmail(),
+                                              financeContact.getPhoneNumber(),
+                                              organisation.getId(),
+                                              organisation.getName(),
+                                              organisation.getCompaniesHouseNumber(),
+                                              bankDetails.getAccountNumber(),
+                                              bankDetails.getSortCode(),
+                                              bankDetails.getAddress().getAsSingleLine(),
+                                              bankDetails.isVerified(),
+                                              bankDetails.getCompanyNameScore(),
+                                              bankDetails.getRegistrationNumberMatched(),
+                                              bankDetails.getAddressScore(),
+                                              bankDetails.isApproved(),
+                                              bankDetails.isManualApproval(),
+                                              projectIsActive);
     }
 
-    private BankDetailsReviewViewModel buildViewModel(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
-        return new BankDetailsReviewViewModel(
-                project.getId(),
-                project.getApplication(),
-                project.getName(),
-                financeContact.getUserName(),
-                financeContact.getEmail(),
-                financeContact.getPhoneNumber(),
-                organisation.getId(),
-                organisation.getName(),
-                organisation.getCompaniesHouseNumber(),
-                bankDetails.getAccountNumber(),
-                bankDetails.getSortCode(),
-                bankDetails.getAddress().getAsSingleLine(),
-                bankDetails.isVerified(),
-                bankDetails.getCompanyNameScore(),
-                bankDetails.getRegistrationNumberMatched(),
-                bankDetails.getAddressScore(),
-                bankDetails.isApproved(),
-                bankDetails.isManualApproval());
-    }
 
-    public void populateExitingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, ChangeBankDetailsForm form){
+    public void populateExistingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, ChangeBankDetailsForm form){
         form.setOrganisationName(organisation.getName());
         form.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         form.setSortCode(bankDetails.getSortCode());

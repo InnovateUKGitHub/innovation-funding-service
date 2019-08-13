@@ -72,7 +72,7 @@ function startPybot() {
     fi
 
 
-    pybot --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    python3 -m robot --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -150,6 +150,8 @@ section "=> GETTING SCRIPT VARIABLES"
 #cd "$(dirname "$0")"
 scriptDir="/robot-tests"
 cd ${scriptDir}
+
+./openshift/fileForEachDBEntry.sh
 
 webBase="<<SHIB-ADDRESS>>"
 
@@ -252,3 +254,4 @@ fi
 
 echo "DONE"
 sleep 1000000000000
+

@@ -12,11 +12,13 @@ The competition admin creates competition
     the user navigates to the page              ${CA_UpcomingComp}
     the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
-    the user selects the Terms and Conditions
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
+    ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
-    the user marks the application as done      ${projectGrowth}  ${compType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
@@ -62,14 +64,25 @@ the user fills in the CS Initial details
     the user clicks the button/link                      link = Competition setup
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
+the user selects procurement Terms and Conditions
+    the user clicks the button/link       link = Terms and conditions
+    the user clicks the button/link       jQuery = label:contains("Procurement")
+    the user clicks the button/link       jQuery = button:contains("Done")
+    then the user should see a field and summary error  Upload a terms and conditions document.
+    the user uploads the file             css = .inputfile  ${valid_pdf}
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user clicks the button/link       link = Competition setup
+    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
+
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
-    the user clicks the button/link      css = button.govuk-button  #Done
+    the user clicks the button/link      jQuery = button:contains("Done")
     the user clicks the button/link      link = Competition setup
     the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link = Funding information
+    the user clicks the button/link       jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field  id = funders[0].funder    Aerospace Technology Institute (ATI)
     the user clicks the button/link       id = funders[0].funder
     click element                         id = funders[0].funder__option--0
@@ -77,8 +90,6 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    the user clicks the button/link       jQuery = button:contains("Generate code")
-    sleep  2s  #This sleeps is intended as the competition Code needs some time
     textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
@@ -93,8 +104,7 @@ the user fills in the CS Eligibility
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
-    the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
-    the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
+    the user selects the radio button   resubmission  yes
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
@@ -134,6 +144,12 @@ the user fills in the CS Documents in other projects
     the user clicks the button/link          css = button[type = "submit"]
     the user should see the element          jQuery = span:contains("Test document type")
     the user clicks the button/link          link = Competition setup
+
+the user marks the procurement application as done
+    [Arguments]  ${growthTable}  ${comp_type}
+    the user clicks the button/link                               link = Application
+    the user marks the Application details section as complete    ${comp_type}
+    the assessed questions are marked as complete(procurement)    ${growthTable}
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -184,9 +200,8 @@ the user marks the Finance section as complete if it's present
 the user opts no finances for EOI comp
     the user clicks the button/link    link = Finances
     the element should be disabled     application-finance-standard
-    the element should be disabled     application-finance-standard-with-vat
     the user selects the radio button  applicationFinanceType  NO_FINANCES
-    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -215,6 +230,25 @@ the user marks each question as complete
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
     the user clicks the button/link  css = button[type="submit"]
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
+
+the assessed questions are marked as complete(procurement)
+    [Arguments]   ${growthTable}
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+     \    the user marks each procurement question as complete    ${ELEMENT}
+     the user should see the element           jQuery = button:contains("Add question")
+     the user fills in the Finances questions  ${growthTable}  false  true
+     the user clicks the button/link           jQuery = button:contains("Done")
+     the user clicks the button/link           link = Competition setup
+
+the user marks each procurement question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
+    the user selects the radio button      question.templateDocument  1
+    the user enters text to a text field   id = question.templateTitle   ${question_link}
+    then the user uploads the file         id = template-document-file   ${ods_file}
+    the user selects the checkbox          question.allowedTemplateResponseFileTypes1
+    the user clicks the button/link        css = button[type="submit"]
+    the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
@@ -332,10 +366,9 @@ the user is able to configure the new question
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
     the user selects the radio button     question.appendix  1
-    click element                         css = label[for="question.allowedFileTypes1"]
-    the user clicks the button/link       css = label[for="question.allowedFileTypes2"]
+    click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
+    the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
-
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -406,7 +439,3 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=GOV.UK
-    Wait For Autosave

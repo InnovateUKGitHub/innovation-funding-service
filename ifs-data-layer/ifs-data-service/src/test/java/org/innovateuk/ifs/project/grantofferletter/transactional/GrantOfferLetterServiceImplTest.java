@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.project.grantofferletter.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -22,20 +18,14 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
-import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
@@ -45,7 +35,6 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -55,19 +44,15 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -84,7 +69,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -94,13 +78,10 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESE
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
-import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterAcademicFinanceTableBuilder.newGrantOfferLetterAcademicFinanceTable;
-import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterFinanceTotalsTableBuilder.newGrantOfferLetterFinanceTotalsTable;
-import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterIndustrialFinanceTableBuilder.newGrantOfferLetterIndustrialFinanceTable;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
@@ -115,8 +96,6 @@ import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOfferLetterService> {
 
-    private static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
-
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -128,32 +107,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private ProjectUser leadPartnerProjectUser;
     private Project project;
     private List<OrganisationResource> organisationResources;
-    private GrantOfferLetterIndustrialFinanceTable industrialFinanceTable;
-    private GrantOfferLetterAcademicFinanceTable academicFinanceTable;
-    private GrantOfferLetterFinanceTotalsTable totalsTable;
     private List<PartnerOrganisationResource> partnerOrganisationsResource;
 
     private Address address;
-
-    private FileEntryResource fileEntryResource;
-
-    private FileEntry createdFile;
-
-    private String htmlFile;
-
-    private Pair<File, FileEntry> fileEntryPair;
-
-    @Captor
-    ArgumentCaptor<Map<String, Object>> templateArgsCaptor;
-
-    @Captor
-    ArgumentCaptor<String> templateCaptor;
-
-    @Captor
-    ArgumentCaptor<FileEntryResource> fileEntryResCaptor;
-
-    @Captor
-    ArgumentCaptor<Supplier<InputStream>> supplierCaptor;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;
@@ -174,9 +130,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private UserRepository userRepositoryMock;
 
     @Mock
-    private SpendProfileService spendProfileServiceMock;
-
-    @Mock
     private NotificationService notificationServiceMock;
 
     @Mock
@@ -192,16 +145,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private CostRepository costRepositoryMock;
 
     @Mock
-    private GrantOfferLetterIndustrialFinanceTablePopulator industrialFinanceTablePopulatorMock;
-
-    @Mock
-    private GrantOfferLetterAcademicFinanceTablePopulator academicFinanceTablePopulatorMock;
-
-    @Mock
-    private GrantOfferLetterFinanceTotalsTablePopulator financeTotalsTablePopulatorMock;
-
-    @Mock
-    private GrantProcessService grantProcessService;
+    private GrantProcessService grantProcessServiceMock;
 
     @Before
     public void setUp() {
@@ -259,15 +203,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 withAddress(address).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withProjectProcess(newProjectProcess().
+                        withActivityState(ProjectState.SETUP).
+                        build()).
                 build();
 
         SpendProfile orgSpendProfile = newSpendProfile()
                 .withSpendProfileFigures(singletonList(newCost().build()))
                 .build();
-
-        industrialFinanceTable = newGrantOfferLetterIndustrialFinanceTable().build();
-        academicFinanceTable = newGrantOfferLetterAcademicFinanceTable().build();
-        totalsTable = newGrantOfferLetterFinanceTotalsTable().build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));
@@ -278,9 +221,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(Optional.of(orgSpendProfile));
         when(costRepositoryMock.findByCostGroupId(anyLong())).thenReturn(singletonList(newCost().build()));
-        when(industrialFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(industrialFinanceTable);
-        when(academicFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(academicFinanceTable);
-        when(financeTotalsTablePopulatorMock.createTable(anyMap(), anyLong())).thenReturn(totalsTable);
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(anyLong())).thenReturn(serviceSuccess(partnerOrganisationsResource));
     }
 
@@ -422,19 +362,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void generateGrantOfferLetter() {
-        assertGenerateFile(
-                fileEntryResource ->
-                        service.generateGrantOfferLetter(123L, fileEntryResource));
-
-        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(nullable(Long.class));
-        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
-        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
-        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
-    }
-
-    @Test
     public void removeGrantOfferLetterFileEntry() {
 
         UserResource internalUserResource = newUserResource().build();
@@ -545,315 +472,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
-    private final Organisation organisation(OrganisationTypeEnum type, String name) {
-        return newOrganisation()
-                .withOrganisationType(type)
-                .withName(name)
-                .build();
-    }
-
-    @Test
-    public void generateGrantOfferLetterIfReadySuccess() {
-
-        setupGolTemplate();
-
-        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
-        Organisation o2 = organisation(BUSINESS, "Org2\"");
-        Organisation o3 = organisation(BUSINESS, "Org3<");
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withGrantClaimPercentage(30)
-                .withApplication(456L)
-                .withOrganisation(3L)
-                .build();
-
-        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
-
-        Map<String, Object> templateArgs = setupTemplateArguments();
-
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-
-        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
-        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
-
-        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(nullable(Long.class));
-        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
-        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
-        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
-
-        assertTrue(checkGolTemplate());
-        assertTrue(result.isSuccess());
-        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
-    }
-
-    @Test
-    public void generateGrantOfferLetterIfReadyWhenProjectDocumentsAndDocsApproved() {
-
-        setupGolTemplate();
-
-        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
-        Organisation o2 = organisation(BUSINESS, "Org2\"");
-        Organisation o3 = organisation(BUSINESS, "Org3<");
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withGrantClaimPercentage(30)
-                .withApplication(456L)
-                .withOrganisation(3L)
-                .build();
-
-        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
-
-        Competition comp = newCompetition().withName("Test Comp<").build();
-        CompetitionDocument configuredCompetitionDocument = CompetitionDocumentBuilder
-                .newCompetitionDocument()
-                .withCompetition(comp)
-                .withTitle("Risk Register")
-                .withGuidance("Guidance for Risk Register")
-                .build();
-        comp.setCompetitionDocuments(singletonList(configuredCompetitionDocument));
-        project.getApplication().setCompetition(comp);
-
-        ProjectDocument projectDocument =
-                newProjectDocument()
-                .withProject(project)
-                .withStatus(DocumentStatus.APPROVED)
-                .build();
-        project.setProjectDocuments(singletonList(projectDocument));
-
-        Map<String, Object> templateArgs = setupTemplateArguments();
-
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-
-        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
-        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
-
-        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(any());
-        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
-        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
-        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
-
-        assertTrue(checkGolTemplate());
-        assertTrue(result.isSuccess());
-        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
-    }
-
-    @Test
-    public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void generateGrantOfferLetterProjectDocuments() {
-
-        Competition comp = newCompetition().withName("Test Comp").build();
-        CompetitionDocument configuredCompetitionDocument = CompetitionDocumentBuilder
-                .newCompetitionDocument()
-                .withCompetition(comp)
-                .withTitle("Risk Register")
-                .withGuidance("Guidance for Risk Register")
-                .build();
-        comp.setCompetitionDocuments(singletonList(configuredCompetitionDocument));
-
-        Organisation o1 = newOrganisation().withName("OrgLeader").build();
-        User u = newUser().withFirstName("ab").withLastName("cd").build();
-        ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(Role.LEADAPPLICANT).build();
-        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
-        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
-        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
-        Project project = newProject().withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
-        ProjectDocument projectDocument =
-                newProjectDocument()
-                .withProject(project)
-                .withStatus(DocumentStatus.REJECTED)
-                .build();
-        project.setProjectDocuments(singletonList(projectDocument));
-
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void generateGrantOfferLetterNoProject() {
-
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.empty());
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(result.isSuccess());
-    }
-
-    private Map<String, Object> setupTemplateArguments() {
-        Map<String, Object> templateArgs = new HashMap();
-        templateArgs.put("ProjectLength", 10L);
-        templateArgs.put("ProjectTitle", "project 1");
-        templateArgs.put("LeadContact", "ab cd");
-        templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "OrgLeader&");
-        templateArgs.put("CompetitionName", "Test Comp<");
-        templateArgs.put("Address1", "InnovateUK>");
-        templateArgs.put("Address2", "Northstar House\"");
-        templateArgs.put("Address3", "");
-        templateArgs.put("TownCity", "Swindon&");
-        templateArgs.put("PostCode", "SN1 1AA'");
-        templateArgs.put("ProjectStartDate", ZonedDateTime.now().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", ZonedDateTime.now().toString());
-        return templateArgs;
-    }
-
-    private boolean compareTemplate(Map<String, Object> expectedTemplateArgs, Map<String, Object> templateArgs) {
-        boolean result = true;
-        result &= expectedTemplateArgs.get("ProjectLength").equals(templateArgs.get("ProjectLength"));
-        result &= expectedTemplateArgs.get("ProjectTitle").equals(templateArgs.get("ProjectTitle"));
-        result &= expectedTemplateArgs.get("ProjectStartDate").equals(templateArgs.get("ProjectStartDate"));
-        result &= expectedTemplateArgs.get("LeadContact").equals(templateArgs.get("LeadContact"));
-        result &= expectedTemplateArgs.get("ApplicationNumber").equals(templateArgs.get("ApplicationNumber"));
-        result &= expectedTemplateArgs.get("LeadOrgName").equals(templateArgs.get("LeadOrgName"));
-        result &= expectedTemplateArgs.get("CompetitionName").equals(templateArgs.get("CompetitionName"));
-        result &= expectedTemplateArgs.get("Address1").equals(templateArgs.get("Address1"));
-        result &= expectedTemplateArgs.get("Address2").equals(templateArgs.get("Address2"));
-        result &= expectedTemplateArgs.get("Address3").equals(templateArgs.get("Address3"));
-        result &= expectedTemplateArgs.get("TownCity").equals(templateArgs.get("TownCity"));
-        result &= expectedTemplateArgs.get("PostCode").equals(templateArgs.get("PostCode"));
-        result &= ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isBefore(ZonedDateTime.parse((String) templateArgs.get("Date"))) || ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isEqual(ZonedDateTime.parse((String) templateArgs.get("Date")));
-        return result;
-    }
-
-    private void setupGolTemplate() {
-        fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
-                build();
-
-        createdFile = newFileEntry().build();
-        fileEntryPair = Pair.of(new File("blah"), createdFile);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-                .append("<html dir=\"ltr\" lang=\"en\">\n")
-                .append("<head>\n")
-                .append("<meta charset=\"UTF-8\"></meta>\n")
-                .append("</head>\n")
-                .append("<body>\n")
-                .append("<p>\n")
-                .append("${LeadContact}<br/>\n")
-                .append("</p>\n")
-                .append("</body>\n")
-                .append("</html>\n").toString();
-
-        when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
-        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
-    }
-
-    private boolean checkGolTemplate() {
-        boolean result = true;
-        result &= fileEntryResource.getMediaType().equals(fileEntryResCaptor.getAllValues().get(0).getMediaType());
-        result &= (fileEntryResource.getName() + ".pdf").equals(fileEntryResCaptor.getAllValues().get(0).getName());
-
-        String startOfGeneratedFileString = null;
-        try {
-            int n = supplierCaptor.getAllValues().get(0).get().available();
-            byte[] startOfGeneratedFile = new byte[n];
-            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n < 9 ? n : 9);
-            startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-
-        }
-        String pdfHeader = "%PDF-1.4\n";
-        result &= pdfHeader.equals(startOfGeneratedFileString.substring(0, pdfHeader.length()));
-        return result;
-    }
-
-    private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
-
-        List<CompetitionDocument> competitionDocuments
-                = CompetitionDocumentBuilder.newCompetitionDocument().build(1);
-
-        Competition comp = newCompetition()
-                .withName("Test Comp<")
-                .withCompetitionDocuments(competitionDocuments)
-                .build();
-
-        User u = newUser()
-                .withFirstName("ab")
-                .withLastName("cd")
-                .build();
-        ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisationId(o1.getId())
-                .withUser(u)
-                .withRole(Role.LEADAPPLICANT)
-                .build();
-        Application app = newApplication()
-                .withCompetition(comp)
-                .withProcessRoles(leadAppProcessRole)
-                .withId(3L)
-                .build();
-        ProjectUser pm = newProjectUser()
-                .withRole(PROJECT_MANAGER)
-                .withOrganisation(o1)
-                .build();
-
-        PartnerOrganisation po = newPartnerOrganisation()
-                .withOrganisation(o1)
-                .withLeadOrganisation(true)
-                .build();
-
-        PartnerOrganisation po2 = newPartnerOrganisation()
-                .withOrganisation(o2)
-                .withLeadOrganisation(false)
-                .build();
-
-        PartnerOrganisation po3 = newPartnerOrganisation()
-                .withOrganisation(o3)
-                .withLeadOrganisation(false)
-                .build();
-
-        Address address = newAddress()
-                .withAddressLine1("InnovateUK>")
-                .withAddressLine2("Northstar House\"")
-                .withTown("Swindon&")
-                .withPostcode("SN1 1AA'")
-                .build();
-        project = newProject()
-                .withName("project 1")
-                .withApplication(app)
-                .withPartnerOrganisations(asList(po3, po, po2))
-                .withProjectUsers(asList(pm))
-                .withDuration(10L)
-                .withAddress(address)
-                .withTargetStartDate(LocalDate.now())
-                .build();
-
-        ProjectDocument projectDocument =
-                newProjectDocument()
-                .withProject(project)
-                .withStatus(DocumentStatus.APPROVED)
-                .build();
-
-        project.setProjectDocuments(singletonList(projectDocument));
-
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
-
-        when(organisationRepositoryMock.findById(o1.getId())).thenReturn(Optional.of(o1));
-        when(organisationRepositoryMock.findById(o2.getId())).thenReturn(Optional.of(o2));
-        when(organisationRepositoryMock.findById(o3.getId())).thenReturn(Optional.of(o3));
-
-    }
-
     @Test
     public void sendGrantOfferLetterNoGol() {
 
@@ -882,7 +500,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withUser(user)
                 .withOrganisation(nonAcademicUnfunded)
                 .withInvite(newProjectUserInvite()
-                .build())
+                        .build())
                 .build(1);
 
         Competition competition = newCompetition()
@@ -902,8 +520,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project project = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1)).withGrantOfferLetter(golFile)
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1)).withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
 
@@ -962,8 +580,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project p = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1))
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1))
                 .withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
@@ -1015,8 +633,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project project = newProject()
                 .withProjectUsers(pu)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .withOrganisation(nonAcademicUnfunded)
-                .build(1)).withGrantOfferLetter(golFile)
+                        .withOrganisation(nonAcademicUnfunded)
+                        .build(1)).withGrantOfferLetter(golFile)
                 .withApplication(application)
                 .build();
 
@@ -1136,10 +754,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withId(projectId)
                 .withProjectUsers(projectUsers)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                    .withOrganisation(organisation1, organisation2)
-                    .build(2)
+                        .withOrganisation(organisation1, organisation2)
+                        .build(2)
                 )
                 .withApplication(application)
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
                 .build();
 
         List<NotificationTarget> to = asList(
@@ -1191,7 +812,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withRole(PROJECT_MANAGER, PROJECT_FINANCE_CONTACT)
                 .withUser(user).withOrganisation(nonAcademicUnfunded)
                 .withInvite(newProjectUserInvite()
-                .build())
+                        .build())
                 .build(2);
 
         Competition competition = newCompetition()
@@ -1210,6 +831,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                         .withOrganisation(nonAcademicUnfunded)
                         .build(1))
                 .withApplication(application)
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
                 .build();
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
@@ -1248,7 +872,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newProjectUserInvite().build()).build(1);
-        Project project = newProject().withId(projectId).withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).build();
+        Project project = newProject()
+                .withId(projectId)
+                .withProjectUsers(pu)
+                .withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1))
+                .withProjectProcess(newProjectProcess()
+                        .withActivityState(ProjectState.SETUP)
+                        .build())
+                .build();
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);

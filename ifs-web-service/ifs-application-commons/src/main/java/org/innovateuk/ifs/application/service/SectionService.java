@@ -9,39 +9,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
+
 /**
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionService {
-    List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);
-
+    ValidationMessages markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
     void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
-
     void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById);
-
     SectionResource getById(Long sectionId);
-
     List<Long> getCompleted(Long applicationId, Long organisationId);
-
     Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
-
     Boolean allSectionsMarkedAsComplete(Long applicationId);
-
     List<SectionResource> filterParentSections(List<SectionResource> sections);
-
-    List<SectionResource> getAllByCompetitionId(Long competitionId);
-
+    List<SectionResource> getAllByCompetitionId(long competitionId);
+    default List<SectionResource> getAllByCompetitionIdExcludingTerms(long id) {
+        return simpleFilterNot(getAllByCompetitionId(id), SectionResource::isTermsAndConditions);
+    }
     void removeSectionsQuestionsWithType(SectionResource section, FormInputType type);
-
-    SectionResource getSectionByQuestionId(Long questionId);
-
-    Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
-
-    List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);
-
-    SectionResource getFinanceSection(Long competitionId);
-
-    SectionResource getOrganisationFinanceSection(Long competitionId);
-
+    SectionResource getSectionByQuestionId(long questionId);
+    Set<Long> getQuestionsForSectionAndSubsections(long sectionId);
+    List<SectionResource> getSectionsForCompetitionByType(long competitionId, SectionType type);
+    SectionResource getFinanceSection(long competitionId);
+    SectionResource getTermsAndConditionsSection(long competitionId);
+    SectionResource getOrganisationFinanceSection(long competitionId);
     List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }

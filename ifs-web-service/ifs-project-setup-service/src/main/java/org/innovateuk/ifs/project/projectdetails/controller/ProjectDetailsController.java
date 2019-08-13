@@ -17,7 +17,6 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
@@ -68,11 +67,8 @@ public class ProjectDetailsController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
 
-    @Autowired
-    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/new-details")
+    @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
                                      UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -102,7 +98,7 @@ public class ProjectDetailsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/new-readonly")
+    @GetMapping("/{projectId}/readonly")
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
                                                UserResource loggedInUser) {
 

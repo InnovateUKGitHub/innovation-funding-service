@@ -41,15 +41,13 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         form.setGrantClaimPercentage(0);
 
         form.setOtherFunding(true);
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123)));
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, null, "InvalidPattern", new BigDecimal("012345678901234567890")));
+        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123), 1L));
+        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, null, "InvalidPattern", new BigDecimal("012345678901234567890"), 1L));
 
         form.setOtherFundingRows(asMap(
                 unsavedId, emptyRow,
                 "20", existingRow
         ));
-
-        form.setTermsAgreed(false);
 
         BindingResult bindingResult = new DataBinder(form).getBindingResult();
         UserResource user = newUserResource().build();
@@ -67,11 +65,5 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].source"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].date"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].fundingAmount"));
-
-        assertTrue(bindingResult.hasFieldErrors("termsAgreed"));
-
-
-
-
     }
 }

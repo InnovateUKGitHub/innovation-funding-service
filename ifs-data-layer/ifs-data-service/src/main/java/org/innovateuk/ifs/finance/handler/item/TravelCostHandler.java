@@ -18,34 +18,29 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     public static final String COST_KEY = "travel";
 
     @Override
-    public ApplicationFinanceRow toCost(TravelCost travel) {
+    public ApplicationFinanceRow toApplicationDomain(TravelCost travel) {
         ApplicationFinanceRow applicationFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
-            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, travel.getCostType());
         }
         return applicationFinanceRow;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(TravelCost travel) {
+    public ProjectFinanceRow toProjectDomain(TravelCost travel) {
         ProjectFinanceRow projectFinanceRow = null;
         if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
-            projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, travel.getCostType());
         }
         return projectFinanceRow;
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity());
+        return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getTarget().getId());
     }
 }

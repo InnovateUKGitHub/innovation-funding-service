@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -278,6 +279,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withFundingType(FundingType... fundingTypes) {
         return withArray((fundingType, competitionResource) -> competitionResource.setFundingType(fundingType), fundingTypes);
+    }
+
+    public CompetitionResourceBuilder withCompetitionTerms(FileEntryResource... competitionTermsItems) {
+        return withArray((competitionTerms, competitionResource) -> competitionResource.setCompetitionTerms(competitionTerms), competitionTermsItems);
     }
 
     @Override

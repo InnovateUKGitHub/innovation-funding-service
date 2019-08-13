@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;

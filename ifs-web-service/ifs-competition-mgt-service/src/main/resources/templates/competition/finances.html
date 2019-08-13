@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finances',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body class="govuk-template__body competition-management competition-setup">
 
@@ -18,8 +18,8 @@
             <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='govuk-heading-xl'" />
-        <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finances',size='govuk-heading-xl'" />
+        <form th:if="${model.editable}" method="POST"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${competitionSetupForm}"
               novalidate="novalidate"
@@ -44,16 +44,6 @@
                                    th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-standard"
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
-                                   class="govuk-label govuk-radios__label"/>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="application-finance-standard-with-vat"
-                                   class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT}"
-                                   th:disabled="${model.subsection.noFinancesCompetition}" type="radio"
-                                   th:field="*{applicationFinanceType}" required="required"/>
-                            <label for="application-finance-standard-with-vat"
-                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
                         <div class="govuk-radios__item" data-target="include-your-organisation-section"
@@ -120,6 +110,14 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">When to include a Je-S form</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            For standard competitions the answer to this question is 'Yes', unless you know otherwise.
+                        </div>
+                    </details>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="include-jes-form-yes"
@@ -160,6 +158,14 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">When to include the 'Your organisation' section for research organisations</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            For standard competitions the answer to this question is 'No', unless you know otherwise.
+                        </div>
+                    </details>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="include-your-organisation-section-yes"

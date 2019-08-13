@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -9,6 +12,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -80,6 +84,18 @@ public class Application implements ProcessActivity {
     private Boolean stateAidAgreed;
 
     private boolean inAssessmentReviewPanel;
+
+    @Enumerated(EnumType.STRING)
+    private CompetitionReferralSource competitionReferralSource;
+
+    @Enumerated(EnumType.STRING)
+    private CompanyAge companyAge;
+
+    @Enumerated(EnumType.STRING)
+    private CompanyPrimaryFocus companyPrimaryFocus;
+
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private Project project;
 
     public Application() {
     }
@@ -232,7 +248,7 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return applicationProcess.isInState(ApplicationState.OPEN);
+        return applicationProcess.isInState(ApplicationState.OPENED);
     }
 
     public boolean isSubmitted() {
@@ -261,6 +277,14 @@ public class Application implements ProcessActivity {
 
     public void setFormInputResponses(List<FormInputResponse> formInputResponses) {
         this.formInputResponses = formInputResponses;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
@@ -394,5 +418,29 @@ public class Application implements ProcessActivity {
             default:
                 throw new IllegalArgumentException("Unexpected enum constant: " + collaborationLevel);
         }
+    }
+
+    public CompetitionReferralSource getCompetitionReferralSource() {
+        return competitionReferralSource;
+    }
+
+    public void setCompetitionReferralSource(CompetitionReferralSource competitionReferralSource) {
+        this.competitionReferralSource = competitionReferralSource;
+    }
+
+    public CompanyAge getCompanyAge() {
+        return companyAge;
+    }
+
+    public void setCompanyAge(CompanyAge companyAge) {
+        this.companyAge = companyAge;
+    }
+
+    public CompanyPrimaryFocus getCompanyPrimaryFocus() {
+        return companyPrimaryFocus;
+    }
+
+    public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
+        this.companyPrimaryFocus = companyPrimaryFocus;
     }
 }

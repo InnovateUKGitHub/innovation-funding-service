@@ -834,4 +834,8 @@ public final class CollectionFunctions {
     public static <T> List<T> flattenOptional(Collection<Optional<T>> toFlatten){
         return  simpleMap(simpleFilter(toFlatten, Optional::isPresent), Optional::get);
     }
+
+    public static <T> Predicate<T> negate(Predicate<T> predicate) {
+        return predicate.negate();
+    }
 }

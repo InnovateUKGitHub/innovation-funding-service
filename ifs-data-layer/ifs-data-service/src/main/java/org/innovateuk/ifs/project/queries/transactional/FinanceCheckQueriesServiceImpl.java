@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -15,8 +17,8 @@ import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.threads.service.MappingThreadService;
-import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
+import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl implements FinanceCheckQueriesService {
 
-    private final ThreadService<QueryResource, PostResource> service;
+    private final MessageThreadService<QueryResource, PostResource> service;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -52,6 +54,9 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -63,7 +68,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
     @Autowired
     public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, AuthenticationHelper authenticationHelper, QueryMapper queryMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(queryRepository, authenticationHelper, queryMapper, postMapper, ProjectFinance.class);
+        service = new MappingMessageThreadService<>(queryRepository, authenticationHelper, queryMapper, postMapper, ProjectFinance.class);
     }
 
     @Override
@@ -82,17 +87,21 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         return findOne(threadId).andOnSuccess(query -> {
             ProjectFinance projectFinance = projectFinanceRepository.findById(query.contextClassPk).get();
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
-            if(financeContact.isPresent()) {
+            if (financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
                 if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
                     Project project = projectFinance.getProject();
-                    return sendResponseNotification(financeContact.get().getUser(), project);
+                    return sendResponseNotification(financeContact.get().getUser(), project)
+                            .andOnSuccessReturn(() -> query);
                 }
-                return result;
+                return result.andOnSuccessReturn(() -> query);
             } else {
                 return serviceFailure(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED));
             }
-        });
+        }).andOnSuccessReturnVoid(query ->
+            activityLogService.recordQueryActivityByProjectFinanceId(query.contextClassPk,
+                    ActivityType.FINANCE_QUERY_RESPONDED, threadId)
+        );
     }
 
     @Override
@@ -120,6 +129,10 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                     } else {
                         return serviceFailure(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED));
                     }
+                }).andOnSuccessReturn(threadId -> {
+                    activityLogService.recordQueryActivityByProjectFinanceId(query.contextClassPk,
+                            ActivityType.FINANCE_QUERY, threadId);
+                    return threadId;
                 });
     }
 

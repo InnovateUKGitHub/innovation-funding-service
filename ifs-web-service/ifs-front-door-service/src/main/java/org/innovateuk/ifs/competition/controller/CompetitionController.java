@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
@@ -61,10 +63,16 @@ public class CompetitionController {
     }
 
     @GetMapping("info/terms-and-conditions")
-    public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
-
+    public String termsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         GrantTermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
+        model.addAttribute("model", new CompetitionTermsViewModel(competitionId));
         return "competition/info/" + termsAndConditions.getTemplate();
+    }
+
+    @GetMapping("info/terms-and-conditions/full")
+    public @ResponseBody ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return getFileResponseEntity(competitionRestService.downloadTerms(competitionId).getSuccess(), competition.getCompetitionTerms());
     }
 }

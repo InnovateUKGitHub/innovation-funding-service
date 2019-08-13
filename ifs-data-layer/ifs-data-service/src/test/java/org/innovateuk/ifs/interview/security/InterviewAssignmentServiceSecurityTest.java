@@ -17,7 +17,7 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
         return InterviewAssignmentServiceImpl.class;
     }
 
-    private static Pageable PAGE_REQUEST = new PageRequest(0, 20);
+    private static Pageable PAGE_REQUEST = PageRequest.of(0, 20);
 
     @Test
     public void getAvailableApplications() {

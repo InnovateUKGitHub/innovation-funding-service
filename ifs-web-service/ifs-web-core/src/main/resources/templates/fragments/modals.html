@@ -327,12 +327,10 @@
         <h2 class="govuk-heading-m">Send grant offer letter</h2>
         <p class="govuk-body">The Project Manager will be told by email.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
-            <div>
-                <button class="govuk-button" id="modal-send-gol" type="submit">Publish to project team</button>
-                <button type="button" class="js-close button-clear">Cancel</button>
-            </div>
-        </form>
+        <div>
+            <button class="govuk-button" id="modal-send-gol" type="submit">Publish to project team</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
     </div>
 </th:block>
 
@@ -610,4 +608,71 @@
         </div>
     </div>
 </th:block>
+
+<!-- Remove team member from application -->
+<th:block th:fragment="modal-application-team-remove-user (user) ">
+    <div class="warning-modal" th:classappend="${'modal-application-team-remove-' + user.id}" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m" th:text="${'Remove ' + user.name}">Remove Stacey Shipman</h2>
+            <p class="govuk-body">They will no longer be able to view or help complete this application.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" type="submit" name="remove-team-member" th:value="${user.inviteId}">Remove</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Remove organisation from application -->
+<th:block th:fragment="modal-application-team-remove-organisation (organisation, user) ">
+    <div class="alignleft warning-modal" th:classappend="${'modal-application-team-remove-organisation-' + organisation.id}" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Remove organisation</h2>
+            <p class="govuk-body">Removing the organisation from the project will also remove all the people from that organisation.
+            Their finance information will be deleted and any assigned questions will return to you.
+            They will not be notified so you should contact them first. </p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Session Timeout warning -->
+<th:block th:fragment="modal-session-timeout-warning">
+    <div class="modal-session-timeout-warning" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Your application has timed out</h2>
+            <p class="govuk-body" id="timeout-warning-hint">You have been signed out as you were inactive for 8 hours.
+                We do this to keep your information secure. You need to sign back in to continue with your application.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <a class="govuk-button" href="/Logout">Sign in</a>
+        </div>
+    </div>
+</th:block>
+
+<!-- Inactivity Timeout warning -->
+<th:block th:fragment="modal-inactivity-timeout-warning">
+    <div class="modal-inactivity-timeout-warning" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Your application will time out soon</h2>
+            <p class="govuk-body" id="timeout-warning-hint">We will reset your application if you do not respond in 5
+                minutes. We do this to keep your information secure.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button data-stay-signed-in="" class="govuk-button js-close" aria-describedby="timeout-warning-hint">Stay signed in</button>
+        </div>
+    </div>
+</th:block>
+
 </html>

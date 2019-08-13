@@ -20,22 +20,17 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     public static final String COST_KEY = "subcontracting";
 
     @Override
-    public ApplicationFinanceRow toCost(SubContractingCost costItem) {
+    public ApplicationFinanceRow toApplicationDomain(SubContractingCost costItem) {
         return costItem != null ? mapSubContractingCost(costItem) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(SubContractingCost costItem) {
+    public ProjectFinanceRow toProjectDomain(SubContractingCost costItem) {
         return mapSubContractingToProjectCost(costItem);
     }
 
     @Override
-    public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost, cost.getFinanceRowMetadata());
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+    public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
 
@@ -47,13 +42,13 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
             }
         }
 
-        return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
+        return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription(), cost.getTarget().getId());
     }
 
     private ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         ApplicationFinanceRow cost =  new ApplicationFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
-                0, subContractingCost.getCost(),null,null);
+                0, subContractingCost.getCost(),null,costItem.getCostType());
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;
@@ -62,7 +57,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     private ProjectFinanceRow mapSubContractingToProjectCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         ProjectFinanceRow cost =  new ProjectFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
-                0, subContractingCost.getCost(),null,null);
+                0, subContractingCost.getCost(),null,costItem.getCostType());
         cost.addCostValues(
                 new FinanceRowMetaValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));
         return cost;

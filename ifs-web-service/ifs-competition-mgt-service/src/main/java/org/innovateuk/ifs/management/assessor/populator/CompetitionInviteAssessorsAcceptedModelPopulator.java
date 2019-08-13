@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.assessor.populator;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
@@ -29,14 +28,10 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private CategoryRestService categoryRestService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          String originQuery) {
+                                                          int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -46,8 +41,8 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                empty(),
                 singletonList(ACCEPTED),
+                empty(),
                 empty()
         )
                 .getSuccess();
@@ -55,8 +50,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
-        model.setOriginQuery(originQuery);
+        model.setPagination(new Pagination(pageResource));
 
         return model;
     }

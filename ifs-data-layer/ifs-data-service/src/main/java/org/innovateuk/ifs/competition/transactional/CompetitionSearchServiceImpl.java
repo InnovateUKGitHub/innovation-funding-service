@@ -6,9 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.resource.search.*;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -53,16 +51,13 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
+    public ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            List<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId())
-                    : competitionRepository.findProjectSetup();
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+                    : competitionRepository.findProjectSetup(PageRequest.of(page, size));
 
-            return serviceSuccess(competitions.stream()
-                    .map(this::toProjectSetupCompetitionResult)
-                    .sorted(comparing(ProjectSetupCompetitionSearchResultItem::getManageFundingEmailDate))
-                    .collect(toList()));
+            return handleCompetitionSearchResultPage(competitions, this::toProjectSetupCompetitionResult);
         });
     }
 
@@ -75,33 +70,34 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
-        List<Competition> competitions = competitionRepository.findNonIfs();
-        return serviceSuccess(competitions.stream()
-                .map(this::toNonIfsCompetitionSearchReult)
-                .collect(toList()));
+    public ServiceResult<CompetitionSearchResult> findNonIfsCompetitions(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Competition> competitions = competitionRepository.findNonIfs(pageRequest);
+        return handleCompetitionSearchResultPage(competitions, this::toNonIfsCompetitionSearchResult);
     }
 
     @Override
-    public ServiceResult<List<CompetitionSearchResultItem>> findPreviousCompetitions() {
-        List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(competitions.stream()
-                .map(this::toPreviousCompetitionSearchResult)
-                .sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate()))
-                .collect(Collectors.toList()));
+    public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
+                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+                    : competitionRepository.findPrevious(PageRequest.of(page, size));
+
+            return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
+        });
     }
 
     @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = "%" + searchQuery + "%";
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             if (user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)) {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
+                return handleCompetitionSearchResultPage(competitionRepository.searchForInnovationLeadOrStakeholder(searchQueryLike, user.getId(), pageRequest), this::searchResultFromCompetition);
             } else if (user.hasRole(SUPPORT)) {
-                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
+                return handleCompetitionSearchResultPage(competitionRepository.searchForSupportUser(searchQueryLike, pageRequest), this::searchResultFromCompetition);
             }
-            return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
+            return handleCompetitionSearchResultPage(competitionRepository.search(searchQueryLike, pageRequest), this::searchResultFromCompetition);
         });
     }
 
@@ -148,7 +144,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
         );
     }
 
-    private NonIfsCompetitionSearchResultItem toNonIfsCompetitionSearchReult(Competition competition) {
+    private NonIfsCompetitionSearchResultItem toNonIfsCompetitionSearchResult(Competition competition) {
         return new NonIfsCompetitionSearchResultItem(
                 competition.getId(),
                 competition.getName(),
@@ -162,9 +158,6 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     private PreviousCompetitionSearchResultItem toPreviousCompetitionSearchResult(Competition competition) {
-        ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId());
-        ZonedDateTime openDate = openDateMilestone.getOptionalSuccessObject().map(MilestoneResource::getDate).orElse(null);
-
         return new PreviousCompetitionSearchResultItem(
                 competition.getId(),
                 competition.getName(),
@@ -174,16 +167,18 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                openDate
+                applicationRepository.countPrevious(competition.getId()),
+                projectRepository.countByApplicationCompetitionId(competition.getId()),
+                projectRepository.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competition.getId(), ProjectState.COMPLETED_STATES)
         );
     }
 
-    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(PageRequest pageRequest, int size, Page<Competition> pageResult) {
+    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(Page<Competition> pageResult, Function<Competition, CompetitionSearchResultItem> mapping) {
         CompetitionSearchResult result = new CompetitionSearchResult();
         List<Competition> competitions = pageResult.getContent();
-        result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
-        result.setNumber(pageRequest.getPageNumber());
-        result.setSize(size);
+        result.setContent(simpleMap(competitions, mapping));
+        result.setNumber(pageResult.getPageable().getPageNumber());
+        result.setSize(pageResult.getPageable().getPageSize());
         result.setTotalElements(pageResult.getTotalElements());
         result.setTotalPages(pageResult.getTotalPages());
 
@@ -191,10 +186,13 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     }
 
     private AbstractCompetitionSearchResultItem searchResultFromCompetition(Competition competition) {
+        if (competition.isNonIfs()) {
+            return toNonIfsCompetitionSearchResult(competition);
+        }
         switch (competition.getCompetitionStatus()) {
             case COMPETITION_SETUP:
             case READY_TO_OPEN:
-                return toPreviousCompetitionSearchResult(competition);
+                return toUpcomingCompetitionResult(competition);
             case OPEN:
             case CLOSED:
             case IN_ASSESSMENT:
@@ -238,7 +236,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     private Long getFeedbackReleasedCount() {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
                 (isInnovationLead(user) || isStakeholder(user)) ?
-                        competitionRepository.countFeedbackReleasedForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countFeedbackReleased()
+                        competitionRepository.countPreviousForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countPrevious()
         ).getSuccess();
     }
 }

@@ -49,7 +49,7 @@ import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -127,7 +127,7 @@ public class ProjectFinanceChecksController {
     private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -471,14 +471,26 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new FinanceChecksProjectCostsViewModel());
+        model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
-                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(),
-                true, false, null, competition.isH2020()));
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview,
+                                                                                 organisation.getName(),
+                                                                                 project.getName(),
+                                                                                 application.getId(),
+                                                                                 isLeadPartnerOrganisation,
+                                                                                 project.getId(),
+                                                                                 organisation.getId(),
+                                                                                 eligibilityApproved,
+                                                                                 eligibility.getEligibilityRagStatus(),
+                                                                                 eligibility.getEligibilityApprovalUserFirstName(),
+                                                                                 eligibility.getEligibilityApprovalUserLastName(),
+                                                                                 eligibility.getEligibilityApprovalDate(),
+                                                                                 true,
+                                                                                 false,
+                                                                                 null,
+                                                                                 competition.isH2020(),
+                                                                                 project.getProjectState().isActive()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

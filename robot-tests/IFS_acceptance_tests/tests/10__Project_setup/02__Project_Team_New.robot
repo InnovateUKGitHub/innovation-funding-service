@@ -17,6 +17,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5901 - Change access permisions to update project team members in project setup
 ...
+...             IFS-5710 - Add project team section to setup your project page
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -74,17 +76,17 @@ Verify add new team member field validation
     Given the user clicks the button/link               jQuery = button:contains("Add team member")
     When the user clicks the button/link                jQuery = button:contains("Invite to project")
     Then the user should see a field and summary error  Please enter a name.
-    And the user should see a field and summary error   Enter an email address in the correct format, like name@example.com
+    And the user should see a field and summary error   Enter an email address.
     [Teardown]  the user clicks the button/link         jQuery = td:contains("Name")~ td button:contains("Remove")
 
 The lead partner is able to add a new team member
     [Documentation]  IFS-5719
     Given the user clicks the button/link  jQuery = button:contains("Add team member")
     When the user adds a new team member   Tester   ${leadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Tester (Pending)")
+    Then the user should see the element   jQuery = td:contains("Tester (Pending)") ~ td:contains("${leadNewMemberEmail}")
     [Teardown]   Logout as user
 
-A new team member is able to accept the inviation from lead partner and see projec set up
+A new team member is able to accept the invitation from lead partner and see project set up
     [Documentation]  IFS-5719
     Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
     When the user creates a new account                  Tester   Testington   ${leadNewMemberEmail}
@@ -96,10 +98,10 @@ Non Lead partner is able to add a new team member
     Given the user navigates to the page   ${newProjecTeamPage}
     And the user clicks the button/link    jQuery = button:contains("Add team member")
     When the user adds a new team member   Testerina   ${nonLeadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Testerina (Pending)")
+    Then the user should see the element   jQuery = td:contains("Testerina (Pending)") ~ td:contains("${nonLeadNewMemberEmail}")
     [Teardown]   the user logs out if they are logged in
 
-A new team member is able to accept the inviation from non lead partner and see projec set up
+A new team member is able to accept the invitation from non lead partner and see projec set up
     [Documentation]  IFS-5719
     Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Ludlow.  1
     When the user creates a new account                     Testerina   Testington   ${nonLeadNewMemberEmail}
@@ -144,7 +146,69 @@ Css user is able to add a new team member to all partners
     Given the user navigates to the page   ${internalViewTeamPage}
     Then the user is able to add team memebers to all partner organisations
 
+Dashboard status updates correctly for internal and external users
+    [Documentation]  IFS-5710
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the Project team status for internal user is incomplete
+    When all partners complete the Project team section
+    Then the Project team status appears as complete for the internal user
+
 *** Keywords ***
+
+The Project team status for internal user is incomplete
+    the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
+    the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Incomplete")
+
+All partners complete the Project team section
+    non lead partners complete the Project team section
+    lead partner completes the Project team section
+
+Non lead partners complete the Project team section
+    log in as a different user                &{collaborator2_alternative_user_credentials}
+    the user navigates to the Project team page from the dashboard
+    the user selects their finance contact    financeContact2
+    the user clicks the button/link           link = Set up your project
+    the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+    log in as a different user                &{collaborator1_credentials}
+    the user navigates to the Project team page from the dashboard
+    the user selects their finance contact    financeContact2
+    the user clicks the button/link           link = Set up your project
+    the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+Lead partner completes the Project team section
+    log in as a different user               &{lead_applicant_credentials}
+    the user clicks the button/link          link = ${PS_PD_Application_Title}
+    the user should see the element          jQuery = ul li:contains("Project team") span:contains("To be completed")
+    the user clicks the button/link          link = Project team
+    the user selects their finance contact   financeContact2
+    the user clicks the button/link          link = Project manager
+    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user selects the radio button        projectManager   projectManager2
+    the user clicks the button/link          jQuery = button:contains("Save project manager")
+    the user clicks the button/link          link = Set up your project
+    the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The Project team status appears as complete for the internal user
+    log in as a different user    &{Comp_admin1_credentials}
+    the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
+    the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
+
+the user should see project manager/finance contact validations
+    [Arguments]   ${save_CTA}  ${errormessage}
+    the user clicks the button/link                  jQuery = button:contains("${save_CTA}")
+    the user should see a field and summary error    ${errormessage}
+
+The user selects their finance contact
+    [Arguments]  ${financeContactName}
+    the user clicks the button/link     link = Your finance contact
+    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
+    the user selects the radio button   financeContact   ${financeContactName}
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+
+The user navigates to the Project team page from the dashboard
+    the user clicks the button/link   link = ${PS_PD_Application_Title}
+    the user clicks the button/link   link = Project team
+
 The user is able to add team memebers to all partner organisations
     the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ p:first button:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=name]  cssAdded1

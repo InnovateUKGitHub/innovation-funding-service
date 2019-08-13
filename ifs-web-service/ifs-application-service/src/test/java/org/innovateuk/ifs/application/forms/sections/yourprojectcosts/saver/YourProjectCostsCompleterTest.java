@@ -16,9 +16,9 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -66,7 +66,7 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
         SectionResource organisationSection = newSectionResource().build();
         SectionResource fundingSection = newSectionResource().build();
 
-        when(sectionService.markAsComplete(sectionId, application.getId(), role.getId())).thenReturn(emptyList());
+        when(sectionService.markAsComplete(sectionId, application.getId(), role.getId())).thenReturn(noErrors());
         when(applicationRestService.getApplicationById(role.getApplicationId())).thenReturn(restSuccess(application));
         when(organisationRestService.getOrganisationById(role.getOrganisationId())).thenReturn(restSuccess(organisation));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));

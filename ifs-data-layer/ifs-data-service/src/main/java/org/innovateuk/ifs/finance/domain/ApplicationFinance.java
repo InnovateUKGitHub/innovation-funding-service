@@ -30,18 +30,11 @@ public class ApplicationFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
-
     public ApplicationFinance() {
-        // no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {
         super(organisation);
-        this.application = application;
-    }
-
-    public ApplicationFinance(long id, Application application, Organisation organisation) {
-        super(id, organisation);
         this.application = application;
     }
 

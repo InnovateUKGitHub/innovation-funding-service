@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
@@ -28,7 +30,6 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +87,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private ProjectUserMapper projectUserMapper;
 
+    @Autowired
+    private ActivityLogService activityLogService;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -138,7 +142,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
-                    addProcessRoles(project, user, organisation);
                     return addProjectPartner(project, user, organisation);
                 });
     }
@@ -152,12 +155,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }
-    }
-
-    private void addProcessRoles(Project project, User user, Organisation organisation) {
-        Application application = project.getApplication();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
-        processRoleRepository.save(processRole);
     }
 
     @Override
@@ -193,47 +190,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> withdrawProject(long projectId) {
-
-        return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
-        );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> handleProjectOffline(long projectId) {
-
-        return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.handleProjectOffline(existingProject, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_HANDLED_OFFLINE)));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> completeProjectOffline(long projectId) {
-
-        return getProject(projectId).andOnSuccess(
-                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
-                        projectWorkflowHandler.completeProjectOffline(existingProject, user) ?
-                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_COMPLETED_OFFLINE)));
-    }
-
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
-
-        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
-                failure -> createProjectFromApplicationId(applicationId),
-                success -> serviceSuccess(success)
-        );
-    }
-
-    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId);
+        Optional<ProjectResource> existingProject = getByApplicationId(applicationId).getOptionalSuccessObject();
+        if (existingProject.isPresent()) {
+            return serviceSuccess(existingProject.get());
+        }
+        return createProjectFromApplicationId(applicationId).andOnSuccessReturn(project -> {
+            activityLogService.recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+            return project;
+        });
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {

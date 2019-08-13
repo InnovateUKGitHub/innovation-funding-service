@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -21,12 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -64,23 +61,19 @@ public class ApplicationSummaryController {
         this.euGrantTransferRestService = euGrantTransferRestService;
     }
 
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, monitoring officers and stakeholders have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user,
-                                     @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
-                                     @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+                                     UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         boolean isSupport = isSupport(user);
-        if ((competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) && !isSupport) {
-            return redirectToFeedback(applicationId, queryParams);
+        if (shouldDisplayFeedback(competition, application, isSupport)) {
+            return redirectToFeedback(applicationId);
         }
         UserResource userForModel;
         if (isSupport) {
@@ -90,9 +83,16 @@ public class ApplicationSummaryController {
             userForModel = user;
         }
 
-        model.addAttribute("originQuery", originQuery);
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, isSupport));
         return "application-summary";
+    }
+
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application, boolean isSupport) {
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        return application.isSubmitted()
+                && feedbackAvailable
+                && !isSupport;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")
@@ -108,9 +108,8 @@ public class ApplicationSummaryController {
         return user.hasRole(SUPPORT);
     }
 
-    private String redirectToFeedback(long applicationId, MultiValueMap<String, String> queryParams) {
+    private String redirectToFeedback(long applicationId) {
         return UriComponentsBuilder.fromPath(String.format("redirect:/application/%s/feedback", applicationId))
-                .queryParams(queryParams)
                 .build()
                 .encode()
                 .toUriString();

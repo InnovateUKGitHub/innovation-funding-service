@@ -9,31 +9,18 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='govuk-heading-xl'" />
 
-    <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
+    <form th:attr="data-competition=${model.general.competition.id}" data-section="additional"
           th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${model.general.editable}"
                   class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Funding information</legend>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-form-group">
-                        <span class="govuk-label">Funder</span>
-                    </div>
-                </div>
-
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-form-group">
-                        <span class="govuk-label">Budget</span>
-                    </div>
-                </div>
-            </div>
 
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funder">Select funder name</label>
+                        <label class="govuk-label govuk-!-margin-bottom-7" th:for="funders[__${iteration.index}__].funder">Funder</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
@@ -50,7 +37,7 @@
 
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-visually-hidden" th:for="funders[__${iteration.index}__].funderBudget">Budget</label>
+                        <label class="govuk-label govuk-!-margin-bottom-7" th:for="funders[__${iteration.index}__].funderBudget">Budget</label>
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                         </th:block>
@@ -156,7 +143,7 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
-                           data-autosave-disabled="data-autosave-disabled"/>
+                           aria-live="assertive" />
                     <button class="button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>

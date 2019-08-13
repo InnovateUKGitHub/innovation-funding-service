@@ -60,11 +60,11 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -129,9 +129,9 @@ public class GrantMapperTest {
         when(projectFinanceRepository.findByProjectIdAndOrganisationId(any(), any()))
                 .thenReturn(projectFinance);
         ProjectFinanceRow projectFinanceRow = mock(ProjectFinanceRow.class);
-        when(projectFinanceRow.getName()).thenReturn(GRANT_CLAIM_IDENTIFIER);
+        when(projectFinanceRow.getName()).thenReturn("grant-claim");
         when(projectFinanceRow.getQuantity()).thenReturn(30);
-        when(projectFinanceRowRepository.findByTargetId(any()))
+        when(projectFinanceRowRepository.findByTargetId(anyLong()))
                 .thenReturn(Collections.singletonList(projectFinanceRow));
 
         List<InnovationLead> innovationLeads = newInnovationLead().

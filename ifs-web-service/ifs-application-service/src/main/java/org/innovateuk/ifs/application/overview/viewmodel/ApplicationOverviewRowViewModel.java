@@ -12,13 +12,23 @@ public class ApplicationOverviewRowViewModel {
     private final String title;
     private final String url;
     private final boolean complete;
-    private final Optional<AssignButtonsViewModel> assignButtonsViewModel;
+    private final AssignButtonsViewModel assignButtonsViewModel;
+    private final boolean showStatus;
 
-    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, Optional<AssignButtonsViewModel> assignButtonsViewModel) {
+    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, AssignButtonsViewModel assignButtonsViewModel, boolean showStatus) {
         this.title = title;
         this.url = url;
         this.complete = complete;
         this.assignButtonsViewModel = assignButtonsViewModel;
+        this.showStatus = showStatus;
+    }
+
+    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, boolean showStatus) {
+        this.title = title;
+        this.url = url;
+        this.complete = complete;
+        this.assignButtonsViewModel = null;
+        this.showStatus = showStatus;
     }
 
     public String getTitle() {
@@ -34,10 +44,16 @@ public class ApplicationOverviewRowViewModel {
     }
 
     public Optional<AssignButtonsViewModel> getAssignButtonsViewModel() {
-        return assignButtonsViewModel;
+        return Optional.ofNullable(assignButtonsViewModel);
     }
 
     public boolean isAssignable() {
-        return assignButtonsViewModel.isPresent();
+        
+        return getAssignButtonsViewModel().isPresent() &&
+                getAssignButtonsViewModel().get().getAssignableApplicants().size() > 1;
+    }
+
+    public boolean isShowStatus() {
+        return showStatus;
     }
 }

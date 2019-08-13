@@ -10,16 +10,17 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
  */
 public class DocumentViewModel {
 
-    private long projectId;
-    private String projectName;
-    private long applicationId;
-    private long documentConfigId;
-    private String title;
-    private String guidance;
-    private FileDetailsViewModel fileDetails;
-    private DocumentStatus status;
-    private String statusComments;
-    private boolean projectManager;
+    private final long projectId;
+    private final String projectName;
+    private final long applicationId;
+    private final long documentConfigId;
+    private final String title;
+    private final String guidance;
+    private final FileDetailsViewModel fileDetails;
+    private final DocumentStatus status;
+    private final String statusComments;
+    private final boolean projectManager;
+    private final boolean projectIsActive;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -30,7 +31,8 @@ public class DocumentViewModel {
                              FileDetailsViewModel fileDetails,
                              DocumentStatus status,
                              String statusComments,
-                             boolean projectManager) {
+                             boolean projectManager,
+                             boolean projectIsActive) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -41,6 +43,7 @@ public class DocumentViewModel {
         this.status = status;
         this.statusComments = statusComments;
         this.projectManager = projectManager;
+        this.projectIsActive = projectIsActive;
     }
 
     public long getProjectId() {
@@ -83,7 +86,10 @@ public class DocumentViewModel {
         return projectManager;
     }
 
-    /* view model logic. */
+    public boolean isProjectIsActive() {
+        return projectIsActive;
+    }
+
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
@@ -113,6 +119,7 @@ public class DocumentViewModel {
                 .append(status, that.status)
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
+                .append(projectIsActive, that.projectIsActive)
                 .isEquals();
     }
 
@@ -127,6 +134,7 @@ public class DocumentViewModel {
                 .append(status)
                 .append(guidance)
                 .append(projectManager)
+                .append(projectIsActive)
                 .toHashCode();
     }
 }

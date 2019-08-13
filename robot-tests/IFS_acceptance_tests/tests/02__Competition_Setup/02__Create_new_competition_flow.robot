@@ -124,7 +124,6 @@ Initial details - User enters valid values and marks as done
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
-    And the user moves focus and waits for autosave
     And the user clicks the button twice                        css = label[for = "stateAid2"]
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
@@ -182,8 +181,8 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
-    And the user clicks the button/link      css = button.govuk-button  #Done
+    When The user clicks the button/link     jQuery = label:contains("Advanced")
+    And the user clicks the button/link      jQuery = button:contains("Done")
     Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -297,9 +296,7 @@ Eligibility: Mark as Done then Edit again
     And the user selects the checkbox        lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user selects the radio button    resubmission    no
-    And the user moves focus and waits for autosave
     And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
-    And the user moves focus and waits for autosave
     When the user clicks the button/link     jQuery = button:contains("Done")
     Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
     And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
@@ -324,22 +321,10 @@ Eligibility: Should have a Green Check
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
-    When the user clicks the button/link            link = Milestones
-    Then the user should see the element            jQuery = p:contains("Select the stage at which the competition is complete for Innovate UK.")
-    When the user should see the element            jQuery = li span:contains("1. Open date")
-    And the user should see the element             jQuery = li span:contains("2. Briefing event")
-    And the user should see the element             jQuery = li span:contains("3. Submission date")
-    And the user should see the element             jQuery = li span:contains("4. Allocate assessors")
-    And the user should see the element             jQuery = li span:contains("5. Assessor briefing")
-    And the user should see the element             jQuery = li span:contains("6. Assessor accepts")
-    And the user should see the element             jQuery = li span:contains("7. Assessor deadline")
-    And the user should see the element             jQuery = li span:contains("8. Line draw")
-    And the user should see the element             jQuery = li span:contains("9. Assessment panel")
-    And the user should see the element             jQuery = li span:contains("10. Panel date")
-    And the user should see the element             jQuery = li span:contains("11. Funders panel")
-    And the user should see the element             jQuery = li span:contains("12. Notifications")
-    And the user should see the element             jQuery = label:contains("13. Release feedback")
-    And the user should see the element             jQuery = label:contains("14. Project setup")
+    Given the user clicks the button/link           link = Milestones
+    Then the user should see the element            jQuery = h1:contains("Completion stage")
+    And the user should see the element             jQuery = label:contains("Release feedback")
+    And the user should see the element             jQuery = label:contains("Project setup")
     And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
@@ -418,7 +403,7 @@ Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Application details
-    And the user should see the element           jQuery = h1:contains("Application details")
+    And the user should see the element           jQuery = h1:contains("Details")
     When the user selects the radio button        useResubmissionQuestion  false
     Then the user enters text to a text field     id = minProjectDuration  2
     And the user enters text to a text field      id = maxProjectDuration  60
@@ -514,15 +499,15 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                css = p button[type="submit"]  #Add question link
-    When the user is able to configure the new question  ${customQuestion}
-    And the user clicks the button/link                  jQuery = li:contains("${customQuestion}")
-    Then the user should be able to see the read only view of question correctly  ${customQuestion}
+    Given the user clicks the button/link                                               css = p button[type="submit"]  #Add question link
+    When the user is able to configure the new question                                 ${customQuestion}
+    And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
+    Then the user should be able to see the read only view of question correctly        ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
     [Tags]  HappyPath
-    Given the user clicks the button/link     jQuery = a:contains("Costs and value for money")
+    Given the user clicks the button/link     css = #main-content > form > ul:nth-child(7) > li:nth-child(10) > div.task > h4 > a
     When the user clicks the button/link      css = button[name="deleteQuestion"]
     Then the user should not see the element  jQuery = a:contains("Costs and value for money")
     When the user should see the element      jQuery = li:contains("Additionality") .task-status-complete
@@ -532,8 +517,8 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
-    When the user should see the element           jQuery = h1:contains("Application finances")
-    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
+    When the user should see the element           jQuery = h1:contains("Finances")
+    And the user selects the radio button          applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
@@ -602,7 +587,7 @@ Moving competition to Ready to Open state
     [Tags]  HappyPath
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link    css = #compCTA
-    Then the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link    jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -636,11 +621,11 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    And the user clicks the button/link      css = button.govuk-button
+    And the user clicks the button/link      jQuery = button:contains("Done")
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
     And the user should see the element      jQuery = li:contains("Application") .task-status-complete
     When the user clicks the button/link     css = #compCTA
-    Then the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link     jQuery = button:contains("Done")
     When the user clicks the button/link     link = Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
@@ -682,7 +667,7 @@ Assessor: Should have a Green Check
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css = #compCTA
-    And the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    And the user clicks the button/link     jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -728,7 +713,7 @@ User cannot delete competition with assessors
 
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
-    [Tags]  MySQL
+    [Tags]
     [Setup]  update milestone to yesterday          ${competitionId}  OPEN_DATE
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
@@ -746,13 +731,6 @@ The Applicant see the correct Questions
     Given the user should see the element      jQuery = li:contains("${customQuestion}")
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
-
-The user can see the VAT text in Your project costs
-    [Documentation]  IFS-4345
-    [Tags]
-    Given the user clicks the button/link      link = Your finances
-    When the user clicks the button/link       link = Your project costs
-    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 *** Keywords ***
 the total should be correct
@@ -802,7 +780,6 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
     Set Focus To Element    jQuery = button:contains(Done)
-    wait for autosave
 
 the weekdays should be correct
     element should contain    css = tr:nth-child(1) td:nth-child(3)     Wed
@@ -898,7 +875,7 @@ the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
+    the user should see the element                        jQuery = #innovation-row-2 option:disabled:contains("Space technology")
     the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again

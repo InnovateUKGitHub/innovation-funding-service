@@ -21,7 +21,7 @@ Number of days remaining until submission should be correct
 
 Hours remaining should show the last 24hours
     [Documentation]    INFUND-8614
-    [Tags]    MySQL  HappyPath
+    [Tags]  HappyPath
     [Setup]    Custom setup
     When the user reloads the page
     Then the user should see the element    jQuery = .status-msg:contains("hours left")

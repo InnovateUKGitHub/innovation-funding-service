@@ -13,7 +13,7 @@ IFS.core.autoSave = (function () {
       select: '[data-autosave] select:not([readonly="readonly"],[data-autosave-disabled])',
       textareas: '[data-autosave] textarea:not([readonly="readonly"],[data-autosave-disabled])',
       typeTimeout: 500,
-      minimumUpdateTime: 800, // the minimum time between the ajax request, and displaying the result of the ajax call.
+      minimumUpdateTime: 200, // the minimum time between the ajax request, and displaying the result of the ajax call.
       ajaxTimeOut: 15000
     },
     init: function () {
@@ -237,13 +237,13 @@ IFS.core.autoSave = (function () {
               autoSaveInfo.html('Saved!')
 
               // update the update details section if it exists
-              if (form.attr('data-autosave') === 'application' && formGroup.find('.update-details').length !== 0) {
-                var applicationId = jQuery('#application_id').val()
+              if (jQuery('[data-update-date]').length !== 0) {
+                var applicationId = jQuery('[data-update-date]').data('application-id')
                 var url = '/application/' + applicationId + '/form/update_time_details'
                 // do a replace of the updatedetails based on return of ajax request to correct time and author
                 jQuery.get(url, function (fragment) {
                   if (fragment) {
-                    formGroup.find('.update-details').replaceWith(fragment)
+                    jQuery('[data-update-date]').replaceWith(fragment)
                   }
                 })
               }

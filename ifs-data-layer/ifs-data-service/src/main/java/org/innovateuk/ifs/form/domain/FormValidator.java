@@ -41,7 +41,6 @@ public class FormValidator {
         return title;
     }
 
-
     public String getClazzName() {
         return clazzName;
     }

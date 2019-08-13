@@ -22,7 +22,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin    MySQL
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -75,7 +75,6 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link     jQuery = .govuk-button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link     jQuery = button:contains("Done")
-    And wait for autosave
     When the user clicks the button/link    jQuery = a:contains("Business opportunity")
     Then the user sees the correct read only view of the question
     And the user clicks the button/link     link = Return to application questions
@@ -85,7 +84,7 @@ Finances are editable (Ready to Open)
     [Tags]
     Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     When The user clicks the button/link         link = Finances
-    And the user should see the element          jQuery = h1:contains("Application finances")
+    And the user should see the element          jQuery = h1:contains("Finances")
     When the user clicks the button/link         jQuery = a:contains("Edit this question")
     Then if textarea is empty the proper validation messages are shown
     And the user clicks the button/link          jQuery = button:contains("Done")
@@ -116,8 +115,8 @@ Funding Information is editable (Open)
     And the user should see the element         id = pafNumber
     And the user should see the element         id = budgetCode
     And the user should see the element         id = activityCode
-    And The user clicks the button/link         jQuery = button:contains("Done")
-    Then The user should see the element        jQuery = .govuk-button:contains("Edit")
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    Then The user should see the element        jQuery = button:contains("Edit")
     And The user should see the element         jQuery = td:contains("Aerospace Technology Institute (ATI)")
     [Teardown]    the user clicks the button/link  link = Competition setup
 
@@ -198,7 +197,7 @@ Finances not editable (Open)
     [Documentation]    INFUND-6941
     [Tags]
     When The user clicks the button/link             link = Finances
-    And the user should see the element              jquery = h1:contains("Application finances")
+    And the user should see the element              jquery = h1:contains("Finances")
     Then The user should not see the element         css = input
     And The user should not see the element          jquery = .govuk-button:contains("Edit")
     And The user should not see the element          jquery = button:contains("Done")
@@ -211,7 +210,7 @@ Initial details editable before notify date (Open)
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
     And the user should see the element                     jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
     And the user should see the element                     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("6 March 2017")
+    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("${openCompetitionBusinessRTOOpenDate}")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
@@ -224,7 +223,7 @@ Initial details editable before notify date (Open)
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
-    [Tags]    MySQL
+    [Tags]
     Given the user clicks the button/link     link = Assessors
     Then the user should see the element      jQuery = .govuk-button:contains("Edit")
     And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")
@@ -301,7 +300,7 @@ the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link = Competition setup
-    the user clicks the button/link    link = Complete setup
+    the user clicks the button/link    jQuery = a:contains("Complete setup")
     the user clicks the button/link    css = button[type="submit"]
     the user closes the browser
 

@@ -26,6 +26,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
+#${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.
@@ -140,11 +141,10 @@ As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]  HappyPath
     [Setup]  get competition id and set open date to yesterday   ${compWithGrowth}
-    Given Log in as a different user                             &{lead_applicant_credentials}
-    And logged in user applies to competition                    ${compWithGrowth}  1
+    Given the user logs in and apply to a competition
     When the user clicks the button/link                         link = Your finances
     And the user clicks the button/link                          link = Your organisation
-    Then the user should not see the element                     jQuery = div label:contains("Turnover (£)")
+    Then the user should not see the element                     css = #turnover
     And the user should see the element                          jQuery = div label:contains("Full time employees")
     And the user should see the element                          jQuery = span:contains("Number of full time employees at your organisation.")
 
@@ -274,7 +274,7 @@ Lead applicant can see all innovation areas
     [Documentation]  IFS-40
     [Tags]
     Given the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link          jQuery = a:contains('Untitled application'):last
+    And the user clicks the button/link          jQuery = a:contains("Application With GrowthTable")
     And the user clicks the button/link          link = Application details
     #The fact that the link is present means that the innovation area is not pre-defined
     When the user clicks the button/link         css = #researchArea
@@ -334,7 +334,7 @@ Invite Collaborator in Application with Growth table
     Given the lead applicant invites an existing user  ${compWithGrowth}  ${collaborator1_credentials["email"]}
     When log in as a different user                    &{collaborator1_credentials}
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
-    When the user should see the element               jQuery = h2:contains("We have found an account with the invited email address")
+    When the user should see the element               jQuery = h3:contains("We have found an account with the invited email address")
     Then the user clicks the button/link               link = Continue
     And the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
 
@@ -352,10 +352,17 @@ Non-lead can mark Organisation as complete
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
 
-Non-lead can can edit and remark Organisation as Complete
+Non-lead can edit and remark Organisation as Complete
     [Documentation]    INFUND-8518 INFUND-8561
     [Tags]
     Given the user can edit resubmit and read only of the organisation    headCountAtLastFinancialYear
+
+Non-lead can mark terms and conditions as complete
+    [Documentation]  IFS-5920
+    [Setup]  the user clicks the button/link      link = Your finances
+    Given the user clicks the button/link         link = Application overview
+    When the user accept the competition terms and conditions
+    Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
@@ -371,8 +378,29 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
-*** Keywords ***
+The lead applicant checks for terms and conditions partners status
+    [Documentation]  IFS-5920
+    [Tags]
+    [Setup]  the user navigate to competition
+    Given the user accept the competition terms and conditions
+    And the user clicks the button/link             link = Award terms and conditions
+    When the user clicks the button/link            link = View partners' acceptance
+    Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
+    And the user should see the element             jQuery = td:contains("Empire Ltd (Lead)") ~ td:contains("Accepted")
+    And the user should see the element             jQuery = td:contains("INNOVATE LTD") ~ td:contains("Not yet accepted")
+    [Teardown]  the user clicks the button/link     link = Terms and conditions of an Innovate UK grant award
 
+The lead applicant checks for terms and conditions validations
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link         link = Back to application overview
+    And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete
+    When the user clicks the button/link          link = Review and submit
+    And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")
+    Then the user should see the element          jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
+    [Teardown]  the user clicks the button/link   link = Application overview
+
+*** Keywords ***
 the user should see the dates in full format
     ${today} =    Get time
     ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true
@@ -448,7 +476,7 @@ the lead applicant invites an existing user
 
 the user navigates to the growth table finances
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = .in-progress a:contains("Untitled application"):last
+    the user clicks the button/link  jQuery = .in-progress a:contains("Application With GrowthTable")
     the user clicks the button/link  link = Your finances
 
 Invite a non-existing collaborator in Application with Growth table
@@ -492,9 +520,20 @@ the logged in user should not be able to apply in a competition he has not right
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
 
+the user logs in and apply to a competition
+    Log in as a different user                        &{lead_applicant_credentials}
+    logged in user applies to competition             ${compWithGrowth}  1
+    the user clicks the button/link                   link = Application details
+    the user enters text to a text field              css = [id="name"]  Application With GrowthTable
+    the user clicks the button/link                   link = Application overview
+
 Custom suite setup
     Set predefined date variables
     Connect to database  @{database}
+
+the user navigate to competition
+    log in as a different user             &{lead_applicant_credentials}
+    the user clicks the button/link        link = All-Innov-Areas Application With GrowthTable
 
 Custom suite teardown
     Close browser and delete emails

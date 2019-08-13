@@ -6,10 +6,12 @@ import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentTermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -50,6 +52,9 @@ public class AssessmentOverviewController {
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
     @Autowired
+    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
+
+    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
@@ -58,20 +63,27 @@ public class AssessmentOverviewController {
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @GetMapping
     public String getOverview(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
-                              @PathVariable("assessmentId") Long assessmentId) {
-
+                              @PathVariable("assessmentId") long assessmentId) {
         model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
     }
 
     @GetMapping("/finances")
-    public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
+    public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
+    }
+
+    @GetMapping("/terms-and-conditions")
+    public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
+        model.addAttribute("model", assessmentTermsAndConditionsModelPopulator.populate(assessmentId));
+        return "assessment/application-terms-and-conditions";
     }
 
     @GetMapping("/detailed-finances/organisation/{organisationId}")
@@ -82,11 +94,10 @@ public class AssessmentOverviewController {
         return "assessment/application-detailed-finances";
     }
 
-    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download/**")
+    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
-            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource loggedInUser) {
         ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))

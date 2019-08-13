@@ -8,6 +8,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
         Question defaultQuestion = service.buildQuestion(competition);
         FormInput feedbackInput = defaultQuestion.getFormInputs().get(2);
 
-        assertEquals(defaultQuestion.getFormInputs().size(), 4);
+        assertEquals(defaultQuestion.getFormInputs().size(), 5);
         assertEquals(feedbackInput.getGuidanceRows().size(), 5);
     }
 
@@ -93,9 +94,13 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
     public void buildQuestion_createQuestionShouldNotContainTheDefaultAllowedFileTypeAndGuidanceForFileUpload() throws Exception {
         Question defaultQuestion = service.buildQuestion(competition);
         FormInput fileUploadFormInput = defaultQuestion.getFormInputs().get(3);
+        FormInput templateDoc = defaultQuestion.getFormInputs().get(4);
 
-        assertEquals(defaultQuestion.getFormInputs().size(), 4);
+        assertEquals(defaultQuestion.getFormInputs().size(), 5);
         assertEquals(fileUploadFormInput.getAllowedFileTypes(), emptySet());
+        assertEquals(templateDoc.getAllowedFileTypes(), emptySet());
+        assertEquals(FormInputType.FILEUPLOAD, fileUploadFormInput.getType());
+        assertEquals(FormInputType.TEMPLATE_DOCUMENT, templateDoc.getType());
         assertNull(fileUploadFormInput.getGuidanceAnswer());
     }
 }

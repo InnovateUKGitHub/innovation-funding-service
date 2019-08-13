@@ -215,7 +215,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void findApplicationsNotAssignedToAssessor() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         Page<InterviewApplicationResource> page = repository.findApplicationsNotAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
 
@@ -230,7 +230,7 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void findApplicationsAssignedToAssessor() {
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
 
         Page<InterviewApplicationResource> page = repository.findApplicationsAssignedToAssessor(competition.getId(), assessor.getId(), pageable);
 

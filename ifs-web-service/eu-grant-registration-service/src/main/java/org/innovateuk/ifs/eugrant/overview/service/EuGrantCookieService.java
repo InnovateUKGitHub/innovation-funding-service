@@ -3,7 +3,7 @@ package org.innovateuk.ifs.eugrant.overview.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eu.grant.EuGrantRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class EuGrantCookieService {
     private EuGrantRestService euGrantRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Autowired
     private EuGrantHttpServlet euGrantHttpServlet;
