@@ -42,7 +42,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     private static final long SECTION_ID = 2L;
     private static final long PROCESS_ROLE_ID = 3L;
     private static final long ORGANISATION_ID = 4L;
-    private static final String VIEW = "application/your-funding";
+    private static final String VIEW = "application/sections/your-funding/your-funding";
 
     @Mock
     private YourFundingFormPopulator formPopulator;
@@ -114,7 +114,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("edit", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("%s%s/form/your-funding/%s", APPLICATION_BASE_URL, APPLICATION_ID, SECTION_ID)));
+                .andExpect(redirectedUrl(String.format("%s%d/form/your-funding/organisation/%d/section/%d", APPLICATION_BASE_URL, APPLICATION_ID, ORGANISATION_ID, SECTION_ID)));
 
         verifyZeroInteractions(saver);
         verify(sectionStatusRestService).markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
@@ -193,7 +193,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         String fieldId = "123";
 
         when(saver.autoSave(field, value, APPLICATION_ID, getLoggedInUser())).thenReturn(Optional.of(Long.valueOf(fieldId)));
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}/auto-save",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("field", field)
                 .param("value", value))
@@ -206,8 +206,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     public void ajaxRemoveRow() throws Exception {
         String costId = "123";
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
-                APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}/remove-row/{rowId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID, costId))
                 .andExpect(status().isOk());
 
         verify(saver).removeOtherFundingRow(costId);
@@ -225,7 +225,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
             return null;
         }).when(saver).addOtherFundingRow(any());
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}/add-row",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
                 .andExpect(view().name("application/your-funding-fragments :: ajax_other_funding_row"))
                 .andExpect(model().attribute("row", row))

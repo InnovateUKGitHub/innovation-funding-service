@@ -5,7 +5,11 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.OrganisationFinanceOverview;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -71,6 +75,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
@@ -138,6 +143,11 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     @Spy
     @InjectMocks
     private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
+
+    @Mock
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+    @Mock
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
 
     @Spy
     private FinanceUtil financeUtil;
@@ -373,61 +383,55 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         inOrder.verifyNoMoreInteractions();
     }
 
-//    @Test
-//    public void getFinancesSummary() throws Exception {
-//        setupCompetition();
-//        setupApplicationWithRoles();
-//
-//        ZonedDateTime now = ZonedDateTime.now();
-//
-//        CompetitionResource competitionResource = newCompetitionResource()
-//                .withAssessorAcceptsDate(now.minusDays(2))
-//                .withAssessorDeadlineDate(now.plusDays(4))
-//                .withFundingType(GRANT)
-//                .build();
-//
-//        ApplicationResource applicationResource = applications.get(0);
-//
-//        AssessmentResource assessmentResource = newAssessmentResource()
-//                .withApplication(applicationResource.getId())
-//                .withApplicationName("Application name")
-//                .withCompetition(competitionResource.getId())
-//                .withCollaborativeProject(true)
-//                .build();
-//
-//        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
-//
-//        SortedSet<OrganisationResource> orgSet = setupOrganisations();
-//        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
-//        OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
-//                .withApplicationId(applicationResource.getId())
-//                .withOrganisationFinances(appFinanceList)
-//                .build();
-//
-//        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-//        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-//        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
-//        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
-//        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
-//
-//
-//        AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
-//                assessmentResource.getId(),
-//                applicationResource.getId(),
-//                "Application name",
-//                3,
-//                50,
-//                true,
-//                GRANT);
-//
-//        mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(model().attribute("model", expectedViewModel))
-//                .andExpect(model().attribute("applicationOrganisations", orgSet))
-//                .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
-//                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
-//                .andExpect(view().name("assessment/application-finances-summary"));
-//    }
+    @Test
+    public void getFinancesSummary() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+
+        ZonedDateTime now = ZonedDateTime.now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
+                .withFundingType(GRANT)
+                .build();
+
+        ApplicationResource applicationResource = applications.get(0);
+
+        AssessmentResource assessmentResource = newAssessmentResource()
+                .withApplication(applicationResource.getId())
+                .withApplicationName("Application name")
+                .withCompetition(competitionResource.getId())
+                .withCollaborativeProject(true)
+                .build();
+
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
+        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
+
+        ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
+        when(applicationFinanceSummaryViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFinanceSummaryViewModel);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
+        when(applicationFundingBreakdownViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFundingBreakdownViewModel);
+
+        AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
+                assessmentResource.getId(),
+                applicationResource.getId(),
+                "Application name",
+                3,
+                50,
+                GRANT,
+                applicationFinanceSummaryViewModel,
+                applicationFundingBreakdownViewModel);
+
+        mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessment/application-finances-summary"));
+    }
 
     @Test
     public void getDetailedFinancesBusiness() throws Exception {

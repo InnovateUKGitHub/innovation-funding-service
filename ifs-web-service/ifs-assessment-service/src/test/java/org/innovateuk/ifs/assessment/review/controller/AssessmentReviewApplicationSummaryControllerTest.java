@@ -1,75 +1,41 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.context.TestPropertySource;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentReviewApplicationSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentReviewApplicationSummaryController> {
 
-    @Spy
-    @InjectMocks
+    @Mock
     private AssessmentReviewApplicationSummaryModelPopulator assessmentReviewApplicationSummaryModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
-
-    @Mock
-    private ApplicantRestService applicantRestService;
-
-    @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Mock
-    private CategoryRestService categoryRestServiceMock;
-
-    @Mock
-    private UserRestService userRestServiceMock;
-
-    @Mock
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-
-    @Mock
-    private AssessmentRestService assessmentRestService;
-
-    @Mock
-    private InviteService inviteService;
 
     @Override
     protected AssessmentReviewApplicationSummaryController supplyControllerUnderTest() {
         return new AssessmentReviewApplicationSummaryController();
     }
 
-    //TODO
+    @Test
+    public void viewApplication() throws Exception {
+        long reviewId = 1L;
+        long applicationId = 2L;
+        AssessmentReviewApplicationSummaryViewModel model = mock(AssessmentReviewApplicationSummaryViewModel.class);
+
+        when(assessmentReviewApplicationSummaryModelPopulator.populateModel(getLoggedInUser(), applicationId)).thenReturn(model);
+
+        mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, applicationId))
+                .andExpect(view().name("assessor-panel-application-overview"))
+                .andExpect(model().attribute("model", model));
+    }
 }

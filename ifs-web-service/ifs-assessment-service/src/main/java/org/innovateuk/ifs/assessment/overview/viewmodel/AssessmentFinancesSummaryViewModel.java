@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -59,5 +61,39 @@ public class AssessmentFinancesSummaryViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessmentFinancesSummaryViewModel that = (AssessmentFinancesSummaryViewModel) o;
+
+        return new EqualsBuilder()
+                .append(assessmentId, that.assessmentId)
+                .append(applicationId, that.applicationId)
+                .append(daysLeft, that.daysLeft)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(applicationName, that.applicationName)
+                .append(fundingType, that.fundingType)
+                .append(applicationFinanceSummaryViewModel, that.applicationFinanceSummaryViewModel)
+                .append(applicationFundingBreakdownViewModel, that.applicationFundingBreakdownViewModel)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentId)
+                .append(applicationId)
+                .append(applicationName)
+                .append(daysLeft)
+                .append(daysLeftPercentage)
+                .append(fundingType)
+                .append(applicationFinanceSummaryViewModel)
+                .append(applicationFundingBreakdownViewModel)
+                .toHashCode();
     }
 }

@@ -16,6 +16,7 @@ import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.n
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -43,8 +45,6 @@ import static org.mockito.Mockito.when;
 
 public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundingFormPopulator> {
     private static final long APPLICATION_ID = 1L;
-    private static final long ORGANISATION_ID = 2L;
-
 
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -59,6 +59,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private ApplicationService applicationService;
 
     private UserResource user = newUserResource().build();
+    private OrganisationResource organisation =  newOrganisationResource().build();
 
     private GrantClaim grantClaim;
     private OtherFunding otherFunding;
@@ -112,7 +113,8 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .build();
         otherFundingQuestion = newQuestionResource().build();
 
-        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
         when(applicationService.getById(APPLICATION_ID)).thenReturn(application);
         when(questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING)).thenReturn(restSuccess(otherFundingQuestion));
     }
@@ -121,7 +123,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     public void populate() {
         YourFundingForm form = new YourFundingForm();
 
-        service.populateForm(form, APPLICATION_ID, ORGANISATION_ID);
+        service.populateForm(form, APPLICATION_ID, organisation.getId());
 
         assertEquals(form.getRequestingFunding(), true);
         assertEquals(form.getGrantClaimPercentage(), (Integer) 100);
@@ -150,7 +152,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         grantClaim.setGrantClaimPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, ORGANISATION_ID);
+        service.populateForm(form, APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());
@@ -163,7 +165,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         grantClaim.setGrantClaimPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, ORGANISATION_ID);
+        service.populateForm(form, APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -26,11 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,24 +38,19 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -170,87 +160,5 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         verify(applicationSaver, times(1)).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class));
 
         mockMvc.perform(get("/application/1/form/question/edit/21")).andExpect(status().isOk());
-    }
-
-    @Test
-    public void questionSubmit() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param("formInput[1]", "Some Value...")
-
-        )
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitEdit() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(EDIT_QUESTION, "1_2")
-        )
-                .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Boolean.class));
-    }
-
-    @Test
-    public void questionSubmitAssign() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(ASSIGN_QUESTION_PARAM, "1_2")
-
-        )
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitMarkAsCompleteQuestion() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(MARK_AS_COMPLETE, "1")
-        ).andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitSaveElement() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-
-        mockMvc.perform(post("/application/1/form/question/1"))
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void applicationDetailsFormSubmit_incorrectFileType() throws Exception {
-        long formInputId = 2L;
-        String fileError = "file error";
-        MockMultipartFile file = new MockMultipartFile("formInput[" + formInputId +"]", "filename.txt", "text/plain", "someText".getBytes());
-
-        long fileQuestionId = 31L;
-        ValidationMessages validationMessages = new ValidationMessages();
-        validationMessages.addError(fieldError("formInput[" + formInputId + "]", new Error(fileError, UNSUPPORTED_MEDIA_TYPE)));
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
-                .thenReturn(validationMessages);
-
-        MvcResult result = mockMvc.perform(
-            fileUpload("/application/{applicationId}/form/question/{questionId}", application.getId(), fileQuestionId)
-                        .file(file)
-                        .param("upload_file", "")
-        ).andReturn();
-
-        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
-        assertEquals(fileError, bindingResult.getFieldError("formInput[" + formInputId + "]").getCode());
     }
 }
