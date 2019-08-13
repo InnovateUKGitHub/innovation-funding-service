@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.finance.viewmodel.FinanceSummaryTableRow;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceSummaryTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -31,7 +31,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -71,8 +72,11 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         boolean open = application.isOpen() && competition.isOpen() && currentUsersRole
                 .map(role -> applicantProcessRoles().contains(role.getRole()))
                 .orElse(false);
+
+
         Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
                 .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
+
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
         Map<Long, Set<Long>> completedSections;
         if (open) {

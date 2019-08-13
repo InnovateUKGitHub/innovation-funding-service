@@ -244,7 +244,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     private ServiceResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
-        return find(applicationFinanceHandler.getApplicationTotals(applicationId), notFoundError(ApplicationFinance.class, applicationId));
+        return serviceSuccess(applicationFinanceHandler.getApplicationTotals(applicationId));
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {

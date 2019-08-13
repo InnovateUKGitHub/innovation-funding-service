@@ -302,7 +302,7 @@ Applicant can view and edit project growth table
 The Lead Applicant fills in the Application Details for App with Growth
     [Documentation]  This step is required for following test cases
     [Tags]
-    Given the user clicks the button/link           link = Application overview
+    Given the user clicks the button/link           link = Back to application overview
     When the user clicks the button/link            link = Application details
     Then the user fills in the Application details  ${applicationWithGrowth}  ${tomorrowday}  ${month}  ${nextyear}
 

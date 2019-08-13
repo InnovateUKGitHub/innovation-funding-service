@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.finance.populator;
 
-import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -73,7 +73,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
 
         Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
-                .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
+                    .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
+
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
         long leadOrganisationId = leadOrganisationId(processRoles);
 
@@ -113,7 +114,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .getOrganisationId();
     }
 
-    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances,long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
+    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
 
