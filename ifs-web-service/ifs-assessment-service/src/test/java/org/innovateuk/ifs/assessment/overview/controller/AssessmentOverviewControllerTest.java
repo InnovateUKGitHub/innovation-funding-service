@@ -854,7 +854,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new VatCategory();
-        costCategory.addCost(new Vat(1L, "vat", false, 2L));
+        costCategory.addCost(new Vat(1L, false, 2L));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
 
         appFinanceList.stream().findFirst().get().setFinanceOrganisationDetails(organisationFinances);

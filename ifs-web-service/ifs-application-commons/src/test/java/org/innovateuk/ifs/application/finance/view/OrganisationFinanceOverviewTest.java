@@ -41,7 +41,7 @@ public class OrganisationFinanceOverviewTest {
     }
 
     @Test
-    public void costCalculationsShouldReturnZeroWhenThereAreNoOrganisationFinances() throws Exception {
+    public void costCalculationsShouldReturnZeroWhenThereAreNoOrganisationFinances() {
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl();
         Assert.assertEquals(organisationFinanceOverview.getTotal(), new BigDecimal(0));
         Assert.assertEquals(organisationFinanceOverview.getTotalContribution(), new BigDecimal(0));
@@ -54,15 +54,15 @@ public class OrganisationFinanceOverviewTest {
         BigDecimal totalValue1 = new BigDecimal(123);
         BigDecimal totalValue2 = new BigDecimal(456);
 
-        when(applicationFinanceResource1.getTotal()).thenReturn(totalValue1);
-        when(applicationFinanceResource2.getTotal()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotalCosts()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotalCosts()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotal(), totalValue1.add(totalValue2));
 
     }
 
     @Test
-    public void totalFundingSoughtShouldBeAllOrganisationFundingAddedTogether() throws Exception {
+    public void totalFundingSoughtShouldBeAllOrganisationFundingAddedTogether() {
         BigDecimal totalValue1 = new BigDecimal(124);
         BigDecimal totalValue2 = new BigDecimal(457);
 
@@ -73,7 +73,7 @@ public class OrganisationFinanceOverviewTest {
     }
 
     @Test
-    public void totalContributionShouldBeAllOrganisationContributionsAddedTogether() throws Exception {
+    public void totalContributionShouldBeAllOrganisationContributionsAddedTogether() {
         BigDecimal totalValue1 = new BigDecimal(125);
         BigDecimal totalValue2 = new BigDecimal(458);
 
@@ -84,7 +84,7 @@ public class OrganisationFinanceOverviewTest {
     }
 
     @Test
-    public void totalOtherFundingShouldBeAllOrganisationOtherFundingAddedTogether() throws Exception {
+    public void totalOtherFundingShouldBeAllOrganisationOtherFundingAddedTogether() {
         BigDecimal totalValue1 = new BigDecimal(126);
         BigDecimal totalValue2 = new BigDecimal(459);
 

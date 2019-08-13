@@ -91,9 +91,9 @@ public class AbstractYourProjectCostsSaverTest {
         otherRow.setEstimate(new BigDecimal(123));
         form.setOtherRows(asMap(UNSAVED_ROW_PREFIX, otherRow));
 
-        Vat vat = new Vat();
+        VatForm vat = new VatForm();
         vat.setRegistered(false);
-        form.setVat(vat);
+        form.setVatForm(vat);
 
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
