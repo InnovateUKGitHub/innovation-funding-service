@@ -102,8 +102,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
-                yourFinancesCompleteForAllOrganisations,
-                competition.isProcurement()
+                yourFinancesCompleteForAllOrganisations
         );
     }
 

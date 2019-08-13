@@ -111,8 +111,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
         model.addAttribute("currentCompetition", competition);
-        model.addAttribute("procurementCompetition", competition.isProcurement());
-        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(1.2)));
+        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(0.2)));
         model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
 

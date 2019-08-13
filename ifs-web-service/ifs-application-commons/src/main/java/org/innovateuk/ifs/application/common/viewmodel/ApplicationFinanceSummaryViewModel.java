@@ -33,7 +33,6 @@ public class ApplicationFinanceSummaryViewModel {
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final Long eachCollaboratorFinanceSectionId;
     private final boolean yourFinancesCompleteForAllOrganisations;
-    private final boolean procurementCompetition;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
                                               Boolean hasFinanceSection,
@@ -51,8 +50,7 @@ public class ApplicationFinanceSummaryViewModel {
                                               BigDecimal financeTotal,
                                               Map<Long, Set<Long>> completedSectionsByOrganisation,
                                               Long eachCollaboratorFinanceSectionId,
-                                              boolean yourFinancesCompleteForAllOrganisations,
-                                              boolean procurementCompetition) {
+                                              boolean yourFinancesCompleteForAllOrganisations) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -70,7 +68,6 @@ public class ApplicationFinanceSummaryViewModel {
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
         this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
-        this.procurementCompetition = procurementCompetition;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -143,9 +140,5 @@ public class ApplicationFinanceSummaryViewModel {
 
     public boolean getYourFinancesCompleteForAllOrganisations() {
         return yourFinancesCompleteForAllOrganisations;
-    }
-
-    public boolean isProcurementCompetition() {
-        return procurementCompetition;
     }
 }

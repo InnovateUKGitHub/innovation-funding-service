@@ -27,7 +27,6 @@ public class ApplicationFundingBreakdownViewModel {
     private final ApplicationResource currentApplication;
     private final OrganisationResource userOrganisation;
     private final Map<Long, Boolean> showDetailedFinanceLink;
-    private final boolean procurementCompetition;
     private final CompetitionResource currentCompetition;
     private final BigDecimal vatTotal;
     private final boolean isVatRegistered;
@@ -55,7 +54,6 @@ public class ApplicationFundingBreakdownViewModel {
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
-        this.procurementCompetition = currentCompetition.isProcurement();
         this.isVatRegistered = isApplicationVatRegistered();
         this.vatTotal = calculateVat();
     }
@@ -81,7 +79,6 @@ public class ApplicationFundingBreakdownViewModel {
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
-        this.procurementCompetition = currentCompetition.isProcurement();
         this.isVatRegistered = isApplicationVatRegistered();
         this.vatTotal = calculateVat();
     }
@@ -124,10 +121,6 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<Long, Boolean> getShowDetailedFinanceLink() {
         return showDetailedFinanceLink;
-    }
-
-    public boolean isProcurementCompetition() {
-        return procurementCompetition;
     }
 
     public CompetitionResource getCurrentCompetition() {

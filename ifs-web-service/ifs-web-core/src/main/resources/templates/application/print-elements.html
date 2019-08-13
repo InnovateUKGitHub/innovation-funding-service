@@ -173,7 +173,7 @@
                     class="govuk-table__header govuk-table__header--numeric width-80">Travel and subsistence (&pound;)</th>
                 <th scope="col"
                     class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
-                <th scope="col" th:if="${procurementCompetition}"
+                <th scope="col" th:if="${organisationFinances.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
                     class="govuk-table__header govuk-table__header--numeric width-80">VAT total (&pound;)</th>
             </tr>
             </thead>
@@ -221,7 +221,7 @@
                         th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                         th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                     </td>
-                    <td th:if="${procurementCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
+                    <td th:if="${organisationFinances.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}" class="govuk-table__cell govuk-table__cell--numeric"
                         th:text="${#numbers.formatInteger(vatTotal, 0, 'DEFAULT')}">
                     </td>
                 </th:block>
