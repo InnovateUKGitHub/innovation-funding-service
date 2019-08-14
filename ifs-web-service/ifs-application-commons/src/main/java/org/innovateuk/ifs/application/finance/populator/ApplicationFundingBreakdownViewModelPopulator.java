@@ -87,7 +87,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         long leadOrganisationId = leadOrganisationId(processRoles);
 
         List<BreakdownTableRow> rows = organisations.stream()
-                .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, applicationId, competition))
+                .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
         rows.addAll(pendingOrganisations(applicationId));
@@ -122,9 +122,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .getOrganisationId();
     }
 
-    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
+    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
-        Optional<String> financeLink = financesLink(organisation, processRoles, user, applicationId, competition);
+        Optional<String> financeLink = financesLink(organisation, processRoles, user, application, competition);
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
@@ -142,17 +142,23 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         );
     }
 
-    private Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
+    private Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
-            return Optional.of(internalLink(applicationId, organisation));
+        if (authenticatedUser.isInternalUser()) {
+            if (!application.isSubmitted()) {
+                if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
+                    return Optional.of(internalLink(application.getId(), organisation));
+                }
+            } else {
+                return Optional.of(internalLink(application.getId(), organisation));
+            }
         }
         if (currentUserRole.isPresent()) {
             if (applicantProcessRoles().contains(currentUserRole.get().getRole())
                     && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
-                return Optional.of(applicantLink(applicationId));
+                return Optional.of(applicantLink(application.getId()));
             }
             if (asessorProcessRoles().contains(currentUserRole.get().getRole())
                     && DETAILED.equals(competition.getAssessorFinanceView())) {
