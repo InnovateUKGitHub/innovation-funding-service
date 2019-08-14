@@ -82,7 +82,7 @@ Applicant visits his Finances
     [Documentation]    INFUND-6393  IFS-3938
     [Tags]  HappyPath
     Given the user should see the element          jQuery = h1:contains("Application overview")
-    When the user clicks the button/link           link = Your finances
+    When the user clicks the button/link           link = Your project finances
     Then the user should see the element           jQuery = li:contains("Your project costs") > .task-status-incomplete
     And the user should see the element            jQuery = li:contains("Your organisation") > .task-status-incomplete
     And the user should see that the funding depends on the research area
@@ -107,7 +107,7 @@ Application details read only view shows correct details without innovation area
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
-    Given the user clicks the button/link         link = Your finances
+    Given the user clicks the button/link         link = Your project finances
     Then the user clicks the button/link          link = Your organisation
     And the user should see the element           jQuery = div label:contains("Turnover (£)")
     And the user should see the element           jQuery = div label:contains("Full time employees")
@@ -142,7 +142,7 @@ As next step the Applicant cannot see the turnover field
     [Tags]  HappyPath
     [Setup]  get competition id and set open date to yesterday   ${compWithGrowth}
     Given the user logs in and apply to a competition
-    When the user clicks the button/link                         link = Your finances
+    When the user clicks the button/link                         link = Your project finances
     And the user clicks the button/link                          link = Your organisation
     Then the user should not see the element                     css = #turnover
     And the user should see the element                          jQuery = div label:contains("Full time employees")
@@ -165,7 +165,7 @@ Organisation server side validation when no
     Then the user should see a field and summary error    Enter your organisation size.
     And the user should see a field and summary error     ${empty_field_warning_message}
     And the user should see a field and summary error     ${empty_field_warning_message}
-    And the user should not see the element               jQuery = h1:contains("Your finances")
+    And the user should not see the element               jQuery = h1:contains("Your project finances")
     # Checking that by marking as complete, the user doesn't get redirected to the main finances page
 
 Organisation client side validation when no
@@ -210,7 +210,7 @@ Funding subsection opens when Appl details and organisation info are provided
     Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = ${applicationWithoutGrowth}
     When the user should see the element    jQuery = li:contains("Application details") > .task-status-complete
-    And the user clicks the button/link     link = Your finances
+    And the user clicks the button/link     link = Your project finances
     And the user should see the element     jQuery = li:contains("Your organisation") > .task-status-complete
     Then the user should see the element    jQuery = li:contains("Your funding") > .task-status-incomplete
 
@@ -359,7 +359,7 @@ Non-lead can edit and remark Organisation as Complete
 
 Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
-    [Setup]  the user clicks the button/link      link = Your finances
+    [Setup]  the user clicks the button/link      link = Your project finances
     Given the user clicks the button/link         link = Application overview
     When the user accept the competition terms and conditions
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
@@ -409,7 +409,7 @@ the user should see the dates in full format
 the user should see that the funding depends on the research area
     the user clicks the button/link  link = Your funding
     the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
-    the user clicks the button/link  link = Your finances
+    the user clicks the button/link  link = Your project finances
 
 the user should see his finances empty
     the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
@@ -477,7 +477,7 @@ the lead applicant invites an existing user
 the user navigates to the growth table finances
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = .in-progress a:contains("Application With GrowthTable")
-    the user clicks the button/link  link = Your finances
+    the user clicks the button/link  link = Your project finances
 
 Invite a non-existing collaborator in Application with Growth table
     the user should see the element       jQuery = h1:contains("Application overview")

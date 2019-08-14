@@ -115,7 +115,7 @@ public class OpenSectionViewModelTest {
 
     @Test
     public void testGetIsYourFinancesAndIsNotCompleted() {
-        currentSection.setName("Your finances");
+        currentSection.setName("Your project finances");
         viewModel.setCurrentSection(currentSection);
         viewModel.setCompletedSections(asList());
 
@@ -124,7 +124,7 @@ public class OpenSectionViewModelTest {
 
     @Test
     public void testGetIsYourFinances() {
-        currentSection.setName("NOT Your finances");
+        currentSection.setName("NOT Your project finances");
         viewModel.setCurrentSection(currentSection);
 
         assertEquals(Boolean.FALSE, viewModel.getIsYourFinances());

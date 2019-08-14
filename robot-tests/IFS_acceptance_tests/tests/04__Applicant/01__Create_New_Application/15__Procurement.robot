@@ -134,14 +134,14 @@ the user marks the procurement finances as complete
     the user clicks the button/link                 link = Your project costs
     the user clicks the button/link                 jQuery = button:contains("Overhead costs")
     the user should see the element                 jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-    the user clicks the button/link                 link = Your finances
+    the user clicks the button/link                 link = Your project finances
     the user fills in the project costs             ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user should not see the element             css = table
     the user should see all procurement finance subsections complete
     the user clicks the button/link                 link = Application overview
-    the user should see the element                 jQuery = li:contains("Your finances") > .task-status-complete
+    the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
     the user should not see the element             link = Finances overview
 
 the user should see all procurement finance subsections complete

@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-We have replied to a query regarding your finances submitted for ${applicationName}.
+We have replied to a query regarding your project finances submitted for ${applicationName}.
 
 You can view and respond in the project setup (${dashboardUrl}) stage for this application. Please navigate to the finance checks section.
 

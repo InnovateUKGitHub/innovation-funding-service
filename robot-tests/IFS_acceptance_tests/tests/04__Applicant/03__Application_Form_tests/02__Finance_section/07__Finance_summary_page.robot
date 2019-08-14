@@ -11,7 +11,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 ...
-...               INFUND-8397  Permission denied when submitting your finances as a collaborator
+...               INFUND-8397  Permission denied when submitting your project finances as a collaborator
 ...
 ...               IFS-401 Support team view of detailed finances in application form
 ...
@@ -71,7 +71,7 @@ Your Finance includes Finance summary table for lead applicant
     [Tags]
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  0%  0  8,000,000  0
+    Then the finance summary table in Your project Finances has correct values for lead  £72,611  0%  0  8,000,000  0
     And the user clicks the button/link            link = Return to application overview
 
 Your Finance includes Finance summary table for collaborator
@@ -79,7 +79,7 @@ Your Finance includes Finance summary table for collaborator
     [Tags]
     [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for collaborator  £990  0%  0  2,468  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  £990  0%  0  2,468  0
     And The user clicks the button/link            link = Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -162,7 +162,7 @@ Support User can see the read only finance summary
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
-    Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    Then The finance summary table in Your project Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
@@ -174,7 +174,7 @@ Support User can see the read only view of collaborator Your project costs for L
 Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
-    When the user clicks the button/link           jQuery = a:contains("Your finances")
+    When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
     When the user clicks the button/link           link = Your organisation
     Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
@@ -206,7 +206,7 @@ Innovation lead can see read only summary for lead
     [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .project-cost-breakdown tbody tr:nth-of-type(1) th a
     When the user should see the element              jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    Then the finance summary table in Your project Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
@@ -216,7 +216,7 @@ Innovation lead can see read only summary for collaborator
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user should see the element             jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your Finances has correct values for collaborator  £990  100  0  2,468  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  £990  100  0  2,468  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
@@ -234,7 +234,7 @@ Innovation lead can see read only view of collaborator Your project costs for La
 Innovation lead can see read only view of Your organisation
     [Documentation]  IFS-802
     [Tags]  InnovationLead
-    When the user clicks the button/link           jQuery = a:contains("Your finances")
+    When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your organisation")
     Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
@@ -243,7 +243,7 @@ Innovation lead can see read only view of Your organisation
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802
     [Tags]  InnovationLead
-    When the user clicks the button/link           jQuery = a:contains("Your finances")
+    When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your funding")
     Then the user should see the element           jQuery = dt:contains("Funding level") + dd:contains("30%")
@@ -255,7 +255,7 @@ IFS Admin views the finance summary
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
-    Then the finance summary table in Your Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
+    Then the finance summary table in Your project Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
 
 A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
     [Documentation]  IFS-3609
@@ -281,7 +281,7 @@ the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationEggsName}") + td:contains("£990")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£328,571")
 
-the finance summary table in Your Finances has correct values for lead
+the finance summary table in Your project Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
@@ -294,7 +294,7 @@ the finance summary table in Your Finances has correct values for lead
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
-the finance summary table in Your Finances has correct values for collaborator
+the finance summary table in Your project Finances has correct values for collaborator
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
@@ -81,7 +81,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
             UserResource loggedInUser,
             Model model) {
 
-        Future<CommonYourFinancesViewModel> commonViewModelRequest = async(() ->
+        Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
@@ -136,7 +136,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourProjectFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
             YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
@@ -195,7 +195,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
         return viewModelPopulator.populate(applicationId, competitionId,  organisationId);
     }
 
-    private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+    private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
         return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 

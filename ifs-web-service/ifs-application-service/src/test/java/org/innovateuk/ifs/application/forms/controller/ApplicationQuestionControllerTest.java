@@ -18,9 +18,9 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.YourProjectFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -96,7 +96,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Mock
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+    private YourProjectFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -165,7 +165,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
+        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourProjectFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
         when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
