@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -44,7 +44,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0"
                 th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
             <p class="govuk-body">Only your organisation can see this level of detail. All members of your
-                organisation can access and edit your finances. We recommend assigning completion of your finances
+                organisation can access and edit your project finances. We recommend assigning completion of your project finances
                 to one member of your team.</p>
 
             <div class="govuk-accordion" data-module="accordion" id="accordion-finances">

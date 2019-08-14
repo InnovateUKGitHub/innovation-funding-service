@@ -27,7 +27,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
         this.notRequestingFunding = notRequestingFunding;
     }
 
-    /* Your finances display logic */
+    /* Your project finances display logic */
     public boolean showSectionAsNotRequired(SectionResource subSection) {
         return notRequestingFunding && (SectionType.ORGANISATION_FINANCES.equals(subSection.getType())
                 || SectionType.FUNDING_FINANCES.equals(subSection.getType()));

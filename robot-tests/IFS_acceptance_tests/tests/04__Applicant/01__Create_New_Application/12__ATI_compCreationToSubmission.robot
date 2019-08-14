@@ -106,7 +106,7 @@ User fills in funding overide
     the user clicks the button/link   css = button[type="submit"]
 
 the user checks the override value is applied
-    the user clicks the button/link     link = Your finances
+    the user clicks the button/link     link = Your project finances
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
@@ -131,7 +131,7 @@ the lead invites already registered user
     the user clicks the button/link                link = Continue
     logging in and error checking                  &{collaborator1_credentials}
     the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link                link = Your finances
+    the user clicks the button/link                link = Your project finances
     the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
     the user accept the competition terms and conditions
     Log in as a different user                     &{lead_applicant_credentials}
@@ -141,7 +141,7 @@ the lead invites already registered user
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
     the user should not see the element  link = eligible for state aid
-    the user clicks the button/link      link = Your finances
+    the user clicks the button/link      link = Your project finances
 
 Custom suite teardown
     Close browser and delete emails

@@ -126,9 +126,7 @@ User can see the Application details along with feedback
     [Tags]
     Given the user should see the element                          jQuery = h2:contains("Application details")
     And the user should see the element                            jQuery = h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
-    When the user checks the Project summary functionality
-    And the user checks the Public description functionality
-    And the user checks the Scope functionality
+    When the user checks the application details sections
     Then the user should see the element                            jQuery = h2:contains("Application details")
 
 User can see feedback to individual questions
@@ -208,6 +206,16 @@ The user checks the Scope functionality
     the user should see the element    jQuery = p:contains("This is the scope feedback")
     the user clicks the button/link    jQuery = a:contains("Feedback overview")
 
+the user checks the application team
+    the user clicks the button/link  link = Application team
+    the user should see the element  jQuery = h1:contains("Application team")
+    the user clicks the button/link  link = Application overview
+
+the user checks the research category
+    the user clicks the button/link  link = Research category
+    the user should see the element  jQuery = main:contains("Research category") p:contains("Experimental")
+    the user clicks the button/link  link = Feedback overview
+
 The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
     log in as a different user         ${email}  ${password}
@@ -236,3 +244,10 @@ the user should see the competition details in previous tab
     the user should see the element    jQuery = th:contains("ID") + th:contains("Title")
     the user should see the element    jQuery = th:contains("Number of submitted applications") + th:contains("Number of completed projects")
     the user should see the element    jQuery = tr td:contains("Project Setup Comp 20") ~ td:contains("0 of 1")
+
+the user checks the application details sections
+    the user checks the Project summary functionality
+    the user checks the Public description functionality
+    the user checks the Scope functionality
+    the user checks the application team
+    the user checks the research category
