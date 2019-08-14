@@ -57,6 +57,9 @@ public class YourProjectCostsFormValidator {
             case OVERHEADS:
                 validateOverhead(form.getOverhead(), validationHandler);
                 break;
+            case PROCUREMENT_OVERHEADS:
+                validateRows(form.getProcurementOverheadRows(),"procurementOverheadRows[%s].", validationHandler);
+                break;
             case CAPITAL_USAGE:
                 validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
                 break;
@@ -121,7 +124,7 @@ public class YourProjectCostsFormValidator {
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
             if (!(id.startsWith(UNSAVED_ROW_PREFIX) && row.isBlank())) {
-                validateForm(row, validationHandler,  path, id);
+                validateForm(row, validationHandler, path, id);
             }
         });
     }

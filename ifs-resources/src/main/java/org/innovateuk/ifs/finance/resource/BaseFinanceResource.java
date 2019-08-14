@@ -109,6 +109,7 @@ public abstract class BaseFinanceResource {
         }
     }
 
+    @JsonIgnore
     public BigDecimal getTotalCosts() {
 
         if (financeOrganisationDetails == null) {
