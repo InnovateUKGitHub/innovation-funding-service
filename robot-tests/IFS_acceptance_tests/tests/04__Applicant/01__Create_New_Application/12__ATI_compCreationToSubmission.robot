@@ -112,7 +112,7 @@ the user checks the override value is applied
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
     the user selects the checkbox       agree-terms-page
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
-    the user clicks the button/link     link = Application overview
+    the user clicks the button/link     link = Back to application overview
 
 the finance overview is marked as incomplete
     the user clicks the button/link    link = Finances overview

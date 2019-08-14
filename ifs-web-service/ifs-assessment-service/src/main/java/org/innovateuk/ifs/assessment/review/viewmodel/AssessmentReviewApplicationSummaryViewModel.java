@@ -4,8 +4,6 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyView
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import java.util.List;
-
 public class AssessmentReviewApplicationSummaryViewModel {
 
     private final long applicationId;
@@ -15,14 +13,14 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     private final CompetitionResource currentCompetition;
 
-    private final List<AssessmentResource> feedbackSummary;
+    private final AssessmentResource assessment;
 
-    public AssessmentReviewApplicationSummaryViewModel(long applicationId, String applicationName, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, CompetitionResource currentCompetition, List<AssessmentResource> feedbackSummary) {
+    public AssessmentReviewApplicationSummaryViewModel(long applicationId, String applicationName, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, CompetitionResource currentCompetition, AssessmentResource assessment) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.currentCompetition = currentCompetition;
-        this.feedbackSummary = feedbackSummary;
+        this.assessment = assessment;
     }
 
     public long getApplicationId() {
@@ -41,7 +39,7 @@ public class AssessmentReviewApplicationSummaryViewModel {
         return currentCompetition;
     }
 
-    public List<AssessmentResource> getFeedbackSummary() {
-        return feedbackSummary;
+    public AssessmentResource getAssessment() {
+        return assessment;
     }
 }

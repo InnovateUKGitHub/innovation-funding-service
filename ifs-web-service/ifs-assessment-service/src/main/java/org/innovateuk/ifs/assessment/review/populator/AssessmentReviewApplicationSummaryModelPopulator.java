@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -34,13 +35,15 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     public AssessmentReviewApplicationSummaryViewModel populateModel(UserResource user, long applicationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        ApplicationReadOnlyViewModel readOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, ApplicationReadOnlySettings.defaultSettings());
+        AssessmentResource assessment = assessmentRestService
+                .getByUserAndApplication(user.getId(), applicationId)
+                .getSuccess().get(0);
+        ApplicationReadOnlyViewModel readOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(assessment.getId()));
         return new AssessmentReviewApplicationSummaryViewModel(application.getId(),
                 application.getName(),
                 readOnlyViewModel,
-                competition,assessmentRestService
-                        .getByUserAndApplication(user.getId(), applicationId)
-                        .getSuccess());
+                competition,
+                assessment);
     }
 
 }

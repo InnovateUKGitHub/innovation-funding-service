@@ -7,7 +7,7 @@ public class ApplicationReadOnlySettings {
 
     private boolean includeStatuses = false;
     private boolean includeQuestionLinks = false;
-    private Long assesmentId = null;
+    private Long assessmentId = null;
 
     private ApplicationReadOnlySettings() {}
 
@@ -34,14 +34,15 @@ public class ApplicationReadOnlySettings {
     }
 
     public boolean isIncludeAssessment() {
-        return assesmentId != null;
-    }
-    public Long getAssessmentId() {
-        return assesmentId;
+        return assessmentId != null;
     }
 
-    public ApplicationReadOnlySettings setAssesmentId(Long assesmentId) {
-        this.assesmentId = assesmentId;
+    public Long getAssessmentId() {
+        return assessmentId;
+    }
+
+    public ApplicationReadOnlySettings setAssessmentId(Long assesmentId) {
+        this.assessmentId = assesmentId;
         return this;
     }
 

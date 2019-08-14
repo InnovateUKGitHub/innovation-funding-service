@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.eugrant.overview.service;
+package org.innovateuk.ifs.util;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class EuGrantHttpServlet {
+public class HttpServletUtil {
 
     public HttpServletRequest request() {
         return ((ServletRequestAttributes) RequestContextHolder

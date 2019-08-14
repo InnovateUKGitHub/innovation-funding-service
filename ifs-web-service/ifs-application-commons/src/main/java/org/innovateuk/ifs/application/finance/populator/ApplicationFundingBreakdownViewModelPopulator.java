@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
@@ -66,6 +67,13 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
     @Autowired
     private AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private HttpServletUtil httpServletUtil;
+
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -115,34 +123,14 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     }
 
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
-        Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
-        Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
-
-        boolean showFinancesLink = false;
-        String url = "";
-        if (currentUserRole.isPresent()) {
-            if (applicantProcessRoles().contains(currentUserRole.get().getRole())
-                     && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
-                showFinancesLink = true;
-                url = applicantLink(applicationId);
-            }
-            if (asessorProcessRoles().contains(currentUserRole.get().getRole())
-                    && DETAILED.equals(competition.getAssessorFinanceView())) {
-                showFinancesLink = true;
-                url = assessorLink(currentUserRole.get(), organisation);
-            }
-        }
-        if (user.isInternalUser()) {
-            showFinancesLink = true;
-            url = internalLink(applicationId, organisation);
-        }
-
+        Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
+        Optional<String> financeLink = financesLink(organisation, processRoles, user, applicationId, competition);
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
                 organisation.getId().equals(leadOrganisationId) ? "Lead organisation" : "Partner",
-                showFinancesLink,
-                url,
+                financeLink.isPresent(),
+                financeLink.orElse(null),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, LABOUR)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, OVERHEADS)).orElse(BigDecimal.ZERO),
@@ -152,6 +140,26 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 finance.map(appFinance -> getCategoryOrZero(appFinance, TRAVEL)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, OTHER_COSTS)).orElse(BigDecimal.ZERO)
         );
+    }
+
+    private Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, long applicationId, CompetitionResource competition) {
+        Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
+
+        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
+        if (authenticatedUser.isInternalUser()) {
+            return Optional.of(internalLink(applicationId, organisation));
+        }
+        if (currentUserRole.isPresent()) {
+            if (applicantProcessRoles().contains(currentUserRole.get().getRole())
+                    && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
+                return Optional.of(applicantLink(applicationId));
+            }
+            if (asessorProcessRoles().contains(currentUserRole.get().getRole())
+                    && DETAILED.equals(competition.getAssessorFinanceView())) {
+                return Optional.of(assessorLink(currentUserRole.get(), organisation));
+            }
+        }
+        return Optional.empty();
     }
 
     private String assessorLink(ProcessRoleResource processRole, OrganisationResource organisation) {
@@ -170,7 +178,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     }
 
     private BigDecimal getCategoryOrZero(ApplicationFinanceResource appFinance, FinanceRowType labour) {
-        return ofNullable(appFinance.getFinanceOrganisationDetails(labour))
+        return Optional.ofNullable(appFinance.getFinanceOrganisationDetails(labour))
                 .map(FinanceRowCostCategory::getTotal)
                 .orElse(BigDecimal.ZERO);
     }

@@ -92,7 +92,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         rows.addAll(pendingOrganisations(applicationId));
 
         return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open, application.isCollaborativeProject(),
-                currentUsersRole.map(ProcessRoleResource::getOrganisationId).orElse(null));
+                currentUsersRole.map(ProcessRoleResource::getOrganisationId).orElse(null),
+                competition.getCollaborationLevel());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {

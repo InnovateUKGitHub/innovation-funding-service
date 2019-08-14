@@ -29,11 +29,11 @@ public class YourFinancesViewModel {
         this.h2020 = competition.isH2020();
         this.collaborativeProject = !CollaborationLevel.SINGLE.equals(competition.getCollaborationLevel());
         this.fullyFunded = competition.isFullyFunded();
-        this.costs = Optional.ofNullable(organisationFinance.getTotal()).orElse(BigDecimal.ZERO);
-        this.claimPercentage = Optional.ofNullable(organisationFinance.getGrantClaimPercentage()).orElse(0);
-        this.fundingSought = Optional.ofNullable(organisationFinance.getTotalFundingSought()).orElse(BigDecimal.ZERO);
-        this.otherFunding = Optional.ofNullable(organisationFinance.getTotalOtherFunding()).orElse(BigDecimal.ZERO);
-        this.contribution = Optional.ofNullable(organisationFinance.getTotalContribution()).orElse(BigDecimal.ZERO);
+        this.costs = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO);
+        this.claimPercentage = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(0);
+        this.fundingSought = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO);
+        this.otherFunding = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
+        this.contribution = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
         this.rows = rows;
     }
 

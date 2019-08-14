@@ -24,15 +24,15 @@
 
             <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
 
-            <section th:if="!${#lists.isEmpty(model.feedbackSummary)}">
+            <section>
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Feedback summary</h2>
                 <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
-                <p class="govuk-body" th:if="${model.feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
-                <p class="govuk-body" th:if="!${model.feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
+                <p class="govuk-body" th:if="${model.assessment.getFundingDecision().getFundingConfirmation()}">Yes</p>
+                <p class="govuk-body" th:if="!${model.assessment.getFundingDecision().getFundingConfirmation()}">No</p>
                 <h3 class="govuk-heading-s">Your feedback</h3>
-                <p class="govuk-body" th:text="${model.feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
+                <p class="govuk-body" th:text="${model.assessment.getFundingDecision().getFeedback()}">Feedback text</p>
                 <h3 class="govuk-heading-s">Other comments</h3>
-                <p class="govuk-body" th:text="${model.feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
+                <p class="govuk-body" th:text="${model.assessment.getFundingDecision().getComment()}">Feedback text</p>
             </section>
 
 

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,15 +17,17 @@ public class ApplicationFinanceSummaryViewModel {
     private final List<FinanceSummaryTableRow> rows;
     private final boolean readOnly;
     private final boolean collaborativeProject;
+    private final CollaborationLevel collaborationLevel;
 
     private final Long currentUsersOrganisationId;
 
-    public ApplicationFinanceSummaryViewModel(long applicationId, List<FinanceSummaryTableRow> rows, boolean readOnly, boolean collaborativeProject, Long currentUsersOrganisationId) {
+    public ApplicationFinanceSummaryViewModel(long applicationId, List<FinanceSummaryTableRow> rows, boolean readOnly, boolean collaborativeProject, Long currentUsersOrganisationId, CollaborationLevel collaborationLevel) {
         this.applicationId = applicationId;
         this.rows = rows;
         this.readOnly = readOnly;
         this.collaborativeProject = collaborativeProject;
         this.currentUsersOrganisationId = currentUsersOrganisationId;
+        this.collaborationLevel = collaborationLevel;
     }
 
     public long getApplicationId() {
@@ -92,5 +96,14 @@ public class ApplicationFinanceSummaryViewModel {
         return rows.stream()
                 .map(FinanceSummaryTableRow::getContribution)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public boolean showCollaborationWarning() {
+        return CollaborationLevel.COLLABORATIVE.equals(collaborationLevel)
+                && !atLeastTwoCompleteOrganisationFinances();
+    }
+    private boolean atLeastTwoCompleteOrganisationFinances() {
+        return rows.stream().filter(FinanceSummaryTableRow::isComplete)
+                .count() > 1;
     }
 }
