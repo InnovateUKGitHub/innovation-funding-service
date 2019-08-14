@@ -107,7 +107,7 @@ public class ApplicationPrintPopulator {
         addQuestionsDetails(model, application, null);
         addUserDetails(model, user, userApplicationRoles);
         addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), completedSectionsByOrganisation, Optional.empty());
-        addFinanceDetails(model, competition.getId(), applicationId);
+        addFinanceDetails(model, competition, applicationId);
 
         return "application/print";
     }
@@ -121,8 +121,8 @@ public class ApplicationPrintPopulator {
         model.addAttribute("financeSection", section);
     }
 
-    private void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
-        addFinanceSections(competitionId, model);
+    private void addFinanceDetails(Model model, CompetitionResource competition, Long applicationId) {
+        addFinanceSections(competition.getId(), model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
                 fileEntryRestService,
@@ -130,7 +130,7 @@ public class ApplicationPrintPopulator {
         );
 
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
-        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
+        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType(competition));
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
         model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
@@ -142,7 +142,7 @@ public class ApplicationPrintPopulator {
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
-        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(0.2)));
+        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotalCosts().multiply(BigDecimal.valueOf(0.2)));
         model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
 

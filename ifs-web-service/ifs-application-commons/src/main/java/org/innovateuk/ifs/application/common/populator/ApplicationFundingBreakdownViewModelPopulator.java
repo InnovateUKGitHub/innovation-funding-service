@@ -109,7 +109,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         // Finance Section will be null for EOI Competitions
         if (section != null) {
             return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
+                    organisationFinanceOverview.getTotalPerType(competition),
                     organisationFinanceOverview.getTotal(),
                     applicationOrganisations,
                     section,
@@ -122,7 +122,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     competition);
         } else {
             return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
+                    organisationFinanceOverview.getTotalPerType(competition),
                     applicationOrganisations,
                     section,
                     leadOrganisation,

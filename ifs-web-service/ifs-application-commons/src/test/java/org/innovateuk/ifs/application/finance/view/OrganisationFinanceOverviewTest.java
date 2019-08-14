@@ -50,12 +50,12 @@ public class OrganisationFinanceOverviewTest {
     }
 
     @Test
-    public void totalCostsShouldBeAllOrganisationCostsAddedTogether () throws Exception {
+    public void totalCostsShouldBeAllOrganisationCostsAddedTogether () {
         BigDecimal totalValue1 = new BigDecimal(123);
         BigDecimal totalValue2 = new BigDecimal(456);
 
-        when(applicationFinanceResource1.getTotalCosts()).thenReturn(totalValue1);
-        when(applicationFinanceResource2.getTotalCosts()).thenReturn(totalValue2);
+        when(applicationFinanceResource1.getTotal()).thenReturn(totalValue1);
+        when(applicationFinanceResource2.getTotal()).thenReturn(totalValue2);
 
         Assert.assertEquals(organisationFinanceOverview.getTotal(), totalValue1.add(totalValue2));
 

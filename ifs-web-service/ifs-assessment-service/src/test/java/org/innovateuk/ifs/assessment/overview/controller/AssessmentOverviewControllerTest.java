@@ -396,6 +396,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withFundingType(GRANT)
                 .build();
 
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+
         ApplicationResource applicationResource = applications.get(0);
 
         AssessmentResource assessmentResource = newAssessmentResource()
@@ -419,7 +421,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
         when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
         when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
-
 
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(),
