@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -141,7 +142,22 @@ public class ApplicationPrintPopulator {
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
+        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(0.2)));
+        model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
+
+    private boolean isVatRegistered(Map<Long, BaseFinanceResource> organisationFinances) {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().isVatRegistered();
+        }
+
+        return false;
+    }
+
     private void addSubSections(Optional<SectionResource> currentSection, Model model, List<SectionResource> parentSections,
                                 List<SectionResource> allSections, List<QuestionResource> questions, List<FormInputResource> formInputResources) {
         Map<Long, List<QuestionResource>> subsectionQuestions;
