@@ -42,7 +42,7 @@
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
                 <input type="hidden" id="cacheTest" value=""/>
                 <th:block th:unless="${model.readOnly}" >
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
+                    <div th:if="${form.fundingPercentage}" class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                                 Are you requesting funding?
@@ -75,6 +75,34 @@
                             </div>
                         </fieldset>
                     </div>
+
+                    <div th:if="${form.fundingAmount}"
+                         class="govuk-form-group govuk-!-margin-bottom-9" th:classappend="${#fields.hasErrors('amount')} ? 'govuk-form-group--error'">
+                        <input type="hidden" name="requestingFunding" value="true"/>
+                        <h2 class="govuk-heading-m">How much funding is required?</h2>
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h2 class="govuk-fieldset__heading govuk-visually-hidden">Funding amount</h2>
+                            </legend>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('amount')}"
+                                  th:text="${err}"></span>
+                            <span class="govuk-hint">The amount you apply for must reflect the funding amount available for this competition.</span>
+
+                            <label class="govuk-label govuk-!-font-weight-bold" for="amount">
+                                Funding amount (&pound;)
+                            </label>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('amount')}" th:text="${err}" />
+                            <input id="amount"
+                                   type="number"
+                                   class="govuk-input govuk-input--width-10"
+                                   required="required"
+                                   th:errorclass="govuk-input--error"
+                                   th:field="*{amount}"
+                                   min="0"
+                                   placeholder="0" />
+                        </fieldset>
+                    </div>
+
                     <div class="govuk-form-group govuk-!-margin-bottom-9" th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
                         <h2 class="govuk-heading-m">Other funding</h2>
                         <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
@@ -122,7 +150,7 @@
                         <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>
                     </dl>
                     <dl class="govuk-list readonly-data" th:if="${form.fundingAmount}">
-                        <dt>Funding level</dt>
+                        <dt>Funding amount</dt>
                         <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
                     </dl>
                     <h2 class="govuk-heading-m">Other funding for this project</h2>
