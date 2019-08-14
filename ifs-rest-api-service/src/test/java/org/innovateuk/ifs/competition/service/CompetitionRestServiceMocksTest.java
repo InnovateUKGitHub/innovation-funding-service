@@ -6,20 +6,22 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 
 public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionRestServiceImpl> {
 
-    private static final String competitionsRestURL = "/competition";
+    private static final String COMPETITIONS_REST_URL = "/competition";
 
     @Override
     protected CompetitionRestServiceImpl registerRestServiceUnderTest() {
@@ -28,9 +30,8 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Test
     public void getAll() {
-
         List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
-        setupGetWithRestResultExpectations(competitionsRestURL + "/find-all", competitionResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(format("%s/find-all", COMPETITIONS_REST_URL), competitionResourceListType(), returnedResponse);
         List<CompetitionResource> responses = service.getAll().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
@@ -38,44 +39,43 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Test
     public void getCompetitionById() {
-
         CompetitionResource returnedResponse = new CompetitionResource();
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
+        setupGetWithRestResultExpectations(format("%s/%d", COMPETITIONS_REST_URL, 123), CompetitionResource.class, returnedResponse);
 
-        CompetitionResource response = service.getCompetitionById(123L).getSuccess();
+        CompetitionResource response = service.getCompetitionById(123).getSuccess();
         assertNotNull(response);
-        Assert.assertEquals(returnedResponse, response);
+        assertEquals(returnedResponse, response);
     }
 
     @Test
     public void findInnovationLeads() {
+        List<UserResource> returnedResponse = newUserResource().build(2);
 
-        List<UserResource> returnedResponse = asList(new UserResource(), new UserResource());
+        setupGetWithRestResultExpectations(format("%s/%d/%s", COMPETITIONS_REST_URL, 123, "innovation-leads"), userListType(), returnedResponse);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/innovation-leads", userListType(), returnedResponse);
+        List<UserResource> response = service.findInnovationLeads(123).getSuccess();
 
-        List<UserResource> response = service.findInnovationLeads(123L).getSuccess();
         assertNotNull(response);
-        Assert.assertEquals(returnedResponse, response);
+        assertEquals(returnedResponse, response);
     }
 
     @Test
     public void addInnovationLead() {
+        setupPostWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "add-innovation-lead", 234), HttpStatus.OK);
 
-        setupPostWithRestResultExpectations(competitionsRestURL + "/123" + "/add-innovation-lead" + "/234", HttpStatus.OK);
+        RestResult<Void> response = service.addInnovationLead(123, 234);
 
-        RestResult<Void> response = service.addInnovationLead(123L, 234L);
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void removeInnovationLead() {
+        setupPostWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "remove-innovation-lead", 234), HttpStatus.OK);
 
-        setupPostWithRestResultExpectations(competitionsRestURL + "/123" + "/remove-innovation-lead" + "/234", HttpStatus.OK);
+        RestResult<Void> response = service.removeInnovationLead(123, 234);
 
-        RestResult<Void> response = service.removeInnovationLead(123L, 234L);
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -87,6 +87,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         setupGetWithRestResultExpectations("/competition-type/find-all", competitionTypeResourceListType(), returnedResponse);
 
         List<CompetitionTypeResource> response = service.getCompetitionTypes().getSuccess();
+
         assertNotNull(response);
         assertEquals(2, response.size());
         assertEquals(returnedResponse, response);
@@ -94,10 +95,22 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
     @Test
     public void updateTermsAndConditionsForCompetition() {
-        setupPutWithRestResultExpectations(competitionsRestURL + "/123" + "/update-terms-and-conditions" + "/234", HttpStatus.OK);
+        setupPutWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "update-terms-and-conditions", 234), HttpStatus.OK);
 
-        RestResult<Void> response = service.updateTermsAndConditionsForCompetition(123L, 234L);
+        RestResult<Void> response = service.updateTermsAndConditionsForCompetition(123, 234);
+
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void downloadTerms() {
+        long competitionId = 7;
+        ByteArrayResource expectedResource = new ByteArrayResource("content".getBytes());
+        setupGetWithRestResultExpectations(format("%s/%d/terms-and-conditions", COMPETITIONS_REST_URL, competitionId), ByteArrayResource.class, expectedResource, HttpStatus.OK);
+
+        ByteArrayResource actualResource = service.downloadTerms(competitionId).getSuccess();
+
+        assertEquals(expectedResource, actualResource);
     }
 }

@@ -85,7 +85,7 @@ public class SubcontractingRowForm extends AbstractCostRowForm<SubContractingCos
     }
 
     @Override
-    public SubContractingCost toCost() {
-        return new SubContractingCost(getCostId(), cost, country, name, role);
+    public SubContractingCost toCost(Long financeId) {
+        return new SubContractingCost(getCostId(), cost, country, name, role, financeId);
     }
 }

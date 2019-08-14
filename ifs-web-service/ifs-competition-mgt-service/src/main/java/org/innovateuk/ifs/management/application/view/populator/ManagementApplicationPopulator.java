@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.application.view.populator;
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -15,21 +16,21 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
-import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
 
 @Component
 public class ManagementApplicationPopulator {
@@ -55,30 +56,30 @@ public class ManagementApplicationPopulator {
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
+    @Autowired
+    private ProjectRestService projectRestService;
+
     public ManagementApplicationViewModel populate(long applicationId,
-                                                   UserResource user,
-                                                   String origin,
-                                                   MultiValueMap<String, String> queryParams) {
+                                                   UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
 
-        queryParams.put("competitionId", singletonList(String.valueOf(application.getCompetition())));
-        queryParams.put("applicationId", singletonList(String.valueOf(application.getId())));
-        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGEMENT_APPLICATION, queryParams);
-        String backUrl = buildBackUrl(ManagementApplicationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
+        Long projectId = null;
+        if (application.getApplicationState() == ApplicationState.APPROVED) {
+            projectId = projectRestService.getByApplicationId(applicationId).getOptionalSuccessObject().map(ProjectResource::getId).orElse(null);
+        }
 
         return new ManagementApplicationViewModel(
                 application,
                 competition,
-                backUrl,
-                originQuery,
                 ineligibilityViewModel,
                 applicationReadOnlyViewModel,
                 getAppendices(applicationId),
                 canMarkAsIneligible(application, user),
-                user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN)
+                user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
+                projectId
         );
 
     }
@@ -89,10 +90,19 @@ public class ManagementApplicationPopulator {
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
-                    String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
+                    String title = fileTitle(formInputResource, fileEntryResource);
                     return new AppendixViewModel(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).
                 collect(Collectors.toList());
+    }
+
+    private static String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
+        if (TEMPLATE_DOCUMENT.equals(formInputResource.getType())) {
+            return format("Uploaded %s", formInputResource.getDescription());
+        } else if (FILEUPLOAD.equals(formInputResource.getType())) {
+            return "Appendix";
+        }
+        return formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
     }
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {

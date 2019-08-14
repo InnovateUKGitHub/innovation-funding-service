@@ -26,6 +26,10 @@ public class FormInputResponseResource {
         // no-arg constructor
     }
 
+    public FormInputResponseResource(String value) {
+        this.value = value;
+    }
+
     public FormInputResponseResource(ZonedDateTime updateDate, String value, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.value = value;

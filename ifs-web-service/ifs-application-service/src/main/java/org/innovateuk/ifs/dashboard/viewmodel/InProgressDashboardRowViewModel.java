@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -16,8 +16,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
  */
-public class InProgressDashboardRowViewModel extends
-        AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
+public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
 
     private static final int ONE_HUNDRED_PERCENT = 100;
 
@@ -52,7 +51,7 @@ public class InProgressDashboardRowViewModel extends
         this.startDate = startDate;
     }
 
-    public InProgressDashboardRowViewModel (DashboardApplicationInProgressResource resource){
+    public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
         super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
         this.assignedToMe = resource.isAssignedToMe();
         this.applicationState = resource.getApplicationState();

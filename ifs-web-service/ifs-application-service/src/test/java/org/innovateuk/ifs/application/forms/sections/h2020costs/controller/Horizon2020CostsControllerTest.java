@@ -119,7 +119,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser().isInternalUser(), "")).thenReturn(viewModel);
+        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser().isInternalUser())).thenReturn(viewModel);
         return viewModel;
     }
 }

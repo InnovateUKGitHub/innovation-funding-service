@@ -28,7 +28,7 @@
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a th:href="${projectView.linkUrl} + ${model.originQuery}"
+                                    <a th:href="${projectView.linkUrl}"
                                        th:text="${projectView.title}"
                                        class="govuk-link">PROJECT NAME</a>
                                 </h3>
@@ -136,15 +136,15 @@
                 </div>
             </section>
 
-            <section class="previous-applications" th:unless="${model.previous.empty}">
+            <section class="previous" th:unless="${model.previous.empty}">
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m">Previous applications</h2>
+                    <h2 class="govuk-heading-m">Previous</h2>
                     <ul>
                         <li th:each="previousView : ${model.previous}"
                             th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a th:href="${previousView.linkUrl} + ${model.originQuery}" th:text="${previousView.title}" class="govuk-link" />
+                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" class="govuk-link" />
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>
@@ -156,6 +156,8 @@
                                 <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
                                 <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
                                 <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
+                                <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
                             </div>
                         </li>
                     </ul>

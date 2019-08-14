@@ -14,6 +14,7 @@ import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 
@@ -29,18 +30,27 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
                 .findAny();
 
+        Optional<FormInputResource> templateDocument = formInputs.stream().filter(formInput -> formInput.getType().equals(TEMPLATE_DOCUMENT))
+                .findAny();
+
         Optional<FormInputResponseResource> textResponse = textInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
         Optional<FormInputResponseResource> appendixResponse = appendix
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
+        Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
+                .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
+
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 textResponse.map(FormInputResponseResource::getValue).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null)
-        );
+                appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),
+                templateDocumentResponse.map(FormInputResponseResource::getFilename).orElse(null),
+                templateDocument.map(FormInputResource::getDescription).orElse(null),
+                templateDocumentResponse.map(FormInputResponseResource::getFormInput).orElse(null)
+            );
     }
 
     private String questionName(QuestionResource question) {

@@ -7,8 +7,6 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +44,10 @@ public class FinanceOverviewPopulator {
 
         if(hasFinanceSection) {
             Long organisationType = applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType();
-            List<QuestionResource> costsQuestions = questionRestService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST).getSuccess();
 
             applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId());
             if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
-                openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCompetition(), organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+                openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCompetition(), organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
             }
         }
     }

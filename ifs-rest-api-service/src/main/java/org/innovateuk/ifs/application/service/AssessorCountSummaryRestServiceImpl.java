@@ -3,12 +3,9 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -22,10 +19,9 @@ public class AssessorCountSummaryRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(
-            long competitionId, Optional<Long> innovationSectorId, Optional<BusinessType> businessType, Integer pageIndex, Integer pageSize) {
+            long competitionId, String assessorNameFilter, Integer pageIndex, Integer pageSize) {
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        innovationSectorId.ifPresent(i -> params.add("innovationSector", String.valueOf(i)));
-        businessType.ifPresent(b -> params.add("businessType", b.name()));
+        params.add("assessorNameFilter", assessorNameFilter);
 
         String uriWithParams = buildPaginationUri(format("%s/find-by-competition-id/%s", ASSESSOR_COUNT_REST_URL, competitionId), pageIndex, pageSize, null, params);
         return getWithRestResult(uriWithParams, AssessorCountSummaryPageResource.class);

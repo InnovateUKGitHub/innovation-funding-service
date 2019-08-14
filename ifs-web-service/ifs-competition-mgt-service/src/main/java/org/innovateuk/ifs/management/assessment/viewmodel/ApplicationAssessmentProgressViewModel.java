@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessment.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -25,7 +26,7 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAssessmentProgressRejectedRowViewModel> rejected;
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
     private List<InnovationSectorResource> innovationSectors;
-    private Long filterInnovationArea;
+    private String assessorNameFilter;
     private Pagination pagination;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
@@ -41,7 +42,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned,
                                                   List<ApplicationAvailableAssessorsRowViewModel> available,
                                                   List<InnovationSectorResource> innovationSectors,
-                                                  Long filterInnovation,
+                                                  String assessorNameFilter,
                                                   Pagination pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -56,7 +57,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.previouslyAssigned = previouslyAssigned;
         this.available = available;
         this.innovationSectors = innovationSectors;
-        this.filterInnovationArea = filterInnovation;
+        this.assessorNameFilter = assessorNameFilter;
         this.pagination = pagination;
     }
 
@@ -112,8 +113,8 @@ public class ApplicationAssessmentProgressViewModel {
         return innovationSectors;
     }
 
-    public Long getFilterInnovationArea() {
-        return filterInnovationArea;
+    public String getAssessorNameFilter() {
+        return assessorNameFilter;
     }
 
     public Pagination getPagination() {
@@ -142,7 +143,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(rejected, that.rejected)
                 .append(previouslyAssigned, that.previouslyAssigned)
                 .append(innovationSectors, that.innovationSectors)
-                .append(filterInnovationArea, that.filterInnovationArea)
+                .append(assessorNameFilter, that.assessorNameFilter)
                 .append(pagination, that.pagination)
                 .isEquals();
     }
@@ -163,8 +164,29 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(rejected)
                 .append(previouslyAssigned)
                 .append(innovationSectors)
-                .append(filterInnovationArea)
+                .append(assessorNameFilter)
                 .append(pagination)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("applicationId", applicationId)
+                .append("applicationName", applicationName)
+                .append("applicationInnovationArea", applicationInnovationArea)
+                .append("competitionId", competitionId)
+                .append("competitionName", competitionName)
+                .append("inAssessment", inAssessment)
+                .append("leadOrganisation", leadOrganisation)
+                .append("partnerOrganisations", partnerOrganisations)
+                .append("assigned", assigned)
+                .append("available", available)
+                .append("rejected", rejected)
+                .append("previouslyAssigned", previouslyAssigned)
+                .append("innovationSectors", innovationSectors)
+                .append("assessorNameFilter", assessorNameFilter)
+                .append("pagination", pagination)
+                .toString();
     }
 }

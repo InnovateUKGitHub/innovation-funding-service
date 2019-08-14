@@ -15,6 +15,7 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
     private CompetitionResource competition;
     private String selectedInnovationAreaName;
     private AssignButtonsViewModel assignButtonsViewModel;
+    private boolean isProcurementCompetition;
 
     @Override
     protected FormInputType formInputType() {
@@ -84,6 +85,14 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
 
     public boolean getApplicationIsReadOnly() {
         return !competition.isOpen() || !application.isOpen();
+    }
+
+    public boolean getIsProcurementCompetition() {
+        return isProcurementCompetition;
+    }
+
+    public void setIsProcurementCompetition(boolean procurementCompetition) {
+        isProcurementCompetition = procurementCompetition;
     }
 
 }

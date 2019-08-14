@@ -6,8 +6,8 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ "$TARGET" == "production" ]]; then
-    echo "Cannot reset the database on production"
+if [[ "$TARGET" == "ifs-prod" ]]; then
+    echo "Cannot reset the database on ifs-prod"
     exit 1
 fi
 
@@ -52,6 +52,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"
 
+    export FLYWAY_TABLE=schema_version
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
     export SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 fi

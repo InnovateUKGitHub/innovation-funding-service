@@ -68,15 +68,15 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
         Long applicationId = 1L;
         int page = 3;
         int size = 6;
-        long filterInnovationArea = 4L;
+        String assessorNameFilter = "";
 
-        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, page, size, filterInnovationArea)).thenReturn(serviceSuccess(expected));
+        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, page, size, assessorNameFilter)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors?page={page}&size={size}&filterInnovationArea={filter}", applicationId, page, size, filterInnovationArea))
+        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors?page={page}&size={size}&assessorNameFilter={assessorNameFilter}", applicationId, page, size, assessorNameFilter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
-        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, page, size, filterInnovationArea);
+        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, page, size, assessorNameFilter);
     }
 
     @Test

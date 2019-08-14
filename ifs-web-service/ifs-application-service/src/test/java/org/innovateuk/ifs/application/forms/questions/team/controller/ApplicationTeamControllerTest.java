@@ -104,7 +104,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void markAsCompleteFromReviewAndSubmit() throws Exception {
+    public void showErrors() throws Exception {
         long applicationId = 1L;
         long questionId = 2L;
 
@@ -112,7 +112,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(emptyList()));
 
-        MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/team?mark_as_complete=true", applicationId, questionId))
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/team?show-errors=true", applicationId, questionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/team", applicationId, questionId)))
                 .andReturn();

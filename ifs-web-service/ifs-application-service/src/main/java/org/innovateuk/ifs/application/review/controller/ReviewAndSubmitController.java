@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -16,15 +15,14 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,9 +32,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
-import static java.lang.String.*;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Controller
@@ -44,27 +41,23 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
 public class ReviewAndSubmitController {
     public static final String FORM_ATTR_NAME = "applicationSubmitForm";
 
+    @Autowired
     private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
+    @Autowired
     private ApplicationRestService applicationRestService;
+    @Autowired
     private CompetitionRestService competitionRestService;
-    private ApplicationModelPopulator applicationModelPopulator;
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
     private UserService userService;
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
     private QuestionStatusRestService questionStatusRestService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private QuestionRestService questionRestService;
 
-    public ReviewAndSubmitController(ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, ApplicationModelPopulator applicationModelPopulator, CookieFlashMessageFilter cookieFlashMessageFilter, UserService userService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService, QuestionRestService questionRestService) {
-        this.reviewAndSubmitViewModelPopulator = reviewAndSubmitViewModelPopulator;
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.applicationModelPopulator = applicationModelPopulator;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-        this.userService = userService;
-        this.questionStatusRestService = questionStatusRestService;
-        this.userRestService = userRestService;
-        this.questionRestService = questionRestService;
-    }
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -74,10 +67,7 @@ public class ReviewAndSubmitController {
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
                                   Model model,
-                                  UserResource user,
-                                  @RequestParam MultiValueMap<String, String> queryParams) {
-
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationSummaryOrigin.REVIEW_AND_SUBMIT, queryParams));
+                                  UserResource user) {
         model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
 
         return "application/review-and-submit";
@@ -93,16 +83,6 @@ public class ReviewAndSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.isProcurement()) {
-            if (!applicationSubmitForm.isAgreeTerms()) {
-                String errorCode = "validation.application.procurement.terms.required";
-                bindingResult.rejectValue("agreeTerms", errorCode);
-                redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + FORM_ATTR_NAME, bindingResult);
-                redirectAttributes.addFlashAttribute(FORM_ATTR_NAME, applicationSubmitForm);
-                return format("redirect:/application/%d/summary", applicationId);
-            }
-
-        }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
     }
@@ -218,14 +198,17 @@ public class ReviewAndSubmitController {
         }
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
+
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
 
         return competition.isH2020() ?
                 "h2020-grant-transfer-track" : "application-track";
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
+        return userService.isLeadApplicant(user.getId(), application) && application.isSubmittable();
     }
 
     private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {

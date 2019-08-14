@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -19,12 +20,14 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singleton;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -142,6 +145,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition()
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Competition expectedResult = newCompetition().withId(4L).build();
@@ -176,6 +180,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
+                .withFinanceRowTypes(singleton(FINANCE))
                 .build();
 
         List<Competition> competitions = asList(competitionTemplate);
@@ -192,6 +197,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         Competition competition = newCompetition()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));

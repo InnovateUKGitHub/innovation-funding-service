@@ -20,15 +20,6 @@ Status changes when we assign a question
     Then the assign status should be correct for the Project Summary
     And the blue flag should not be visible
 
-Re-assign is possible from the overview page
-    [Documentation]    INFUND-39
-    [Tags]
-    Given the user navigates to the page                                            ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link                                             link = Academic robot test application
-    When the applicant assigns the Project Summary question from the overview page  Steve Smith
-    Then a blue flag should be visible for the Project Summary in overview page
-    And the assign button should say Assigned to you
-
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
@@ -38,14 +29,13 @@ Custom Suite Setup
 the Applicant edits the Project summary
     Clear Element Text                    css = .textarea-wrapped .editor
     The user enters text to a text field  css = .textarea-wrapped .editor    Check last updated date@#$
-    Set Focus To Element                                   css = .app-submit-btn
+    Set Focus To Element                                   id = application-question-complete
     wait for autosave
 
 the assign status should be correct for the Project Summary
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = Academic robot test application
-    the user should see the element  jQuery = li:contains("Project summary") > .assign-container button
-    Element Should Contain           jQuery = li:contains("Project summary") > .assign-container button    Arsene Wenger
+    the user should see the element  jQuery = li:contains("Project summary"):contains("Assigned to"):contains("Arsene Wenger")
 
 the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
@@ -55,8 +45,12 @@ the applicant assigns the Project Summary question from the overview page
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    the user clicks the button/link  css = .question .assign-button button
-    the user clicks the button/link  jQuery = button:contains("${assignee_name}")
+    the user clicks the button/link     jQuery = a:contains("Assign to someone else")
+    the user should see the element     jQuery = h2:contains("Assign this question to someone else.")
+    the user clicks the button/link     jQuery = label:contains("${assignee_name}")
+    the user clicks the button/link     jQuery = label:contains("${assignee_name}")
+    the user clicks the button/link     jQuery = label:contains("${assignee_name}")
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
 
 a blue flag should be visible for the Project Summary in overview page
     Wait Until Page Does Not Contain Without Screenshots  Assigning to Steve Smith...    10s

@@ -3,12 +3,12 @@ package org.innovateuk.ifs.management.funding.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApplicationViewModel;
-import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
-import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,6 @@ public class ManageFundingApplicationsModelPopulator {
 
     public ManageFundingApplicationViewModel populate(FundingNotificationFilterForm queryForm,
                                                       long competitionId,
-                                                      String queryString,
                                                       long totalSubmittableApplications) {
         ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(
                 competitionId, queryForm.getSortField(), queryForm.getPage(),
@@ -47,7 +46,7 @@ public class ManageFundingApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         boolean selectAllDisabled = totalSubmittableApplications > CompetitionManagementCookieController.SELECTION_LIMIT;
-        Pagination pagination = new Pagination(results, queryString);
+        Pagination pagination = new Pagination(results);
 
         return new ManageFundingApplicationViewModel(
                 results,

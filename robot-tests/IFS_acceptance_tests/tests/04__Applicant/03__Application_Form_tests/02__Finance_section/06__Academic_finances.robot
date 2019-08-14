@@ -75,13 +75,7 @@ Academics upload
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
-
-Academic partner can view the file on the finances
-    [Documentation]    INFUND-917
-    [Tags]
-    When the user opens the link in new window  ${5mb_pdf}
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
+    And open pdf link                                  ${5mb_pdf}
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -121,7 +115,7 @@ Mark all as complete
     And the user enters the project location
     And the user clicks the button/link            link = Your funding
     And the user marks your funding section as complete
-    Then the user should see the element           jQuery = h1:contains("Your finances")
+    Then the user should see the element           jQuery = h1:contains("Your project finances")
     And the user navigates to the finance overview of the academic
     And the user should see the element            css = .finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
 

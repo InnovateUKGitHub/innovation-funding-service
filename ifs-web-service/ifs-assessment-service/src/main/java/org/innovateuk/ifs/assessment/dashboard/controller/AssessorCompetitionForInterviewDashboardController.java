@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForInterviewDashboardModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +12,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all requests that are related to the assessor interview dashboard.
@@ -34,8 +31,7 @@ public class AssessorCompetitionForInterviewDashboardController {
                                     UserResource loggedInUser
                                 ) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.ASSESSOR_INTERVIEW, params);
-        model.addAttribute("model", assessorCompetitionForInterviewDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId(), originQuery));
+        model.addAttribute("model", assessorCompetitionForInterviewDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
         return "assessor-interview-applications";
     }
 

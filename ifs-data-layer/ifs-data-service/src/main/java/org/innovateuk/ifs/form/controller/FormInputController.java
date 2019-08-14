@@ -1,12 +1,16 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,6 +22,8 @@ public class FormInputController {
 
     @Autowired
     private FormInputService formInputService;
+
+    private final static FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/{id}")
     public RestResult<FormInputResource> findOne(@PathVariable("id") Long id) {
@@ -52,5 +58,16 @@ public class FormInputController {
     @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return formInputService.delete(id).toDeleteResponse();
+    }
+
+    @GetMapping(value = "/file/{formInputId}", produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Object> downloadFile(@PathVariable long formInputId) throws IOException {
+        return fileControllerUtils.handleFileDownload(() -> formInputService.downloadFile(formInputId));
+    }
+
+    @GetMapping(value = "/file-details/{formInputId}", produces = "application/json")
+    public RestResult<FileEntryResource> findFile(@PathVariable long formInputId) throws IOException {
+        return formInputService.findFile(formInputId).toGetResponse();
     }
 }

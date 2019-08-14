@@ -8,15 +8,15 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestServ
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
-import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
 import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
@@ -27,7 +27,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,7 +132,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
         List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, buildQueryString(params), submittableApplications.size()));
+                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, submittableApplications.size()));
                 return MANAGE_FUNDING_APPLICATIONS_VIEW;
             }
         );
@@ -192,7 +191,6 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
     @PostMapping("/manage-funding-applications")
     public String selectApplications(Model model,
-                                     @RequestParam MultiValueMap<String, String> params,
                                      @PathVariable("competitionId") Long competitionId,
                                      @ModelAttribute @Valid FundingNotificationFilterForm query,
                                      ValidationHandler queryFormValidationHandler,
@@ -207,13 +205,13 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 .orElse(new FundingNotificationSelectionCookie(selectionForm));
 
         return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
-                () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params, request), // Pass or fail JSR 303 on the ids
+                () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, request), // Pass or fail JSR 303 on the ids
                         () -> {
                             // Custom validation
                             if (selectionCookie.getFundingNotificationSelectionForm().getIds().isEmpty()) {
                                 idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
                             }
-                            return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, params, request), // Pass or fail custom validation
+                            return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model, request), // Pass or fail custom validation
                                     () -> {
                                         removeCookie(response, competitionId);
                                         return composeEmailRedirect(competitionId, selectionCookie.getFundingNotificationSelectionForm().getIds());
@@ -322,23 +320,15 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         return () -> "redirect:/competition/" + competitionId + "/funding";
     }
 
-    private Supplier<String> idsFailureView(long competitionId, FundingNotificationFilterForm query, Model model, MultiValueMap<String, String> params, HttpServletRequest request) {
+    private Supplier<String> idsFailureView(long competitionId, FundingNotificationFilterForm query, Model model, HttpServletRequest request) {
         FundingNotificationSelectionCookie storedSelectionFormCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());
         List<Long> ids = getAllApplicationIdsByFilters(competitionId, storedSelectionFormCookie.getFundingNotificationFilterForm());
         final long totalSubmittableApplications = ids.size();
 
         return () -> {
-            model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, buildQueryString(params), totalSubmittableApplications));
+            model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, totalSubmittableApplications));
             return "comp-mgt-manage-funding-applications";
         };
-    }
-
-    private String buildQueryString(MultiValueMap<String, String> params){
-        return UriComponentsBuilder.newInstance()
-                .queryParams(params)
-                .build()
-                .encode()
-                .toUriString();
     }
 
     private void checkCompetitionIsOpen(long competitionId) {

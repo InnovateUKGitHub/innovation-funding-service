@@ -32,17 +32,16 @@
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
     <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? govuk-form-group--error">
 
-        <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
-            <th:block th:unless="${model.complete or model.closed or model.summary}">
-                <div class="assign-container" th:classappend="${model.assignButtonsViewModel.assignedToCurrentUser} ? 'assign-alert' : 'assigned-alert'">
-                    <th:block th:insert="question-type/form-elements :: current-assignee (${model.assignButtonsViewModel})"/>
-                </div>
-            </th:block>
-        </th:block>
-
-        <th:block
-            th:if="${!model.closed and !model.summary and !model.assignButtonsViewModel.hideAssignButtons and model.assignButtonsViewModel.currentUserIsLead}">
-            <th:block th:insert="question-type/form-elements :: assign-buttons-dialog (${model.assignButtonsViewModel})" th:with="fullButtonText=${TRUE}"/>
+        <th:block th:unless="${model.complete or model.closed or model.summary or model.singleApplicant}"
+                  th:with="assignee=${model.assignButtonsViewModel.assignedToCurrentUser ? 'you' : model.assignButtonsViewModel.assigneeUserName}">
+            <div class="assigned-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">This question is assigned to
+                    <th:block th:text="${assignee}"/>.
+                    <a th:if="${model.assignButtonsViewModel.currentUserIsLead and !model.assignButtonsViewModel.hideAssignButtons}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${question.id})}"
+                       class="govuk-link">Assign to someone else.</a>
+                </p>
+            </div>
         </th:block>
 
         <div th:unless="${model.closed or model.summary}" class="textarea-header">
@@ -169,7 +168,6 @@
     </th:block>
 
     <!-- ===========================Form: Percentage =========================== -->
-
     <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
         <label th:if="${question.getName()}"
                th:text="${question.name}"
@@ -182,11 +180,5 @@
         <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
         <span>&percnt;</span>
     </div>
-
-    <!-- ===========================Form: empty / no question =========================== -->
-    <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
-        <div class="govuk-body" ifs:utext="${question.description}" />
-        <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-    </th:block>
 
 </html>

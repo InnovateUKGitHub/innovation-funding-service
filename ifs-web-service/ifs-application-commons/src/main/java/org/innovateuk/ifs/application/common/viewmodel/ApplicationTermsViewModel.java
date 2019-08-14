@@ -17,6 +17,7 @@ public class ApplicationTermsViewModel {
     private final ZonedDateTime termsAcceptedOn;
     private final boolean termsAcceptedByAllOrganisations;
     private final boolean showHeaderAndFooter;
+    private final boolean additionalTerms;
 
     public ApplicationTermsViewModel(long applicationId,
                                      long competitionId,
@@ -26,7 +27,8 @@ public class ApplicationTermsViewModel {
                                      boolean termsAccepted,
                                      String termsAcceptedByName,
                                      ZonedDateTime termsAcceptedOn,
-                                     boolean termsAcceptedByAllOrganisations) {
+                                     boolean termsAcceptedByAllOrganisations,
+                                     boolean additionalTerms) {
         this.applicationId = applicationId;
         this.competitionId = competitionId;
         this.questionId = questionId;
@@ -36,6 +38,7 @@ public class ApplicationTermsViewModel {
         this.termsAcceptedByName = termsAcceptedByName;
         this.termsAcceptedOn = termsAcceptedOn;
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
+        this.additionalTerms = additionalTerms;
         this.showHeaderAndFooter = true;
     }
 
@@ -44,12 +47,14 @@ public class ApplicationTermsViewModel {
                                      long questionId,
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
-                                     boolean termsAcceptedByAllOrganisation) {
+                                     boolean termsAcceptedByAllOrganisation,
+                                     boolean additionalTerms) {
         this.applicationId = applicationId;
         this.competitionId = competitionId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.collaborativeApplication = collaborativeApplication;
+        this.additionalTerms = additionalTerms;
         this.termsAccepted = null;
         this.termsAcceptedByName = null;
         this.termsAcceptedOn = null;
@@ -99,5 +104,9 @@ public class ApplicationTermsViewModel {
 
     public boolean isShowHeaderAndFooter() {
         return showHeaderAndFooter;
+    }
+
+    public boolean isAdditionalTerms() {
+        return additionalTerms;
     }
 }

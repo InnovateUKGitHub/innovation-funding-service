@@ -12,6 +12,8 @@ Documentation     Suite description
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -55,7 +57,7 @@ Invite a registered assessor
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link = ${comp_name}
     And the user clicks the button/link                       link = Invite assessors to assess the competition
-    And the user selects the option from the drop-down menu   Smart infrastructure  id = filterInnovationArea
+    And the user enters text to a text field                  id = assessorNameFilter   Paul Plum
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
     Then the user clicks the button/link                      jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Add selected to invite list")
@@ -108,13 +110,11 @@ the comp admin closes the assessment and releases feedback
     Then the user should not see an error in the page
 
 the EOI comp moves to Previous tab
-    [Documentation]  IFS-2376
+    [Documentation]  IFS-2376  IFS-6054
     [Tags]
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = a:contains("Previous")
-    Then the user clicks the button/link   link = ${comp_name}
-    And the user should see the element    JQuery = h1:contains("${comp_name}")
-#    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
+    Then the user should see the competition details and sucessful application
 
 *** Keywords ***
 Custom Suite Setup
@@ -156,7 +156,14 @@ the applicant checks for competition terms and conditions
     the user clicks the button/link       link = Award terms and conditions
     the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
+
+the user should see the competition details and sucessful application
+    the user clicks the button/link    link = ${comp_name}
+    the user should see the element    jQuery = dt:contains("Competition type:") ~ dd:contains("Expression of interest")
+    the user should see the element    jQuery = button:contains("Projects (0)")
+    the user expands the section       Applications
+    the user should see the element    jQuery = h1:contains("${comp_name}")
 
 Custom suite teardown
     Close browser and delete emails

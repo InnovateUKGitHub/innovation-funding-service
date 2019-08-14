@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface ApplicationValidatorService {
     ValidationMessages validateFormInputResponse(Application application, long formInputId, long markedAsCompleteById);
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
-    List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById);
+    List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById);
 
     @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(FinanceRowItem costItem);

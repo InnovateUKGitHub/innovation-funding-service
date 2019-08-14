@@ -58,12 +58,12 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]  HappyPath
     [Setup]    The user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link          link = Invite robot test application
-    When the user clicks the button/link           link = Application team
-    And The user clicks the button/link       jquery = button:contains("Add person to ${organisation}")
-    And The user should not see the element   jQuery = .modal-delete-organisation button:contains('Delete organisation')
-    Then The user should see the element      jQuery = table:contains(empire) + table td:contains(Remove)
-    And The user clicks the button/link       jQuery = table:contains(empire) + table button:contains(Remove)
+    Given the user clicks the button/link         link = Invite robot test application
+    When the user clicks the button/link          link = Application team
+    And The user clicks the button/link           jquery = button:contains("Add person to ${organisation}")
+    And The user should not see the element       jQuery = .modal-delete-organisation button:contains('Delete organisation')
+    Then The user should see the element          jQuery = .govuk-table button:contains(Remove)
+    And The user clicks the button/link           jQuery = .govuk-table button:contains(Remove)
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
@@ -142,15 +142,6 @@ The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
     Then the user should not see the element  css = li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-
-Pending users visible in the assign list but not clickable
-    [Documentation]    INFUND-928  INFUND-1962
-    [Tags]  HappyPath
-    Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link           link = Invite robot test application
-    And the user clicks the button/link           link = Project summary
-    Then the applicant cannot assign to pending invitees
-    And the user should see the element           jQuery = li:contains("Adrian Booth (pending)")
     [Teardown]  logout as user
 
 Business organisation (partner accepts invitation)
@@ -208,13 +199,12 @@ Partner can invite others to his own organisation
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
-    [Tags]
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link = Invite robot test application
     And the user clicks the button/link    link = Project summary
-    When the user clicks the button/link   css = .assign-button > button
-    Then the user should see the element   jQuery = button:contains("Adrian Booth")
+    And the user clicks the button/link    jQuery = a:contains("Assign to someone else")
+    Then the user should see the element   jQuery = label:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928  INFUND-1463  INFUND-7979
@@ -249,7 +239,7 @@ Registered partner should not create new org but should follow the create accoun
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = a:contains("Sign in")
+    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking           &{lead_applicant_credentials}
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
@@ -283,10 +273,6 @@ The lead applicant should have the correct org status
     the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
-the applicant cannot assign to pending invitees
-    the user clicks the button/link      jQuery = button:contains("Assign this question to someone else")
-    the user should not see the element  jQuery = button:contains("Adrian Booth")
-
 the status of the people should be correct in the Manage contributors page
     the user should see the element  jQuery = .table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
     the user should see the element  jQuery = .table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
@@ -294,7 +280,7 @@ the status of the people should be correct in the Manage contributors page
 the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
-    And the user clicks the button/link   link = Your finances
+    And the user clicks the button/link   link = Your project finances
     And the user should see the element   link = Your project costs
     And the user should see the element   link = Your organisation
     And the user should see the element   jQuery = h3:contains("Your funding")
@@ -311,7 +297,7 @@ the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery = .govuk-button:contains("Sign in")
+    The user clicks the button/link                            jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}

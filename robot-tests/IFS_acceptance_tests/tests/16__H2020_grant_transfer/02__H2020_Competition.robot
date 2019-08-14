@@ -141,6 +141,7 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
+    the user clicks the button/link         id = generate-code
     the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
     the user clicks the button/link         id = funders[0].funder
     click element                           id = funders[0].funder__option--0
@@ -148,8 +149,8 @@ The user completes funding information
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
     the user enters text to a text field    id = activityCode    4242
-    the user clicks the button/link         id = generate-code
     the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         jQuery = td:contains(" Aerospace Technology Institute")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
@@ -229,8 +230,8 @@ The user completes the application proccess details
     the user selects the radio button       includeJesForm  false
     the user selects the radio button       includeYourOrganisationSection  false
     the user enters text to a text field    css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
-    the user clicks the button/link         jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link         jQuery = button:contains("Done")
 
 The user completes grant transfer setup
     the user clicks the button/link         jQuery = a:contains("Complete")
@@ -304,13 +305,13 @@ The user is able to complete Horizon 2020 grant agreement section
     the user should see the element           jQuery = li:contains("Horizon 2020 grant agreement") > .task-status-complete
 
 The user is able to complete Finance details section
-    the user clicks the button/link           jQuery = a:contains("Your finances")
-    the user should see the element           jQuery = h1:contains("Your finances")
+    the user clicks the button/link           jQuery = a:contains("Your project finances")
+    the user should see the element           jQuery = h1:contains("Your project finances")
     the user is able to complete your project location section
     the user is able to complete your organisation section
     the user is able to complete your project costs section
     the user clicks the button/link            link = Return to application overview
-    the user should see the element           jQuery = li:contains("Your finances") > .task-status-complete
+    the user should see the element           jQuery = li:contains("Your project finances") > .task-status-complete
 
 The user is able to complete Your project location section
      the user clicks the button/link           jQuery = a:contains("Your project location")
@@ -343,7 +344,7 @@ The user is able to complete your project costs section
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
 The user is able to validate conversion spredsheet links works
-    the user opens the link in new window           funding conversion spreadsheet
+    the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = 404 - UK Research and Innovation
     the user should see the element                 jQuery = p:contains("Go back")
     the user closes the last opened tab
@@ -358,7 +359,7 @@ The user is able to verify validation on each page
     validate errors on Application details page
     validate errors on public description page
     validate errors on h2020 grant agreement page
-    validate errors on your finances section
+    validate errors on your project finances section
     validate the user is unable to submit an incomplete application
 
 Validate errors on Application details page
@@ -387,8 +388,8 @@ Validate errors on H2020 grant agreement page
     the user should see a field and summary error        ${empty_field_warning_message}
     the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
 
-Validate errors on Your Finances section
-    the user clicks the button/link                      jQuery = a:contains("Your finances")
+Validate errors on Your project Finances section
+    the user clicks the button/link                      jQuery = a:contains("Your project finances")
     the user clicks the button/link                      jQuery = a:contains("Your project location")
     the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.

@@ -35,6 +35,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 
 @Component
 public class ApplicationTeamPopulator {
@@ -60,7 +61,10 @@ public class ApplicationTeamPopulator {
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess()
+                .stream()
+                .filter(role -> applicantProcessRoles().contains(role.getRole()))
+                .collect(toList());
         List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(applicationId).getSuccess();
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
         List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccess();

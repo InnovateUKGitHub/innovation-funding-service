@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.DOCUMENT;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 
@@ -23,8 +24,10 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -48,8 +51,14 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
+    private Set<FileTypeCategory> allowedAppendixResponseFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
+
+    private Boolean templateDocument;
+    private Set<FileTypeCategory> allowedTemplateResponseFileTypes = new LinkedHashSet<>();
+    private String templateTitle;
+    private String templateFilename;
+    private Long templateFormInput;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -219,12 +228,12 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public Set<FileTypeCategory> getAllowedFileTypes() {
-        return allowedFileTypes;
+    public Set<FileTypeCategory> getAllowedAppendixResponseFileTypes() {
+        return allowedAppendixResponseFileTypes;
     }
 
-    public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypes = allowedFileTypes;
+    public void setAllowedAppendixResponseFileTypes(Set<FileTypeCategory> allowedAppendixResponseFileTypes) {
+        this.allowedAppendixResponseFileTypes = allowedAppendixResponseFileTypes;
     }
 
     public String getAppendixGuidance() {
@@ -235,8 +244,51 @@ public class CompetitionSetupQuestionResource {
         this.appendixGuidance = appendixGuidance;
     }
 
-    public static List<FileTypeCategory> getSupportedTypeCategories(){
+    public Boolean getTemplateDocument() {
+        return templateDocument;
+    }
+
+    public void setTemplateDocument(Boolean templateDocument) {
+        this.templateDocument = templateDocument;
+    }
+
+    public Set<FileTypeCategory> getAllowedTemplateResponseFileTypes() {
+        return allowedTemplateResponseFileTypes;
+    }
+
+    public void setAllowedTemplateResponseFileTypes(Set<FileTypeCategory> allowedTemplateResponseFileTypes) {
+        this.allowedTemplateResponseFileTypes = allowedTemplateResponseFileTypes;
+    }
+
+    public String getTemplateTitle() {
+        return templateTitle;
+    }
+
+    public void setTemplateTitle(String templateTitle) {
+        this.templateTitle = templateTitle;
+    }
+
+    public String getTemplateFilename() {
+        return templateFilename;
+    }
+
+    public void setTemplateFilename(String templateFilename) {
+        this.templateFilename = templateFilename;
+    }
+
+    public Long getTemplateFormInput() {
+        return templateFormInput;
+    }
+
+    public void setTemplateFormInput(Long templateFormInput) {
+        this.templateFormInput = templateFormInput;
+    }
+
+    public static List<FileTypeCategory> getAppendixTypeCategories(){
         return asList(PDF, SPREADSHEET);
+    }
+    public static List<FileTypeCategory> getTemplateDocumentTypeCategories() {
+        return asList(PDF, SPREADSHEET, DOCUMENT);
     }
 
     @Override
@@ -258,6 +310,11 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
+                .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
+                .append(appendixGuidance, that.appendixGuidance)
+                .append(templateDocument, that.templateDocument)
+                .append(allowedTemplateResponseFileTypes, that.allowedTemplateResponseFileTypes)
+                .append(templateTitle, that.templateTitle)
                 .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
                 .append(assessmentGuidance, that.assessmentGuidance)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
@@ -283,6 +340,11 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
+                .append(allowedAppendixResponseFileTypes)
+                .append(appendixGuidance)
+                .append(templateDocument)
+                .append(allowedTemplateResponseFileTypes)
+                .append(templateTitle)
                 .append(assessmentGuidanceTitle)
                 .append(assessmentGuidance)
                 .append(assessmentMaxWords)
@@ -294,5 +356,4 @@ public class CompetitionSetupQuestionResource {
                 .append(scope)
                 .toHashCode();
     }
-
 }

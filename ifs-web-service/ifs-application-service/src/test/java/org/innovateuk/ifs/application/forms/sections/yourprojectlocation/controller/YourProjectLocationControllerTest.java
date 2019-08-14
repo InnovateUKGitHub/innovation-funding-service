@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
@@ -20,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -61,8 +61,8 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
-    private CommonYourFinancesViewModel commonFinancesViewModel =
-            new CommonYourFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
+    private CommonYourProjectFinancesViewModel commonFinancesViewModel =
+            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
 
     @Test
     public void viewPage() throws Exception {
@@ -213,7 +213,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         ProcessRoleResource processRole = newProcessRoleResource().build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
-        when(sectionServiceMock.markAsComplete(sectionId, applicationId, processRole.getId())).thenReturn(emptyList());
+        when(sectionServiceMock.markAsComplete(sectionId, applicationId, processRole.getId())).thenReturn(noErrors());
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)

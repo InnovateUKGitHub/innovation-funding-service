@@ -8,7 +8,7 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -42,7 +41,7 @@ public class AcademicCostFormPopulatorTest extends BaseServiceUnitTest<AcademicC
     private FileEntryRestService fileEntryRestService;
 
     @Mock
-    private DefaultFinanceRowRestService defaultFinanceRowRestService;
+    private ApplicationFinanceRowRestService defaultFinanceRowRestService;
 
     @Override
     protected AcademicCostFormPopulator supplyServiceUnderTest() {
@@ -87,16 +86,16 @@ public class AcademicCostFormPopulatorTest extends BaseServiceUnitTest<AcademicC
 
         service.populate(form, APPLICATION_ID, ORGANISATION_ID);
 
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("tsb_reference")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("incurred_staff")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("incurred_travel_subsistence")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("incurred_other_costs")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("allocated_investigators")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("allocated_estates_costs")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("allocated_other_costs")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("indirect_costs")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("exceptions_staff")));
-        verify(defaultFinanceRowRestService).addWithResponse(eq(finance.getId()), argThat(hasName("exceptions_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("tsb_reference")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_staff")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_travel_subsistence")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_investigators")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_estates_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("indirect_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_staff")));
+        verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_other_costs")));
 
         assertNull(form.getFilename());
     }

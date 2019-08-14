@@ -86,6 +86,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     APPLICATION_NOT_READY_TO_BE_SUBMITTED(FORBIDDEN),
 
     /**
+     * Finance
+     */
+    FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION(BAD_REQUEST),
+
+    /**
      * Public content
      */
     PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),

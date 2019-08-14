@@ -29,12 +29,17 @@ public class TravelCost extends AbstractFinanceRowItem {
     private Integer quantity;
     private String name;
 
-    public TravelCost() {
+    private TravelCost() {
+        this(null);
+    }
+
+    public TravelCost(Long targetId) {
+        super(targetId);
         this.name = getCostType().getType();
     }
 
-    public TravelCost(Long id, String item, BigDecimal cost, Integer quantity) {
-        this();
+    public TravelCost(Long id, String item, BigDecimal cost, Integer quantity, Long targetId) {
+        this(targetId);
         this.id = id;
         this.item = item;
         this.cost = cost;

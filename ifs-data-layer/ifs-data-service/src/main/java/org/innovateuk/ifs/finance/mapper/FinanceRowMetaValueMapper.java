@@ -9,8 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        FinanceRowMetaFieldMapper.class,
-        ApplicationFinanceRowMapper.class
+        FinanceRowMetaFieldMapper.class
     }
 )
 public abstract class FinanceRowMetaValueMapper extends BaseMapper<FinanceRowMetaValue, FinanceRowMetaValueResource, Long> {

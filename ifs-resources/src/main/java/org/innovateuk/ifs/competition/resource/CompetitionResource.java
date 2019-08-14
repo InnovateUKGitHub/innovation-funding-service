@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
@@ -101,9 +103,10 @@ public class CompetitionResource {
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
+    private Set<FinanceRowType> financeRowTypes;
+    private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
-        // no-arg constructor
     }
 
     public CompetitionResource(long id,
@@ -121,6 +124,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isOpen() {
         return CompetitionStatus.OPEN.equals(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isInProjectSetup() {
+        return CompetitionStatus.PROJECT_SETUP.equals(competitionStatus);
     }
 
     @JsonIgnore
@@ -177,6 +185,14 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+        this.financeRowTypes = financeRowTypes;
     }
 
     public boolean isNonFinanceType() {
@@ -760,6 +776,19 @@ public class CompetitionResource {
         this.fundingType = fundingType;
     }
 
+    public FileEntryResource getCompetitionTerms() {
+        return competitionTerms;
+    }
+
+    public void setCompetitionTerms(FileEntryResource competitionTerms) {
+        this.competitionTerms = competitionTerms;
+    }
+
+    @JsonIgnore
+    public boolean isCompetitionTermsUploaded() {
+        return competitionTerms != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -831,6 +860,7 @@ public class CompetitionResource {
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(fundingType, that.fundingType)
+                .append(competitionTerms, that.competitionTerms)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -899,6 +929,7 @@ public class CompetitionResource {
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)
                 .append(fundingType)
+                .append(competitionTerms)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

@@ -166,7 +166,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 
@@ -268,14 +268,15 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     @Test
     public void findAssessorsByCompetitionAndInnovationArea() {
         long competitionId = 1L;
+        String assessorFilter = "";
 
         addTestAssessors();
 
         assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
-        Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndInnovationArea(competitionId, INNOVATION_AREA_ID, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -298,7 +299,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
 
-        Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
 
         Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 
@@ -321,7 +322,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
 
-        Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
         Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 

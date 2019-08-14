@@ -106,36 +106,6 @@
     }
   }
 
-  .collapsible {
-    .govuk-grid-column-three-quarters {
-      padding-left: 30px;
-    }
-
-    .govuk-grid-column-full {
-      padding: 0 18px;
-    }
-
-    .accordion_item {
-      border-top: 1px solid $govuk-border-colour;
-      padding-top: 20px;
-
-      &:first-child {
-        border: none;
-      }
-    }
-
-    .assessor-score {
-      text-align: center;
-      margin-right: 60px;
-      font-weight: bold;
-      float: right;
-
-      .score {
-        @include govuk-font(48);
-      }
-    }
-  }
-
   .my-applications {
     .in-progress {
       li {

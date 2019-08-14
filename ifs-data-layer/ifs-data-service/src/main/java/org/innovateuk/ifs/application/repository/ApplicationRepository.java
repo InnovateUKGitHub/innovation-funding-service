@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.data.domain.Page;
@@ -174,4 +175,47 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(FIND_BY_PROJECT)
     Application findByProjectId(@Param("projectId") long projectId);
+
+    @Query("SELECT new org.innovateuk.ifs.application.resource.PreviousApplicationResource(" +
+            "app.id, " +
+            "app.name, " +
+            "lead.name, " +
+            "app.applicationProcess.activityState, " +
+            "app.competition.id " +
+            ") FROM Application app " +
+            " LEFT JOIN Project project " +
+            "   ON project.application.id = app.id " +
+            " JOIN ProcessRole pr" +
+            "   ON pr.applicationId = app.id  " +
+            " JOIN Organisation lead " +
+            "   ON lead.id = pr.organisationId" +
+            PREVIOUS_WHERE_CLAUSE +
+            " AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT ")
+    List<PreviousApplicationResource> findPrevious(long competitionId);
+
+    String PREVIOUS_WHERE_CLAUSE =  " WHERE project.id IS NULL " +
+            " AND app.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.CREATED " +
+            " AND app.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.OPENED " +
+            " AND app.competition.id = :competitionId";
+
+    @Query(" SELECT COUNT(app.id)" +
+            " FROM Application app " +
+           " LEFT JOIN Project project " +
+           "   ON project.application.id = app.id " +
+            PREVIOUS_WHERE_CLAUSE)
+    int countPrevious(long competitionId);
+
+    @Query(" SELECT DISTINCT app FROM Application app" +
+           " LEFT JOIN ProcessRole pr " +
+           "    ON app.id = pr.applicationId " +
+           "        AND pr.user.id=:userId " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR) " +
+           " LEFT JOIN Project proj " +
+           "    ON proj.application.id = app.id " +
+           " LEFT JOIN ProjectUser pu " +
+           "    ON pu.project.id = proj.id " +
+           "        AND pu.user.id=:userId " +
+           " WHERE (proj.id IS NULL AND pr iS NOT NULL)" + // No project exists and user has applicant process role
+           "    OR  pu.id IS NOT NULL") // Or project exists and user is a project user.
+    List<Application> findApplicationsForDashboard(long userId);
 }

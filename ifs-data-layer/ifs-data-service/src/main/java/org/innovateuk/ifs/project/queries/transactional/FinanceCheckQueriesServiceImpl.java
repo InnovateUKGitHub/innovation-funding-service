@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
 
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -91,13 +91,17 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                 ServiceResult<Void> result = service.addPost(post, threadId);
                 if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
                     Project project = projectFinance.getProject();
-                    return sendResponseNotification(financeContact.get().getUser(), project);
+                    return sendResponseNotification(financeContact.get().getUser(), project)
+                            .andOnSuccessReturn(() -> query);
                 }
-                return result;
+                return result.andOnSuccessReturn(() -> query);
             } else {
                 return serviceFailure(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED));
             }
-        });
+        }).andOnSuccessReturnVoid(query ->
+            activityLogService.recordQueryActivityByProjectFinanceId(query.contextClassPk,
+                    ActivityType.FINANCE_QUERY_RESPONDED, threadId)
+        );
     }
 
     @Override

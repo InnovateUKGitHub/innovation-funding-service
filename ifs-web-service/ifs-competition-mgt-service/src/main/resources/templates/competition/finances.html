@@ -46,16 +46,6 @@
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
-                        <div class="govuk-radios__item">
-                            <input id="application-finance-standard-with-vat"
-                                   class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT}"
-                                   th:disabled="${model.subsection.noFinancesCompetition}" type="radio"
-                                   th:field="*{applicationFinanceType}" required="required"/>
-                            <label for="application-finance-standard-with-vat"
-                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
-                                   class="govuk-label govuk-radios__label"/>
-                        </div>
                         <div class="govuk-radios__item" data-target="include-your-organisation-section"
                              data-target-inverted="true" data-target-clear-form="true">
                             <input id="application-finance-no-finances"
@@ -120,6 +110,14 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">When to include a Je-S form</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            For standard competitions the answer to this question is 'Yes', unless you know otherwise.
+                        </div>
+                    </details>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="include-jes-form-yes"
@@ -160,6 +158,14 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">When to include the 'Your organisation' section for research organisations</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            For standard competitions the answer to this question is 'No', unless you know otherwise.
+                        </div>
+                    </details>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="include-your-organisation-section-yes"

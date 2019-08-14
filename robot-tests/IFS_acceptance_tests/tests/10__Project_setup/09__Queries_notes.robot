@@ -128,7 +128,7 @@ Finance contact receives an email when new query is posted and can see a pending
     [Documentation]  INFUND-4841 IFS-2746 IFS-3559
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
-    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
+    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: Query regarding your project finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css = .status-warning  #Pending query
     And the user clicks the button/link     link = Finance checks
@@ -164,7 +164,7 @@ Applicant - Finance contact can view the project finance user's uploads
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
     [Tags]
-    Given the user should see the element   jQuery = #title-query-2:contains("Pending query")
+    Given the user should see the element   jQuery = button:contains("an eligibility query's title"):contains("Pending query")
     And the user should see the element     jQuery = h2:contains("an eligibility") .section-incomplete
     Then the user should see the response to query client side validations
     And the user should see the response to query server side validation
@@ -182,7 +182,7 @@ Applicant - Query response can be posted
 Applicant - Respond to older query
     [Documentation]    INFUND-4843
     [Tags]
-    Given the user clicks the button/link      jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
+    Given the user clicks the button/link      jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
     When the user enters text to a text field  css = .editor    one more response to the eligibility query
     Then the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
     And the user should see the element        jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
@@ -191,7 +191,7 @@ Applicant - Repond to Viability query
     [Documentation]  IFS-2746
     [Tags]
     Given the user expands the section        a viability query's title
-    When the user clicks the button/link      jQuery = h2:contains("viability") + [id^="finance-checks-query"] a:contains("Respond")
+    When the user clicks the button/link      jQuery = #accordion-pending-queries-content-1 a:contains("Respond")   #a viability query response
     And the user enters text to a text field  css = .editor  This is applicant's response to the Viability query.
     And the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
     Then the user should see the element      jQuery = h2:contains("viability") .section-awaiting
@@ -221,14 +221,14 @@ Project finance user can view the response and uploaded files
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
     [Tags]
-    When the user clicks the button/link      jQuery = h2:contains("an eligibility query's title") + [id^="finance-checks-internal-query"] a:contains("Respond")
+    When the user clicks the button/link      jQuery = #accordion-queries-content-2 a:contains("Respond")
     And the user enters text to a text field  css = .editor  This is a response to a response
     And the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
 
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753 IFS-3559
     [Tags]
-    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
+    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your project finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
@@ -236,6 +236,7 @@ Finance contact can view the new response
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
     When the user clicks the button/link  jQuery = .projects-in-setup a:contains("${Queries_Application_Title}")
     And the user clicks the button/link   link = Finance checks
+    And the user expands the section      Open all
     Then the user should see the element  jQuery = .govuk-heading-s:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
 
 Project Finance user is able to mark a query discussion as complete
@@ -244,8 +245,8 @@ Project Finance user is able to mark a query discussion as complete
     Given log in as a different user                &{internal_finance_credentials}
     When the user navigates to the page             ${dreambit_finance_checks}/query
     And the user expands the section                an eligibility query's title
-    Then the query conversation can be resolved by  Lee Bowman  eligibility
-    And the user should not see the element         jQuery = h2:contains("an eligibility query's title") + [id^="finance-checks-internal-query"] a:contains("Respond")
+    Then the query conversation can be resolved by  Lee Bowman  1
+    And the user should not see the element         jQuery = #accordion-pending-queries-content-2 a:contains("Respond")
     [Teardown]  the user collapses the section      an eligibility query's title
 
 Applicant can see the the queries resolved
@@ -418,9 +419,9 @@ Custom Suite Setup
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
-    the user clicks the button/link  jQuery = h2:contains("${section}") + [id^="finance-checks-internal-query"] a:contains("Mark as resolved")
+    the user clicks the button/link  jQuery = #accordion-queries-content-${section} a:contains("Mark as resolved")    #a viability query
     the user clicks the button/link  css = button[name="markAsResolved"]  # Submit
-    the user should see the element  jQuery = h2:contains("${section}") .yes  # Resolved green check
+    the user should see the element  jQuery = #accordion-queries-heading-${section} .yes  # Resolved green check
     the user should see the element  jQuery = .message-alert:contains("${user} on")
     the user should see the element  jQuery = .message-alert:contains("${today}")
 
@@ -470,8 +471,8 @@ the project finance user post another new query
     the user should not see an error in the page
 
 the user should see list of posted queries
-    the user should see the element      jQuery = h2:nth-of-type(1):contains("a viability query's title")
-    the user should see the element      jQuery = h2:nth-of-type(2):contains("an eligibility query's title")
+    the user should see the element      jQuery = #accordion-queries-heading-1:contains("a viability query's title")
+    the user should see the element      jQuery = #accordion-queries-heading-2:contains("an eligibility query's title")
     # Query responses tab
     the user navigates to the page       ${server}/project-setup-management/competition/${Queries_Application_Project}/status/queries
     the user should see the element      jQuery = p:contains("There are no outstanding queries.")
@@ -487,8 +488,8 @@ the user should see the response to query server side validation
     the user should not see an error in the page
 
 the user should see the response to query client side validations
-    the user expands the section                  an eligibility query's title
-    the user clicks the button/link               jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
+    the user expands the section                  Open all
+    the user clicks the button/link               jQuery = #accordion-pending-queries-content-2 a:contains("Respond")
     the user enters text to a text field          css = .editor  ${empty}
     Set Focus To Element                          jQuery = .govuk-button:contains("Post response")
     the user should see a field error             ${empty_field_warning_message}
@@ -507,7 +508,7 @@ the user mark the discussion as resolved
     the user should see the element                 jQuery = h1:contains("${Dreambit_Name}")
     the user should see the element                 link = Post a new query
     the user expands the section                    a viability query's title
-    the query conversation can be resolved by       Arden Pimenta  viability
+    the query conversation can be resolved by       Arden Pimenta  1
     [Teardown]  the user collapses the section      a viability query's title
 
 the project finance user view the query details

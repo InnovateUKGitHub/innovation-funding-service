@@ -93,7 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void removeNotifications(List<QuestionStatusResource> questionStatuses) {
-        questionStatuses.stream().forEach(qs -> questionStatusRestService.updateNotification(qs.getId(), true));
+        questionStatuses.forEach(qs -> questionStatusRestService.updateNotification(qs.getId(), true));
     }
 
     @Override

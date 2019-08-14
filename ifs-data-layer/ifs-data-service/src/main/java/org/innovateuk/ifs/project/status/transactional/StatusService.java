@@ -12,7 +12,10 @@ import java.util.Optional;
 
 public interface StatusService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PROJECT_SETUP_COMPETITION_STATUS')")
-    ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId, String applicationSearchString);
+    ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(long competitionId, String applicationSearchString);
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PROJECT_SETUP_COMPETITION_STATUS')")
+    ServiceResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(long competitionId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_PROJECT_STATUS')")
     ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId);
@@ -22,4 +25,5 @@ public interface StatusService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_TEAM_STATUS')")
     ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
+
 }

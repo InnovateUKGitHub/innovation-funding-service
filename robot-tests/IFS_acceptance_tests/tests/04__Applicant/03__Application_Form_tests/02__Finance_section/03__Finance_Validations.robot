@@ -164,16 +164,16 @@ Capital usage server side
 Subcontracting costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
-    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
+    When the user enters text to a text field   css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
+    And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
     Then the user should see a field error      ${empty_field_warning_message}
 
 Subcontracting costs server side
     [Documentation]    INFUND-844
-    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    -100
-    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
+    When the user enters text to a text field            css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="cost"]    -100
+    And the user enters text to a text field             css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
@@ -229,7 +229,7 @@ Other costs server side
 
 Project location client side validations
     [Documentation]  IFS-4681
-    [Setup]  the user clicks the button/link   link = Your finances
+    [Setup]  the user clicks the button/link   link = Your project finances
     Given the user clicks the button/link      link = Your project location
     When the user enters text to a text field  id = postcode  ${EMPTY}
     Then the user should see a field error     Enter a valid postcode.
@@ -244,7 +244,7 @@ Project location server-side validations
 
 Funding level server side
     [Documentation]    INFUND-844
-    [Setup]  the user clicks the button/link     link = Your finances
+    [Setup]  the user clicks the button/link     link = Your project finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
     And the user selects the radio button        requestingFunding   true

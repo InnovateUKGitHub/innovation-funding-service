@@ -162,7 +162,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
         assertEquals("4. A question", questionRow.getTitle());
-        assertEquals(String.format("/application/%d/form/question/%d", application.getId(), questions.get(0).getId()), questionRow.getUrl());
+        assertEquals(String.format("/application/%d/form/question/%d/generic", application.getId(), questions.get(0).getId()), questionRow.getUrl());
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
         assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());

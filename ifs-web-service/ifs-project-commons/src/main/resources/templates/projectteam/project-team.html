@@ -19,7 +19,7 @@
 
     <th:block th:if="${model.isInternalUserView()}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"/>
+                  th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}, dynamicBackLink=${true}"/>
     </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -35,8 +35,11 @@
         <p class="govuk-body">The lead partner must choose a project manager who will be responsible for setting up the
             project. Each partner must provide a finance contact. We will contact the assigned person with any finance
             queries.</p>
-        <p class="govuk-body">Everyone below can view all of project setup. If you add a new person they will show as
-            pending until they register for the website. Once they register you can assign them a role.</p>
+        <p class="govuk-body" th:unless="${model.isInternalUserView()}">Everyone below can view all of project setup.
+            If you add a new person they will show as pending until they register for the website.
+                Once they register you can assign them a role.</p>
+        <p class="govuk-body" th:if="${model.isInternalUserView()}">Everyone below can view all of project setup.
+            If they add a new person they will show as pending until they register for the website.</p>
         <th:block th:unless="${model.isInternalUserView() or model.isReadOnly()}">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
@@ -96,8 +99,9 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
-                            class="govuk-visually-hidden">Remove</span></th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                            <th:block th:if="${model.isInternalUserView()}">Role</th:block>
+                            <span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -106,12 +110,13 @@
                         <td class="govuk-table__cell"
                             th:text="${user.displayName}"
                             th:classappend="${user.invite ? 'hint' : ''}"></td>
-                        <td class="govuk-table__cell"
+                        <td class="govuk-table__cell ifs-table__email"
                             th:text="${user.getEmail()}"
                             th:classappend="${user.invite ? 'hint' : ''}">-
                         </td>
-                        <td class="govuk-table__cell alignright"
-                            th:classappend="${user.invite ? 'hint' : ''}">
+                        <td class="govuk-table__cell"
+                            th:classappend="|${user.invite ? 'hint' : ''}
+                                             ${user.isFinanceContact() or user.isProjectManager() ? '' : 'alignright'}|">
                             <th:block th:if="${organisation.editable and !model.isReadOnly()}">
                                 <th:block
                                     th:if="${!user.invite and model.loggedInUserId != user.id and !user.isFinanceContact() and !user.isProjectManager() and !model.isInternalUserView()}">
@@ -130,10 +135,10 @@
                                             th:unless="${model.isInternalUserView()}">Remove
                                     </button>
                                 </th:block>
-                                <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
+                            </th:block>
+                            <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
                                     <span th:text="${user.getRolesNames()}"
                                           th:classappend="${user.invite ? 'hint' : ''}">Roles</span>
-                                </th:block>
                             </th:block>
                         </td>
                     </tr>

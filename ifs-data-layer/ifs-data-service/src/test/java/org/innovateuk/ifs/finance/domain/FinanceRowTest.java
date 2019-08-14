@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class FinanceRowTest {
         applicationFinance = new ApplicationFinance();
         question = new Question();
         financeType = new FinanceType();
-        costItem = new ApplicationFinanceRow(id, name, item, description, quantity, cost, applicationFinance, question);
+        costItem = new ApplicationFinanceRow(id, name, item, description, quantity, cost, applicationFinance, FinanceRowType.FINANCE);
     }
 
     @Test
@@ -48,7 +49,7 @@ public class FinanceRowTest {
     public void constructorsShouldCreateInstancesOnValidInput() throws Exception {
         BigDecimal value = new BigDecimal(2.2);
         new ApplicationFinanceRow();
-        new ApplicationFinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, question);
+        new ApplicationFinanceRow(19274617892346L, "key", "item2","description2",1,value,applicationFinance, FinanceRowType.FINANCE);
     }
 
     @Test
@@ -58,7 +59,6 @@ public class FinanceRowTest {
         String description2 = "description of cost item";
         Integer quantity2 = 10;
         BigDecimal cost2 = new BigDecimal(2000);
-        Question question2 = new Question();
         ApplicationFinance applicationFinance2 = new ApplicationFinance();
 
         costItem.setItem(item2);
@@ -66,7 +66,7 @@ public class FinanceRowTest {
         costItem.setDescription(description2);
         costItem.setQuantity(quantity2);
         costItem.setCost(cost2);
-        costItem.setQuestion(question2);
+        costItem.setType(FinanceRowType.FINANCE);
         costItem.setTarget(applicationFinance2);
 
         Assert.assertEquals(costItem.getItem(), item2);
@@ -74,6 +74,6 @@ public class FinanceRowTest {
         Assert.assertEquals(costItem.getDescription(), description2);
         Assert.assertEquals(costItem.getQuantity(), quantity2);
         Assert.assertEquals(costItem.getCost(), cost2);
-        Assert.assertEquals(costItem.getQuestion(),question2);
+        Assert.assertEquals(costItem.getType(), FinanceRowType.FINANCE);
     }
 }

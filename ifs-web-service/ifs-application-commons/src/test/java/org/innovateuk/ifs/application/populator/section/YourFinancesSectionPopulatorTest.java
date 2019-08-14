@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -43,13 +43,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link YourFinancesSectionPopulator}
+ * Tests for {@link YourProjectFinancesSectionPopulator}
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class YourFinancesSectionPopulatorTest {
 
     @InjectMocks
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+    private YourProjectFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator navigationPopulator;
@@ -96,7 +96,7 @@ public class YourFinancesSectionPopulatorTest {
         when(financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(financeResource);
         when(financeService.getApplicationFinanceTotals(section.getApplication().getId())).thenReturn(asList(financeResource));
 
-        YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
+        YourProjectFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
     }

@@ -11,8 +11,6 @@ public class ManagementApplicationViewModel {
 
     private final ApplicationResource application;
     private final CompetitionResource competition;
-    private final String backUrl;
-    private final String originQuery;
     private final ApplicationOverviewIneligibilityViewModel ineligibility;
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final List<AppendixViewModel> appendices;
@@ -28,26 +26,25 @@ public class ManagementApplicationViewModel {
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
+    private final Long projectId;
 
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
-                                          String backUrl,
-                                          String originQuery,
                                           ApplicationOverviewIneligibilityViewModel ineligibility,
                                           ApplicationReadOnlyViewModel applicationReadOnlyViewModel,
                                           List<AppendixViewModel> appendices,
                                           boolean canMarkAsIneligible,
-                                          boolean canReinstate) {
+                                          boolean canReinstate,
+                                          Long projectId) {
         this.application = application;
         this.competition = competition;
-        this.backUrl = backUrl;
-        this.originQuery = originQuery;
         this.ineligibility = ineligibility;
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.appendices = appendices;
         this.canMarkAsIneligible = canMarkAsIneligible;
         this.canReinstate = canReinstate;
+        this.projectId = projectId;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -66,14 +63,6 @@ public class ManagementApplicationViewModel {
 
     public CompetitionResource getCompetition() {
         return competition;
-    }
-
-    public String getBackUrl() {
-        return backUrl;
-    }
-
-    public String getOriginQuery() {
-        return originQuery;
     }
 
     public ApplicationOverviewIneligibilityViewModel getIneligibility() {
@@ -102,6 +91,14 @@ public class ManagementApplicationViewModel {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public boolean hasProject() {
+        return projectId != null;
     }
 
     public LocalDate getStartDate() {

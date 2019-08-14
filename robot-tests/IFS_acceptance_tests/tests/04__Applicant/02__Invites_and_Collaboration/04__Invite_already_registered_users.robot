@@ -74,7 +74,7 @@ Existing user creates a new application and invites a user from the same organis
     the user should see the element       jQuery = td:contains("${test_mailbox_one}+invite2@gmail.com")
     the user clicks the button/link       link = Application overview
     the user clicks the button/link       link = Application details
-    the user enters text to a text field  css = [id="application.name"]    Invite a user with the same org
+    the user enters text to a text field  css = [id="name"]    Invite a user with the same org
     the user clicks the button/link       jQuery = .govuk-button:contains("Save and return")
 
 The invited user should get a message to contact the helpdesk

@@ -3,11 +3,10 @@ package org.innovateuk.ifs.assessment.profile.controller;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
-import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,7 +47,7 @@ public class AssessorProfileController {
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
         ProfileResource profile = assessorProfile.getProfile();
 
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, profile, null, null, false));
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, profile, Optional.empty(), false));
         return "profile/skills";
     }
 
@@ -59,7 +58,7 @@ public class AssessorProfileController {
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
         ProfileResource profile = assessorProfile.getProfile();
 
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, null, null, false));
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, Optional.empty(), false));
         return "profile/declaration-of-interest";
     }
 

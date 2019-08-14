@@ -119,19 +119,23 @@ Comp admin can open the view mode of the application
     And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
     And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
 
-    And the user can view this file without any errors
-    And the user closes the last opened tab
+    And open pdf link                                                      ${5mb_pdf}, 4 MB
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
     # TODO when working on Guarantined files. Variable has been removed
+
+Comp admin can link to the comp page from application overview
+    [Documentation]  IFS-6060
+    Given the user clicks the button/link  link = ${openCompetitionRTO_name}
+    Then the user should be redirected to the correct page                 ${server}/management/competition/${openCompetitionRTO}
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
     [Tags]
     Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
-    Then the user should not see the element         link = your finances
-    And the user should see the element              jQuery = h3:contains("Finances summary")
+    Then the user should not see the element         link = your project finances
+    And the user should see the element              jQuery = h2:contains("Finances summary")
     And the user should see the element              jQuery = h2:contains("Funding breakdown")
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
@@ -155,12 +159,12 @@ the user can see the option to upload a file on the page
     the user should see the element             jQuery = label:contains("Upload")
 
 the user can view this file without any errors
-    The user opens the link in new window    ${5mb_pdf}, 4 MB
+    the user clicks the button/link    ${5mb_pdf}, 4 MB
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message
     [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
-    The user opens the link in new window       test_quarantine.pdf, 7 KB
+    the user clicks the button/link       test_quarantine.pdf, 7 KB
     the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}
 
@@ -180,7 +184,7 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link             link = Your project costs
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
     the user should see the element             jQuery = label:contains("Subcontractor name")
-    The user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) input[name$=".cost"]    2000
+    The user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(2) input[name$=".cost"]    2000
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".name"]    Jackson Ltd
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".country"]    Romania
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".role"]    Contractor

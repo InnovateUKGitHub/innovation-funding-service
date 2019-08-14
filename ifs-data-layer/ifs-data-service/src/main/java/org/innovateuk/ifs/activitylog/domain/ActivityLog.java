@@ -3,6 +3,7 @@ package org.innovateuk.ifs.activitylog.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Immutable;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -14,7 +15,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static javax.persistence.EnumType.STRING;
 
 @Entity
@@ -89,8 +92,8 @@ public class ActivityLog {
         return application;
     }
 
-    public Organisation getOrganisation() {
-        return organisation;
+    public Optional<Organisation> getOrganisation() {
+        return ofNullable(organisation);
     }
 
     public ActivityType getType() {
@@ -105,12 +108,12 @@ public class ActivityLog {
         return createdOn;
     }
 
-    public CompetitionDocument getCompetitionDocument() {
-        return competitionDocument;
+    public Optional<CompetitionDocument> getCompetitionDocument() {
+        return ofNullable(competitionDocument);
     }
 
-    public Query getQuery() {
-        return query;
+    public Optional<Query> getQuery() {
+        return ofNullable(query);
     }
 
     @Override

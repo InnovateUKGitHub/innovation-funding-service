@@ -56,6 +56,14 @@
                         downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
                     </div>
 
+                    <div th:if="${model.templateDocumentExists}">
+                        <div th:replace="question-type/form-elements :: readonly-file-download
+                        (filename=${model.templateDocumentDetails.filename},
+                        filesizeKbytes=${model.templateDocumentDetails.filesizeKbytes},
+                        fileDescription=${model.templateDocumentFileDescription}+':',
+                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.templateDocumentDetails.formInputId})})" />
+                    </div>
+
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
                         <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
                     </div>

@@ -22,4 +22,5 @@ $(window).load(function () {
       $('.error input:first').focus()
     }
   }
+  $('.govuk-accordion__icon').attr('aria-hidden', 'false')
 });

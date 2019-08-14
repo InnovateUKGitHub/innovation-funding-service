@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.form.resource.FormInputType;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +14,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     LABOUR("labour", "Labour", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     OVERHEADS("overheads", "Overheads", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    PROCUREMENT_OVERHEADS("procurement_overheads", "Procurement overheads", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     MATERIALS("materials", "Materials", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     CAPITAL_USAGE("capital_usage", "Capital usage", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", singletonList(INCLUDE_IN_SPEND_PROFILE)),
@@ -48,23 +47,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         this.financeRowOptionsList = financeRowOptionsList;
     }
 
-    public static FinanceRowType fromType(FormInputType formInputType) {
-        if (formInputType != null) {
-            for (FinanceRowType costType : values()) {
-                if (formInputType == FormInputType.findByName(costType.getType())) {
-                    return costType;
-                }
-            }
-        }
-        throw new IllegalArgumentException("No valid FinanceRowType found for FormInputType: " + formInputType);
-    }
-
     public String getType() {
         return type;
-    }
-
-    public FormInputType getFormInputType() {
-        return FormInputType.findByName(getType());
     }
 
     @Override

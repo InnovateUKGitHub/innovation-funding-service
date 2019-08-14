@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +31,7 @@ public class SectionStatusController {
     }
 
     @PostMapping("/mark-as-complete/{sectionId}/{applicationId}/{markedAsCompleteById}")
-    public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final long sectionId,
+    public RestResult<ValidationMessages> markAsComplete(@PathVariable("sectionId") final long sectionId,
                                                                @PathVariable("applicationId") final long applicationId,
                                                                @PathVariable("markedAsCompleteById") final long markedAsCompleteById) {
         return sectionStatusService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();

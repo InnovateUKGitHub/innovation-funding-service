@@ -87,7 +87,7 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
-    Given the user navigates to the page    ${assessment_panel}/assessors/find     #the user clicks the button/link     link = Find
+    Given the user navigates to the page    ${assessment_panel}/assessors/find
     Then the competition admin invites assessors to the competition
 
 CompAdmin can remove assessor from invite list
@@ -206,12 +206,12 @@ Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]  HappyPath
     Given comp admin assign applications to panel
-    Then the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
+    Then the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
 
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
     [Tags]  HappyPath
-    # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
+    #When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given comp admin invites an assessor
     Then Assessor logs in and accepts the invitation  ${assessor_madeleine_email}
     And the user should see the element               jQuery = h3:contains("${CLOSED_COMPETITION_NAME}") ~ div:contains("applications awaiting review")
@@ -239,10 +239,10 @@ Assessor can attend Panel and see applications that he has assessed
     [Tags]  HappyPath
     Given the assessor accept the application
     When the user clicks the button/link        link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
-    And the user clicks the button/link         jQuery = button:contains("Business opportunity")
+    And the user expands the section            Business opportunity
     Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery = div:contains("Score") span:contains(8)
-    And assessor should see the competition terms and conditions     Application summary
+    And assessor should see the competition terms and conditions     Back to application summary
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138

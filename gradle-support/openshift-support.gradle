@@ -38,6 +38,10 @@ task setDatabaseDefaults {
     if (!project.hasProperty('DB_PORT')) {
         project.ext.DB_PORT = 3306
     }
+    
+    if (!project.hasProperty('FLYWAY_TABLE')) {
+        project.ext.FLYWAY_TABLE = 'schema_version'
+    }
 }
 prepareDeployment.mustRunAfter setDatabaseDefaults
 
@@ -62,27 +66,27 @@ prepareDeployment.mustRunAfter setDbResetDefaults
 
 task osDeployProduction(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "production", project.version]
+    args = [openshiftEnv, "ifs-prod", project.version]
 }
 
 task osUpgradeProduction(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
-    args = [openshiftEnv, "production", project.version]
+    args = [openshiftEnv, "ifs-prod", project.version]
 }
 
 task dbAnonymisedDumpProduction(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
-    args = [openshiftEnv, "production", project.version]
+    args = [openshiftEnv, "ifs-prod", project.version]
 }
 
 task dbBaselineProduction(type: Exec, dependsOn: [setDatabaseDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
-    args = [openshiftEnv, "production", project.version]
+    args = [openshiftEnv, "ifs-prod", project.version]
 }
 
 task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setFinanceDataServiceSyncDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
-    args = [openshiftEnv, "production", project.version]
+    args = [openshiftEnv, "ifs-prod", project.version]
 }
 
 // UAT tasks
@@ -309,7 +313,7 @@ task createProject(dependsOn: deleteProject) {
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
         }
 
-        if (openshiftEnv == "production" || openshiftEnv == "ifs-uat") {
+        if (openshiftEnv == "ifs-prod" || openshiftEnv == "ifs-uat") {
             exec {
                 executable 'oc'
                 args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"

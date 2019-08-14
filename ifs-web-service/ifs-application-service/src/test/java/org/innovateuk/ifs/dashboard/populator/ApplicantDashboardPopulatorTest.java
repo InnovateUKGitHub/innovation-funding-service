@@ -2,10 +2,10 @@ package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewModel;
@@ -27,10 +27,10 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource.DashboardApplicationForEuGrantTransferResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource.DashboardApplicationInProgressResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource.DashboardApplicationInSetupResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource.DashboardPreviousApplicationResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.junit.Assert.assertEquals;
@@ -58,15 +58,15 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testPopulateInSetupProjects() {
-        DashboardApplicationInSetupResource inSetup = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource inSetup = new DashboardApplicationInSetupResourceBuilder()
                 .withCompetitionTitle("Competition Title")
                 .withProjectId(3L)
                 .withProjectTitle("Project Title")
                 .build();
-        List<DashboardApplicationInSetupResource> inSetUp = singletonList(inSetup);
+        List<DashboardInSetupRowResource> inSetUp = singletonList(inSetup);
         setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getProjects().size());
         InSetupDashboardRowViewModel inSetupViewModel = viewModel.getProjects().get(0);
@@ -78,22 +78,22 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testSortForInSetupProjects() {
-        DashboardApplicationInSetupResource startsYesterday = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsYesterday = new DashboardApplicationInSetupResourceBuilder()
                 .withTargetStartDate(YESTERDAY.toLocalDate())
                 .withProjectTitle("starts in past")
                 .build();
-        DashboardApplicationInSetupResource startsToday = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsToday = new DashboardApplicationInSetupResourceBuilder()
                 .withTargetStartDate(TODAY.toLocalDate())
                 .withProjectTitle("starts today")
                 .build();
-        DashboardApplicationInSetupResource startsTomorrow = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsTomorrow = new DashboardApplicationInSetupResourceBuilder()
                 .withTargetStartDate(TOMORROW.toLocalDate())
                 .withProjectTitle("starts in future")
                 .build();
-        List<DashboardApplicationInSetupResource> inSetUp = asList(startsYesterday, startsToday, startsTomorrow);
+        List<DashboardInSetupRowResource> inSetUp = asList(startsYesterday, startsToday, startsTomorrow);
         setupDashboard(inSetUp, emptyList(), emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<InSetupDashboardRowViewModel> result = viewModel.getProjects();
         assertEquals(3, result.size());
@@ -104,16 +104,16 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populateEuGrantTransfers() {
-        DashboardApplicationForEuGrantTransferResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder()
+        DashboardEuGrantTransferRowResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withTitle("Title")
                 .withApplicationProgress(1)
                 .withApplicationState(APPROVED)
                 .withCompetitionTitle("Competition Title")
                 .withProjectId(5L)
                 .build();
-        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfers = singletonList(euGrantTransfer);
+        List<DashboardEuGrantTransferRowResource> euGrantTransfers = singletonList(euGrantTransfer);
         setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertFalse(viewModel.getEuGrantTransfers().isEmpty());
         EuGrantTransferDashboardRowViewModel euGrantViewModel = viewModel.getEuGrantTransfers().get(0);
@@ -128,30 +128,30 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testSortForEuGrantTransfers() {
-        DashboardApplicationForEuGrantTransferResource approvedOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
+        DashboardEuGrantTransferRowResource approvedOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withApplicationId(1L)
                 .withApplicationState(APPROVED)
                 .withTitle("approved application 1")
                 .build();
-        DashboardApplicationForEuGrantTransferResource openOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
+        DashboardEuGrantTransferRowResource openOne = new DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withApplicationId(2L)
                 .withApplicationState(OPENED)
                 .withTitle("open application 1")
                 .build();
-        DashboardApplicationForEuGrantTransferResource openTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
+        DashboardEuGrantTransferRowResource openTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withApplicationId(3L)
                 .withApplicationState(OPENED)
                 .withTitle("open application 2")
                 .build();
-        DashboardApplicationForEuGrantTransferResource approvedTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
+        DashboardEuGrantTransferRowResource approvedTwo = new DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withApplicationId(4L)
                 .withApplicationState(APPROVED)
                 .withTitle("approved application 2")
                 .build();
-        List<DashboardApplicationForEuGrantTransferResource> euGrantTransfers = asList(approvedOne, openOne, openTwo, approvedTwo);
+        List<DashboardEuGrantTransferRowResource> euGrantTransfers = asList(approvedOne, openOne, openTwo, approvedTwo);
         setupDashboard(emptyList(), euGrantTransfers, emptyList(), emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<EuGrantTransferDashboardRowViewModel> result = viewModel.getEuGrantTransfers();
         assertEquals(4, result.size());
@@ -163,7 +163,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populateInProgress() {
-        DashboardApplicationInProgressResource inProgress = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource inProgress = new DashboardApplicationInProgressResourceBuilder()
                 .withTitle("Title")
                 .withEndDate(TOMORROW)
                 .withDaysLeft(1)
@@ -173,9 +173,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withLeadApplicant(TRUE)
                 .withApplicationState(APPROVED)
                 .build();
-        List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources = singletonList(inProgress);
+        List<DashboardInProgressRowResource> dashboardApplicationInProgressResources = singletonList(inProgress);
         setupDashboard(emptyList(), emptyList(), dashboardApplicationInProgressResources, emptyList());
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getInProgress().size());
         InProgressDashboardRowViewModel inProgressViewModel = viewModel.getInProgress().get(0);
@@ -195,34 +195,34 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testSortForInProgress() {
-        DashboardApplicationInProgressResource endsYesterday = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource endsYesterday = new DashboardApplicationInProgressResourceBuilder()
                 .withEndDate(YESTERDAY)
                 .withTitle("ends in past")
                 .build();
-        DashboardApplicationInProgressResource startedOneMonthAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource startedOneMonthAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
                 .withStartDate(ONE_MONTH_AGO.toLocalDate())
                 .withEndDate(TODAY)
                 .withTitle("ends today + started 1 year ago")
                 .build();
-        DashboardApplicationInProgressResource startedOneWeekAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource startedOneWeekAgoAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
                 .withStartDate(ONE_WEEK_AGO.toLocalDate())
                 .withEndDate(TODAY)
                 .withTitle("ends today + started 1 week ago")
                 .build();
-        DashboardApplicationInProgressResource startedTodayAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource startedTodayAndEndsToday = new DashboardApplicationInProgressResourceBuilder()
                 .withStartDate(TODAY.toLocalDate())
                 .withEndDate(TODAY)
                 .withTitle("ends today + started today")
                 .build();
-        DashboardApplicationInProgressResource endsTomorrow = new DashboardApplicationInProgressResourceBuilder()
+        DashboardInProgressRowResource endsTomorrow = new DashboardApplicationInProgressResourceBuilder()
                 .withEndDate(TOMORROW)
                 .withTitle("ends in future")
                 .build();
-        List<DashboardApplicationInProgressResource> inProgress = asList(endsYesterday, startedOneMonthAgoAndEndsToday,
-                startedOneWeekAgoAndEndsToday, startedTodayAndEndsToday, endsTomorrow);
+        List<DashboardInProgressRowResource> inProgress = asList(endsYesterday, startedOneMonthAgoAndEndsToday,
+                                                                 startedOneWeekAgoAndEndsToday, startedTodayAndEndsToday, endsTomorrow);
         setupDashboard(emptyList(), emptyList(), inProgress, emptyList());
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<InProgressDashboardRowViewModel> result = viewModel.getInProgress();
         assertEquals(5, result.size());
@@ -235,7 +235,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populatePrevious() {
-        DashboardPreviousApplicationResource previous = new DashboardPreviousApplicationResourceBuilder()
+        DashboardPreviousRowResource previous = new DashboardPreviousApplicationResourceBuilder()
                 .withTitle("Title")
                 .withApplicationId(7L)
                 .withApplicationProgress(50)
@@ -246,9 +246,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withEndDate(YESTERDAY)
                 .withLeadApplicant(FALSE)
                 .build();
-        List<DashboardPreviousApplicationResource> dashboardPreviousApplicationResources = singletonList(previous);
+        List<DashboardPreviousRowResource> dashboardPreviousApplicationResources = singletonList(previous);
         setupDashboard(emptyList(), emptyList(), emptyList(), dashboardPreviousApplicationResources);
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         assertEquals(1, viewModel.getPrevious().size());
         PreviousDashboardRowViewModel previousViewModel = viewModel.getPrevious().get(0);
@@ -262,22 +262,22 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testSortForPrevious() {
-        DashboardPreviousApplicationResource startsYesterday = new DashboardPreviousApplicationResourceBuilder()
+        DashboardPreviousRowResource startsYesterday = new DashboardPreviousApplicationResourceBuilder()
                 .withStartDate(YESTERDAY.toLocalDate())
                 .withTitle("starts in past")
                 .build();
-        DashboardPreviousApplicationResource startsToday = new DashboardPreviousApplicationResourceBuilder()
+        DashboardPreviousRowResource startsToday = new DashboardPreviousApplicationResourceBuilder()
                 .withStartDate(TODAY.toLocalDate())
                 .withTitle("starts today")
                 .build();
-        DashboardPreviousApplicationResource startsTomorrow = new DashboardPreviousApplicationResourceBuilder()
+        DashboardPreviousRowResource startsTomorrow = new DashboardPreviousApplicationResourceBuilder()
                 .withStartDate(TOMORROW.toLocalDate())
                 .withTitle("starts in future")
                 .build();
-        List<DashboardPreviousApplicationResource> previous = asList(startsYesterday, startsToday, startsTomorrow);
+        List<DashboardPreviousRowResource> previous = asList(startsYesterday, startsToday, startsTomorrow);
         setupDashboard(emptyList(), emptyList(), emptyList(), previous);
 
-        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID, "originQuery");
+        ApplicantDashboardViewModel viewModel = populator.populate(USER_ID);
 
         List<PreviousDashboardRowViewModel> result = viewModel.getPrevious();
         assertEquals(3, result.size());
@@ -286,7 +286,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertEquals("starts in past", result.get(2).getTitle());
     }
 
-    private void setupDashboard(List<DashboardApplicationInSetupResource> inSetup, List<DashboardApplicationForEuGrantTransferResource> euGrantTransfer, List<DashboardApplicationInProgressResource> inProgress, List<DashboardPreviousApplicationResource> previous) {
+    private void setupDashboard(List<DashboardInSetupRowResource> inSetup, List<DashboardEuGrantTransferRowResource> euGrantTransfer, List<DashboardInProgressRowResource> inProgress, List<DashboardPreviousRowResource> previous) {
         ApplicantDashboardResource applicantDashboardResource = new ApplicantDashboardResource.ApplicantDashboardResourceBuilder()
                 .withInSetup(inSetup)
                 .withEuGrantTransfer(euGrantTransfer)

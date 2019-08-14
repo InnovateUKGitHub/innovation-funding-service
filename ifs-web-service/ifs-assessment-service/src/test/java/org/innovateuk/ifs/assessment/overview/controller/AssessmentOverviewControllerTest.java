@@ -482,7 +482,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), true, "")).thenReturn(viewModel);
+        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), true)).thenReturn(viewModel);
         when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
 
@@ -826,8 +826,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                         assessmentResource.getId(),
                         grantTermsAndConditions.getTemplate(),
                         3,
-                        50
-                );
+                        50,
+                        competitionId);
 
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
         when(competitionRestService.getCompetitionById(assessmentResource.getCompetition())).thenReturn(restSuccess(competition));

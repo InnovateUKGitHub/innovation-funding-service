@@ -73,11 +73,12 @@ Applicant completes Project Details
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]
-    Given Log in as a different user       &{internal_finance_credentials}
-    When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
-    And the user clicks the button/link    jQuery = button:contains("Overhead costs")
-    Then the user should see the element   jQuery = a:contains("${excel_file}")
+    Given Log in as a different user            &{internal_finance_credentials}
+    When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
+    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user expands the section            Overhead costs
+    Then the user should see the element        jQuery = a:contains("${excel_file}")
+    And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22
     # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
 
@@ -105,7 +106,7 @@ User fills in funding overide
     the user clicks the button/link   css = button[type="submit"]
 
 the user checks the override value is applied
-    the user clicks the button/link     link = Your finances
+    the user clicks the button/link     link = Your project finances
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
@@ -130,7 +131,7 @@ the lead invites already registered user
     the user clicks the button/link                link = Continue
     logging in and error checking                  &{collaborator1_credentials}
     the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link                link = Your finances
+    the user clicks the button/link                link = Your project finances
     the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
     the user accept the competition terms and conditions
     Log in as a different user                     &{lead_applicant_credentials}
@@ -140,7 +141,7 @@ the lead invites already registered user
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
     the user should not see the element  link = eligible for state aid
-    the user clicks the button/link      link = Your finances
+    the user clicks the button/link      link = Your project finances
 
 Custom suite teardown
     Close browser and delete emails

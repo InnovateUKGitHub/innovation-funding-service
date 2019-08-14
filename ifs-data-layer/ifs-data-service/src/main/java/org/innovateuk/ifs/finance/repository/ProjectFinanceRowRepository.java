@@ -12,9 +12,6 @@ import java.util.Optional;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ProjectFinanceRowRepository extends FinanceRowRepository<ProjectFinanceRow>, PagingAndSortingRepository<ProjectFinanceRow, Long> {
-    List<ProjectFinanceRow> findByTargetId(Long targetId);
-    ProjectFinanceRow findOneByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
-    List<ProjectFinanceRow> findByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
-    List<ProjectFinanceRow> findByTargetIdAndQuestionId(Long targetId, Long questionId);
-    Optional<ProjectFinanceRow> findOneByApplicationRowId(Long applicationRowId);
+    List<ProjectFinanceRow> findByTargetId(long targetId);
+    Optional<ProjectFinanceRow> findOneByApplicationRowId(long applicationRowId);
 }

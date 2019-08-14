@@ -15,15 +15,11 @@ import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestSer
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,16 +28,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -52,14 +46,11 @@ public class ProjectDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-
-    private boolean onHoldFeatureToggle;
     private ProjectService projectService;
     private CompetitionRestService competitionRestService;
     private ProjectDetailsService projectDetailsService;
     private PartnerOrganisationRestService partnerOrganisationService;
     private FinanceReviewerRestService financeReviewerRestService;
-    private OrganisationRestService organisationRestService;
 
     public ProjectDetailsController() {
     }
@@ -68,16 +59,12 @@ public class ProjectDetailsController {
     public ProjectDetailsController(ProjectService projectService, CompetitionRestService competitionRestService,
                                     ProjectDetailsService projectDetailsService,
                                     PartnerOrganisationRestService partnerOrganisationService,
-                                    FinanceReviewerRestService financeReviewerRestService,
-                                    OrganisationRestService organisationRestService,
-                                    @Value("${ifs.project.management.on.hold}") boolean onHoldFeatureToggle) {
+                                    FinanceReviewerRestService financeReviewerRestService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
         this.partnerOrganisationService = partnerOrganisationService;
         this.financeReviewerRestService = financeReviewerRestService;
-        this.organisationRestService = organisationRestService;
-        this.onHoldFeatureToggle = onHoldFeatureToggle;
     }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
@@ -90,10 +77,7 @@ public class ProjectDetailsController {
                                      UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
-
-        List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -105,11 +89,8 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                onHoldFeatureToggle ? loggedInUser.hasRole(PROJECT_FINANCE) : loggedInUser.hasRole(IFS_ADMINISTRATOR),
                 loggedInUser.hasRole(PROJECT_FINANCE),
                 leadOrganisationResource.getName(),
-                getProjectManager(projectUsers).orElse(null),
-                getFinanceContactForPartnerOrganisation(projectUsers, organisations),
                 locationPerPartnerRequired,
                 locationPerPartnerRequired?
                         partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
@@ -118,36 +99,6 @@ public class ProjectDetailsController {
                 financeReviewer.map(SimpleUserResource::getEmail).orElse(null)));
 
         return "project/detail";
-    }
-    
-    private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
-        return  projectRoles.stream()
-                .filter(uar -> uar.getRole() == PARTNER.getId())
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccess())
-                .collect(Collectors.toList());
-    }
-
-    private List<OrganisationResource> sortedOrganisations(List<OrganisationResource> organisations,
-                                                           OrganisationResource lead)
-    {
-        return new PrioritySorting<>(organisations, lead, OrganisationResource::getName).unwrap();
-    }
-
-    private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
-    }
-
-    private Map<OrganisationResource, ProjectUserResource> getFinanceContactForPartnerOrganisation(List<ProjectUserResource> projectUsers, List<OrganisationResource> partnerOrganisations) {
-        List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
-
-        Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap = new LinkedHashMap<>();
-
-        partnerOrganisations.forEach(organisation ->
-                organisationFinanceContactMap.put(organisation,
-                        simpleFindFirst(financeRoles, financeUserResource -> financeUserResource.getOrganisation().equals(organisation.getId())).orElse(null))
-        );
-
-        return organisationFinanceContactMap;
     }
 
     @PreAuthorize("hasAuthority('project_finance')")

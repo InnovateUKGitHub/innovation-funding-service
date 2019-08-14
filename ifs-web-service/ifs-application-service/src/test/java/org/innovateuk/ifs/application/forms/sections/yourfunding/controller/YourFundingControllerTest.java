@@ -20,11 +20,11 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -82,10 +82,10 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         long organisationId = 5L;
         ManagementYourFundingViewModel viewModel = mock(ManagementYourFundingViewModel.class);
 
-        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?origin=PROJECT_SETUP_MANAGEMENT_STATUS"))
+        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId))
                 .thenReturn(viewModel);
 
-        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/{organisationId}?origin=PROJECT_SETUP_MANAGEMENT_STATUS",
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/{organisationId}",
                 APPLICATION_ID, SECTION_ID, organisationId))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -144,7 +144,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         when(saver.save(eq(APPLICATION_ID), any(), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
-        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(emptyList()));
+        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(noErrors()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)

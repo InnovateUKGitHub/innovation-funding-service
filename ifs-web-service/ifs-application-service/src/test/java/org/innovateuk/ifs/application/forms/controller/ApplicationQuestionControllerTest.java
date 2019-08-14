@@ -10,17 +10,17 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOvervi
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.YourProjectFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -43,11 +43,11 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
@@ -63,7 +63,6 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
@@ -88,12 +87,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Mock
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Mock
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
-    @Mock
     private OverheadFileSaver overheadFileSaver;
 
     @Mock
@@ -103,7 +96,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Mock
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+    private YourProjectFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -123,6 +116,12 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
+
+    @Mock
+    private ApplicationResearchCategoryModelPopulator applicationResearchCategoryModelPopulator;
+
+    @Mock
+    private ApplicationResearchCategoryFormPopulator applicationResearchCategoryFormPopulator;
 
     private ApplicationResource application;
     private Long sectionId;
@@ -164,9 +163,9 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
         sectionBuilder =  newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
+        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
+        when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
+        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourProjectFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
         when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
@@ -174,7 +173,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(76);
 
-        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
         when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
                 .thenReturn(new ValidationMessages());
     }
@@ -226,7 +225,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                         .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Optional.class), any(Boolean.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Boolean.class));
     }
 
     @Test

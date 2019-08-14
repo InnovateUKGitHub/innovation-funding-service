@@ -35,6 +35,7 @@ var vendorJsFiles = [
   __dirname + '/js/vendor/govuk/application.js',
   __dirname + '/js/vendor/govuk/govuk-cookies.js',
   __dirname + '/js/vendor/wysiwyg-editor/*.js',
+  __dirname + '/js/vendor/tablesorter/jquery.tablesorter.js',
   '!' + __dirname + '/js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
@@ -52,6 +53,11 @@ gulp.task('web-core:copy-fonts-govuk', function () {
 gulp.task('web-core:copy-images-govuk', function () {
   return gulp.src(filesExist(govukFrontendPath + 'assets/images/**/**'))
   .pipe(gulp.dest(__dirname + '/images'))
+})
+//  copy over tablesorter javascript to the javascript folder
+gulp.task('web-core:copy-tablesorter', function () {
+  return gulp.src(filesExist(nodeModulesPath + 'tablesorter/dist/js/jquery.tablesorter.js'))
+  .pipe(gulp.dest(__dirname + '/js/vendor/tablesorter'))
 })
 //  copy over html5shiv javascript to the javascript folder
 gulp.task('web-core:copy-html5shiv', function () {
@@ -88,7 +94,7 @@ gulp.task('web-core:vendor', function () {
 })
 
 // build all js
-gulp.task('web-core:js', gulp.parallel('web-core:vendor', 'web-core:ifs-js', 'web-core:copy-html5shiv'))
+gulp.task('web-core:js', gulp.series(gulp.parallel('web-core:copy-html5shiv', 'web-core:copy-tablesorter'),gulp.parallel('web-core:ifs-js', 'web-core:vendor')))
 
 gulp.task('web-core:css', gulp.parallel('web-core:copy-css-autocomplete', 'web-core:copy-images-govuk', 'web-core:copy-fonts-govuk', function () {
   return gulp.src(filesExist(sassFiles))
