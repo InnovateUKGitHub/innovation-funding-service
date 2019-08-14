@@ -32,7 +32,7 @@ Maximum funding level available for lead business
     Then the user should see the element                     jQuery = span:contains("The maximum you can enter is 45%")
     And the user selects the radio button                    otherFunding  false
     And the user clicks the button/link                      jQuery = a:contains("Your finances")
-    [Teardown]  the user clicks the button/link              link = Application overview
+    [Teardown]  the user clicks the button/link              link = Back to application overview
 
 Lead applicant invites a Charity member
     [Documentation]    IFS-338
@@ -74,7 +74,7 @@ Maximum funding level available for RTO lead
     And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
     And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
     And the user marks your funding section as complete
-    [Teardown]  the user clicks the button/link                             link = Application overview
+    [Teardown]  the user clicks the button/link                             link = Back to application overview
 
 Editing research category does not reset your funding
     [Documentation]  IFS-4127
