@@ -15,7 +15,7 @@ the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = h3:contains("${Application}") a
-    the user clicks the button/link  link = Your finances
+    the user clicks the button/link  link = Your project finances
 
 Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
@@ -87,7 +87,7 @@ the user marks the finances as complete
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link = Application overview
-    the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
+    the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills the procurement project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}

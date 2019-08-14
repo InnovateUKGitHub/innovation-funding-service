@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
@@ -81,7 +81,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             UserResource loggedInUser,
             Model model) {
 
-        Future<CommonYourFinancesViewModel> commonViewModelRequest = async(() ->
+        Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
@@ -133,7 +133,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         trimPostcodeInForm(form);
 
         Supplier<String> failureHandler = () -> {
-            CommonYourFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
             model.addAttribute("commonFinancesModel", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
@@ -196,7 +196,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
-    private CommonYourFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
         return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 

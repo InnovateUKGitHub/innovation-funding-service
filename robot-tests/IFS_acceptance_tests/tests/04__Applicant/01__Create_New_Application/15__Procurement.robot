@@ -152,7 +152,7 @@ the user marks the procurement finances as complete
     the user should not see the element              css = table
     the user should see all procurement finance subsections complete
     the user clicks the button/link                  link = Application overview
-    the user should see the element                  jQuery = li:contains("Your finances") > .task-status-complete
+    the user should see the element                  jQuery = li:contains("Your project finances") > .task-status-complete
     the user should not see the element              link = Finances overview
 
 the user should see all procurement finance subsections complete
