@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -26,12 +27,13 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
     }
 
     @Override
-    public TermsAndConditionsReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
+    public TermsAndConditionsReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         return new TermsAndConditionsReadOnlyViewModel(
                 data,
                 question,
                 applicationTermsModelPopulator.populate(data.getModelUser(), data.getApplication().getId(), question.getId(), true),
-                applicationTermsPartnerModelPopulator.populate(data.getApplication(), question.getId())
+                applicationTermsPartnerModelPopulator.populate(data.getApplication(), question.getId()),
+                settings.isIncludeAssessment()
         );
     }
 

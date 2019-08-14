@@ -210,4 +210,13 @@
     </p>
 </th:block>
 
+<th:block th:fragment="terms-and-conditions-assessment(model)">
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
+    <p class="govuk-body">
+        <a class="govuk-link"
+           th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}">
+            View award terms and conditions</a>
+    </p>
+</th:block>
+
 </html>

@@ -151,7 +151,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
-        when(mockPopulator.populate(questions.get(0), expectedData)).thenReturn(expectedRowModel);
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
@@ -168,6 +168,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(financeSection.getName(), "Finance section");
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 
-        verify(mockPopulator).populate(questions.get(0), expectedData);
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 }

@@ -49,7 +49,7 @@ public class GrantAgreementReadOnlyPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        GrantAgreementReadOnlyViewModel viewModel = populator.populate(question, data);
+        GrantAgreementReadOnlyViewModel viewModel = populator.populate(question, data, settings);
 
         assertEquals("file.name", viewModel.getFilename());
 

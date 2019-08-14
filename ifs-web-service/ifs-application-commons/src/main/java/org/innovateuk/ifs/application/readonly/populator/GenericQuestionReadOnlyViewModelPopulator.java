@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -32,7 +33,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     private HttpServletUtil httpServletUtil;
 
     @Override
-    public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
+    public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
         Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA))
                 .findAny();

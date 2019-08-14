@@ -130,7 +130,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     public ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
-            return populatorMap.get(question.getQuestionSetupType()).populate(question, data);
+            return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
         } else {
             throw new IFSRuntimeException("Populator not found for question type: " + question.getQuestionSetupType().name());
         }
