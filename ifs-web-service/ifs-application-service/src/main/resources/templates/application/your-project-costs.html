@@ -77,10 +77,8 @@
             <div class="govuk-form-group" th:if="${model.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
                  th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
-                    <legend id="vat"
-                            class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        Are you VAT
-                        registered?
+                    <legend id="vat" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        Are you VAT registered?
                     </legend>
                     <span class="govuk-hint" th:unless="${model.readOnly}">If you are VAT registered, VAT will be calculated at 20%</span>
                     <span class="govuk-body" th:if="${model.readOnly}"
