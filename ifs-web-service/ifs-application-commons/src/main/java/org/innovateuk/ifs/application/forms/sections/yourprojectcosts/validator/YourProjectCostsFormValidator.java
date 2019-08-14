@@ -105,7 +105,7 @@ public class YourProjectCostsFormValidator {
 
     private void validateVat(VatForm vatForm, ValidationHandler validationHandler) {
         if (vatForm == null) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vat.registered", null, "validation.yourProjectCostsForm.vatRegistered.required")));
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vatForm.registered", null, "validation.yourProjectCostsForm.vatRegistered.required")));
         }
     }
 
