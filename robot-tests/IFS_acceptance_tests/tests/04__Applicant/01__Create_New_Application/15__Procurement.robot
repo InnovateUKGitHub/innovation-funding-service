@@ -43,7 +43,7 @@ Applicant fills in project costs with VAT
     Then the user enters the project location
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
     And the user clicks the button/link                 link = Application overview
-    And the user should see the element                 jQuery = li:contains("Your finances") > .task-status-complete
+    And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
@@ -145,7 +145,7 @@ the user marks the procurement finances as complete
     the user clicks the button/link                  link = Your project costs
     the user clicks the button/link                  jQuery = button:contains("Overhead costs")
     the user should see the element                  jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-    the user clicks the button/link                  link = Your finances
+    the user clicks the button/link                  link = Your project finances
     the user fills in the procurement project costs  ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information   ${Application}  ${SMALL_ORGANISATION_SIZE}
@@ -204,5 +204,5 @@ the user checks the VAT calculations
     the user should see the element                jQuery = th:contains("Total VAT")
     the user should see the element                jQuery = td:contains("£72,839") ~ td:contains("12,140")
     the user clicks the button/link                link = Application overview
-    the user clicks the button/link                link = Your finances
+    the user clicks the button/link                link = Your project finances
 
