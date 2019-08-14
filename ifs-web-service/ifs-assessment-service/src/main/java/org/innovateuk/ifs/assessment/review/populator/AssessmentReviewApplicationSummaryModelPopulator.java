@@ -14,6 +14,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Build the model for the Application under review view.
  */
@@ -35,15 +37,19 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     public AssessmentReviewApplicationSummaryViewModel populateModel(UserResource user, long applicationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        AssessmentResource assessment = assessmentRestService
+        Optional<AssessmentResource> assessment = assessmentRestService
                 .getByUserAndApplication(user.getId(), applicationId)
-                .getSuccess().get(0);
-        ApplicationReadOnlyViewModel readOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(assessment.getId()));
+                .getSuccess().stream().findFirst();
+        ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings();
+        if (assessment.isPresent()) {
+            settings.setAssessmentId(assessment.get().getId());
+        }
+        ApplicationReadOnlyViewModel readOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
         return new AssessmentReviewApplicationSummaryViewModel(application.getId(),
                 application.getName(),
                 readOnlyViewModel,
                 competition,
-                assessment);
+                assessment.orElse(null));
     }
 
 }

@@ -24,7 +24,7 @@
 
             <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
 
-            <section>
+            <section th:if="${model.assessment != null}">
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Feedback summary</h2>
                 <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
                 <p class="govuk-body" th:if="${model.assessment.getFundingDecision().getFundingConfirmation()}">Yes</p>
