@@ -146,7 +146,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.isInternalUser()) {
+        if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
             return Optional.of(internalLink(applicationId, organisation));
         }
         if (currentUserRole.isPresent()) {
