@@ -18,11 +18,13 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
     private String item;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer companyCost;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @DecimalMax(value = "100", message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
