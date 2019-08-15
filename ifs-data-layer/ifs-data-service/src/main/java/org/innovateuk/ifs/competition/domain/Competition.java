@@ -631,6 +631,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return displayDate(getStartDate(), CompetitionResource.START_DATE_FORMAT);
     }
 
+    public String submissionDateDisplay() {
+        return displayDate(getEndDate(), CompetitionResource.START_DATE_FORMAT);//reuse start date format
+    }
+
     private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
             return toUkTimeZone(date).format(formatter);

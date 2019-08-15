@@ -169,7 +169,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
         notificationArguments.put("competitionName", competition.getName());
-        notificationArguments.put("webBaseUrl", webBaseUrl);
+        notificationArguments.put("compCloseDate", competition.submissionDateDisplay());
         notificationArguments.put("earlyMetricsUrl", earlyMetricsUrl);
 
         return new Notification(
