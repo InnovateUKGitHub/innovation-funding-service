@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -64,6 +65,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveOtherCost(field, value, finance);
             } else if (field.startsWith("procurementOverheadRows")) {
                 return autosaveProcurementOverheadCost(field, value, finance);
+            } else if (field.startsWith("vat")) {
+                return autosaveVAT(value, finance, applicationId, organisation.getId());
             } else {
                 throw new IFSRuntimeException(format("Auto save field not handled %s", field), emptyList());
             }
@@ -107,6 +110,15 @@ public class YourProjectCostsAutosaver {
         return Optional.empty();
     }
 
+    private Optional<Long> autosaveVAT(String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+        VatCategory category = (VatCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+        Vat vat = (Vat) category.getCosts().get(0);
+        vat.setRegistered(Boolean.valueOf(value));
+        financeRowRestService.update(vat);
+        return Optional.empty();
+    }
+
     private Optional<Long> autosaveMaterialCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
@@ -128,7 +140,7 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+    private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
         ProcurementOverhead cost = getCost(id, () -> new ProcurementOverhead(finance.getId()));

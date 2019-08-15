@@ -27,18 +27,29 @@ Applicant applies to newly created procurement competition
     Given Log in as a different user            &{RTO_lead_applicant_credentials}
     Then logged in user applies to competition  ${comp_name}  3
 
-Applicant submits his application
+Applicant completes Application questions
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(procurement)
-    When the user navigates to Your-finances page                ${appl_name}
-    And the user marks the procurement finances as complete      ${appl_name}   Calculate  52,214  yes
-    And the user accept the procurement terms and conditions
-    And the user selects research category                       Feasibility studies
-    And the applicant submits the procurement application
+
+Applicant fills in project costs with VAT
+    [Documentation]  IFS-5098
+    When the user navigates to Your-finances page       ${appl_name}
+    Given the user fills the procurement project costs  Calculate  52,214
+    When the user checks the VAT calculations
+    Then the user enters the project location
+    And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                 link = Application overview
+    And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant submits the application
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
+    Given the user accept the procurement terms and conditions
+    When the user selects research category                      Feasibility studies
+    Then the applicant submits the procurement application
     [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
@@ -131,18 +142,18 @@ the user fills in procurement Application details
 
 the user marks the procurement finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
-    the user clicks the button/link                 link = Your project costs
-    the user clicks the button/link                 jQuery = button:contains("Overhead costs")
-    the user should see the element                 jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-    the user clicks the button/link                 link = Your project finances
-    the user fills in the project costs             ${overheadsCost}  ${totalCosts}
+    the user clicks the button/link                  link = Your project costs
+    the user clicks the button/link                  jQuery = button:contains("Overhead costs")
+    the user should see the element                  jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    the user clicks the button/link                  link = Your project finances
+    the user fills in the procurement project costs  ${overheadsCost}  ${totalCosts}
     the user enters the project location
-    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user should not see the element             css = table
+    the user fills in the organisation information   ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user should not see the element              css = table
     the user should see all procurement finance subsections complete
-    the user clicks the button/link                 link = Back to application overview
-    the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
-    the user should not see the element             link = Finances overview
+    the user clicks the button/link                  link = Back to application overview
+    the user should see the element                  jQuery = li:contains("Your project finances") > .task-status-complete
+    the user should not see the element              link = Finances overview
 
 the user should see all procurement finance subsections complete
     the user should see the element  css = li:nth-of-type(1) .task-status-complete
@@ -161,6 +172,9 @@ Competition is closed
     update milestone to yesterday                       ${competitionId}  SUBMISSION_DATE
 
 the assessor submits the assessment
+    the user clicks the button/link               link = Finances overview
+    then the user should see the element          jQuery = h2:contains("Project cost breakdown") ~ div:contains("Total VAT")
+    the user clicks the button/link               link = Back to your assessment overview
     the assessor adds score and feedback for every question    11   # value 5: is the number of questions to loop through to submit feedback
     the user clicks the button/link               link = Review and complete your assessment
     the user selects the radio button             fundingConfirmation  true
@@ -174,3 +188,21 @@ the assessor submits the assessment
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user checks the VAT calculations
+    the user clicks the button/link                css = label[for="stateAidAgreed"]
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user should see a field and summary error  Select if you are VAT registered
+    the user selects the radio button              vatForm.registered  false
+    the user should not see the element            id = vat-total
+    the user selects the radio button              vatForm.registered  true
+    the user should see the element                jQuery = #vatRegistered-totals div:contains("Total VAT") ~ div:contains("£12,140") ~ div:contains("project costs") ~ div:contains("72,839")
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                link = Application overview
+    the user clicks the button/link                link = Review and submit
+    the user expands the section                   Funding breakdown
+    the user should see the element                jQuery = th:contains("Total VAT")
+    the user should see the element                jQuery = td:contains("£72,839") ~ td:contains("12,140")
+    the user clicks the button/link                link = Application overview
+    the user clicks the button/link                link = Your project finances
+

@@ -67,6 +67,8 @@ public class IndustrialCostFinanceHandlerTest {
     private GrantClaimHandler grantClaimHandler;
     @Spy
     private OtherFundingHandler otherFundingHandler;
+    @Spy
+    private VatHandler vatHandler;
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
     private Competition competition;
@@ -80,6 +82,8 @@ public class IndustrialCostFinanceHandlerTest {
     private FinanceRow subContractingCost;
     private FinanceRow labourCost;
     private Materials material;
+    private Vat vat;
+    private FinanceRow vatCost;
     private FinanceRow materialCost;
 
     @Before
@@ -105,7 +109,6 @@ public class IndustrialCostFinanceHandlerTest {
                 init.forEach(i -> costs.add(i));
             }
         }
-
 
         capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20, applicationFinance.getId());
         capitalUsageCost = handler.toApplicationDomain(capitalUsage);
@@ -145,6 +148,13 @@ public class IndustrialCostFinanceHandlerTest {
         materialCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)materialCost);
 
+        vat = new Vat(applicationFinance.getId());
+        vat.setRegistered(false);
+        vat.setName("vat");
+        vatCost = handler.toApplicationDomain(vat);
+        vatCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow)vatCost);
+
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
@@ -162,6 +172,12 @@ public class IndustrialCostFinanceHandlerTest {
     public void getOrganisationFinancesOtherCosts() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
         assertEquals("Testing equality for; "+ FinanceRowType.OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(FinanceRowType.OTHER_COSTS).getTotal());
+    }
+
+    @Test
+    public void getOrganisationFinancesVat() {
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
+        assertEquals("Testing equality for; "+ FinanceRowType.VAT.getType(), new BigDecimal(0), organisationFinances.get(FinanceRowType.VAT).getTotal());
     }
 
     @Test
@@ -213,7 +229,8 @@ public class IndustrialCostFinanceHandlerTest {
                 Pair.of(SUBCONTRACTING_COSTS, SubContractingCostHandler.class),
                 Pair.of(OVERHEADS, OverheadsHandler.class),
                 Pair.of(OTHER_COSTS, OtherCostHandler.class),
-                Pair.of(OTHER_FUNDING, OtherFundingHandler.class)
+                Pair.of(OTHER_FUNDING, OtherFundingHandler.class),
+                Pair.of(VAT, VatHandler.class)
         ).forEach(pair -> {
             final FinanceRowType costType = pair.getKey();
             final Class<?> clazz = pair.getValue();

@@ -140,6 +140,8 @@
                         <th scope="col"
                             th:if="${breakdown.hasOther}"
                             class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
+                        <th scope="col" th:if="${breakdown.hasVat}"
+                            class="govuk-table__header govuk-table__header--numeric width-80">Total VAT (&pound;)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -178,6 +180,9 @@
                         <td th:if="${breakdown.hasOther}"
                             class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${#numbers.formatInteger(row.other, 0, 'DEFAULT')}">0</td>
+                        <td th:if="${breakdown.hasVat}"
+                            class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatInteger(row.vat, 0, 'DEFAULT')}">
                     </tr>
                     <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
                         <th class="govuk-table__header" scope="row">Total</th>
@@ -215,6 +220,10 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:if="${breakdown.hasOther}"
                             th:text="${#numbers.formatInteger(breakdown.other, 0, 'DEFAULT')}">
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:if="${breakdown.hasVat}"
+                            th:text="${#numbers.formatInteger(breakdown.vat, 0, 'DEFAULT')}">
                         </td>
                     </tr>
                     </tbody>

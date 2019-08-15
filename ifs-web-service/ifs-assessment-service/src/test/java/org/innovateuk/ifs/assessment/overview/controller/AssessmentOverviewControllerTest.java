@@ -36,6 +36,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
@@ -400,6 +404,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withFundingType(GRANT)
                 .build();
 
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+
         ApplicationResource applicationResource = applications.get(0);
 
         AssessmentResource assessmentResource = newAssessmentResource()
@@ -420,7 +426,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(applicationFinanceSummaryViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFinanceSummaryViewModel);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
         when(applicationFundingBreakdownViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFundingBreakdownViewModel);
-
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(),
                 applicationResource.getId(),
@@ -559,7 +564,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .andExpect(view().name("assessment/application-detailed-finances"))
                 .andReturn();
     }
-
 
     @Test
     public void rejectInvitation() throws Exception {
@@ -843,6 +847,13 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
         appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(),MEDIUM, ""));
         appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), MEDIUM, ""));
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
+        FinanceRowCostCategory costCategory = new VatCategory();
+        costCategory.addCost(new Vat(1L, false, 2L));
+        organisationFinances.put(FinanceRowType.FINANCE, costCategory);
+
+        appFinanceList.stream().findFirst().get().setFinanceOrganisationDetails(organisationFinances);
 
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 

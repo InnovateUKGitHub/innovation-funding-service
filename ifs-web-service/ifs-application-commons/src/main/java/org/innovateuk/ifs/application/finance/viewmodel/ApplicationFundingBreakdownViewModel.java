@@ -17,12 +17,14 @@ public class ApplicationFundingBreakdownViewModel {
     private final List<BreakdownTableRow> rows;
     private final boolean collaborativeProject;
     private final Set<FinanceRowType> financeRowTypes;
+    private final boolean anyApplicantHasVat;
 
-    public ApplicationFundingBreakdownViewModel(long applicationId, List<BreakdownTableRow> rows, boolean collaborativeProject, Set<FinanceRowType> financeRowTypes) {
+    public ApplicationFundingBreakdownViewModel(long applicationId, List<BreakdownTableRow> rows, boolean collaborativeProject, Set<FinanceRowType> financeRowTypes, boolean anyApplicantHasVat) {
         this.applicationId = applicationId;
         this.rows = rows;
         this.collaborativeProject = collaborativeProject;
         this.financeRowTypes = financeRowTypes;
+        this.anyApplicantHasVat = anyApplicantHasVat;
     }
 
     public long getApplicationId() {
@@ -71,6 +73,10 @@ public class ApplicationFundingBreakdownViewModel {
 
     public boolean isHasOther() {
         return financeRowTypes.contains(OTHER_COSTS);
+    }
+
+    public boolean isHasVat() {
+        return anyApplicantHasVat;
     }
 
     public BigDecimal getTotal() {
@@ -124,6 +130,12 @@ public class ApplicationFundingBreakdownViewModel {
     public BigDecimal getOther() {
         return rows.stream()
                 .map(BreakdownTableRow::getOther)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getVat() {
+        return rows.stream()
+                .map(BreakdownTableRow::getVat)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

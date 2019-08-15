@@ -19,8 +19,9 @@ public class BreakdownTableRow {
     private final BigDecimal subcontracting;
     private final BigDecimal travel;
     private final BigDecimal other;
+    private final BigDecimal vat;
 
-    public BreakdownTableRow(Long organisationId, String organisationName, String status, boolean showViewFinancesLink, String url, BigDecimal total, BigDecimal labour, BigDecimal overheads, BigDecimal procurementOverheads, BigDecimal materials, BigDecimal capitalUsage, BigDecimal subcontracting, BigDecimal travel, BigDecimal other) {
+    public BreakdownTableRow(Long organisationId, String organisationName, String status, boolean showViewFinancesLink, String url, BigDecimal total, BigDecimal labour, BigDecimal overheads, BigDecimal procurementOverheads, BigDecimal materials, BigDecimal capitalUsage, BigDecimal subcontracting, BigDecimal travel, BigDecimal other, BigDecimal vat) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -35,6 +36,7 @@ public class BreakdownTableRow {
         this.subcontracting = subcontracting;
         this.travel = travel;
         this.other = other;
+        this.vat = vat;
     }
 
     public Long getOrganisationId() {
@@ -93,6 +95,10 @@ public class BreakdownTableRow {
         return other;
     }
 
+    public BigDecimal getVat() {
+        return vat;
+    }
+
     public static BreakdownTableRow pendingOrganisation(String name) {
         return new BreakdownTableRow(
                 null,
@@ -100,6 +106,7 @@ public class BreakdownTableRow {
                 "(pending)",
                 false,
                 null,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,

@@ -184,6 +184,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withIncludeJesForm(true)
                 .build();
 
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
                 .getId());
 

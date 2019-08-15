@@ -95,8 +95,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         return new ApplicationFundingBreakdownViewModel(applicationId,
                 rows,
                 application.isCollaborativeProject(),
-                competition.getFinanceRowTypes()
-                );
+                competition.getFinanceRowTypes(),
+                finances.values().stream().anyMatch(ApplicationFinanceResource::isVatRegistered));
     }
 
 
@@ -139,7 +139,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 finance.map(appFinance -> getCategoryOrZero(appFinance, CAPITAL_USAGE)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, SUBCONTRACTING_COSTS)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, TRAVEL)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, OTHER_COSTS)).orElse(BigDecimal.ZERO)
+                finance.map(appFinance -> getCategoryOrZero(appFinance, OTHER_COSTS)).orElse(BigDecimal.ZERO),
+                finance.map(appFinance -> getCategoryOrZero(appFinance, VAT)).orElse(BigDecimal.ZERO)
         );
     }
 
