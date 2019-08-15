@@ -11,19 +11,10 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
 public abstract class AbstractYourFundingForm {
-    private Boolean requestingFunding;
 
     private Boolean otherFunding;
 
     private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
-
-    public Boolean getRequestingFunding() {
-        return requestingFunding;
-    }
-
-    public void setRequestingFunding(Boolean requestingFunding) {
-        this.requestingFunding = requestingFunding;
-    }
 
     public Boolean getOtherFunding() {
         return otherFunding;

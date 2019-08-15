@@ -16,11 +16,11 @@ public class GrantClaimCostBuilder extends AbstractCostBuilder<GrantClaimPercent
     }
 
     public GrantClaimCostBuilder withGrantClaimPercentage(Integer... value) {
-        return withArray((v, cost) -> cost.setGrantClaimPercentage(v), value);
+        return withArray((v, cost) -> cost.setPercentage(v), value);
     }
 
     public static GrantClaimCostBuilder newGrantClaim() {
-        return new GrantClaimCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Grant Claim "));
+        return new GrantClaimCostBuilder(emptyList()).with(uniqueIds());
     }
 
     private GrantClaimCostBuilder(List<BiConsumer<Integer, GrantClaimPercentage>> multiActions) {

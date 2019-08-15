@@ -55,7 +55,6 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void save() {
-        long otherFundingQuestionId = 2L;
         OrganisationResource organisation = newOrganisationResource().build();
         UserResource user = newUserResource().build();
         OtherFunding otherFunding = newOtherFunding()
@@ -81,7 +80,6 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         form.setRequestingFunding(true);
         form.setGrantClaimPercentage(100);
 
-        form.setOtherFundingQuestionId(otherFundingQuestionId);
         form.setOtherFunding(true);
 
         OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId()));

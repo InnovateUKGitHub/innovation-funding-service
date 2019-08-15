@@ -49,7 +49,6 @@ public class YourFundingFormPopulator {
 
         AbstractYourFundingForm form = getForm(finance);
 
-        form.setRequestingFunding(finance.isRequestingFunding());
         populateOtherFunding(form, finance);
         return form;
     }
@@ -75,6 +74,7 @@ public class YourFundingFormPopulator {
             GrantClaimPercentage grantClaimPercentage = (GrantClaimPercentage) grantClaim;
             YourFundingPercentageForm form = new YourFundingPercentageForm();
             form.setGrantClaimPercentage(grantClaimPercentage.getPercentage());
+            form.setRequestingFunding(grantClaimPercentage.getPercentage() == null ? null : finance.isRequestingFunding());
             return form;
         } else if (grantClaim instanceof GrantClaimAmount) {
             GrantClaimAmount grantClaimAmount = (GrantClaimAmount) grantClaim;

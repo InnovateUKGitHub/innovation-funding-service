@@ -122,9 +122,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate() {
-        YourFundingPercentageForm form = new YourFundingPercentageForm();
-
-        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, user, Optional.empty());
 
         assertEquals(form.getRequestingFunding(), true);
         assertEquals(form.getGrantClaimPercentage(), (Integer) 100);
@@ -149,11 +147,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_defaultValues() {
-        YourFundingPercentageForm form = new YourFundingPercentageForm();
-        grantClaim.setGrantClaimPercentage(null);
+        grantClaim.setPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, user, Optional.empty());
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());
@@ -162,11 +159,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_withOrgId() {
-        YourFundingPercentageForm form = new YourFundingPercentageForm();
-        grantClaim.setGrantClaimPercentage(null);
+        grantClaim.setPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, user, Optional.of(organisation.getId()));
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, user, Optional.of(organisation.getId()));
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());

@@ -18,6 +18,6 @@ public class GrantClaimTest {
     @Test
     public void grantClaimShouldReturnCorrectBaseAttributesTest() throws Exception {
         assert(grantClaim.getId().equals(id));
-        assert(grantClaim.getGrantClaimPercentage().equals(grantClaimPercentage));
+        assert(grantClaim.getPercentage().equals(grantClaimPercentage));
     }
 }

@@ -33,14 +33,11 @@ public class YourFundingFormValidator {
 
     public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId) {
 
-        ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
-        if (TRUE.equals(form.getRequestingFunding())) {
-            if (form instanceof YourFundingPercentageForm) {
-                validateFundingLevel((YourFundingPercentageForm) form, errors, user, applicationId);
-            }
-            if (form instanceof YourFundingAmountForm) {
-                validateFundingLevel((YourFundingAmountForm) form, errors, user, applicationId);
-            }
+        if (form instanceof YourFundingPercentageForm) {
+            validateYourFundingPercentageForm((YourFundingPercentageForm) form, errors, user, applicationId);
+        }
+        if (form instanceof YourFundingAmountForm) {
+            validateYourFundingAmountForm((YourFundingAmountForm) form, errors, user, applicationId);
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -97,21 +94,24 @@ public class YourFundingFormValidator {
             errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
         }
     }
-    private void validateFundingLevel(YourFundingAmountForm form, Errors errors, UserResource user, long applicationId) {
+    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors, UserResource user, long applicationId) {
         if (form.getAmount() == null || form.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             ValidationUtils.rejectIfEmpty(errors, "amount", "validation.field.must.not.be.blank");
         }
     }
-    private void validateFundingLevel(YourFundingPercentageForm form, Errors errors, UserResource user, long applicationId) {
-        ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
-        if (form.getGrantClaimPercentage() != null) {
-            if (form.getGrantClaimPercentage() <= 0) {
-                errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min");
-            } else {
-                OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-                ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
-                if (form.getGrantClaimPercentage() > finance.getMaximumFundingLevel()) {
-                    errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max",  new String[] {String.valueOf(finance.getMaximumFundingLevel())}, "");
+    private void validateYourFundingPercentageForm(YourFundingPercentageForm form, Errors errors, UserResource user, long applicationId) {
+        ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
+        if (TRUE.equals(form.getRequestingFunding())) {
+            ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
+            if (form.getGrantClaimPercentage() != null) {
+                if (form.getGrantClaimPercentage() <= 0) {
+                    errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min");
+                } else {
+                    OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
+                    ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+                    if (form.getGrantClaimPercentage() > finance.getMaximumFundingLevel()) {
+                        errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
+                    }
                 }
             }
         }

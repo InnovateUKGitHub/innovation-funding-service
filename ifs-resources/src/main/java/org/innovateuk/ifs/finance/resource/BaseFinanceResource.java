@@ -161,12 +161,18 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public Integer getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
+        if (grantClaim == null) {
+            return 0;
+        }
         return grantClaim.calculateClaimPercentage(getTotal());
     }
 
     @JsonIgnore
     private BigDecimal getGrantClaimAmount() {
         GrantClaim grantClaim = getGrantClaim();
+        if (grantClaim == null) {
+            return BigDecimal.ZERO;
+        }
         return grantClaim.calculateGrantClaimAmount(getTotal());
     }
 

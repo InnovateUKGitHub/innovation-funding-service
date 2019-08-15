@@ -53,9 +53,8 @@ public class YourFundingSaver {
 
         ValidationMessages messages = new ValidationMessages();
 
-        if (form.getRequestingFunding() != null) {
-            saveGrantClaimAmount(finance, form, messages);
-        }
+        saveGrantClaimAmount(finance, form, messages);
+
         if (form.getOtherFunding() != null) {
             saveOtherFunding(finance, form, messages);
         }
@@ -163,11 +162,7 @@ public class YourFundingSaver {
 
     private void saveGrantClaimAmount(ApplicationFinanceResource finance, YourFundingAmountForm form, ValidationMessages messages) {
         GrantClaimAmount claim = (GrantClaimAmount) finance.getGrantClaim();
-        if (form.getRequestingFunding()) {
-            claim.setAmount(form.getAmount());
-        } else {
-            claim.setAmount(BigDecimal.ZERO);
-        }
+        claim.setAmount(form.getAmount());
         messages.addAll(financeRowRestService.update(claim).getSuccess());
     }
     private void saveOtherFunding(ApplicationFinanceResource finance, AbstractYourFundingForm form, ValidationMessages messages) {
