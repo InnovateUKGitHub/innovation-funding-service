@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -34,8 +35,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
-import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.APPLICATION_SUBMITTED;
-import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.HORIZON_2020_APPLICATION_SUBMITTED;
+import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -101,6 +101,28 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
             assertEquals(APPLICATION_SUBMITTED, notification.getMessageKey());
+        }), eq(EMAIL));
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void sendNotificationApplicationSubmittedLoans() {
+        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
+        Competition competition = newCompetition().withFundingType(FundingType.LOAN).build();
+        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
+
+        verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(LOANS_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }
