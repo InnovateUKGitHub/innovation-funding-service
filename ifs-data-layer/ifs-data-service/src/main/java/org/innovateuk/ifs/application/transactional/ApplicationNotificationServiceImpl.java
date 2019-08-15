@@ -51,6 +51,9 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    @Value("${ifs.early.metrics.url}")
+    private String earlyMetricsUrl;
+
     @Override
     @Transactional(readOnly = true)
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
@@ -168,6 +171,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         notificationArguments.put("competitionName", competition.getName());
         notificationArguments.put("webBaseUrl", webBaseUrl);
         //TODO add custom loans link from properties
+        notificationArguments.put("earlyMetricsUrl", earlyMetricsUrl);
 
         return new Notification(
                 from,
