@@ -13,13 +13,14 @@ public class BreakdownTableRow {
     private final BigDecimal total;
     private final BigDecimal labour;
     private final BigDecimal overheads;
+    private final BigDecimal procurementOverheads;
     private final BigDecimal materials;
     private final BigDecimal capitalUsage;
     private final BigDecimal subcontracting;
     private final BigDecimal travel;
     private final BigDecimal other;
 
-    public BreakdownTableRow(Long organisationId, String organisationName, String status, boolean showViewFinancesLink, String url, BigDecimal total, BigDecimal labour, BigDecimal overheads, BigDecimal materials, BigDecimal capitalUsage, BigDecimal subcontracting, BigDecimal travel, BigDecimal other) {
+    public BreakdownTableRow(Long organisationId, String organisationName, String status, boolean showViewFinancesLink, String url, BigDecimal total, BigDecimal labour, BigDecimal overheads, BigDecimal procurementOverheads, BigDecimal materials, BigDecimal capitalUsage, BigDecimal subcontracting, BigDecimal travel, BigDecimal other) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -28,6 +29,7 @@ public class BreakdownTableRow {
         this.total = total;
         this.labour = labour;
         this.overheads = overheads;
+        this.procurementOverheads = procurementOverheads;
         this.materials = materials;
         this.capitalUsage = capitalUsage;
         this.subcontracting = subcontracting;
@@ -65,6 +67,10 @@ public class BreakdownTableRow {
 
     public BigDecimal getOverheads() {
         return overheads;
+    }
+
+    public BigDecimal getProcurementOverheads() {
+        return procurementOverheads;
     }
 
     public BigDecimal getMaterials() {

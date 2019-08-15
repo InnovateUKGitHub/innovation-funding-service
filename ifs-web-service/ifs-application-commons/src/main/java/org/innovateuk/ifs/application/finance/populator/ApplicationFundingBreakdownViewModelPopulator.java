@@ -134,6 +134,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, LABOUR)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, OVERHEADS)).orElse(BigDecimal.ZERO),
+                finance.map(appFinance -> getCategoryOrZero(appFinance, PROCUREMENT_OVERHEADS)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, MATERIALS)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, CAPITAL_USAGE)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, SUBCONTRACTING_COSTS)).orElse(BigDecimal.ZERO),

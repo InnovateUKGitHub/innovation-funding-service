@@ -50,6 +50,10 @@ public class ApplicationFundingBreakdownViewModel {
         return financeRowTypes.contains(OVERHEADS);
     }
 
+    public boolean isHasProcurementOverheads() {
+        return financeRowTypes.contains(PROCUREMENT_OVERHEADS);
+    }
+
     public boolean isHasMaterials() {
         return financeRowTypes.contains(MATERIALS);
     }
@@ -84,6 +88,12 @@ public class ApplicationFundingBreakdownViewModel {
     public BigDecimal getOverheads() {
         return rows.stream()
                 .map(BreakdownTableRow::getOverheads)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getProcurementOverheads() {
+        return rows.stream()
+                .map(BreakdownTableRow::getProcurementOverheads)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
