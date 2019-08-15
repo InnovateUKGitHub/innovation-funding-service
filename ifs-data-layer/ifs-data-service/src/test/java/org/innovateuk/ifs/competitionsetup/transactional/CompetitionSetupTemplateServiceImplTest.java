@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singleton;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -51,8 +52,11 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     @Mock
     private CompetitionTemplatePersistorImpl competitionTemplatePersistorMock;
 
+    @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;
+
     @Test
-    public void initializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
@@ -70,7 +74,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void initializeCompetitionByCompetitionTemplate_competitionCantBeFoundShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionCantBeFoundShouldResultInServiceFailure() {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
@@ -88,7 +92,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void initializeCompetitionByCompetitionTemplate_competitionNotInCompetitionSetupShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionNotInCompetitionSetupShouldResultInServiceFailure() {
         Competition competitionTemplate = newCompetition().withId(2L).build();
         CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).withId(3L).build();
@@ -106,7 +110,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void initializeCompetitionByCompetitionTemplate_templateCantBeFoundShouldResultInServiceFailure() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_templateCantBeFoundShouldResultInServiceFailure() {
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
@@ -122,14 +126,14 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void initializeCompetitionByCompetitionTemplate_competitionShouldBeCleanedAndPersistedWithTemplateSections() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_competitionShouldBeCleanedAndPersistedWithTemplateSections() {
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
 
         Competition competitionTemplate = newCompetition()
                 .withId(2L)
                 .withSections(templateSections)
                 .build();
-        List<Competition> competitions = asList(competitionTemplate);
+        List<Competition> competitions = singletonList(competitionTemplate);
 
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
                 .withCompetitions(competitions)
@@ -167,7 +171,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void initializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() throws Exception {
+    public void initializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() {
 
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
 
@@ -183,7 +187,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withFinanceRowTypes(singleton(FINANCE))
                 .build();
 
-        List<Competition> competitions = asList(competitionTemplate);
+        List<Competition> competitions = singletonList(competitionTemplate);
 
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
                 .withCompetitions(competitions)
@@ -211,6 +215,105 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
+        assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
+        assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());
+    }
+
+    @Test
+    public void initializeCompetitionByCompetitionTemplate_loan() {
+        List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
+
+        GrantTermsAndConditions templateTermsAndConditions = new GrantTermsAndConditions();
+        GrantTermsAndConditions loanTermsAndConditions = new GrantTermsAndConditions();
+
+        Competition competitionTemplate = newCompetition()
+                .withSections(templateSections)
+                .withApplicationFinanceType(NO_FINANCES)
+                .withTermsAndConditions(templateTermsAndConditions)
+                .withGrantClaimMaximums()
+                .withAcademicGrantPercentage(30)
+                .withFinanceRowTypes(singleton(FINANCE))
+                .build();
+
+        List<Competition> competitions = singletonList(competitionTemplate);
+
+        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
+                .withCompetitions(competitions)
+                .withMaximum(50, 100)
+                .build(2);
+        competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
+
+        CompetitionType competitionType = newCompetitionType()
+                .withTemplate(competitionTemplate)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.LOAN)
+                .build();
+
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionTemplatePersistorMock.persistByEntity(competition))
+                .thenReturn(newCompetition().withId(4L).build());
+        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(loanTermsAndConditions);
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+        assertTrue(result.isSuccess());
+
+        assertSame(loanTermsAndConditions, competition.getTermsAndConditions());
+        assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
+        assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());
+    }
+
+    @Test
+    public void initializeCompetitionByCompetitionTemplate_procurement() {
+        List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
+
+
+        GrantTermsAndConditions templateTermsAndConditions = new GrantTermsAndConditions();
+        GrantTermsAndConditions procurementTermsAndConditions = new GrantTermsAndConditions();
+
+        Competition competitionTemplate = newCompetition()
+                .withSections(templateSections)
+                .withApplicationFinanceType(NO_FINANCES)
+                .withTermsAndConditions(templateTermsAndConditions)
+                .withGrantClaimMaximums()
+                .withAcademicGrantPercentage(30)
+                .withFinanceRowTypes(singleton(FINANCE))
+                .build();
+
+        List<Competition> competitions = singletonList(competitionTemplate);
+
+        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
+                .withCompetitions(competitions)
+                .withMaximum(50, 100)
+                .build(2);
+        competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
+
+        CompetitionType competitionType = newCompetitionType()
+                .withTemplate(competitionTemplate)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.LOAN)
+                .build();
+
+        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionTemplatePersistorMock.persistByEntity(competition))
+                .thenReturn(newCompetition().withId(4L).build());
+        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.PROCUREMENT)).thenReturn(procurementTermsAndConditions);
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+        assertTrue(result.isSuccess());
+
+        assertSame(procurementTermsAndConditions, competition.getTermsAndConditions());
         assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
         assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());
     }

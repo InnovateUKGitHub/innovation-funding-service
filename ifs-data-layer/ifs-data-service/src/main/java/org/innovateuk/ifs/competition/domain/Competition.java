@@ -248,7 +248,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public void setSections(List<Section> sections) {
-        this.sections = sections;
+        this.sections.clear();
+        if (sections != null) {
+            this.sections.addAll(sections);
+        }
     }
 
     public void setQuestions(List<Question> questions) {
