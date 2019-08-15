@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
@@ -41,12 +39,12 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(GrantClaimPercentage grantClaim) {
-        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, null, grantClaim.getTotal(), null, grantClaim.getCostType());
+        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getPercentage(), grantClaim.getTotal(), null, grantClaim.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(GrantClaimPercentage grantClaim) {
-        return new ProjectFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, null, grantClaim.getTotal(), null, grantClaim.getCostType());
+        return new ProjectFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getPercentage(), grantClaim.getTotal(), null, grantClaim.getCostType());
     }
 
     @Override
@@ -60,13 +58,7 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new GrantClaimPercentage(cost.getId(), mapCostValue(cost.getCost()), cost.getTarget().getId());
-    }
-
-    private Integer mapCostValue(BigDecimal cost) {
-        return  Optional.ofNullable(cost)
-                .map(BigDecimal::intValue)
-                .orElse(null);
+        return new GrantClaimPercentage(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
