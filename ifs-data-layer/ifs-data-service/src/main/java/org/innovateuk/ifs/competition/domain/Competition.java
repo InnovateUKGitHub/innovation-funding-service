@@ -632,7 +632,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public String submissionDateDisplay() {
-        return displayDate(getEndDate(), CompetitionResource.START_DATE_FORMAT);//reuse start date format
+        return displayDate(getEndDate(), DateTimeFormatter.ofPattern("d MMMM yyyy"));
     }
 
     private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {

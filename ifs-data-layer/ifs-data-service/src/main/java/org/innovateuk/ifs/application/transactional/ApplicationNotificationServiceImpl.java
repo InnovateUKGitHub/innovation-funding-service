@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -155,7 +156,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     Notification notification;
                     if (competition.isH2020()) {
                         notification = horizon2020GrantTransferNotification(from, to, application);
-                    } else if (competition.getFundingType().equals(FundingType.LOAN)) {
+                    } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
@@ -212,6 +213,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
-       LOANS_APPLICATION_SUBMITTED;
+        LOANS_APPLICATION_SUBMITTED;
     }
 }

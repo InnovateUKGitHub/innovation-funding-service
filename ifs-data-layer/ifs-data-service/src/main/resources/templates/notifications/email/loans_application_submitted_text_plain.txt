@@ -2,9 +2,13 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 You have completed part A of your application for ${competitionName}.
+
 To finish your application, you must complete part B, the Early Metrics startup high growth index survey, before the competition closes on ${compCloseDate}.
+
+${earlyMetricsUrl}
+
 If you have already completed both parts A and B, then we will be in touch to let you know if your application has progressed to the next stage.
-TOOO_PLAIN_TEXT_LINK
+
 Yours sincerely,
 <@layout.senderPlainText />
 </@layout.defaultPlainText>
