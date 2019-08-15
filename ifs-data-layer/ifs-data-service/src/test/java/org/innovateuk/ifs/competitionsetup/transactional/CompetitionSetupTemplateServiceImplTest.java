@@ -299,7 +299,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         Competition competition = newCompetition()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withFundingType(FundingType.LOAN)
+                .withFundingType(FundingType.PROCUREMENT)
                 .build();
 
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
