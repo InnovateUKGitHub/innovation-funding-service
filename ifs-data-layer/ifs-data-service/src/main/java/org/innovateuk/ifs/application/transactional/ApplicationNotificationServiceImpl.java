@@ -158,7 +158,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     } else if (competition.getFundingType().equals(FundingType.LOAN)) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else {
-                        notification = applicationSubmitNotification(from, to, application, competition);
+                        notification = loanApplicationSubmitNotification(from, to, application, competition);
+//                        notification = applicationSubmitNotification(from, to, application, competition);
                     }
 
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -170,7 +171,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         notificationArguments.put("applicationName", application.getName());
         notificationArguments.put("competitionName", competition.getName());
         notificationArguments.put("webBaseUrl", webBaseUrl);
-        //TODO add custom loans link from properties
         notificationArguments.put("earlyMetricsUrl", earlyMetricsUrl);
 
         return new Notification(
