@@ -23,7 +23,7 @@ public class OrganisationFinancesWithoutGrowthTableResource {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    OrganisationFinancesWithoutGrowthTableResource() {
+    public OrganisationFinancesWithoutGrowthTableResource() {
     }
 
     public OrganisationSize getOrganisationSize() {

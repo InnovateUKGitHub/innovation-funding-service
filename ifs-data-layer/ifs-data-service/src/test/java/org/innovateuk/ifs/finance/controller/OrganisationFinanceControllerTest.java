@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.*;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
@@ -117,7 +118,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long competitionId = 5;
         boolean stateAidAgreed = true;
         YearMonth financialYearEnd = YearMonth.of(2019, Month.JANUARY);
-        OrganisationSize organisationSize = OrganisationSize.MEDIUM;
+        OrganisationSize organisationSize = MEDIUM;
 
         long annualTurnover = 123;
         long annualProfits = 234;
@@ -276,6 +277,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
+        OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource = new OrganisationFinancesWithoutGrowthTableResource();
         User loggedInUser = newUser().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
@@ -289,7 +291,8 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         getQuestionAndFormInputResponses(competition.getId(), FormInputType.STAFF_COUNT);
 
         mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", application.getId(), organisation.getId())
-                .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON)
+                .content(toJson(organisationFinancesWithoutGrowthTableResource)))
                 .andExpect(status().isOk());
     }
 
