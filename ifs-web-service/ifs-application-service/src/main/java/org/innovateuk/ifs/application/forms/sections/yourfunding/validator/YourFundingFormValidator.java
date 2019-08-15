@@ -98,6 +98,9 @@ public class YourFundingFormValidator {
         }
     }
     private void validateFundingLevel(YourFundingAmountForm form, Errors errors, UserResource user, long applicationId) {
+        if (form.getAmount() == null || form.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+            ValidationUtils.rejectIfEmpty(errors, "amount", "validation.field.must.not.be.blank");
+        }
     }
     private void validateFundingLevel(YourFundingPercentageForm form, Errors errors, UserResource user, long applicationId) {
         ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");

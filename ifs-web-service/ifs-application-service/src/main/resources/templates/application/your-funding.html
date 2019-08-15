@@ -84,10 +84,7 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                                 <h2 class="govuk-fieldset__heading govuk-visually-hidden">Funding amount</h2>
                             </legend>
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('amount')}"
-                                  th:text="${err}"></span>
                             <span class="govuk-hint">The amount you apply for must reflect the funding amount available for this competition.</span>
-
                             <label class="govuk-label govuk-!-font-weight-bold" for="amount">
                                 Funding amount (&pound;)
                             </label>
@@ -97,9 +94,7 @@
                                    class="govuk-input govuk-input--width-10"
                                    required="required"
                                    th:errorclass="govuk-input--error"
-                                   th:field="*{amount}"
-                                   min="0"
-                                   placeholder="0" />
+                                   th:field="*{amount}" />
                         </fieldset>
                     </div>
 

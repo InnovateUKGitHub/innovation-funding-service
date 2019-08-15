@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
 public class YourFundingAmountForm extends AbstractYourFundingForm {
+
     private BigDecimal amount;
 
     public BigDecimal getAmount() {
