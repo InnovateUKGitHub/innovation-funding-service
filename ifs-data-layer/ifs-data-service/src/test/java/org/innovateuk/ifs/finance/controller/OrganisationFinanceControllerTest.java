@@ -247,9 +247,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
 
-
-        foo(competition.getId(), FormInputType.FINANCIAL_YEAR_END, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
-
+        getQuestionAndFormInputResponsesWithDescription(competition.getId(), FormInputType.FINANCIAL_YEAR_END, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
 
         Question financialOverviewRowQuestion = newQuestion().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FINANCIAL_OVERVIEW_ROW)).thenReturn(serviceSuccess(financialOverviewRowQuestion));
@@ -260,8 +258,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .build(4);
         when(formInputService.findByQuestionId(financialOverviewRowQuestion.getId())).thenReturn(serviceSuccess(financialOverviewFormInputResponses));
 
-
-        bar(competition.getId(), FormInputType.FINANCIAL_STAFF_COUNT);
+        getQuestionAndFormInputResponses(competition.getId(), FormInputType.FINANCIAL_STAFF_COUNT);
 
         mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", application.getId(), organisation.getId())
                 .contentType(APPLICATION_JSON)
@@ -269,14 +266,64 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk());
     }
 
-    private void foo(long competitionId, FormInputType formInputType, String description) {
+    @Test
+    public void updateOrganisationWithoutGrowthTable() throws Exception {
+
+        boolean stateAid = true;
+
+        Competition competition = newCompetition().withStateAid(stateAid).build();
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        Application application = newApplication().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
+        Organisation organisation = newOrganisation().build();
+        User loggedInUser = newUser().build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
+        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
+        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
+        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+                .thenReturn(serviceSuccess(applicationFinanceResource));
+
+        getQuestionAndFormInputResponses(competition.getId(), FormInputType.ORGANISATION_TURNOVER);
+        getQuestionAndFormInputResponses(competition.getId(), FormInputType.STAFF_COUNT);
+
+        mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", application.getId(), organisation.getId())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void isShowStateAidAgreement() throws Exception {
+
+        boolean stateAid = true;
+
+        Competition competition = newCompetition().withStateAid(stateAid).build();
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        Application application = newApplication().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
+        Organisation organisation = newOrganisation().build();
+        User loggedInUser = newUser().build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
+        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
+        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
+        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+                .thenReturn(serviceSuccess(applicationFinanceResource));
+
+        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/show-state-aid", application.getId(), organisation.getId()))
+                .andExpect(status().isOk());
+    }
+
+    private void getQuestionAndFormInputResponsesWithDescription(long competitionId, FormInputType formInputType, String description) {
         Question question = newQuestion().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(question));
         List<FormInputResource> formInputResponses = newFormInputResource().withType(formInputType).withDescription(description).build(1);
         when(formInputService.findByQuestionId(question.getId())).thenReturn(serviceSuccess(formInputResponses));
     }
 
-    private void bar(long competitionId, FormInputType formInputType) {
+    private void getQuestionAndFormInputResponses(long competitionId, FormInputType formInputType) {
         Question question = newQuestion().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(question));
         List<FormInputResource> formInputResponses = newFormInputResource().withType(formInputType).build(1);
