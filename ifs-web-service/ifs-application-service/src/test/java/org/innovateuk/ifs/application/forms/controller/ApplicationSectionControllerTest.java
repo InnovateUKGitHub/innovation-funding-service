@@ -15,9 +15,9 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
-import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
+import org.innovateuk.ifs.application.populator.section.YourProjectFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -82,7 +82,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Mock
-    private YourFinancesSectionPopulator yourFinancesSectionPopulator;
+    private YourProjectFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -154,10 +154,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
+        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourProjectFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
-        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(76);
@@ -183,7 +182,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andReturn();
 
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
-        assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
+        assertEquals(YourProjectFinancesSectionViewModel.class, viewModelResult.getClass());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Boolean.class));
     }
@@ -208,7 +207,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andReturn();
 
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
-        assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
+        assertEquals(YourProjectFinancesSectionViewModel.class, viewModelResult.getClass());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Boolean.class));
     }
@@ -402,7 +401,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andReturn();
 
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
-        assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
+        assertEquals(YourProjectFinancesSectionViewModel.class, viewModelResult.getClass());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Boolean.class));
     }

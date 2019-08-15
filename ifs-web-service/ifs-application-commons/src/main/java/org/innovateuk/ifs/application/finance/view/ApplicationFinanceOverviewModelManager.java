@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOvervi
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -17,7 +18,7 @@ import org.springframework.ui.Model;
 import java.util.Map;
 
 @Component
-public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
+public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModelPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private FinanceService financeService;
@@ -39,8 +40,8 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         this.fileEntryRestService = fileEntryRestService;
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
-        addFinanceSections(competitionId, model);
+    public void addFinanceDetails(Model model, CompetitionResource competition, Long applicationId) {
+        addFinanceSections(competition.getId(), model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
                 fileEntryRestService,
@@ -48,7 +49,7 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         );
 
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
-        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
+        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType(competition));
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
         model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
@@ -69,37 +70,5 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
             return;
         }
         model.addAttribute("financeSection", section);
-    }
-
-    public BaseFinanceOverviewViewModel getFinanceDetailsViewModel(Long competitionId, Long applicationId) {
-        ApplicationFinanceOverviewViewModel viewModel = new ApplicationFinanceOverviewViewModel();
-
-        addFinanceSections(competitionId, viewModel);
-        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
-                financeService,
-                fileEntryRestService,
-                applicationId
-        );
-        viewModel.setFinanceTotal(organisationFinanceOverview.getTotal());
-        viewModel.setFinanceTotalPerType(organisationFinanceOverview.getTotalPerType());
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
-        viewModel.setOrganisationFinances(organisationFinances);
-        viewModel.setAcademicFileEntries(organisationFinanceOverview.getAcademicOrganisationFileEntries());
-        viewModel.setTotalFundingSought(organisationFinanceOverview.getTotalFundingSought());
-        viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
-        viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
-        viewModel.setResearchParticipationPercentage(
-                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
-        );
-
-        return viewModel;
-    }
-
-    private void addFinanceSections(Long competitionId, BaseFinanceOverviewViewModel viewModel) {
-        SectionResource section = sectionService.getFinanceSection(competitionId);
-        if (section == null) {
-            return;
-        }
-        viewModel.setFinanceSection(section);
     }
 }

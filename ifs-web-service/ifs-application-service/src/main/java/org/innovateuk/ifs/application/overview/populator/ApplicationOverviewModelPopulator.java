@@ -168,7 +168,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
 
-        boolean leadOrganisation = data.getLeadApplicant().getOrganisationId() == data.getOrganisation().getId();
+        boolean leadOrganisation = data.getLeadApplicant().getOrganisationId().equals(data.getOrganisation().getId());
 
         boolean completeForAll = data.getCompletedSectionsByOrganisation()
                 .values()

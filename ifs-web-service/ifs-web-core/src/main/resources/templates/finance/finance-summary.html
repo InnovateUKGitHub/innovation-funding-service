@@ -30,6 +30,7 @@
             th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
                      hasProcurementOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
+                     hasVat=${isVatRegistered},
                      hasMaterials=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
                      hasCapitalUsage=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
                      hasSubcontracting=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
@@ -70,6 +71,8 @@
                         <th scope="col"
                             th:if="${hasOther}"
                             class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
+                        <th scope="col" th:if="${hasVat}"
+                            class="govuk-table__header govuk-table__header--numeric width-80">Total VAT (&pound;)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -149,6 +152,9 @@
                                     th:if="${hasOther}"
                                     th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}"
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
+                                </td>
+                                <td th:if="${hasVat}" class="govuk-table__cell govuk-table__cell--numeric"
+                                    th:text="${#numbers.formatInteger(vatTotal, 0, 'DEFAULT')}">
                                 </td>
                             </th:block>
                             <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
@@ -241,6 +247,10 @@
                             th:if="${hasOther}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
+                        <td th:if="${hasVat}" class="govuk-table__cell govuk-table__cell--numeric"
+                            th:with="financeTotal = ${vatTotal}"
+                            th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -299,7 +309,7 @@
                     <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}"
                               th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" /></strong>
+                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.totalCosts, 0, 'DEFAULT')}" /></strong>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought, 0, 'DEFAULT')}"/>
@@ -383,15 +393,15 @@
                        th:if="${applicationOrganisation.id == userOrganisation.id}"
                        th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                       <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                         class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
+                         class="govuk-body govuk-link">Return to the finances section</a> to complete your project finances.</p>
                 </th:block>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
             </div>
             <div th:unless="${collaborativeProject}" class="warning-alert">
-                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your finances as complete.</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
                 <p class="govuk-body">
                     <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                       class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
+                       class="govuk-body govuk-link">Return to the finances section</a> to complete your project finances.</p>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete.</p>
             </div>
         </th:block>

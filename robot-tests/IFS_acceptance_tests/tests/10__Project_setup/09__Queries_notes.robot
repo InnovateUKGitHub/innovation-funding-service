@@ -128,7 +128,7 @@ Finance contact receives an email when new query is posted and can see a pending
     [Documentation]  INFUND-4841 IFS-2746 IFS-3559
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
-    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
+    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: Query regarding your project finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css = .status-warning  #Pending query
     And the user clicks the button/link     link = Finance checks
@@ -228,7 +228,7 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753 IFS-3559
     [Tags]
-    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
+    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your project finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752

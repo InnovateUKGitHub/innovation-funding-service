@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -12,7 +13,7 @@ public interface OrganisationFinanceOverview {
 
     Map<Long, BaseFinanceResource> getFinancesByOrganisation();
 
-    Map<FinanceRowType, BigDecimal> getTotalPerType();
+    Map<FinanceRowType, BigDecimal> getTotalPerType(CompetitionResource competition);
 
     BigDecimal getTotal();
 

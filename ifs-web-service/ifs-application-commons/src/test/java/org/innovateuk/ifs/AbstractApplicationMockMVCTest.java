@@ -193,6 +193,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withIncludeJesForm(true)
                 .build();
 
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
                 .getId());
 
@@ -270,7 +272,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withPriority(5).withType(SectionType.GENERAL).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withPriority(6).withType
                 (SectionType.GENERAL).build();
-        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withPriority(7).withType
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your project finances")).withPriority(7).withType
                 (SectionType.FINANCE).build();
         SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs"))
                 .withPriority(8).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();

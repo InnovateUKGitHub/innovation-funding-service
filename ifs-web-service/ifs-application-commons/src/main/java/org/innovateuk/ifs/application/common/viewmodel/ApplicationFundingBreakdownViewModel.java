@@ -10,6 +10,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * View model for finance/finance-summary :: financial_summary_table.
@@ -27,6 +28,8 @@ public class ApplicationFundingBreakdownViewModel {
     private final OrganisationResource userOrganisation;
     private final Map<Long, Boolean> showDetailedFinanceLink;
     private final CompetitionResource currentCompetition;
+    private final BigDecimal vatTotal;
+    private final boolean isVatRegistered;
 
     public ApplicationFundingBreakdownViewModel(
             Map<FinanceRowType, BigDecimal> financeTotalPerType,
@@ -51,6 +54,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
+        this.isVatRegistered = isApplicationVatRegistered();
+        this.vatTotal = calculateVat();
     }
 
     //For EOI Competitions
@@ -74,6 +79,8 @@ public class ApplicationFundingBreakdownViewModel {
         this.userOrganisation = userOrganisation;
         this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.currentCompetition = currentCompetition;
+        this.isVatRegistered = isApplicationVatRegistered();
+        this.vatTotal = calculateVat();
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -118,5 +125,44 @@ public class ApplicationFundingBreakdownViewModel {
 
     public CompetitionResource getCurrentCompetition() {
         return currentCompetition;
+    }
+
+    public boolean isVatRegistered() {
+        return isVatRegistered;
+    }
+
+    public boolean isIsVatRegistered() {
+        return isVatRegistered;
+    }
+
+    public BigDecimal getVatTotal() {
+        return vatTotal;
+    }
+
+    /* view model logic.
+      Procurement competitions only have one applicant
+     */
+    public BigDecimal calculateVat() {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().getTotalCosts().multiply(BigDecimal.valueOf(0.2));
+        }
+
+        return BigDecimal.ZERO;
+    }
+
+    public boolean isApplicationVatRegistered() {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().isVatRegistered();
+        }
+
+        return false;
     }
 }
