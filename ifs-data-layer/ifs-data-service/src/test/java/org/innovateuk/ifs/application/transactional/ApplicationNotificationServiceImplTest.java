@@ -72,6 +72,7 @@ public class ApplicationNotificationServiceImplTest {
     private ApplicationNotificationService service = new ApplicationNotificationServiceImpl();
 
     private static final String WEB_BASE_URL = "www.baseUrl.com" ;
+    private static final String EARLY_METRICS_URL = "www.early-metrics.com" ;
     private static final Set<ApplicationState> FUNDING_DECISIONS_MADE_STATUSES = asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED);
@@ -81,6 +82,7 @@ public class ApplicationNotificationServiceImplTest {
         initMocks(this);
 
         ReflectionTestUtils.setField(service, "webBaseUrl", WEB_BASE_URL);
+        ReflectionTestUtils.setField(service, "earlyMetricsUrl", EARLY_METRICS_URL);
     }
 
     @Test
@@ -97,6 +99,7 @@ public class ApplicationNotificationServiceImplTest {
         verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
@@ -119,6 +122,8 @@ public class ApplicationNotificationServiceImplTest {
         verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
+            assertEquals(EARLY_METRICS_URL, notification.getGlobalArguments().get("earlyMetricsUrl"));
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getName());

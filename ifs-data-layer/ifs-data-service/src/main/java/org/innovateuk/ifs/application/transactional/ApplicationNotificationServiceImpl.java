@@ -158,8 +158,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     } else if (competition.getFundingType().equals(FundingType.LOAN)) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else {
-                        notification = loanApplicationSubmitNotification(from, to, application, competition);
-//                        notification = applicationSubmitNotification(from, to, application, competition);
+                        notification = applicationSubmitNotification(from, to, application, competition);
                     }
 
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
