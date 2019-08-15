@@ -45,7 +45,7 @@ public class FinanceOverviewPopulator {
         if(hasFinanceSection) {
             Long organisationType = applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType();
 
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId());
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition(), applicantSection.getApplication().getId());
             if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
                 openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCompetition(), organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
             }

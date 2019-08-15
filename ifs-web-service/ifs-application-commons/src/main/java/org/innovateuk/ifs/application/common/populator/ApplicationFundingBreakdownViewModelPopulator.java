@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -47,7 +46,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private OrganisationService organisationService;
     private InviteService inviteService;
     private UserRestService userRestService;
-    private CompetitionRestService competitionRestService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
@@ -58,8 +56,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          FormInputRestService formInputRestService,
                                                          OrganisationService organisationService,
                                                          InviteService inviteService,
-                                                         UserRestService userRestService,
-                                                         CompetitionRestService competitionRestService) {
+                                                         UserRestService userRestService) {
         super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
@@ -69,13 +66,11 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.organisationService = organisationService;
         this.inviteService = inviteService;
         this.userRestService = userRestService;
-        this.competitionRestService = competitionRestService;
     }
 
-    public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
+    public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user, CompetitionResource competition) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         OrganisationResource userOrganisation = getUserOrganisation(user, applicationId);
 
@@ -114,7 +109,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         // Finance Section will be null for EOI Competitions
         if (section != null) {
             return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
+                    organisationFinanceOverview.getTotalPerType(competition),
                     organisationFinanceOverview.getTotal(),
                     applicationOrganisations,
                     section,
@@ -127,7 +122,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                     competition);
         } else {
             return new ApplicationFundingBreakdownViewModel(
-                    organisationFinanceOverview.getTotalPerType(),
+                    organisationFinanceOverview.getTotalPerType(competition),
                     applicationOrganisations,
                     section,
                     leadOrganisation,

@@ -89,13 +89,22 @@ the user marks the finances as complete
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
 
+the user fills the procurement project costs
+    [Arguments]  ${overheadsCost}  ${totalCosts}
+    the user clicks the button/link  link = Your project costs
+    the user fills in Labour
+    the user fills in procurement Overhead costs
+    the user fills in Material
+    the user fills in Capital usage
+    the user fills in Subcontracting costs
+    the user fills in Travel and subsistence
+    the user fills in Other costs
+
 the user fills in the project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link = Your project costs
     the user fills in Labour
-    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-    Run Keyword If   '${status}' == 'PASS'    Run Keyword  the user fills in procurement Overhead costs
-    ...  ELSE    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
+    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -122,6 +131,7 @@ the user fills in Labour
     the user clicks the button/link            jQuery = button:contains("Labour")
 
 the user fills in procurement Overhead costs
+    the user expands the section  Overhead costs
     Validations for procurement Overhead costs
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(1) input   Cost
     the user enters text to a text field    css = #accordion-finances-content-10 tbody tr:nth-of-type(1) td:nth-of-type(2) input   5000

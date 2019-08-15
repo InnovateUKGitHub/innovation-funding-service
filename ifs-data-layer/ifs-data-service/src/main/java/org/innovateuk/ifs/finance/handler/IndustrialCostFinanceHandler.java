@@ -46,19 +46,22 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     private OtherFundingHandler otherFundingHandler;
 
+    private VatHandler vatHandler;
+
     public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                             ProjectFinanceRowRepository projectFinanceRowRepository,
-                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                             QuestionService questionService,
-                                             ApplicationFinanceRepository applicationFinanceRepository,
-                                             ProjectFinanceRepository projectFinanceRepository,
-                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                             OverheadsHandler overheadsHandler,
-                                             SubContractingCostHandler subContractingCostHandler,
-                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                             OtherFundingHandler otherFundingHandler,
-                                             ProcurementsOverheadsHandler procurementsOverheadsHandler) {
+                                        ProjectFinanceRowRepository projectFinanceRowRepository,
+                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                        QuestionService questionService,
+                                        ApplicationFinanceRepository applicationFinanceRepository,
+                                        ProjectFinanceRepository projectFinanceRepository,
+                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                        OverheadsHandler overheadsHandler,
+                                        SubContractingCostHandler subContractingCostHandler,
+                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                        OtherFundingHandler otherFundingHandler,
+                                        ProcurementsOverheadsHandler procurementsOverheadsHandler,
+                                        VatHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
@@ -69,6 +72,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         this.travelCostHandler = travelCostHandler;
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
+        this.vatHandler = vatHandler;
         this.procurementsOverheadsHandler = procurementsOverheadsHandler;
     }
 
@@ -144,6 +148,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
                 break;
+            case VAT:
+                handler = vatHandler;
+                break;
         }
         if (handler != null) {
             return handler;
@@ -162,6 +169,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 return new OverheadCostCategory();
             case FINANCE:
                 return new GrantClaimCategory();
+            case VAT:
+                return new VatCategory();
             default:
                 return new DefaultCostCategory();
         }

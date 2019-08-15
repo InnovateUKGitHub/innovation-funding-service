@@ -8,15 +8,13 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCategory;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +61,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case PROCUREMENT_OVERHEADS:
                     messages.addAll(saveRows(form.getProcurementOverheadRows(), finance).get());
                     break;
+                case VAT:
+                    messages.addAll(saveVat(form.getVatForm(), finance).get());
+                    break;
             }
             if (messages.getErrors().isEmpty()) {
                 return serviceSuccess();
@@ -103,6 +104,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PROCUREMENT_OVERHEADS)) {
             futures.add(saveRows(form.getProcurementOverheadRows(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.VAT)) {
+            futures.add(saveVat(form.getVatForm(), finance));
+        }
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -142,6 +146,20 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             }
 
             return getFinanceRowService().update(overheadCost).getSuccess();
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> saveVat(VatForm vatForm, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            VatCategory vatCategory = (VatCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
+            Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
+
+            vatCost.setRegistered(vatForm.getRegistered());
+
+            messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
+
+            return messages;
         });
     }
 

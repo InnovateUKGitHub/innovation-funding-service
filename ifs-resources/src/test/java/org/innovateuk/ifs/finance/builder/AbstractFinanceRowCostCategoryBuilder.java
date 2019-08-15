@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -16,5 +17,10 @@ public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRow
     @SafeVarargs
     public final S withCosts(List<? extends FinanceRowItem>... costs) {
         return withArray((cost, financeRow) -> cost.forEach(financeRow::addCost), costs);
+    }
+
+    @SafeVarargs
+    public final S withTotal(BigDecimal... value) {
+        return withArraySetFieldByReflection("total", value);
     }
 }

@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public class YourProjectCostsForm {
 
+    public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
+
     private LabourForm labour = new LabourForm();
 
     private OverheadForm overhead = new OverheadForm();
@@ -24,7 +26,17 @@ public class YourProjectCostsForm {
 
     private Map<String, OtherCostRowForm> otherRows = new LinkedHashMap<>();
 
+    private VatForm vatForm;
+
     private Boolean eligibleAgreement;
+
+    public VatForm getVatForm() {
+        return vatForm;
+    }
+
+    public void setVatForm(VatForm vatForm) {
+        this.vatForm = vatForm;
+    }
 
     public OverheadForm getOverhead() {
         return overhead;
@@ -101,6 +113,14 @@ public class YourProjectCostsForm {
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
         return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    }
+
+    public BigDecimal getVatTotal() {
+        return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
+    }
+
+    public BigDecimal getProjectVatTotal() {
+        return getOrganisationFinanceTotal().add(getVatTotal());
     }
 
     public BigDecimal getTotalOverheadCosts() {
