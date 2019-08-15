@@ -36,7 +36,7 @@ Submit button disabled when application is incomplete
     Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_rto_name}
     And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and submit at the bottom of this page.")
-    And the user clicks the button/link                link = Your finances
+    And the user clicks the button/link                link = Your project finances
     And the user clicks the button/link                link = Back to application overview
     And the user clicks the button/link                jQuery = .govuk-button:contains("Review and submit")
     Then the submit button should be disabled

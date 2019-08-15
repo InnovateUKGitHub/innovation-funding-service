@@ -107,6 +107,7 @@ public class BreakdownTableRow {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO
         );
     }

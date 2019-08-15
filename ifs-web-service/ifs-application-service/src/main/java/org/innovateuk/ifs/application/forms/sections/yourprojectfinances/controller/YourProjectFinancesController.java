@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.forms.sections.yourfinances.controller;
+package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.controller;
 
 
-import org.innovateuk.ifs.application.forms.sections.yourfinances.populator.YourFinancesModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel.YourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.populator.YourProjectFinancesModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourProjectFinancesViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @Controller
 @SecuredBySpring(value = "YOUR_FINANCES", description = "Applicants or internal users can view finances.")
 @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-public class YourFinancesController {
-    private static final String VIEW = "application/sections/your-finances/your-finances";
+public class YourProjectFinancesController {
+    private static final String VIEW = "application/sections/your-project-finances/your-project-finances";
 
     @Autowired
-    private YourFinancesModelPopulator yourFinancesModelPopulator;
+    private YourProjectFinancesModelPopulator yourFinancesModelPopulator;
 
     @GetMapping
     public String viewFinancesOverview(@PathVariable long applicationId,
@@ -31,7 +31,7 @@ public class YourFinancesController {
                                        @PathVariable long organisationId,
                                        UserResource user,
                                        Model model) {
-        YourFinancesViewModel viewModel = yourFinancesModelPopulator.populate(applicationId, sectionId, organisationId, user);
+        YourProjectFinancesViewModel viewModel = yourFinancesModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
     }

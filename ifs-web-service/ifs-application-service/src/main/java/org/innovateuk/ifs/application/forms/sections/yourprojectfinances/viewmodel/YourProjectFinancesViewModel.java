@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public class YourFinancesViewModel {
+public class YourProjectFinancesViewModel {
     private final long applicationId;
     private final String applicationName;
     private final boolean h2020;
@@ -23,7 +23,7 @@ public class YourFinancesViewModel {
 
     private final List<YourFinancesRowViewModel> rows;
 
-    public YourFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, ApplicationFinanceResource organisationFinance, List<YourFinancesRowViewModel> rows) {
+    public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, ApplicationFinanceResource organisationFinance, List<YourFinancesRowViewModel> rows) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.h2020 = competition.isH2020();

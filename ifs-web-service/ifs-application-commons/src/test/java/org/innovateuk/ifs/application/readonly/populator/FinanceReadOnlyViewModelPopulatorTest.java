@@ -80,7 +80,7 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
         when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         FinanceReadOnlyViewModel viewModel = populator.populate(data);
 

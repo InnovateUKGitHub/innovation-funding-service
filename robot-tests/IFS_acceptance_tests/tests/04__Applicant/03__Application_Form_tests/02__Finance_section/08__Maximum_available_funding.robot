@@ -31,7 +31,7 @@ Maximum funding level available for lead business
     And the user selects the radio button                    requestingFunding   true
     Then the user should see the element                     jQuery = span:contains("The maximum you can enter is 45%")
     And the user selects the radio button                    otherFunding  false
-    And the user clicks the button/link                      jQuery = a:contains("Your finances")
+    And the user clicks the button/link                      jQuery = a:contains("Your project finances")
     [Teardown]  the user clicks the button/link              link = Back to application overview
 
 Lead applicant invites a Charity member
@@ -81,7 +81,7 @@ Editing research category does not reset your funding
     [Tags]
     Given the user edits the research category   Feasibility studies
     And the user edits the organisation size     ${SMALL_ORGANISATION_SIZE}
-    And The user clicks the button/link          link = Your finances
+    And The user clicks the button/link          link = Your project finances
     Then the user should see the element         jQuery = li:contains("Your funding") .task-status-complete
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
@@ -170,7 +170,7 @@ the user fills the other application details questions
 
 the business user fills in the project costs
 # The project costs are added such that business partner costs are less than 50% of overall project costs
-    the user clicks the button/link         link = Your finances
+    the user clicks the button/link         link = Your project finances
     the user clicks the button/link         link = Your project costs
     the user clicks the button/link         jQuery = button:contains("Materials")
     the user should see the element         css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -183,13 +183,18 @@ the business user fills in the project costs
 
 the user edits the research category
     [Arguments]   ${research_category}
+<<<<<<< HEAD
     the user clicks the button/link     jQuery = a:contains("Your finances")
     the user clicks the button/link     link = Back to application overview
+=======
+    the user clicks the button/link     jQuery = a:contains("Your project finances")
+    the user clicks the button/link     link = Application overview
+>>>>>>> 3fddfa1de672ad53634296b533699a80209f072d
     the user clicks the button/link     link = Research category
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user clicks the button twice    jQuery = label[for^="researchCategory"]:contains("${research_category}")
     the user clicks the button/link     id = application-question-complete
-    the user clicks the button/link     link = Your finances
+    the user clicks the button/link     link = Your project finances
 
 the user edits the organisation size
     [Arguments]  ${org_size}
@@ -212,7 +217,7 @@ the correct funding is displayed to academic user
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain    Bath Spa University
     Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
-    the user clicks the button/link   link = Your finances
+    the user clicks the button/link   link = Your project finances
     the user should see the element   jQuery = td:contains(" 0%")
 
 the academic user marks your project costs as complete

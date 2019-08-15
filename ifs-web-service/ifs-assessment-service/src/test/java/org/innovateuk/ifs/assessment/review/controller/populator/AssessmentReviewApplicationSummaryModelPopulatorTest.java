@@ -60,7 +60,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(singletonList(assessment)));
-        when(applicationReadOnlyViewModelPopulator.populate(application.getId(), user,
+        when(applicationReadOnlyViewModelPopulator.populate(application, competition, user,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(assessment.getId())))
                 .thenReturn(readOnlyViewModel);
 

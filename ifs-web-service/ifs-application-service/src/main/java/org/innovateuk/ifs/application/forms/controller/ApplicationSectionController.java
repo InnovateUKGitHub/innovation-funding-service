@@ -80,7 +80,7 @@ public class ApplicationSectionController {
         return redirect(applicationId, section, user);
     }
 
-    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your project Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @GetMapping(SECTION_URL + "{sectionId}/{organisationId}")
     public String getSectionInternalUser(@PathVariable long applicationId,

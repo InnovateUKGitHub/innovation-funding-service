@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel;
 
 public class YourFinancesRowViewModel {
 

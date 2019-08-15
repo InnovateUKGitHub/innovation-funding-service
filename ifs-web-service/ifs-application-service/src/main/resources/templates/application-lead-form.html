@@ -57,9 +57,6 @@
                         <th:block th:insert="fragments/application-details :: application_details(${formInputViewModel})" />
                     </th:block>
                 </th:block>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
-                    <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
-                </th:block>
                 <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
                     <th:block th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
                 </th:block>

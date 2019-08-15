@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your finances'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project finances'"/>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -16,7 +16,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your finances',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Your project finances',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
         <div class="your-finances">
             <h2 th:unless="${model.h2020}"

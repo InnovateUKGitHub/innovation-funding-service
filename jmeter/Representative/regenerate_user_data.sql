@@ -34,7 +34,7 @@ select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_quest
              and other_funding_question.name = 'Other funding'
             join section your_finance_section
               on your_finance_section.competition_id = c.id
-             and your_finance_section.name = 'Your finances'
+             and your_finance_section.name = 'Your project finances'
             join question travel_subsistence_question
               on travel_subsistence_question.competition_id = c.id
              and travel_subsistence_question.name = 'Travel and subsistence'

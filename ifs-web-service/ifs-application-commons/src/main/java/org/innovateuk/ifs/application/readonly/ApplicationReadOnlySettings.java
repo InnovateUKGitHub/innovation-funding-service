@@ -52,11 +52,12 @@ public class ApplicationReadOnlySettings {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationReadOnlySettings that = (ApplicationReadOnlySettings) o;
+        ApplicationReadOnlySettings settings = (ApplicationReadOnlySettings) o;
 
         return new EqualsBuilder()
-                .append(includeStatuses, that.includeStatuses)
-                .append(includeQuestionLinks, that.includeQuestionLinks)
+                .append(includeStatuses, settings.includeStatuses)
+                .append(includeQuestionLinks, settings.includeQuestionLinks)
+                .append(assessmentId, settings.assessmentId)
                 .isEquals();
     }
 
@@ -65,6 +66,7 @@ public class ApplicationReadOnlySettings {
         return new HashCodeBuilder(17, 37)
                 .append(includeStatuses)
                 .append(includeQuestionLinks)
+                .append(assessmentId)
                 .toHashCode();
     }
 }

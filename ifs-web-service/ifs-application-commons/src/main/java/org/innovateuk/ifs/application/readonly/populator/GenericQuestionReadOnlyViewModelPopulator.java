@@ -53,26 +53,30 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        Optional<Collection<AssessorFormInputResponseResource>> responses = Optional.ofNullable(data.getQuestionToAssessorResponse().get(question.getId()));
+        Optional<AssessorFormInputResponseResource> feedback = Optional.empty();
+        Optional<AssessorFormInputResponseResource> score = Optional.empty();
+        if (settings.isIncludeAssessment()) {
+            Optional<Collection<AssessorFormInputResponseResource>> responses = Optional.ofNullable(data.getQuestionToAssessorResponse().get(question.getId()));
 
-        Optional<AssessorFormInputResponseResource> feedback = responses.flatMap(resps ->
-                resps.stream()
-                        .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
-                        .findAny());
+            feedback = responses.flatMap(resps ->
+                    resps.stream()
+                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
+                            .findAny());
 
-        Optional<AssessorFormInputResponseResource> score = responses.flatMap(resps ->
-                resps.stream()
-                        .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
-                        .findAny());
+            score = responses.flatMap(resps ->
+                    resps.stream()
+                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
+                            .findAny());
+        }
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 textResponse.map(FormInputResponseResource::getValue).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                appendixResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data)).orElse(null),
+                appendixResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),
                 templateDocumentResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                templateDocumentResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data)).orElse(null),
+                templateDocumentResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
                 templateDocumentResponse.map(FormInputResponseResource::getFormInput).orElse(null),
                 feedback.map(AssessorFormInputResponseResource::getValue).orElse(null),
@@ -80,11 +84,11 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             );
     }
 
-    private String urlForFormInputDownload(long formInputId, QuestionResource question, ApplicationReadOnlyData data) {
+    private String urlForFormInputDownload(long formInputId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
         if (data.getApplicantProcessRole().isPresent()) {
             return String.format("/application/%d/form/question/%d/forminput/%d/download", data.getApplication().getId(), question.getId(), formInputId);
-        } else if (authenticatedUser.hasRole(Role.ASSESSOR) && !data.getQuestionToAssessorResponse().isEmpty()) {
+        } else if (authenticatedUser.hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
             long assessmentId = data.getQuestionToAssessorResponse().entries().iterator().next().getValue().getAssessment();
             return String.format("/assessment/%d/application/%d/formInput/%d/download", assessmentId, data.getApplication().getId(), formInputId);
         } else {

@@ -111,7 +111,7 @@ public class ApplicationNavigationPopulator {
      */
     public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId, boolean isSupport) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
-            model.addAttribute(BACK_TITLE, "Your finances");
+            model.addAttribute(BACK_TITLE, "Your project finances");
             if (applicantOrganisationId.isPresent()) {
                 model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
             } else {

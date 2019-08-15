@@ -80,15 +80,15 @@ the applicant cannot add a collaborator to a single comp
 
 the applicant sees single comp finance summary
     the user clicks the button/link      link = Finances overview
-    the user should see the element      jQuery = .warning-alert:contains("You have not marked your finances as complete")
+    the user should see the element      jQuery = .warning-alert:contains("You have not marked your project finances as complete")
     the user should not see the element  jQuery = .finance-summary th[scope = "row"]:contains("Total")
     the user clicks the button/link      link = Application overview
 
 the applicant sees state aid information
-    the user clicks the button/link      link = Your finances
+    the user clicks the button/link      link = Your project finances
     the user clicks the button/link      link = Your organisation
     the user should see the element      link = eligible for state aid
-    the user clicks the button/link      link = Your finances
+    the user clicks the button/link      link = Your project finances
     the user clicks the button/link      link = Back to application overview
 
 Custom suite teardown

@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.forms.sections.yourfinances.populator;
+package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.populator;
 
 import org.innovateuk.ifs.application.ApplicationUrlHelper;
-import org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel.YourFinancesRowViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourfinances.viewmodel.YourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourFinancesRowViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -27,7 +27,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Component
-public class YourFinancesModelPopulator {
+public class YourProjectFinancesModelPopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -53,7 +53,7 @@ public class YourFinancesModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-    public YourFinancesViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
+    public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         SectionResource yourFinances = sectionRestService.getById(sectionId).getSuccess();
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -70,7 +70,7 @@ public class YourFinancesModelPopulator {
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
                                 completedSections.contains(subSection.getId()))
                 ).collect(toList());
-        return new YourFinancesViewModel(applicationId, application.getName(), competition,
+        return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
                 applicationFinanceResource,
                 rows);
     }
