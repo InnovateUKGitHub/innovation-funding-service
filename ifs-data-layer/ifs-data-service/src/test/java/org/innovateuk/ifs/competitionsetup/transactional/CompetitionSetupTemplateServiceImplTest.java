@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -144,6 +145,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition()
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Competition expectedResult = newCompetition().withId(4L).build();
@@ -195,6 +197,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         Competition competition = newCompetition()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
@@ -210,6 +213,5 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
         assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
         assertEquals(grantClaimMaximums, competition.getGrantClaimMaximums());
-        assertEquals(singleton(FINANCE), competition.getFinanceRowTypes());
     }
 }

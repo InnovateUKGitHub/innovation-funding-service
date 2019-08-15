@@ -31,6 +31,7 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
+import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -144,17 +145,22 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .map(avm ->
                         new ApplicationOverviewRowViewModel(
                                 getQuestionTitle(question),
-                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
                                 showStatus)
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
                                 getQuestionTitle(question),
-                                format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()),
+                                getRowUrlFromQuestion(question, data),
                                 complete,
                                 showStatus)
                 );
+    }
+
+    private static String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
+        return getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId())
+                .orElse(format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()));
     }
 
     private static boolean isTermsAndConditionsComplete(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
@@ -162,7 +168,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
 
-        boolean leadOrganisation = data.getLeadApplicant().getOrganisationId() == data.getOrganisation().getId();
+        boolean leadOrganisation = data.getLeadApplicant().getOrganisationId().equals(data.getOrganisation().getId());
 
         boolean completeForAll = data.getCompletedSectionsByOrganisation()
                 .values()

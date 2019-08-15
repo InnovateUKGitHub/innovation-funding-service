@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.form.documentation;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.form.controller.FormInputController;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
@@ -8,11 +11,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.function.Function;
 
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceBuilder;
 import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceFields;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -21,8 +29,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<FormInputController> {
+public class FormInputControllerDocumentation extends BaseFileControllerMockMVCTest<FormInputController> {
     private static final String baseURI = "/forminput";
 
     @Mock
@@ -114,4 +124,36 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
                         )
                 ));
     }
+
+
+    @Test
+    public void findFile() throws Exception {
+        final long formInputId = 22L;
+        FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
+        when(formInputServiceMock.findFile(formInputId)).thenReturn(serviceSuccess(fileEntryResource));
+
+        mockMvc.perform(get(baseURI + "/file-details/{formInputId}", formInputId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntryResource)))
+                .andDo(document("forminput/{method-name}",
+                        pathParameters(parameterWithName("formInputId").description("Id of the question to get template file of")),
+                        responseFields(fileEntryResourceFields)));
+
+        verify(formInputServiceMock).findFile(formInputId);
+    }
+
+    @Test
+    public void downloadFile() throws Exception {
+        final long formInputId = 22L;
+
+        Function<FormInputService, ServiceResult<FileAndContents>> serviceCallToDownload =
+                (service) -> formInputServiceMock.downloadFile(formInputId);
+
+        assertGetFileContents(baseURI + "/file/{formInputId}", new Object[]{formInputId},
+                emptyMap(), formInputServiceMock, serviceCallToDownload)
+                .andExpect(status().isOk())
+                .andDo(documentFileGetContentsMethod("forminput/{method-name}"));
+    }
+
 }

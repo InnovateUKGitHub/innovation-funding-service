@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
-
     private Map<FinanceRowType, FinanceRowHandler<?>> financeRowHandlers;
 
     @Autowired
@@ -181,9 +180,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
-            if(cost.getApplicationRowId() != null) {
+            if (cost.getApplicationRowId() != null) {
                 applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
-            } else{
+            } else {
                 applicationFinanceRow = Optional.empty();
             }
             return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));

@@ -52,7 +52,7 @@ the applicant visits all of the question pages, edits their content and marks th
     the applicant goes to the project team section, and performs actions
     the applicant goes to the funding section, and performs actions
     the applicant goes to the adding value section, and performs actions
-    the applicant goes to the your finances section, and performs actions
+    the applicant goes to the your project finances section, and performs actions
     the applicant goes to the summary page
 
 the applicant goes to the application details page and performs actions
@@ -152,11 +152,11 @@ the applicant goes to the adding value section, and performs actions
     Assign the adding value section to Jessica Doe
     the applicant saves and returns to the overview    Saving the adding value section
 
-the applicant goes to the your finances section, and performs actions
-    click link    Your finances
-    time until page contains    acesss and edit your finances    Loading the your finances section
+the applicant goes to the your project finances section, and performs actions
+    click link    Your project finances
+    time until page contains    access and edit your project finances    Loading the your project finances section
     the applicant edits the finance sections
-    the applicant saves and returns to the overview    Saving the your finances section
+    the applicant saves and returns to the overview    Saving the your project finances section
 
 the applicant edits the finance sections
     the applicant adds in some labour costs

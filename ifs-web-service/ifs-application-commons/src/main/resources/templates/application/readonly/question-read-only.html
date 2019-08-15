@@ -17,6 +17,22 @@
                       th:text="${model.answer}">
             </textarea>
         </div>
+
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
+            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
+                Uploaded project plan and methodology
+            </h1>
+            <p class="uploaded-file govuk-body"
+               th:with="applicantUrl=@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentId})},
+                     internalUrl=@{/competition/{competitionId}/application/{applicationId}/forminput/{formInputId}/download(competitionId=${model.competitionId}, applicationId=${model.applicationId}, formInputId=${model.templateDocumentId})}">
+                <a class="govuk-link"
+                   th:href="${isApplicant ? applicantUrl : internalUrl}"
+                   th:text="${model.templateDocumentFilename}"
+                   target="_blank"
+                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
+            </p>
+        </div>
+
         <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
             <p class="uploaded-file govuk-body"
                 th:with="applicantUrl=@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})},
@@ -25,10 +41,9 @@
                    th:href="${isApplicant ? applicantUrl : internalUrl}"
                    th:text="${model.appendixFilename}"
                    target="_blank"
-                   aria-describedby="file-hint">file</a> <span id="file-hint">(opens in a new window)</span>.
+                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
             </p>
         </div>
-
     </div>
 </th:block>
 
@@ -97,7 +112,7 @@
     <p class="govuk-body" th:if="${model.open and isApplicant}">
         To make changes to your organisations' finances, go back to the
         <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your finances</a> section.
+           class="govuk-link">your project finances</a> section.
     </p>
 
     <div>

@@ -34,11 +34,13 @@ public class ApplicantQuestionResourceBuilder extends AbstractApplicantResourceB
         return withArraySetFieldByReflection("question", question);
     }
 
-    public ApplicantQuestionResourceBuilder withApplicantFormInputs(List<ApplicantFormInputResource>... applicantFormInputs) {
+    @SafeVarargs
+    public final ApplicantQuestionResourceBuilder withApplicantFormInputs(List<ApplicantFormInputResource>... applicantFormInputs) {
         return withArraySetFieldByReflection("applicantFormInputs", applicantFormInputs);
     }
 
-    public ApplicantQuestionResourceBuilder withApplicantQuestionStatuses(List<ApplicantQuestionStatusResource>... applicantQuestionStatuses) {
+    @SafeVarargs
+    public final ApplicantQuestionResourceBuilder withApplicantQuestionStatuses(List<ApplicantQuestionStatusResource>... applicantQuestionStatuses) {
         return withArraySetFieldByReflection("applicantQuestionStatuses", applicantQuestionStatuses);
     }
 }

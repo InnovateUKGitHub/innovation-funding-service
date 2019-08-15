@@ -12,11 +12,13 @@ The competition admin creates competition
     the user navigates to the page              ${CA_UpcomingComp}
     the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
-    the user selects the Terms and Conditions
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
+    ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
-    the user marks the application as done      ${projectGrowth}  ${compType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
@@ -61,6 +63,16 @@ the user fills in the CS Initial details
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
+
+the user selects procurement Terms and Conditions
+    the user clicks the button/link       link = Terms and conditions
+    the user clicks the button/link       jQuery = label:contains("Procurement")
+    the user clicks the button/link       jQuery = button:contains("Done")
+    then the user should see a field and summary error  Upload a terms and conditions document.
+    the user uploads the file             css = .inputfile  ${valid_pdf}
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user clicks the button/link       link = Competition setup
+    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
@@ -133,6 +145,12 @@ the user fills in the CS Documents in other projects
     the user should see the element          jQuery = span:contains("Test document type")
     the user clicks the button/link          link = Competition setup
 
+the user marks the procurement application as done
+    [Arguments]  ${growthTable}  ${comp_type}
+    the user clicks the button/link                               link = Application
+    the user marks the Application details section as complete    ${comp_type}
+    the assessed questions are marked as complete(procurement)    ${growthTable}
+
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
@@ -182,7 +200,6 @@ the user marks the Finance section as complete if it's present
 the user opts no finances for EOI comp
     the user clicks the button/link    link = Finances
     the element should be disabled     application-finance-standard
-    the element should be disabled     application-finance-standard-with-vat
     the user selects the radio button  applicationFinanceType  NO_FINANCES
     the user clicks the button/link    jQuery = button:contains("Done")
 
@@ -213,6 +230,25 @@ the user marks each question as complete
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
     the user clicks the button/link  css = button[type="submit"]
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
+
+the assessed questions are marked as complete(procurement)
+    [Arguments]   ${growthTable}
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+     \    the user marks each procurement question as complete    ${ELEMENT}
+     the user should see the element           jQuery = button:contains("Add question")
+     the user fills in the Finances questions  ${growthTable}  false  true
+     the user clicks the button/link           jQuery = button:contains("Done")
+     the user clicks the button/link           link = Competition setup
+
+the user marks each procurement question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
+    the user selects the radio button      question.templateDocument  1
+    the user enters text to a text field   id = question.templateTitle   ${question_link}
+    then the user uploads the file         id = template-document-file   ${ods_file}
+    the user selects the checkbox          question.allowedTemplateResponseFileTypes1
+    the user clicks the button/link        css = button[type="submit"]
+    the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}

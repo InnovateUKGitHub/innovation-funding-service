@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -115,9 +114,6 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    @Mock
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
     @Before
     public void setUp() {
         super.setup();
@@ -153,6 +149,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
                         .withRoleName(LEADAPPLICANT.getName())
+                        .withRole(LEADAPPLICANT)
                         .build())
                 .withOrganisation(organisation)
                 .build();

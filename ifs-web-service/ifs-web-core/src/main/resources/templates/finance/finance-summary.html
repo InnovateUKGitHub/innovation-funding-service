@@ -29,6 +29,7 @@
         <div class="project-cost-breakdown"
             th:with="hasLabour=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
                      hasOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
+                     hasProcurementOverheads=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
                      hasMaterials=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
                      hasCapitalUsage=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
                      hasSubcontracting=${currentCompetition.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
@@ -50,6 +51,9 @@
                             class="govuk-table__header govuk-table__header--numeric">Labour (&pound;)</th>
                         <th scope="col"
                             th:if="${hasOverheads}"
+                            class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
+                        <th scope="col"
+                            th:if="${hasProcurementOverheads}"
                             class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
                         <th scope="col"
                             th:if="${hasMaterials}"
@@ -117,6 +121,11 @@
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric"
+                                    th:if="${hasProcurementOverheads}"
+                                    th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
+                                    th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric"
                                     th:if="${hasMaterials}"
                                     th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)}"
                                     th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
@@ -149,6 +158,8 @@
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasOverheads}"
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                                <td th:if="${hasProcurementOverheads}"
+                                    class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasMaterials}"
                                     class="govuk-table__cell govuk-table__cell--numeric">0</td>
                                 <td th:if="${hasCapitalUsage}"
@@ -171,6 +182,8 @@
                         <td th:if="${hasLabour}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         <td th:if="${hasOverheads}"
+                            class="govuk-table__cell govuk-table__cell--numeric">0</td>
+                        <td th:if="${hasProcurementOverheads}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         <td th:if="${hasMaterials}"
                             class="govuk-table__cell govuk-table__cell--numeric">0</td>
@@ -196,6 +209,11 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                             th:if="${hasOverheads}"
+                            th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
+                            th:if="${hasProcurementOverheads}"
                             th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
@@ -365,15 +383,15 @@
                        th:if="${applicationOrganisation.id == userOrganisation.id}"
                        th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                       <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                         class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
+                         class="govuk-body govuk-link">Return to the finances section</a> to complete your project finances.</p>
                 </th:block>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
             </div>
             <div th:unless="${collaborativeProject}" class="warning-alert">
-                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your finances as complete.</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
                 <p class="govuk-body">
                     <a th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.id},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                       class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
+                       class="govuk-body govuk-link">Return to the finances section</a> to complete your project finances.</p>
                 <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete.</p>
             </div>
         </th:block>

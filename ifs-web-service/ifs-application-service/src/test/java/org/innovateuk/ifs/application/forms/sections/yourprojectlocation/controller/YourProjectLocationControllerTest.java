@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
@@ -61,8 +61,8 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
-    private CommonYourFinancesViewModel commonFinancesViewModel =
-            new CommonYourFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
+    private CommonYourProjectFinancesViewModel commonFinancesViewModel =
+            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
 
     @Test
     public void viewPage() throws Exception {

@@ -35,6 +35,7 @@
               data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
               data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE ? 'project' : 'question'}"
               data-section="application"
+              enctype="multipart/form-data"
               novalidate="novalidate">
 
             <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />

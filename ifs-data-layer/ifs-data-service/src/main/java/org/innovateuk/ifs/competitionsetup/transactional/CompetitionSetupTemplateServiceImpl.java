@@ -66,37 +66,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
-        competition = copyTemplatePropertiesToCompetition(template, competition);
-        competition = initialiseFinanceTypes(competition);
+        Competition populatedCompetition = copyTemplatePropertiesToCompetition(template, competition);
 
-        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
-    }
+        Competition competitionWithFinances = initialiseFinanceTypes(populatedCompetition);
 
-    private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
-        competition.setSections(new ArrayList<>(template.getSections()));
-        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-        competition.setTermsAndConditions(template.getTermsAndConditions());
-        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-        competition.setMinProjectDuration(template.getMinProjectDuration());
-        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-        competition.setApplicationFinanceType(template.getApplicationFinanceType());
-        return competition;
-    }
-
-    private Competition setDefaultAssessorPayAndCount(Competition competition) {
-        if (competition.getAssessorCount() == null) {
-            Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
-        }
-
-        if (competition.getAssessorPay() == null) {
-            competition.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
-        }
-        return competition;
-    }
-
-    private boolean competitionIsNotInSetupState(Competition competition) {
-        return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
+        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competitionWithFinances));
     }
 
     private Competition initialiseFinanceTypes(Competition competition) {
@@ -130,7 +104,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             case PROCUREMENT:
                 competition.getFinanceRowTypes().addAll(EnumSet.of(
                         LABOUR,
-                        //OVERHEADS,
+                        PROCUREMENT_OVERHEADS,
                         MATERIALS,
                         CAPITAL_USAGE,
                         SUBCONTRACTING_COSTS,
@@ -142,6 +116,33 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 break;
         }
         return competition;
+    }
+
+    private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
+        competition.setSections(new ArrayList<>(template.getSections()));
+        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
+        competition.setTermsAndConditions(template.getTermsAndConditions());
+        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
+        competition.setMinProjectDuration(template.getMinProjectDuration());
+        competition.setMaxProjectDuration(template.getMaxProjectDuration());
+        competition.setApplicationFinanceType(template.getApplicationFinanceType());
+        return competition;
+    }
+
+    private Competition setDefaultAssessorPayAndCount(Competition competition) {
+        if (competition.getAssessorCount() == null) {
+            Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
+            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
+        }
+
+        if (competition.getAssessorPay() == null) {
+            competition.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+        }
+        return competition;
+    }
+
+    private boolean competitionIsNotInSetupState(Competition competition) {
+        return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
 
 }

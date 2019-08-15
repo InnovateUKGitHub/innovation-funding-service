@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtil
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,19 +27,14 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 public class
 InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<InitialDetailsViewModel> {
 
+    @Autowired
     private CompetitionRestService competitionRestService;
+    @Autowired
     private CompetitionSetupService competitionSetupService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private CategoryRestService categoryRestService;
-
-    public InitialDetailsModelPopulator(CompetitionRestService competitionRestService,
-                                        CompetitionSetupService competitionSetupService, UserRestService userRestService,
-                                        CategoryRestService categoryRestService) {
-        this.competitionRestService = competitionRestService;
-        this.competitionSetupService = competitionSetupService;
-        this.userRestService = userRestService;
-        this.categoryRestService = categoryRestService;
-    }
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {

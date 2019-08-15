@@ -68,7 +68,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
         addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
-        addFinanceDetails(model, competition.getId(), assessment.getApplication());
+        addFinanceDetails(model, competition, assessment.getApplication());
 
         return new AssessmentFinancesSummaryViewModel(assessmentId, assessment.getApplication(),
                 assessment.getApplicationName(),
@@ -97,8 +97,8 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("showAssessorDetailedFinanceLink", financeVew.equals(DETAILED));
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
-        addFinanceSections(competitionId, model);
+    public void addFinanceDetails(Model model, CompetitionResource competition, Long applicationId) {
+        addFinanceSections(competition.getId(), model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
@@ -109,6 +109,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
+        model.addAttribute("currentCompetition", competition);
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

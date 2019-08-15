@@ -2,16 +2,12 @@ package org.innovateuk.ifs.question.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.file.controller.FileControllerUtils;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.question.transactional.QuestionFileSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /**
  * QuestionController exposes competition setup application questions data and operations through a REST API.
@@ -24,8 +20,6 @@ public class QuestionSetupCompetitionController {
     private QuestionSetupCompetitionService questionSetupCompetitionService;
     @Autowired
     private QuestionFileSetupCompetitionService questionFileSetupCompetitionService;
-
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/get-by-id/{questionId}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable final long questionId) {
@@ -67,16 +61,5 @@ public class QuestionSetupCompetitionController {
     @DeleteMapping(value = "/template-file/{questionId}", produces = "application/json")
     public RestResult<Void> deleteFile(@PathVariable long questionId) {
         return questionFileSetupCompetitionService.deleteTemplateFile(questionId).toDeleteResponse();
-    }
-
-    @GetMapping(value = "/template-file/{questionId}", produces = "application/json")
-    public @ResponseBody
-    ResponseEntity<Object> downloadFile(@PathVariable long questionId) throws IOException {
-        return fileControllerUtils.handleFileDownload(() -> questionFileSetupCompetitionService.downloadTemplateFile(questionId));
-    }
-
-    @GetMapping(value = "/template-file-details/{questionId}", produces = "application/json")
-    public RestResult<FileEntryResource> findFile(@PathVariable long questionId) throws IOException {
-        return questionFileSetupCompetitionService.findTemplateFile(questionId).toGetResponse();
     }
 }

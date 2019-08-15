@@ -3,9 +3,11 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class CompetitionController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final long id) {
@@ -59,5 +63,10 @@ public class CompetitionController {
     public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
+    }
+
+    @GetMapping(path = "/{id}/terms-and-conditions", produces = "application/json")
+    public ResponseEntity<Object> downloadTerms(@PathVariable("id") long competitionId) {
+        return fileControllerUtils.handleFileDownload(() -> competitionService.downloadTerms(competitionId));
     }
 }

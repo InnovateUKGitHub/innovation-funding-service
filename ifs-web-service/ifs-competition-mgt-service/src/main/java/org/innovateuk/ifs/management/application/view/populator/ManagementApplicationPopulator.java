@@ -26,8 +26,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
 
 @Component
 public class ManagementApplicationPopulator {
@@ -87,10 +90,19 @@ public class ManagementApplicationPopulator {
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
-                    String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
+                    String title = fileTitle(formInputResource, fileEntryResource);
                     return new AppendixViewModel(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).
                 collect(Collectors.toList());
+    }
+
+    private static String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
+        if (TEMPLATE_DOCUMENT.equals(formInputResource.getType())) {
+            return format("Uploaded %s", formInputResource.getDescription());
+        } else if (FILEUPLOAD.equals(formInputResource.getType())) {
+            return "Appendix";
+        }
+        return formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
     }
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {

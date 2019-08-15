@@ -16,10 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 
 @Component
@@ -61,12 +62,14 @@ public class YourProjectCostsAutosaver {
                 return autosaveTravelCost(field, value, finance);
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
+            } else if (field.startsWith("procurementOverheadRows")) {
+                return autosaveProcurementOverheadCost(field, value, finance);
             } else {
-                throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save field not handled %s", field), emptyList());
             }
         } catch (Exception e) {
             LOG.debug("Error auto saving", e);
-            LOG.info(String.format("Unable to auto save field (%s) value (%s)", field, value));
+            LOG.info(format("Unable to auto save field (%s) value (%s)", field, value));
         }
         return Optional.empty();
     }
@@ -87,7 +90,7 @@ public class YourProjectCostsAutosaver {
                 cost.setLabourDays(Integer.parseInt(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save labour field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
@@ -119,7 +122,28 @@ public class YourProjectCostsAutosaver {
                 cost.setCost(new BigDecimal(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save material field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save material field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) throws InstantiationException, IllegalAccessException {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        ProcurementOverhead cost = getCost(id, () -> new ProcurementOverhead(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setItem(value);
+                break;
+            case "companyCost":
+                cost.setCompanyCost(Integer.parseInt(value));
+                break;
+            case "projectCost":
+                cost.setProjectCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save procurement overhead field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
@@ -149,7 +173,7 @@ public class YourProjectCostsAutosaver {
                 cost.setUtilisation(Integer.valueOf(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save capital usage field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save capital usage field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
@@ -173,7 +197,7 @@ public class YourProjectCostsAutosaver {
                 cost.setCost(new BigDecimal(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save sub-contracting field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save sub-contracting field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
@@ -194,7 +218,7 @@ public class YourProjectCostsAutosaver {
                 cost.setCost(new BigDecimal(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save travel field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save travel field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
@@ -212,7 +236,7 @@ public class YourProjectCostsAutosaver {
                 cost.setCost(new BigDecimal(value));
                 break;
             default:
-                throw new IFSRuntimeException(String.format("Auto save other cost field not handled %s", rowField), Collections.emptyList());
+                throw new IFSRuntimeException(format("Auto save other cost field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
