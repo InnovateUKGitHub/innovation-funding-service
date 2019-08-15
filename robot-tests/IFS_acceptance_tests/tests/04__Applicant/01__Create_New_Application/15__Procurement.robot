@@ -196,7 +196,7 @@ the user checks the VAT calculations
     the user selects the radio button              vatForm.registered  false
     the user should not see the element            id = vat-total
     the user selects the radio button              vatForm.registered  true
-    the user should see the element                jQuery = #vatRegistered-totals div:contains("Total VAT") ~ div:contains("£12,040") ~ div:contains("project costs") ~ div:contains("72,239")
+    the user should see the element                jQuery = #vatRegistered-totals div:contains("Total VAT") ~ div:contains("£12,140") ~ div:contains("project costs") ~ div:contains("72,839")
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Application overview
     the user clicks the button/link                link = Review and submit
