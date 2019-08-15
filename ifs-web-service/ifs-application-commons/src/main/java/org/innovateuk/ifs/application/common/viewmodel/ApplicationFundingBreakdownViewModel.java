@@ -139,18 +139,21 @@ public class ApplicationFundingBreakdownViewModel {
         return vatTotal;
     }
 
-    /* view model logic. */
-    public BigDecimal calculateVat() {
-        return getFinanceTotal().multiply(BigDecimal.valueOf(0.2));
-    }
-
-    public BigDecimal calculateVatTotal() {
-        return getFinanceTotal().multiply(BigDecimal.valueOf(1.2));
-    }
-
-    /*
-     Procurement competitions only have one applicant
+    /* view model logic.
+      Procurement competitions only have one applicant
      */
+    public BigDecimal calculateVat() {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().getTotalCosts().multiply(BigDecimal.valueOf(0.2));
+        }
+
+        return BigDecimal.ZERO;
+    }
+
     public boolean isApplicationVatRegistered() {
         Optional<BaseFinanceResource> financeResource = organisationFinances.values()
                 .stream()

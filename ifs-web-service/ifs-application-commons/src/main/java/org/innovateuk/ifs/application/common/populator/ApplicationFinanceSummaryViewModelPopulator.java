@@ -88,7 +88,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
-                organisationFinanceOverview.getTotalPerType(),
+                organisationFinanceOverview.getTotalPerType(competition),
                 applicationOrganisations,
                 sectionsMarkedAsComplete,
                 financeSectionId,
