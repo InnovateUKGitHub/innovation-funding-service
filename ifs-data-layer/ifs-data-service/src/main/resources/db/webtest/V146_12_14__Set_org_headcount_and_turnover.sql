@@ -1,4 +1,4 @@
---Update finance check for project that will be used in setup with growth table values
+-- Update finance check for project that will be used in setup with growth table values
 SELECT @comp_id := id FROM competition WHERE name = 'Internet of Things';
 SELECT @app_id := id FROM application WHERE competition = @comp_id AND name = 'Sensing & Control network using the lighting infrastructure';
 SELECT @project_id := id FROM project WHERE application_id = @app_id;
