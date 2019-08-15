@@ -33,7 +33,7 @@
 
         <th:block th:if="${model.isApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">The checks have been completed and your finances approved.</p>
+                <p class="govuk-body">The checks have been completed and your project finances approved.</p>
             </div>
             <p class="govuk-body"> Review your <a
                 th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
@@ -46,10 +46,10 @@
             <p class="govuk-body">Innovate UK is reviewing
                 <th:block th:unless="${model.isAcademic()}">
                     <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-                       class="govuk-link">your finances</a>.
+                       class="govuk-link">your project finances</a>.
                 </th:block>
                 <th:block th:if="${model.isAcademic()}">
-                    your finances.
+                    your project finances.
                 </th:block>
                 You can also view the <a
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"

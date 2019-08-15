@@ -91,8 +91,8 @@ Research and technology organisations (RTO) search (accept invitation flow with 
     And And Logging in and Error Checking                                        ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page                       ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                          link = Climate science the history of Greenland's ice
-    And the user clicks the button/link                                          link = Your finances
-    And the user should see the element                                          jQuery = h1:contains("Your finances")
+    And the user clicks the button/link                                          link = Your project finances
+    And the user should see the element                                          jQuery = h1:contains("Your project finances")
 
 Validation on terms and condition page
     [Documentation]  IFS-3093

@@ -7,8 +7,6 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdo
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -21,6 +19,7 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.InviteService;
@@ -42,6 +41,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
@@ -78,14 +78,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     @Spy
     @InjectMocks
     private AssessmentReviewApplicationSummaryModelPopulator assessmentReviewApplicationSummaryModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Spy
     @InjectMocks
@@ -192,6 +184,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
         competition.setHasAssessmentPanel(true);
         competition.setCompetitionStatus(FUNDERS_PANEL);
+        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
 
         List<FormInputResource> formInputs = setupAssessmentFormInputs(questionId, ASSESSOR_SCORE, TEXTAREA);
         long formInputIdScore = formInputs.get(0).getId();

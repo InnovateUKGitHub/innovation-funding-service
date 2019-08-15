@@ -280,7 +280,7 @@ the status of the people should be correct in the Manage contributors page
 the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
-    And the user clicks the button/link   link = Your finances
+    And the user clicks the button/link   link = Your project finances
     And the user should see the element   link = Your project costs
     And the user should see the element   link = Your organisation
     And the user should see the element   jQuery = h3:contains("Your funding")

@@ -53,7 +53,7 @@ Applicant Applies to Research leading Competition
     the user selects Research category                    Feasibility studies
     the lead applicant marks every question as complete   Scope
     the lead applicant marks every question as complete   1. How innovative is your project?
-    And The user clicks the button/link                   link = Your finances
+    And The user clicks the button/link                   link = Your project finances
     When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
     And the user accept the competition terms and conditions
     Then user is not able to submit his application as he exceeds research participation

@@ -229,7 +229,7 @@ Other costs server side
 
 Project location client side validations
     [Documentation]  IFS-4681
-    [Setup]  the user clicks the button/link   link = Your finances
+    [Setup]  the user clicks the button/link   link = Your project finances
     Given the user clicks the button/link      link = Your project location
     When the user enters text to a text field  id = postcode  ${EMPTY}
     Then the user should see a field error     Enter a valid postcode.
@@ -244,7 +244,7 @@ Project location server-side validations
 
 Funding level server side
     [Documentation]    INFUND-844
-    [Setup]  the user clicks the button/link     link = Your finances
+    [Setup]  the user clicks the button/link     link = Your project finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
     And the user selects the radio button        requestingFunding   true

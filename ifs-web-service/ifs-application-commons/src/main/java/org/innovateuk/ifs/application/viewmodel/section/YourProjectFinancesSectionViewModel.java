@@ -11,11 +11,11 @@ import java.util.Optional;
 /**
  * Generic ViewModel for common fields in SectionViewModels
  */
-public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
+public class YourProjectFinancesSectionViewModel extends AbstractSectionViewModel {
     private List<Long> completedSectionIds;
     private BaseFinanceResource organisationFinance;
 
-    public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+    public YourProjectFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 

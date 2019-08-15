@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -20,19 +20,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Your finances populator section view models.
+ * Your project finances populator section view models.
  */
 @Component
-public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
+public class YourProjectFinancesSectionPopulator extends AbstractSectionPopulator<YourProjectFinancesSectionViewModel> {
 
     private final SectionService sectionService;
     private final FinanceService financeService;
     private final FileEntryRestService fileEntryRestService;
 
-    public YourFinancesSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
-                                        final SectionService sectionService,
-                                        final FinanceService financeService,
-                                        final FileEntryRestService fileEntryRestService) {
+    public YourProjectFinancesSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                               final SectionService sectionService,
+                                               final FinanceService financeService,
+                                               final FileEntryRestService fileEntryRestService) {
         super(navigationPopulator);
         this.sectionService = sectionService;
         this.financeService = financeService;
@@ -40,14 +40,14 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     @Override
-    protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
-        return new YourFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+    protected YourProjectFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
+        return new YourProjectFinancesSectionViewModel(applicantSection, Collections.emptyList(), getNavigationViewModel(applicantSection), readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
     }
 
     @Override
     public void populateNoReturn(ApplicantSectionResource section,
                                  ApplicationForm form,
-                                 YourFinancesSectionViewModel viewModel,
+                                 YourProjectFinancesSectionViewModel viewModel,
                                  Model model,
                                  BindingResult bindingResult,
                                  Boolean readOnly,
