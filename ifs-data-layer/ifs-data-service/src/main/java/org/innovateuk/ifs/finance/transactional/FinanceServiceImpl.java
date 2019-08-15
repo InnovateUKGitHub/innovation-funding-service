@@ -150,8 +150,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
-        Application application = applicationRepository.findById(applicationFinance.getApplication()).get();
-        return getOpenApplication(application.getId()).andOnSuccess(app ->
+        return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
                         dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
@@ -167,7 +166,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
         );
     }
 
-
     /**
      * There are some objects that need a default value, and an instance to use in the form,
      * so there are some objects that need to be created before loading the form.
@@ -179,7 +177,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
     }
-
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
         if (fileEntryId == null || fileEntryId == 0L) {

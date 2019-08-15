@@ -65,12 +65,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
-        Optional<ProcessRoleResource> currentUsersRole = getCurrentUsersRole(processRoles, user);
+        Optional<ProcessRoleResource> currentApplicantRole = getCurrentUsersRole(processRoles, user);
 
-        boolean open = application.isOpen() && competition.isOpen() && currentUsersRole
-                .map(role -> applicantProcessRoles().contains(role.getRole()))
-                .orElse(false);
-
+        boolean open = application.isOpen() && competition.isOpen() && currentApplicantRole.isPresent();
 
         Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
                 .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
@@ -92,13 +89,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         rows.addAll(pendingOrganisations(applicationId));
 
         return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open, application.isCollaborativeProject(),
-                currentUsersRole.map(ProcessRoleResource::getOrganisationId).orElse(null),
+                currentApplicantRole.map(ProcessRoleResource::getOrganisationId).orElse(null),
                 competition.getCollaborationLevel());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
         return processRoles.stream()
                 .filter(role -> role.getUser().equals(user.getId()))
+                .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .findFirst();
     }
 
