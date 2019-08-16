@@ -6,9 +6,9 @@ public interface GrantClaim extends FinanceRowItem {
 
     void reset();
 
-    Integer calculateClaimPercentage(BigDecimal total);
-
-    BigDecimal calculateGrantClaimAmount(BigDecimal total);
-
     boolean isRequestingFunding();
+
+    Integer calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding);
+
+    BigDecimal calculateFundingSought(BigDecimal total, BigDecimal totalOtherFunding);
 }

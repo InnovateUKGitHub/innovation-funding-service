@@ -164,30 +164,22 @@ public abstract class BaseFinanceResource {
         if (grantClaim == null) {
             return 0;
         }
-        return grantClaim.calculateClaimPercentage(getTotal());
-    }
-
-    @JsonIgnore
-    private BigDecimal getGrantClaimAmount() {
-        GrantClaim grantClaim = getGrantClaim();
-        if (grantClaim == null) {
-            return BigDecimal.ZERO;
-        }
-        return grantClaim.calculateGrantClaimAmount(getTotal());
+        return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
-        return getGrantClaimAmount()
-                .subtract(getTotalOtherFunding())
-                .max(BigDecimal.ZERO);
+        GrantClaim grantClaim = getGrantClaim();
+        if (grantClaim == null) {
+            return BigDecimal.ZERO;
+        }
+        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalContribution() {
-        return getTotal()
-                .subtract(getGrantClaimAmount())
-                .max(BigDecimal.ZERO);
+        return getTotalOtherFunding()
+                .add(getTotalFundingSought());
     }
 
     @JsonIgnore

@@ -70,7 +70,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
-    public Integer calculateClaimPercentage(BigDecimal total) {
+    public Integer calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
         return percentage;
     }
 
@@ -80,11 +80,12 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
-    public BigDecimal calculateGrantClaimAmount(BigDecimal total) {
+    public BigDecimal calculateFundingSought(BigDecimal total, BigDecimal otherFunding) {
         if (percentage == null) {
             return BigDecimal.ZERO;
         }
         return total.multiply(new BigDecimal(percentage))
-                .divide(new BigDecimal(100));
+                .divide(new BigDecimal(100))
+                .subtract(otherFunding);
     }
 }
