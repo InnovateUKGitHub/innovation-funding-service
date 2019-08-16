@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource {
@@ -165,18 +167,22 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || PROCUREMENT.equals(fundingType);
     }
 
     @JsonIgnore
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return PROCUREMENT.equals(fundingType);
     }
 
     @JsonIgnore
+    public boolean isLoan() {
+        return LOAN.equals(fundingType);
+    }
 
+    @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || PROCUREMENT.equals(fundingType);
     }
 
     public CompetitionStatus getCompetitionStatus() {
