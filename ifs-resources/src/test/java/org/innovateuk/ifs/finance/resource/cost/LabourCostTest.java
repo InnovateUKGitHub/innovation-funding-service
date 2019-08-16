@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNull;
 
 public class LabourCostTest {
 
-    LabourCost labourCost;
+    private LabourCost labourCost;
     private Long id;
     private String key;
     private String role;
@@ -24,45 +24,45 @@ public class LabourCostTest {
         key = "Labour";
         role = "Manager";
         grossEmployeeCost = new BigDecimal(50000);
-        labourDays = new Integer(168);
+        labourDays = 168;
         description = "";
 
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays,  description, 1L);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
     }
 
     @Test
-    public void labourCostShouldReturnCorrectBaseAttributesTest() throws Exception {
-        assert(labourCost.getId().equals(id));
-        assert(labourCost.getRole().equals(role));
-        assert(labourCost.getGrossEmployeeCost().equals(grossEmployeeCost));
-        assert(labourCost.getLabourDays().equals(labourDays));
-        assert(labourCost.getDescription().equals(description));
+    public void labourCostShouldReturnCorrectBaseAttributesTest() {
+        assert (labourCost.getId().equals(id));
+        assert (labourCost.getRole().equals(role));
+        assert (labourCost.getGrossEmployeeCost().equals(grossEmployeeCost));
+        assert (labourCost.getLabourDays().equals(labourDays));
+        assert (labourCost.getDescription().equals(description));
     }
 
     @Test
-    public void getRateTest() throws Exception {
-        Integer workingDaysPerYear = new Integer(232);
+    public void getRateTest() {
+        Integer workingDaysPerYear = 232;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         BigDecimal expected = new BigDecimal(215.51724).setScale(5, BigDecimal.ROUND_HALF_EVEN);
         assertEquals(expected, ratePerDay);
     }
 
     @Test
-    public void rateNullLabourDaysTest() throws Exception {
+    public void rateNullLabourDaysTest() {
         Integer workingDaysPerYear = null;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         assertNull(ratePerDay);
     }
 
     @Test
-    public void rateWithDivisionByZeroLabourDaysTest() throws Exception {
+    public void rateWithDivisionByZeroLabourDaysTest() {
         int workingDaysPerYear = 0;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, ratePerDay);
     }
 
     @Test
-    public void getRateWithoutGrossEmployeeCost() throws Exception {
+    public void getRateWithoutGrossEmployeeCost() {
         int workingDaysPerYear = 50;
         labourCost.setGrossEmployeeCost(BigDecimal.ZERO);
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
@@ -70,8 +70,8 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getLabourCostTotalTest() throws Exception {
-        Integer workingDaysPerYear = new Integer(232);
+    public void getLabourCostTotalTest() {
+        Integer workingDaysPerYear = 232;
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         BigDecimal expected = new BigDecimal(36206.89632).setScale(5, BigDecimal.ROUND_HALF_EVEN);
         BigDecimal totalStoredLabourCost = labourCost.getTotal();
@@ -80,15 +80,15 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getLabourCostTotalWithoutLabourDaysTest() throws Exception {
-        Integer workingDaysPerYear = new Integer(232);
+    public void getLabourCostTotalWithoutLabourDaysTest() {
+        Integer workingDaysPerYear = 232;
         labourCost.setLabourDays(null);
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, totalLabourCost);
     }
 
     @Test
-    public void setRoleTest() throws Exception {
+    public void setRoleTest() {
         labourCost.setRole("Developer");
         assertEquals("Developer", labourCost.getRole());
     }
