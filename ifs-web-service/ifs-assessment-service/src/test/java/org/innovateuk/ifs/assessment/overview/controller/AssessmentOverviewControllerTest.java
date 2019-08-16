@@ -8,7 +8,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.OrganisationFinanceOverview;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
@@ -35,11 +34,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
@@ -61,7 +56,6 @@ import org.springframework.validation.BindingResult;
 
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -85,8 +79,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -97,7 +89,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -451,11 +442,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         OrganisationResource organisation = orgSet.first();
-        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
-        OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
-                .withApplicationId(applicationResource.getId())
-                .withOrganisationFinances(appFinanceList)
-                .build();
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
@@ -478,10 +464,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withApplicantChildrenSections(asList(costSection))
                 .withCurrentUser(loggedInUser)
                 .build();
-
-        AssessmentDetailedFinancesViewModel expectedViewModel = new AssessmentDetailedFinancesViewModel(
-                assessmentResource.getId(), applicationResource.getId(), applicationResource, "Application name", false);
-
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
@@ -512,7 +494,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         OrganisationResource organisation = orgSet.first();
-        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(1)).build();
         QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
@@ -842,25 +823,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         inOrder.verifyNoMoreInteractions();
     }
 
-    private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
-        List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
-        List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
-        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(),MEDIUM, ""));
-        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), MEDIUM, ""));
-
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
-        FinanceRowCostCategory costCategory = new VatCostCategory();
-        costCategory.addCost(new Vat(1L, false, 2L));
-        organisationFinances.put(FinanceRowType.FINANCE, costCategory);
-
-        appFinanceList.stream().findFirst().get().setFinanceOrganisationDetails(organisationFinances);
-
-        when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
-
-        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-
-        return appFinanceList;
-    }
 
     private SortedSet<OrganisationResource> setupOrganisations() {
         OrganisationResource org1 = newOrganisationResource().withId(1L).withName("Empire Ltd").build();
