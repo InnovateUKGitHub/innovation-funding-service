@@ -49,21 +49,21 @@ public class LoggedInUserMethodArgumentResolverTest {
     }
 
     @Test
-    public void supportsParameter_shouldSupportUserResource () throws Exception {
+    public void supportsParameter_shouldSupportUserResource () {
         MethodParameter userResourceParameter = new MethodParameter(testMethod, 0);
 
         assertTrue(loggedInUserMethodArgumentResolver.supportsParameter(userResourceParameter));
     }
 
     @Test
-    public void supportsParameter_shouldNotSupportAnotherType () throws Exception {
+    public void supportsParameter_shouldNotSupportAnotherType () {
         MethodParameter notAUserResourceParameter = new MethodParameter(testMethod, 1);
 
         assertFalse(loggedInUserMethodArgumentResolver.supportsParameter(notAUserResourceParameter));
     }
 
     @Test
-    public void supportsParameter_shouldNotSupportModelAttributedUserResource () throws Exception {
+    public void supportsParameter_shouldNotSupportModelAttributedUserResource () {
         MethodParameter modelAttributeResourceParameter = new MethodParameter(testMethod, 2);
 
         assertFalse(loggedInUserMethodArgumentResolver.supportsParameter(modelAttributeResourceParameter));
