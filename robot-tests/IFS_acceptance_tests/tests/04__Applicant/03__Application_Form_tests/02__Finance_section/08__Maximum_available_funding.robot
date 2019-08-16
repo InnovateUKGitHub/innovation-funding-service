@@ -183,13 +183,8 @@ the business user fills in the project costs
 
 the user edits the research category
     [Arguments]   ${research_category}
-<<<<<<< HEAD
-    the user clicks the button/link     jQuery = a:contains("Your finances")
-    the user clicks the button/link     link = Back to application overview
-=======
     the user clicks the button/link     jQuery = a:contains("Your project finances")
-    the user clicks the button/link     link = Application overview
->>>>>>> 3fddfa1de672ad53634296b533699a80209f072d
+    the user clicks the button/link     link = Back to application overview
     the user clicks the button/link     link = Research category
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user clicks the button twice    jQuery = label[for^="researchCategory"]:contains("${research_category}")
